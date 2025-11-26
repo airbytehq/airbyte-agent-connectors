@@ -1,0 +1,52 @@
+name: Publish Connectors
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'connectors/**'
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      connectors: ${{ steps.detect.outputs.connectors }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - id: detect
+        run: |
+          # Detect changed connector directories
+          changed=$(git diff --name-only HEAD~1 HEAD -- connectors/ | \
+            grep -oP 'connectors/\K[^/]+' | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "connectors=$changed" >> $GITHUB_OUTPUT
+
+  publish:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.connectors != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        connector: ${{ fromJson(needs.detect-changes.outputs.connectors) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install build tools
+        run: pip install build twine pytest pytest-asyncio httpx pydantic pyyaml python-dotenv
+      - name: Install connector dependencies
+        run: pip install connectors/${{ matrix.connector }}/
+      - name: Run tests
+        run: |
+          cd connectors/${{ matrix.connector }}
+          pytest tests/ -v -m generated
+      - name: Build package
+        run: python -m build connectors/${{ matrix.connector }}/
+      - name: Publish to PyPI
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: twine upload connectors/${{ matrix.connector }}/dist/* --skip-existing
