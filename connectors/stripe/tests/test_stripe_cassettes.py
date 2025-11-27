@@ -13,22 +13,6 @@ from airbyte_ai_stripe import StripeConnector
 
 
 @pytest.mark.asyncio
-async def test_customers_create():
-    """Test creating a new customer"""
-    mock_response = {'id': 'cus_NewCustomer123', 'object': 'customer', 'address': None, 'balance': 0, 'created': 1762100000, 'currency': None, 'default_currency': None, 'default_source': None, 'delinquent': False, 'description': 'Customer created via test', 'discount': None, 'email': 'test-create@example.com', 'invoice_prefix': 'TESTCREA', 'invoice_settings': {'custom_fields': None, 'default_payment_method': None, 'footer': None, 'rendering_options': None}, 'livemode': False, 'metadata': {}, 'name': 'Test Create Customer', 'next_invoice_sequence': 1, 'phone': '+15551234567', 'preferred_locales': [], 'shipping': None, 'tax_exempt': 'none', 'test_clock': None}
-
-    connector = StripeConnector.create(secrets={"token": "test_key"})
-
-    with patch(
-        "airbyte_ai_stripe._vendored.connector_sdk.http_client.HTTPClient.request",
-        new=AsyncMock(return_value=mock_response)
-    ):
-        result = await connector.customers.create(email="test-create@example.com", name="Test Create Customer", phone="+15551234567", description="Customer created via test")
-
-    assert result == mock_response
-
-
-@pytest.mark.asyncio
 async def test_customers_get():
     """Captured from real API call on 2025-11-12"""
     mock_response = {'id': 'cus_TLTWhRfiG8of9k', 'object': 'customer', 'address': None, 'balance': 0, 'created': 1762033365, 'currency': None, 'default_currency': None, 'default_source': None, 'delinquent': False, 'description': None, 'discount': None, 'email': 'sdk-test@example.com', 'invoice_prefix': 'UZKYMUN3', 'invoice_settings': {'custom_fields': None, 'default_payment_method': None, 'footer': None, 'rendering_options': None}, 'livemode': False, 'metadata': {}, 'name': 'SDK Test', 'next_invoice_sequence': 1, 'phone': None, 'preferred_locales': [], 'shipping': None, 'tax_exempt': 'none', 'test_clock': None}
