@@ -1,0 +1,687 @@
+# HubSpot API Connector
+# OpenAPI 3.1 specification with Airbyte extensions
+
+openapi: 3.1.0
+
+info:
+  title: HubSpot API Connector
+  version: 1.0.0
+  description: Connector for HubSpot CRM API
+  x-airbyte-connector-name: hubspot
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: HubSpot API Documentation
+      url: https://developers.hubspot.com/docs/api/crm/understanding-the-crm
+
+servers:
+  - url: https://api.hubapi.com
+    description: HubSpot API server
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Contacts Resource
+  "/crm/v3/objects/contacts":
+    get:
+      summary: List contacts
+      description: Returns a paginated list of contacts
+      operationId: listContacts
+      x-airbyte-resource: contacts
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to include archived contacts
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of contacts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/contacts/{contactId}":
+    get:
+      summary: Get a contact
+      description: Get a single contact by ID
+      operationId: getContact
+      x-airbyte-resource: contacts
+      x-airbyte-verb: get
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          description: Contact ID
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+        "404":
+          description: Contact not found
+        "401":
+          description: Unauthorized
+
+  # Companies Resource
+  "/crm/v3/objects/companies":
+    get:
+      summary: List companies
+      description: Returns a paginated list of companies
+      operationId: listCompanies
+      x-airbyte-resource: companies
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to include archived companies
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of companies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompaniesList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/companies/{companyId}":
+    get:
+      summary: Get a company
+      description: Get a single company by ID
+      operationId: getCompany
+      x-airbyte-resource: companies
+      x-airbyte-verb: get
+      parameters:
+        - name: companyId
+          in: path
+          required: true
+          description: Company ID
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Company object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Company"
+        "404":
+          description: Company not found
+        "401":
+          description: Unauthorized
+
+  # Deals Resource
+  "/crm/v3/objects/deals":
+    get:
+      summary: List deals
+      description: Returns a paginated list of deals
+      operationId: listDeals
+      x-airbyte-resource: deals
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to include archived deals
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of deals
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DealsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/deals/{dealId}":
+    get:
+      summary: Get a deal
+      description: Get a single deal by ID
+      operationId: getDeal
+      x-airbyte-resource: deals
+      x-airbyte-verb: get
+      parameters:
+        - name: dealId
+          in: path
+          required: true
+          description: Deal ID
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Deal object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deal"
+        "404":
+          description: Deal not found
+        "401":
+          description: Unauthorized
+
+  # Tickets Resource
+  "/crm/v3/objects/tickets":
+    get:
+      summary: List tickets
+      description: Returns a paginated list of tickets
+      operationId: listTickets
+      x-airbyte-resource: tickets
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to include archived tickets
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of tickets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketsList"
+        "401":
+          description: Unauthorized
+
+  "/crm/v3/objects/tickets/{ticketId}":
+    get:
+      summary: Get a ticket
+      description: Get a single ticket by ID
+      operationId: getTicket
+      x-airbyte-resource: tickets
+      x-airbyte-verb: get
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          description: Ticket ID
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Ticket object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Ticket"
+        "404":
+          description: Ticket not found
+        "401":
+          description: Unauthorized
+
+  # Schemas Resource (for discovering custom objects)
+  "/crm/v3/schemas":
+    get:
+      summary: List custom object schemas
+      description: Returns all custom object schemas to discover available custom objects
+      operationId: listSchemas
+      x-airbyte-resource: schemas
+      x-airbyte-verb: list
+      responses:
+        "200":
+          description: List of custom object schemas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SchemasList"
+        "401":
+          description: Unauthorized
+
+  # Generic Objects Resource (for custom objects)
+  "/crm/v3/objects/{objectType}":
+    get:
+      summary: List objects
+      description: Returns a paginated list of objects for any custom object type
+      operationId: listObjects
+      x-airbyte-resource: objects
+      x-airbyte-verb: list
+      parameters:
+        - name: objectType
+          in: path
+          required: true
+          description: Object type ID or fully qualified name (e.g., "cars" or "p12345_cars")
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to include archived objects
+          schema:
+            type: boolean
+            default: false
+      responses:
+        "200":
+          description: List of objects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ObjectsList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Object type not found
+
+  "/crm/v3/objects/{objectType}/{objectId}":
+    get:
+      summary: Get an object
+      description: Get a single object by ID for any custom object type
+      operationId: getObject
+      x-airbyte-resource: objects
+      x-airbyte-verb: get
+      parameters:
+        - name: objectType
+          in: path
+          required: true
+          description: Object type ID or fully qualified name
+          schema:
+            type: string
+        - name: objectId
+          in: path
+          required: true
+          description: Object record ID
+          schema:
+            type: string
+        - name: properties
+          in: query
+          description: Comma-separated list of properties to include
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Object record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CRMObject"
+        "404":
+          description: Object not found
+        "401":
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: HubSpot Private App Access Token or OAuth Access Token
+      x-airbyte-auth-config:
+        title: "Access Token Authentication"
+        type: object
+        required:
+          - access_token
+        properties:
+          access_token:
+            type: string
+            title: "Access Token"
+            description: "Your HubSpot Private App Access Token or OAuth Access Token"
+            airbyte_secret: true
+        auth_mapping:
+          token: "${access_token}"
+
+  schemas:
+    # Contact schemas
+    Contact:
+      type: object
+      x-airbyte-resource-name: contacts
+      description: HubSpot contact object
+      properties:
+        id:
+          type: string
+          description: Unique contact identifier
+        properties:
+          type: object
+          description: Contact properties
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the contact is archived
+
+    ContactsList:
+      type: object
+      description: Paginated list of contacts
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Contact"
+        paging:
+          $ref: "#/components/schemas/Paging"
+
+    # Company schemas
+    Company:
+      type: object
+      x-airbyte-resource-name: companies
+      description: HubSpot company object
+      properties:
+        id:
+          type: string
+          description: Unique company identifier
+        properties:
+          type: object
+          description: Company properties
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the company is archived
+
+    CompaniesList:
+      type: object
+      description: Paginated list of companies
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Company"
+        paging:
+          $ref: "#/components/schemas/Paging"
+
+    # Deal schemas
+    Deal:
+      type: object
+      x-airbyte-resource-name: deals
+      description: HubSpot deal object
+      properties:
+        id:
+          type: string
+          description: Unique deal identifier
+        properties:
+          type: object
+          description: Deal properties
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the deal is archived
+
+    DealsList:
+      type: object
+      description: Paginated list of deals
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Deal"
+        paging:
+          $ref: "#/components/schemas/Paging"
+
+    # Ticket schemas
+    Ticket:
+      type: object
+      x-airbyte-resource-name: tickets
+      description: HubSpot ticket object
+      properties:
+        id:
+          type: string
+          description: Unique ticket identifier
+        properties:
+          type: object
+          description: Ticket properties
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the ticket is archived
+
+    TicketsList:
+      type: object
+      description: Paginated list of tickets
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Ticket"
+        paging:
+          $ref: "#/components/schemas/Paging"
+
+    # Schema schemas (for custom objects discovery)
+    Schema:
+      type: object
+      x-airbyte-resource-name: schemas
+      description: Custom object schema definition
+      properties:
+        id:
+          type: string
+          description: Schema ID
+        name:
+          type: string
+          description: Schema name
+        labels:
+          type: object
+          description: Display labels
+          properties:
+            singular:
+              type: string
+            plural:
+              type: string
+        objectTypeId:
+          type: string
+          description: Object type identifier
+        fullyQualifiedName:
+          type: string
+          description: Fully qualified name (p{portal_id}_{object_name})
+        properties:
+          type: array
+          description: Schema properties
+          items:
+            type: object
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    SchemasList:
+      type: object
+      description: List of custom object schemas
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/Schema"
+
+    # Generic CRM object schemas
+    CRMObject:
+      type: object
+      x-airbyte-resource-name: objects
+      description: Generic HubSpot CRM object (for custom objects)
+      properties:
+        id:
+          type: string
+          description: Unique object identifier
+        properties:
+          type: object
+          description: Object properties
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        archived:
+          type: boolean
+          description: Whether the object is archived
+
+    ObjectsList:
+      type: object
+      description: Paginated list of generic CRM objects
+      properties:
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/CRMObject"
+        paging:
+          $ref: "#/components/schemas/Paging"
+
+    # Shared pagination schema
+    Paging:
+      type: object
+      description: Pagination information
+      properties:
+        next:
+          type: object
+          properties:
+            after:
+              type: string
+              description: Cursor for next page
+            link:
+              type: string
+              description: URL for next page
