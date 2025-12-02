@@ -31,7 +31,7 @@ class StripeConnector:
     """
 
     connector_name = "stripe"
-    connector_version = "0.0.1"
+    connector_version = "0.0.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     def __init__(self, executor: ExecutorProtocol):
