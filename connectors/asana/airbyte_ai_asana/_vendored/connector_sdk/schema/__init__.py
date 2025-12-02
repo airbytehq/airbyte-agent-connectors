@@ -17,7 +17,15 @@ Usage:
 
 from .connector import OpenAPIConnector, Tag, ExternalDocs
 from .base import Info, Server, Contact, License, ServerVariable
-from .security import SecurityScheme, SecurityRequirement, OAuth2Flow, OAuth2Flows
+from .security import (
+    SecurityScheme,
+    SecurityRequirement,
+    OAuth2Flow,
+    OAuth2Flows,
+    AirbyteAuthConfig,
+    AuthConfigOption,
+    AuthConfigFieldSpec,
+)
 from .components import (
     Components,
     Schema,
@@ -46,6 +54,9 @@ __all__ = [
     "SecurityRequirement",
     "OAuth2Flow",
     "OAuth2Flows",
+    "AirbyteAuthConfig",
+    "AuthConfigOption",
+    "AuthConfigFieldSpec",
     # Component models
     "Components",
     "Schema",
