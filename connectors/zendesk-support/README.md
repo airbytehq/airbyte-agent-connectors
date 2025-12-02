@@ -2,7 +2,9 @@
 
 Type-safe Zendesk-Support API connector with full IDE autocomplete support for AI applications.
 
-**Version:** 1.0.0
+**Package Version:** 0.5.0
+**Connector Version:** 1.0.0
+**SDK Version:** 0.1.0
 
 ## Installation
 
