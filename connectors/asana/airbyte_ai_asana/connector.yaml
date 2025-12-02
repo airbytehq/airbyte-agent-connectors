@@ -1,0 +1,454 @@
+# Asana API Connector
+# OpenAPI 3.0 specification with Airbyte extensions
+
+openapi: 3.1.0
+
+info:
+  title: Asana API Connector
+  version: 1.0.0
+  description: Connector for Asana API
+  x-airbyte-connector-name: asana
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Asana API Reference
+      url: https://developers.asana.com/reference/rest-api-reference
+    - type: changelog
+      title: Asana API Changelog
+      url: https://developers.asana.com/docs/change-log
+    - type: authentication_guide
+      title: Asana API Authentication Guide
+      url: https://developers.asana.com/docs/authentication
+    - type: rate_limits
+      title: Asana API Rate Limits
+      url: https://developers.asana.com/docs/rate-limits
+    - type: api_deprecations
+      title: Asana API Deprecations
+      url: https://developers.asana.com/docs/deprecations
+
+servers:
+  - url: https://app.asana.com/api/1.0
+    description: Asana API server
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Tasks endpoints
+  "/projects/{project_gid}/tasks":
+    get:
+      summary: List tasks from a project
+      description: Returns all tasks in a project
+      operationId: listTasks
+      x-airbyte-resource: tasks
+      x-airbyte-verb: list
+      parameters:
+        - name: project_gid
+          in: path
+          required: true
+          description: Project GID to list tasks from
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksList"
+        "401":
+          description: Unauthorized
+
+  "/tasks/{task_gid}":
+    get:
+      summary: Get a task
+      description: Get a single task by its ID
+      operationId: getTask
+      x-airbyte-resource: tasks
+      x-airbyte-verb: get
+      parameters:
+        - name: task_gid
+          in: path
+          required: true
+          description: Task GID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Task object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskResponse"
+        "404":
+          description: Task not found
+        "401":
+          description: Unauthorized
+
+  # Projects endpoints
+  "/projects":
+    get:
+      summary: List projects
+      description: Returns a paginated list of projects
+      operationId: listProjects
+      x-airbyte-resource: projects
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset token
+          schema:
+            type: string
+        - name: workspace
+          in: query
+          description: The workspace to filter projects on
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of projects
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectsList"
+        "401":
+          description: Unauthorized
+
+  "/projects/{project_gid}":
+    get:
+      summary: Get a project
+      description: Get a single project by its ID
+      operationId: getProject
+      x-airbyte-resource: projects
+      x-airbyte-verb: get
+      parameters:
+        - name: project_gid
+          in: path
+          required: true
+          description: Project GID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Project object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProjectResponse"
+        "404":
+          description: Project not found
+        "401":
+          description: Unauthorized
+
+  # Workspaces endpoints
+  "/workspaces":
+    get:
+      summary: List workspaces
+      description: Returns a paginated list of workspaces
+      operationId: listWorkspaces
+      x-airbyte-resource: workspaces
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspacesList"
+        "401":
+          description: Unauthorized
+
+  "/workspaces/{workspace_gid}":
+    get:
+      summary: Get a workspace
+      description: Get a single workspace by its ID
+      operationId: getWorkspace
+      x-airbyte-resource: workspaces
+      x-airbyte-verb: get
+      parameters:
+        - name: workspace_gid
+          in: path
+          required: true
+          description: Workspace GID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Workspace object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkspaceResponse"
+        "404":
+          description: Workspace not found
+        "401":
+          description: Unauthorized
+
+  # Users endpoints
+  "/users":
+    get:
+      summary: List users
+      description: Returns a paginated list of users
+      operationId: listUsers
+      x-airbyte-resource: users
+      x-airbyte-verb: list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset token
+          schema:
+            type: string
+        - name: workspace
+          in: query
+          description: The workspace to filter users on
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of users
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersList"
+        "401":
+          description: Unauthorized
+
+  "/users/{user_gid}":
+    get:
+      summary: Get a user
+      description: Get a single user by their ID
+      operationId: getUser
+      x-airbyte-resource: users
+      x-airbyte-verb: get
+      parameters:
+        - name: user_gid
+          in: path
+          required: true
+          description: User GID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "404":
+          description: User not found
+        "401":
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Key authentication using Bearer token
+
+  schemas:
+    # Task schemas
+    Task:
+      type: object
+      x-airbyte-resource-name: tasks
+      description: Compact task object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (task)
+        name:
+          type: string
+          description: Task name
+
+    TaskResponse:
+      type: object
+      description: Task response wrapper
+      properties:
+        data:
+          $ref: "#/components/schemas/Task"
+
+    TasksList:
+      type: object
+      description: Paginated list of tasks
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+        next_page:
+          type: ["object", "null"]
+          properties:
+            offset:
+              type: string
+            path:
+              type: string
+            uri:
+              type: string
+
+    # Project schemas
+    Project:
+      type: object
+      x-airbyte-resource-name: projects
+      description: Compact project object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (project)
+        name:
+          type: string
+          description: Project name
+
+    ProjectResponse:
+      type: object
+      description: Project response wrapper
+      properties:
+        data:
+          $ref: "#/components/schemas/Project"
+
+    ProjectsList:
+      type: object
+      description: Paginated list of projects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        next_page:
+          type: ["object", "null"]
+          properties:
+            offset:
+              type: string
+            path:
+              type: string
+            uri:
+              type: string
+
+    # Workspace schemas
+    Workspace:
+      type: object
+      x-airbyte-resource-name: workspaces
+      description: Compact workspace object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (workspace)
+        name:
+          type: string
+          description: Workspace name
+
+    WorkspaceResponse:
+      type: object
+      description: Workspace response wrapper
+      properties:
+        data:
+          $ref: "#/components/schemas/Workspace"
+
+    WorkspacesList:
+      type: object
+      description: Paginated list of workspaces
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Workspace"
+        next_page:
+          type: ["object", "null"]
+          properties:
+            offset:
+              type: string
+            path:
+              type: string
+            uri:
+              type: string
+
+    # User schemas
+    User:
+      type: object
+      x-airbyte-resource-name: users
+      description: Compact user object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (user)
+        name:
+          type: string
+          description: User name
+
+    UserResponse:
+      type: object
+      description: User response wrapper
+      properties:
+        data:
+          $ref: "#/components/schemas/User"
+
+    UsersList:
+      type: object
+      description: Paginated list of users
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        next_page:
+          type: ["object", "null"]
+          properties:
+            offset:
+              type: string
+            path:
+              type: string
+            uri:
+              type: string
