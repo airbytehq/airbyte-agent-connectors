@@ -1,0 +1,293 @@
+openapi: 3.1.0
+info:
+  title: Zendesk Support API Connector
+  version: 1.0.0
+  x-airbyte-connector-name: zendesk-support
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Zendesk Support API Documentation
+      url: https://developer.zendesk.com/api-reference/ticketing/introduction/
+    - type: changelog
+      title: Zendesk API Changelog
+      url: https://developer.zendesk.com/api-reference/changelog/changelog/
+    - type: developer_community
+      title: Zendesk APIs Developer Community
+      url: https://support.zendesk.com/hc/en-us/community/topics/1260801854210
+    - type: authentication_guide
+      title: Zendesk API Authentication Guide
+      url: https://developer.zendesk.com/api-reference/introduction/security-and-auth/
+    - type: api_reference
+      title: Zendesk Ticketing Documentation
+      url: https://developer.zendesk.com/documentation/ticketing/
+    - type: rate_limits
+      title: Zendesk API Rate Limits
+      url: https://developer.zendesk.com/api-reference/introduction/rate-limits/
+
+servers:
+  - url: https://{subdomain}.zendesk.com/api/v2
+    description: Zendesk Support API Server
+    variables:
+      subdomain:
+        default: your-subdomain
+        description: Your Zendesk subdomain
+
+security:
+  - basicAuth: []
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: "Email and API token authentication. Username format: {email}/token, Password: {api_token}"
+
+  schemas:
+    Article:
+      type: object
+      x-airbyte-resource-name: articles
+      description: Help Center article object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the article
+          read_only: true
+        url:
+          type: string
+          description: The API URL of the article
+          read_only: true
+        html_url:
+          type: string
+          description: The public URL of the article
+          read_only: true
+        title:
+          type: string
+          description: The title of the article
+        body:
+          type: string
+          description: The body content of the article (HTML)
+        locale:
+          type: string
+          description: The locale of the article
+        author_id:
+          type: integer
+          description: The ID of the user who created the article
+        section_id:
+          type: integer
+          description: The ID of the section the article belongs to
+        created_at:
+          type: string
+          format: date-time
+          description: The time the article was created
+          read_only: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The time the article was last updated
+          read_only: true
+        vote_sum:
+          type: integer
+          description: Sum of upvotes and downvotes
+          read_only: true
+        vote_count:
+          type: integer
+          description: Number of votes
+          read_only: true
+        label_names:
+          type: array
+          items:
+            type: string
+          description: List of label names associated with the article
+        draft:
+          type: boolean
+          description: Whether the article is a draft
+        promoted:
+          type: boolean
+          description: Whether the article is promoted
+        position:
+          type: integer
+          description: Position of the article in the section
+      required:
+        - id
+
+    ArticleList:
+      type: object
+      description: List of articles
+      properties:
+        articles:
+          type: array
+          items:
+            $ref: "#/components/schemas/Article"
+        count:
+          type: integer
+          description: Total number of articles
+        next_page:
+          type: ["string", "null"]
+          description: URL for next page of results
+        previous_page:
+          type: ["string", "null"]
+          description: URL for previous page of results
+
+    ArticleAttachment:
+      type: object
+      x-airbyte-resource-name: article_attachments
+      description: Article attachment object
+      properties:
+        id:
+          type: integer
+          description: The unique ID of the attachment
+          read_only: true
+        url:
+          type: string
+          format: uri
+          description: The API URL of the attachment
+          read_only: true
+        article_id:
+          type: integer
+          description: The ID of the article this attachment belongs to
+          read_only: true
+        file_name:
+          type: string
+          description: The name of the attached file
+        content_type:
+          type: string
+          description: The MIME type of the attachment
+        content_url:
+          type: string
+          format: uri
+          description: The URL to download the attachment
+          read_only: true
+        size:
+          type: integer
+          description: The size of the attachment in bytes
+          read_only: true
+        inline:
+          type: boolean
+          description: Whether the attachment is displayed inline in the article
+        created_at:
+          type: string
+          format: date-time
+          description: The time the attachment was created
+          read_only: true
+        updated_at:
+          type: string
+          format: date-time
+          description: The time the attachment was last updated
+          read_only: true
+      required:
+        - id
+        - file_name
+
+    ArticleAttachmentList:
+      type: object
+      description: List of article attachments
+      properties:
+        article_attachments:
+          type: array
+          items:
+            $ref: "#/components/schemas/ArticleAttachment"
+        count:
+          type: integer
+          description: Total number of attachments
+        next_page:
+          type: ["string", "null"]
+          description: URL for next page of results
+        previous_page:
+          type: ["string", "null"]
+          description: URL for previous page of results
+
+paths:
+  /help_center/articles.json:
+    get:
+      summary: List all articles
+      description: Returns a list of all articles in the Help Center
+      operationId: ListArticles
+      x-airbyte-resource: articles
+      x-airbyte-verb: list
+      tags:
+        - Articles
+      parameters:
+        - name: per_page
+          in: query
+          description: Number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 30
+        - name: page
+          in: query
+          description: Page number for pagination
+          schema:
+            type: integer
+            minimum: 1
+        - name: sort_by
+          in: query
+          description: Sort articles by field (created_at, updated_at, title, position)
+          schema:
+            type: string
+            enum: [created_at, updated_at, title, position]
+        - name: sort_order
+          in: query
+          description: Sort order (asc or desc)
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        "200":
+          description: List of articles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleList"
+
+  /help_center/articles/{id}.json:
+    get:
+      summary: Get an article by ID
+      description: Retrieves the details of a specific article
+      operationId: GetArticle
+      x-airbyte-resource: articles
+      x-airbyte-verb: get
+      tags:
+        - Articles
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The unique ID of the article
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Article object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  article:
+                    $ref: "#/components/schemas/Article"
+
+  /help_center/articles/{article_id}/attachments.json:
+    get:
+      summary: List attachments for an article
+      description: Returns a list of all attachments for a specific article
+      operationId: ListArticleAttachments
+      x-airbyte-resource: article_attachments
+      x-airbyte-verb: list
+      tags:
+        - Article Attachments
+      parameters:
+        - name: article_id
+          in: path
+          required: true
+          description: The unique ID of the article
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of article attachments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleAttachmentList"
