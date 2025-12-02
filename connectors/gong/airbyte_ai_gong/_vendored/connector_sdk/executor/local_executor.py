@@ -3,21 +3,25 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import os
 import re
 import time
-from typing import Any
+from typing import Any, AsyncIterator, Protocol
 from urllib.parse import quote
+
+from opentelemetry import trace
 
 from ..constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
 )
 from ..secrets import SecretStr
-from ..http_client import HTTPClient
+from ..http_client import HTTPClient, TokenRefreshCallback
 from ..config_loader import load_connector_config
 from ..logging import NullLogger, RequestLogger
 from ..observability import ObservabilitySession
+from ..auth_template import apply_auth_mapping
 from ..telemetry import SegmentTracker
 from ..types import ConnectorConfig, ResourceDefinition, Verb
 
@@ -32,6 +36,43 @@ from .models import (
 )
 
 
+class _OperationContext:
+    """Shared context for operation handlers."""
+
+    def __init__(self, executor: "LocalExecutor"):
+        self.executor = executor
+        self.http_client = executor.http_client
+        self.tracker = executor.tracker
+        self.session = executor.session
+        self.logger = executor.logger
+        self.resource_index = executor._resource_index
+        self.operation_index = executor._operation_index
+        # Bind helper methods
+        self.build_path = executor._build_path
+        self.extract_query_params = executor._extract_query_params
+        self.extract_body = executor._extract_body
+        self.build_request_body = executor._build_request_body
+        self.determine_request_format = executor._determine_request_format
+        self.validate_required_body_fields = executor._validate_required_body_fields
+
+
+class _OperationHandler(Protocol):
+    """Protocol for operation handlers."""
+
+    def can_handle(self, verb: Verb) -> bool:
+        """Check if this handler can handle the given verb."""
+        ...
+
+    async def execute_operation(
+        self,
+        resource: str,
+        verb: Verb,
+        params: dict[str, Any],
+    ) -> dict[str, Any] | AsyncIterator[bytes]:
+        """Execute the operation and return result."""
+        ...
+
+
 class LocalExecutor:
     """Async executor for Resource×Verb operations with direct HTTP execution.
 
@@ -44,19 +85,27 @@ class LocalExecutor:
     def __init__(
         self,
         config_path: str,
-        secrets: dict[str, SecretStr],
+        secrets: dict[str, SecretStr] | None = None,
+        auth_config: dict[str, SecretStr] | None = None,
         enable_logging: bool = False,
         log_file: str | None = None,
         execution_context: str | None = None,
         max_connections: int = DEFAULT_MAX_CONNECTIONS,
         max_keepalive_connections: int = DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
         max_logs: int | None = 10000,
+        config_values: dict[str, str] | None = None,
+        on_token_refresh: TokenRefreshCallback = None,
     ):
         """Initialize async executor.
 
         Args:
             config_path: Path to connector.yaml
-            secrets: Secret credentials for authentication (e.g., {"token": SecretStr("sk_...")})
+            secrets: (Legacy) Auth parameters that bypass x-airbyte-auth-config mapping.
+                Directly passed to auth strategies (e.g., {"username": "...", "password": "..."}).
+                Cannot be used together with auth_config.
+            auth_config: User-facing auth configuration following x-airbyte-auth-config spec.
+                Will be transformed via auth_mapping to produce auth parameters.
+                Cannot be used together with secrets.
             enable_logging: Enable request/response logging
             log_file: Path to log file (if enable_logging=True)
             execution_context: Execution context (mcp, direct, blessed, agent)
@@ -65,9 +114,35 @@ class LocalExecutor:
             max_logs: Maximum number of logs to keep in memory before rotation.
                 Set to None for unlimited (not recommended for production).
                 Defaults to 10000.
+            config_values: Optional dict of config values for server variable substitution
+                (e.g., {"subdomain": "acme"} for URLs like https://{subdomain}.api.example.com).
+            on_token_refresh: Optional callback function(new_tokens: dict) called when
+                OAuth2 tokens are refreshed. Use this to persist updated tokens.
+                Can be sync or async. Example: lambda tokens: save_to_db(tokens)
         """
+        # Validate mutual exclusivity
+        if secrets is not None and auth_config is not None:
+            raise ValueError(
+                "Cannot provide both 'secrets' and 'auth_config' parameters. "
+                "Use 'auth_config' for user-facing credentials (recommended), "
+                "or 'secrets' for direct auth parameters (legacy)."
+            )
+
         self.config: ConnectorConfig = load_connector_config(config_path)
-        self.secrets = secrets
+        self.on_token_refresh = on_token_refresh
+
+        # Determine which credentials to use and whether to apply mapping
+        if auth_config is not None:
+            # Apply auth config mapping (user-facing → auth parameters)
+            self.secrets = self._apply_auth_config_mapping(auth_config)
+        elif secrets is not None:
+            # Use secrets directly (bypass mapping - legacy behavior)
+            self.secrets = secrets
+        else:
+            # No credentials provided
+            self.secrets = None
+
+        self.config_values = config_values or {}
 
         # Create shared observability session
         self.session = ObservabilitySession(
@@ -98,10 +173,12 @@ class LocalExecutor:
         self.http_client = HTTPClient(
             base_url=self.config.base_url,
             auth_config=self.config.auth,
-            secrets=secrets,
+            secrets=self.secrets,
+            config_values=self.config_values,
             logger=self.logger,
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
+            on_token_refresh=on_token_refresh,
         )
 
         # Build O(1) lookup indexes
@@ -117,20 +194,83 @@ class LocalExecutor:
                 if endpoint:
                     self._operation_index[(resource.name, verb)] = endpoint
 
-    async def execute(self, config: ExecutionConfig) -> ExecutionResult:
-        """Execute connector with given configuration (ExecutorProtocol implementation).
+        # Register operation handlers (order matters for can_handle priority)
+        op_context = _OperationContext(self)
+        self._operation_handlers: list[_OperationHandler] = [
+            _DownloadOperationHandler(op_context),
+            _StandardOperationHandler(op_context),
+        ]
 
-        This method implements the ExecutorProtocol interface. It wraps the internal
-        _execute_operation() method to provide a consistent interface with HostedExecutor.
+    def _apply_auth_config_mapping(
+        self, user_secrets: dict[str, SecretStr]
+    ) -> dict[str, SecretStr]:
+        """Apply auth_mapping from x-airbyte-auth-config to transform user secrets.
+
+        This method takes user-provided secrets (e.g., {"api_token": "abc123"}) and
+        transforms them into the auth scheme format (e.g., {"username": "abc123", "password": "api_token"})
+        using the template mappings defined in x-airbyte-auth-config.
+
+        Args:
+            user_secrets: User-provided secrets from config
+
+        Returns:
+            Transformed secrets matching the auth scheme requirements
+        """
+        if not self.config.auth.user_config_spec:
+            # No x-airbyte-auth-config defined, use secrets as-is
+            return user_secrets
+
+        user_config_spec = self.config.auth.user_config_spec
+        auth_mapping = None
+        required_fields: list[str] | None = None
+
+        # Check for single option (direct auth_mapping)
+        if user_config_spec.auth_mapping:
+            auth_mapping = user_config_spec.auth_mapping
+            required_fields = user_config_spec.required
+        # Check for oneOf (multiple auth options)
+        elif user_config_spec.one_of:
+            # Find the matching option based on which required fields are present
+            for option in user_config_spec.one_of:
+                option_required = option.required or []
+                if all(field in user_secrets for field in option_required):
+                    auth_mapping = option.auth_mapping
+                    required_fields = option_required
+                    break
+
+        if not auth_mapping:
+            # No matching auth_mapping found, use secrets as-is
+            return user_secrets
+
+        # Convert SecretStr values to plain strings for template processing
+        user_config_values = {
+            key: (
+                value.get_secret_value()
+                if hasattr(value, "get_secret_value")
+                else str(value)
+            )
+            for key, value in user_secrets.items()
+        }
+
+        # Apply the auth_mapping templates, passing required_fields so optional
+        # fields that are not provided can be skipped
+        mapped_values = apply_auth_mapping(
+            auth_mapping, user_config_values, required_fields=required_fields
+        )
+
+        # Convert back to SecretStr
+        mapped_secrets = {key: SecretStr(value) for key, value in mapped_values.items()}
+
+        return mapped_secrets
+
+    async def execute(self, config: ExecutionConfig) -> ExecutionResult:
+        """Execute connector operation using handler pattern.
 
         Args:
             config: Execution configuration (resource, verb, params)
 
         Returns:
-            ExecutionResult with success/failure status
-
-        Raises:
-            Infrastructure exceptions: Network errors, auth failures, etc.
+            ExecutionResult with success/failure status and data
 
         Example:
             config = ExecutionConfig(
@@ -143,12 +283,27 @@ class LocalExecutor:
                 print(result.data)
         """
         try:
-            # Call the internal execute method
-            response_data = await self._execute_operation(
-                resource=config.resource, verb=config.verb, params=config.params
-            )
+            # Convert config to internal format
+            verb = Verb(config.verb) if isinstance(config.verb, str) else config.verb
+            params = config.params or {}
 
-            # Wrap successful response in ExecutionResult
+            # Dispatch to handler (handlers handle telemetry internally)
+            handler = next(
+                (h for h in self._operation_handlers if h.can_handle(verb)), None
+            )
+            if not handler:
+                raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
+
+            # Execute handler
+            result = handler.execute_operation(config.resource, verb, params)
+
+            # Handle AsyncIterator (download) vs dict (standard)
+            if inspect.isasyncgen(result):
+                # Download: return stream in ExecutionResult
+                return ExecutionResult(success=True, data=result, error=None)
+
+            # Standard: await coroutine and return
+            response_data = await result
             return ExecutionResult(success=True, data=response_data, error=None)
 
         except (
@@ -160,9 +315,6 @@ class LocalExecutor:
             # These are "expected" execution errors - return them in ExecutionResult
             return ExecutionResult(success=False, data={}, error=str(e))
 
-        # All other exceptions (network errors, auth failures) are raised as-is
-        # This includes HTTP errors from the http_client
-
     async def _execute_operation(
         self,
         resource: str,
@@ -171,7 +323,7 @@ class LocalExecutor:
     ) -> dict[str, Any]:
         """Internal method: Execute a verb on a resource asynchronously.
 
-        This is the internal implementation used by execute().
+        This method now delegates to the appropriate handler.
         External code should use execute(config) instead.
 
         Args:
@@ -192,101 +344,27 @@ class LocalExecutor:
         params = params or {}
         verb = Verb(verb) if isinstance(verb, str) else verb
 
-        # Increment operation counter
-        self.session.increment_operations()
+        # Delegate to the appropriate handler
+        handler = next(
+            (h for h in self._operation_handlers if h.can_handle(verb)), None
+        )
+        if not handler:
+            raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
 
-        # Track operation timing and status
-        start_time = time.time()
-        error_type = None
-        status_code = None
-
-        try:
-            # O(1) resource lookup
-            resource_def = self._resource_index.get(resource)
-            if not resource_def:
-                available_resources = list(self._resource_index.keys())
-                raise ResourceNotFoundError(
-                    f"Resource '{resource}' not found in connector. "
-                    f"Available resources: {available_resources}"
-                )
-
-            # Check if verb is supported
-            if verb not in resource_def.verbs:
-                supported_verbs = [v.value for v in resource_def.verbs]
-                raise VerbNotSupportedError(
-                    f"Verb '{verb.value}' not supported for resource '{resource}'. "
-                    f"Supported verbs: {supported_verbs}"
-                )
-
-            # O(1) operation lookup
-            endpoint = self._operation_index.get((resource, verb))
-            if not endpoint:
-                raise ExecutorError(
-                    f"No endpoint defined for {resource}.{verb.value}. "
-                    f"This is a configuration error."
-                )
-
-            # Validate required body fields for CREATE/UPDATE operations
-            self._validate_required_body_fields(endpoint, params, verb, resource)
-
-            # Build request parameters
-            # Use path_override if available, otherwise use the OpenAPI path
-            actual_path = (
-                endpoint.path_override.path if endpoint.path_override else endpoint.path
-            )
-            path = self._build_path(actual_path, params)
-            query_params = self._extract_query_params(endpoint.query_params, params)
-
-            # Build request body (GraphQL or standard)
-            body = self._build_request_body(endpoint, params)
-
-            # Determine request format (json/data parameters)
-            request_kwargs = self._determine_request_format(endpoint, body)
-
-            # Execute async HTTP request
-            response = await self.http_client.request(
-                method=endpoint.method,
-                path=path,
-                params=query_params if query_params else None,
-                json=request_kwargs.get("json"),
-                data=request_kwargs.get("data"),
-            )
-
-            # Assume success with 200 status code if no exception raised
-            status_code = 200
-            return response
-
-        except Exception as e:
-            # Capture error details
-            error_type = type(e).__name__
-
-            # Try to get status code from HTTP errors
-            if hasattr(e, "response") and hasattr(e.response, "status_code"):
-                status_code = e.response.status_code
-
-            raise
-
-        finally:
-            # Always track operation (success or failure)
-            timing_ms = (time.time() - start_time) * 1000
-            self.tracker.track_operation(
-                resource=resource,
-                verb=verb.value if isinstance(verb, Verb) else verb,
-                status_code=status_code,
-                timing_ms=timing_ms,
-                error_type=error_type,
-            )
+        return await handler.execute_operation(resource, verb, params)
 
     async def execute_batch(
         self, operations: list[tuple[str, str | Verb, dict[str, Any] | None]]
-    ) -> list[dict[str, Any]]:
-        """Execute multiple operations concurrently.
+    ) -> list[dict[str, Any] | AsyncIterator[bytes]]:
+        """Execute multiple operations concurrently (supports all verb types including download).
 
         Args:
             operations: List of (resource, verb, params) tuples
 
         Returns:
-            List of responses in the same order as operations
+            List of responses in the same order as operations.
+            Standard operations return dict[str, Any].
+            Download operations return AsyncIterator[bytes].
 
         Raises:
             ValueError: If any resource or verb not found
@@ -296,18 +374,28 @@ class LocalExecutor:
             results = await executor.execute_batch([
                 ("Customer", "list", {"limit": 10}),
                 ("Customer", "get", {"id": "cus_123"}),
-                ("Customer", "get", {"id": "cus_456"}),
+                ("attachments", "download", {"id": "att_456"}),
             ])
         """
-        # Create tasks for all operations
-        tasks = [
-            self._execute_operation(resource, verb, params)
-            for resource, verb, params in operations
-        ]
+        # Build tasks by dispatching directly to handlers
+        tasks = []
+        for resource, verb, params in operations:
+            # Convert verb to Verb enum if needed
+            verb = Verb(verb) if isinstance(verb, str) else verb
+            params = params or {}
 
-        # Execute all tasks concurrently using asyncio.gather
-        results = await asyncio.gather(*tasks)
-        return results
+            # Find appropriate handler
+            handler = next(
+                (h for h in self._operation_handlers if h.can_handle(verb)), None
+            )
+            if not handler:
+                raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
+
+            # Call handler directly (exceptions propagate naturally)
+            tasks.append(handler.execute_operation(resource, verb, params))
+
+        # Execute all tasks concurrently - exceptions propagate via asyncio.gather
+        return await asyncio.gather(*tasks)
 
     def _build_path(self, path_template: str, params: dict[str, Any]) -> str:
         """Build path by replacing {param} placeholders with URL-encoded values.
@@ -371,6 +459,52 @@ class LocalExecutor:
             Dictionary of body fields
         """
         return {key: value for key, value in params.items() if key in allowed_fields}
+
+    @staticmethod
+    def _extract_download_url(
+        response: dict[str, Any],
+        file_field: str,
+        resource: str,
+    ) -> str:
+        """Extract download URL from metadata response using x-airbyte-file-url.
+
+        Args:
+            response: Metadata response containing file reference
+            file_field: JSON path to file URL field (from x-airbyte-file-url)
+            resource: Resource name (for error messages)
+
+        Returns:
+            Extracted file URL
+
+        Raises:
+            ExecutorError: If file field not found or invalid
+        """
+        # Navigate nested path (e.g., "article_attachment.content_url")
+        parts = file_field.split(".")
+        current = response
+
+        for i, part in enumerate(parts):
+            if not isinstance(current, dict):
+                raise ExecutorError(
+                    f"Cannot extract download URL for {resource}: "
+                    f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                )
+
+            if part not in current:
+                raise ExecutorError(
+                    f"Cannot extract download URL for {resource}: "
+                    f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
+                )
+
+            current = current[part]
+
+        if not isinstance(current, str):
+            raise ExecutorError(
+                f"Cannot extract download URL for {resource}: "
+                f"Expected string at '{file_field}', got {type(current).__name__}"
+            )
+
+        return current
 
     def _build_request_body(
         self, endpoint: Any, params: dict[str, Any]
@@ -628,3 +762,338 @@ class LocalExecutor:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit."""
         await self.close()
+
+
+# =============================================================================
+# Operation Handlers
+# =============================================================================
+
+
+class _StandardOperationHandler:
+    """Handler for standard REST operations (GET, LIST, CREATE, UPDATE, DELETE, SEARCH, AUTHORIZE)."""
+
+    def __init__(self, context: _OperationContext):
+        self.ctx = context
+
+    def can_handle(self, verb: Verb) -> bool:
+        """Check if this handler can handle the given verb."""
+        return verb in {
+            Verb.GET,
+            Verb.LIST,
+            Verb.CREATE,
+            Verb.UPDATE,
+            Verb.DELETE,
+            Verb.SEARCH,
+            Verb.AUTHORIZE,
+        }
+
+    async def execute_operation(
+        self, resource: str, verb: Verb, params: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Execute standard REST operation with full telemetry and error handling."""
+        tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
+
+        with tracer.start_as_current_span("local_executor.execute_operation") as span:
+            # Add span attributes
+            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.resource", resource)
+            span.set_attribute("connector.verb", verb.value)
+            if params:
+                span.set_attribute("connector.param_keys", list(params.keys()))
+
+            # Increment operation counter
+            self.ctx.session.increment_operations()
+
+            # Track operation timing and status
+            start_time = time.time()
+            error_type = None
+            status_code = None
+
+            try:
+                # O(1) resource lookup
+                resource_def = self.ctx.resource_index.get(resource)
+                if not resource_def:
+                    available_resources = list(self.ctx.resource_index.keys())
+                    raise ResourceNotFoundError(
+                        f"Resource '{resource}' not found in connector. "
+                        f"Available resources: {available_resources}"
+                    )
+
+                # Check if verb is supported
+                if verb not in resource_def.verbs:
+                    supported_verbs = [v.value for v in resource_def.verbs]
+                    raise VerbNotSupportedError(
+                        f"Verb '{verb.value}' not supported for resource '{resource}'. "
+                        f"Supported verbs: {supported_verbs}"
+                    )
+
+                # O(1) operation lookup
+                endpoint = self.ctx.operation_index.get((resource, verb))
+                if not endpoint:
+                    raise ExecutorError(
+                        f"No endpoint defined for {resource}.{verb.value}. "
+                        f"This is a configuration error."
+                    )
+
+                # Validate required body fields for CREATE/UPDATE operations
+                self.ctx.validate_required_body_fields(endpoint, params, verb, resource)
+
+                # Build request parameters
+                # Use path_override if available, otherwise use the OpenAPI path
+                actual_path = (
+                    endpoint.path_override.path
+                    if endpoint.path_override
+                    else endpoint.path
+                )
+                path = self.ctx.build_path(actual_path, params)
+                query_params = self.ctx.extract_query_params(
+                    endpoint.query_params, params
+                )
+
+                # Build request body (GraphQL or standard)
+                body = self.ctx.build_request_body(endpoint, params)
+
+                # Determine request format (json/data parameters)
+                request_kwargs = self.ctx.determine_request_format(endpoint, body)
+
+                # Execute async HTTP request
+                response = await self.ctx.http_client.request(
+                    method=endpoint.method,
+                    path=path,
+                    params=query_params if query_params else None,
+                    json=request_kwargs.get("json"),
+                    data=request_kwargs.get("data"),
+                )
+
+                # Assume success with 200 status code if no exception raised
+                status_code = 200
+
+                # Mark span as successful
+                span.set_attribute("connector.success", True)
+                span.set_attribute("http.status_code", status_code)
+
+                return response
+
+            except (ResourceNotFoundError, VerbNotSupportedError) as e:
+                # Validation errors - record in span
+                error_type = type(e).__name__
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", error_type)
+                span.record_exception(e)
+                raise
+
+            except Exception as e:
+                # Capture error details
+                error_type = type(e).__name__
+
+                # Try to get status code from HTTP errors
+                if hasattr(e, "response") and hasattr(e.response, "status_code"):
+                    status_code = e.response.status_code
+                    span.set_attribute("http.status_code", status_code)
+
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", error_type)
+                span.record_exception(e)
+                raise
+
+            finally:
+                # Always track operation (success or failure)
+                timing_ms = (time.time() - start_time) * 1000
+                self.ctx.tracker.track_operation(
+                    resource=resource,
+                    verb=verb.value if isinstance(verb, Verb) else verb,
+                    status_code=status_code,
+                    timing_ms=timing_ms,
+                    error_type=error_type,
+                )
+
+
+class _DownloadOperationHandler:
+    """Handler for download operations.
+
+    Supports two modes:
+    - Two-step (with x-airbyte-file-url): metadata request → extract URL → stream file
+    - One-step (without x-airbyte-file-url): stream file directly from endpoint
+    """
+
+    def __init__(self, context: _OperationContext):
+        self.ctx = context
+
+    def can_handle(self, verb: Verb) -> bool:
+        """Check if this handler can handle the given verb."""
+        return verb == Verb.DOWNLOAD
+
+    async def execute_operation(
+        self, resource: str, verb: Verb, params: dict[str, Any]
+    ) -> AsyncIterator[bytes]:
+        """Execute download operation (one-step or two-step) with full telemetry."""
+        tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
+
+        with tracer.start_as_current_span("local_executor.execute_operation") as span:
+            # Add span attributes
+            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.resource", resource)
+            span.set_attribute("connector.verb", verb.value)
+            if params:
+                span.set_attribute("connector.param_keys", list(params.keys()))
+
+            # Increment operation counter
+            self.ctx.session.increment_operations()
+
+            # Track operation timing and status
+            start_time = time.time()
+            error_type = None
+            status_code = None
+
+            try:
+                # Look up resource
+                resource_def = self.ctx.resource_index.get(resource)
+                if not resource_def:
+                    raise ResourceNotFoundError(
+                        f"Resource '{resource}' not found in connector. "
+                        f"Available resources: {list(self.ctx.resource_index.keys())}"
+                    )
+
+                # Look up operation
+                operation = self.ctx.operation_index.get((resource, verb))
+                if not operation:
+                    raise VerbNotSupportedError(
+                        f"Verb '{verb.value}' not supported for resource '{resource}'. "
+                        f"Supported verbs: {[v.value for v in resource_def.verbs]}"
+                    )
+
+                # Common setup for both download modes
+                actual_path = (
+                    operation.path_override.path
+                    if operation.path_override
+                    else operation.path
+                )
+                path = self.ctx.build_path(actual_path, params)
+                query_params = self.ctx.extract_query_params(
+                    operation.query_params, params
+                )
+
+                # Prepare headers (with optional Range support)
+                range_header = params.get("range_header")
+                headers = {"Accept": "*/*"}
+                if range_header is not None:
+                    headers["Range"] = range_header
+
+                # Check download mode: two-step (with file_field) or one-step (without)
+                file_field = operation.file_field
+
+                if file_field:
+                    # Two-step download: metadata → extract URL → stream file
+                    # Step 1: Get metadata (standard request)
+                    request_body = self.ctx.build_request_body(
+                        endpoint=operation,
+                        params=params,
+                    )
+                    request_format = self.ctx.determine_request_format(
+                        operation, request_body
+                    )
+                    self.ctx.validate_required_body_fields(
+                        operation, params, verb, resource
+                    )
+
+                    metadata_response = await self.ctx.http_client.request(
+                        method=operation.method,
+                        path=path,
+                        params=query_params,
+                        **request_format,
+                    )
+
+                    # Step 2: Extract file URL from metadata
+                    file_url = LocalExecutor._extract_download_url(
+                        response=metadata_response,
+                        file_field=file_field,
+                        resource=resource,
+                    )
+
+                    # Step 3: Stream file from extracted URL
+                    file_response = await self.ctx.http_client.request(
+                        method="GET",
+                        path=file_url,
+                        headers=headers,
+                        stream=True,
+                    )
+                else:
+                    # One-step direct download: stream file directly from endpoint
+                    file_response = await self.ctx.http_client.request(
+                        method=operation.method,
+                        path=path,
+                        params=query_params,
+                        headers=headers,
+                        stream=True,
+                    )
+
+                # Assume success once we start streaming
+                status_code = 200
+
+                # Mark span as successful
+                span.set_attribute("connector.success", True)
+                span.set_attribute("http.status_code", status_code)
+
+                # Stream file chunks
+                default_chunk_size = 8 * 1024 * 1024  # 8 MB
+                async for chunk in file_response.original_response.aiter_bytes(
+                    chunk_size=default_chunk_size
+                ):
+                    # Log each chunk for cassette recording
+                    self.ctx.logger.log_chunk_fetch(chunk)
+                    yield chunk
+
+            except (ResourceNotFoundError, VerbNotSupportedError) as e:
+                # Validation errors - record in span
+                error_type = type(e).__name__
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", error_type)
+                span.record_exception(e)
+
+                # Track the failed operation before re-raising
+                timing_ms = (time.time() - start_time) * 1000
+                self.ctx.tracker.track_operation(
+                    resource=resource,
+                    verb=verb.value,
+                    status_code=status_code,
+                    timing_ms=timing_ms,
+                    error_type=error_type,
+                )
+                raise
+
+            except Exception as e:
+                # Capture error details
+                error_type = type(e).__name__
+
+                # Try to get status code from HTTP errors
+                if hasattr(e, "response") and hasattr(e.response, "status_code"):
+                    status_code = e.response.status_code
+                    span.set_attribute("http.status_code", status_code)
+
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", error_type)
+                span.record_exception(e)
+
+                # Track the failed operation before re-raising
+                timing_ms = (time.time() - start_time) * 1000
+                self.ctx.tracker.track_operation(
+                    resource=resource,
+                    verb=verb.value,
+                    status_code=status_code,
+                    timing_ms=timing_ms,
+                    error_type=error_type,
+                )
+                raise
+
+            finally:
+                # Track successful operation (if no exception was raised)
+                # Note: For generators, this runs after all chunks are yielded
+                if error_type is None:
+                    timing_ms = (time.time() - start_time) * 1000
+                    self.ctx.tracker.track_operation(
+                        resource=resource,
+                        verb=verb.value,
+                        status_code=status_code,
+                        timing_ms=timing_ms,
+                        error_type=None,
+                    )

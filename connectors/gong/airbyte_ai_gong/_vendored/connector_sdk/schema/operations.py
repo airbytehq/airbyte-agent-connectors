@@ -7,7 +7,7 @@ References:
 """
 
 from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .components import Parameter, RequestBody, Response, PathOverrideConfig
 from .security import SecurityRequirement
@@ -56,10 +56,40 @@ class Operation(BaseModel):
             "differs from actual endpoint"
         ),
     )
+    x_airbyte_file_url: Optional[str] = Field(None, alias="x-airbyte-file-url")
 
     # Future extensions (commented out, defined for future use)
     # from .extensions import PaginationConfig
     # x_pagination: Optional[PaginationConfig] = Field(None, alias="x-airbyte-pagination")
+
+    @model_validator(mode="after")
+    def validate_download_verb_requirements(self) -> "Operation":
+        """
+        Validate download operation requirements.
+
+        Rules:
+        - If x-airbyte-verb is "download":
+          - x-airbyte-file-url must be non-empty if provided
+        - If x-airbyte-verb is not "download":
+          - x-airbyte-file-url must not be present
+        """
+        verb = self.x_airbyte_verb
+        file_url = self.x_airbyte_file_url
+
+        if verb == "download":
+            # If file_url is provided, it must be non-empty
+            if file_url is not None and not file_url.strip():
+                raise ValueError(
+                    "x-airbyte-file-url must be non-empty when provided for download operations"
+                )
+        else:
+            # Non-download verbs cannot have file_url
+            if file_url is not None:
+                raise ValueError(
+                    f"x-airbyte-file-url can only be used with x-airbyte-verb: download, but verb is '{verb}'"
+                )
+
+        return self
 
 
 class PathItem(BaseModel):

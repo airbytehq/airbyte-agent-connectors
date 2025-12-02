@@ -6,8 +6,8 @@ from airbyte_ai_gong import GongConnector
 
 
 def test_connector_creation():
-    """Test creating GongConnector instance."""
-    connector = GongConnector.create(secrets={"api_key": "test_key"})
+    """Test creating GongConnector instance with Access Key Authentication."""
+    connector = GongConnector.create(auth_config={"access_key": "test_access_key", "access_key_secret": "test_access_key_secret"})
     assert connector.connector_name == "gong"
     assert connector.connector_version
 

@@ -259,6 +259,44 @@ Example:
     ```
 """
 
+AIRBYTE_FILE_URL = "x-airbyte-file-url"
+"""
+Extension: x-airbyte-file-url
+Location: Operation object (on individual HTTP operations with x-airbyte-verb: download)
+Type: string
+Required: Yes (when x-airbyte-verb is "download")
+
+Description:
+    Specifies which field in the metadata response contains the download URL. Used with
+    the 'download' verb to perform a two-step file retrieval: first fetch metadata,
+    then extract and download from the URL field specified here.
+
+    The field path can be a simple field name (e.g., "content_url") or a nested path
+    using dot notation (e.g., "data.download_link"). The URL must be absolute.
+
+Example:
+    ```yaml
+    paths:
+      /articles/{article_id}/attachments/{attachment_id}:
+        get:
+          x-airbyte-resource: article_attachments
+          x-airbyte-verb: download
+          x-airbyte-file-url: content_url
+          responses:
+            "200":
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      content_url:
+                        type: string
+                        description: URL to download the file
+    ```
+"""
+
 
 # =============================================================================
 # Enums and Type Definitions
@@ -290,6 +328,9 @@ class VerbType(str, Enum):
     SEARCH = "search"
     """Search for records matching specific query criteria"""
 
+    DOWNLOAD = "download"
+    """Download file content from a URL specified in the metadata response"""
+
 
 class BodyType(str, Enum):
     """
@@ -303,7 +344,9 @@ class BodyType(str, Enum):
 
 
 # Type alias for use in Pydantic models
-VerbTypeLiteral = Literal["get", "list", "create", "update", "delete", "search"]
+VerbTypeLiteral = Literal[
+    "get", "list", "create", "update", "delete", "search", "download"
+]
 
 
 # =============================================================================
@@ -340,6 +383,7 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_TOKEN_PATH,
         AIRBYTE_BODY_TYPE,
         AIRBYTE_PATH_OVERRIDE,
+        AIRBYTE_FILE_URL,
     ]
 
 
@@ -400,6 +444,12 @@ EXTENSION_REGISTRY = {
         "required": False,
         "validation": "strict",
         "description": "Override actual HTTP path when OpenAPI path differs from real endpoint (strongly-typed Pydantic model)",
+    },
+    AIRBYTE_FILE_URL: {
+        "location": "operation",
+        "type": "string",
+        "required": "conditional",  # Required when verb is 'download'
+        "description": "Field in metadata response containing download URL (required for download verb)",
     },
 }
 """

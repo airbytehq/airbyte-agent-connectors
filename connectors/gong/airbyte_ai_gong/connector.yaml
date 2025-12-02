@@ -135,6 +135,133 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v2/calls/extensive":
+    post:
+      summary: List calls with extensive data
+      description: Retrieve detailed call data including participants, interaction stats, and content
+      operationId: listCallsExtensive
+      x-airbyte-resource: calls_extensive
+      x-airbyte-verb: list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDateTime:
+                      type: string
+                      format: date-time
+                      description: Start date in ISO 8601 format
+                    toDateTime:
+                      type: string
+                      format: date-time
+                      description: End date in ISO 8601 format
+                    callIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of specific call IDs to retrieve
+                    workspaceId:
+                      type: string
+                      description: Filter by workspace ID
+                contentSelector:
+                  type: object
+                  description: Select which content to include in the response
+                  properties:
+                    context:
+                      type: string
+                      description: Context level for the data
+                      enum:
+                        - Extended
+                    contextTiming:
+                      type: array
+                      description: Context timing options
+                      items:
+                        type: string
+                        enum:
+                          - Now
+                          - TimeOfCall
+                    exposedFields:
+                      type: object
+                      description: Specify which fields to include in the response
+                      properties:
+                        collaboration:
+                          type: object
+                          properties:
+                            publicComments:
+                              type: boolean
+                              description: Include public comments
+                        content:
+                          type: object
+                          properties:
+                            pointsOfInterest:
+                              type: boolean
+                              description: Include points of interest (deprecated, use highlights)
+                            structure:
+                              type: boolean
+                              description: Include call structure
+                            topics:
+                              type: boolean
+                              description: Include topics discussed
+                            trackers:
+                              type: boolean
+                              description: Include trackers
+                            trackerOccurrences:
+                              type: boolean
+                              description: Include tracker occurrences
+                            brief:
+                              type: boolean
+                              description: Include call brief
+                            outline:
+                              type: boolean
+                              description: Include call outline
+                            highlights:
+                              type: boolean
+                              description: Include call highlights
+                            callOutcome:
+                              type: boolean
+                              description: Include call outcome
+                            keyPoints:
+                              type: boolean
+                              description: Include key points
+                        interaction:
+                          type: object
+                          properties:
+                            personInteractionStats:
+                              type: boolean
+                              description: Include person interaction statistics
+                            questions:
+                              type: boolean
+                              description: Include questions asked
+                            speakers:
+                              type: boolean
+                              description: Include speaker information
+                            video:
+                              type: boolean
+                              description: Include video interaction data
+                        media:
+                          type: boolean
+                          description: Include media URLs (audio/video)
+                        parties:
+                          type: boolean
+                          description: Include participant information
+                cursor:
+                  type: string
+                  description: Cursor for pagination
+      responses:
+        "200":
+          description: Detailed call data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensiveCallsResponse"
+        "401":
+          description: Unauthorized
+
   "/v2/workspaces":
     get:
       summary: List workspaces
@@ -195,12 +322,152 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v2/stats/activity/aggregate":
+    post:
+      summary: Retrieve aggregated activity statistics
+      description: Provides aggregated user activity metrics across a specified period
+      operationId: getActivityAggregate
+      x-airbyte-resource: stats_activity_aggregate
+      x-airbyte-verb: list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDate:
+                      type: string
+                      format: date
+                      description: Start date (YYYY-MM-DD)
+                    toDate:
+                      type: string
+                      format: date
+                      description: End date (YYYY-MM-DD)
+                    userIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of user IDs to retrieve stats for
+      responses:
+        "200":
+          description: Aggregated activity statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityAggregateResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/stats/activity/day-by-day":
+    post:
+      summary: Retrieve daily activity statistics
+      description: Delivers daily user activity metrics across a specified date range
+      operationId: getActivityDayByDay
+      x-airbyte-resource: stats_activity_day_by_day
+      x-airbyte-verb: list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDate:
+                      type: string
+                      format: date
+                      description: Start date (YYYY-MM-DD)
+                    toDate:
+                      type: string
+                      format: date
+                      description: End date (YYYY-MM-DD)
+                    userIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of user IDs to retrieve stats for
+      responses:
+        "200":
+          description: Daily activity statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ActivityDayByDayResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/stats/interaction":
+    post:
+      summary: Retrieve interaction statistics
+      description: Returns interaction stats for users based on calls that have Whisper turned on
+      operationId: getInteractionStats
+      x-airbyte-resource: stats_interaction
+      x-airbyte-verb: list
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDate:
+                      type: string
+                      format: date
+                      description: Start date (YYYY-MM-DD)
+                    toDate:
+                      type: string
+                      format: date
+                      description: End date (YYYY-MM-DD)
+                    userIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of user IDs to retrieve stats for
+      responses:
+        "200":
+          description: Interaction statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InteractionStatsResponse"
+        "401":
+          description: Unauthorized
+
 components:
   securitySchemes:
     basicAuth:
       type: http
       scheme: basic
       description: Basic authentication using Access Key as username and Access Key Secret as password
+      x-airbyte-auth-config:
+        title: "Access Key Authentication"
+        type: object
+        required:
+          - access_key
+          - access_key_secret
+        properties:
+          access_key:
+            type: string
+            title: "Access Key"
+            description: "Your Gong API Access Key"
+            airbyte_secret: true
+          access_key_secret:
+            type: string
+            title: "Access Key Secret"
+            description: "Your Gong API Access Key Secret"
+            airbyte_secret: true
+        auth_mapping:
+          username: "${access_key}"
+          password: "${access_key_secret}"
 
   schemas:
     PaginationRecords:
@@ -400,3 +667,385 @@ components:
         requestId:
           type: string
           description: Request identifier
+
+    ExtensiveCall:
+      type: object
+      x-airbyte-resource-name: calls_extensive
+      description: Detailed call object with extended information
+      properties:
+        metaData:
+          type: object
+          description: Call metadata
+          properties:
+            id:
+              type: string
+              description: Unique call identifier
+            url:
+              type: string
+              description: URL to call in Gong
+            title:
+              type: string
+              description: Call title
+            scheduled:
+              type: string
+              format: date-time
+              description: Scheduled time
+            started:
+              type: string
+              format: date-time
+              description: Call start time
+            duration:
+              type: integer
+              description: Call duration in seconds
+            primaryUserId:
+              type: string
+              description: Primary user ID
+            direction:
+              type: string
+              description: Call direction
+            system:
+              type: string
+              description: System type
+            scope:
+              type: string
+              description: Call scope
+            media:
+              type: string
+              description: Media type (Audio/Video)
+            language:
+              type: string
+              description: Call language
+            workspaceId:
+              type: string
+              description: Workspace ID
+            isPrivate:
+              type: boolean
+              description: Whether call is private
+            meetingUrl:
+              type: string
+              description: Meeting URL
+        parties:
+          type: array
+          description: Call participants
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Party ID
+              emailAddress:
+                type: string
+                description: Email address
+              name:
+                type: string
+                description: Full name
+              title:
+                type: string
+                description: Job title
+              userId:
+                type: string
+                description: Gong user ID if internal
+              speakerId:
+                type: string
+                description: Speaker ID for transcript matching
+              context:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      type: string
+                    objects:
+                      type: array
+                      items:
+                        type: object
+                affiliation:
+                  type: string
+                  description: Internal or External
+        interaction:
+          type: object
+          description: Interaction statistics
+          properties:
+            interactionStats:
+              type: array
+              items:
+                type: object
+                properties:
+                  speakerId:
+                    type: string
+                  talkTime:
+                    type: number
+            questions:
+              type: object
+              properties:
+                companyCount:
+                  type: integer
+                nonCompanyCount:
+                  type: integer
+        collaboration:
+          type: object
+          description: Collaboration data
+          properties:
+            publicComments:
+              type: array
+              items:
+                type: object
+        content:
+          type: object
+          description: Content data including topics and trackers
+          properties:
+            topics:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  duration:
+                    type: number
+            trackers:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  count:
+                    type: integer
+                  type:
+                    type: string
+                  occurrences:
+                    type: array
+                    items:
+                      type: object
+            pointsOfInterest:
+              type: object
+        media:
+          type: object
+          description: Media URLs
+          properties:
+            audioUrl:
+              type: string
+            videoUrl:
+              type: string
+
+    ExtensiveCallsResponse:
+      type: object
+      description: Response containing detailed call data
+      properties:
+        calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExtensiveCall"
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+        requestId:
+          type: string
+          description: Request identifier
+
+    UserAggregateActivityStats:
+      type: object
+      description: Aggregated activity statistics for a user
+      properties:
+        callsAsHost:
+          type: integer
+        callsGaveFeedback:
+          type: integer
+        callsRequestedFeedback:
+          type: integer
+        callsReceivedFeedback:
+          type: integer
+        ownCallsListenedTo:
+          type: integer
+        othersCallsListenedTo:
+          type: integer
+        callsSharedInternally:
+          type: integer
+        callsSharedExternally:
+          type: integer
+        callsScorecardsFilled:
+          type: integer
+        callsScorecardsReceived:
+          type: integer
+        callsAttended:
+          type: integer
+        callsCommentsGiven:
+          type: integer
+        callsCommentsReceived:
+          type: integer
+        callsMarkedAsFeedbackGiven:
+          type: integer
+        callsMarkedAsFeedbackReceived:
+          type: integer
+
+    UserAggregateActivity:
+      type: object
+      x-airbyte-resource-name: stats_activity_aggregate
+      description: User with aggregated activity statistics
+      properties:
+        userId:
+          type: string
+        userEmailAddress:
+          type: string
+        userAggregateActivityStats:
+          $ref: "#/components/schemas/UserAggregateActivityStats"
+
+    ActivityAggregateResponse:
+      type: object
+      description: Response containing aggregated activity statistics
+      properties:
+        requestId:
+          type: string
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+        usersAggregateActivityStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserAggregateActivity"
+        fromDateTime:
+          type: string
+        toDateTime:
+          type: string
+        timeZone:
+          type: string
+
+    DailyActivityStats:
+      type: object
+      description: Daily activity statistics with call IDs
+      properties:
+        callsAsHost:
+          type: array
+          items:
+            type: string
+        callsGaveFeedback:
+          type: array
+          items:
+            type: string
+        callsRequestedFeedback:
+          type: array
+          items:
+            type: string
+        callsReceivedFeedback:
+          type: array
+          items:
+            type: string
+        ownCallsListenedTo:
+          type: array
+          items:
+            type: string
+        othersCallsListenedTo:
+          type: array
+          items:
+            type: string
+        callsSharedInternally:
+          type: array
+          items:
+            type: string
+        callsSharedExternally:
+          type: array
+          items:
+            type: string
+        callsAttended:
+          type: array
+          items:
+            type: string
+        callsCommentsGiven:
+          type: array
+          items:
+            type: string
+        callsCommentsReceived:
+          type: array
+          items:
+            type: string
+        callsMarkedAsFeedbackGiven:
+          type: array
+          items:
+            type: string
+        callsMarkedAsFeedbackReceived:
+          type: array
+          items:
+            type: string
+        callsScorecardsFilled:
+          type: array
+          items:
+            type: string
+        callsScorecardsReceived:
+          type: array
+          items:
+            type: string
+        fromDate:
+          type: string
+        toDate:
+          type: string
+
+    UserDetailedActivity:
+      type: object
+      x-airbyte-resource-name: stats_activity_day_by_day
+      description: User with detailed daily activity statistics
+      properties:
+        userId:
+          type: string
+        userEmailAddress:
+          type: string
+        userDailyActivityStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyActivityStats"
+
+    ActivityDayByDayResponse:
+      type: object
+      description: Response containing daily activity statistics
+      properties:
+        requestId:
+          type: string
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+        usersDetailedActivities:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserDetailedActivity"
+
+    PersonInteractionStat:
+      type: object
+      description: Individual interaction statistic
+      properties:
+        name:
+          type: string
+        value:
+          type: number
+
+    UserInteractionStats:
+      type: object
+      x-airbyte-resource-name: stats_interaction
+      description: User with interaction statistics
+      properties:
+        userId:
+          type: string
+        userEmailAddress:
+          type: string
+        personInteractionStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/PersonInteractionStat"
+
+    InteractionStatsResponse:
+      type: object
+      description: Response containing interaction statistics
+      properties:
+        requestId:
+          type: string
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+        peopleInteractionStats:
+          type: array
+          items:
+            $ref: "#/components/schemas/UserInteractionStats"
+        fromDateTime:
+          type: string
+        toDateTime:
+          type: string
+        timeZone:
+          type: string
+
