@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-ai-gong"
-version = "0.5.0"
+version = "0.6.0"
 description = "Airbyte Gong Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -28,6 +28,9 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "segment-analytics-python>=2.2.0",
     "jsonref>=1.1.0",
+    "jinja2>=3.0.0",
+    "opentelemetry-api>=1.37.0",
+    "opentelemetry-sdk>=1.37.0",
 ]
 
 [project.urls]
