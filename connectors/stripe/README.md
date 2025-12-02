@@ -2,8 +2,10 @@
 
 Type-safe Stripe API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.1.15
+**Package Version:** 0.1.16
+
 **Connector Version:** 0.0.1
+
 **SDK Version:** 0.1.0
 
 ## Installation
