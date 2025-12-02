@@ -5,6 +5,15 @@ Generated from OpenAPI specification schemas.
 """
 from typing import TypedDict, NotRequired
 
+# ===== AUTH CONFIG TYPE DEFINITIONS =====
+
+class ZendeskSupportAuthConfig(TypedDict):
+    """Authentication"""
+    access_token: str  # OAuth2 access token
+    refresh_token: NotRequired[str]  # OAuth2 refresh token (optional)
+    client_id: NotRequired[str]  # OAuth2 client ID (optional)
+    client_secret: NotRequired[str]  # OAuth2 client secret (optional)
+
 # ===== RESPONSE TYPE DEFINITIONS =====
 
 class Article(TypedDict):
@@ -69,3 +78,14 @@ class ArticlesGetParams(TypedDict):
 class ArticleAttachmentsListParams(TypedDict):
     """Parameters for article_attachments.list operation"""
     article_id: str
+
+class ArticleAttachmentsGetParams(TypedDict):
+    """Parameters for article_attachments.get operation"""
+    article_id: str
+    attachment_id: str
+
+class ArticleAttachmentsDownloadParams(TypedDict):
+    """Parameters for article_attachments.download operation"""
+    article_id: str
+    attachment_id: str
+    range_header: NotRequired[str]

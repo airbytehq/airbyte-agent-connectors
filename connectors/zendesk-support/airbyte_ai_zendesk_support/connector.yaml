@@ -32,14 +32,22 @@ servers:
         description: Your Zendesk subdomain
 
 security:
-  - basicAuth: []
+  - zendeskOAuth: []
 
 components:
   securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
-      description: "Email and API token authentication. Username format: {email}/token, Password: {api_token}"
+    zendeskOAuth:
+      type: oauth2
+      description: Zendesk OAuth 2.0 authentication
+      flows:
+        authorizationCode:
+          authorizationUrl: https://{{subdomain}}.zendesk.com/oauth/authorizations/new
+          tokenUrl: https://{{subdomain}}.zendesk.com/oauth/tokens
+          refreshUrl: https://{{subdomain}}.zendesk.com/oauth/tokens
+          scopes:
+            read: Read access to all resources
+            write: Write access to all resources
+            read write: Read and write access to all resources
 
   schemas:
     Article:
@@ -291,3 +299,68 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ArticleAttachmentList"
+
+
+  /help_center/articles/{article_id}/attachments/{attachment_id}:
+    get:
+      summary: Retrieve attachment metadata
+      description: Retrieves the metadata of a specific attachment for a specific article
+      operationId: GetArticleAttachmentMetadata
+      x-airbyte-resource: article_attachments
+      x-airbyte-verb: get
+      tags:
+        - Article Attachments
+      parameters:
+        - name: article_id
+          in: path
+          required: true
+          description: The unique ID of the article
+          schema:
+            type: integer
+        - name: attachment_id
+          in: path
+          required: true
+          description: The unique ID of the attachment
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Article attachment metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArticleAttachment"
+
+  /help_center/articles/{article_id}/attachments/{attachment_id}/download:
+    get:
+      summary: Download attachment file
+      description: Downloads the file content of a specific attachment
+      operationId: DownloadArticleAttachment
+      x-airbyte-resource: article_attachments
+      x-airbyte-verb: download
+      x-airbyte-file-url: article_attachment.content_url
+      x-airbyte-path-override:
+        path: /help_center/articles/{article_id}/attachments/{attachment_id}
+      tags:
+        - Article Attachments
+      parameters:
+        - name: article_id
+          in: path
+          required: true
+          description: The unique ID of the article
+          schema:
+            type: integer
+        - name: attachment_id
+          in: path
+          required: true
+          description: The unique ID of the attachment
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Article attachment file content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary

@@ -6,7 +6,7 @@ Generated from OpenAPI specification.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Any, Dict, overload, Self
+from typing import TYPE_CHECKING, Optional, Any, Dict, AsyncIterator, overload, Self
 try:
     from typing import Literal
 except ImportError:
@@ -16,11 +16,16 @@ from pathlib import Path
 if TYPE_CHECKING:
     from ._vendored.connector_sdk.executor import ExecutorProtocol
     from .types import (
+        ArticleAttachment,
         ArticleAttachmentList,
+        ArticleAttachmentsDownloadParams,
+        ArticleAttachmentsGetParams,
         ArticleAttachmentsListParams,
         ArticleList,
         ArticlesGetParams,
         ArticlesListParams,
+        AsyncIterator,
+        ZendeskSupportAuthConfig,
     )
 
 
@@ -44,38 +49,52 @@ class ZendeskSupportConnector:
     @classmethod
     def create(
         cls,
-        secrets: Optional[dict[str, str]] = None,
+        auth_config: Optional[ZendeskSupportAuthConfig] = None,
         config_path: Optional[str] = None,
         connector_id: Optional[str] = None,
         airbyte_client_id: Optional[str] = None,
         airbyte_client_secret: Optional[str] = None,
         airbyte_connector_api_url: Optional[str] = None,
+        on_token_refresh: Optional[Any] = None,
         subdomain: Optional[str] = None    ) -> Self:
         """
         Create a new zendesk-support connector instance.
 
         Supports both local and hosted execution modes:
-        - Local mode: Provide `secrets` for direct API calls
+        - Local mode: Provide `auth_config` for direct API calls
         - Hosted mode: Provide `connector_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
 
         Args:
-            secrets: API secrets/credentials (required for local mode)
+            auth_config: Typed authentication configuration (required for local mode)
             config_path: Optional path to connector config (uses bundled default if None)
             connector_id: Connector ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
-            airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)            subdomain: Your Zendesk subdomain
+            airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            on_token_refresh: Optional callback for OAuth2 token refresh persistence.
+                Called with new_tokens dict when tokens are refreshed. Can be sync or async.
+                Example: lambda tokens: save_to_database(tokens)            subdomain: Your Zendesk subdomain
         Returns:
             Configured ZendeskSupportConnector instance
 
         Examples:
             # Local mode (direct API calls)
-            connector = ZendeskSupportConnector.create(secrets={"api_key": "sk_..."})
-
+            connector = ZendeskSupportConnector.create(auth_config={"api_key": "sk_..."})
             # Hosted mode (executed on Airbyte cloud)
             connector = ZendeskSupportConnector.create(
                 connector_id="connector-456",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789"
+            )
+
+            # Local mode with OAuth2 token refresh callback
+            def save_tokens(new_tokens: dict) -> None:
+                # Persist updated tokens to your storage (file, database, etc.)
+                with open("tokens.json", "w") as f:
+                    json.dump(new_tokens, f)
+
+            connector = ZendeskSupportConnector.create(
+                auth_config={"access_token": "...", "refresh_token": "..."},
+                on_token_refresh=save_tokens
             )
         """
         # Hosted mode: connector_id, airbyte_client_id, and airbyte_client_secret provided
@@ -89,11 +108,11 @@ class ZendeskSupportConnector:
             )
             return cls(executor)
 
-        # Local mode: secrets required
-        if not secrets:
+        # Local mode: auth_config required
+        if not auth_config:
             raise ValueError(
                 "Either provide (connector_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
-                "or secrets for local mode"
+                "or auth_config for local mode"
             )
 
         from ._vendored.connector_sdk.executor import LocalExecutor
@@ -101,7 +120,17 @@ class ZendeskSupportConnector:
         if not config_path:
             config_path = str(cls.get_default_config_path())
 
-        executor = LocalExecutor(config_path=config_path, secrets=secrets)
+        # Build config_values dict from server variables
+        config_values = {}
+        if subdomain:
+            config_values["subdomain"] = subdomain
+
+        executor = LocalExecutor(
+            config_path=config_path,
+            auth_config=auth_config,
+            config_values=config_values,
+            on_token_refresh=on_token_refresh
+        )
         connector = cls(executor)
 
         # Update base_url with server variables if provided
@@ -140,6 +169,20 @@ class ZendeskSupportConnector:
         verb: Literal["list"],
         params: "ArticleAttachmentsListParams"
     ) -> "ArticleAttachmentList": ...
+    @overload
+    async def execute(
+        self,
+        resource: Literal["article_attachments"],
+        verb: Literal["get"],
+        params: "ArticleAttachmentsGetParams"
+    ) -> "ArticleAttachment": ...
+    @overload
+    async def execute(
+        self,
+        resource: Literal["article_attachments"],
+        verb: Literal["download"],
+        params: "ArticleAttachmentsDownloadParams"
+    ) -> "AsyncIterator[bytes]": ...
 
     @overload
     async def execute(
@@ -286,3 +329,54 @@ class ArticleattachmentsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("article_attachments", "list", params)
+    async def get(
+        self,
+        article_id: str,
+        attachment_id: str,
+        **kwargs
+    ) -> "ArticleAttachment":
+        """
+        Retrieve attachment metadata
+
+        Args:
+            article_id: The unique ID of the article
+            attachment_id: The unique ID of the attachment
+            **kwargs: Additional parameters
+
+        Returns:
+            ArticleAttachment
+        """
+        params = {k: v for k, v in {
+            "article_id": article_id,
+            "attachment_id": attachment_id,
+            **kwargs
+        }.items() if v is not None}
+
+        return await self._connector.execute("article_attachments", "get", params)
+    async def download(
+        self,
+        article_id: str,
+        attachment_id: str,
+        range_header: Optional[str] = None,
+        **kwargs
+    ) -> "AsyncIterator[bytes]":
+        """
+        Download attachment file
+
+        Args:
+            article_id: The unique ID of the article
+            attachment_id: The unique ID of the attachment
+            range_header: Optional Range header for partial downloads (e.g., 'bytes=0-99')
+            **kwargs: Additional parameters
+
+        Returns:
+            AsyncIterator[bytes]
+        """
+        params = {k: v for k, v in {
+            "article_id": article_id,
+            "attachment_id": attachment_id,
+            "range_header": range_header,
+            **kwargs
+        }.items() if v is not None}
+
+        return await self._connector.execute("article_attachments", "download", params)

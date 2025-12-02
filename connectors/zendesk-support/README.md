@@ -16,7 +16,7 @@ uv pip install airbyte-ai-zendesk-support
 from airbyte_ai_zendesk_support import ZendeskSupportConnector
 
 # Create connector
-connector = ZendeskSupportConnector.create(secrets={"api_key": "your_api_key"})
+connector = ZendeskSupportConnector.create(auth_config={"api_key": "your_api_key"})
 
 # Use typed methods with full IDE autocomplete
 # (See Available Operations below for all methods)
@@ -30,6 +30,8 @@ connector = ZendeskSupportConnector.create(secrets={"api_key": "your_api_key"})
 
 ### Article_Attachments Operations
 - `list_article_attachments()` - List attachments for an article
+- `get_article_attachment_metadata()` - Retrieve attachment metadata
+- `download_article_attachment()` - Download attachment file
 
 ## Type Definitions
 

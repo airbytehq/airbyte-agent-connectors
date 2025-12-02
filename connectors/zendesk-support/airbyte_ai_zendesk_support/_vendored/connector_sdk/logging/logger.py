@@ -1,5 +1,6 @@
 """Request/response logging implementation."""
 
+import base64
 import json
 import time
 import uuid
@@ -149,6 +150,14 @@ class RequestLogger:
         request_data = self._active_requests.pop(request_id)
         timing_ms = (time.time() - request_data["start_time"]) * 1000
 
+        # Convert bytes to base64 for JSON serialization
+        serializable_body = response_body
+        if isinstance(response_body, bytes):
+            serializable_body = {
+                "_binary": True,
+                "_base64": base64.b64encode(response_body).decode("utf-8"),
+            }
+
         log_entry = RequestLog(
             method=request_data["method"],
             url=request_data["url"],
@@ -157,7 +166,7 @@ class RequestLogger:
             params=request_data["params"],
             body=request_data["body"],
             response_status=status_code,
-            response_body=response_body,
+            response_body=serializable_body,
             timing_ms=timing_ms,
         )
 
@@ -199,6 +208,14 @@ class RequestLogger:
         self.session.logs.append(log_entry)
         self._rotate_logs_if_needed()
 
+    def log_chunk_fetch(self, chunk: bytes) -> None:
+        """Log a chunk from streaming response.
+
+        Args:
+            chunk: Binary chunk data from streaming response
+        """
+        self.session.chunk_logs.append(chunk)
+
     def save(self) -> None:
         """Write the current session to the log file.
 
@@ -233,6 +250,10 @@ class NullLogger:
 
     def log_error(self, *args, **kwargs) -> None:
         """No-op log_error."""
+        pass
+
+    def log_chunk_fetch(self, chunk: bytes) -> None:
+        """No-op chunk logging for production."""
         pass
 
     def save(self) -> None:
