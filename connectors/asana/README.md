@@ -16,7 +16,7 @@ uv pip install airbyte-ai-asana
 from airbyte_ai_asana import AsanaConnector
 
 # Create connector
-connector = AsanaConnector.create(secrets={"api_key": "your_api_key"})
+connector = AsanaConnector.create(auth_config={"api_key": "your_api_key"})
 
 # Use typed methods with full IDE autocomplete
 # (See Available Operations below for all methods)

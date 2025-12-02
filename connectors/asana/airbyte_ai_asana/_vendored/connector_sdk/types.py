@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .constants import OPENAPI_DEFAULT_VERSION
 from .schema.components import PathOverrideConfig
+from .schema.security import AirbyteAuthConfig
 
 
 class Verb(str, Enum):
@@ -27,10 +28,10 @@ class AuthType(str, Enum):
     """Supported authentication types."""
 
     API_KEY = "api_key"
-    BEARER_TOKEN = "bearer_token"
     BEARER = "bearer"
     HTTP = "http"
     BASIC = "basic"
+    OAUTH2 = "oauth2"
 
 
 class ContentType(str, Enum):
@@ -59,6 +60,11 @@ class AuthConfig(BaseModel):
 
     type: AuthType
     config: dict[str, Any] = Field(default_factory=dict)
+    # User-facing config spec from x-airbyte-auth-config extension
+    user_config_spec: AirbyteAuthConfig | None = Field(
+        None,
+        description="User-facing authentication configuration spec from x-airbyte-auth-config",
+    )
 
 
 # Executor types (used by executor.py)
@@ -87,6 +93,12 @@ class EndpointDefinition(BaseModel):
     graphql_body: dict[str, Any] | None = Field(
         None,
         description="GraphQL body configuration from x-airbyte-body-type extension",
+    )
+
+    # Download support (Airbyte extension)
+    file_field: str | None = Field(
+        None,
+        description="Field in metadata response containing download URL (from x-airbyte-file-url extension)",
     )
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import httpx
+from opentelemetry import trace
 
 from .models import (
     ExecutionConfig,
@@ -111,39 +112,64 @@ class HostedExecutor:
             )
             result = await executor.execute(config)
         """
-        # Build API URL from instance api_url
-        url = f"{self.api_url}/connectors/{self.connector_id}/execute"
+        tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
-        # Build request body matching ExecutionRequest model
-        # Extract resource, verb, and params from config attributes
-        request_body = {
-            "resource": config.resource,
-            "verb": config.verb,
-            "params": config.params,
-        }
+        with tracer.start_as_current_span("hosted_executor.execute") as span:
+            # Add span attributes
+            span.set_attribute("connector.id", self.connector_id)
+            span.set_attribute("connector.resource", config.resource)
+            span.set_attribute("connector.verb", config.verb)
+            span.set_attribute("connector.api_url", self.api_url)
+            if config.params:
+                # Only add non-sensitive param keys
+                span.set_attribute("connector.param_keys", list(config.params.keys()))
 
-        try:
-            # Make synchronous HTTP request
-            # (wrapped in async method for protocol compatibility)
-            response = self.client.post(url, json=request_body)
+            # Build API URL from instance api_url
+            url = f"{self.api_url}/connectors/{self.connector_id}/execute"
+            span.set_attribute("http.url", url)
 
-            # Raise exception for 4xx/5xx status codes
-            response.raise_for_status()
+            # Build request body matching ExecutionRequest model
+            # Extract resource, verb, and params from config attributes
+            request_body = {
+                "resource": config.resource,
+                "verb": config.verb,
+                "params": config.params,
+            }
 
-            # Parse JSON response
-            result_data = response.json()
+            try:
+                # Make synchronous HTTP request
+                # (wrapped in async method for protocol compatibility)
+                response = self.client.post(url, json=request_body)
 
-            # Return success result
-            return ExecutionResult(success=True, data=result_data, error=None)
+                # Add response status code to span
+                span.set_attribute("http.status_code", response.status_code)
 
-        except httpx.HTTPStatusError:
-            # HTTP error (4xx, 5xx) - re-raise as infrastructure error
-            # Let the caller handle this
-            raise
+                # Raise exception for 4xx/5xx status codes
+                response.raise_for_status()
 
-        except httpx.RequestError:
-            # Network error (connection failed, timeout, etc.) - re-raise
-            raise
+                # Parse JSON response
+                result_data = response.json()
+
+                # Mark span as successful
+                span.set_attribute("connector.success", True)
+
+                # Return success result
+                return ExecutionResult(success=True, data=result_data, error=None)
+
+            except httpx.HTTPStatusError as e:
+                # HTTP error (4xx, 5xx) - record and re-raise
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", "HTTPStatusError")
+                span.set_attribute("http.status_code", e.response.status_code)
+                span.record_exception(e)
+                raise
+
+            except Exception as e:
+                # Catch-all for any other unexpected exceptions
+                span.set_attribute("connector.success", False)
+                span.set_attribute("connector.error_type", type(e).__name__)
+                span.record_exception(e)
+                raise
 
     def close(self):
         """Close the HTTP client.
