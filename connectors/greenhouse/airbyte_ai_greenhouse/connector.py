@@ -25,6 +25,7 @@ if TYPE_CHECKING:
         Job,
         JobsGetParams,
         JobsListParams,
+        GreenhouseAuthConfig,
     )
 
 
@@ -49,37 +50,51 @@ class GreenhouseConnector:
     @classmethod
     def create(
         cls,
-        secrets: Optional[dict[str, str]] = None,
+        auth_config: Optional[GreenhouseAuthConfig] = None,
         config_path: Optional[str] = None,
         connector_id: Optional[str] = None,
         airbyte_client_id: Optional[str] = None,
         airbyte_client_secret: Optional[str] = None,
-        airbyte_connector_api_url: Optional[str] = None    ) -> Self:
+        airbyte_connector_api_url: Optional[str] = None,
+        on_token_refresh: Optional[Any] = None    ) -> Self:
         """
         Create a new greenhouse connector instance.
 
         Supports both local and hosted execution modes:
-        - Local mode: Provide `secrets` for direct API calls
+        - Local mode: Provide `auth_config` for direct API calls
         - Hosted mode: Provide `connector_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
 
         Args:
-            secrets: API secrets/credentials (required for local mode)
+            auth_config: Typed authentication configuration (required for local mode)
             config_path: Optional path to connector config (uses bundled default if None)
             connector_id: Connector ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            on_token_refresh: Optional callback for OAuth2 token refresh persistence.
+                Called with new_tokens dict when tokens are refreshed. Can be sync or async.
+                Example: lambda tokens: save_to_database(tokens)
         Returns:
             Configured GreenhouseConnector instance
 
         Examples:
             # Local mode (direct API calls)
-            connector = GreenhouseConnector.create(secrets={"api_key": "sk_..."})
-
+            connector = GreenhouseConnector.create(auth_config={"api_key": "sk_..."})
             # Hosted mode (executed on Airbyte cloud)
             connector = GreenhouseConnector.create(
                 connector_id="connector-456",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789"
+            )
+
+            # Local mode with OAuth2 token refresh callback
+            def save_tokens(new_tokens: dict) -> None:
+                # Persist updated tokens to your storage (file, database, etc.)
+                with open("tokens.json", "w") as f:
+                    json.dump(new_tokens, f)
+
+            connector = GreenhouseConnector.create(
+                auth_config={"access_token": "...", "refresh_token": "..."},
+                on_token_refresh=save_tokens
             )
         """
         # Hosted mode: connector_id, airbyte_client_id, and airbyte_client_secret provided
@@ -93,11 +108,11 @@ class GreenhouseConnector:
             )
             return cls(executor)
 
-        # Local mode: secrets required
-        if not secrets:
+        # Local mode: auth_config required
+        if not auth_config:
             raise ValueError(
                 "Either provide (connector_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
-                "or secrets for local mode"
+                "or auth_config for local mode"
             )
 
         from ._vendored.connector_sdk.executor import LocalExecutor
@@ -105,7 +120,15 @@ class GreenhouseConnector:
         if not config_path:
             config_path = str(cls.get_default_config_path())
 
-        executor = LocalExecutor(config_path=config_path, secrets=secrets)
+        # Build config_values dict from server variables
+        config_values = None
+
+        executor = LocalExecutor(
+            config_path=config_path,
+            auth_config=auth_config,
+            config_values=config_values,
+            on_token_refresh=on_token_refresh
+        )
         connector = cls(executor)
 
         # Update base_url with server variables if provided

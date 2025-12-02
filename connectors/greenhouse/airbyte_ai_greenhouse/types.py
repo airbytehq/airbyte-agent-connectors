@@ -5,6 +5,12 @@ Generated from OpenAPI specification schemas.
 """
 from typing import TypedDict, NotRequired, Any
 
+# ===== AUTH CONFIG TYPE DEFINITIONS =====
+
+class GreenhouseAuthConfig(TypedDict):
+    """Harvest API Key Authentication"""
+    api_key: str  # Your Greenhouse Harvest API Key from the Dev Center
+
 # ===== RESPONSE TYPE DEFINITIONS =====
 
 class Candidate(TypedDict):

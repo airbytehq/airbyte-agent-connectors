@@ -245,6 +245,20 @@ components:
       type: http
       scheme: basic
       description: HTTP Basic authentication (API token as username, blank password)
+      x-airbyte-auth-config:
+        title: "Harvest API Key Authentication"
+        type: object
+        required:
+          - api_key
+        properties:
+          api_key:
+            type: string
+            title: "Harvest API Key"
+            description: "Your Greenhouse Harvest API Key from the Dev Center"
+            airbyte_secret: true
+        auth_mapping:
+          username: "${api_key}"
+          password: ""
 
   schemas:
     Candidate:

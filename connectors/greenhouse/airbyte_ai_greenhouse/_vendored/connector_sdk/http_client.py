@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import asyncio
 from collections import defaultdict
+from collections.abc import Awaitable, Callable
 from datetime import datetime
 from typing import Any
 
@@ -30,6 +32,14 @@ from .secrets import SecretStr
 from .auth_strategies import AuthStrategyFactory
 from .logging import NullLogger
 from .types import AuthConfig, AuthType
+
+# Type alias for token refresh callback
+# Supports both sync and async callbacks for flexibility
+TokenRefreshCallback = (
+    Callable[[dict[str, str]], None]
+    | Callable[[dict[str, str]], Awaitable[None]]
+    | None
+)
 
 
 class HTTPMetrics:
@@ -82,6 +92,7 @@ class HTTPClient:
         base_url: str,
         auth_config: AuthConfig,
         secrets: dict[str, SecretStr | str],
+        config_values: dict[str, str] | None = None,
         client: HTTPClientProtocol | None = None,
         logger: Any | None = None,
         max_connections: int = DEFAULT_MAX_CONNECTIONS,
@@ -89,6 +100,7 @@ class HTTPClient:
         timeout: float = DEFAULT_REQUEST_TIMEOUT,
         connect_timeout: float | None = None,
         read_timeout: float | None = None,
+        on_token_refresh: TokenRefreshCallback = None,
     ):
         """Initialize async HTTP client.
 
@@ -96,6 +108,8 @@ class HTTPClient:
             base_url: Base URL for API (e.g., https://api.stripe.com)
             auth_config: Authentication configuration from connector.yaml
             secrets: Secret credentials (SecretStr or plain str values)
+            config_values: Non-secret configuration values (e.g., {"subdomain": "mycompany"})
+                Used for server variables and template substitution in OAuth2 refresh URLs.
             client: Optional HTTPClientProtocol implementation. If None, creates HTTPXClient.
             logger: Optional RequestLogger instance for logging requests/responses
             max_connections: Maximum number of concurrent connections
@@ -103,12 +117,26 @@ class HTTPClient:
             timeout: Default timeout in seconds (used if connect/read not specified)
             connect_timeout: Connection timeout in seconds
             read_timeout: Read timeout in seconds
+            on_token_refresh: Optional callback for OAuth2 token refresh persistence.
+                Signature: (new_tokens: dict[str, str]) -> None (sync or async).
+                Called when tokens are refreshed. Use to persist updated tokens.
         """
         self.base_url = base_url.rstrip("/")
+        self.config_values = config_values or {}
+
+        # Substitute server variables in base_url (e.g., {subdomain} -> "mycompany")
+        for var_name, var_value in self.config_values.items():
+            self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
+
         self.auth_config = auth_config
         self.secrets = secrets
+        self.config_values = config_values or {}
         self.logger = logger or NullLogger()
         self.metrics = HTTPMetrics()
+        self.on_token_refresh: TokenRefreshCallback = on_token_refresh
+
+        # Auth error handling with refresh lock (for strategies that support refresh)
+        self._refresh_lock = asyncio.Lock()
 
         # Validate base URL
         if not base_url:
@@ -184,7 +212,7 @@ class HTTPClient:
                     "Missing required credential 'api_key' for API_KEY authentication"
                 )
 
-        elif self.auth_config.type in (AuthType.BEARER_TOKEN, AuthType.BEARER):
+        elif self.auth_config.type == AuthType.BEARER:
             token = self.secrets.get("token") or self.secrets.get("api_key")
             if not token:
                 raise AuthenticationError(
@@ -222,19 +250,23 @@ class HTTPClient:
         json: dict[str, Any] | None = None,
         data: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
-        """Make an async HTTP request.
+        *,
+        stream: bool = False,
+    ):
+        """Make an async HTTP request with optional streaming.
 
         Args:
             method: HTTP method (GET, POST, etc.)
-            path: API path (e.g., /v1/customers/cus_123)
+            path: API path or full URL
             params: Query parameters
             json: JSON body for POST/PUT
             data: Form-encoded body for POST/PUT (mutually exclusive with json)
             headers: Additional headers
+            stream: If True, do not eagerly read the body (useful for downloads)
 
         Returns:
-            Response JSON as dictionary
+            - If stream=False: Parsed JSON (dict) or empty dict
+            - If stream=True: Response object suitable for streaming
 
         Raises:
             HTTPStatusError: If request fails with 4xx/5xx status
@@ -244,8 +276,12 @@ class HTTPClient:
             NetworkError: If network error occurs
             HTTPClientError: For other client errors
         """
-        # Build full URL
-        url = f"{self.base_url}{path}"
+        # Check if path is a full URL (for CDN/external URLs)
+        url = (
+            path
+            if path.startswith(("http://", "https://"))
+            else f"{self.base_url}{path}"
+        )
 
         # Prepare headers with auth
         request_headers = headers or {}
@@ -275,9 +311,23 @@ class HTTPClient:
                 json=json,
                 data=data,
                 headers=request_headers,
+                stream=stream,
             )
 
             status_code = response.status_code
+
+            # Streaming path: return response without reading body
+            if stream:
+                success = True
+
+                # Log placeholder (without consuming stream)
+                # Actual chunks will be logged via log_chunk_fetch() during iteration
+                self.logger.log_response(
+                    request_id=request_id,
+                    status_code=status_code,
+                    response_body=f"<binary content, {response.headers.get('content-length', 'unknown')} bytes>",
+                )
+                return response
 
             # Parse response - handle non-JSON responses gracefully
             content_type = response.headers.get("content-type", "")
@@ -328,6 +378,69 @@ class HTTPClient:
         except AuthenticationError as e:
             # Auth error (401, 403) - already wrapped by adapter
             status_code = e.status_code if hasattr(e, "status_code") else 401
+
+            # Attempt to handle auth error (e.g., token refresh for OAuth2)
+            # Use lock to prevent concurrent refresh attempts
+            async with self._refresh_lock:
+                # Check if credentials were already refreshed by another
+                # concurrent request while we were waiting for the lock
+                current_token = self.secrets.get("access_token")
+
+                # Get the current auth strategy
+                strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
+
+                # Ask strategy to handle the error (returns new tokens or None)
+                try:
+                    new_tokens = await strategy.handle_auth_error(
+                        status_code=status_code,
+                        config=self.auth_config.config,
+                        secrets=self.secrets,
+                        config_values=self.config_values,
+                        http_client=self.client._client
+                        if hasattr(self.client, "_client")
+                        else None,
+                    )
+
+                    if new_tokens:
+                        # Notify callback if provided (for persistence)
+                        if self.on_token_refresh is not None:
+                            try:
+                                # Support both sync and async callbacks
+                                result = self.on_token_refresh(new_tokens)
+                                if hasattr(result, "__await__"):
+                                    await result
+                            except Exception as callback_error:
+                                # Log but don't fail the refresh if callback fails
+                                self.logger.log_error(
+                                    request_id=request_id,
+                                    error=f"Token refresh callback failed: {str(callback_error)}",
+                                    status_code=status_code,
+                                )
+
+                        # Update secrets with new tokens (in-memory)
+                        self.secrets.update(new_tokens)
+
+                        # Retry request if credentials changed
+                        if self.secrets.get("access_token") != current_token:
+                            return await self.request(
+                                method=method,
+                                path=path,
+                                params=params,
+                                json=json,
+                                data=data,
+                                headers=headers,
+                            )
+
+                except Exception as refresh_error:
+                    # Credential refresh failed, log and continue
+                    self.logger.log_error(
+                        request_id=request_id,
+                        error=f"Credential refresh failed: {str(refresh_error)}",
+                        status_code=status_code,
+                    )
+                    # Fall through to raise original auth error
+
+            # Log and raise the authentication error
             self.logger.log_error(
                 request_id=request_id,
                 error=str(e),

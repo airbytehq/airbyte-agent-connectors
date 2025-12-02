@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, AsyncIterator, Protocol, runtime_checkable
 
 from dotenv import load_dotenv
 
@@ -52,13 +52,22 @@ class ExecutionResult:
 
     Args:
         success: True if execution completed successfully, False if it failed
-        data: Response data from the execution (dict from API response)
+        data: Response data from the execution
+            - dict[str, Any] for standard operations (GET, LIST, CREATE, etc.)
+            - AsyncIterator[bytes] for download operations (streaming file content)
         error: Error message if success=False, None otherwise
 
-    Example (Success):
+    Example (Success - Standard):
         result = ExecutionResult(
             success=True,
             data={"customers": [...]},
+            error=None
+        )
+
+    Example (Success - Download):
+        result = ExecutionResult(
+            success=True,
+            data=async_iterator_of_bytes,
             error=None
         )
 
@@ -71,7 +80,7 @@ class ExecutionResult:
     """
 
     success: bool
-    data: dict[str, Any]
+    data: dict[str, Any] | AsyncIterator[bytes]
     error: str | None = None
 
 

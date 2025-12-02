@@ -1,14 +1,20 @@
 """Type definitions for request/response logging."""
 
+import base64
 from datetime import UTC, datetime
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, ConfigDict, Field, field_serializer
+from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
 
 def _utc_now() -> datetime:
     """Get current UTC datetime (timezone-aware)."""
     return datetime.now(UTC)
+
+
+def _encode_bytes(v: bytes) -> dict:
+    """Encode bytes as base64 for JSON serialization."""
+    return {"_binary": True, "_base64": base64.b64encode(v).decode("utf-8")}
 
 
 class RequestLog(BaseModel):
@@ -52,7 +58,36 @@ class LogSession(BaseModel):
         "When limit is reached, oldest logs should be flushed before removal. "
         "Set to None for unlimited (not recommended for production).",
     )
+    chunk_logs: List[bytes] = Field(
+        default_factory=list,
+        description="Captured chunks from streaming responses. "
+        "Each chunk is logged when log_chunk_fetch() is called.",
+    )
+
+    @field_validator("chunk_logs", mode="before")
+    @classmethod
+    def decode_chunk_logs(cls, v: Any) -> List[bytes]:
+        """Decode chunk_logs from JSON representation back to bytes."""
+        if v is None or v == []:
+            return []
+        if isinstance(v, list):
+            result = []
+            for item in v:
+                if isinstance(item, bytes):
+                    result.append(item)
+                elif isinstance(item, dict) and item.get("_binary"):
+                    # Decode from {"_binary": True, "_base64": "..."} format
+                    result.append(base64.b64decode(item["_base64"]))
+                else:
+                    result.append(item)
+            return result
+        return v
 
     @field_serializer("started_at")
     def serialize_datetime(self, value: datetime) -> str:
         return value.isoformat()
+
+    @field_serializer("chunk_logs")
+    def serialize_chunk_logs(self, value: List[bytes]) -> List[dict]:
+        """Serialize bytes chunks as base64 for JSON."""
+        return [_encode_bytes(chunk) for chunk in value]
