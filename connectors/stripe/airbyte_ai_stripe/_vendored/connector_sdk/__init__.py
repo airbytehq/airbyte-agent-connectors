@@ -36,6 +36,7 @@ from .exceptions import (
     NetworkError,
     TimeoutError,
 )
+from .utils import save_download
 
 __version__ = SDK_VERSION
 
@@ -76,4 +77,6 @@ __all__ = [
     # Performance monitoring
     "PerformanceMonitor",
     "instrument",
+    # Utilities
+    "save_download",
 ]

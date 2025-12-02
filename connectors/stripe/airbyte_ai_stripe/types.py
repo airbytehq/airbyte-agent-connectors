@@ -5,6 +5,12 @@ Generated from OpenAPI specification schemas.
 """
 from typing import TypedDict, NotRequired, Any
 
+# ===== AUTH CONFIG TYPE DEFINITIONS =====
+
+class StripeAuthConfig(TypedDict):
+    """Authentication"""
+    token: str  # Authentication bearer token
+
 # ===== RESPONSE TYPE DEFINITIONS =====
 
 class Customer(TypedDict):

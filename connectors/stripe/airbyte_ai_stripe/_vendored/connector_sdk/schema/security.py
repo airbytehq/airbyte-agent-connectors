@@ -6,7 +6,7 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
 """
 
-from typing import Optional, Dict, List, Literal
+from typing import Optional, Dict, List, Literal, Any
 from pydantic import BaseModel, Field, model_validator, ConfigDict
 
 
@@ -40,6 +40,97 @@ class OAuth2Flows(BaseModel):
     authorization_code: Optional[OAuth2Flow] = Field(None, alias="authorizationCode")
 
 
+class AuthConfigFieldSpec(BaseModel):
+    """
+    Specification for a user-facing authentication config field.
+
+    This defines a single input field that users provide for authentication.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    type: Literal["string", "integer", "boolean", "number"] = "string"
+    title: Optional[str] = None
+    description: Optional[str] = None
+    format: Optional[str] = None  # e.g., "email", "uri"
+    pattern: Optional[str] = None  # Regex validation
+    airbyte_secret: bool = Field(False, alias="airbyte_secret")
+    default: Optional[Any] = None
+
+
+class AuthConfigOption(BaseModel):
+    """
+    A single authentication configuration option.
+
+    Defines user-facing fields and how they map to auth parameters.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    title: Optional[str] = None
+    description: Optional[str] = None
+    type: Literal["object"] = "object"
+    required: List[str] = Field(default_factory=list)
+    properties: Dict[str, AuthConfigFieldSpec] = Field(default_factory=dict)
+    auth_mapping: Dict[str, str] = Field(
+        default_factory=dict,
+        description="Mapping from auth parameters (e.g., 'username', 'password', 'token') to template strings using ${field} syntax",
+    )
+
+
+class AirbyteAuthConfig(BaseModel):
+    """
+    Airbyte auth configuration extension (x-airbyte-auth-config).
+
+    Defines user-facing authentication configuration and how it maps to
+    the underlying OpenAPI security scheme.
+
+    Either a single auth option or multiple options via oneOf.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    # Single option fields
+    title: Optional[str] = None
+    description: Optional[str] = None
+    type: Optional[Literal["object"]] = None
+    required: Optional[List[str]] = None
+    properties: Optional[Dict[str, AuthConfigFieldSpec]] = None
+    auth_mapping: Optional[Dict[str, str]] = None
+
+    # Multiple options (oneOf)
+    one_of: Optional[List[AuthConfigOption]] = Field(None, alias="oneOf")
+
+    @model_validator(mode="after")
+    def validate_config_structure(self) -> "AirbyteAuthConfig":
+        """Validate that either single option or oneOf is provided, not both."""
+        has_single = (
+            self.type is not None
+            or self.properties is not None
+            or self.auth_mapping is not None
+        )
+        has_one_of = self.one_of is not None and len(self.one_of) > 0
+
+        if not has_single and not has_one_of:
+            raise ValueError(
+                "Either single auth option (type/properties/auth_mapping) or oneOf must be provided"
+            )
+
+        if has_single and has_one_of:
+            raise ValueError("Cannot have both single auth option and oneOf")
+
+        if has_single:
+            # Validate single option has required fields
+            if self.type != "object":
+                raise ValueError("Single auth option must have type='object'")
+            if not self.properties:
+                raise ValueError("Single auth option must have properties")
+            if not self.auth_mapping:
+                raise ValueError("Single auth option must have auth_mapping")
+
+        return self
+
+
 class SecurityScheme(BaseModel):
     """
     Security scheme definition.
@@ -53,13 +144,15 @@ class SecurityScheme(BaseModel):
 
     Extensions:
     - x-airbyte-token-path: JSON path to extract token from auth response (Airbyte extension)
+    - x-airbyte-token-refresh: OAuth2 token refresh configuration (dict with auth_style, body_format)
+    - x-airbyte-auth-config: User-facing authentication configuration (Airbyte extension)
 
     Future extensions (not yet active):
     - x-grant-type: OAuth grant type for refresh tokens
     - x-refresh-endpoint: Custom refresh endpoint URL
     """
 
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
     # Standard OpenAPI fields
     type: Literal["apiKey", "http", "oauth2", "openIdConnect"]
@@ -81,6 +174,12 @@ class SecurityScheme(BaseModel):
 
     # Airbyte extensions
     x_token_path: Optional[str] = Field(None, alias="x-airbyte-token-path")
+    x_token_refresh: Optional[Dict[str, Any]] = Field(
+        None, alias="x-airbyte-token-refresh"
+    )
+    x_airbyte_auth_config: Optional[AirbyteAuthConfig] = Field(
+        None, alias="x-airbyte-auth-config"
+    )
 
     # Future extensions (commented out, defined for future use)
     # x_grant_type: Optional[Literal["refresh_token", "client_credentials"]] = Field(None, alias="x-grant-type")

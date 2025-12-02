@@ -1,8 +1,7 @@
 openapi: 3.1.0
-# Test: yaml change should auto-bump 0.0.3 -> 0.0.4 and publish only stripe
 info:
   title: Stripe API Connector
-  version: 0.0.4
+  version: 0.0.1
   x-airbyte-connector-name: stripe
   x-airbyte-external-documentation-urls:
     - title: Stripe API Changelog documentation

@@ -26,6 +26,7 @@ from .types import (
 )
 from .schema import OpenAPIConnector
 from .schema.components import RequestBody, GraphQLBodyConfig
+from .schema.security import AirbyteAuthConfig, AuthConfigFieldSpec
 
 
 class ConfigLoaderError(Exception):
@@ -324,6 +325,9 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                     # Resolve all $refs in the response schema using jsonref
                     response_schema = resolve_schema_refs(schema, spec_dict)
 
+            # Extract file_field for download operations
+            file_field = getattr(operation, "x_airbyte_file_url", None)
+
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
@@ -337,6 +341,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 request_schema=request_schema,
                 response_schema=response_schema,
                 graphql_body=graphql_body,
+                file_field=file_field,
             )
 
             # Add to resources map
@@ -383,6 +388,205 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
     return config
 
 
+def _get_attribute_flexible(obj: Any, *names: str) -> Any:
+    """Get attribute from object, trying multiple name variants.
+
+    Supports both snake_case and camelCase attribute names.
+    Returns None if no variant is found.
+
+    Args:
+        obj: Object to get attribute from
+        *names: Attribute names to try in order
+
+    Returns:
+        Attribute value if found, None otherwise
+
+    Example:
+        # Try both "refresh_url" and "refreshUrl"
+        url = _get_attribute_flexible(flow, "refresh_url", "refreshUrl")
+    """
+    for name in names:
+        value = getattr(obj, name, None)
+        if value is not None:
+            return value
+    return None
+
+
+def _select_oauth2_flow(flows: Any) -> Any:
+    """Select the best OAuth2 flow from available flows.
+
+    Prefers authorizationCode (most secure for web apps), but falls back
+    to other flow types if not available.
+
+    Args:
+        flows: OAuth2 flows object from OpenAPI spec
+
+    Returns:
+        Selected flow object, or None if no flows available
+    """
+    # Priority order: authorizationCode > clientCredentials > password > implicit
+    flow_names = [
+        ("authorization_code", "authorizationCode"),  # Preferred
+        ("client_credentials", "clientCredentials"),  # Server-to-server
+        ("password", "password"),  # Resource owner
+        ("implicit", "implicit"),  # Legacy, less secure
+    ]
+
+    for snake_case, camel_case in flow_names:
+        flow = _get_attribute_flexible(flows, snake_case, camel_case)
+        if flow:
+            return flow
+
+    return None
+
+
+def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
+    """Parse OAuth2 authentication configuration from OpenAPI scheme.
+
+    Extracts configuration from standard OAuth2 flows and custom x-airbyte-token-refresh
+    extension for additional refresh behavior customization.
+
+    Args:
+        scheme: OAuth2 security scheme from OpenAPI spec
+
+    Returns:
+        Dictionary with OAuth2 configuration including:
+        - header: Authorization header name (default: "Authorization")
+        - prefix: Token prefix (default: "Bearer")
+        - refresh_url: Token refresh endpoint (from flows)
+        - auth_style: How to send credentials (from x-airbyte-token-refresh)
+        - body_format: Request encoding (from x-airbyte-token-refresh)
+    """
+    config: dict[str, str] = {
+        "header": "Authorization",
+        "prefix": "Bearer",
+    }
+
+    # Extract flow information for refresh_url
+    if scheme.flows:
+        flow = _select_oauth2_flow(scheme.flows)
+        if flow:
+            # Try to get refresh URL (supports both naming conventions)
+            refresh_url = _get_attribute_flexible(flow, "refresh_url", "refreshUrl")
+            if refresh_url:
+                config["refresh_url"] = refresh_url
+
+    # Extract custom refresh configuration from x-airbyte-token-refresh extension
+    x_token_refresh = getattr(scheme, "x_token_refresh", None)
+    if x_token_refresh:
+        auth_style = getattr(x_token_refresh, "auth_style", None)
+        if auth_style:
+            config["auth_style"] = auth_style
+
+        body_format = getattr(x_token_refresh, "body_format", None)
+        if body_format:
+            config["body_format"] = body_format
+
+    return config
+
+
+def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
+    """Generate default x-airbyte-auth-config for an auth type.
+
+    When x-airbyte-auth-config is not explicitly defined in the OpenAPI spec,
+    we generate a sensible default that maps user-friendly field names to
+    the auth scheme's parameters.
+
+    Args:
+        auth_type: The authentication type (BEARER, BASIC, API_KEY)
+
+    Returns:
+        Default auth config spec with properties and auth_mapping
+    """
+    if auth_type == AuthType.BEARER:
+        return AirbyteAuthConfig(
+            type="object",
+            required=["token"],
+            properties={
+                "token": AuthConfigFieldSpec(
+                    type="string",
+                    title="Bearer Token",
+                    description="Authentication bearer token",
+                )
+            },
+            auth_mapping={"token": "${token}"},
+        )
+    elif auth_type == AuthType.BASIC:
+        return AirbyteAuthConfig(
+            type="object",
+            required=["username", "password"],
+            properties={
+                "username": AuthConfigFieldSpec(
+                    type="string",
+                    title="Username",
+                    description="Authentication username",
+                ),
+                "password": AuthConfigFieldSpec(
+                    type="string",
+                    title="Password",
+                    description="Authentication password",
+                ),
+            },
+            auth_mapping={"username": "${username}", "password": "${password}"},
+        )
+    elif auth_type == AuthType.API_KEY:
+        return AirbyteAuthConfig(
+            type="object",
+            required=["api_key"],
+            properties={
+                "api_key": AuthConfigFieldSpec(
+                    type="string",
+                    title="API Key",
+                    description="API authentication key",
+                )
+            },
+            auth_mapping={"api_key": "${api_key}"},
+        )
+    elif auth_type == AuthType.OAUTH2:
+        # OAuth2: access_token is required, other fields are optional.
+        # The auth_mapping includes all fields, but apply_auth_mapping
+        # will skip mappings for fields not provided by the user.
+        return AirbyteAuthConfig(
+            type="object",
+            required=["access_token"],
+            properties={
+                "access_token": AuthConfigFieldSpec(
+                    type="string",
+                    title="Access Token",
+                    description="OAuth2 access token",
+                ),
+                "refresh_token": AuthConfigFieldSpec(
+                    type="string",
+                    title="Refresh Token",
+                    description="OAuth2 refresh token (optional)",
+                ),
+                "client_id": AuthConfigFieldSpec(
+                    type="string",
+                    title="Client ID",
+                    description="OAuth2 client ID (optional)",
+                ),
+                "client_secret": AuthConfigFieldSpec(
+                    type="string",
+                    title="Client Secret",
+                    description="OAuth2 client secret (optional)",
+                ),
+            },
+            auth_mapping={
+                "access_token": "${access_token}",
+                "refresh_token": "${refresh_token}",
+                "client_id": "${client_id}",
+                "client_secret": "${client_secret}",
+            },
+        )
+    else:
+        # Unknown auth type - return minimal config
+        return AirbyteAuthConfig(
+            type="object",
+            properties={},
+            auth_mapping={},
+        )
+
+
 def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
     """Parse authentication configuration from OpenAPI spec.
 
@@ -390,34 +594,63 @@ def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
         spec: OpenAPI connector specification
 
     Returns:
-        AuthConfig
+        AuthConfig with user_config_spec (explicit or generated default)
     """
     if not spec.components or not spec.components.security_schemes:
-        return AuthConfig(type=AuthType.API_KEY, config={})
+        default_config = _generate_default_auth_config(AuthType.API_KEY)
+        return AuthConfig(
+            type=AuthType.API_KEY,
+            config={},
+            user_config_spec=default_config,
+        )
 
     # Get the first security scheme
     scheme_name, scheme = next(iter(spec.components.security_schemes.items()))
 
+    # Extract x-airbyte-auth-config if present, otherwise generate default
+    auth_type = AuthType.API_KEY  # Default
+    auth_config = {}
+
     if scheme.type == "http":
         if scheme.scheme == "bearer":
-            return AuthConfig(
-                type=AuthType.BEARER,
-                config={"header": "Authorization", "prefix": "Bearer"},
-            )
+            auth_type = AuthType.BEARER
+            auth_config = {"header": "Authorization", "prefix": "Bearer"}
         elif scheme.scheme == "basic":
-            return AuthConfig(type=AuthType.BASIC, config={})
+            auth_type = AuthType.BASIC
+            auth_config = {}
 
     elif scheme.type == "apiKey":
+        auth_type = AuthType.API_KEY
+        auth_config = {
+            "header": scheme.name or "Authorization",
+            "in": scheme.in_ or "header",
+        }
+
+    elif scheme.type == "oauth2":
+        # Parse OAuth2 configuration
+        oauth2_config = _parse_oauth2_config(scheme)
+        # Use explicit x-airbyte-auth-config if present, otherwise generate default for OAuth2
+        if scheme.x_airbyte_auth_config:
+            auth_config_obj = scheme.x_airbyte_auth_config
+        else:
+            auth_config_obj = _generate_default_auth_config(AuthType.OAUTH2)
         return AuthConfig(
-            type=AuthType.API_KEY,
-            config={
-                "header": scheme.name or "Authorization",
-                "in": scheme.in_ or "header",
-            },
+            type=AuthType.OAUTH2,
+            config=oauth2_config,
+            user_config_spec=auth_config_obj,
         )
 
-    # Default fallback
-    return AuthConfig(type=AuthType.API_KEY, config={})
+    # Use explicit x-airbyte-auth-config if present, otherwise generate default
+    if scheme.x_airbyte_auth_config:
+        auth_config_obj = scheme.x_airbyte_auth_config
+    else:
+        auth_config_obj = _generate_default_auth_config(auth_type)
+
+    return AuthConfig(
+        type=auth_type,
+        config=auth_config,
+        user_config_spec=auth_config_obj,
+    )
 
 
 def load_connector_config(config_path: str | Path) -> ConnectorConfig:
