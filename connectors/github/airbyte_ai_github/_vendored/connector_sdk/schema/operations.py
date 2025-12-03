@@ -11,7 +11,7 @@ from pydantic import BaseModel, Field, ConfigDict, model_validator
 
 from .components import Parameter, RequestBody, Response, PathOverrideConfig
 from .security import SecurityRequirement
-from ..extensions import VerbTypeLiteral
+from ..extensions import ActionTypeLiteral
 
 
 class Operation(BaseModel):
@@ -21,8 +21,8 @@ class Operation(BaseModel):
     OpenAPI Reference: https://spec.openapis.org/oas/v3.1.0#operation-object
 
     Extensions:
-    - x-airbyte-resource: Resource name (Airbyte extension)
-    - x-airbyte-verb: Semantic verb (Airbyte extension)
+    - x-airbyte-entity: Entity name (Airbyte extension)
+    - x-airbyte-action: Semantic action (Airbyte extension)
     - x-airbyte-path-override: Path override (Airbyte extension)
 
     Future extensions (not yet active):
@@ -46,8 +46,8 @@ class Operation(BaseModel):
     servers: Optional[List[Any]] = None  # Can override root servers
 
     # Airbyte extensions
-    x_airbyte_resource: str = Field(..., alias="x-airbyte-resource")
-    x_airbyte_verb: VerbTypeLiteral = Field(..., alias="x-airbyte-verb")
+    x_airbyte_entity: str = Field(..., alias="x-airbyte-entity")
+    x_airbyte_action: ActionTypeLiteral = Field(..., alias="x-airbyte-action")
     x_airbyte_path_override: Optional[PathOverrideConfig] = Field(
         None,
         alias="x-airbyte-path-override",
@@ -63,30 +63,30 @@ class Operation(BaseModel):
     # x_pagination: Optional[PaginationConfig] = Field(None, alias="x-airbyte-pagination")
 
     @model_validator(mode="after")
-    def validate_download_verb_requirements(self) -> "Operation":
+    def validate_download_action_requirements(self) -> "Operation":
         """
         Validate download operation requirements.
 
         Rules:
-        - If x-airbyte-verb is "download":
+        - If x-airbyte-action is "download":
           - x-airbyte-file-url must be non-empty if provided
-        - If x-airbyte-verb is not "download":
+        - If x-airbyte-action is not "download":
           - x-airbyte-file-url must not be present
         """
-        verb = self.x_airbyte_verb
+        action = self.x_airbyte_action
         file_url = self.x_airbyte_file_url
 
-        if verb == "download":
+        if action == "download":
             # If file_url is provided, it must be non-empty
             if file_url is not None and not file_url.strip():
                 raise ValueError(
                     "x-airbyte-file-url must be non-empty when provided for download operations"
                 )
         else:
-            # Non-download verbs cannot have file_url
+            # Non-download actions cannot have file_url
             if file_url is not None:
                 raise ValueError(
-                    f"x-airbyte-file-url can only be used with x-airbyte-verb: download, but verb is '{verb}'"
+                    f"x-airbyte-file-url can only be used with x-airbyte-action: download, but action is '{action}'"
                 )
 
         return self

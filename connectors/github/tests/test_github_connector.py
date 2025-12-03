@@ -7,7 +7,7 @@ from airbyte_ai_github import GithubConnector
 
 def test_connector_creation():
     """Test creating GithubConnector instance with Authentication."""
-    connector = GithubConnector.create(auth_config={"access_token": "test_access_token", "refresh_token": "test_refresh_token", "client_id": "test_client_id", "client_secret": "test_client_secret"})
+    connector = GithubConnector(auth_config={"access_token": "test_access_token", "refresh_token": "test_refresh_token", "client_id": "test_client_id", "client_secret": "test_client_secret"})
     assert connector.connector_name == "github"
     assert connector.connector_version
 

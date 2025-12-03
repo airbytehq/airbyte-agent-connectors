@@ -41,7 +41,7 @@ components:
   schemas:
     Repository:
       type: object
-      x-airbyte-resource-name: repositories
+      x-airbyte-entity-name: repositories
       description: GitHub repository object
       properties:
         # Core identifiers
@@ -462,8 +462,8 @@ paths:
       summary: Get a repository
       description: Gets information about a specific GitHub repository using GraphQL
       operationId: Repositories_Get
-      x-airbyte-resource: repositories
-      x-airbyte-verb: get
+      x-airbyte-entity: repositories
+      x-airbyte-action: get
       x-airbyte-path-override:
         path: /graphql
       tags:
@@ -538,8 +538,8 @@ paths:
       summary: List repositories for a user
       description: Returns a list of repositories for the specified user using GraphQL
       operationId: Repositories_List
-      x-airbyte-resource: repositories
-      x-airbyte-verb: list
+      x-airbyte-entity: repositories
+      x-airbyte-action: list
       x-airbyte-path-override:
         path: /graphql
       tags:
@@ -632,8 +632,8 @@ paths:
         Search for GitHub repositories using GitHub's powerful search syntax.
         Examples: "language:python stars:>1000", "topic:machine-learning", "org:facebook is:public"
       operationId: Repositories_Search
-      x-airbyte-resource: repositories
-      x-airbyte-verb: search
+      x-airbyte-entity: repositories
+      x-airbyte-action: search
       x-airbyte-path-override:
         path: /graphql
       tags:

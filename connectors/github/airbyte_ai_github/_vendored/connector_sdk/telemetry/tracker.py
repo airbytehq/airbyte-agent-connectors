@@ -81,8 +81,8 @@ class SegmentTracker:
 
     def track_operation(
         self,
-        resource: str,
-        verb: str,
+        entity: str,
+        action: str,
         status_code: Optional[int],
         timing_ms: float,
         error_type: Optional[str] = None,
@@ -105,8 +105,8 @@ class SegmentTracker:
                 execution_context=self.session.execution_context,
                 public_ip=self.session.public_ip,
                 connector_name=self.session.connector_name,
-                resource=resource,
-                verb=verb,
+                entity=entity,
+                action=action,
                 status_code=status_code,
                 timing_ms=timing_ms,
                 error_type=error_type,
