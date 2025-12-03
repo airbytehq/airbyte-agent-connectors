@@ -2,7 +2,7 @@
 
 Type-safe Linear API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.8.0
+**Package Version:** 0.9.0
 
 **Connector Version:** 1.0.0
 
@@ -20,7 +20,7 @@ uv pip install airbyte-ai-linear
 from airbyte_ai_linear import LinearConnector
 
 # Create connector
-connector = LinearConnector.create(auth_config={"api_key": "your_api_key"})
+connector = LinearConnector(auth_config={"api_key": "your_api_key"})
 
 # Use typed methods with full IDE autocomplete
 # (See Available Operations below for all methods)

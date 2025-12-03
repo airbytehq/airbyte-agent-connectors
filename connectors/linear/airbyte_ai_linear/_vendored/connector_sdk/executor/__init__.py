@@ -5,8 +5,8 @@ from .models import (
     ExecutionResult,
     ExecutorProtocol,
     ExecutorError,
-    ResourceNotFoundError,
-    VerbNotSupportedError,
+    EntityNotFoundError,
+    ActionNotSupportedError,
     MissingParameterError,
     InvalidParameterError,
 )
@@ -24,8 +24,8 @@ __all__ = [
     "HostedExecutor",
     # Exceptions
     "ExecutorError",
-    "ResourceNotFoundError",
-    "VerbNotSupportedError",
+    "EntityNotFoundError",
+    "ActionNotSupportedError",
     "MissingParameterError",
     "InvalidParameterError",
 ]

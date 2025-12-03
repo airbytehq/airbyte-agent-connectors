@@ -52,8 +52,8 @@ paths:
       summary: List issues
       description: Returns a paginated list of issues via GraphQL with pagination support
       operationId: listIssues
-      x-airbyte-resource: issues
-      x-airbyte-verb: list
+      x-airbyte-entity: issues
+      x-airbyte-action: list
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -103,8 +103,8 @@ paths:
       summary: Get an issue
       description: Get a single issue by ID via GraphQL
       operationId: getIssue
-      x-airbyte-resource: issues
-      x-airbyte-verb: get
+      x-airbyte-entity: issues
+      x-airbyte-action: get
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -149,8 +149,8 @@ paths:
       summary: List projects
       description: Returns a paginated list of projects via GraphQL with pagination support
       operationId: listProjects
-      x-airbyte-resource: projects
-      x-airbyte-verb: list
+      x-airbyte-entity: projects
+      x-airbyte-action: list
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -200,8 +200,8 @@ paths:
       summary: Get a project
       description: Get a single project by ID via GraphQL
       operationId: getProject
-      x-airbyte-resource: projects
-      x-airbyte-verb: get
+      x-airbyte-entity: projects
+      x-airbyte-action: get
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -246,8 +246,8 @@ paths:
       summary: List teams
       description: Returns a list of teams via GraphQL with pagination support
       operationId: listTeams
-      x-airbyte-resource: teams
-      x-airbyte-verb: list
+      x-airbyte-entity: teams
+      x-airbyte-action: list
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -297,8 +297,8 @@ paths:
       summary: Get a team
       description: Get a single team by ID via GraphQL
       operationId: getTeam
-      x-airbyte-resource: teams
-      x-airbyte-verb: get
+      x-airbyte-entity: teams
+      x-airbyte-action: get
       x-airbyte-path-override:
         path: /graphql
       parameters:
@@ -349,7 +349,7 @@ components:
     # Issue Schemas
     Issue:
       type: object
-      x-airbyte-resource-name: issues
+      x-airbyte-entity-name: issues
       description: Linear issue object
       required:
         - id
@@ -436,7 +436,7 @@ components:
     # Project Schemas
     Project:
       type: object
-      x-airbyte-resource-name: projects
+      x-airbyte-entity-name: projects
       description: Linear project object
       required:
         - id
@@ -527,7 +527,7 @@ components:
     # Team Schemas
     Team:
       type: object
-      x-airbyte-resource-name: teams
+      x-airbyte-entity-name: teams
       description: Linear team object
       required:
         - id

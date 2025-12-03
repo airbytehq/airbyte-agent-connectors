@@ -23,8 +23,8 @@ class ExecutionConfig:
     the executor's constructor instead of being part of the execution config.
 
     Args:
-        resource: Resource name (e.g., "customers", "invoices")
-        verb: Operation verb (e.g., "list", "get", "create")
+        entity: Entity name (e.g., "customers", "invoices")
+        action: Operation action (e.g., "list", "get", "create")
         params: Optional parameters for the operation
             - For GET: {"id": "cus_123"}
             - For LIST: {"limit": 10}
@@ -32,14 +32,14 @@ class ExecutionConfig:
 
     Example:
         config = ExecutionConfig(
-            resource="customers",
-            verb="list",
+            entity="customers",
+            action="list",
             params={"limit": 10}
         )
     """
 
-    resource: str
-    verb: str
+    entity: str
+    action: str
     params: dict[str, Any] | None = field(default=None, kw_only=True)
 
 
@@ -75,7 +75,7 @@ class ExecutionResult:
         result = ExecutionResult(
             success=False,
             data={},
-            error="Resource 'invalid' not found"
+            error="Entity 'invalid' not found"
         )
     """
 
@@ -112,7 +112,7 @@ class ExecutorProtocol(Protocol):
         """Execute connector with given configuration.
 
         Args:
-            config: Configuration for execution (resource, verb, params)
+            config: Configuration for execution (entity, action, params)
 
         Returns:
             ExecutionResult with success status, data, and optional error message
@@ -121,7 +121,7 @@ class ExecutorProtocol(Protocol):
             Infrastructure exceptions (network errors, HTTP errors, auth failures)
             These are exceptional cases where the system cannot complete the request.
 
-            Execution errors (resource not found, invalid operation) are returned
+            Execution errors (entity not found, invalid operation) are returned
             in ExecutionResult.error instead of being raised.
         """
         ...
@@ -138,14 +138,14 @@ class ExecutorError(Exception):
     pass
 
 
-class ResourceNotFoundError(ExecutorError):
-    """Raised when a resource is not found in the connector."""
+class EntityNotFoundError(ExecutorError):
+    """Raised when an entity is not found in the connector."""
 
     pass
 
 
-class VerbNotSupportedError(ExecutorError):
-    """Raised when a verb is not supported for a resource."""
+class ActionNotSupportedError(ExecutorError):
+    """Raised when an action is not supported for an entity."""
 
     pass
 
