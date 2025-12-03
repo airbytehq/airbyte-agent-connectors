@@ -2,7 +2,7 @@
 
 Type-safe Asana API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.9.0
+**Package Version:** 0.10.0
 
 **Connector Version:** 1.0.0
 

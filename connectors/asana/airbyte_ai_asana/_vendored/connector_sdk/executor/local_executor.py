@@ -476,6 +476,9 @@ class LocalExecutor:
     ) -> str:
         """Extract download URL from metadata response using x-airbyte-file-url.
 
+        Supports both simple dot notation (e.g., "article.content_url") and array
+        indexing with bracket notation (e.g., "calls[0].media.audioUrl").
+
         Args:
             response: Metadata response containing file reference
             file_field: JSON path to file URL field (from x-airbyte-file-url)
@@ -487,24 +490,62 @@ class LocalExecutor:
         Raises:
             ExecutorError: If file field not found or invalid
         """
-        # Navigate nested path (e.g., "article_attachment.content_url")
+        # Navigate nested path (e.g., "article_attachment.content_url" or "calls[0].media.audioUrl")
         parts = file_field.split(".")
         current = response
 
         for i, part in enumerate(parts):
-            if not isinstance(current, dict):
-                raise ExecutorError(
-                    f"Cannot extract download URL for {entity}: "
-                    f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
-                )
+            # Check if part has array indexing (e.g., "calls[0]")
+            array_match = re.match(r"^(\w+)\[(\d+)\]$", part)
 
-            if part not in current:
-                raise ExecutorError(
-                    f"Cannot extract download URL for {entity}: "
-                    f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
-                )
+            if array_match:
+                field_name = array_match.group(1)
+                index = int(array_match.group(2))
 
-            current = current[part]
+                # Navigate to the field
+                if not isinstance(current, dict):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                    )
+
+                if field_name not in current:
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Field '{field_name}' not found in response. Available fields: {list(current.keys())}"
+                    )
+
+                # Get the array
+                array_value = current[field_name]
+                if not isinstance(array_value, list):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Expected list at '{field_name}', got {type(array_value).__name__}"
+                    )
+
+                # Check index bounds
+                if index >= len(array_value):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
+                    )
+
+                current = array_value[index]
+            else:
+                # Regular dict navigation
+                if not isinstance(current, dict):
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                    )
+
+                if part not in current:
+                    raise ExecutorError(
+                        f"Cannot extract download URL for {entity}: "
+                        f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
+                    )
+
+                current = current[part]
 
         if not isinstance(current, str):
             raise ExecutorError(
@@ -801,7 +842,7 @@ class _StandardOperationHandler:
         """Execute standard REST operation with full telemetry and error handling."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span("local_executor.execute_operation") as span:
+        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
             span.set_attribute("connector.entity", entity)
@@ -937,7 +978,7 @@ class _DownloadOperationHandler:
         """Execute download operation (one-step or two-step) with full telemetry."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span("local_executor.execute_operation") as span:
+        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
             span.set_attribute("connector.entity", entity)

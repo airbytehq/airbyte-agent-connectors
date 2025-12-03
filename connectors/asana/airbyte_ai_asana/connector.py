@@ -11,7 +11,10 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
 from pathlib import Path
+
+from ._vendored.connector_sdk import save_download
 
 if TYPE_CHECKING:
     from .types import (
@@ -68,6 +71,7 @@ class AsanaConnector:
             connector_id: Connector ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            airbyte_connector_api_url: Airbyte connector API URL (defaults to Airbyte Cloud API URL)
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
@@ -138,6 +142,7 @@ class AsanaConnector:
         return Path(__file__).parent / "connector.yaml"
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
     @overload
     async def execute(
         self,
@@ -145,6 +150,7 @@ class AsanaConnector:
         action: Literal["list"],
         params: "TasksListParams"
     ) -> "TasksList": ...
+
     @overload
     async def execute(
         self,
@@ -152,6 +158,7 @@ class AsanaConnector:
         action: Literal["get"],
         params: "TasksGetParams"
     ) -> "TaskResponse": ...
+
     @overload
     async def execute(
         self,
@@ -159,6 +166,7 @@ class AsanaConnector:
         action: Literal["list"],
         params: "ProjectsListParams"
     ) -> "ProjectsList": ...
+
     @overload
     async def execute(
         self,
@@ -166,6 +174,7 @@ class AsanaConnector:
         action: Literal["get"],
         params: "ProjectsGetParams"
     ) -> "ProjectResponse": ...
+
     @overload
     async def execute(
         self,
@@ -173,6 +182,7 @@ class AsanaConnector:
         action: Literal["list"],
         params: "WorkspacesListParams"
     ) -> "WorkspacesList": ...
+
     @overload
     async def execute(
         self,
@@ -180,6 +190,7 @@ class AsanaConnector:
         action: Literal["get"],
         params: "WorkspacesGetParams"
     ) -> "WorkspaceResponse": ...
+
     @overload
     async def execute(
         self,
@@ -187,6 +198,7 @@ class AsanaConnector:
         action: Literal["list"],
         params: "UsersListParams"
     ) -> "UsersList": ...
+
     @overload
     async def execute(
         self,
@@ -194,6 +206,7 @@ class AsanaConnector:
         action: Literal["get"],
         params: "UsersGetParams"
     ) -> "UserResponse": ...
+
 
     @overload
     async def execute(
@@ -265,7 +278,7 @@ class TasksQuery:
         limit: int | None = None,
         offset: str | None = None,
         **kwargs
-    ) -> "TasksList":
+    ) -> TasksList:
         """
         List tasks from a project
 
@@ -286,11 +299,14 @@ class TasksQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("tasks", "list", params)
+
+
+
     async def get(
         self,
         task_gid: str,
         **kwargs
-    ) -> "TaskResponse":
+    ) -> TaskResponse:
         """
         Get a task
 
@@ -307,6 +323,9 @@ class TasksQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("tasks", "get", params)
+
+
+
 class ProjectsQuery:
     """
     Query class for Projects entity operations.
@@ -322,7 +341,7 @@ class ProjectsQuery:
         offset: str | None = None,
         workspace: str | None = None,
         **kwargs
-    ) -> "ProjectsList":
+    ) -> ProjectsList:
         """
         List projects
 
@@ -343,11 +362,14 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("projects", "list", params)
+
+
+
     async def get(
         self,
         project_gid: str,
         **kwargs
-    ) -> "ProjectResponse":
+    ) -> ProjectResponse:
         """
         Get a project
 
@@ -364,6 +386,9 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("projects", "get", params)
+
+
+
 class WorkspacesQuery:
     """
     Query class for Workspaces entity operations.
@@ -378,7 +403,7 @@ class WorkspacesQuery:
         limit: int | None = None,
         offset: str | None = None,
         **kwargs
-    ) -> "WorkspacesList":
+    ) -> WorkspacesList:
         """
         List workspaces
 
@@ -397,11 +422,14 @@ class WorkspacesQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("workspaces", "list", params)
+
+
+
     async def get(
         self,
         workspace_gid: str,
         **kwargs
-    ) -> "WorkspaceResponse":
+    ) -> WorkspaceResponse:
         """
         Get a workspace
 
@@ -418,6 +446,9 @@ class WorkspacesQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("workspaces", "get", params)
+
+
+
 class UsersQuery:
     """
     Query class for Users entity operations.
@@ -433,7 +464,7 @@ class UsersQuery:
         offset: str | None = None,
         workspace: str | None = None,
         **kwargs
-    ) -> "UsersList":
+    ) -> UsersList:
         """
         List users
 
@@ -454,11 +485,14 @@ class UsersQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("users", "list", params)
+
+
+
     async def get(
         self,
         user_gid: str,
         **kwargs
-    ) -> "UserResponse":
+    ) -> UserResponse:
         """
         Get a user
 
@@ -475,3 +509,5 @@ class UsersQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("users", "get", params)
+
+
