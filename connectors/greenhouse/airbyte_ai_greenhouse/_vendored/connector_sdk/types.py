@@ -11,8 +11,8 @@ from .schema.components import PathOverrideConfig
 from .schema.security import AirbyteAuthConfig
 
 
-class Verb(str, Enum):
-    """Supported verbs for Resource operations."""
+class Action(str, Enum):
+    """Supported actions for Entity operations."""
 
     GET = "get"
     CREATE = "create"
@@ -80,7 +80,7 @@ class EndpointDefinition(BaseModel):
             "When set, overrides the path for actual HTTP requests."
         ),
     )
-    verb: Verb | None = None  # Semantic verb (get, list, create, update, delete)
+    action: Action | None = None  # Semantic action (get, list, create, update, delete)
     description: str | None = None
     body_fields: list[str] = Field(default_factory=list)  # For POST/PUT
     query_params: list[str] = Field(default_factory=list)  # For GET
@@ -102,15 +102,15 @@ class EndpointDefinition(BaseModel):
     )
 
 
-class ResourceDefinition(BaseModel):
-    """Definition of an API resource."""
+class EntityDefinition(BaseModel):
+    """Definition of an API entity."""
 
     model_config = {"populate_by_name": True}
 
     name: str
-    verbs: list[Verb]
-    endpoints: dict[Verb, EndpointDefinition]
-    resource_schema: dict[str, Any] | None = Field(default=None, alias="schema")
+    actions: list[Action]
+    endpoints: dict[Action, EndpointDefinition]
+    entity_schema: dict[str, Any] | None = Field(default=None, alias="schema")
 
 
 class ConnectorConfig(BaseModel):
@@ -122,5 +122,5 @@ class ConnectorConfig(BaseModel):
     version: str = OPENAPI_DEFAULT_VERSION
     base_url: str
     auth: AuthConfig
-    resources: list[ResourceDefinition]
+    entities: list[EntityDefinition]
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector

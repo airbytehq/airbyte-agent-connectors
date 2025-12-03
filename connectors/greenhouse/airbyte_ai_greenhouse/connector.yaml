@@ -26,8 +26,8 @@ paths:
       summary: List candidates
       description: Returns a paginated list of all candidates in the organization
       operationId: listCandidates
-      x-airbyte-resource: candidates
-      x-airbyte-verb: list
+      x-airbyte-entity: candidates
+      x-airbyte-action: list
       parameters:
         - name: per_page
           in: query
@@ -63,8 +63,8 @@ paths:
       summary: Get a candidate
       description: Get a single candidate by ID
       operationId: getCandidate
-      x-airbyte-resource: candidates
-      x-airbyte-verb: get
+      x-airbyte-entity: candidates
+      x-airbyte-action: get
       parameters:
         - name: id
           in: path
@@ -89,8 +89,8 @@ paths:
       summary: List applications
       description: Returns a paginated list of all applications
       operationId: listApplications
-      x-airbyte-resource: applications
-      x-airbyte-verb: list
+      x-airbyte-entity: applications
+      x-airbyte-action: list
       parameters:
         - name: per_page
           in: query
@@ -155,8 +155,8 @@ paths:
       summary: Get an application
       description: Get a single application by ID
       operationId: getApplication
-      x-airbyte-resource: applications
-      x-airbyte-verb: get
+      x-airbyte-entity: applications
+      x-airbyte-action: get
       parameters:
         - name: id
           in: path
@@ -181,8 +181,8 @@ paths:
       summary: List jobs
       description: Returns a paginated list of all jobs in the organization
       operationId: listJobs
-      x-airbyte-resource: jobs
-      x-airbyte-verb: list
+      x-airbyte-entity: jobs
+      x-airbyte-action: list
       parameters:
         - name: per_page
           in: query
@@ -218,8 +218,8 @@ paths:
       summary: Get a job
       description: Get a single job by ID
       operationId: getJob
-      x-airbyte-resource: jobs
-      x-airbyte-verb: get
+      x-airbyte-entity: jobs
+      x-airbyte-action: get
       parameters:
         - name: id
           in: path
@@ -263,7 +263,7 @@ components:
   schemas:
     Candidate:
       type: object
-      x-airbyte-resource-name: candidates
+      x-airbyte-entity-name: candidates
       description: Greenhouse candidate object
       properties:
         id:
@@ -354,7 +354,7 @@ components:
 
     Application:
       type: object
-      x-airbyte-resource-name: applications
+      x-airbyte-entity-name: applications
       description: Greenhouse application object
       properties:
         id:
@@ -432,7 +432,7 @@ components:
 
     Job:
       type: object
-      x-airbyte-resource-name: jobs
+      x-airbyte-entity-name: jobs
       description: Greenhouse job object
       properties:
         id:

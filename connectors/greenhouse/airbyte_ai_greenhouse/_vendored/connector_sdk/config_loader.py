@@ -21,8 +21,8 @@ from .types import (
     ConnectorConfig,
     ContentType,
     EndpointDefinition,
-    ResourceDefinition,
-    Verb,
+    EntityDefinition,
+    Action,
 )
 from .schema import OpenAPIConnector
 from .schema.components import RequestBody, GraphQLBodyConfig
@@ -47,8 +47,8 @@ class InvalidOpenAPIError(ConfigLoaderError):
     pass
 
 
-class DuplicateResourceError(ConfigLoaderError):
-    """Raised when duplicate resource names are detected."""
+class DuplicateEntityError(ConfigLoaderError):
+    """Raised when duplicate entity names are detected."""
 
     pass
 
@@ -233,7 +233,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         spec: OpenAPI connector specification (fully validated)
 
     Returns:
-        ConnectorConfig with resources and endpoints
+        ConnectorConfig with entities and endpoints
     """
     # Convert spec to dict for jsonref resolution
     spec_dict = spec.model_dump(by_alias=True, exclude_none=True)
@@ -250,8 +250,8 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
     # Parse authentication
     auth_config = _parse_auth_from_openapi(spec)
 
-    # Group operations by resource
-    resources_map: dict[str, dict[str, EndpointDefinition]] = {}
+    # Group operations by entity
+    entities_map: dict[str, dict[str, EndpointDefinition]] = {}
 
     for path, path_item in spec.paths.items():
         # Check each HTTP method
@@ -260,32 +260,32 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
             if not operation:
                 continue
 
-            # Extract resource and verb from x-resource and x-verb
-            resource_name = operation.x_airbyte_resource
-            verb_name = operation.x_airbyte_verb
+            # Extract entity and action from x-airbyte-entity and x-airbyte-action
+            entity_name = operation.x_airbyte_entity
+            action_name = operation.x_airbyte_action
             path_override = operation.x_airbyte_path_override
 
-            if not resource_name:
+            if not entity_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-resource in operation {method_name.upper()} {path}. "
-                    f"All operations must specify a resource."
+                    f"Missing required x-airbyte-entity in operation {method_name.upper()} {path}. "
+                    f"All operations must specify an entity."
                 )
 
-            if not verb_name:
+            if not action_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-verb in operation {method_name.upper()} {path}. "
-                    f"All operations must specify a verb."
+                    f"Missing required x-airbyte-action in operation {method_name.upper()} {path}. "
+                    f"All operations must specify an action."
                 )
 
-            # Convert to Verb enum
+            # Convert to Action enum
             try:
-                verb = Verb(verb_name)
+                action = Action(action_name)
             except ValueError:
-                # Provide clear error for invalid verbs
-                valid_verbs = ", ".join([v.value for v in Verb])
+                # Provide clear error for invalid actions
+                valid_actions = ", ".join([a.value for a in Action])
                 raise InvalidOpenAPIError(
-                    f"Invalid verb '{verb_name}' in operation {method_name.upper()} {path}. "
-                    f"Valid verbs are: {valid_verbs}"
+                    f"Invalid action '{action_name}' in operation {method_name.upper()} {path}. "
+                    f"Valid actions are: {valid_actions}"
                 )
 
             # Determine content type
@@ -344,36 +344,36 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 file_field=file_field,
             )
 
-            # Add to resources map
-            if resource_name not in resources_map:
-                resources_map[resource_name] = {}
-            resources_map[resource_name][verb] = endpoint
+            # Add to entities map
+            if entity_name not in entities_map:
+                entities_map[entity_name] = {}
+            entities_map[entity_name][action] = endpoint
 
-    # Note: No need to check for duplicate resource names - the dict structure
+    # Note: No need to check for duplicate entity names - the dict structure
     # automatically ensures uniqueness. If the OpenAPI spec contains duplicate
     # operationIds, only the last one will be kept.
 
-    # Convert resources map to ResourceDefinition list
-    resources = []
-    for resource_name, endpoints_dict in resources_map.items():
-        verbs = list(endpoints_dict.keys())
+    # Convert entities map to EntityDefinition list
+    entities = []
+    for entity_name, endpoints_dict in entities_map.items():
+        actions = list(endpoints_dict.keys())
 
         # Get schema from components if available
         schema = None
         if spec.components:
-            # Look for a schema matching the resource name
+            # Look for a schema matching the entity name
             for schema_name, schema_def in spec.components.schemas.items():
                 if (
-                    schema_def.x_airbyte_resource_name == resource_name
-                    or schema_name.lower() == resource_name.lower()
+                    schema_def.x_airbyte_entity_name == entity_name
+                    or schema_name.lower() == entity_name.lower()
                 ):
                     schema = schema_def.model_dump(by_alias=True)
                     break
 
-        resource = ResourceDefinition(
-            name=resource_name, verbs=verbs, endpoints=endpoints_dict, schema=schema
+        entity = EntityDefinition(
+            name=entity_name, actions=actions, endpoints=endpoints_dict, schema=schema
         )
-        resources.append(resource)
+        entities.append(entity)
 
     # Create ConnectorConfig
     config = ConnectorConfig(
@@ -381,7 +381,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         version=version,
         base_url=base_url,
         auth=auth_config,
-        resources=resources,
+        entities=entities,
         openapi_spec=spec,
     )
 
@@ -700,14 +700,14 @@ def load_connector_config(config_path: str | Path) -> ConnectorConfig:
     # Parse auth config
     auth_config = raw_config.get("auth", {})
 
-    # Parse resources
-    resources = []
-    for resource_data in raw_config.get("resources", []):
-        # Parse endpoints for each verb
+    # Parse entities
+    entities = []
+    for entity_data in raw_config.get("entities", []):
+        # Parse endpoints for each action
         endpoints_dict = {}
-        for verb_str in resource_data.get("verbs", []):
-            verb = Verb(verb_str)
-            endpoint_data = resource_data["endpoints"].get(verb_str)
+        for action_str in entity_data.get("actions", []):
+            action = Action(action_str)
+            endpoint_data = entity_data["endpoints"].get(action_str)
 
             if endpoint_data:
                 # Extract path parameters from the path template
@@ -722,15 +722,15 @@ def load_connector_config(config_path: str | Path) -> ConnectorConfig:
                     path_params=path_params,
                     graphql_body=None,  # GraphQL only supported in OpenAPI format (via x-airbyte-body-type)
                 )
-                endpoints_dict[verb] = endpoint
+                endpoints_dict[action] = endpoint
 
-        resource = ResourceDefinition(
-            name=resource_data["name"],
-            verbs=[Verb(v) for v in resource_data["verbs"]],
+        entity = EntityDefinition(
+            name=entity_data["name"],
+            actions=[Action(a) for a in entity_data["actions"]],
             endpoints=endpoints_dict,
-            schema=resource_data.get("schema"),
+            schema=entity_data.get("schema"),
         )
-        resources.append(resource)
+        entities.append(entity)
 
     # Build ConnectorConfig
     config = ConnectorConfig(
@@ -738,7 +738,7 @@ def load_connector_config(config_path: str | Path) -> ConnectorConfig:
         version=connector_meta.get("version", OPENAPI_DEFAULT_VERSION),
         base_url=raw_config.get("base_url", connector_meta.get("base_url", "")),
         auth=auth_config,
-        resources=resources,
+        entities=entities,
     )
 
     return config

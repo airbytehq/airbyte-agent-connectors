@@ -6,7 +6,7 @@ Generated from OpenAPI specification.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Optional, Any, Dict, overload, Self
+from typing import TYPE_CHECKING, Any, overload
 try:
     from typing import Literal
 except ImportError:
@@ -14,7 +14,6 @@ except ImportError:
 from pathlib import Path
 
 if TYPE_CHECKING:
-    from ._vendored.connector_sdk.executor import ExecutorProtocol
     from .types import (
         Application,
         ApplicationsGetParams,
@@ -40,25 +39,17 @@ class GreenhouseConnector:
     connector_version = "1.0.0"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    def __init__(self, executor: ExecutorProtocol):
-        """Initialize connector with an executor."""
-        self._executor = executor
-        self.candidates = CandidatesQuery(self)
-        self.applications = ApplicationsQuery(self)
-        self.jobs = JobsQuery(self)
-
-    @classmethod
-    def create(
-        cls,
-        auth_config: Optional[GreenhouseAuthConfig] = None,
-        config_path: Optional[str] = None,
-        connector_id: Optional[str] = None,
-        airbyte_client_id: Optional[str] = None,
-        airbyte_client_secret: Optional[str] = None,
-        airbyte_connector_api_url: Optional[str] = None,
-        on_token_refresh: Optional[Any] = None    ) -> Self:
+    def __init__(
+        self,
+        auth_config: GreenhouseAuthConfig | None = None,
+        config_path: str | None = None,
+        connector_id: str | None = None,
+        airbyte_client_id: str | None = None,
+        airbyte_client_secret: str | None = None,
+        airbyte_connector_api_url: str | None = None,
+        on_token_refresh: Any | None = None    ):
         """
-        Create a new greenhouse connector instance.
+        Initialize a new greenhouse connector instance.
 
         Supports both local and hosted execution modes:
         - Local mode: Provide `auth_config` for direct API calls
@@ -73,14 +64,11 @@ class GreenhouseConnector:
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
-        Returns:
-            Configured GreenhouseConnector instance
-
         Examples:
             # Local mode (direct API calls)
-            connector = GreenhouseConnector.create(auth_config={"api_key": "sk_..."})
+            connector = GreenhouseConnector(auth_config={"api_key": "sk_..."})
             # Hosted mode (executed on Airbyte cloud)
-            connector = GreenhouseConnector.create(
+            connector = GreenhouseConnector(
                 connector_id="connector-456",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789"
@@ -92,7 +80,7 @@ class GreenhouseConnector:
                 with open("tokens.json", "w") as f:
                     json.dump(new_tokens, f)
 
-            connector = GreenhouseConnector.create(
+            connector = GreenhouseConnector(
                 auth_config={"access_token": "...", "refresh_token": "..."},
                 on_token_refresh=save_tokens
             )
@@ -100,40 +88,41 @@ class GreenhouseConnector:
         # Hosted mode: connector_id, airbyte_client_id, and airbyte_client_secret provided
         if connector_id and airbyte_client_id and airbyte_client_secret:
             from ._vendored.connector_sdk.executor import HostedExecutor
-            executor = HostedExecutor(
+            self._executor = HostedExecutor(
                 connector_id=connector_id,
                 airbyte_client_id=airbyte_client_id,
                 airbyte_client_secret=airbyte_client_secret,
                 api_url=airbyte_connector_api_url,
             )
-            return cls(executor)
+        else:
+            # Local mode: auth_config required
+            if not auth_config:
+                raise ValueError(
+                    "Either provide (connector_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
+                    "or auth_config for local mode"
+                )
 
-        # Local mode: auth_config required
-        if not auth_config:
-            raise ValueError(
-                "Either provide (connector_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
-                "or auth_config for local mode"
+            from ._vendored.connector_sdk.executor import LocalExecutor
+
+            if not config_path:
+                config_path = str(self.get_default_config_path())
+
+            # Build config_values dict from server variables
+            config_values = None
+
+            self._executor = LocalExecutor(
+                config_path=config_path,
+                auth_config=auth_config,
+                config_values=config_values,
+                on_token_refresh=on_token_refresh
             )
 
-        from ._vendored.connector_sdk.executor import LocalExecutor
+            # Update base_url with server variables if provided
 
-        if not config_path:
-            config_path = str(cls.get_default_config_path())
-
-        # Build config_values dict from server variables
-        config_values = None
-
-        executor = LocalExecutor(
-            config_path=config_path,
-            auth_config=auth_config,
-            config_values=config_values,
-            on_token_refresh=on_token_refresh
-        )
-        connector = cls(executor)
-
-        # Update base_url with server variables if provided
-
-        return connector
+        # Initialize entity query objects
+        self.candidates = CandidatesQuery(self)
+        self.applications = ApplicationsQuery(self)
+        self.jobs = JobsQuery(self)
 
     @classmethod
     def get_default_config_path(cls) -> Path:
@@ -144,80 +133,80 @@ class GreenhouseConnector:
     @overload
     async def execute(
         self,
-        resource: Literal["candidates"],
-        verb: Literal["list"],
+        entity: Literal["candidates"],
+        action: Literal["list"],
         params: "CandidatesListParams"
     ) -> "dict[str, Any]": ...
     @overload
     async def execute(
         self,
-        resource: Literal["candidates"],
-        verb: Literal["get"],
+        entity: Literal["candidates"],
+        action: Literal["get"],
         params: "CandidatesGetParams"
     ) -> "Candidate": ...
     @overload
     async def execute(
         self,
-        resource: Literal["applications"],
-        verb: Literal["list"],
+        entity: Literal["applications"],
+        action: Literal["list"],
         params: "ApplicationsListParams"
     ) -> "dict[str, Any]": ...
     @overload
     async def execute(
         self,
-        resource: Literal["applications"],
-        verb: Literal["get"],
+        entity: Literal["applications"],
+        action: Literal["get"],
         params: "ApplicationsGetParams"
     ) -> "Application": ...
     @overload
     async def execute(
         self,
-        resource: Literal["jobs"],
-        verb: Literal["list"],
+        entity: Literal["jobs"],
+        action: Literal["list"],
         params: "JobsListParams"
     ) -> "dict[str, Any]": ...
     @overload
     async def execute(
         self,
-        resource: Literal["jobs"],
-        verb: Literal["get"],
+        entity: Literal["jobs"],
+        action: Literal["get"],
         params: "JobsGetParams"
     ) -> "Job": ...
 
     @overload
     async def execute(
         self,
-        resource: str,
-        verb: str,
-        params: Dict[str, Any]
-    ) -> Dict[str, Any]: ...
+        entity: str,
+        action: str,
+        params: dict[str, Any]
+    ) -> dict[str, Any]: ...
 
     async def execute(
         self,
-        resource: str,
-        verb: str,
-        params: Optional[Dict[str, Any]] = None
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None
     ) -> Any:
         """
-        Execute a resource operation with full type safety.
+        Execute an entity operation with full type safety.
 
         This is the recommended interface for blessed connectors as it:
         - Uses the same signature as non-blessed connectors
-        - Provides full IDE autocomplete for resource/verb/params
+        - Provides full IDE autocomplete for entity/action/params
         - Makes migration from generic to blessed connectors seamless
 
         Args:
-            resource: Resource name (e.g., "customers")
-            verb: Operation verb (e.g., "create", "get", "list")
-            params: Operation parameters (typed based on resource+verb)
+            entity: Entity name (e.g., "customers")
+            action: Operation action (e.g., "create", "get", "list")
+            params: Operation parameters (typed based on entity+action)
 
         Returns:
             Typed response based on the operation
 
         Example:
             customer = await connector.execute(
-                resource="customers",
-                verb="get",
+                entity="customers",
+                action="get",
                 params={"id": "cus_123"}
             )
         """
@@ -225,8 +214,8 @@ class GreenhouseConnector:
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
-            resource=resource,
-            verb=verb,
+            entity=entity,
+            action=action,
             params=params
         )
 
@@ -241,7 +230,7 @@ class GreenhouseConnector:
 
 class CandidatesQuery:
     """
-    Query class for Candidates resource operations.
+    Query class for Candidates entity operations.
     """
 
     def __init__(self, connector: GreenhouseConnector):
@@ -250,8 +239,8 @@ class CandidatesQuery:
 
     async def list(
         self,
-        per_page: Optional[int] = None,
-        page: Optional[int] = None,
+        per_page: int | None = None,
+        page: int | None = None,
         **kwargs
     ) -> "dict[str, Any]":
         """
@@ -274,7 +263,7 @@ class CandidatesQuery:
         return await self._connector.execute("candidates", "list", params)
     async def get(
         self,
-        id: Optional[str] = None,
+        id: str | None = None,
         **kwargs
     ) -> "Candidate":
         """
@@ -295,7 +284,7 @@ class CandidatesQuery:
         return await self._connector.execute("candidates", "get", params)
 class ApplicationsQuery:
     """
-    Query class for Applications resource operations.
+    Query class for Applications entity operations.
     """
 
     def __init__(self, connector: GreenhouseConnector):
@@ -304,13 +293,13 @@ class ApplicationsQuery:
 
     async def list(
         self,
-        per_page: Optional[int] = None,
-        page: Optional[int] = None,
-        created_before: Optional[str] = None,
-        created_after: Optional[str] = None,
-        last_activity_after: Optional[str] = None,
-        job_id: Optional[int] = None,
-        status: Optional[str] = None,
+        per_page: int | None = None,
+        page: int | None = None,
+        created_before: str | None = None,
+        created_after: str | None = None,
+        last_activity_after: str | None = None,
+        job_id: int | None = None,
+        status: str | None = None,
         **kwargs
     ) -> "dict[str, Any]":
         """
@@ -343,7 +332,7 @@ class ApplicationsQuery:
         return await self._connector.execute("applications", "list", params)
     async def get(
         self,
-        id: Optional[str] = None,
+        id: str | None = None,
         **kwargs
     ) -> "Application":
         """
@@ -364,7 +353,7 @@ class ApplicationsQuery:
         return await self._connector.execute("applications", "get", params)
 class JobsQuery:
     """
-    Query class for Jobs resource operations.
+    Query class for Jobs entity operations.
     """
 
     def __init__(self, connector: GreenhouseConnector):
@@ -373,8 +362,8 @@ class JobsQuery:
 
     async def list(
         self,
-        per_page: Optional[int] = None,
-        page: Optional[int] = None,
+        per_page: int | None = None,
+        page: int | None = None,
         **kwargs
     ) -> "dict[str, Any]":
         """
@@ -397,7 +386,7 @@ class JobsQuery:
         return await self._connector.execute("jobs", "list", params)
     async def get(
         self,
-        id: Optional[str] = None,
+        id: str | None = None,
         **kwargs
     ) -> "Job":
         """

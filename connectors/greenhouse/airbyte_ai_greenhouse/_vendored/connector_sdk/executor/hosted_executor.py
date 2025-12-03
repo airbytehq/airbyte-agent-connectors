@@ -32,8 +32,8 @@ class HostedExecutor:
         )
 
         config = ExecutionConfig(
-            resource="customers",
-            verb="list"
+            entity="customers",
+            action="list"
         )
 
         result = await executor.execute(config)
@@ -96,7 +96,7 @@ class HostedExecutor:
         OAuth authentication and the configuration in the request body.
 
         Args:
-            config: Execution configuration (resource, verb, params)
+            config: Execution configuration (entity, action, params)
 
         Returns:
             ExecutionResult with success/failure status
@@ -107,8 +107,8 @@ class HostedExecutor:
 
         Example:
             config = ExecutionConfig(
-                resource="customers",
-                verb="list"
+                entity="customers",
+                action="list"
             )
             result = await executor.execute(config)
         """
@@ -117,8 +117,8 @@ class HostedExecutor:
         with tracer.start_as_current_span("hosted_executor.execute") as span:
             # Add span attributes
             span.set_attribute("connector.id", self.connector_id)
-            span.set_attribute("connector.resource", config.resource)
-            span.set_attribute("connector.verb", config.verb)
+            span.set_attribute("connector.entity", config.entity)
+            span.set_attribute("connector.action", config.action)
             span.set_attribute("connector.api_url", self.api_url)
             if config.params:
                 # Only add non-sensitive param keys
@@ -129,10 +129,10 @@ class HostedExecutor:
             span.set_attribute("http.url", url)
 
             # Build request body matching ExecutionRequest model
-            # Extract resource, verb, and params from config attributes
+            # Extract entity, action, and params from config attributes
             request_body = {
-                "resource": config.resource,
-                "verb": config.verb,
+                "entity": config.entity,
+                "action": config.action,
                 "params": config.params,
             }
 

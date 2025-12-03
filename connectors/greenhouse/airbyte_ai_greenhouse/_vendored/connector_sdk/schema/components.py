@@ -67,9 +67,7 @@ class Schema(BaseModel):
     deprecated: Optional[bool] = None
 
     # Airbyte extension
-    x_airbyte_resource_name: Optional[str] = Field(
-        None, alias="x-airbyte-resource-name"
-    )
+    x_airbyte_entity_name: Optional[str] = Field(None, alias="x-airbyte-entity-name")
 
 
 class Parameter(BaseModel):
