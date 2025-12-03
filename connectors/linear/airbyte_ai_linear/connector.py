@@ -11,7 +11,10 @@ try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
 from pathlib import Path
+
+from ._vendored.connector_sdk import save_download
 
 if TYPE_CHECKING:
     from .types import (
@@ -64,6 +67,7 @@ class LinearConnector:
             connector_id: Connector ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            airbyte_connector_api_url: Airbyte connector API URL (defaults to Airbyte Cloud API URL)
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
@@ -133,6 +137,7 @@ class LinearConnector:
         return Path(__file__).parent / "connector.yaml"
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
     @overload
     async def execute(
         self,
@@ -140,6 +145,7 @@ class LinearConnector:
         action: Literal["list"],
         params: "IssuesListParams"
     ) -> "IssuesListResponse": ...
+
     @overload
     async def execute(
         self,
@@ -147,6 +153,7 @@ class LinearConnector:
         action: Literal["get"],
         params: "IssuesGetParams"
     ) -> "IssueResponse": ...
+
     @overload
     async def execute(
         self,
@@ -154,6 +161,7 @@ class LinearConnector:
         action: Literal["list"],
         params: "ProjectsListParams"
     ) -> "ProjectsListResponse": ...
+
     @overload
     async def execute(
         self,
@@ -161,6 +169,7 @@ class LinearConnector:
         action: Literal["get"],
         params: "ProjectsGetParams"
     ) -> "ProjectResponse": ...
+
     @overload
     async def execute(
         self,
@@ -168,6 +177,7 @@ class LinearConnector:
         action: Literal["list"],
         params: "TeamsListParams"
     ) -> "TeamsListResponse": ...
+
     @overload
     async def execute(
         self,
@@ -175,6 +185,7 @@ class LinearConnector:
         action: Literal["get"],
         params: "TeamsGetParams"
     ) -> "TeamResponse": ...
+
 
     @overload
     async def execute(
@@ -245,7 +256,7 @@ class IssuesQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> "IssuesListResponse":
+    ) -> IssuesListResponse:
         """
         List issues
 
@@ -264,11 +275,14 @@ class IssuesQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("issues", "list", params)
+
+
+
     async def get(
         self,
         id: str | None = None,
         **kwargs
-    ) -> "IssueResponse":
+    ) -> IssueResponse:
         """
         Get an issue
 
@@ -285,6 +299,9 @@ class IssuesQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("issues", "get", params)
+
+
+
 class ProjectsQuery:
     """
     Query class for Projects entity operations.
@@ -299,7 +316,7 @@ class ProjectsQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> "ProjectsListResponse":
+    ) -> ProjectsListResponse:
         """
         List projects
 
@@ -318,11 +335,14 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("projects", "list", params)
+
+
+
     async def get(
         self,
         id: str | None = None,
         **kwargs
-    ) -> "ProjectResponse":
+    ) -> ProjectResponse:
         """
         Get a project
 
@@ -339,6 +359,9 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("projects", "get", params)
+
+
+
 class TeamsQuery:
     """
     Query class for Teams entity operations.
@@ -353,7 +376,7 @@ class TeamsQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> "TeamsListResponse":
+    ) -> TeamsListResponse:
         """
         List teams
 
@@ -372,11 +395,14 @@ class TeamsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("teams", "list", params)
+
+
+
     async def get(
         self,
         id: str | None = None,
         **kwargs
-    ) -> "TeamResponse":
+    ) -> TeamResponse:
         """
         Get a team
 
@@ -393,3 +419,5 @@ class TeamsQuery:
         }.items() if v is not None}
 
         return await self._connector.execute("teams", "get", params)
+
+
