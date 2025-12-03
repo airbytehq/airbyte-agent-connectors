@@ -82,12 +82,12 @@ class OpenAPIConnector(BaseModel):
             )
         return v
 
-    def get_resource_operations(self, resource_name: str) -> list[tuple[str, str, Any]]:
+    def get_entity_operations(self, entity_name: str) -> list[tuple[str, str, Any]]:
         """
-        Get all operations for a specific resource.
+        Get all operations for a specific entity.
 
         Args:
-            resource_name: The x-resource value to filter by
+            entity_name: The x-airbyte-entity value to filter by
 
         Returns:
             List of tuples: (path, method, operation)
@@ -105,18 +105,18 @@ class OpenAPIConnector(BaseModel):
                 "trace",
             ]:
                 operation = getattr(path_item, method, None)
-                if operation and operation.x_airbyte_resource == resource_name:
+                if operation and operation.x_airbyte_entity == entity_name:
                     results.append((path, method, operation))
         return results
 
-    def list_resources(self) -> list[str]:
+    def list_entities(self) -> list[str]:
         """
-        List all unique resource names defined in x-resource extensions.
+        List all unique entity names defined in x-airbyte-entity extensions.
 
         Returns:
-            Sorted list of unique resource names
+            Sorted list of unique entity names
         """
-        resources = set()
+        entities = set()
         for path_item in self.paths.values():
             for method in [
                 "get",
@@ -129,6 +129,6 @@ class OpenAPIConnector(BaseModel):
                 "trace",
             ]:
                 operation = getattr(path_item, method, None)
-                if operation and operation.x_airbyte_resource:
-                    resources.add(operation.x_airbyte_resource)
-        return sorted(resources)
+                if operation and operation.x_airbyte_entity:
+                    entities.add(operation.x_airbyte_entity)
+        return sorted(entities)

@@ -9,8 +9,8 @@ from typing import Any, Dict, Optional
 class OperationMetadata:
     """Shared operation metadata."""
 
-    resource: str
-    verb: str
+    entity: str
+    action: str
     timestamp: datetime
     timing_ms: Optional[float] = None
     status_code: Optional[int] = None

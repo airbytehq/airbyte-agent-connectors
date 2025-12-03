@@ -38,8 +38,8 @@ class OperationEvent(BaseEvent):
     """API operation event."""
 
     connector_name: str
-    resource: str
-    verb: str
+    entity: str
+    action: str
     timing_ms: float
     public_ip: Optional[str] = None
     status_code: Optional[int] = None
