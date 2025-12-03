@@ -2,7 +2,7 @@
 
 Type-safe Github API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.7.0
+**Package Version:** 0.8.0
 
 **Connector Version:** 1.0.0
 
@@ -20,7 +20,7 @@ uv pip install airbyte-ai-github
 from airbyte_ai_github import GithubConnector
 
 # Create connector
-connector = GithubConnector.create(auth_config={"api_key": "your_api_key"})
+connector = GithubConnector(auth_config={"api_key": "your_api_key"})
 
 # Use typed methods with full IDE autocomplete
 # (See Available Operations below for all methods)

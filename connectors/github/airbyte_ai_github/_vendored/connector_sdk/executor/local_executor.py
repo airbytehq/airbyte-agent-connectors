@@ -23,14 +23,14 @@ from ..logging import NullLogger, RequestLogger
 from ..observability import ObservabilitySession
 from ..auth_template import apply_auth_mapping
 from ..telemetry import SegmentTracker
-from ..types import ConnectorConfig, ResourceDefinition, Verb
+from ..types import ConnectorConfig, EntityDefinition, Action
 
 from .models import (
     ExecutionConfig,
     ExecutionResult,
     ExecutorError,
-    ResourceNotFoundError,
-    VerbNotSupportedError,
+    EntityNotFoundError,
+    ActionNotSupportedError,
     MissingParameterError,
     InvalidParameterError,
 )
@@ -45,7 +45,7 @@ class _OperationContext:
         self.tracker = executor.tracker
         self.session = executor.session
         self.logger = executor.logger
-        self.resource_index = executor._resource_index
+        self.entity_index = executor._entity_index
         self.operation_index = executor._operation_index
         # Bind helper methods
         self.build_path = executor._build_path
@@ -59,14 +59,14 @@ class _OperationContext:
 class _OperationHandler(Protocol):
     """Protocol for operation handlers."""
 
-    def can_handle(self, verb: Verb) -> bool:
-        """Check if this handler can handle the given verb."""
+    def can_handle(self, action: Action) -> bool:
+        """Check if this handler can handle the given action."""
         ...
 
     async def execute_operation(
         self,
-        resource: str,
-        verb: Verb,
+        entity: str,
+        action: Action,
         params: dict[str, Any],
     ) -> dict[str, Any] | AsyncIterator[bytes]:
         """Execute the operation and return result."""
@@ -74,10 +74,10 @@ class _OperationHandler(Protocol):
 
 
 class LocalExecutor:
-    """Async executor for Resource×Verb operations with direct HTTP execution.
+    """Async executor for Entity×Action operations with direct HTTP execution.
 
     This is the "local mode" executor that makes direct HTTP calls to external APIs.
-    It performs local resource/verb lookups, validation, and request building.
+    It performs local entity/action lookups, validation, and request building.
 
     Implements ExecutorProtocol.
     """
@@ -182,17 +182,17 @@ class LocalExecutor:
         )
 
         # Build O(1) lookup indexes
-        self._resource_index: dict[str, ResourceDefinition] = {
-            resource.name: resource for resource in self.config.resources
+        self._entity_index: dict[str, EntityDefinition] = {
+            entity.name: entity for entity in self.config.entities
         }
 
-        # Build O(1) operation index: (resource, verb) -> endpoint
-        self._operation_index: dict[tuple[str, Verb], Any] = {}
-        for resource in self.config.resources:
-            for verb in resource.verbs:
-                endpoint = resource.endpoints.get(verb)
+        # Build O(1) operation index: (entity, action) -> endpoint
+        self._operation_index: dict[tuple[str, Action], Any] = {}
+        for entity in self.config.entities:
+            for action in entity.actions:
+                endpoint = entity.endpoints.get(action)
                 if endpoint:
-                    self._operation_index[(resource.name, verb)] = endpoint
+                    self._operation_index[(entity.name, action)] = endpoint
 
         # Register operation handlers (order matters for can_handle priority)
         op_context = _OperationContext(self)
@@ -267,15 +267,15 @@ class LocalExecutor:
         """Execute connector operation using handler pattern.
 
         Args:
-            config: Execution configuration (resource, verb, params)
+            config: Execution configuration (entity, action, params)
 
         Returns:
             ExecutionResult with success/failure status and data
 
         Example:
             config = ExecutionConfig(
-                resource="customers",
-                verb="list",
+                entity="customers",
+                action="list",
                 params={"limit": 10}
             )
             result = await executor.execute(config)
@@ -284,18 +284,24 @@ class LocalExecutor:
         """
         try:
             # Convert config to internal format
-            verb = Verb(config.verb) if isinstance(config.verb, str) else config.verb
+            action = (
+                Action(config.action)
+                if isinstance(config.action, str)
+                else config.action
+            )
             params = config.params or {}
 
             # Dispatch to handler (handlers handle telemetry internally)
             handler = next(
-                (h for h in self._operation_handlers if h.can_handle(verb)), None
+                (h for h in self._operation_handlers if h.can_handle(action)), None
             )
             if not handler:
-                raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
+                raise ExecutorError(
+                    f"No handler registered for action '{action.value}'."
+                )
 
             # Execute handler
-            result = handler.execute_operation(config.resource, verb, params)
+            result = handler.execute_operation(config.entity, action, params)
 
             # Handle AsyncIterator (download) vs dict (standard)
             if inspect.isasyncgen(result):
@@ -307,8 +313,8 @@ class LocalExecutor:
             return ExecutionResult(success=True, data=response_data, error=None)
 
         except (
-            ResourceNotFoundError,
-            VerbNotSupportedError,
+            EntityNotFoundError,
+            ActionNotSupportedError,
             MissingParameterError,
             InvalidParameterError,
         ) as e:
@@ -317,18 +323,18 @@ class LocalExecutor:
 
     async def _execute_operation(
         self,
-        resource: str,
-        verb: str | Verb,
+        entity: str,
+        action: str | Action,
         params: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        """Internal method: Execute a verb on a resource asynchronously.
+        """Internal method: Execute an action on an entity asynchronously.
 
         This method now delegates to the appropriate handler.
         External code should use execute(config) instead.
 
         Args:
-            resource: Resource name (e.g., "Customer")
-            verb: Verb to execute (e.g., "get" or Verb.GET)
+            entity: Entity name (e.g., "Customer")
+            action: Action to execute (e.g., "get" or Action.GET)
             params: Parameters for the operation
                 - For GET: {"id": "cus_123"} for path params
                 - For LIST: {"limit": 10} for query params
@@ -338,28 +344,28 @@ class LocalExecutor:
             API response as dictionary
 
         Raises:
-            ValueError: If resource or verb not found
+            ValueError: If entity or action not found
             HTTPClientError: If API request fails
         """
         params = params or {}
-        verb = Verb(verb) if isinstance(verb, str) else verb
+        action = Action(action) if isinstance(action, str) else action
 
         # Delegate to the appropriate handler
         handler = next(
-            (h for h in self._operation_handlers if h.can_handle(verb)), None
+            (h for h in self._operation_handlers if h.can_handle(action)), None
         )
         if not handler:
-            raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
+            raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
-        return await handler.execute_operation(resource, verb, params)
+        return await handler.execute_operation(entity, action, params)
 
     async def execute_batch(
-        self, operations: list[tuple[str, str | Verb, dict[str, Any] | None]]
+        self, operations: list[tuple[str, str | Action, dict[str, Any] | None]]
     ) -> list[dict[str, Any] | AsyncIterator[bytes]]:
-        """Execute multiple operations concurrently (supports all verb types including download).
+        """Execute multiple operations concurrently (supports all action types including download).
 
         Args:
-            operations: List of (resource, verb, params) tuples
+            operations: List of (entity, action, params) tuples
 
         Returns:
             List of responses in the same order as operations.
@@ -367,7 +373,7 @@ class LocalExecutor:
             Download operations return AsyncIterator[bytes].
 
         Raises:
-            ValueError: If any resource or verb not found
+            ValueError: If any entity or action not found
             HTTPClientError: If any API request fails
 
         Example:
@@ -379,20 +385,22 @@ class LocalExecutor:
         """
         # Build tasks by dispatching directly to handlers
         tasks = []
-        for resource, verb, params in operations:
-            # Convert verb to Verb enum if needed
-            verb = Verb(verb) if isinstance(verb, str) else verb
+        for entity, action, params in operations:
+            # Convert action to Action enum if needed
+            action = Action(action) if isinstance(action, str) else action
             params = params or {}
 
             # Find appropriate handler
             handler = next(
-                (h for h in self._operation_handlers if h.can_handle(verb)), None
+                (h for h in self._operation_handlers if h.can_handle(action)), None
             )
             if not handler:
-                raise ExecutorError(f"No handler registered for verb '{verb.value}'.")
+                raise ExecutorError(
+                    f"No handler registered for action '{action.value}'."
+                )
 
             # Call handler directly (exceptions propagate naturally)
-            tasks.append(handler.execute_operation(resource, verb, params))
+            tasks.append(handler.execute_operation(entity, action, params))
 
         # Execute all tasks concurrently - exceptions propagate via asyncio.gather
         return await asyncio.gather(*tasks)
@@ -464,14 +472,14 @@ class LocalExecutor:
     def _extract_download_url(
         response: dict[str, Any],
         file_field: str,
-        resource: str,
+        entity: str,
     ) -> str:
         """Extract download URL from metadata response using x-airbyte-file-url.
 
         Args:
             response: Metadata response containing file reference
             file_field: JSON path to file URL field (from x-airbyte-file-url)
-            resource: Resource name (for error messages)
+            entity: Entity name (for error messages)
 
         Returns:
             Extracted file URL
@@ -486,13 +494,13 @@ class LocalExecutor:
         for i, part in enumerate(parts):
             if not isinstance(current, dict):
                 raise ExecutorError(
-                    f"Cannot extract download URL for {resource}: "
+                    f"Cannot extract download URL for {entity}: "
                     f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
                 )
 
             if part not in current:
                 raise ExecutorError(
-                    f"Cannot extract download URL for {resource}: "
+                    f"Cannot extract download URL for {entity}: "
                     f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
                 )
 
@@ -500,7 +508,7 @@ class LocalExecutor:
 
         if not isinstance(current, str):
             raise ExecutorError(
-                f"Cannot extract download URL for {resource}: "
+                f"Cannot extract download URL for {entity}: "
                 f"Expected string at '{file_field}', got {type(current).__name__}"
             )
 
@@ -714,21 +722,21 @@ class LocalExecutor:
         return interpolate_value(variables)
 
     def _validate_required_body_fields(
-        self, endpoint: Any, params: dict[str, Any], verb: Verb, resource: str
+        self, endpoint: Any, params: dict[str, Any], action: Action, entity: str
     ) -> None:
         """Validate that required body fields are present for CREATE/UPDATE operations.
 
         Args:
             endpoint: Endpoint definition
             params: Parameters provided
-            verb: Operation verb
-            resource: Resource name
+            action: Operation action
+            entity: Entity name
 
         Raises:
             MissingParameterError: If required body fields are missing
         """
         # Only validate for operations that typically have required body fields
-        if verb not in (Verb.CREATE, Verb.UPDATE):
+        if action not in (Action.CREATE, Action.UPDATE):
             return
 
         # Check if endpoint has body fields defined
@@ -745,7 +753,7 @@ class LocalExecutor:
 
         if missing_fields:
             raise MissingParameterError(
-                f"Missing required body fields for {resource}.{verb.value}: {missing_fields}. "
+                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. "
                 f"Provided parameters: {list(params.keys())}"
             )
 
@@ -775,20 +783,20 @@ class _StandardOperationHandler:
     def __init__(self, context: _OperationContext):
         self.ctx = context
 
-    def can_handle(self, verb: Verb) -> bool:
-        """Check if this handler can handle the given verb."""
-        return verb in {
-            Verb.GET,
-            Verb.LIST,
-            Verb.CREATE,
-            Verb.UPDATE,
-            Verb.DELETE,
-            Verb.SEARCH,
-            Verb.AUTHORIZE,
+    def can_handle(self, action: Action) -> bool:
+        """Check if this handler can handle the given action."""
+        return action in {
+            Action.GET,
+            Action.LIST,
+            Action.CREATE,
+            Action.UPDATE,
+            Action.DELETE,
+            Action.SEARCH,
+            Action.AUTHORIZE,
         }
 
     async def execute_operation(
-        self, resource: str, verb: Verb, params: dict[str, Any]
+        self, entity: str, action: Action, params: dict[str, Any]
     ) -> dict[str, Any]:
         """Execute standard REST operation with full telemetry and error handling."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
@@ -796,8 +804,8 @@ class _StandardOperationHandler:
         with tracer.start_as_current_span("local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
-            span.set_attribute("connector.resource", resource)
-            span.set_attribute("connector.verb", verb.value)
+            span.set_attribute("connector.entity", entity)
+            span.set_attribute("connector.action", action.value)
             if params:
                 span.set_attribute("connector.param_keys", list(params.keys()))
 
@@ -810,33 +818,33 @@ class _StandardOperationHandler:
             status_code = None
 
             try:
-                # O(1) resource lookup
-                resource_def = self.ctx.resource_index.get(resource)
-                if not resource_def:
-                    available_resources = list(self.ctx.resource_index.keys())
-                    raise ResourceNotFoundError(
-                        f"Resource '{resource}' not found in connector. "
-                        f"Available resources: {available_resources}"
+                # O(1) entity lookup
+                entity_def = self.ctx.entity_index.get(entity)
+                if not entity_def:
+                    available_entities = list(self.ctx.entity_index.keys())
+                    raise EntityNotFoundError(
+                        f"Entity '{entity}' not found in connector. "
+                        f"Available entities: {available_entities}"
                     )
 
-                # Check if verb is supported
-                if verb not in resource_def.verbs:
-                    supported_verbs = [v.value for v in resource_def.verbs]
-                    raise VerbNotSupportedError(
-                        f"Verb '{verb.value}' not supported for resource '{resource}'. "
-                        f"Supported verbs: {supported_verbs}"
+                # Check if action is supported
+                if action not in entity_def.actions:
+                    supported_actions = [a.value for a in entity_def.actions]
+                    raise ActionNotSupportedError(
+                        f"Action '{action.value}' not supported for entity '{entity}'. "
+                        f"Supported actions: {supported_actions}"
                     )
 
                 # O(1) operation lookup
-                endpoint = self.ctx.operation_index.get((resource, verb))
+                endpoint = self.ctx.operation_index.get((entity, action))
                 if not endpoint:
                     raise ExecutorError(
-                        f"No endpoint defined for {resource}.{verb.value}. "
+                        f"No endpoint defined for {entity}.{action.value}. "
                         f"This is a configuration error."
                     )
 
                 # Validate required body fields for CREATE/UPDATE operations
-                self.ctx.validate_required_body_fields(endpoint, params, verb, resource)
+                self.ctx.validate_required_body_fields(endpoint, params, action, entity)
 
                 # Build request parameters
                 # Use path_override if available, otherwise use the OpenAPI path
@@ -874,7 +882,7 @@ class _StandardOperationHandler:
 
                 return response
 
-            except (ResourceNotFoundError, VerbNotSupportedError) as e:
+            except (EntityNotFoundError, ActionNotSupportedError) as e:
                 # Validation errors - record in span
                 error_type = type(e).__name__
                 span.set_attribute("connector.success", False)
@@ -900,8 +908,8 @@ class _StandardOperationHandler:
                 # Always track operation (success or failure)
                 timing_ms = (time.time() - start_time) * 1000
                 self.ctx.tracker.track_operation(
-                    resource=resource,
-                    verb=verb.value if isinstance(verb, Verb) else verb,
+                    entity=entity,
+                    action=action.value if isinstance(action, Action) else action,
                     status_code=status_code,
                     timing_ms=timing_ms,
                     error_type=error_type,
@@ -919,12 +927,12 @@ class _DownloadOperationHandler:
     def __init__(self, context: _OperationContext):
         self.ctx = context
 
-    def can_handle(self, verb: Verb) -> bool:
-        """Check if this handler can handle the given verb."""
-        return verb == Verb.DOWNLOAD
+    def can_handle(self, action: Action) -> bool:
+        """Check if this handler can handle the given action."""
+        return action == Action.DOWNLOAD
 
     async def execute_operation(
-        self, resource: str, verb: Verb, params: dict[str, Any]
+        self, entity: str, action: Action, params: dict[str, Any]
     ) -> AsyncIterator[bytes]:
         """Execute download operation (one-step or two-step) with full telemetry."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
@@ -932,8 +940,8 @@ class _DownloadOperationHandler:
         with tracer.start_as_current_span("local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
-            span.set_attribute("connector.resource", resource)
-            span.set_attribute("connector.verb", verb.value)
+            span.set_attribute("connector.entity", entity)
+            span.set_attribute("connector.action", action.value)
             if params:
                 span.set_attribute("connector.param_keys", list(params.keys()))
 
@@ -946,20 +954,20 @@ class _DownloadOperationHandler:
             status_code = None
 
             try:
-                # Look up resource
-                resource_def = self.ctx.resource_index.get(resource)
-                if not resource_def:
-                    raise ResourceNotFoundError(
-                        f"Resource '{resource}' not found in connector. "
-                        f"Available resources: {list(self.ctx.resource_index.keys())}"
+                # Look up entity
+                entity_def = self.ctx.entity_index.get(entity)
+                if not entity_def:
+                    raise EntityNotFoundError(
+                        f"Entity '{entity}' not found in connector. "
+                        f"Available entities: {list(self.ctx.entity_index.keys())}"
                     )
 
                 # Look up operation
-                operation = self.ctx.operation_index.get((resource, verb))
+                operation = self.ctx.operation_index.get((entity, action))
                 if not operation:
-                    raise VerbNotSupportedError(
-                        f"Verb '{verb.value}' not supported for resource '{resource}'. "
-                        f"Supported verbs: {[v.value for v in resource_def.verbs]}"
+                    raise ActionNotSupportedError(
+                        f"Action '{action.value}' not supported for entity '{entity}'. "
+                        f"Supported actions: {[a.value for a in entity_def.actions]}"
                     )
 
                 # Common setup for both download modes
@@ -993,7 +1001,7 @@ class _DownloadOperationHandler:
                         operation, request_body
                     )
                     self.ctx.validate_required_body_fields(
-                        operation, params, verb, resource
+                        operation, params, action, entity
                     )
 
                     metadata_response = await self.ctx.http_client.request(
@@ -1007,7 +1015,7 @@ class _DownloadOperationHandler:
                     file_url = LocalExecutor._extract_download_url(
                         response=metadata_response,
                         file_field=file_field,
-                        resource=resource,
+                        entity=entity,
                     )
 
                     # Step 3: Stream file from extracted URL
@@ -1043,7 +1051,7 @@ class _DownloadOperationHandler:
                     self.ctx.logger.log_chunk_fetch(chunk)
                     yield chunk
 
-            except (ResourceNotFoundError, VerbNotSupportedError) as e:
+            except (EntityNotFoundError, ActionNotSupportedError) as e:
                 # Validation errors - record in span
                 error_type = type(e).__name__
                 span.set_attribute("connector.success", False)
@@ -1053,8 +1061,8 @@ class _DownloadOperationHandler:
                 # Track the failed operation before re-raising
                 timing_ms = (time.time() - start_time) * 1000
                 self.ctx.tracker.track_operation(
-                    resource=resource,
-                    verb=verb.value,
+                    entity=entity,
+                    action=action.value,
                     status_code=status_code,
                     timing_ms=timing_ms,
                     error_type=error_type,
@@ -1077,8 +1085,8 @@ class _DownloadOperationHandler:
                 # Track the failed operation before re-raising
                 timing_ms = (time.time() - start_time) * 1000
                 self.ctx.tracker.track_operation(
-                    resource=resource,
-                    verb=verb.value,
+                    entity=entity,
+                    action=action.value,
                     status_code=status_code,
                     timing_ms=timing_ms,
                     error_type=error_type,
@@ -1091,8 +1099,8 @@ class _DownloadOperationHandler:
                 if error_type is None:
                     timing_ms = (time.time() - start_time) * 1000
                     self.ctx.tracker.track_operation(
-                        resource=resource,
-                        verb=verb.value,
+                        entity=entity,
+                        action=action.value,
                         status_code=status_code,
                         timing_ms=timing_ms,
                         error_type=None,

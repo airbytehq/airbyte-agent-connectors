@@ -19,13 +19,13 @@ from .executor import (
     ExecutionConfig,
     ExecutionResult,
     ExecutorError,
-    ResourceNotFoundError,
-    VerbNotSupportedError,
+    EntityNotFoundError,
+    ActionNotSupportedError,
     MissingParameterError,
     InvalidParameterError,
 )
 from .http_client import HTTPClient
-from .types import ConnectorConfig, Verb, AuthType, ResourceDefinition
+from .types import ConnectorConfig, Action, AuthType, EntityDefinition
 from .config_loader import load_connector_config
 from .logging import RequestLogger, NullLogger, RequestLog, LogSession
 from .performance import PerformanceMonitor, instrument
@@ -51,16 +51,16 @@ __all__ = [
     "ExecutionResult",
     # Types
     "ConnectorConfig",
-    "Verb",
+    "Action",
     "AuthType",
-    "ResourceDefinition",
+    "EntityDefinition",
     "load_connector_config",
     # Authentication
     "AuthStrategy",
     # Executor Exceptions
     "ExecutorError",
-    "ResourceNotFoundError",
-    "VerbNotSupportedError",
+    "EntityNotFoundError",
+    "ActionNotSupportedError",
     "MissingParameterError",
     "InvalidParameterError",
     # HTTP Exceptions
