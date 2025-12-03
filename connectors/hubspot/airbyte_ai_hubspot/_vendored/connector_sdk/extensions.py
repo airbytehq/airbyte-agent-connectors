@@ -9,13 +9,13 @@ All extension names, valid values, and related types are centralized here to ens
 consistency across the codebase.
 
 Usage:
-    from .extensions import AIRBYTE_CONNECTOR_NAME, AIRBYTE_RESOURCE, VerbType
+    from .extensions import AIRBYTE_CONNECTOR_NAME, AIRBYTE_ENTITY, ActionType
 
     # In Pydantic models
-    x_resource: Optional[str] = Field(None, alias=AIRBYTE_RESOURCE)
+    x_entity: Optional[str] = Field(None, alias=AIRBYTE_ENTITY)
 
     # In tests and validation
-    assert operation.get(AIRBYTE_VERB) in VerbType.__members__.values()
+    assert operation.get(AIRBYTE_ACTION) in ActionType.__members__.values()
 """
 
 from enum import Enum
@@ -74,42 +74,42 @@ Example:
     ```
 """
 
-AIRBYTE_RESOURCE = "x-airbyte-resource"
+AIRBYTE_ENTITY = "x-airbyte-entity"
 """
-Extension: x-airbyte-resource
+Extension: x-airbyte-entity
 Location: Operation object (on individual HTTP operations)
 Type: string
 Required: Yes (for operations that should be exposed as Airbyte streams)
 
 Description:
-    Identifies which logical resource/stream this operation belongs to. Operations
-    with the same x-airbyte-resource value are grouped together to form a single
-    Airbyte stream. The resource name is used as the stream name.
+    Identifies which logical entity/stream this operation belongs to. Operations
+    with the same x-airbyte-entity value are grouped together to form a single
+    Airbyte stream. The entity name is used as the stream name.
 
 Example:
     ```yaml
     paths:
       /customers:
         get:
-          x-airbyte-resource: customers
-          x-airbyte-verb: list
+          x-airbyte-entity: customers
+          x-airbyte-action: list
     ```
 """
 
-AIRBYTE_VERB = "x-airbyte-verb"
+AIRBYTE_ACTION = "x-airbyte-action"
 """
-Extension: x-airbyte-verb
+Extension: x-airbyte-action
 Location: Operation object (on individual HTTP operations)
-Type: string (enum - see VerbType)
+Type: string (enum - see ActionType)
 Required: Yes (for operations that should be exposed as Airbyte streams)
 Valid Values: get, list, create, update, delete
 
 Description:
-    Specifies the semantic intent of this operation within its resource. This helps
+    Specifies the semantic intent of this operation within its entity. This helps
     Airbyte understand how to map REST operations to stream operations and determine
     which operation to use for syncing data.
 
-Verb Semantics:
+Action Semantics:
     - list: Fetch multiple records (paginated, used for syncing)
     - get: Fetch a single record by ID
     - create: Create a new record
@@ -121,29 +121,29 @@ Example:
     paths:
       /customers:
         get:
-          x-airbyte-resource: customers
-          x-airbyte-verb: list
+          x-airbyte-entity: customers
+          x-airbyte-action: list
         post:
-          x-airbyte-resource: customers
-          x-airbyte-verb: create
+          x-airbyte-entity: customers
+          x-airbyte-action: create
       /customers/{id}:
         get:
-          x-airbyte-resource: customers
-          x-airbyte-verb: get
+          x-airbyte-entity: customers
+          x-airbyte-action: get
     ```
 """
 
-AIRBYTE_RESOURCE_NAME = "x-airbyte-resource-name"
+AIRBYTE_ENTITY_NAME = "x-airbyte-entity-name"
 """
-Extension: x-airbyte-resource-name
+Extension: x-airbyte-entity-name
 Location: Schema object (in components.schemas)
 Type: string
-Required: No (but recommended for resource schemas)
+Required: No (but recommended for entity schemas)
 
 Description:
-    Links a schema definition to a logical resource/stream. This helps identify which
-    schema represents the main data model for a particular resource, especially when
-    multiple schemas might reference the same resource.
+    Links a schema definition to a logical entity/stream. This helps identify which
+    schema represents the main data model for a particular entity, especially when
+    multiple schemas might reference the same entity.
 
 Example:
     ```yaml
@@ -151,7 +151,7 @@ Example:
       schemas:
         Customer:
           type: object
-          x-airbyte-resource-name: customers
+          x-airbyte-entity-name: customers
           properties:
             id:
               type: string
@@ -231,11 +231,11 @@ Validation: Strict - enforced at Pydantic model level
 
 Description:
     Overrides the HTTP path used for actual requests when the OpenAPI path differs
-    from the real API endpoint. Common for GraphQL APIs where multiple resources
+    from the real API endpoint. Common for GraphQL APIs where multiple entities
     need unique OpenAPI paths but query the same HTTP endpoint.
 
     This allows multiple operations (e.g., repositories→search, issues→search) to
-    have distinct resource-verb mappings in the OpenAPI spec while all sending
+    have distinct entity-action mappings in the OpenAPI spec while all sending
     requests to the same physical endpoint (e.g., /graphql).
 
 Structure:
@@ -246,14 +246,14 @@ Example:
     paths:
       /graphql:repositories:  # OpenAPI path (for uniqueness)
         post:
-          x-airbyte-resource: repositories
-          x-airbyte-verb: search
+          x-airbyte-entity: repositories
+          x-airbyte-action: search
           x-airbyte-path-override:
             path: /graphql  # Actual HTTP endpoint
       /graphql:issues:  # Different OpenAPI path
         post:
-          x-airbyte-resource: issues
-          x-airbyte-verb: search
+          x-airbyte-entity: issues
+          x-airbyte-action: search
           x-airbyte-path-override:
             path: /graphql  # Same actual endpoint
     ```
@@ -262,13 +262,13 @@ Example:
 AIRBYTE_FILE_URL = "x-airbyte-file-url"
 """
 Extension: x-airbyte-file-url
-Location: Operation object (on individual HTTP operations with x-airbyte-verb: download)
+Location: Operation object (on individual HTTP operations with x-airbyte-action: download)
 Type: string
-Required: Yes (when x-airbyte-verb is "download")
+Required: Yes (when x-airbyte-action is "download")
 
 Description:
     Specifies which field in the metadata response contains the download URL. Used with
-    the 'download' verb to perform a two-step file retrieval: first fetch metadata,
+    the 'download' action to perform a two-step file retrieval: first fetch metadata,
     then extract and download from the URL field specified here.
 
     The field path can be a simple field name (e.g., "content_url") or a nested path
@@ -279,8 +279,8 @@ Example:
     paths:
       /articles/{article_id}/attachments/{attachment_id}:
         get:
-          x-airbyte-resource: article_attachments
-          x-airbyte-verb: download
+          x-airbyte-entity: article_attachments
+          x-airbyte-action: download
           x-airbyte-file-url: content_url
           responses:
             "200":
@@ -303,11 +303,11 @@ Example:
 # =============================================================================
 
 
-class VerbType(str, Enum):
+class ActionType(str, Enum):
     """
-    Valid values for x-airbyte-verb extension.
+    Valid values for x-airbyte-action extension.
 
-    These verbs represent the semantic operations that can be performed on a resource.
+    These actions represent the semantic operations that can be performed on an entity.
     """
 
     GET = "get"
@@ -344,7 +344,7 @@ class BodyType(str, Enum):
 
 
 # Type alias for use in Pydantic models
-VerbTypeLiteral = Literal[
+ActionTypeLiteral = Literal[
     "get", "list", "create", "update", "delete", "search", "download"
 ]
 
@@ -354,17 +354,17 @@ VerbTypeLiteral = Literal[
 # =============================================================================
 
 
-def is_valid_verb(verb: str) -> bool:
+def is_valid_action(action: str) -> bool:
     """
-    Check if a string is a valid Airbyte verb.
+    Check if a string is a valid Airbyte action.
 
     Args:
-        verb: The verb string to validate
+        action: The action string to validate
 
     Returns:
-        True if the verb is valid, False otherwise
+        True if the action is valid, False otherwise
     """
-    return verb in [v.value for v in VerbType]
+    return action in [a.value for a in ActionType]
 
 
 def get_all_extension_names() -> list[str]:
@@ -377,9 +377,9 @@ def get_all_extension_names() -> list[str]:
     return [
         AIRBYTE_CONNECTOR_NAME,
         AIRBYTE_EXTERNAL_DOCUMENTATION_URLS,
-        AIRBYTE_RESOURCE,
-        AIRBYTE_VERB,
-        AIRBYTE_RESOURCE_NAME,
+        AIRBYTE_ENTITY,
+        AIRBYTE_ACTION,
+        AIRBYTE_ENTITY_NAME,
         AIRBYTE_TOKEN_PATH,
         AIRBYTE_BODY_TYPE,
         AIRBYTE_PATH_OVERRIDE,
@@ -404,24 +404,24 @@ EXTENSION_REGISTRY = {
         "required": True,
         "description": "List of external documentation URLs relevant to the connector",
     },
-    AIRBYTE_RESOURCE: {
+    AIRBYTE_ENTITY: {
         "location": "operation",
         "type": "string",
         "required": True,
-        "description": "Resource/stream name this operation belongs to",
+        "description": "Entity/stream name this operation belongs to",
     },
-    AIRBYTE_VERB: {
+    AIRBYTE_ACTION: {
         "location": "operation",
         "type": "string",
         "required": True,
-        "enum": [v.value for v in VerbType],
+        "enum": [a.value for a in ActionType],
         "description": "Semantic operation type",
     },
-    AIRBYTE_RESOURCE_NAME: {
+    AIRBYTE_ENTITY_NAME: {
         "location": "schema",
         "type": "string",
         "required": False,
-        "description": "Links schema to a resource/stream",
+        "description": "Links schema to an entity/stream",
     },
     AIRBYTE_TOKEN_PATH: {
         "location": "securityScheme",
@@ -448,8 +448,8 @@ EXTENSION_REGISTRY = {
     AIRBYTE_FILE_URL: {
         "location": "operation",
         "type": "string",
-        "required": "conditional",  # Required when verb is 'download'
-        "description": "Field in metadata response containing download URL (required for download verb)",
+        "required": "conditional",  # Required when action is 'download'
+        "description": "Field in metadata response containing download URL (required for download action)",
     },
 }
 """

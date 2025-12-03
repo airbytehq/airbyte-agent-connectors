@@ -27,8 +27,8 @@ paths:
       summary: List contacts
       description: Returns a paginated list of contacts
       operationId: listContacts
-      x-airbyte-resource: contacts
-      x-airbyte-verb: list
+      x-airbyte-entity: contacts
+      x-airbyte-action: list
       parameters:
         - name: limit
           in: query
@@ -69,8 +69,8 @@ paths:
       summary: Get a contact
       description: Get a single contact by ID
       operationId: getContact
-      x-airbyte-resource: contacts
-      x-airbyte-verb: get
+      x-airbyte-entity: contacts
+      x-airbyte-action: get
       parameters:
         - name: contactId
           in: path
@@ -101,8 +101,8 @@ paths:
       summary: List companies
       description: Returns a paginated list of companies
       operationId: listCompanies
-      x-airbyte-resource: companies
-      x-airbyte-verb: list
+      x-airbyte-entity: companies
+      x-airbyte-action: list
       parameters:
         - name: limit
           in: query
@@ -143,8 +143,8 @@ paths:
       summary: Get a company
       description: Get a single company by ID
       operationId: getCompany
-      x-airbyte-resource: companies
-      x-airbyte-verb: get
+      x-airbyte-entity: companies
+      x-airbyte-action: get
       parameters:
         - name: companyId
           in: path
@@ -175,8 +175,8 @@ paths:
       summary: List deals
       description: Returns a paginated list of deals
       operationId: listDeals
-      x-airbyte-resource: deals
-      x-airbyte-verb: list
+      x-airbyte-entity: deals
+      x-airbyte-action: list
       parameters:
         - name: limit
           in: query
@@ -217,8 +217,8 @@ paths:
       summary: Get a deal
       description: Get a single deal by ID
       operationId: getDeal
-      x-airbyte-resource: deals
-      x-airbyte-verb: get
+      x-airbyte-entity: deals
+      x-airbyte-action: get
       parameters:
         - name: dealId
           in: path
@@ -249,8 +249,8 @@ paths:
       summary: List tickets
       description: Returns a paginated list of tickets
       operationId: listTickets
-      x-airbyte-resource: tickets
-      x-airbyte-verb: list
+      x-airbyte-entity: tickets
+      x-airbyte-action: list
       parameters:
         - name: limit
           in: query
@@ -291,8 +291,8 @@ paths:
       summary: Get a ticket
       description: Get a single ticket by ID
       operationId: getTicket
-      x-airbyte-resource: tickets
-      x-airbyte-verb: get
+      x-airbyte-entity: tickets
+      x-airbyte-action: get
       parameters:
         - name: ticketId
           in: path
@@ -323,8 +323,8 @@ paths:
       summary: List custom object schemas
       description: Returns all custom object schemas to discover available custom objects
       operationId: listSchemas
-      x-airbyte-resource: schemas
-      x-airbyte-verb: list
+      x-airbyte-entity: schemas
+      x-airbyte-action: list
       responses:
         "200":
           description: List of custom object schemas
@@ -341,8 +341,8 @@ paths:
       summary: List objects
       description: Returns a paginated list of objects for any custom object type
       operationId: listObjects
-      x-airbyte-resource: objects
-      x-airbyte-verb: list
+      x-airbyte-entity: objects
+      x-airbyte-action: list
       parameters:
         - name: objectType
           in: path
@@ -391,8 +391,8 @@ paths:
       summary: Get an object
       description: Get a single object by ID for any custom object type
       operationId: getObject
-      x-airbyte-resource: objects
-      x-airbyte-verb: get
+      x-airbyte-entity: objects
+      x-airbyte-action: get
       parameters:
         - name: objectType
           in: path
@@ -447,7 +447,7 @@ components:
     # Contact schemas
     Contact:
       type: object
-      x-airbyte-resource-name: contacts
+      x-airbyte-entity-name: contacts
       description: HubSpot contact object
       properties:
         id:
@@ -483,7 +483,7 @@ components:
     # Company schemas
     Company:
       type: object
-      x-airbyte-resource-name: companies
+      x-airbyte-entity-name: companies
       description: HubSpot company object
       properties:
         id:
@@ -519,7 +519,7 @@ components:
     # Deal schemas
     Deal:
       type: object
-      x-airbyte-resource-name: deals
+      x-airbyte-entity-name: deals
       description: HubSpot deal object
       properties:
         id:
@@ -555,7 +555,7 @@ components:
     # Ticket schemas
     Ticket:
       type: object
-      x-airbyte-resource-name: tickets
+      x-airbyte-entity-name: tickets
       description: HubSpot ticket object
       properties:
         id:
@@ -591,7 +591,7 @@ components:
     # Schema schemas (for custom objects discovery)
     Schema:
       type: object
-      x-airbyte-resource-name: schemas
+      x-airbyte-entity-name: schemas
       description: Custom object schema definition
       properties:
         id:
@@ -638,7 +638,7 @@ components:
     # Generic CRM object schemas
     CRMObject:
       type: object
-      x-airbyte-resource-name: objects
+      x-airbyte-entity-name: objects
       description: Generic HubSpot CRM object (for custom objects)
       properties:
         id:
