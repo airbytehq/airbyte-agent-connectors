@@ -277,15 +277,19 @@ class HTTPClient:
             HTTPClientError: For other client errors
         """
         # Check if path is a full URL (for CDN/external URLs)
+        is_external_url = path.startswith(
+            ("http://", "https://")
+        ) and not path.startswith(self.base_url)
         url = (
             path
             if path.startswith(("http://", "https://"))
             else f"{self.base_url}{path}"
         )
 
-        # Prepare headers with auth
+        # Prepare headers with auth (skip for external URLs like pre-signed S3)
         request_headers = headers or {}
-        request_headers = self._inject_auth(request_headers)
+        if not is_external_url:
+            request_headers = self._inject_auth(request_headers)
 
         # Log request start
         request_id = self.logger.log_request(

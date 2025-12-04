@@ -2,7 +2,7 @@
 
 Type-safe Zendesk-Support API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.10.0
+**Package Version:** 0.11.0
 
 **Connector Version:** 1.0.0
 
@@ -29,13 +29,13 @@ connector = ZendeskSupportConnector(auth_config={"api_key": "your_api_key"})
 ## Available Operations
 
 ### Articles Operations
-- `list_articles()` - List all articles
-- `get_article()` - Get an article by ID
+- `list_articles()` - Returns a list of all articles in the Help Center
+- `get_article()` - Retrieves the details of a specific article
 
 ### Article_Attachments Operations
-- `list_article_attachments()` - List attachments for an article
-- `get_article_attachment_metadata()` - Retrieve attachment metadata
-- `download_article_attachment()` - Download attachment file
+- `list_article_attachments()` - Returns a list of all attachments for a specific article
+- `get_article_attachment_metadata()` - Retrieves the metadata of a specific attachment for a specific article
+- `download_article_attachment()` - Downloads the file content of a specific attachment
 
 ## Type Definitions
 

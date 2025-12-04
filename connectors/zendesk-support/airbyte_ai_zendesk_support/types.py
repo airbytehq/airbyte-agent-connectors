@@ -1,7 +1,5 @@
 """
-Auto-generated type definitions for zendesk-support connector.
-
-Generated from OpenAPI specification schemas.
+Type definitions for zendesk-support connector.
 """
 from typing import TypedDict, NotRequired
 
