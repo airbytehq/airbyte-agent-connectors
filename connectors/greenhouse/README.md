@@ -2,7 +2,7 @@
 
 Type-safe Greenhouse API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.10.0
+**Package Version:** 0.11.0
 
 **Connector Version:** 1.0.0
 
@@ -29,16 +29,16 @@ connector = GreenhouseConnector(auth_config={"api_key": "your_api_key"})
 ## Available Operations
 
 ### Candidates Operations
-- `list_candidates()` - List candidates
-- `get_candidate()` - Get a candidate
+- `list_candidates()` - Returns a paginated list of all candidates in the organization
+- `get_candidate()` - Get a single candidate by ID
 
 ### Applications Operations
-- `list_applications()` - List applications
-- `get_application()` - Get an application
+- `list_applications()` - Returns a paginated list of all applications
+- `get_application()` - Get a single application by ID
 
 ### Jobs Operations
-- `list_jobs()` - List jobs
-- `get_job()` - Get a job
+- `list_jobs()` - Returns a paginated list of all jobs in the organization
+- `get_job()` - Get a single job by ID
 
 ## Type Definitions
 

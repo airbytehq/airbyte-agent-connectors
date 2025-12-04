@@ -1,7 +1,5 @@
 """
-Auto-generated type definitions for greenhouse connector.
-
-Generated from OpenAPI specification schemas.
+Type definitions for greenhouse connector.
 """
 from typing import TypedDict, NotRequired, Any
 
