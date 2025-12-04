@@ -67,7 +67,7 @@ class StripeConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = StripeConnector(auth_config={"api_key": "sk_..."})
+            connector = StripeConnector(auth_config={"token": "..."})
             # Hosted mode (executed on Airbyte cloud)
             connector = StripeConnector(
                 connector_id="connector-456",
