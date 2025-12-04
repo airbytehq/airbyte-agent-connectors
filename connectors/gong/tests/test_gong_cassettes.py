@@ -11,7 +11,6 @@ from unittest.mock import AsyncMock, patch
 from airbyte_ai_gong import GongConnector
 
 
-
 @pytest.mark.asyncio
 async def test_call_transcripts_by_id():
     """Retrieve transcript for a specific call by ID"""
@@ -38,13 +37,13 @@ async def test_call_transcripts_by_id():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_call_transcripts_list():
@@ -72,13 +71,13 @@ async def test_call_transcripts_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_calls_extensive_list():
@@ -106,13 +105,13 @@ async def test_calls_extensive_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_calls_extensive_with_content_selector():
@@ -140,13 +139,13 @@ async def test_calls_extensive_with_content_selector():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_calls_get_id_1220490555266799467():
@@ -202,13 +201,13 @@ async def test_calls_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_calls_list_november():
@@ -236,13 +235,13 @@ async def test_calls_list_november():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_stats_activity_aggregate_list():
@@ -270,13 +269,13 @@ async def test_stats_activity_aggregate_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_stats_activity_day_by_day_list():
@@ -304,13 +303,13 @@ async def test_stats_activity_day_by_day_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_stats_interaction_list():
@@ -338,13 +337,13 @@ async def test_stats_interaction_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_users_get_id_361458326017907882():
@@ -400,13 +399,13 @@ async def test_users_list():
     else:
         # When JSONPath doesn't match, expect None or empty array
         assert result["data"] is None or result["data"] == []
+
     assert "meta" in result
     assert isinstance(result["meta"], dict)
     meta_path_pagination = parse_jsonpath("$.records")
     meta_matches_pagination = meta_path_pagination.find(mock_response)
     if meta_matches_pagination:
         assert result["meta"]["pagination"] == meta_matches_pagination[0].value
-
 
 @pytest.mark.asyncio
 async def test_workspaces_list():

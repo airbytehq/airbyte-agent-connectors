@@ -98,6 +98,10 @@ class TranscriptsResponse(TypedDict):
     records: NotRequired[PaginationRecords]
     requestId: NotRequired[str]
 
+class ExtensiveCallCollaboration(TypedDict):
+    """Collaboration data"""
+    publicComments: NotRequired[list[dict[str, Any]]]
+
 class ExtensiveCallMedia(TypedDict):
     """Media URLs"""
     audioUrl: NotRequired[str]
@@ -118,6 +122,24 @@ class ExtensiveCallInteraction(TypedDict):
     interactionStats: NotRequired[list[ExtensiveCallInteractionInteractionstatsItem]]
     questions: NotRequired[ExtensiveCallInteractionQuestions]
 
+class ExtensiveCallMetadata(TypedDict):
+    """Call metadata"""
+    id: NotRequired[str]
+    url: NotRequired[str]
+    title: NotRequired[str]
+    scheduled: NotRequired[str]
+    started: NotRequired[str]
+    duration: NotRequired[int]
+    primaryUserId: NotRequired[str]
+    direction: NotRequired[str]
+    system: NotRequired[str]
+    scope: NotRequired[str]
+    media: NotRequired[str]
+    language: NotRequired[str]
+    workspaceId: NotRequired[str]
+    isPrivate: NotRequired[bool]
+    meetingUrl: NotRequired[str]
+
 class ExtensiveCallPartiesItemContextItem(TypedDict):
     """Nested schema for ExtensiveCallPartiesItem.context_item"""
     system: NotRequired[str]
@@ -132,10 +154,6 @@ class ExtensiveCallPartiesItem(TypedDict):
     userId: NotRequired[str]
     speakerId: NotRequired[str]
     context: NotRequired[list[ExtensiveCallPartiesItemContextItem]]
-
-class ExtensiveCallCollaboration(TypedDict):
-    """Collaboration data"""
-    publicComments: NotRequired[list[dict[str, Any]]]
 
 class ExtensiveCallContentTrackersItem(TypedDict):
     """Nested schema for ExtensiveCallContent.trackers_item"""
@@ -155,24 +173,6 @@ class ExtensiveCallContent(TypedDict):
     topics: NotRequired[list[ExtensiveCallContentTopicsItem]]
     trackers: NotRequired[list[ExtensiveCallContentTrackersItem]]
     pointsOfInterest: NotRequired[dict[str, Any]]
-
-class ExtensiveCallMetadata(TypedDict):
-    """Call metadata"""
-    id: NotRequired[str]
-    url: NotRequired[str]
-    title: NotRequired[str]
-    scheduled: NotRequired[str]
-    started: NotRequired[str]
-    duration: NotRequired[int]
-    primaryUserId: NotRequired[str]
-    direction: NotRequired[str]
-    system: NotRequired[str]
-    scope: NotRequired[str]
-    media: NotRequired[str]
-    language: NotRequired[str]
-    workspaceId: NotRequired[str]
-    isPrivate: NotRequired[bool]
-    meetingUrl: NotRequired[str]
 
 class ExtensiveCall(TypedDict):
     """Detailed call object with extended information"""

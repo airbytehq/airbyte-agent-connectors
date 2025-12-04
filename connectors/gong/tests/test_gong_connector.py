@@ -6,11 +6,11 @@ from airbyte_ai_gong import GongConnector
 
 
 def test_connector_creation():
-    """Test creating GongConnector instance with Access Key Authentication."""
+    """Test creating GongConnector instance with Access Key Authentication.
+    """
     connector = GongConnector(auth_config={"access_key": "test_access_key", "access_key_secret": "test_access_key_secret"})
     assert connector.connector_name == "gong"
     assert connector.connector_version
-
 
 def test_connector_metadata():
     """Test connector metadata."""
