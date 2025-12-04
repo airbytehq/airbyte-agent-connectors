@@ -11,7 +11,6 @@ from unittest.mock import AsyncMock, patch
 from airbyte_ai_hubspot import HubspotConnector
 
 
-
 @pytest.mark.asyncio
 async def test_companies_get():
     """Captured from real API call on 2025-12-01"""
@@ -26,7 +25,6 @@ async def test_companies_get():
         result = await connector.companies.get(companyId="4992593519")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_companies_list_limit_2():
@@ -43,7 +41,6 @@ async def test_companies_list_limit_2():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_contacts_get():
     """Captured from real API call on 2025-12-01"""
@@ -58,7 +55,6 @@ async def test_contacts_get():
         result = await connector.contacts.get(contactId="151")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_contacts_list_limit_2():
@@ -75,7 +71,6 @@ async def test_contacts_list_limit_2():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_deals_get():
     """Captured from real API call on 2025-12-01"""
@@ -90,7 +85,6 @@ async def test_deals_get():
         result = await connector.deals.get(dealId="3980651569")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_deals_list_limit_2():
@@ -107,7 +101,6 @@ async def test_deals_list_limit_2():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_objects_get():
     """Captured from real API call on 2025-12-01"""
@@ -122,7 +115,6 @@ async def test_objects_get():
         result = await connector.objects.get(objectType="2-13913028", objectId="5938880072")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_objects_list_limit_2():
@@ -139,7 +131,6 @@ async def test_objects_list_limit_2():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_schemas_list():
     """Captured from real API call on 2025-12-01"""
@@ -154,7 +145,6 @@ async def test_schemas_list():
         result = await connector.schemas.list()
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_tickets_get():
@@ -171,7 +161,6 @@ async def test_tickets_get():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_tickets_list_limit_2():
     """Captured from real API call on 2025-12-01"""
@@ -186,4 +175,3 @@ async def test_tickets_list_limit_2():
         result = await connector.tickets.list(limit=2)
 
     assert result == mock_response
-
