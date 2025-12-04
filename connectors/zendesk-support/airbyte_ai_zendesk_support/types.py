@@ -62,6 +62,8 @@ class ArticleAttachmentList(TypedDict):
     next_page: NotRequired[str | None]
     previous_page: NotRequired[str | None]
 
+# ===== ENVELOPE TYPE DEFINITIONS =====
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class ArticlesListParams(TypedDict):

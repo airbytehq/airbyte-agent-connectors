@@ -77,6 +77,7 @@ class Info(BaseModel):
 
     Extensions:
     - x-airbyte-connector-name: Name of the connector (Airbyte extension)
+    - x-airbyte-connector-id: UUID of the connector (Airbyte extension)
     - x-airbyte-external-documentation-urls: List of external documentation URLs (Airbyte extension)
     """
 
@@ -93,6 +94,7 @@ class Info(BaseModel):
     x_airbyte_connector_name: Optional[str] = Field(
         None, alias="x-airbyte-connector-name"
     )
+    x_airbyte_connector_id: Optional[str] = Field(None, alias="x-airbyte-connector-id")
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(
         ..., alias="x-airbyte-external-documentation-urls"
     )
