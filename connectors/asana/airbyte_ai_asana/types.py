@@ -1,7 +1,5 @@
 """
-Auto-generated type definitions for asana connector.
-
-Generated from OpenAPI specification schemas.
+Type definitions for asana connector.
 """
 from typing import TypedDict, NotRequired
 

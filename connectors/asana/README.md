@@ -2,7 +2,7 @@
 
 Type-safe Asana API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.12.0
+**Package Version:** 0.13.0
 
 **Connector Version:** 1.0.0
 
@@ -29,20 +29,20 @@ connector = AsanaConnector(auth_config={"api_key": "your_api_key"})
 ## Available Operations
 
 ### Tasks Operations
-- `list_tasks()` - List tasks from a project
-- `get_task()` - Get a task
+- `list_tasks()` - Returns all tasks in a project
+- `get_task()` - Get a single task by its ID
 
 ### Projects Operations
-- `list_projects()` - List projects
-- `get_project()` - Get a project
+- `list_projects()` - Returns a paginated list of projects
+- `get_project()` - Get a single project by its ID
 
 ### Workspaces Operations
-- `list_workspaces()` - List workspaces
-- `get_workspace()` - Get a workspace
+- `list_workspaces()` - Returns a paginated list of workspaces
+- `get_workspace()` - Get a single workspace by its ID
 
 ### Users Operations
-- `list_users()` - List users
-- `get_user()` - Get a user
+- `list_users()` - Returns a paginated list of users
+- `get_user()` - Get a single user by their ID
 
 ## Type Definitions
 
