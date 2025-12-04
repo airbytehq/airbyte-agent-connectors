@@ -1,7 +1,5 @@
 """
-Auto-generated type definitions for gong connector.
-
-Generated from OpenAPI specification schemas.
+Type definitions for gong connector.
 """
 from typing import TypedDict, NotRequired, Any
 
@@ -21,14 +19,39 @@ class PaginationRecords(TypedDict):
     currentPageNumber: NotRequired[int]
     cursor: NotRequired[str]
 
+class UserSettings(TypedDict):
+    """User settings"""
+    webConferencesRecorded: NotRequired[bool]
+    preventWebConferenceRecording: NotRequired[bool]
+    telephonyCallsImported: NotRequired[bool]
+    emailsImported: NotRequired[bool]
+    preventEmailImport: NotRequired[bool]
+    nonRecordedMeetingsImported: NotRequired[bool]
+    gongConnectEnabled: NotRequired[bool]
+
+class UserSpokenlanguagesItem(TypedDict):
+    """Nested schema for User.spokenLanguages_item"""
+    language: NotRequired[str]
+    primary: NotRequired[bool]
+
 class User(TypedDict):
     """User object"""
     id: NotRequired[str]
     emailAddress: NotRequired[str]
+    created: NotRequired[str]
+    active: NotRequired[bool]
+    emailAliases: NotRequired[list[str]]
+    trustedEmailAddress: NotRequired[str | None]
     firstName: NotRequired[str]
     lastName: NotRequired[str]
-    active: NotRequired[bool]
-    createdDate: NotRequired[str]
+    title: NotRequired[str | None]
+    phoneNumber: NotRequired[str | None]
+    extension: NotRequired[str | None]
+    personalMeetingUrls: NotRequired[list[str]]
+    settings: NotRequired[UserSettings]
+    managerId: NotRequired[str | None]
+    meetingConsentPageUrl: NotRequired[str | None]
+    spokenLanguages: NotRequired[list[UserSpokenlanguagesItem]]
 
 class UsersResponse(TypedDict):
     """Response containing list of users"""
@@ -46,13 +69,23 @@ class Call(TypedDict):
     id: NotRequired[str]
     url: NotRequired[str]
     title: NotRequired[str]
+    scheduled: NotRequired[str]
     started: NotRequired[str]
     duration: NotRequired[int]
     primaryUserId: NotRequired[str]
     direction: NotRequired[str]
     system: NotRequired[str]
     scope: NotRequired[str]
+    media: NotRequired[str]
     language: NotRequired[str]
+    workspaceId: NotRequired[str]
+    sdrDisposition: NotRequired[str | None]
+    clientUniqueId: NotRequired[str | None]
+    customData: NotRequired[str | None]
+    purpose: NotRequired[str | None]
+    meetingUrl: NotRequired[str]
+    isPrivate: NotRequired[bool]
+    calendarEventId: NotRequired[str | None]
 
 class CallsResponse(TypedDict):
     """Response containing list of calls"""
@@ -67,8 +100,10 @@ class CallResponse(TypedDict):
 
 class Workspace(TypedDict):
     """Workspace object"""
+    id: NotRequired[str]
     workspaceId: NotRequired[str]
     name: NotRequired[str]
+    description: NotRequired[str]
 
 class WorkspacesResponse(TypedDict):
     """Response containing list of workspaces"""
@@ -102,58 +137,20 @@ class ExtensiveCallCollaboration(TypedDict):
     """Collaboration data"""
     publicComments: NotRequired[list[dict[str, Any]]]
 
-class ExtensiveCallMedia(TypedDict):
-    """Media URLs"""
-    audioUrl: NotRequired[str]
-    videoUrl: NotRequired[str]
+class ExtensiveCallInteractionInteractionstatsItem(TypedDict):
+    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
+    name: NotRequired[str]
+    value: NotRequired[float]
 
 class ExtensiveCallInteractionQuestions(TypedDict):
     """Nested schema for ExtensiveCallInteraction.questions"""
     companyCount: NotRequired[int]
     nonCompanyCount: NotRequired[int]
 
-class ExtensiveCallInteractionInteractionstatsItem(TypedDict):
-    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
-    speakerId: NotRequired[str]
-    talkTime: NotRequired[float]
-
 class ExtensiveCallInteraction(TypedDict):
     """Interaction statistics"""
     interactionStats: NotRequired[list[ExtensiveCallInteractionInteractionstatsItem]]
     questions: NotRequired[ExtensiveCallInteractionQuestions]
-
-class ExtensiveCallMetadata(TypedDict):
-    """Call metadata"""
-    id: NotRequired[str]
-    url: NotRequired[str]
-    title: NotRequired[str]
-    scheduled: NotRequired[str]
-    started: NotRequired[str]
-    duration: NotRequired[int]
-    primaryUserId: NotRequired[str]
-    direction: NotRequired[str]
-    system: NotRequired[str]
-    scope: NotRequired[str]
-    media: NotRequired[str]
-    language: NotRequired[str]
-    workspaceId: NotRequired[str]
-    isPrivate: NotRequired[bool]
-    meetingUrl: NotRequired[str]
-
-class ExtensiveCallPartiesItemContextItem(TypedDict):
-    """Nested schema for ExtensiveCallPartiesItem.context_item"""
-    system: NotRequired[str]
-    objects: NotRequired[list[dict[str, Any]]]
-
-class ExtensiveCallPartiesItem(TypedDict):
-    """Nested schema for ExtensiveCall.parties_item"""
-    id: NotRequired[str]
-    emailAddress: NotRequired[str]
-    name: NotRequired[str]
-    title: NotRequired[str]
-    userId: NotRequired[str]
-    speakerId: NotRequired[str]
-    context: NotRequired[list[ExtensiveCallPartiesItemContextItem]]
 
 class ExtensiveCallContentTrackersItem(TypedDict):
     """Nested schema for ExtensiveCallContent.trackers_item"""
@@ -173,6 +170,52 @@ class ExtensiveCallContent(TypedDict):
     topics: NotRequired[list[ExtensiveCallContentTopicsItem]]
     trackers: NotRequired[list[ExtensiveCallContentTrackersItem]]
     pointsOfInterest: NotRequired[dict[str, Any]]
+
+class ExtensiveCallPartiesItemContextItem(TypedDict):
+    """Nested schema for ExtensiveCallPartiesItem.context_item"""
+    system: NotRequired[str]
+    objects: NotRequired[list[dict[str, Any]]]
+
+class ExtensiveCallPartiesItem(TypedDict):
+    """Nested schema for ExtensiveCall.parties_item"""
+    id: NotRequired[str]
+    emailAddress: NotRequired[str]
+    name: NotRequired[str]
+    title: NotRequired[str]
+    userId: NotRequired[str]
+    speakerId: NotRequired[str | None]
+    affiliation: NotRequired[str]
+    methods: NotRequired[list[str]]
+    phoneNumber: NotRequired[str]
+    context: NotRequired[list[ExtensiveCallPartiesItemContextItem]]
+
+class ExtensiveCallMedia(TypedDict):
+    """Media URLs"""
+    audioUrl: NotRequired[str]
+    videoUrl: NotRequired[str]
+
+class ExtensiveCallMetadata(TypedDict):
+    """Call metadata"""
+    id: NotRequired[str]
+    url: NotRequired[str]
+    title: NotRequired[str]
+    scheduled: NotRequired[str]
+    started: NotRequired[str]
+    duration: NotRequired[int]
+    primaryUserId: NotRequired[str]
+    direction: NotRequired[str]
+    system: NotRequired[str]
+    scope: NotRequired[str]
+    media: NotRequired[str]
+    language: NotRequired[str]
+    workspaceId: NotRequired[str]
+    sdrDisposition: NotRequired[str | None]
+    clientUniqueId: NotRequired[str | None]
+    customData: NotRequired[str | None]
+    purpose: NotRequired[str | None]
+    isPrivate: NotRequired[bool]
+    meetingUrl: NotRequired[str]
+    calendarEventId: NotRequired[str | None]
 
 class ExtensiveCall(TypedDict):
     """Detailed call object with extended information"""
@@ -318,6 +361,30 @@ class CallsExtensiveListParamsContentselector(TypedDict):
     context: NotRequired[str]
     contextTiming: NotRequired[list[str]]
     exposedFields: NotRequired[CallsExtensiveListParamsContentselectorExposedfields]
+
+class CallAudioDownloadParamsFilter(TypedDict):
+    """Nested schema for CallAudioDownloadParams.filter"""
+    callIds: NotRequired[list[str]]
+
+class CallAudioDownloadParamsContentselectorExposedfields(TypedDict):
+    """Nested schema for CallAudioDownloadParamsContentselector.exposedFields"""
+    media: NotRequired[bool]
+
+class CallAudioDownloadParamsContentselector(TypedDict):
+    """Nested schema for CallAudioDownloadParams.contentSelector"""
+    exposedFields: NotRequired[CallAudioDownloadParamsContentselectorExposedfields]
+
+class CallVideoDownloadParamsFilter(TypedDict):
+    """Nested schema for CallVideoDownloadParams.filter"""
+    callIds: NotRequired[list[str]]
+
+class CallVideoDownloadParamsContentselectorExposedfields(TypedDict):
+    """Nested schema for CallVideoDownloadParamsContentselector.exposedFields"""
+    media: NotRequired[bool]
+
+class CallVideoDownloadParamsContentselector(TypedDict):
+    """Nested schema for CallVideoDownloadParams.contentSelector"""
+    exposedFields: NotRequired[CallVideoDownloadParamsContentselectorExposedfields]
 
 class CallTranscriptsListParamsFilter(TypedDict):
     """Nested schema for CallTranscriptsListParams.filter"""
@@ -475,6 +542,18 @@ class CallsExtensiveListParams(TypedDict):
     filter: NotRequired[CallsExtensiveListParamsFilter]
     contentSelector: NotRequired[CallsExtensiveListParamsContentselector]
     cursor: NotRequired[str]
+
+class CallAudioDownloadParams(TypedDict):
+    """Parameters for call_audio.download operation"""
+    filter: NotRequired[CallAudioDownloadParamsFilter]
+    contentSelector: NotRequired[CallAudioDownloadParamsContentselector]
+    range_header: NotRequired[str]
+
+class CallVideoDownloadParams(TypedDict):
+    """Parameters for call_video.download operation"""
+    filter: NotRequired[CallVideoDownloadParamsFilter]
+    contentSelector: NotRequired[CallVideoDownloadParamsContentselector]
+    range_header: NotRequired[str]
 
 class WorkspacesListParams(TypedDict):
     """Parameters for workspaces.list operation"""

@@ -274,6 +274,100 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v2/calls:audio/download":
+    post:
+      summary: Download call audio
+      description: |
+        Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+        {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+      operationId: DownloadCallAudio
+      x-airbyte-entity: call_audio
+      x-airbyte-action: download
+      x-airbyte-file-url: calls[0].media.audioUrl
+      x-airbyte-path-override:
+        path: /v2/calls/extensive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    callIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List containing the single call ID
+                contentSelector:
+                  type: object
+                  properties:
+                    exposedFields:
+                      type: object
+                      properties:
+                        media:
+                          type: boolean
+                          description: Must be true to get media URLs
+                          default: true
+      responses:
+        "200":
+          description: Call metadata with audio URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensiveCallsResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/calls:video/download":
+    post:
+      summary: Download call video
+      description: |
+        Downloads the video media file for a call. Temporarily, the request body must be configured with:
+        {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+      operationId: DownloadCallVideo
+      x-airbyte-entity: call_video
+      x-airbyte-action: download
+      x-airbyte-file-url: calls[0].media.videoUrl
+      x-airbyte-path-override:
+        path: /v2/calls/extensive
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    callIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List containing the single call ID
+                contentSelector:
+                  type: object
+                  properties:
+                    exposedFields:
+                      type: object
+                      properties:
+                        media:
+                          type: boolean
+                          description: Must be true to get media URLs
+                          default: true
+      responses:
+        "200":
+          description: Call metadata with video URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtensiveCallsResponse"
+        "401":
+          description: Unauthorized
+
   "/v2/workspaces":
     get:
       summary: List workspaces
@@ -523,18 +617,74 @@ components:
         emailAddress:
           type: string
           description: User email address
+        created:
+          type: string
+          description: User creation timestamp
+        active:
+          type: boolean
+          description: Whether user is active
+        emailAliases:
+          type: array
+          items:
+            type: string
+          description: Email aliases for the user
+        trustedEmailAddress:
+          type: ["string", "null"]
+          description: Trusted email address
         firstName:
           type: string
           description: User first name
         lastName:
           type: string
           description: User last name
-        active:
-          type: boolean
-          description: Whether user is active
-        createdDate:
-          type: string
-          description: User creation date
+        title:
+          type: ["string", "null"]
+          description: Job title
+        phoneNumber:
+          type: ["string", "null"]
+          description: Phone number
+        extension:
+          type: ["string", "null"]
+          description: Phone extension
+        personalMeetingUrls:
+          type: array
+          items:
+            type: string
+          description: Personal meeting URLs
+        settings:
+          type: object
+          description: User settings
+          properties:
+            webConferencesRecorded:
+              type: boolean
+            preventWebConferenceRecording:
+              type: boolean
+            telephonyCallsImported:
+              type: boolean
+            emailsImported:
+              type: boolean
+            preventEmailImport:
+              type: boolean
+            nonRecordedMeetingsImported:
+              type: boolean
+            gongConnectEnabled:
+              type: boolean
+        managerId:
+          type: ["string", "null"]
+          description: Manager user ID
+        meetingConsentPageUrl:
+          type: ["string", "null"]
+          description: Meeting consent page URL
+        spokenLanguages:
+          type: array
+          items:
+            type: object
+            properties:
+              language:
+                type: string
+              primary:
+                type: boolean
+          description: Spoken languages
 
     UsersResponse:
       type: object
@@ -574,6 +724,10 @@ components:
         title:
           type: string
           description: Call title
+        scheduled:
+          type: string
+          format: date-time
+          description: Scheduled time
         started:
           type: string
           format: date-time
@@ -593,9 +747,36 @@ components:
         scope:
           type: string
           description: Call scope
+        media:
+          type: string
+          description: Media type (Audio/Video)
         language:
           type: string
           description: Call language
+        workspaceId:
+          type: string
+          description: Workspace ID
+        sdrDisposition:
+          type: ["string", "null"]
+          description: SDR disposition
+        clientUniqueId:
+          type: ["string", "null"]
+          description: Client unique identifier
+        customData:
+          type: ["string", "null"]
+          description: Custom data
+        purpose:
+          type: ["string", "null"]
+          description: Call purpose
+        meetingUrl:
+          type: string
+          description: Meeting URL
+        isPrivate:
+          type: boolean
+          description: Whether call is private
+        calendarEventId:
+          type: ["string", "null"]
+          description: Calendar event ID
 
     CallsResponse:
       type: object
@@ -626,12 +807,18 @@ components:
       x-airbyte-entity-name: workspaces
       description: Workspace object
       properties:
-        workspaceId:
+        id:
           type: string
           description: Unique workspace identifier
+        workspaceId:
+          type: string
+          description: Unique workspace identifier (legacy)
         name:
           type: string
           description: Workspace name
+        description:
+          type: string
+          description: Workspace description
 
     WorkspacesResponse:
       type: object
@@ -743,12 +930,27 @@ components:
             workspaceId:
               type: string
               description: Workspace ID
+            sdrDisposition:
+              type: ["string", "null"]
+              description: SDR disposition
+            clientUniqueId:
+              type: ["string", "null"]
+              description: Client unique identifier
+            customData:
+              type: ["string", "null"]
+              description: Custom data
+            purpose:
+              type: ["string", "null"]
+              description: Call purpose
             isPrivate:
               type: boolean
               description: Whether call is private
             meetingUrl:
               type: string
               description: Meeting URL
+            calendarEventId:
+              type: ["string", "null"]
+              description: Calendar event ID
         parties:
           type: array
           description: Call participants
@@ -771,8 +973,19 @@ components:
                 type: string
                 description: Gong user ID if internal
               speakerId:
-                type: string
+                type: ["string", "null"]
                 description: Speaker ID for transcript matching
+              affiliation:
+                type: string
+                description: Internal or External
+              methods:
+                type: array
+                items:
+                  type: string
+                description: Contact methods
+              phoneNumber:
+                type: string
+                description: Phone number
               context:
                 type: array
                 items:
@@ -784,9 +997,6 @@ components:
                       type: array
                       items:
                         type: object
-                affiliation:
-                  type: string
-                  description: Internal or External
         interaction:
           type: object
           description: Interaction statistics
@@ -796,10 +1006,12 @@ components:
               items:
                 type: object
                 properties:
-                  speakerId:
+                  name:
                     type: string
-                  talkTime:
+                    description: Stat name
+                  value:
                     type: number
+                    description: Stat value
             questions:
               type: object
               properties:

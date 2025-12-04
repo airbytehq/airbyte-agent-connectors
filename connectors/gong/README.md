@@ -2,7 +2,7 @@
 
 Type-safe Gong API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.12.0
+**Package Version:** 0.13.0
 
 **Connector Version:** 1.0.0
 
@@ -29,30 +29,40 @@ connector = GongConnector(auth_config={"api_key": "your_api_key"})
 ## Available Operations
 
 ### Users Operations
-- `list_users()` - List users
-- `get_user()` - Get a user
+- `list_users()` - Returns a list of all users in the Gong account
+- `get_user()` - Get a single user by ID
 
 ### Calls Operations
-- `list_calls()` - List calls
-- `get_call()` - Get a call
+- `list_calls()` - Retrieve calls data by date range
+- `get_call()` - Get specific call data by ID
 
 ### Calls_Extensive Operations
-- `list_calls_extensive()` - List calls with extensive data
+- `list_calls_extensive()` - Retrieve detailed call data including participants, interaction stats, and content
+
+### Call_Audio Operations
+- `download_call_audio()` - Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+
+
+### Call_Video Operations
+- `download_call_video()` - Downloads the video media file for a call. Temporarily, the request body must be configured with:
+{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+
 
 ### Workspaces Operations
-- `list_workspaces()` - List workspaces
+- `list_workspaces()` - List all company workspaces
 
 ### Call_Transcripts Operations
-- `get_call_transcripts()` - Retrieve call transcripts
+- `get_call_transcripts()` - Returns transcripts for calls in a specified date range or specific call IDs
 
 ### Stats_Activity_Aggregate Operations
-- `get_activity_aggregate()` - Retrieve aggregated activity statistics
+- `get_activity_aggregate()` - Provides aggregated user activity metrics across a specified period
 
 ### Stats_Activity_Day_By_Day Operations
-- `get_activity_day_by_day()` - Retrieve daily activity statistics
+- `get_activity_day_by_day()` - Delivers daily user activity metrics across a specified date range
 
 ### Stats_Interaction Operations
-- `get_interaction_stats()` - Retrieve interaction statistics
+- `get_interaction_stats()` - Returns interaction stats for users based on calls that have Whisper turned on
 
 ## Type Definitions
 
