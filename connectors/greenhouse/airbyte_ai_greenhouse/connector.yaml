@@ -8,6 +8,7 @@ info:
   version: 1.0.0
   description: Connector for Greenhouse Harvest API
   x-airbyte-connector-name: greenhouse
+  x-airbyte-connector-id: 59f1e50a-331f-4f09-b3e8-2e8d4d355f44
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Greenhouse API Reference documentation

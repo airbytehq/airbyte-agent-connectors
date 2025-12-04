@@ -80,6 +80,8 @@ class Job(TypedDict):
     hiring_team: NotRequired[dict[str, Any]]
     openings: NotRequired[list[dict[str, Any]]]
 
+# ===== ENVELOPE TYPE DEFINITIONS =====
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class CandidatesListParams(TypedDict):

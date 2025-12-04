@@ -44,6 +44,29 @@ class ExecutionConfig:
 
 
 @dataclass
+class StandardExecuteResult:
+    """Result from standard operation handlers (GET, LIST, CREATE, UPDATE, DELETE, etc.).
+
+    This is returned by _StandardOperationHandler to provide type-safe data and metadata
+    returns instead of using tuples. Download operations continue to return AsyncIterator[bytes]
+    directly for simplicity.
+
+    Args:
+        data: Response data from the operation
+        metadata: Optional metadata extracted from response (e.g., pagination info)
+
+    Example:
+        result = StandardExecuteResult(
+            data={"id": "1", "name": "Test"},
+            metadata={"pagination": {"cursor": "next123", "totalRecords": 100}}
+        )
+    """
+
+    data: dict[str, Any]
+    metadata: dict[str, Any] | None = None
+
+
+@dataclass
 class ExecutionResult:
     """Result of a connector execution.
 
@@ -56,12 +79,14 @@ class ExecutionResult:
             - dict[str, Any] for standard operations (GET, LIST, CREATE, etc.)
             - AsyncIterator[bytes] for download operations (streaming file content)
         error: Error message if success=False, None otherwise
+        meta: Optional metadata extracted from response (e.g., pagination info)
 
     Example (Success - Standard):
         result = ExecutionResult(
             success=True,
-            data={"customers": [...]},
-            error=None
+            data=[{"id": "1"}, {"id": "2"}],
+            error=None,
+            meta={"pagination": {"cursor": "next123", "totalRecords": 100}}
         )
 
     Example (Success - Download):
@@ -75,13 +100,15 @@ class ExecutionResult:
         result = ExecutionResult(
             success=False,
             data={},
-            error="Entity 'invalid' not found"
+            error="Entity 'invalid' not found",
+            meta=None
         )
     """
 
     success: bool
     data: dict[str, Any] | AsyncIterator[bytes]
     error: str | None = None
+    meta: dict[str, Any] | None = None
 
 
 # ============================================================================

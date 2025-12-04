@@ -259,6 +259,128 @@ Example:
     ```
 """
 
+AIRBYTE_RECORD_EXTRACTOR = "x-airbyte-record-extractor"
+"""
+Extension: x-airbyte-record-extractor
+Location: Operation object (on individual HTTP operations)
+Type: string (JSONPath expression)
+Required: No
+
+Description:
+    Specifies a JSONPath expression to extract actual record data from API
+    response envelopes. Many APIs wrap responses in metadata structures
+    (pagination info, request IDs, etc.). This extension tells the executor
+    where to find the actual records.
+
+    Return type is automatically inferred from x-airbyte-action:
+    - list, search actions: Returns array ([] if path not found)
+    - get, create, update, delete actions: Returns single record (None if path not found)
+
+Example:
+    ```yaml
+    paths:
+      /v2/users:
+        get:
+          x-airbyte-entity: users
+          x-airbyte-action: list
+          x-airbyte-record-extractor: $.users
+    ```
+
+    API Response:
+    ```json
+    {
+      "requestId": "abc123",
+      "users": [{"id": "1"}, {"id": "2"}]
+    }
+    ```
+
+    Executor Returns: [{"id": "1"}, {"id": "2"}]
+"""
+
+AIRBYTE_META_EXTRACTOR = "x-airbyte-meta-extractor"
+"""
+Extension: x-airbyte-meta-extractor
+Location: Operation object (on individual HTTP operations)
+Type: dict[str, str] (field name → JSONPath expression)
+Required: No
+
+Description:
+    Extracts metadata (pagination info, request IDs, etc.) from API responses.
+    Each key in the dict becomes a field in ExecutionResult.meta, with its value
+    being a JSONPath expression that extracts data from the original response.
+
+    Supports two usage patterns:
+
+    Pattern 1: Extract entire nested object (when all fields are grouped together)
+    Pattern 2: Extract individual fields (when fields are scattered across response)
+
+    Metadata is extracted from the original full response before record extraction,
+    ensuring access to envelope metadata that may be removed during record extraction.
+
+Usage Pattern 1 (Extract nested object):
+    ```yaml
+    paths:
+      /v2/users:
+        get:
+          x-airbyte-resource: users
+          x-airbyte-verb: list
+          x-airbyte-record-extractor: $.users
+          x-airbyte-meta-extractor:
+            pagination: $.records  # Extracts entire nested object
+    ```
+
+    API Response:
+    ```json
+    {
+      "requestId": "abc123",
+      "records": {
+        "cursor": "next_page_token",
+        "totalRecords": 100,
+        "currentPageSize": 20
+      },
+      "users": [{"id": "1"}, {"id": "2"}]
+    }
+    ```
+
+    Executor Returns:
+    - data: [{"id": "1"}, {"id": "2"}]
+    - meta: {"pagination": {"cursor": "next_page_token", "totalRecords": 100, "currentPageSize": 20}}
+
+Usage Pattern 2 (Extract individual fields):
+    ```yaml
+    paths:
+      /v1/customers:
+        get:
+          x-airbyte-resource: customers
+          x-airbyte-verb: list
+          x-airbyte-record-extractor: $.data
+          x-airbyte-meta-extractor:
+            cursor: $.records.cursor
+            total_count: $.records.totalRecords
+            request_id: $.requestId
+            has_more: $.has_more
+    ```
+
+    API Response:
+    ```json
+    {
+      "requestId": "xyz789",
+      "records": {"cursor": "abc", "totalRecords": 50},
+      "has_more": true,
+      "data": [{"id": "cus_1"}, {"id": "cus_2"}]
+    }
+    ```
+
+    Executor Returns:
+    - data: [{"id": "cus_1"}, {"id": "cus_2"}]
+    - meta: {"cursor": "abc", "total_count": 50, "request_id": "xyz789", "has_more": true}
+
+Behavior:
+    - Missing paths return None for that field (does not crash)
+    - Invalid JSONPath logs warning and returns None for that field
+    - Extraction happens before record extraction to access full response envelope
+"""
+
 AIRBYTE_FILE_URL = "x-airbyte-file-url"
 """
 Extension: x-airbyte-file-url
@@ -383,6 +505,8 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_TOKEN_PATH,
         AIRBYTE_BODY_TYPE,
         AIRBYTE_PATH_OVERRIDE,
+        AIRBYTE_RECORD_EXTRACTOR,
+        AIRBYTE_META_EXTRACTOR,
         AIRBYTE_FILE_URL,
     ]
 
@@ -444,6 +568,18 @@ EXTENSION_REGISTRY = {
         "required": False,
         "validation": "strict",
         "description": "Override actual HTTP path when OpenAPI path differs from real endpoint (strongly-typed Pydantic model)",
+    },
+    AIRBYTE_RECORD_EXTRACTOR: {
+        "location": "operation",
+        "type": "string",
+        "required": False,
+        "description": "JSONPath expression to extract records from response envelopes",
+    },
+    AIRBYTE_META_EXTRACTOR: {
+        "location": "operation",
+        "type": "dict[str, str]",
+        "required": False,
+        "description": "Dictionary mapping field names to JSONPath expressions for extracting metadata (pagination, request IDs, etc.) from response envelopes",
     },
     AIRBYTE_FILE_URL: {
         "location": "operation",
