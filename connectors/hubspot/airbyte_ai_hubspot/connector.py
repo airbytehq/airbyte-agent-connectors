@@ -94,7 +94,7 @@ class HubspotConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = HubspotConnector(auth_config={"api_key": "sk_..."})
+            connector = HubspotConnector(auth_config={"access_token": "..."})
             # Hosted mode (executed on Airbyte cloud)
             connector = HubspotConnector(
                 connector_id="connector-456",
