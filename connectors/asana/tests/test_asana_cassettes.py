@@ -11,7 +11,6 @@ from unittest.mock import AsyncMock, patch
 from airbyte_ai_asana import AsanaConnector
 
 
-
 @pytest.mark.asyncio
 async def test_projects_get():
     """Captured from real API call on 2025-11-20"""
@@ -26,7 +25,6 @@ async def test_projects_get():
         result = await connector.projects.get(project_gid="1201485355022853")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_projects_list_limit_5():
@@ -43,7 +41,6 @@ async def test_projects_list_limit_5():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_tasks_get():
     """Captured from real API call on 2025-11-20"""
@@ -58,7 +55,6 @@ async def test_tasks_get():
         result = await connector.tasks.get(task_gid="1210025338168162")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_tasks_list_limit_5():
@@ -75,7 +71,6 @@ async def test_tasks_list_limit_5():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_users_get():
     """Captured from real API call on 2025-11-20"""
@@ -90,7 +85,6 @@ async def test_users_get():
         result = await connector.users.get(user_gid="1200344886012993")
 
     assert result == mock_response
-
 
 @pytest.mark.asyncio
 async def test_users_list_limit_5():
@@ -107,7 +101,6 @@ async def test_users_list_limit_5():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_workspaces_get():
     """Captured from real API call on 2025-11-20"""
@@ -123,7 +116,6 @@ async def test_workspaces_get():
 
     assert result == mock_response
 
-
 @pytest.mark.asyncio
 async def test_workspaces_list():
     """Captured from real API call on 2025-11-20"""
@@ -138,4 +130,3 @@ async def test_workspaces_list():
         result = await connector.workspaces.list()
 
     assert result == mock_response
-
