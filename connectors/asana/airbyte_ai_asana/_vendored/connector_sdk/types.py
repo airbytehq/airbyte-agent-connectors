@@ -95,6 +95,18 @@ class EndpointDefinition(BaseModel):
         description="GraphQL body configuration from x-airbyte-body-type extension",
     )
 
+    # Record extractor support (Airbyte extension)
+    record_extractor: str | None = Field(
+        None,
+        description="JSONPath expression to extract records from response envelopes",
+    )
+
+    # Metadata extractor support (Airbyte extension)
+    meta_extractor: dict[str, str] | None = Field(
+        None,
+        description="Dictionary mapping field names to JSONPath expressions for extracting metadata from response envelopes",
+    )
+
     # Download support (Airbyte extension)
     file_field: str | None = Field(
         None,

@@ -264,6 +264,8 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
             entity_name = operation.x_airbyte_entity
             action_name = operation.x_airbyte_action
             path_override = operation.x_airbyte_path_override
+            record_extractor = operation.x_airbyte_record_extractor
+            meta_extractor = operation.x_airbyte_meta_extractor
 
             if not entity_name:
                 raise InvalidOpenAPIError(
@@ -331,8 +333,11 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
+                action=action,
                 path=path,
                 path_override=path_override,
+                record_extractor=record_extractor,
+                meta_extractor=meta_extractor,
                 description=operation.description or operation.summary,
                 body_fields=body_fields,
                 query_params=query_params,

@@ -8,6 +8,7 @@ info:
   version: 1.0.0
   description: Connector for Asana API
   x-airbyte-connector-name: asana
+  x-airbyte-connector-id: d0243522-dccf-4978-8ba0-37ed47a0bdbf
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Asana API Reference
