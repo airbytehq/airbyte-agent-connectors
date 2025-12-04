@@ -1,7 +1,5 @@
 """
-Auto-generated type definitions for linear connector.
-
-Generated from OpenAPI specification schemas.
+Type definitions for linear connector.
 """
 from typing import TypedDict, NotRequired, Any
 

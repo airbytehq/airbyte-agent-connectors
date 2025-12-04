@@ -2,7 +2,7 @@
 
 Type-safe Linear API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.12.0
+**Package Version:** 0.13.0
 
 **Connector Version:** 1.0.0
 
@@ -29,16 +29,16 @@ connector = LinearConnector(auth_config={"api_key": "your_api_key"})
 ## Available Operations
 
 ### Issues Operations
-- `list_issues()` - List issues
-- `get_issue()` - Get an issue
+- `list_issues()` - Returns a paginated list of issues via GraphQL with pagination support
+- `get_issue()` - Get a single issue by ID via GraphQL
 
 ### Projects Operations
-- `list_projects()` - List projects
-- `get_project()` - Get a project
+- `list_projects()` - Returns a paginated list of projects via GraphQL with pagination support
+- `get_project()` - Get a single project by ID via GraphQL
 
 ### Teams Operations
-- `list_teams()` - List teams
-- `get_team()` - Get a team
+- `list_teams()` - Returns a list of teams via GraphQL with pagination support
+- `get_team()` - Get a single team by ID via GraphQL
 
 ## Type Definitions
 
