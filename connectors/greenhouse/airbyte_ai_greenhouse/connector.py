@@ -76,7 +76,7 @@ class GreenhouseConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = GreenhouseConnector(auth_config={"api_key": "sk_..."})
+            connector = GreenhouseConnector(auth_config={"api_key": "..."})
             # Hosted mode (executed on Airbyte cloud)
             connector = GreenhouseConnector(
                 connector_id="connector-456",
