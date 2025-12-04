@@ -2,7 +2,7 @@
 
 Type-safe Gong API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.10.0
+**Package Version:** 0.11.0
 
 **Connector Version:** 1.0.0
 
@@ -38,12 +38,6 @@ connector = GongConnector(auth_config={"api_key": "your_api_key"})
 
 ### Calls_Extensive Operations
 - `list_calls_extensive()` - List calls with extensive data
-
-### Call_Audio Operations
-- `download_call_audio()` - Download call audio
-
-### Call_Video Operations
-- `download_call_video()` - Download call video
 
 ### Workspaces Operations
 - `list_workspaces()` - List workspaces

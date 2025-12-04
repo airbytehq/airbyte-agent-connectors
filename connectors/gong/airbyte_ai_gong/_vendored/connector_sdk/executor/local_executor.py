@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import asyncio
-import inspect
 import os
 import re
 import time
+import logging
+
 from typing import Any, AsyncIterator, Protocol
 from urllib.parse import quote
 
+from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
 from ..constants import (
@@ -23,11 +25,17 @@ from ..logging import NullLogger, RequestLogger
 from ..observability import ObservabilitySession
 from ..auth_template import apply_auth_mapping
 from ..telemetry import SegmentTracker
-from ..types import ConnectorConfig, EntityDefinition, Action
+from ..types import (
+    ConnectorConfig,
+    EntityDefinition,
+    Action,
+    EndpointDefinition,
+)
 
 from .models import (
     ExecutionConfig,
     ExecutionResult,
+    StandardExecuteResult,
     ExecutorError,
     EntityNotFoundError,
     ActionNotSupportedError,
@@ -54,6 +62,7 @@ class _OperationContext:
         self.build_request_body = executor._build_request_body
         self.determine_request_format = executor._determine_request_format
         self.validate_required_body_fields = executor._validate_required_body_fields
+        self.extract_records = executor._extract_records
 
 
 class _OperationHandler(Protocol):
@@ -68,8 +77,13 @@ class _OperationHandler(Protocol):
         entity: str,
         action: Action,
         params: dict[str, Any],
-    ) -> dict[str, Any] | AsyncIterator[bytes]:
-        """Execute the operation and return result."""
+    ) -> StandardExecuteResult | AsyncIterator[bytes]:
+        """Execute the operation and return result.
+
+        Returns:
+            StandardExecuteResult for standard operations (GET, LIST, CREATE, etc.)
+            AsyncIterator[bytes] for download operations
+        """
         ...
 
 
@@ -303,14 +317,26 @@ class LocalExecutor:
             # Execute handler
             result = handler.execute_operation(config.entity, action, params)
 
-            # Handle AsyncIterator (download) vs dict (standard)
-            if inspect.isasyncgen(result):
-                # Download: return stream in ExecutionResult
-                return ExecutionResult(success=True, data=result, error=None)
+            # Check if it's an async generator (download) or awaitable (standard)
+            import inspect
 
-            # Standard: await coroutine and return
-            response_data = await result
-            return ExecutionResult(success=True, data=response_data, error=None)
+            if inspect.isasyncgen(result):
+                # Download operation: return generator directly
+                return ExecutionResult(
+                    success=True,
+                    data=result,
+                    error=None,
+                    meta=None,
+                )
+            else:
+                # Standard operation: await and extract data and metadata
+                handler_result = await result
+                return ExecutionResult(
+                    success=True,
+                    data=handler_result.data,
+                    error=None,
+                    meta=handler_result.metadata,
+                )
 
         except (
             EntityNotFoundError,
@@ -329,8 +355,8 @@ class LocalExecutor:
     ) -> dict[str, Any]:
         """Internal method: Execute an action on an entity asynchronously.
 
-        This method now delegates to the appropriate handler.
-        External code should use execute(config) instead.
+        This method now delegates to the appropriate handler and extracts just the data.
+        External code should use execute(config) instead for full ExecutionResult with metadata.
 
         Args:
             entity: Entity name (e.g., "Customer")
@@ -357,7 +383,13 @@ class LocalExecutor:
         if not handler:
             raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
-        return await handler.execute_operation(entity, action, params)
+        # Execute handler and extract just the data for backward compatibility
+        result = await handler.execute_operation(entity, action, params)
+        if isinstance(result, StandardExecuteResult):
+            return result.data
+        else:
+            # Download operation returns AsyncIterator directly
+            return result
 
     async def execute_batch(
         self, operations: list[tuple[str, str | Action, dict[str, Any] | None]]
@@ -403,7 +435,19 @@ class LocalExecutor:
             tasks.append(handler.execute_operation(entity, action, params))
 
         # Execute all tasks concurrently - exceptions propagate via asyncio.gather
-        return await asyncio.gather(*tasks)
+        results = await asyncio.gather(*tasks)
+
+        # Extract data from results
+        extracted_results = []
+        for result in results:
+            if isinstance(result, StandardExecuteResult):
+                # Standard operation: extract data
+                extracted_results.append(result.data)
+            else:
+                # Download operation: return iterator as-is
+                extracted_results.append(result)
+
+        return extracted_results
 
     def _build_path(self, path_template: str, params: dict[str, Any]) -> str:
         """Build path by replacing {param} placeholders with URL-encoded values.
@@ -476,9 +520,6 @@ class LocalExecutor:
     ) -> str:
         """Extract download URL from metadata response using x-airbyte-file-url.
 
-        Supports both simple dot notation (e.g., "article.content_url") and array
-        indexing with bracket notation (e.g., "calls[0].media.audioUrl").
-
         Args:
             response: Metadata response containing file reference
             file_field: JSON path to file URL field (from x-airbyte-file-url)
@@ -490,62 +531,24 @@ class LocalExecutor:
         Raises:
             ExecutorError: If file field not found or invalid
         """
-        # Navigate nested path (e.g., "article_attachment.content_url" or "calls[0].media.audioUrl")
+        # Navigate nested path (e.g., "article_attachment.content_url")
         parts = file_field.split(".")
         current = response
 
         for i, part in enumerate(parts):
-            # Check if part has array indexing (e.g., "calls[0]")
-            array_match = re.match(r"^(\w+)\[(\d+)\]$", part)
+            if not isinstance(current, dict):
+                raise ExecutorError(
+                    f"Cannot extract download URL for {entity}: "
+                    f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                )
 
-            if array_match:
-                field_name = array_match.group(1)
-                index = int(array_match.group(2))
+            if part not in current:
+                raise ExecutorError(
+                    f"Cannot extract download URL for {entity}: "
+                    f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
+                )
 
-                # Navigate to the field
-                if not isinstance(current, dict):
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
-                    )
-
-                if field_name not in current:
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Field '{field_name}' not found in response. Available fields: {list(current.keys())}"
-                    )
-
-                # Get the array
-                array_value = current[field_name]
-                if not isinstance(array_value, list):
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected list at '{field_name}', got {type(array_value).__name__}"
-                    )
-
-                # Check index bounds
-                if index >= len(array_value):
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
-                    )
-
-                current = array_value[index]
-            else:
-                # Regular dict navigation
-                if not isinstance(current, dict):
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
-                    )
-
-                if part not in current:
-                    raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
-                    )
-
-                current = current[part]
+            current = current[part]
 
         if not isinstance(current, str):
             raise ExecutorError(
@@ -556,7 +559,7 @@ class LocalExecutor:
         return current
 
     def _build_request_body(
-        self, endpoint: Any, params: dict[str, Any]
+        self, endpoint: EndpointDefinition, params: dict[str, Any]
     ) -> dict[str, Any] | None:
         """Build request body (GraphQL or standard).
 
@@ -574,7 +577,7 @@ class LocalExecutor:
         return None
 
     def _determine_request_format(
-        self, endpoint: Any, body: dict[str, Any] | None
+        self, endpoint: EndpointDefinition, body: dict[str, Any] | None
     ) -> dict[str, Any]:
         """Determine json/data parameters for HTTP request.
 
@@ -762,6 +765,121 @@ class LocalExecutor:
 
         return interpolate_value(variables)
 
+    def _extract_records(
+        self,
+        response_data: dict[str, Any],
+        endpoint: EndpointDefinition,
+    ) -> dict[str, Any] | list[Any] | None:
+        """Extract records from response using record extractor.
+
+        Type inference based on action:
+        - list, search: Returns array ([] if not found)
+        - get, create, update, delete: Returns single record (None if not found)
+
+        Args:
+            response_data: Full API response
+            endpoint: Endpoint with optional record extractor and action
+
+        Returns:
+            - Extracted data if extractor configured and path found
+            - [] or None if path not found (based on action)
+            - Original response if no extractor configured or on error
+        """
+        # Check if endpoint has record extractor
+        extractor = endpoint.record_extractor
+        if not extractor:
+            return response_data
+
+        # Determine if this action returns array or single record
+        action = endpoint.action
+        if not action:
+            return response_data
+
+        is_array_action = action in (Action.LIST, Action.SEARCH)
+
+        try:
+            # Parse and apply JSONPath expression
+            jsonpath_expr = parse_jsonpath(extractor)
+            matches = [match.value for match in jsonpath_expr.find(response_data)]
+
+            if not matches:
+                # Path not found - return empty based on action
+                return [] if is_array_action else None
+
+            # Return extracted data
+            if is_array_action:
+                # For array actions, return the array (or list of matches)
+                return matches[0] if len(matches) == 1 else matches
+            else:
+                # For single record actions, return first match
+                return matches[0]
+
+        except Exception as e:
+            logging.warning(
+                f"Failed to apply record extractor '{extractor}': {e}. "
+                f"Returning original response."
+            )
+            return response_data
+
+    def _extract_metadata(
+        self,
+        response_data: dict[str, Any],
+        endpoint: EndpointDefinition,
+    ) -> dict[str, Any] | None:
+        """Extract metadata from response using meta extractor.
+
+        Each field in meta_extractor dict is independently extracted using JSONPath.
+        Missing or invalid paths result in None for that field (no crash).
+
+        Args:
+            response_data: Full API response (before record extraction)
+            endpoint: Endpoint with optional meta extractor configuration
+
+        Returns:
+            - Dict of extracted metadata if extractor configured
+            - None if no extractor configured
+            - Dict with None values for failed extractions
+
+        Example:
+            meta_extractor = {
+                "pagination": "$.records",
+                "request_id": "$.requestId"
+            }
+            Returns: {
+                "pagination": {"cursor": "abc", "total": 100},
+                "request_id": "xyz123"
+            }
+        """
+        # Check if endpoint has meta extractor
+        if endpoint.meta_extractor is None:
+            return None
+
+        extracted_meta: dict[str, Any] = {}
+
+        # Extract each field independently
+        for field_name, jsonpath_expr_str in endpoint.meta_extractor.items():
+            try:
+                # Parse and apply JSONPath expression
+                jsonpath_expr = parse_jsonpath(jsonpath_expr_str)
+                matches = [match.value for match in jsonpath_expr.find(response_data)]
+
+                if matches:
+                    # Return first match (most common case)
+                    extracted_meta[field_name] = matches[0]
+                else:
+                    # Path not found - set to None
+                    extracted_meta[field_name] = None
+
+            except Exception as e:
+                # Log error but continue with other fields
+                logging.warning(
+                    f"Failed to apply meta extractor for field '{field_name}' "
+                    f"with path '{jsonpath_expr_str}': {e}. Setting to None."
+                )
+                extracted_meta[field_name] = None
+
+        return extracted_meta
+
     def _validate_required_body_fields(
         self, endpoint: Any, params: dict[str, Any], action: Action, entity: str
     ) -> None:
@@ -838,11 +956,11 @@ class _StandardOperationHandler:
 
     async def execute_operation(
         self, entity: str, action: Action, params: dict[str, Any]
-    ) -> dict[str, Any]:
+    ) -> StandardExecuteResult:
         """Execute standard REST operation with full telemetry and error handling."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
+        with tracer.start_as_current_span("local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
             span.set_attribute("connector.entity", entity)
@@ -914,6 +1032,12 @@ class _StandardOperationHandler:
                     data=request_kwargs.get("data"),
                 )
 
+                # Extract metadata from original response (before record extraction)
+                metadata = self.ctx.executor._extract_metadata(response, endpoint)
+
+                # Extract records if extractor configured
+                response = self.ctx.extract_records(response, endpoint)
+
                 # Assume success with 200 status code if no exception raised
                 status_code = 200
 
@@ -921,7 +1045,8 @@ class _StandardOperationHandler:
                 span.set_attribute("connector.success", True)
                 span.set_attribute("http.status_code", status_code)
 
-                return response
+                # Return StandardExecuteResult with data and metadata
+                return StandardExecuteResult(data=response, metadata=metadata)
 
             except (EntityNotFoundError, ActionNotSupportedError) as e:
                 # Validation errors - record in span
@@ -978,7 +1103,7 @@ class _DownloadOperationHandler:
         """Execute download operation (one-step or two-step) with full telemetry."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
+        with tracer.start_as_current_span("local_executor.execute_operation") as span:
             # Add span attributes
             span.set_attribute("connector.name", self.ctx.executor.config.name)
             span.set_attribute("connector.entity", entity)

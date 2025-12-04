@@ -8,6 +8,7 @@ info:
   version: 1.0.0
   description: Connector for Gong API
   x-airbyte-connector-name: gong
+  x-airbyte-connector-id: 32382e40-3b49-4b99-9c5c-4076501914e7
   x-airbyte-external-documentation-urls:
     - type: api_reference
       title: Gong API Documentation
@@ -28,6 +29,9 @@ paths:
       operationId: listUsers
       x-airbyte-entity: users
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.users
+      x-airbyte-meta-extractor:
+        pagination: $.records
       parameters:
         - name: cursor
           in: query
@@ -52,6 +56,7 @@ paths:
       operationId: getUser
       x-airbyte-entity: users
       x-airbyte-action: get
+      x-airbyte-record-extractor: $.user
       parameters:
         - name: id
           in: path
@@ -78,18 +83,21 @@ paths:
       operationId: listCalls
       x-airbyte-entity: calls
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.calls
+      x-airbyte-meta-extractor:
+        pagination: $.records
       parameters:
         - name: fromDateTime
           in: query
           description: Start date in ISO 8601 format
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
         - name: toDateTime
           in: query
           description: End date in ISO 8601 format
-          required: true
+          required: false
           schema:
             type: string
             format: date-time
@@ -116,6 +124,7 @@ paths:
       operationId: getCall
       x-airbyte-entity: calls
       x-airbyte-action: get
+      x-airbyte-record-extractor: $.call
       parameters:
         - name: id
           in: path
@@ -142,6 +151,9 @@ paths:
       operationId: listCallsExtensive
       x-airbyte-entity: calls_extensive
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.calls
+      x-airbyte-meta-extractor:
+        pagination: $.records
       requestBody:
         required: true
         content:
@@ -262,96 +274,6 @@ paths:
         "401":
           description: Unauthorized
 
-  "/v2/calls:audio/download":
-    post:
-      summary: Download call audio
-      description: Downloads the audio media file for a call
-      operationId: DownloadCallAudio
-      x-airbyte-entity: call_audio
-      x-airbyte-action: download
-      x-airbyte-file-url: calls[0].media.audioUrl
-      x-airbyte-path-override:
-        path: /v2/calls/extensive
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                filter:
-                  type: object
-                  properties:
-                    callIds:
-                      type: array
-                      items:
-                        type: string
-                      description: List containing the single call ID
-                contentSelector:
-                  type: object
-                  properties:
-                    exposedFields:
-                      type: object
-                      properties:
-                        media:
-                          type: boolean
-                          description: Must be true to get media URLs
-                          default: true
-      responses:
-        "200":
-          description: Call metadata with audio URL
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExtensiveCallsResponse"
-        "401":
-          description: Unauthorized
-
-  "/v2/calls:video/download":
-    post:
-      summary: Download call video
-      description: Downloads the video media file for a call
-      operationId: DownloadCallVideo
-      x-airbyte-entity: call_video
-      x-airbyte-action: download
-      x-airbyte-file-url: calls[0].media.videoUrl
-      x-airbyte-path-override:
-        path: /v2/calls/extensive
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                filter:
-                  type: object
-                  properties:
-                    callIds:
-                      type: array
-                      items:
-                        type: string
-                      description: List containing the single call ID
-                contentSelector:
-                  type: object
-                  properties:
-                    exposedFields:
-                      type: object
-                      properties:
-                        media:
-                          type: boolean
-                          description: Must be true to get media URLs
-                          default: true
-      responses:
-        "200":
-          description: Call metadata with video URL
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ExtensiveCallsResponse"
-        "401":
-          description: Unauthorized
-
   "/v2/workspaces":
     get:
       summary: List workspaces
@@ -359,6 +281,7 @@ paths:
       operationId: listWorkspaces
       x-airbyte-entity: workspaces
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.workspaces
       responses:
         "200":
           description: List of workspaces
@@ -376,6 +299,9 @@ paths:
       operationId: getCallTranscripts
       x-airbyte-entity: call_transcripts
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.callTranscripts
+      x-airbyte-meta-extractor:
+        pagination: $.records
       requestBody:
         required: true
         content:
@@ -419,6 +345,9 @@ paths:
       operationId: getActivityAggregate
       x-airbyte-entity: stats_activity_aggregate
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.usersAggregateActivityStats
+      x-airbyte-meta-extractor:
+        pagination: $.records
       requestBody:
         required: true
         content:
@@ -459,6 +388,9 @@ paths:
       operationId: getActivityDayByDay
       x-airbyte-entity: stats_activity_day_by_day
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.usersDetailedActivities
+      x-airbyte-meta-extractor:
+        pagination: $.records
       requestBody:
         required: true
         content:
@@ -499,6 +431,9 @@ paths:
       operationId: getInteractionStats
       x-airbyte-entity: stats_interaction
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.peopleInteractionStats
+      x-airbyte-meta-extractor:
+        pagination: $.records
       requestBody:
         required: true
         content:
@@ -836,7 +771,7 @@ components:
                 type: string
                 description: Gong user ID if internal
               speakerId:
-                type: ["string", "null"]
+                type: string
                 description: Speaker ID for transcript matching
               context:
                 type: array

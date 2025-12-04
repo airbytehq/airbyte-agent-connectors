@@ -25,7 +25,25 @@ async def test_call_transcripts_by_id():
     ):
         result = await connector.call_transcripts.list(filter={'callIds': ['1220490555266799467']})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.callTranscripts")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -41,7 +59,25 @@ async def test_call_transcripts_list():
     ):
         result = await connector.call_transcripts.list(filter={'fromDateTime': '2023-01-01T00:00:00-08:00', 'toDateTime': '2025-11-20T23:59:59-08:00'})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.callTranscripts")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -57,7 +93,25 @@ async def test_calls_extensive_list():
     ):
         result = await connector.calls_extensive.list(filter={'fromDateTime': '2023-01-01T00:00:00Z', 'toDateTime': '2025-12-01T23:59:59Z'})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.calls")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -73,7 +127,25 @@ async def test_calls_extensive_with_content_selector():
     ):
         result = await connector.calls_extensive.list(filter={'fromDateTime': '2024-11-01T00:00:00Z', 'toDateTime': '2024-12-02T23:59:59Z'}, contentSelector={'exposedFields': {'content': {'topics': True, 'trackers': True}, 'interaction': {'personInteractionStats': True, 'questions': True}, 'media': True, 'parties': True}})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.calls")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -89,7 +161,19 @@ async def test_calls_get_id_1220490555266799467():
     ):
         result = await connector.calls.get(id="1220490555266799467")
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.call")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
 
 
 @pytest.mark.asyncio
@@ -105,7 +189,25 @@ async def test_calls_list():
     ):
         result = await connector.calls.list(fromDateTime="2023-01-01T00:00:00-08:00", toDateTime="2025-11-20T23:59:59-08:00")
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.calls")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -121,7 +223,25 @@ async def test_calls_list_november():
     ):
         result = await connector.calls.list(fromDateTime="2024-11-01T00:00:00Z", toDateTime="2024-11-15T23:59:59Z")
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.calls")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -137,7 +257,25 @@ async def test_stats_activity_aggregate_list():
     ):
         result = await connector.stats_activity_aggregate.list(filter={'fromDate': '2024-11-01', 'toDate': '2024-12-02'})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.usersAggregateActivityStats")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -153,7 +291,25 @@ async def test_stats_activity_day_by_day_list():
     ):
         result = await connector.stats_activity_day_by_day.list(filter={'fromDate': '2024-11-01', 'toDate': '2024-12-02'})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.usersDetailedActivities")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -169,7 +325,25 @@ async def test_stats_interaction_list():
     ):
         result = await connector.stats_interaction.list(filter={'fromDate': '2024-11-01', 'toDate': '2024-12-02'})
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.peopleInteractionStats")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -185,7 +359,19 @@ async def test_users_get_id_361458326017907882():
     ):
         result = await connector.users.get(id="361458326017907882")
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.user")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
 
 
 @pytest.mark.asyncio
@@ -201,7 +387,25 @@ async def test_users_list():
     ):
         result = await connector.users.list()
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.users")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
+    assert "meta" in result
+    assert isinstance(result["meta"], dict)
+    meta_path_pagination = parse_jsonpath("$.records")
+    meta_matches_pagination = meta_path_pagination.find(mock_response)
+    if meta_matches_pagination:
+        assert result["meta"]["pagination"] == meta_matches_pagination[0].value
 
 
 @pytest.mark.asyncio
@@ -217,5 +421,17 @@ async def test_workspaces_list():
     ):
         result = await connector.workspaces.list()
 
-    assert result == mock_response
+    # Verify envelope structure
+    assert "data" in result
+    assert isinstance(result["data"], (list, dict))
+
+    # Verify data was extracted correctly from mock response
+    from jsonpath_ng import parse as parse_jsonpath
+    record_path = parse_jsonpath("$.workspaces")
+    record_matches = record_path.find(mock_response)
+    if record_matches:
+        assert result["data"] == record_matches[0].value
+    else:
+        # When JSONPath doesn't match, expect None or empty array
+        assert result["data"] is None or result["data"] == []
 

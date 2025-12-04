@@ -24,6 +24,7 @@ class Operation(BaseModel):
     - x-airbyte-entity: Entity name (Airbyte extension)
     - x-airbyte-action: Semantic action (Airbyte extension)
     - x-airbyte-path-override: Path override (Airbyte extension)
+    - x-airbyte-record-extractor: JSONPath to extract records from response (Airbyte extension)
 
     Future extensions (not yet active):
     - x-airbyte-pagination: Pagination configuration for list operations
@@ -54,6 +55,27 @@ class Operation(BaseModel):
         description=(
             "Override path for HTTP requests when OpenAPI path "
             "differs from actual endpoint"
+        ),
+    )
+    x_airbyte_record_extractor: Optional[str] = Field(
+        None,
+        alias="x-airbyte-record-extractor",
+        description=(
+            "JSONPath expression to extract records from API response envelopes. "
+            "When specified, executor extracts data at this path instead of returning "
+            "full response. Returns array for list/search actions, single record for "
+            "get/create/update/delete actions."
+        ),
+    )
+    x_airbyte_meta_extractor: Optional[Dict[str, str]] = Field(
+        None,
+        alias="x-airbyte-meta-extractor",
+        description=(
+            "Dictionary mapping field names to JSONPath expressions for extracting "
+            "metadata (pagination info, request IDs, etc.) from API response envelopes. "
+            "Each key becomes a field in ExecutionResult.meta with the value extracted "
+            "using the corresponding JSONPath expression. "
+            "Example: {'pagination': '$.pagination', 'request_id': '$.requestId'}"
         ),
     )
     x_airbyte_file_url: Optional[str] = Field(None, alias="x-airbyte-file-url")

@@ -114,7 +114,7 @@ class HostedExecutor:
         """
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
-        with tracer.start_as_current_span("airbyte.hosted_executor.execute") as span:
+        with tracer.start_as_current_span("hosted_executor.execute") as span:
             # Add span attributes
             span.set_attribute("connector.id", self.connector_id)
             span.set_attribute("connector.entity", config.entity)
