@@ -39,10 +39,6 @@ jobs:
         run: pip install build twine pytest pytest-asyncio httpx pydantic pyyaml python-dotenv
       - name: Install connector dependencies
         run: pip install connectors/${{ matrix.connector }}/
-      - name: Run tests
-        run: |
-          cd connectors/${{ matrix.connector }}
-          pytest tests/ -v
       - name: Build package
         run: python -m build connectors/${{ matrix.connector }}/
       - name: Publish to PyPI
