@@ -12,32 +12,39 @@ except ImportError:
 
 from pathlib import Path
 
+from .types import (
+    CRMObject,
+    CompaniesGetParams,
+    CompaniesList,
+    CompaniesListParams,
+    Company,
+    Contact,
+    ContactsGetParams,
+    ContactsList,
+    ContactsListParams,
+    Deal,
+    DealsGetParams,
+    DealsList,
+    DealsListParams,
+    ObjectsGetParams,
+    ObjectsList,
+    ObjectsListParams,
+    SchemasList,
+    SchemasListParams,
+    Ticket,
+    TicketsGetParams,
+    TicketsList,
+    TicketsListParams,
+)
+
 if TYPE_CHECKING:
-    from .types import (
-        CRMObject,
-        CompaniesGetParams,
-        CompaniesList,
-        CompaniesListParams,
-        Company,
-        Contact,
-        ContactsGetParams,
-        ContactsList,
-        ContactsListParams,
-        Deal,
-        DealsGetParams,
-        DealsList,
-        DealsListParams,
-        ObjectsGetParams,
-        ObjectsList,
-        ObjectsListParams,
-        SchemasList,
-        SchemasListParams,
-        Ticket,
-        TicketsGetParams,
-        TicketsList,
-        TicketsListParams,
-        HubspotAuthConfig,
-    )
+    from .models import HubspotAuthConfig
+
+# Import envelope models at runtime (needed for instantiation in action methods)
+from .models import (
+    HubspotExecuteResult,
+    HubspotExecuteResultWithMeta,
+)
 
 
 class HubspotConnector:
@@ -48,7 +55,7 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "1.0.0"
+    connector_version = "0.1.0"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -94,7 +101,7 @@ class HubspotConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = HubspotConnector(auth_config={"access_token": "..."})
+            connector = HubspotConnector(auth_config=HubspotAuthConfig(access_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = HubspotConnector(
                 connector_id="connector-456",
@@ -109,7 +116,7 @@ class HubspotConnector:
                     json.dump(new_tokens, f)
 
             connector = HubspotConnector(
-                auth_config={"access_token": "...", "refresh_token": "..."},
+                auth_config=HubspotAuthConfig(access_token="...", refresh_token="..."),
                 on_token_refresh=save_tokens
             )
         """
@@ -140,7 +147,7 @@ class HubspotConnector:
 
             self._executor = LocalExecutor(
                 config_path=config_path,
-                auth_config=auth_config,
+                auth_config=auth_config.model_dump() if auth_config else None,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -257,7 +264,7 @@ class HubspotConnector:
         entity: str,
         action: str,
         params: dict[str, Any]
-    ) -> dict[str, Any]: ...
+    ) -> HubspotExecuteResult[Any] | HubspotExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
@@ -306,11 +313,14 @@ class HubspotConnector:
         has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
 
         if has_extractors:
-            # With extractors - return envelope with data and meta
-            envelope: dict[str, Any] = {"data": result.data}
+            # With extractors - return Pydantic envelope with data and meta
             if result.meta is not None:
-                envelope["meta"] = result.meta
-            return envelope
+                return HubspotExecuteResultWithMeta[Any, Any](
+                    data=result.data,
+                    meta=result.meta
+                )
+            else:
+                return HubspotExecuteResult[Any](data=result.data)
         else:
             # No extractors - return raw response data
             return result.data
@@ -355,13 +365,14 @@ class ContactsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("contacts", "list", params)
+        result = await self._connector.execute("contacts", "list", params)
+        return result
 
 
 
     async def get(
         self,
-        contactId: str,
+        contact_id: str,
         properties: str | None = None,
         **kwargs
     ) -> Contact:
@@ -369,7 +380,7 @@ class ContactsQuery:
         Get a single contact by ID
 
         Args:
-            contactId: Contact ID
+            contact_id: Contact ID
             properties: Comma-separated list of properties to include
             **kwargs: Additional parameters
 
@@ -377,12 +388,13 @@ class ContactsQuery:
             Contact
         """
         params = {k: v for k, v in {
-            "contactId": contactId,
+            "contactId": contact_id,
             "properties": properties,
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("contacts", "get", params)
+        result = await self._connector.execute("contacts", "get", params)
+        return result
 
 
 
@@ -424,13 +436,14 @@ class CompaniesQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("companies", "list", params)
+        result = await self._connector.execute("companies", "list", params)
+        return result
 
 
 
     async def get(
         self,
-        companyId: str,
+        company_id: str,
         properties: str | None = None,
         **kwargs
     ) -> Company:
@@ -438,7 +451,7 @@ class CompaniesQuery:
         Get a single company by ID
 
         Args:
-            companyId: Company ID
+            company_id: Company ID
             properties: Comma-separated list of properties to include
             **kwargs: Additional parameters
 
@@ -446,12 +459,13 @@ class CompaniesQuery:
             Company
         """
         params = {k: v for k, v in {
-            "companyId": companyId,
+            "companyId": company_id,
             "properties": properties,
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("companies", "get", params)
+        result = await self._connector.execute("companies", "get", params)
+        return result
 
 
 
@@ -493,13 +507,14 @@ class DealsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("deals", "list", params)
+        result = await self._connector.execute("deals", "list", params)
+        return result
 
 
 
     async def get(
         self,
-        dealId: str,
+        deal_id: str,
         properties: str | None = None,
         **kwargs
     ) -> Deal:
@@ -507,7 +522,7 @@ class DealsQuery:
         Get a single deal by ID
 
         Args:
-            dealId: Deal ID
+            deal_id: Deal ID
             properties: Comma-separated list of properties to include
             **kwargs: Additional parameters
 
@@ -515,12 +530,13 @@ class DealsQuery:
             Deal
         """
         params = {k: v for k, v in {
-            "dealId": dealId,
+            "dealId": deal_id,
             "properties": properties,
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("deals", "get", params)
+        result = await self._connector.execute("deals", "get", params)
+        return result
 
 
 
@@ -562,13 +578,14 @@ class TicketsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("tickets", "list", params)
+        result = await self._connector.execute("tickets", "list", params)
+        return result
 
 
 
     async def get(
         self,
-        ticketId: str,
+        ticket_id: str,
         properties: str | None = None,
         **kwargs
     ) -> Ticket:
@@ -576,7 +593,7 @@ class TicketsQuery:
         Get a single ticket by ID
 
         Args:
-            ticketId: Ticket ID
+            ticket_id: Ticket ID
             properties: Comma-separated list of properties to include
             **kwargs: Additional parameters
 
@@ -584,12 +601,13 @@ class TicketsQuery:
             Ticket
         """
         params = {k: v for k, v in {
-            "ticketId": ticketId,
+            "ticketId": ticket_id,
             "properties": properties,
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("tickets", "get", params)
+        result = await self._connector.execute("tickets", "get", params)
+        return result
 
 
 
@@ -616,7 +634,8 @@ class SchemasQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("schemas", "list", params)
+        result = await self._connector.execute("schemas", "list", params)
+        return result
 
 
 
@@ -631,7 +650,7 @@ class ObjectsQuery:
 
     async def list(
         self,
-        objectType: str,
+        object_type: str,
         limit: int | None = None,
         after: str | None = None,
         properties: str | None = None,
@@ -642,7 +661,7 @@ class ObjectsQuery:
         Returns a paginated list of objects for any custom object type
 
         Args:
-            objectType: Object type ID or fully qualified name (e.g., "cars" or "p12345_cars")
+            object_type: Object type ID or fully qualified name (e.g., "cars" or "p12345_cars")
             limit: Number of items to return per page
             after: Pagination cursor for next page
             properties: Comma-separated list of properties to include
@@ -653,7 +672,7 @@ class ObjectsQuery:
             ObjectsList
         """
         params = {k: v for k, v in {
-            "objectType": objectType,
+            "objectType": object_type,
             "limit": limit,
             "after": after,
             "properties": properties,
@@ -661,14 +680,15 @@ class ObjectsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("objects", "list", params)
+        result = await self._connector.execute("objects", "list", params)
+        return result
 
 
 
     async def get(
         self,
-        objectType: str,
-        objectId: str,
+        object_type: str,
+        object_id: str,
         properties: str | None = None,
         **kwargs
     ) -> CRMObject:
@@ -676,8 +696,8 @@ class ObjectsQuery:
         Get a single object by ID for any custom object type
 
         Args:
-            objectType: Object type ID or fully qualified name
-            objectId: Object record ID
+            object_type: Object type ID or fully qualified name
+            object_id: Object record ID
             properties: Comma-separated list of properties to include
             **kwargs: Additional parameters
 
@@ -685,12 +705,13 @@ class ObjectsQuery:
             CRMObject
         """
         params = {k: v for k, v in {
-            "objectType": objectType,
-            "objectId": objectId,
+            "objectType": object_type,
+            "objectId": object_id,
             "properties": properties,
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("objects", "get", params)
+        result = await self._connector.execute("objects", "get", params)
+        return result
 
 

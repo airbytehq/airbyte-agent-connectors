@@ -1,13 +1,13 @@
 """
 Type definitions for hubspot connector.
 """
-from typing import TypedDict, NotRequired, Any
+# Use typing_extensions.TypedDict for Pydantic compatibility on Python < 3.12
+try:
+    from typing_extensions import TypedDict, NotRequired
+except ImportError:
+    from typing import TypedDict, NotRequired  # type: ignore[attr-defined]
 
-# ===== AUTH CONFIG TYPE DEFINITIONS =====
-
-class HubspotAuthConfig(TypedDict):
-    """Access Token Authentication"""
-    access_token: str  # Your HubSpot Private App Access Token or OAuth Access Token
+from typing import Any
 
 # ===== RESPONSE TYPE DEFINITIONS =====
 
@@ -105,7 +105,8 @@ class ObjectsList(TypedDict):
     results: NotRequired[list[CRMObject]]
     paging: NotRequired[Paging]
 
-# ===== ENVELOPE TYPE DEFINITIONS =====
+# ===== METADATA TYPE DEFINITIONS =====
+# Meta types for operations that extract metadata (e.g., pagination info)
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
@@ -118,7 +119,7 @@ class ContactsListParams(TypedDict):
 
 class ContactsGetParams(TypedDict):
     """Parameters for contacts.get operation"""
-    contactId: str
+    contact_id: str
     properties: NotRequired[str]
 
 class CompaniesListParams(TypedDict):
@@ -130,7 +131,7 @@ class CompaniesListParams(TypedDict):
 
 class CompaniesGetParams(TypedDict):
     """Parameters for companies.get operation"""
-    companyId: str
+    company_id: str
     properties: NotRequired[str]
 
 class DealsListParams(TypedDict):
@@ -142,7 +143,7 @@ class DealsListParams(TypedDict):
 
 class DealsGetParams(TypedDict):
     """Parameters for deals.get operation"""
-    dealId: str
+    deal_id: str
     properties: NotRequired[str]
 
 class TicketsListParams(TypedDict):
@@ -154,7 +155,7 @@ class TicketsListParams(TypedDict):
 
 class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""
-    ticketId: str
+    ticket_id: str
     properties: NotRequired[str]
 
 class SchemasListParams(TypedDict):
@@ -163,7 +164,7 @@ class SchemasListParams(TypedDict):
 
 class ObjectsListParams(TypedDict):
     """Parameters for objects.list operation"""
-    objectType: str
+    object_type: str
     limit: NotRequired[int]
     after: NotRequired[str]
     properties: NotRequired[str]
@@ -171,6 +172,6 @@ class ObjectsListParams(TypedDict):
 
 class ObjectsGetParams(TypedDict):
     """Parameters for objects.get operation"""
-    objectType: str
-    objectId: str
+    object_type: str
+    object_id: str
     properties: NotRequired[str]

@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: HubSpot API Connector
-  version: 1.0.0
+  version: 0.1.0
   description: Connector for HubSpot CRM API
   x-airbyte-connector-name: hubspot
   x-airbyte-connector-id: 36c891d9-4bd9-43ac-bad2-10e12756272c
