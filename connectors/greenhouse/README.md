@@ -2,7 +2,7 @@
 
 Type-safe Greenhouse API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.14.0
+**Package Version:** 0.15.0
 
 **Connector Version:** 0.1.0
 
@@ -18,9 +18,10 @@ uv pip install airbyte-ai-greenhouse
 
 ```python
 from airbyte_ai_greenhouse import GreenhouseConnector
+from airbyte_ai_greenhouse.models import GreenhouseAuthConfig
 
 # Create connector
-connector = GreenhouseConnector(auth_config={"api_key": "your_api_key"})
+connector = GreenhouseConnector(auth_config=GreenhouseAuthConfig(api_key="..."))
 
 # Use typed methods with full IDE autocomplete
 # (See Available Operations below for all methods)
