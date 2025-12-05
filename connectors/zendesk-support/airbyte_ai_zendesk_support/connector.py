@@ -12,19 +12,25 @@ except ImportError:
 
 from pathlib import Path
 
+from .types import (
+    ArticleAttachment,
+    ArticleAttachmentList,
+    ArticleAttachmentsDownloadParams,
+    ArticleAttachmentsGetParams,
+    ArticleAttachmentsListParams,
+    ArticleList,
+    ArticlesGetParams,
+    ArticlesListParams,
+)
+
 if TYPE_CHECKING:
-    from .types import (
-        ArticleAttachment,
-        ArticleAttachmentList,
-        ArticleAttachmentsDownloadParams,
-        ArticleAttachmentsGetParams,
-        ArticleAttachmentsListParams,
-        ArticleList,
-        ArticlesGetParams,
-        ArticlesListParams,
-        AsyncIterator,
-        ZendeskSupportAuthConfig,
-    )
+    from .models import ZendeskSupportAuthConfig
+
+# Import envelope models at runtime (needed for instantiation in action methods)
+from .models import (
+    ZendeskSupportExecuteResult,
+    ZendeskSupportExecuteResultWithMeta,
+)
 
 
 class ZendeskSupportConnector:
@@ -35,7 +41,7 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "1.0.0"
+    connector_version = "0.1.0"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -76,7 +82,7 @@ class ZendeskSupportConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Zendesk subdomain
         Examples:
             # Local mode (direct API calls)
-            connector = ZendeskSupportConnector(auth_config={"access_token": "...", "refresh_token": "...", "client_id": "...", "client_secret": "..."})
+            connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = ZendeskSupportConnector(
                 connector_id="connector-456",
@@ -91,7 +97,7 @@ class ZendeskSupportConnector:
                     json.dump(new_tokens, f)
 
             connector = ZendeskSupportConnector(
-                auth_config={"access_token": "...", "refresh_token": "..."},
+                auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="..."),
                 on_token_refresh=save_tokens
             )
         """
@@ -124,7 +130,7 @@ class ZendeskSupportConnector:
 
             self._executor = LocalExecutor(
                 config_path=config_path,
-                auth_config=auth_config,
+                auth_config=auth_config.model_dump() if auth_config else None,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -193,7 +199,7 @@ class ZendeskSupportConnector:
         entity: str,
         action: str,
         params: dict[str, Any]
-    ) -> dict[str, Any]: ...
+    ) -> ZendeskSupportExecuteResult[Any] | ZendeskSupportExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
@@ -242,11 +248,14 @@ class ZendeskSupportConnector:
         has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
 
         if has_extractors:
-            # With extractors - return envelope with data and meta
-            envelope: dict[str, Any] = {"data": result.data}
+            # With extractors - return Pydantic envelope with data and meta
             if result.meta is not None:
-                envelope["meta"] = result.meta
-            return envelope
+                return ZendeskSupportExecuteResultWithMeta[Any, Any](
+                    data=result.data,
+                    meta=result.meta
+                )
+            else:
+                return ZendeskSupportExecuteResult[Any](data=result.data)
         else:
             # No extractors - return raw response data
             return result.data
@@ -291,7 +300,8 @@ class ArticlesQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("articles", "list", params)
+        result = await self._connector.execute("articles", "list", params)
+        return result
 
 
 
@@ -315,7 +325,8 @@ class ArticlesQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("articles", "get", params)
+        result = await self._connector.execute("articles", "get", params)
+        return result
 
 
 
@@ -348,7 +359,8 @@ class ArticleAttachmentsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("article_attachments", "list", params)
+        result = await self._connector.execute("article_attachments", "list", params)
+        return result
 
 
 
@@ -375,7 +387,8 @@ class ArticleAttachmentsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("article_attachments", "get", params)
+        result = await self._connector.execute("article_attachments", "get", params)
+        return result
 
 
 
@@ -405,7 +418,8 @@ class ArticleAttachmentsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("article_attachments", "download", params)
+        result = await self._connector.execute("article_attachments", "download", params)
+        return result
 
 
     async def download_local(

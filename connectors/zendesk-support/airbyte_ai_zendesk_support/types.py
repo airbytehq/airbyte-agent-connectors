@@ -1,16 +1,12 @@
 """
 Type definitions for zendesk-support connector.
 """
-from typing import TypedDict, NotRequired
+# Use typing_extensions.TypedDict for Pydantic compatibility on Python < 3.12
+try:
+    from typing_extensions import TypedDict, NotRequired
+except ImportError:
+    from typing import TypedDict, NotRequired  # type: ignore[attr-defined]
 
-# ===== AUTH CONFIG TYPE DEFINITIONS =====
-
-class ZendeskSupportAuthConfig(TypedDict):
-    """Authentication"""
-    access_token: str  # OAuth2 access token
-    refresh_token: NotRequired[str]  # OAuth2 refresh token (optional)
-    client_id: NotRequired[str]  # OAuth2 client ID (optional)
-    client_secret: NotRequired[str]  # OAuth2 client secret (optional)
 
 # ===== RESPONSE TYPE DEFINITIONS =====
 
@@ -60,7 +56,8 @@ class ArticleAttachmentList(TypedDict):
     next_page: NotRequired[str | None]
     previous_page: NotRequired[str | None]
 
-# ===== ENVELOPE TYPE DEFINITIONS =====
+# ===== METADATA TYPE DEFINITIONS =====
+# Meta types for operations that extract metadata (e.g., pagination info)
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 

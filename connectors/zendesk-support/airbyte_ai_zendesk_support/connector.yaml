@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Zendesk Support API Connector
-  version: 1.0.0
+  version: 0.1.0
   x-airbyte-connector-name: zendesk-support
   x-airbyte-connector-id: 79c1aa37-dae3-42ae-b333-d1c105477715
   x-airbyte-external-documentation-urls:
