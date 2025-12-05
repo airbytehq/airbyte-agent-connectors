@@ -2,7 +2,7 @@
 
 Type-safe Hubspot API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.10.0
+**Package Version:** 0.11.0
 
 **Connector Version:** 1.0.0
 
