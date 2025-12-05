@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Gong API Connector
-  version: 1.0.0
+  version: 0.1.0
   description: Connector for Gong API
   x-airbyte-connector-name: gong
   x-airbyte-connector-id: 32382e40-3b49-4b99-9c5c-4076501914e7
@@ -561,6 +561,224 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v2/settings/scorecards":
+    get:
+      summary: List scorecards
+      description: Retrieve all scorecard configurations in the company
+      operationId: listScorecards
+      x-airbyte-entity: settings_scorecards
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.scorecards
+      parameters:
+        - name: workspaceId
+          in: query
+          description: Filter scorecards by workspace ID
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of scorecards
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ScorecardsResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/settings/trackers":
+    get:
+      summary: List trackers
+      description: Retrieve all keyword tracker configurations in the company
+      operationId: listTrackers
+      x-airbyte-entity: settings_trackers
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.trackers
+      parameters:
+        - name: workspaceId
+          in: query
+          description: Filter trackers by workspace ID
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of trackers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrackersResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/library/folders":
+    get:
+      summary: List library folders
+      description: Retrieve the folder structure of the call library
+      operationId: listLibraryFolders
+      x-airbyte-entity: library_folders
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.folders
+      parameters:
+        - name: workspaceId
+          in: query
+          description: Filter folders by workspace ID
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of library folders
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LibraryFoldersResponse"
+        "401":
+          description: Unauthorized
+
+  "/v2/library/folder-content":
+    get:
+      summary: List folder content
+      description: Retrieve calls in a specific library folder
+      operationId: listFolderContent
+      x-airbyte-entity: library_folder_content
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.calls
+      x-airbyte-meta-extractor:
+        pagination: $.records
+      parameters:
+        - name: folderId
+          in: query
+          description: Folder ID to retrieve content from
+          required: true
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          description: Cursor for pagination
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of calls in folder
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FolderContentResponse"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Folder not found
+
+  "/v2/coaching":
+    get:
+      summary: List coaching metrics
+      description: Retrieve coaching metrics for a manager and their direct reports
+      operationId: listCoachingMetrics
+      x-airbyte-entity: coaching
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.coachingData
+      parameters:
+        - name: workspace-id
+          in: query
+          description: Workspace ID
+          required: true
+          schema:
+            type: string
+        - name: manager-id
+          in: query
+          description: Manager user ID
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          description: Start date in ISO 8601 format
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          description: End date in ISO 8601 format
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: Coaching metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CoachingResponse"
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+
+  "/v2/stats/activity/scorecards":
+    post:
+      summary: List answered scorecards
+      description: Retrieve answered scorecards for applicable reviewed users or scorecards for a date range
+      operationId: listAnsweredScorecards
+      x-airbyte-entity: stats_activity_scorecards
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.answeredScorecards
+      x-airbyte-meta-extractor:
+        pagination: $.records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDateTime:
+                      type: string
+                      format: date-time
+                      description: Start date in ISO 8601 format
+                    toDateTime:
+                      type: string
+                      format: date-time
+                      description: End date in ISO 8601 format
+                    scorecardIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of scorecard IDs to filter by
+                    reviewedUserIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of reviewed user IDs to filter by
+                    reviewerUserIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of reviewer user IDs to filter by
+                    callIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of call IDs to filter by
+                cursor:
+                  type: string
+                  description: Cursor for pagination
+      responses:
+        "200":
+          description: List of answered scorecards
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnsweredScorecardsResponse"
+        "401":
+          description: Unauthorized
+
 components:
   securitySchemes:
     basicAuth:
@@ -988,15 +1206,37 @@ components:
                 description: Phone number
               context:
                 type: array
+                description: CRM context data linked to this participant
                 items:
                   type: object
                   properties:
                     system:
                       type: string
+                      description: CRM system name (e.g., Salesforce, HubSpot)
                     objects:
                       type: array
+                      description: CRM objects linked to this participant
                       items:
                         type: object
+                        properties:
+                          objectType:
+                            type: string
+                            description: CRM object type (Account, Contact, Opportunity, Lead)
+                          objectId:
+                            type: string
+                            description: CRM record ID
+                          fields:
+                            type: array
+                            description: CRM field values
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                  description: Field name
+                                value:
+                                  type: ["string", "number", "null"]
+                                  description: Field value
         interaction:
           type: object
           description: Interaction statistics
@@ -1285,4 +1525,346 @@ components:
           type: string
         timeZone:
           type: string
+
+    ScorecardQuestion:
+      type: object
+      description: A question within a scorecard
+      properties:
+        questionId:
+          type: string
+          description: Unique question identifier
+        questionRevisionId:
+          type: string
+          description: Question revision identifier
+        questionText:
+          type: string
+          description: The question text
+        questionType:
+          type: string
+          description: Type of question (e.g., rating, yes/no)
+        isRequired:
+          type: boolean
+          description: Whether the question is required
+        answerOptions:
+          type: array
+          description: Available answer options
+          items:
+            type: object
+            properties:
+              optionId:
+                type: string
+              optionText:
+                type: string
+              score:
+                type: number
+
+    Scorecard:
+      type: object
+      x-airbyte-entity-name: settings_scorecards
+      description: Scorecard configuration
+      properties:
+        scorecardId:
+          type: string
+          description: Unique scorecard identifier
+        scorecardName:
+          type: string
+          description: Name of the scorecard
+        workspaceId:
+          type: ["string", "null"]
+          description: Workspace ID (null if company-wide)
+        enabled:
+          type: boolean
+          description: Whether the scorecard is enabled
+        updaterUserId:
+          type: string
+          description: User ID of last updater
+        created:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/ScorecardQuestion"
+
+    ScorecardsResponse:
+      type: object
+      description: Response containing list of scorecards
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        scorecards:
+          type: array
+          items:
+            $ref: "#/components/schemas/Scorecard"
+
+    Tracker:
+      type: object
+      x-airbyte-entity-name: settings_trackers
+      description: Keyword tracker configuration
+      properties:
+        trackerId:
+          type: string
+          description: Unique tracker identifier
+        trackerName:
+          type: string
+          description: Name of the tracker
+        workspaceId:
+          type: ["string", "null"]
+          description: Workspace ID (null if company-wide)
+        language:
+          type: string
+          description: Language for the tracker
+        affiliation:
+          type: string
+          description: Who the tracker applies to (internal, external, both)
+        keywords:
+          type: array
+          description: Keywords to track
+          items:
+            type: object
+            properties:
+              keyword:
+                type: string
+              aliases:
+                type: array
+                items:
+                  type: string
+        enabled:
+          type: boolean
+          description: Whether the tracker is enabled
+        created:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    TrackersResponse:
+      type: object
+      description: Response containing list of trackers
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        trackers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Tracker"
+
+    LibraryFolder:
+      type: object
+      x-airbyte-entity-name: library_folders
+      description: Library folder structure
+      properties:
+        id:
+          type: string
+          description: Unique folder identifier
+        name:
+          type: string
+          description: Folder name
+        parentId:
+          type: ["string", "null"]
+          description: Parent folder ID (null for root folders)
+        workspaceId:
+          type: ["string", "null"]
+          description: Workspace ID
+        type:
+          type: string
+          description: Folder type (e.g., folder, stream)
+        created:
+          type: string
+          format: date-time
+          description: Creation timestamp
+        subfolders:
+          type: array
+          description: Nested subfolders
+          items:
+            type: object
+
+    LibraryFoldersResponse:
+      type: object
+      description: Response containing library folder structure
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        folders:
+          type: array
+          items:
+            $ref: "#/components/schemas/LibraryFolder"
+
+    FolderCall:
+      type: object
+      x-airbyte-entity-name: library_folder_content
+      description: Call within a library folder
+      properties:
+        callId:
+          type: string
+          description: Unique call identifier
+        title:
+          type: string
+          description: Call title
+        started:
+          type: string
+          format: date-time
+          description: Call start time
+        duration:
+          type: integer
+          description: Call duration in seconds
+        primaryUserId:
+          type: string
+          description: Primary user ID
+        url:
+          type: string
+          description: URL to call in Gong
+
+    FolderContentResponse:
+      type: object
+      description: Response containing calls in a folder
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        calls:
+          type: array
+          items:
+            $ref: "#/components/schemas/FolderCall"
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+
+    CoachingMetrics:
+      type: object
+      description: Coaching metrics for a user
+      properties:
+        callsListened:
+          type: integer
+          description: Number of team calls listened to
+        callsAttended:
+          type: integer
+          description: Number of team calls participated in
+        callsWithFeedback:
+          type: integer
+          description: Number of calls with feedback given
+        callsWithComments:
+          type: integer
+          description: Number of calls with comments
+        scorecardsFilled:
+          type: integer
+          description: Number of scorecards filled
+
+    CoachingData:
+      type: object
+      x-airbyte-entity-name: coaching
+      description: Coaching data for a user
+      properties:
+        userId:
+          type: string
+          description: User identifier
+        userEmailAddress:
+          type: string
+          description: User email address
+        userName:
+          type: string
+          description: User name
+        isManager:
+          type: boolean
+          description: Whether the user is a manager
+        coachingMetrics:
+          $ref: "#/components/schemas/CoachingMetrics"
+
+    CoachingResponse:
+      type: object
+      description: Response containing coaching metrics
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        coachingData:
+          type: array
+          items:
+            $ref: "#/components/schemas/CoachingData"
+        fromDateTime:
+          type: string
+        toDateTime:
+          type: string
+
+    AnsweredScorecardAnswer:
+      type: object
+      description: An answer to a scorecard question
+      properties:
+        questionId:
+          type: string
+          description: Question identifier
+        questionRevisionId:
+          type: string
+          description: Question revision identifier
+        answer:
+          type: string
+          description: The answer value
+        answerText:
+          type: ["string", "null"]
+          description: Answer text (for text answers)
+        score:
+          type: number
+          description: Score for the answer
+        notApplicable:
+          type: boolean
+          description: Whether marked as N/A
+
+    AnsweredScorecard:
+      type: object
+      x-airbyte-entity-name: stats_activity_scorecards
+      description: A completed scorecard
+      properties:
+        scorecardId:
+          type: string
+          description: Scorecard identifier
+        scorecardName:
+          type: string
+          description: Scorecard name
+        callId:
+          type: string
+          description: Call identifier
+        reviewedUserId:
+          type: string
+          description: User being reviewed
+        reviewerUserId:
+          type: string
+          description: User who completed the review
+        answeredDateTime:
+          type: string
+          format: date-time
+          description: When the scorecard was completed
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnsweredScorecardAnswer"
+        overallScore:
+          type: number
+          description: Overall scorecard score
+        visibility:
+          type: string
+          description: Visibility setting (public, private)
+
+    AnsweredScorecardsResponse:
+      type: object
+      description: Response containing answered scorecards
+      properties:
+        requestId:
+          type: string
+          description: Request identifier
+        answeredScorecards:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnsweredScorecard"
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
 

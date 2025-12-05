@@ -2,9 +2,9 @@
 
 Type-safe Gong API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.15.0
+**Package Version:** 0.16.0
 
-**Connector Version:** 1.0.0
+**Connector Version:** 0.1.0
 
 **SDK Version:** 0.1.0
 
@@ -63,6 +63,24 @@ connector = GongConnector(auth_config={"api_key": "your_api_key"})
 
 ### Stats_Interaction Operations
 - `get_interaction_stats()` - Returns interaction stats for users based on calls that have Whisper turned on
+
+### Settings_Scorecards Operations
+- `list_scorecards()` - Retrieve all scorecard configurations in the company
+
+### Settings_Trackers Operations
+- `list_trackers()` - Retrieve all keyword tracker configurations in the company
+
+### Library_Folders Operations
+- `list_library_folders()` - Retrieve the folder structure of the call library
+
+### Library_Folder_Content Operations
+- `list_folder_content()` - Retrieve calls in a specific library folder
+
+### Coaching Operations
+- `list_coaching_metrics()` - Retrieve coaching metrics for a manager and their direct reports
+
+### Stats_Activity_Scorecards Operations
+- `list_answered_scorecards()` - Retrieve answered scorecards for applicable reviewed users or scorecards for a date range
 
 ## Type Definitions
 
