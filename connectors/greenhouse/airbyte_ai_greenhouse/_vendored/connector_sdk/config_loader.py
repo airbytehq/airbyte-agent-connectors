@@ -380,6 +380,9 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         )
         entities.append(entity)
 
+    # Extract retry config from x-airbyte-retry-config extension
+    retry_config = spec.info.x_airbyte_retry_config
+
     # Create ConnectorConfig
     config = ConnectorConfig(
         name=name,
@@ -388,6 +391,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         auth=auth_config,
         entities=entities,
         openapi_spec=spec,
+        retry_config=retry_config,
     )
 
     return config

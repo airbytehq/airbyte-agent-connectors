@@ -1,8 +1,10 @@
-"""Async HTTP client with connection pooling, auth injection, and metrics."""
+"""Async HTTP client with connection pooling, auth injection, metrics, and retry support."""
 
 from __future__ import annotations
 
 import asyncio
+import random
+import time
 from collections import defaultdict
 from collections.abc import Awaitable, Callable
 from datetime import datetime
@@ -27,6 +29,7 @@ from .http import (
     TimeoutError,
 )
 from .http.adapters import HTTPXClient
+from .schema.extensions import RetryConfig
 from .secrets import SecretStr
 
 from .auth_strategies import AuthStrategyFactory
@@ -51,6 +54,9 @@ class HTTPMetrics:
         self.error_count = 0
         self.total_duration = 0.0
         self.status_counts: dict[int, int] = defaultdict(int)
+        # Retry metrics
+        self.retry_count = 0
+        self.total_retry_delay = 0.0
 
     def record_request(self, duration: float, status_code: int, success: bool):
         """Record a request metric.
@@ -65,6 +71,15 @@ class HTTPMetrics:
         self.status_counts[status_code] += 1
         if not success:
             self.error_count += 1
+
+    def record_retry(self, delay: float):
+        """Record a retry attempt.
+
+        Args:
+            delay: Delay in seconds before the retry
+        """
+        self.retry_count += 1
+        self.total_retry_delay += delay
 
     @property
     def avg_duration(self) -> float:
@@ -81,6 +96,8 @@ class HTTPMetrics:
             "avg_duration": self.avg_duration,
             "total_duration": self.total_duration,
             "status_counts": dict(self.status_counts),
+            "retry_count": self.retry_count,
+            "total_retry_delay": self.total_retry_delay,
         }
 
 
@@ -101,6 +118,7 @@ class HTTPClient:
         connect_timeout: float | None = None,
         read_timeout: float | None = None,
         on_token_refresh: TokenRefreshCallback = None,
+        retry_config: RetryConfig | None = None,
     ):
         """Initialize async HTTP client.
 
@@ -120,6 +138,8 @@ class HTTPClient:
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Signature: (new_tokens: dict[str, str]) -> None (sync or async).
                 Called when tokens are refreshed. Use to persist updated tokens.
+            retry_config: Optional retry configuration for transient errors.
+                If None, uses default RetryConfig with sensible defaults.
         """
         self.base_url = base_url.rstrip("/")
         self.config_values = config_values or {}
@@ -134,6 +154,7 @@ class HTTPClient:
         self.logger = logger or NullLogger()
         self.metrics = HTTPMetrics()
         self.on_token_refresh: TokenRefreshCallback = on_token_refresh
+        self.retry_config = retry_config or RetryConfig()
 
         # Auth error handling with refresh lock (for strategies that support refresh)
         self._refresh_lock = asyncio.Lock()
@@ -242,7 +263,88 @@ class HTTPClient:
         strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
         return strategy.inject_auth(headers, self.auth_config.config, self.secrets)
 
-    async def request(
+    def _should_retry(
+        self,
+        exception: Exception,
+        status_code: int | None,
+        attempt: int,
+    ) -> bool:
+        """Determine if a request should be retried.
+
+        Args:
+            exception: The exception that was raised
+            status_code: HTTP status code if available
+            attempt: Current attempt number (0-indexed)
+
+        Returns:
+            True if the request should be retried
+        """
+        # Check if we have retries remaining
+        if attempt >= self.retry_config.max_attempts - 1:
+            return False
+
+        # Check status code-based retries
+        if status_code and status_code in self.retry_config.retry_on_status_codes:
+            return True
+
+        # Check timeout retries
+        if self.retry_config.retry_on_timeout and isinstance(exception, TimeoutError):
+            return True
+
+        # Check network error retries
+        if self.retry_config.retry_on_network_error and isinstance(
+            exception, NetworkError
+        ):
+            return True
+
+        return False
+
+    def _calculate_delay(self, attempt: int, response_headers: dict[str, str]) -> float:
+        """Calculate delay before the next retry attempt.
+
+        Prefers Retry-After header if present, otherwise uses exponential backoff
+        with optional jitter.
+
+        Args:
+            attempt: The current attempt number (0-indexed)
+            response_headers: Response headers from the failed request
+
+        Returns:
+            Delay in seconds before the next retry
+        """
+        # Try Retry-After header first
+        header_name = self.retry_config.retry_after_header
+        header_value = response_headers.get(header_name) or response_headers.get(
+            header_name.lower()
+        )
+
+        if header_value:
+            try:
+                value = float(header_value)
+                if self.retry_config.retry_after_format == "milliseconds":
+                    delay = value / 1000.0
+                elif self.retry_config.retry_after_format == "unix_timestamp":
+                    delay = max(0.0, value - time.time())
+                else:
+                    delay = value
+                return min(delay, self.retry_config.max_delay_seconds)
+            except (ValueError, TypeError):
+                pass  # Fall through to exponential backoff
+
+        # Exponential backoff: initial_delay * (base ^ attempt)
+        delay = self.retry_config.initial_delay_seconds * (
+            self.retry_config.exponential_base**attempt
+        )
+        delay = min(delay, self.retry_config.max_delay_seconds)
+
+        # Apply full jitter to prevent thundering herd
+        # See: https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/
+        if self.retry_config.jitter:
+            delay = random.random() * delay
+
+        return delay
+
+    async def _execute_request(
         self,
         method: str,
         path: str,
@@ -253,28 +355,9 @@ class HTTPClient:
         *,
         stream: bool = False,
     ):
-        """Make an async HTTP request with optional streaming.
+        """Execute a single HTTP request attempt (no retries).
 
-        Args:
-            method: HTTP method (GET, POST, etc.)
-            path: API path or full URL
-            params: Query parameters
-            json: JSON body for POST/PUT
-            data: Form-encoded body for POST/PUT (mutually exclusive with json)
-            headers: Additional headers
-            stream: If True, do not eagerly read the body (useful for downloads)
-
-        Returns:
-            - If stream=False: Parsed JSON (dict) or empty dict
-            - If stream=True: Response object suitable for streaming
-
-        Raises:
-            HTTPStatusError: If request fails with 4xx/5xx status
-            AuthenticationError: For 401 or 403 status codes
-            RateLimitError: For 429 status codes
-            TimeoutError: If request times out
-            NetworkError: If network error occurs
-            HTTPClientError: For other client errors
+        This is the core request logic, separated from retry handling.
         """
         # Check if path is a full URL (for CDN/external URLs)
         is_external_url = path.startswith(
@@ -323,9 +406,6 @@ class HTTPClient:
             # Streaming path: return response without reading body
             if stream:
                 success = True
-
-                # Log placeholder (without consuming stream)
-                # Actual chunks will be logged via log_chunk_fetch() during iteration
                 self.logger.log_response(
                     request_id=request_id,
                     status_code=status_code,
@@ -337,17 +417,13 @@ class HTTPClient:
             content_type = response.headers.get("content-type", "")
 
             try:
-                # Check if response has content first
                 response_text = await response.text()
 
                 if not response_text.strip():
-                    # Empty response - return empty dict
                     response_data = {}
                 elif "application/json" in content_type or not content_type:
-                    # Try to parse as JSON
                     response_data = await response.json()
                 else:
-                    # Non-JSON response with content
                     error_msg = (
                         f"Expected JSON response for {method.upper()} {url}, "
                         f"got content-type: {content_type}"
@@ -355,133 +431,36 @@ class HTTPClient:
                     raise HTTPClientError(error_msg)
 
             except ValueError as e:
-                # Malformed JSON
                 error_msg = f"Failed to parse JSON response for {method.upper()} {url}: {str(e)}"
                 raise HTTPClientError(error_msg)
 
             success = True
-
-            # Log successful response
             self.logger.log_response(
                 request_id=request_id,
                 status_code=status_code,
                 response_body=response_data,
             )
-
             return response_data
 
-        except RateLimitError as e:
-            # Rate limit error (429) - already wrapped by adapter
-            self.logger.log_error(
-                request_id=request_id,
-                error=str(e),
-                status_code=429,
-            )
-            raise
-
         except AuthenticationError as e:
-            # Auth error (401, 403) - already wrapped by adapter
+            # Auth error (401, 403) - handle token refresh
             status_code = e.status_code if hasattr(e, "status_code") else 401
-
-            # Attempt to handle auth error (e.g., token refresh for OAuth2)
-            # Use lock to prevent concurrent refresh attempts
-            async with self._refresh_lock:
-                # Check if credentials were already refreshed by another
-                # concurrent request while we were waiting for the lock
-                current_token = self.secrets.get("access_token")
-
-                # Get the current auth strategy
-                strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
-
-                # Ask strategy to handle the error (returns new tokens or None)
-                try:
-                    new_tokens = await strategy.handle_auth_error(
-                        status_code=status_code,
-                        config=self.auth_config.config,
-                        secrets=self.secrets,
-                        config_values=self.config_values,
-                        http_client=self.client._client
-                        if hasattr(self.client, "_client")
-                        else None,
-                    )
-
-                    if new_tokens:
-                        # Notify callback if provided (for persistence)
-                        if self.on_token_refresh is not None:
-                            try:
-                                # Support both sync and async callbacks
-                                result = self.on_token_refresh(new_tokens)
-                                if hasattr(result, "__await__"):
-                                    await result
-                            except Exception as callback_error:
-                                # Log but don't fail the refresh if callback fails
-                                self.logger.log_error(
-                                    request_id=request_id,
-                                    error=f"Token refresh callback failed: {str(callback_error)}",
-                                    status_code=status_code,
-                                )
-
-                        # Update secrets with new tokens (in-memory)
-                        self.secrets.update(new_tokens)
-
-                        # Retry request if credentials changed
-                        if self.secrets.get("access_token") != current_token:
-                            return await self.request(
-                                method=method,
-                                path=path,
-                                params=params,
-                                json=json,
-                                data=data,
-                                headers=headers,
-                            )
-
-                except Exception as refresh_error:
-                    # Credential refresh failed, log and continue
-                    self.logger.log_error(
-                        request_id=request_id,
-                        error=f"Credential refresh failed: {str(refresh_error)}",
-                        status_code=status_code,
-                    )
-                    # Fall through to raise original auth error
-
-            # Log and raise the authentication error
-            self.logger.log_error(
-                request_id=request_id,
-                error=str(e),
-                status_code=status_code,
+            result = await self._handle_auth_error(
+                e, request_id, method, path, params, json, data, headers
             )
-            raise
+            if result is not None:
+                return result  # Token refresh succeeded, return the retry result
+            raise  # Token refresh failed or not applicable
 
-        except HTTPStatusError as e:
-            # Other HTTP errors (4xx, 5xx) - already wrapped by adapter
-            status_code = e.status_code if hasattr(e, "status_code") else 0
+        except (RateLimitError, HTTPStatusError, TimeoutError, NetworkError) as e:
+            # These may be retried by the caller
+            status_code = getattr(e, "status_code", 0) or 0
             self.logger.log_error(
-                request_id=request_id,
-                error=str(e),
-                status_code=status_code,
-            )
-            raise
-
-        except TimeoutError as e:
-            # Timeout error - already wrapped by adapter
-            self.logger.log_error(
-                request_id=request_id,
-                error=str(e),
-                status_code=None,
-            )
-            raise
-
-        except NetworkError as e:
-            # Network error - already wrapped by adapter
-            self.logger.log_error(
-                request_id=request_id,
-                error=str(e),
-                status_code=None,
+                request_id=request_id, error=str(e), status_code=status_code or None
             )
             raise
 
         except HTTPClientError as e:
-            # General HTTP client error
             self.logger.log_error(
                 request_id=request_id,
                 error=str(e),
@@ -490,7 +469,6 @@ class HTTPClient:
             raise
 
         except Exception as e:
-            # Other unexpected errors
             error_msg = f"Unexpected error for {method.upper()} {url}: {str(e)}"
             self.logger.log_error(
                 request_id=request_id,
@@ -500,9 +478,132 @@ class HTTPClient:
             raise HTTPClientError(error_msg)
 
         finally:
-            # Record metrics
             duration = (datetime.now() - start_time).total_seconds()
             self.metrics.record_request(duration, status_code, success)
+
+    async def _handle_auth_error(
+        self,
+        error: AuthenticationError,
+        request_id: str,
+        method: str,
+        path: str,
+        params: dict[str, Any] | None,
+        json: dict[str, Any] | None,
+        data: dict[str, Any] | None,
+        headers: dict[str, str] | None,
+    ):
+        """Handle authentication error with potential token refresh.
+
+        Raises the original error if refresh fails or is not applicable.
+        """
+        status_code = error.status_code if hasattr(error, "status_code") else 401
+
+        async with self._refresh_lock:
+            current_token = self.secrets.get("access_token")
+            strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
+
+            try:
+                new_tokens = await strategy.handle_auth_error(
+                    status_code=status_code,
+                    config=self.auth_config.config,
+                    secrets=self.secrets,
+                    config_values=self.config_values,
+                    http_client=self.client._client
+                    if hasattr(self.client, "_client")
+                    else None,
+                )
+
+                if new_tokens:
+                    if self.on_token_refresh is not None:
+                        try:
+                            result = self.on_token_refresh(new_tokens)
+                            if hasattr(result, "__await__"):
+                                await result
+                        except Exception as callback_error:
+                            self.logger.log_error(
+                                request_id=request_id,
+                                error=f"Token refresh callback failed: {str(callback_error)}",
+                                status_code=status_code,
+                            )
+
+                    self.secrets.update(new_tokens)
+
+                    if self.secrets.get("access_token") != current_token:
+                        # Retry with new token - this will go through full retry logic
+                        return await self.request(
+                            method=method,
+                            path=path,
+                            params=params,
+                            json=json,
+                            data=data,
+                            headers=headers,
+                        )
+
+            except Exception as refresh_error:
+                self.logger.log_error(
+                    request_id=request_id,
+                    error=f"Credential refresh failed: {str(refresh_error)}",
+                    status_code=status_code,
+                )
+
+        self.logger.log_error(
+            request_id=request_id, error=str(error), status_code=status_code
+        )
+
+    async def request(
+        self,
+        method: str,
+        path: str,
+        params: dict[str, Any] | None = None,
+        json: dict[str, Any] | None = None,
+        data: dict[str, Any] | None = None,
+        headers: dict[str, str] | None = None,
+        *,
+        stream: bool = False,
+        _auth_retry_attempted: bool = False,
+    ):
+        """Make an async HTTP request with optional streaming and automatic retries.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            path: API path or full URL
+            params: Query parameters
+            json: JSON body for POST/PUT
+            data: Form-encoded body for POST/PUT (mutually exclusive with json)
+            headers: Additional headers
+            stream: If True, do not eagerly read the body (useful for downloads)
+
+        Returns:
+            - If stream=False: Parsed JSON (dict) or empty dict
+            - If stream=True: Response object suitable for streaming
+
+        Raises:
+            HTTPStatusError: If request fails with 4xx/5xx status after all retries
+            AuthenticationError: For 401 or 403 status codes
+            RateLimitError: For 429 status codes (after all retries if configured)
+            TimeoutError: If request times out (after all retries if configured)
+            NetworkError: If network error occurs (after all retries if configured)
+            HTTPClientError: For other client errors
+        """
+        for attempt in range(self.retry_config.max_attempts):
+            try:
+                return await self._execute_request(
+                    method, path, params, json, data, headers, stream=stream
+                )
+            except (RateLimitError, HTTPStatusError, TimeoutError, NetworkError) as e:
+                status_code = getattr(e, "status_code", None)
+                headers_from_error = getattr(e, "headers", {}) or {}
+
+                if not self._should_retry(e, status_code, attempt):
+                    raise
+
+                delay = self._calculate_delay(attempt, headers_from_error)
+                self.metrics.record_retry(delay)
+                await asyncio.sleep(delay)
+            # AuthenticationError, HTTPClientError, and other exceptions propagate immediately
+
+        # Should not reach here, but just in case
+        raise HTTPClientError("Exhausted all retry attempts")
 
     async def close(self):
         """Close the async HTTP client."""

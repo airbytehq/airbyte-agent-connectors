@@ -8,6 +8,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from .constants import OPENAPI_DEFAULT_VERSION
 from .schema.components import PathOverrideConfig
+from .schema.extensions import RetryConfig
 from .schema.security import AirbyteAuthConfig
 
 
@@ -136,3 +137,4 @@ class ConnectorConfig(BaseModel):
     auth: AuthConfig
     entities: list[EntityDefinition]
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
+    retry_config: RetryConfig | None = None  # Optional retry configuration

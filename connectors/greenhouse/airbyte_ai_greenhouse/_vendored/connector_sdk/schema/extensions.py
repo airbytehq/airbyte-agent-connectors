@@ -71,18 +71,38 @@ class RateLimitConfig(BaseModel):
 
 class RetryConfig(BaseModel):
     """
-    Configuration for retry strategy.
+    Configuration for retry strategy with exponential backoff.
 
-    NOT YET USED - Defined for future implementation.
+    Used to configure automatic retries for transient errors (429, 5xx, timeouts, network errors).
+    Can be specified at the connector level via x-airbyte-retry-config in the OpenAPI spec's info section.
 
-    When active, might be added to Server or root OpenAPIConnector as:
-        x_retry: Optional[RetryConfig] = Field(None, alias="x-retry")
+    By default, retries are enabled with max_attempts=3. To disable retries, set max_attempts=1
+    in your connector's x-airbyte-retry-config.
+
+    Example YAML usage:
+        info:
+          title: My API
+          x-airbyte-retry-config:
+            max_attempts: 5
+            initial_delay_seconds: 2.0
+            retry_after_header: "X-RateLimit-Reset"
+            retry_after_format: "unix_timestamp"
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
+    # Core retry settings (max_attempts=3 enables retries by default)
     max_attempts: int = 3
-    backoff_strategy: Literal["exponential", "linear", "constant"] = "exponential"
     initial_delay_seconds: float = 1.0
     max_delay_seconds: float = 60.0
-    retry_on_status_codes: Optional[list[int]] = None  # e.g., [429, 503]
+    exponential_base: float = 2.0
+    jitter: bool = True
+
+    # Which errors to retry
+    retry_on_status_codes: list[int] = [429, 500, 502, 503, 504]
+    retry_on_timeout: bool = True
+    retry_on_network_error: bool = True
+
+    # Header-based delay extraction
+    retry_after_header: str = "Retry-After"
+    retry_after_format: Literal["seconds", "milliseconds", "unix_timestamp"] = "seconds"

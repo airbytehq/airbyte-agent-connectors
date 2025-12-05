@@ -31,6 +31,7 @@ from ..types import (
     Action,
     EndpointDefinition,
 )
+from ..schema.extensions import RetryConfig
 
 from .models import (
     ExecutionConfig,
@@ -109,6 +110,7 @@ class LocalExecutor:
         max_logs: int | None = 10000,
         config_values: dict[str, str] | None = None,
         on_token_refresh: TokenRefreshCallback = None,
+        retry_config: RetryConfig | None = None,
     ):
         """Initialize async executor.
 
@@ -133,6 +135,9 @@ class LocalExecutor:
             on_token_refresh: Optional callback function(new_tokens: dict) called when
                 OAuth2 tokens are refreshed. Use this to persist updated tokens.
                 Can be sync or async. Example: lambda tokens: save_to_db(tokens)
+            retry_config: Optional retry configuration override. If provided, overrides
+                the connector.yaml x-airbyte-retry-config. If None, uses connector.yaml
+                config or SDK defaults.
         """
         # Validate mutual exclusivity
         if secrets is not None and auth_config is not None:
@@ -193,6 +198,7 @@ class LocalExecutor:
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
             on_token_refresh=on_token_refresh,
+            retry_config=retry_config or self.config.retry_config,
         )
 
         # Build O(1) lookup indexes

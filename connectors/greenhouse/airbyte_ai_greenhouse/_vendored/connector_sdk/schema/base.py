@@ -11,6 +11,8 @@ from typing import Optional, Dict
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 from pydantic_core import Url
 
+from .extensions import RetryConfig
+
 
 class Contact(BaseModel):
     """
@@ -79,6 +81,7 @@ class Info(BaseModel):
     - x-airbyte-connector-name: Name of the connector (Airbyte extension)
     - x-airbyte-connector-id: UUID of the connector (Airbyte extension)
     - x-airbyte-external-documentation-urls: List of external documentation URLs (Airbyte extension)
+    - x-airbyte-retry-config: Retry configuration for transient errors (Airbyte extension)
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -97,6 +100,9 @@ class Info(BaseModel):
     x_airbyte_connector_id: Optional[str] = Field(None, alias="x-airbyte-connector-id")
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(
         ..., alias="x-airbyte-external-documentation-urls"
+    )
+    x_airbyte_retry_config: Optional[RetryConfig] = Field(
+        None, alias="x-airbyte-retry-config"
     )
 
 
