@@ -12,19 +12,26 @@ except ImportError:
 
 from pathlib import Path
 
+from .types import (
+    Application,
+    ApplicationsGetParams,
+    ApplicationsListParams,
+    Candidate,
+    CandidatesGetParams,
+    CandidatesListParams,
+    Job,
+    JobsGetParams,
+    JobsListParams,
+)
+
 if TYPE_CHECKING:
-    from .types import (
-        Application,
-        ApplicationsGetParams,
-        ApplicationsListParams,
-        Candidate,
-        CandidatesGetParams,
-        CandidatesListParams,
-        Job,
-        JobsGetParams,
-        JobsListParams,
-        GreenhouseAuthConfig,
-    )
+    from .models import GreenhouseAuthConfig
+
+# Import envelope models at runtime (needed for instantiation in action methods)
+from .models import (
+    GreenhouseExecuteResult,
+    GreenhouseExecuteResultWithMeta,
+)
 
 
 class GreenhouseConnector:
@@ -35,7 +42,7 @@ class GreenhouseConnector:
     """
 
     connector_name = "greenhouse"
-    connector_version = "1.0.0"
+    connector_version = "0.1.0"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -76,7 +83,7 @@ class GreenhouseConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = GreenhouseConnector(auth_config={"api_key": "..."})
+            connector = GreenhouseConnector(auth_config=GreenhouseAuthConfig(api_key="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = GreenhouseConnector(
                 connector_id="connector-456",
@@ -91,7 +98,7 @@ class GreenhouseConnector:
                     json.dump(new_tokens, f)
 
             connector = GreenhouseConnector(
-                auth_config={"access_token": "...", "refresh_token": "..."},
+                auth_config=GreenhouseAuthConfig(access_token="...", refresh_token="..."),
                 on_token_refresh=save_tokens
             )
         """
@@ -122,7 +129,7 @@ class GreenhouseConnector:
 
             self._executor = LocalExecutor(
                 config_path=config_path,
-                auth_config=auth_config,
+                auth_config=auth_config.model_dump() if auth_config else None,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -196,7 +203,7 @@ class GreenhouseConnector:
         entity: str,
         action: str,
         params: dict[str, Any]
-    ) -> dict[str, Any]: ...
+    ) -> GreenhouseExecuteResult[Any] | GreenhouseExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
@@ -245,11 +252,14 @@ class GreenhouseConnector:
         has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
 
         if has_extractors:
-            # With extractors - return envelope with data and meta
-            envelope: dict[str, Any] = {"data": result.data}
+            # With extractors - return Pydantic envelope with data and meta
             if result.meta is not None:
-                envelope["meta"] = result.meta
-            return envelope
+                return GreenhouseExecuteResultWithMeta[Any, Any](
+                    data=result.data,
+                    meta=result.meta
+                )
+            else:
+                return GreenhouseExecuteResult[Any](data=result.data)
         else:
             # No extractors - return raw response data
             return result.data
@@ -288,7 +298,8 @@ class CandidatesQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("candidates", "list", params)
+        result = await self._connector.execute("candidates", "list", params)
+        return result
 
 
 
@@ -312,7 +323,8 @@ class CandidatesQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("candidates", "get", params)
+        result = await self._connector.execute("candidates", "get", params)
+        return result
 
 
 
@@ -363,7 +375,8 @@ class ApplicationsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("applications", "list", params)
+        result = await self._connector.execute("applications", "list", params)
+        return result
 
 
 
@@ -387,7 +400,8 @@ class ApplicationsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("applications", "get", params)
+        result = await self._connector.execute("applications", "get", params)
+        return result
 
 
 
@@ -423,7 +437,8 @@ class JobsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("jobs", "list", params)
+        result = await self._connector.execute("jobs", "list", params)
+        return result
 
 
 
@@ -447,6 +462,7 @@ class JobsQuery:
             **kwargs
         }.items() if v is not None}
 
-        return await self._connector.execute("jobs", "get", params)
+        result = await self._connector.execute("jobs", "get", params)
+        return result
 
 

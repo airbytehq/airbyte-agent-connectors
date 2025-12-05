@@ -1,13 +1,13 @@
 """
 Type definitions for greenhouse connector.
 """
-from typing import TypedDict, NotRequired, Any
+# Use typing_extensions.TypedDict for Pydantic compatibility on Python < 3.12
+try:
+    from typing_extensions import TypedDict, NotRequired
+except ImportError:
+    from typing import TypedDict, NotRequired  # type: ignore[attr-defined]
 
-# ===== AUTH CONFIG TYPE DEFINITIONS =====
-
-class GreenhouseAuthConfig(TypedDict):
-    """Harvest API Key Authentication"""
-    api_key: str  # Your Greenhouse Harvest API Key from the Dev Center
+from typing import Any
 
 # ===== RESPONSE TYPE DEFINITIONS =====
 
@@ -78,7 +78,8 @@ class Job(TypedDict):
     hiring_team: NotRequired[dict[str, Any]]
     openings: NotRequired[list[dict[str, Any]]]
 
-# ===== ENVELOPE TYPE DEFINITIONS =====
+# ===== METADATA TYPE DEFINITIONS =====
+# Meta types for operations that extract metadata (e.g., pagination info)
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 

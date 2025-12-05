@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Greenhouse Harvest API Connector
-  version: 1.0.0
+  version: 0.1.0
   description: Connector for Greenhouse Harvest API
   x-airbyte-connector-name: greenhouse
   x-airbyte-connector-id: 59f1e50a-331f-4f09-b3e8-2e8d4d355f44
