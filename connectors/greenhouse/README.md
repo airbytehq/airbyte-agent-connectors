@@ -2,7 +2,7 @@
 
 Type-safe Greenhouse API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.15.0
+**Package Version:** 0.16.0
 
 **Connector Version:** 0.1.0
 

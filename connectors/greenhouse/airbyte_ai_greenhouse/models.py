@@ -5,8 +5,11 @@ This module contains Pydantic models used for authentication configuration
 and response envelope types.
 """
 
+from __future__ import annotations
+
 from pydantic import BaseModel, ConfigDict, SkipValidation
 from typing import TypeVar, Generic
+
 
 # Authentication configuration
 
@@ -43,3 +46,10 @@ class GreenhouseExecuteResultWithMeta(GreenhouseExecuteResult[T], Generic[T, S])
     """
     meta: SkipValidation[S]
     """Metadata about the response (e.g., pagination cursors, record counts)."""
+
+
+# ===== OPERATION RESULT TYPE ALIASES =====
+
+# Concrete type aliases for each operation result.
+# These provide simpler, more readable type annotations than using the generic forms.
+

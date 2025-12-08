@@ -5,5 +5,10 @@ Auto-generated from OpenAPI specification.
 """
 
 from .connector import GreenhouseConnector
+from .models import (
+    GreenhouseAuthConfig,
+    GreenhouseExecuteResult,
+    GreenhouseExecuteResultWithMeta
+)
 
-__all__ = ["GreenhouseConnector"]
+__all__ = ["GreenhouseConnector", "GreenhouseAuthConfig", "GreenhouseExecuteResult", "GreenhouseExecuteResultWithMeta"]
