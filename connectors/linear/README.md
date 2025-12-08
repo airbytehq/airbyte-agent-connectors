@@ -2,7 +2,7 @@
 
 Type-safe Linear API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.18.0
+**Package Version:** 0.19.0
 
 **Connector Version:** 0.1.0
 

@@ -13,27 +13,27 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
-    IssueResponse,
     IssuesGetParams,
     IssuesListParams,
-    IssuesListResponse,
-    ProjectResponse,
     ProjectsGetParams,
     ProjectsListParams,
-    ProjectsListResponse,
-    TeamResponse,
     TeamsGetParams,
     TeamsListParams,
-    TeamsListResponse,
 )
 
 if TYPE_CHECKING:
     from .models import LinearAuthConfig
 
-# Import envelope models at runtime (needed for instantiation in action methods)
+# Import response models and envelope models at runtime
 from .models import (
     LinearExecuteResult,
     LinearExecuteResultWithMeta,
+    IssueResponse,
+    IssuesListResponse,
+    ProjectResponse,
+    ProjectsListResponse,
+    TeamResponse,
+    TeamsListResponse,
 )
 
 

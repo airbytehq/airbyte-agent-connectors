@@ -1,26 +1,25 @@
 """
 Type definitions for linear connector.
 """
+from __future__ import annotations
+
 # Use typing_extensions.TypedDict for Pydantic compatibility on Python < 3.12
 try:
     from typing_extensions import TypedDict, NotRequired
 except ImportError:
     from typing import TypedDict, NotRequired  # type: ignore[attr-defined]
 
-from typing import Any
 
-# ===== RESPONSE TYPE DEFINITIONS =====
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .models import (
+        Issue,
+        Project,
+        Team,
+    )
 
-class Issue(TypedDict):
-    """Linear issue object"""
-    id: str
-    title: str
-    description: NotRequired[Any]
-    state: NotRequired[Any]
-    priority: NotRequired[Any]
-    assignee: NotRequired[Any]
-    createdAt: NotRequired[str]
-    updatedAt: NotRequired[str]
+# ===== NESTED PARAM TYPE DEFINITIONS =====
+# Nested parameter schemas discovered during parameter extraction
 
 class IssuesListResponseDataIssuesPageinfo(TypedDict):
     """Pagination information"""
@@ -36,29 +35,9 @@ class IssuesListResponseData(TypedDict):
     """Nested schema for IssuesListResponse.data"""
     issues: NotRequired[IssuesListResponseDataIssues]
 
-class IssuesListResponse(TypedDict):
-    """GraphQL response for issues list"""
-    data: NotRequired[IssuesListResponseData]
-
 class IssueResponseData(TypedDict):
     """Nested schema for IssueResponse.data"""
     issue: NotRequired[Issue]
-
-class IssueResponse(TypedDict):
-    """GraphQL response for single issue"""
-    data: NotRequired[IssueResponseData]
-
-class Project(TypedDict):
-    """Linear project object"""
-    id: str
-    name: str
-    description: NotRequired[Any]
-    state: NotRequired[Any]
-    startDate: NotRequired[Any]
-    targetDate: NotRequired[Any]
-    lead: NotRequired[Any]
-    createdAt: NotRequired[str]
-    updatedAt: NotRequired[str]
 
 class ProjectsListResponseDataProjectsPageinfo(TypedDict):
     """Pagination information"""
@@ -74,27 +53,9 @@ class ProjectsListResponseData(TypedDict):
     """Nested schema for ProjectsListResponse.data"""
     projects: NotRequired[ProjectsListResponseDataProjects]
 
-class ProjectsListResponse(TypedDict):
-    """GraphQL response for projects list"""
-    data: NotRequired[ProjectsListResponseData]
-
 class ProjectResponseData(TypedDict):
     """Nested schema for ProjectResponse.data"""
     project: NotRequired[Project]
-
-class ProjectResponse(TypedDict):
-    """GraphQL response for single project"""
-    data: NotRequired[ProjectResponseData]
-
-class Team(TypedDict):
-    """Linear team object"""
-    id: str
-    name: str
-    key: str
-    description: NotRequired[Any]
-    timezone: NotRequired[Any]
-    createdAt: NotRequired[str]
-    updatedAt: NotRequired[str]
 
 class TeamsListResponseDataTeamsPageinfo(TypedDict):
     """Pagination information"""
@@ -110,20 +71,9 @@ class TeamsListResponseData(TypedDict):
     """Nested schema for TeamsListResponse.data"""
     teams: NotRequired[TeamsListResponseDataTeams]
 
-class TeamsListResponse(TypedDict):
-    """GraphQL response for teams list"""
-    data: NotRequired[TeamsListResponseData]
-
 class TeamResponseData(TypedDict):
     """Nested schema for TeamResponse.data"""
     team: NotRequired[Team]
-
-class TeamResponse(TypedDict):
-    """GraphQL response for single team"""
-    data: NotRequired[TeamResponseData]
-
-# ===== METADATA TYPE DEFINITIONS =====
-# Meta types for operations that extract metadata (e.g., pagination info)
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
