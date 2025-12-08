@@ -13,13 +13,10 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
-    Application,
     ApplicationsGetParams,
     ApplicationsListParams,
-    Candidate,
     CandidatesGetParams,
     CandidatesListParams,
-    Job,
     JobsGetParams,
     JobsListParams,
 )
@@ -27,10 +24,13 @@ from .types import (
 if TYPE_CHECKING:
     from .models import GreenhouseAuthConfig
 
-# Import envelope models at runtime (needed for instantiation in action methods)
+# Import response models and envelope models at runtime
 from .models import (
     GreenhouseExecuteResult,
     GreenhouseExecuteResultWithMeta,
+    Application,
+    Candidate,
+    Job,
 )
 
 

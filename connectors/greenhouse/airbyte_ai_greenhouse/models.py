@@ -7,9 +7,8 @@ and response envelope types.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, SkipValidation
-from typing import TypeVar, Generic
-
+from pydantic import BaseModel, ConfigDict, Field
+from typing import TypeVar, Generic, Union, Any
 
 # Authentication configuration
 
@@ -20,6 +19,84 @@ class GreenhouseAuthConfig(BaseModel):
 
     api_key: str
     """Your Greenhouse Harvest API Key from the Dev Center"""
+
+# ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
+
+class Candidate(BaseModel):
+    """Greenhouse candidate object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    first_name: Union[str, Any] = Field(default=None)
+    last_name: Union[str, Any] = Field(default=None)
+    company: Union[str | None, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    updated_at: Union[str, Any] = Field(default=None)
+    last_activity: Union[str, Any] = Field(default=None)
+    is_private: Union[bool, Any] = Field(default=None)
+    photo_url: Union[str | None, Any] = Field(default=None)
+    attachments: Union[list[dict[str, Any]], Any] = Field(default=None)
+    application_ids: Union[list[int], Any] = Field(default=None)
+    phone_numbers: Union[list[dict[str, Any]], Any] = Field(default=None)
+    addresses: Union[list[dict[str, Any]], Any] = Field(default=None)
+    email_addresses: Union[list[dict[str, Any]], Any] = Field(default=None)
+    website_addresses: Union[list[dict[str, Any]], Any] = Field(default=None)
+    social_media_addresses: Union[list[dict[str, Any]], Any] = Field(default=None)
+    recruiter: Union[dict[str, Any] | None, Any] = Field(default=None)
+    coordinator: Union[dict[str, Any] | None, Any] = Field(default=None)
+    can_email: Union[bool, Any] = Field(default=None)
+    tags: Union[list[str], Any] = Field(default=None)
+    custom_fields: Union[dict[str, Any], Any] = Field(default=None)
+
+class Application(BaseModel):
+    """Greenhouse application object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    candidate_id: Union[int, Any] = Field(default=None)
+    prospect: Union[bool, Any] = Field(default=None)
+    applied_at: Union[str, Any] = Field(default=None)
+    rejected_at: Union[str | None, Any] = Field(default=None)
+    last_activity_at: Union[str, Any] = Field(default=None)
+    location: Union[dict[str, Any] | None, Any] = Field(default=None)
+    source: Union[dict[str, Any], Any] = Field(default=None)
+    credited_to: Union[dict[str, Any], Any] = Field(default=None)
+    rejection_reason: Union[dict[str, Any] | None, Any] = Field(default=None)
+    rejection_details: Union[dict[str, Any] | None, Any] = Field(default=None)
+    jobs: Union[list[dict[str, Any]], Any] = Field(default=None)
+    job_post_id: Union[int | None, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    current_stage: Union[dict[str, Any] | None, Any] = Field(default=None)
+    answers: Union[list[dict[str, Any]], Any] = Field(default=None)
+    prospective_office: Union[dict[str, Any] | None, Any] = Field(default=None)
+    prospective_department: Union[dict[str, Any] | None, Any] = Field(default=None)
+    prospect_detail: Union[dict[str, Any], Any] = Field(default=None)
+    attachments: Union[list[dict[str, Any]], Any] = Field(default=None)
+    custom_fields: Union[dict[str, Any], Any] = Field(default=None)
+
+class Job(BaseModel):
+    """Greenhouse job object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    requisition_id: Union[str | None, Any] = Field(default=None)
+    notes: Union[str | None, Any] = Field(default=None)
+    confidential: Union[bool, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    opened_at: Union[str, Any] = Field(default=None)
+    closed_at: Union[str | None, Any] = Field(default=None)
+    updated_at: Union[str, Any] = Field(default=None)
+    departments: Union[list[dict[str, Any] | None], Any] = Field(default=None)
+    offices: Union[list[dict[str, Any]], Any] = Field(default=None)
+    custom_fields: Union[dict[str, Any], Any] = Field(default=None)
+    hiring_team: Union[dict[str, Any], Any] = Field(default=None)
+    openings: Union[list[dict[str, Any]], Any] = Field(default=None)
+
+# ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
+# Meta types for operations that extract metadata (e.g., pagination info)
 
 # ===== RESPONSE ENVELOPE MODELS =====
 
@@ -35,7 +112,7 @@ class GreenhouseExecuteResult(BaseModel, Generic[T]):
     """
     model_config = ConfigDict(extra="forbid")
 
-    data: SkipValidation[T]
+    data: T
     """Response data containing the result of the action."""
 
 
@@ -44,7 +121,7 @@ class GreenhouseExecuteResultWithMeta(GreenhouseExecuteResult[T], Generic[T, S])
 
     Used for actions that return both data and metadata (e.g., pagination info).
     """
-    meta: SkipValidation[S]
+    meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
 
