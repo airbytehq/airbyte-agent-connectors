@@ -13,57 +13,34 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
-    AnsweredScorecard,
-    Call,
     CallAudioDownloadParams,
     CallAudioDownloadParamsContentselector,
     CallAudioDownloadParamsFilter,
-    CallTranscript,
     CallTranscriptsListParams,
     CallTranscriptsListParamsFilter,
-    CallTranscriptsListResultMeta,
     CallVideoDownloadParams,
     CallVideoDownloadParamsContentselector,
     CallVideoDownloadParamsFilter,
     CallsExtensiveListParams,
     CallsExtensiveListParamsContentselector,
     CallsExtensiveListParamsFilter,
-    CallsExtensiveListResultMeta,
     CallsGetParams,
     CallsListParams,
-    CallsListResultMeta,
-    CoachingData,
     CoachingListParams,
-    ExtensiveCall,
-    FolderCall,
-    LibraryFolder,
     LibraryFolderContentListParams,
-    LibraryFolderContentListResultMeta,
     LibraryFoldersListParams,
-    Scorecard,
     SettingsScorecardsListParams,
     SettingsTrackersListParams,
     StatsActivityAggregateListParams,
     StatsActivityAggregateListParamsFilter,
-    StatsActivityAggregateListResultMeta,
     StatsActivityDayByDayListParams,
     StatsActivityDayByDayListParamsFilter,
-    StatsActivityDayByDayListResultMeta,
     StatsActivityScorecardsListParams,
     StatsActivityScorecardsListParamsFilter,
-    StatsActivityScorecardsListResultMeta,
     StatsInteractionListParams,
     StatsInteractionListParamsFilter,
-    StatsInteractionListResultMeta,
-    Tracker,
-    User,
-    UserAggregateActivity,
-    UserDetailedActivity,
-    UserInteractionStats,
     UsersGetParams,
     UsersListParams,
-    UsersListResultMeta,
-    Workspace,
     WorkspacesListParams,
 )
 
@@ -74,6 +51,22 @@ if TYPE_CHECKING:
 from .models import (
     GongExecuteResult,
     GongExecuteResultWithMeta,
+    UsersListResult,
+    UsersGetResult,
+    CallsListResult,
+    CallsGetResult,
+    CallsExtensiveListResult,
+    WorkspacesListResult,
+    CallTranscriptsListResult,
+    StatsActivityAggregateListResult,
+    StatsActivityDayByDayListResult,
+    StatsInteractionListResult,
+    SettingsScorecardsListResult,
+    SettingsTrackersListResult,
+    LibraryFoldersListResult,
+    LibraryFolderContentListResult,
+    CoachingListResult,
+    StatsActivityScorecardsListResult,
 )
 
 
@@ -222,7 +215,7 @@ class GongConnector:
         entity: Literal["users"],
         action: Literal["list"],
         params: "UsersListParams"
-    ) -> "GongExecuteResultWithMeta[list[User], UsersListResultMeta]": ...
+    ) -> "UsersListResult": ...
 
     @overload
     async def execute(
@@ -230,7 +223,7 @@ class GongConnector:
         entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
-    ) -> "GongExecuteResult[User]": ...
+    ) -> "UsersGetResult": ...
 
     @overload
     async def execute(
@@ -238,7 +231,7 @@ class GongConnector:
         entity: Literal["calls"],
         action: Literal["list"],
         params: "CallsListParams"
-    ) -> "GongExecuteResultWithMeta[list[Call], CallsListResultMeta]": ...
+    ) -> "CallsListResult": ...
 
     @overload
     async def execute(
@@ -246,7 +239,7 @@ class GongConnector:
         entity: Literal["calls"],
         action: Literal["get"],
         params: "CallsGetParams"
-    ) -> "GongExecuteResult[Call]": ...
+    ) -> "CallsGetResult": ...
 
     @overload
     async def execute(
@@ -254,7 +247,7 @@ class GongConnector:
         entity: Literal["calls_extensive"],
         action: Literal["list"],
         params: "CallsExtensiveListParams"
-    ) -> "GongExecuteResultWithMeta[list[ExtensiveCall], CallsExtensiveListResultMeta]": ...
+    ) -> "CallsExtensiveListResult": ...
 
     @overload
     async def execute(
@@ -278,7 +271,7 @@ class GongConnector:
         entity: Literal["workspaces"],
         action: Literal["list"],
         params: "WorkspacesListParams"
-    ) -> "GongExecuteResult[list[Workspace]]": ...
+    ) -> "WorkspacesListResult": ...
 
     @overload
     async def execute(
@@ -286,7 +279,7 @@ class GongConnector:
         entity: Literal["call_transcripts"],
         action: Literal["list"],
         params: "CallTranscriptsListParams"
-    ) -> "GongExecuteResultWithMeta[list[CallTranscript], CallTranscriptsListResultMeta]": ...
+    ) -> "CallTranscriptsListResult": ...
 
     @overload
     async def execute(
@@ -294,7 +287,7 @@ class GongConnector:
         entity: Literal["stats_activity_aggregate"],
         action: Literal["list"],
         params: "StatsActivityAggregateListParams"
-    ) -> "GongExecuteResultWithMeta[list[UserAggregateActivity], StatsActivityAggregateListResultMeta]": ...
+    ) -> "StatsActivityAggregateListResult": ...
 
     @overload
     async def execute(
@@ -302,7 +295,7 @@ class GongConnector:
         entity: Literal["stats_activity_day_by_day"],
         action: Literal["list"],
         params: "StatsActivityDayByDayListParams"
-    ) -> "GongExecuteResultWithMeta[list[UserDetailedActivity], StatsActivityDayByDayListResultMeta]": ...
+    ) -> "StatsActivityDayByDayListResult": ...
 
     @overload
     async def execute(
@@ -310,7 +303,7 @@ class GongConnector:
         entity: Literal["stats_interaction"],
         action: Literal["list"],
         params: "StatsInteractionListParams"
-    ) -> "GongExecuteResultWithMeta[list[UserInteractionStats], StatsInteractionListResultMeta]": ...
+    ) -> "StatsInteractionListResult": ...
 
     @overload
     async def execute(
@@ -318,7 +311,7 @@ class GongConnector:
         entity: Literal["settings_scorecards"],
         action: Literal["list"],
         params: "SettingsScorecardsListParams"
-    ) -> "GongExecuteResult[list[Scorecard]]": ...
+    ) -> "SettingsScorecardsListResult": ...
 
     @overload
     async def execute(
@@ -326,7 +319,7 @@ class GongConnector:
         entity: Literal["settings_trackers"],
         action: Literal["list"],
         params: "SettingsTrackersListParams"
-    ) -> "GongExecuteResult[list[Tracker]]": ...
+    ) -> "SettingsTrackersListResult": ...
 
     @overload
     async def execute(
@@ -334,7 +327,7 @@ class GongConnector:
         entity: Literal["library_folders"],
         action: Literal["list"],
         params: "LibraryFoldersListParams"
-    ) -> "GongExecuteResult[list[LibraryFolder]]": ...
+    ) -> "LibraryFoldersListResult": ...
 
     @overload
     async def execute(
@@ -342,7 +335,7 @@ class GongConnector:
         entity: Literal["library_folder_content"],
         action: Literal["list"],
         params: "LibraryFolderContentListParams"
-    ) -> "GongExecuteResultWithMeta[list[FolderCall], LibraryFolderContentListResultMeta]": ...
+    ) -> "LibraryFolderContentListResult": ...
 
     @overload
     async def execute(
@@ -350,7 +343,7 @@ class GongConnector:
         entity: Literal["coaching"],
         action: Literal["list"],
         params: "CoachingListParams"
-    ) -> "GongExecuteResult[list[CoachingData]]": ...
+    ) -> "CoachingListResult": ...
 
     @overload
     async def execute(
@@ -358,7 +351,7 @@ class GongConnector:
         entity: Literal["stats_activity_scorecards"],
         action: Literal["list"],
         params: "StatsActivityScorecardsListParams"
-    ) -> "GongExecuteResultWithMeta[list[AnsweredScorecard], StatsActivityScorecardsListResultMeta]": ...
+    ) -> "StatsActivityScorecardsListResult": ...
 
 
     @overload
@@ -443,7 +436,7 @@ class UsersQuery:
         self,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[User], UsersListResultMeta]:
+    ) -> UsersListResult:
         """
         Returns a list of all users in the Gong account
 
@@ -452,7 +445,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[User], UsersListResultMeta]
+            UsersListResult
         """
         params = {k: v for k, v in {
             "cursor": cursor,
@@ -460,11 +453,10 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[User], UsersListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return UsersListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -472,7 +464,7 @@ class UsersQuery:
         self,
         id: str | None = None,
         **kwargs
-    ) -> GongExecuteResult[User]:
+    ) -> UsersGetResult:
         """
         Get a single user by ID
 
@@ -481,7 +473,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[User]
+            UsersGetResult
         """
         params = {k: v for k, v in {
             "id": id,
@@ -489,8 +481,9 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[User](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return UsersGetResult(
+            data=result.data        )
 
 
 
@@ -509,7 +502,7 @@ class CallsQuery:
         to_date_time: str | None = None,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[Call], CallsListResultMeta]:
+    ) -> CallsListResult:
         """
         Retrieve calls data by date range
 
@@ -520,7 +513,7 @@ class CallsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[Call], CallsListResultMeta]
+            CallsListResult
         """
         params = {k: v for k, v in {
             "fromDateTime": from_date_time,
@@ -530,11 +523,10 @@ class CallsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("calls", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[Call], CallsListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return CallsListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -542,7 +534,7 @@ class CallsQuery:
         self,
         id: str | None = None,
         **kwargs
-    ) -> GongExecuteResult[Call]:
+    ) -> CallsGetResult:
         """
         Get specific call data by ID
 
@@ -551,7 +543,7 @@ class CallsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[Call]
+            CallsGetResult
         """
         params = {k: v for k, v in {
             "id": id,
@@ -559,8 +551,9 @@ class CallsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("calls", "get", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[Call](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return CallsGetResult(
+            data=result.data        )
 
 
 
@@ -579,7 +572,7 @@ class CallsExtensiveQuery:
         content_selector: CallsExtensiveListParamsContentselector | None = None,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[ExtensiveCall], CallsExtensiveListResultMeta]:
+    ) -> CallsExtensiveListResult:
         """
         Retrieve detailed call data including participants, interaction stats, and content
 
@@ -590,7 +583,7 @@ class CallsExtensiveQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[ExtensiveCall], CallsExtensiveListResultMeta]
+            CallsExtensiveListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -600,11 +593,10 @@ class CallsExtensiveQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("calls_extensive", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[ExtensiveCall], CallsExtensiveListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return CallsExtensiveListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -774,20 +766,21 @@ class WorkspacesQuery:
     async def list(
         self,
         **kwargs
-    ) -> GongExecuteResult[list[Workspace]]:
+    ) -> WorkspacesListResult:
         """
         List all company workspaces
 
         Returns:
-            GongExecuteResult[list[Workspace]]
+            WorkspacesListResult
         """
         params = {k: v for k, v in {
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("workspaces", "list", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[list[Workspace]](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return WorkspacesListResult(
+            data=result.data        )
 
 
 
@@ -805,7 +798,7 @@ class CallTranscriptsQuery:
         filter: CallTranscriptsListParamsFilter | None = None,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[CallTranscript], CallTranscriptsListResultMeta]:
+    ) -> CallTranscriptsListResult:
         """
         Returns transcripts for calls in a specified date range or specific call IDs
 
@@ -815,7 +808,7 @@ class CallTranscriptsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[CallTranscript], CallTranscriptsListResultMeta]
+            CallTranscriptsListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -824,11 +817,10 @@ class CallTranscriptsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("call_transcripts", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[CallTranscript], CallTranscriptsListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return CallTranscriptsListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -845,7 +837,7 @@ class StatsActivityAggregateQuery:
         self,
         filter: StatsActivityAggregateListParamsFilter | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[UserAggregateActivity], StatsActivityAggregateListResultMeta]:
+    ) -> StatsActivityAggregateListResult:
         """
         Provides aggregated user activity metrics across a specified period
 
@@ -854,7 +846,7 @@ class StatsActivityAggregateQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[UserAggregateActivity], StatsActivityAggregateListResultMeta]
+            StatsActivityAggregateListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -862,11 +854,10 @@ class StatsActivityAggregateQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("stats_activity_aggregate", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[UserAggregateActivity], StatsActivityAggregateListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return StatsActivityAggregateListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -883,7 +874,7 @@ class StatsActivityDayByDayQuery:
         self,
         filter: StatsActivityDayByDayListParamsFilter | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[UserDetailedActivity], StatsActivityDayByDayListResultMeta]:
+    ) -> StatsActivityDayByDayListResult:
         """
         Delivers daily user activity metrics across a specified date range
 
@@ -892,7 +883,7 @@ class StatsActivityDayByDayQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[UserDetailedActivity], StatsActivityDayByDayListResultMeta]
+            StatsActivityDayByDayListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -900,11 +891,10 @@ class StatsActivityDayByDayQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("stats_activity_day_by_day", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[UserDetailedActivity], StatsActivityDayByDayListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return StatsActivityDayByDayListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -921,7 +911,7 @@ class StatsInteractionQuery:
         self,
         filter: StatsInteractionListParamsFilter | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[UserInteractionStats], StatsInteractionListResultMeta]:
+    ) -> StatsInteractionListResult:
         """
         Returns interaction stats for users based on calls that have Whisper turned on
 
@@ -930,7 +920,7 @@ class StatsInteractionQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[UserInteractionStats], StatsInteractionListResultMeta]
+            StatsInteractionListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -938,11 +928,10 @@ class StatsInteractionQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("stats_interaction", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[UserInteractionStats], StatsInteractionListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return StatsInteractionListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -959,7 +948,7 @@ class SettingsScorecardsQuery:
         self,
         workspace_id: str | None = None,
         **kwargs
-    ) -> GongExecuteResult[list[Scorecard]]:
+    ) -> SettingsScorecardsListResult:
         """
         Retrieve all scorecard configurations in the company
 
@@ -968,7 +957,7 @@ class SettingsScorecardsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[list[Scorecard]]
+            SettingsScorecardsListResult
         """
         params = {k: v for k, v in {
             "workspaceId": workspace_id,
@@ -976,8 +965,9 @@ class SettingsScorecardsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("settings_scorecards", "list", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[list[Scorecard]](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return SettingsScorecardsListResult(
+            data=result.data        )
 
 
 
@@ -994,7 +984,7 @@ class SettingsTrackersQuery:
         self,
         workspace_id: str | None = None,
         **kwargs
-    ) -> GongExecuteResult[list[Tracker]]:
+    ) -> SettingsTrackersListResult:
         """
         Retrieve all keyword tracker configurations in the company
 
@@ -1003,7 +993,7 @@ class SettingsTrackersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[list[Tracker]]
+            SettingsTrackersListResult
         """
         params = {k: v for k, v in {
             "workspaceId": workspace_id,
@@ -1011,8 +1001,9 @@ class SettingsTrackersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("settings_trackers", "list", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[list[Tracker]](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return SettingsTrackersListResult(
+            data=result.data        )
 
 
 
@@ -1029,7 +1020,7 @@ class LibraryFoldersQuery:
         self,
         workspace_id: str | None = None,
         **kwargs
-    ) -> GongExecuteResult[list[LibraryFolder]]:
+    ) -> LibraryFoldersListResult:
         """
         Retrieve the folder structure of the call library
 
@@ -1038,7 +1029,7 @@ class LibraryFoldersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[list[LibraryFolder]]
+            LibraryFoldersListResult
         """
         params = {k: v for k, v in {
             "workspaceId": workspace_id,
@@ -1046,8 +1037,9 @@ class LibraryFoldersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("library_folders", "list", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[list[LibraryFolder]](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return LibraryFoldersListResult(
+            data=result.data        )
 
 
 
@@ -1065,7 +1057,7 @@ class LibraryFolderContentQuery:
         folder_id: str,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[FolderCall], LibraryFolderContentListResultMeta]:
+    ) -> LibraryFolderContentListResult:
         """
         Retrieve calls in a specific library folder
 
@@ -1075,7 +1067,7 @@ class LibraryFolderContentQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[FolderCall], LibraryFolderContentListResultMeta]
+            LibraryFolderContentListResult
         """
         params = {k: v for k, v in {
             "folderId": folder_id,
@@ -1084,11 +1076,10 @@ class LibraryFolderContentQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("library_folder_content", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[FolderCall], LibraryFolderContentListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return LibraryFolderContentListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
 
@@ -1108,7 +1099,7 @@ class CoachingQuery:
         from_: str,
         to: str,
         **kwargs
-    ) -> GongExecuteResult[list[CoachingData]]:
+    ) -> CoachingListResult:
         """
         Retrieve coaching metrics for a manager and their direct reports
 
@@ -1120,7 +1111,7 @@ class CoachingQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResult[list[CoachingData]]
+            CoachingListResult
         """
         params = {k: v for k, v in {
             "workspace-id": workspace_id,
@@ -1131,8 +1122,9 @@ class CoachingQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("coaching", "list", params)
-        # Cast generic envelope to typed envelope with proper data type
-        return GongExecuteResult[list[CoachingData]](data=result.data)
+        # Cast generic envelope to concrete typed result
+        return CoachingListResult(
+            data=result.data        )
 
 
 
@@ -1150,7 +1142,7 @@ class StatsActivityScorecardsQuery:
         filter: StatsActivityScorecardsListParamsFilter | None = None,
         cursor: str | None = None,
         **kwargs
-    ) -> GongExecuteResultWithMeta[list[AnsweredScorecard], StatsActivityScorecardsListResultMeta]:
+    ) -> StatsActivityScorecardsListResult:
         """
         Retrieve answered scorecards for applicable reviewed users or scorecards for a date range
 
@@ -1160,7 +1152,7 @@ class StatsActivityScorecardsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GongExecuteResultWithMeta[list[AnsweredScorecard], StatsActivityScorecardsListResultMeta]
+            StatsActivityScorecardsListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -1169,10 +1161,9 @@ class StatsActivityScorecardsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("stats_activity_scorecards", "list", params)
-        # Cast generic envelope to typed envelope with proper data/meta types
-        return GongExecuteResultWithMeta[list[AnsweredScorecard], StatsActivityScorecardsListResultMeta](
+        # Cast generic envelope to concrete typed result
+        return StatsActivityScorecardsListResult(
             data=result.data,
-            meta=result.meta
-        )
+            meta=result.meta        )
 
 
