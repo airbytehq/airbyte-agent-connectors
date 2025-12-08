@@ -21,7 +21,7 @@ from .types import (
 if TYPE_CHECKING:
     from .models import GithubAuthConfig
 
-# Import envelope models at runtime (needed for instantiation in action methods)
+# Import response models and envelope models at runtime
 from .models import (
     GithubExecuteResult,
     GithubExecuteResultWithMeta,
