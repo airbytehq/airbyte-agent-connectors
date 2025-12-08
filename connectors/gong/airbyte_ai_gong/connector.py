@@ -47,7 +47,7 @@ from .types import (
 if TYPE_CHECKING:
     from .models import GongAuthConfig
 
-# Import envelope models at runtime (needed for instantiation in action methods)
+# Import response models and envelope models at runtime
 from .models import (
     GongExecuteResult,
     GongExecuteResultWithMeta,
