@@ -13,37 +13,37 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
-    CRMObject,
     CompaniesGetParams,
-    CompaniesList,
     CompaniesListParams,
-    Company,
-    Contact,
     ContactsGetParams,
-    ContactsList,
     ContactsListParams,
-    Deal,
     DealsGetParams,
-    DealsList,
     DealsListParams,
     ObjectsGetParams,
-    ObjectsList,
     ObjectsListParams,
-    SchemasList,
     SchemasListParams,
-    Ticket,
     TicketsGetParams,
-    TicketsList,
     TicketsListParams,
 )
 
 if TYPE_CHECKING:
     from .models import HubspotAuthConfig
 
-# Import envelope models at runtime (needed for instantiation in action methods)
+# Import response models and envelope models at runtime
 from .models import (
     HubspotExecuteResult,
     HubspotExecuteResultWithMeta,
+    CRMObject,
+    CompaniesList,
+    Company,
+    Contact,
+    ContactsList,
+    Deal,
+    DealsList,
+    ObjectsList,
+    SchemasList,
+    Ticket,
+    TicketsList,
 )
 
 
