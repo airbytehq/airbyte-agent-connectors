@@ -1,0 +1,112 @@
+name: gong_business_questions
+description: Evaluate Gong connector for sales intelligence questions
+
+cases:
+  - name: top_performers_by_calls
+    question: "Who are my top 5 sales reps based on call volume this month?"
+    cassettes:
+      - team_performance.yaml
+    expected_tools:
+      - entity: users
+        action: list
+      - entity: stats_activity_aggregate
+        action: list
+    expected_answer_contains:
+      - rep names ranked
+      - call counts
+    score_threshold: 0.8
+
+  - name: coaching_needs_identification
+    question: "Which reps need more coaching based on their scorecard results?"
+    cassettes:
+      - coaching_insights.yaml
+    expected_tools:
+      - entity: users
+        action: list
+      - entity: stats_activity_scorecards
+        action: list
+    expected_answer_contains:
+      - rep names
+      - scorecard scores
+      - coaching recommendation
+    score_threshold: 0.7
+
+  - name: competitor_mentions_analysis
+    question: "How often are competitors mentioned in calls this quarter?"
+    cassettes:
+      - call_analysis.yaml
+    expected_tools:
+      - entity: settings_trackers
+        action: list
+      - entity: calls_extensive
+        action: list
+    expected_answer_contains:
+      - competitor names
+      - mention frequency
+    score_threshold: 0.7
+
+  - name: talk_time_analysis
+    question: "What's the average talk-to-listen ratio for my team?"
+    cassettes:
+      - team_performance.yaml
+    expected_tools:
+      - entity: stats_interaction
+        action: list
+    expected_answer_contains:
+      - talk ratio percentages
+      - team average
+    score_threshold: 0.8
+
+  - name: deal_risk_assessment
+    question: "Which deals might be at risk based on recent call sentiment?"
+    cassettes:
+      - call_analysis.yaml
+    expected_tools:
+      - entity: calls_extensive
+        action: list
+    expected_answer_contains:
+      - deal/opportunity names
+      - risk indicators
+    score_threshold: 0.7
+
+  - name: feedback_culture_metrics
+    question: "How active is my team in giving and receiving feedback?"
+    cassettes:
+      - coaching_insights.yaml
+    expected_tools:
+      - entity: stats_activity_aggregate
+        action: list
+      - entity: coaching
+        action: list
+    expected_answer_contains:
+      - feedback given/received counts
+      - comparison across team
+    score_threshold: 0.8
+
+  - name: call_transcript_search
+    question: "Show me calls where pricing objections were discussed"
+    cassettes:
+      - call_analysis.yaml
+    expected_tools:
+      - entity: call_transcripts
+        action: list
+      - entity: settings_trackers
+        action: list
+    expected_answer_contains:
+      - call IDs/links
+      - relevant transcript excerpts
+    score_threshold: 0.7
+
+  - name: onboarding_progress
+    question: "How are new hires performing compared to experienced reps?"
+    cassettes:
+      - team_performance.yaml
+    expected_tools:
+      - entity: users
+        action: list
+      - entity: stats_activity_aggregate
+        action: list
+    expected_answer_contains:
+      - new hire vs experienced comparison
+      - key metrics
+    score_threshold: 0.7

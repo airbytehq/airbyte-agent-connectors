@@ -1,0 +1,515 @@
+# Call Analysis Cassette
+# Contains: Calls, Transcripts, Trackers data
+# Used for: competitor_mentions_analysis, deal_risk_assessment, call_transcript_search
+
+- test_name: settings_trackers_list
+  description: Mock trackers data for competitor and keyword tracking
+  entity: settings_trackers
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params: {}
+  captured_request:
+    method: GET
+    path: /v2/settings/trackers
+    query_params: null
+    headers: {}
+    body: null
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: true
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-trackers-001
+      trackers:
+        - trackerId: "tracker-001"
+          trackerName: "Competitor - Acme Corp"
+          trackerType: KEYWORD
+          keywords:
+            - "Acme"
+            - "Acme Corp"
+            - "Acme Corporation"
+          enabled: true
+          workspaceId: "workspace-001"
+        - trackerId: "tracker-002"
+          trackerName: "Competitor - TechRival"
+          trackerType: KEYWORD
+          keywords:
+            - "TechRival"
+            - "Tech Rival"
+            - "TechRival Inc"
+          enabled: true
+          workspaceId: "workspace-001"
+        - trackerId: "tracker-003"
+          trackerName: "Pricing Objection"
+          trackerType: KEYWORD
+          keywords:
+            - "too expensive"
+            - "price is high"
+            - "budget concerns"
+            - "cost too much"
+            - "pricing objection"
+          enabled: true
+          workspaceId: "workspace-001"
+        - trackerId: "tracker-004"
+          trackerName: "Competitor - GlobalSoft"
+          trackerType: KEYWORD
+          keywords:
+            - "GlobalSoft"
+            - "Global Soft"
+          enabled: true
+          workspaceId: "workspace-001"
+
+- test_name: calls_extensive_list
+  description: Mock extensive call data with trackers and sentiment
+  entity: calls_extensive
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+      contentSelector:
+        exposedFields:
+          content:
+            trackers: true
+            trackerOccurrences: true
+  captured_request:
+    method: POST
+    path: /v2/calls/extensive
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+      contentSelector:
+        exposedFields:
+          content:
+            trackers: true
+            trackerOccurrences: true
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-calls-extensive-001
+      records:
+        totalRecords: 5
+        currentPageSize: 5
+        currentPageNumber: 0
+      calls:
+        - metaData:
+            id: "call-001"
+            url: "https://app.gong.io/call?id=call-001"
+            title: "Discovery Call - Prospect Alpha"
+            scheduled: "2024-11-15T10:00:00Z"
+            started: "2024-11-15T10:02:00Z"
+            duration: 1800
+            primaryUserId: "user-001"
+            direction: "Outbound"
+            system: "Zoom"
+            scope: "External"
+            media: "Video"
+            language: "en-US"
+            workspaceId: "workspace-001"
+            sdrDisposition: null
+            clientUniqueId: "prospect-alpha-001"
+            customData: null
+            purpose: "Discovery"
+            isPrivate: false
+            meetingUrl: "https://zoom.us/j/123456"
+            calendarEventId: "cal-001"
+          parties:
+            - id: "party-001"
+              emailAddress: "sarah.johnson@company.com"
+              name: "Sarah Johnson"
+              title: "Senior Sales Rep"
+              userId: "user-001"
+              speakerId: "speaker-001"
+              affiliation: "Internal"
+            - id: "party-002"
+              emailAddress: "john.smith@prospect-alpha.com"
+              name: "John Smith"
+              title: "VP of Engineering"
+              userId: null
+              speakerId: "speaker-002"
+              affiliation: "External"
+          content:
+            trackers:
+              - trackerId: "tracker-001"
+                trackerName: "Competitor - Acme Corp"
+                count: 3
+                occurrences:
+                  - startTime: 120
+                    endTime: 125
+                    speakerId: "speaker-002"
+                  - startTime: 450
+                    endTime: 458
+                    speakerId: "speaker-001"
+                  - startTime: 890
+                    endTime: 895
+                    speakerId: "speaker-002"
+              - trackerId: "tracker-003"
+                trackerName: "Pricing Objection"
+                count: 2
+                occurrences:
+                  - startTime: 1200
+                    endTime: 1210
+                    speakerId: "speaker-002"
+                  - startTime: 1350
+                    endTime: 1358
+                    speakerId: "speaker-002"
+          collaboration:
+            publicComments: []
+        - metaData:
+            id: "call-002"
+            url: "https://app.gong.io/call?id=call-002"
+            title: "Demo Call - Beta Industries"
+            scheduled: "2024-11-18T14:00:00Z"
+            started: "2024-11-18T14:05:00Z"
+            duration: 2700
+            primaryUserId: "user-002"
+            direction: "Outbound"
+            system: "Zoom"
+            scope: "External"
+            media: "Video"
+            language: "en-US"
+            workspaceId: "workspace-001"
+            sdrDisposition: null
+            clientUniqueId: "beta-industries-001"
+            customData: null
+            purpose: "Demo"
+            isPrivate: false
+            meetingUrl: "https://zoom.us/j/234567"
+            calendarEventId: "cal-002"
+          parties:
+            - id: "party-003"
+              emailAddress: "mike.chen@company.com"
+              name: "Mike Chen"
+              title: "Sales Rep"
+              userId: "user-002"
+              speakerId: "speaker-003"
+              affiliation: "Internal"
+            - id: "party-004"
+              emailAddress: "jane.doe@beta-industries.com"
+              name: "Jane Doe"
+              title: "CTO"
+              userId: null
+              speakerId: "speaker-004"
+              affiliation: "External"
+          content:
+            trackers:
+              - trackerId: "tracker-002"
+                trackerName: "Competitor - TechRival"
+                count: 5
+                occurrences:
+                  - startTime: 300
+                    endTime: 308
+                    speakerId: "speaker-004"
+                  - startTime: 600
+                    endTime: 610
+                    speakerId: "speaker-003"
+                  - startTime: 900
+                    endTime: 905
+                    speakerId: "speaker-004"
+                  - startTime: 1500
+                    endTime: 1510
+                    speakerId: "speaker-004"
+                  - startTime: 2100
+                    endTime: 2108
+                    speakerId: "speaker-003"
+          collaboration:
+            publicComments: []
+        - metaData:
+            id: "call-003"
+            url: "https://app.gong.io/call?id=call-003"
+            title: "Negotiation - Gamma Corp Deal"
+            scheduled: "2024-11-20T11:00:00Z"
+            started: "2024-11-20T11:00:00Z"
+            duration: 3600
+            primaryUserId: "user-005"
+            direction: "Outbound"
+            system: "Teams"
+            scope: "External"
+            media: "Video"
+            language: "en-US"
+            workspaceId: "workspace-001"
+            sdrDisposition: null
+            clientUniqueId: "gamma-corp-001"
+            customData: '{"deal_stage": "negotiation", "deal_value": 150000}'
+            purpose: "Negotiation"
+            isPrivate: false
+            meetingUrl: "https://teams.microsoft.com/l/meetup-join/123"
+            calendarEventId: "cal-003"
+          parties:
+            - id: "party-005"
+              emailAddress: "lisa.martinez@company.com"
+              name: "Lisa Martinez"
+              title: "Senior Sales Rep"
+              userId: "user-005"
+              speakerId: "speaker-005"
+              affiliation: "Internal"
+            - id: "party-006"
+              emailAddress: "bob.wilson@gamma-corp.com"
+              name: "Bob Wilson"
+              title: "Procurement Director"
+              userId: null
+              speakerId: "speaker-006"
+              affiliation: "External"
+          content:
+            trackers:
+              - trackerId: "tracker-003"
+                trackerName: "Pricing Objection"
+                count: 4
+                occurrences:
+                  - startTime: 600
+                    endTime: 615
+                    speakerId: "speaker-006"
+                  - startTime: 1200
+                    endTime: 1215
+                    speakerId: "speaker-006"
+                  - startTime: 2400
+                    endTime: 2410
+                    speakerId: "speaker-006"
+                  - startTime: 3000
+                    endTime: 3012
+                    speakerId: "speaker-006"
+              - trackerId: "tracker-004"
+                trackerName: "Competitor - GlobalSoft"
+                count: 2
+                occurrences:
+                  - startTime: 1800
+                    endTime: 1810
+                    speakerId: "speaker-006"
+                  - startTime: 2700
+                    endTime: 2708
+                    speakerId: "speaker-005"
+          collaboration:
+            publicComments:
+              - id: "comment-001"
+                text: "Deal at risk - multiple pricing objections"
+                authorUserId: "user-006"
+                timestamp: "2024-11-20T15:00:00Z"
+        - metaData:
+            id: "call-004"
+            url: "https://app.gong.io/call?id=call-004"
+            title: "Follow-up - Delta Solutions"
+            scheduled: "2024-11-22T09:00:00Z"
+            started: "2024-11-22T09:03:00Z"
+            duration: 1200
+            primaryUserId: "user-003"
+            direction: "Outbound"
+            system: "Zoom"
+            scope: "External"
+            media: "Video"
+            language: "en-US"
+            workspaceId: "workspace-001"
+            sdrDisposition: null
+            clientUniqueId: "delta-solutions-001"
+            customData: '{"deal_stage": "discovery", "deal_value": 50000}'
+            purpose: "Follow-up"
+            isPrivate: false
+            meetingUrl: "https://zoom.us/j/345678"
+            calendarEventId: "cal-004"
+          parties:
+            - id: "party-007"
+              emailAddress: "emily.davis@company.com"
+              name: "Emily Davis"
+              title: "Sales Rep (New Hire)"
+              userId: "user-003"
+              speakerId: "speaker-007"
+              affiliation: "Internal"
+            - id: "party-008"
+              emailAddress: "alice.brown@delta-solutions.com"
+              name: "Alice Brown"
+              title: "IT Manager"
+              userId: null
+              speakerId: "speaker-008"
+              affiliation: "External"
+          content:
+            trackers:
+              - trackerId: "tracker-001"
+                trackerName: "Competitor - Acme Corp"
+                count: 1
+                occurrences:
+                  - startTime: 600
+                    endTime: 608
+                    speakerId: "speaker-008"
+          collaboration:
+            publicComments: []
+        - metaData:
+            id: "call-005"
+            url: "https://app.gong.io/call?id=call-005"
+            title: "Closing Call - Epsilon Tech"
+            scheduled: "2024-11-25T15:00:00Z"
+            started: "2024-11-25T15:00:00Z"
+            duration: 2400
+            primaryUserId: "user-001"
+            direction: "Outbound"
+            system: "Zoom"
+            scope: "External"
+            media: "Video"
+            language: "en-US"
+            workspaceId: "workspace-001"
+            sdrDisposition: null
+            clientUniqueId: "epsilon-tech-001"
+            customData: '{"deal_stage": "closing", "deal_value": 200000}'
+            purpose: "Closing"
+            isPrivate: false
+            meetingUrl: "https://zoom.us/j/456789"
+            calendarEventId: "cal-005"
+          parties:
+            - id: "party-009"
+              emailAddress: "sarah.johnson@company.com"
+              name: "Sarah Johnson"
+              title: "Senior Sales Rep"
+              userId: "user-001"
+              speakerId: "speaker-009"
+              affiliation: "Internal"
+            - id: "party-010"
+              emailAddress: "tom.harris@epsilon-tech.com"
+              name: "Tom Harris"
+              title: "CEO"
+              userId: null
+              speakerId: "speaker-010"
+              affiliation: "External"
+          content:
+            trackers: []
+          collaboration:
+            publicComments:
+              - id: "comment-002"
+                text: "Great call - deal likely to close this week"
+                authorUserId: "user-006"
+                timestamp: "2024-11-25T17:00:00Z"
+
+- test_name: call_transcripts_list
+  description: Mock call transcripts for keyword search
+  entity: call_transcripts
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+  captured_request:
+    method: POST
+    path: /v2/calls/transcript
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-transcripts-001
+      records:
+        totalRecords: 3
+        currentPageSize: 3
+        currentPageNumber: 0
+      callTranscripts:
+        - callId: "call-001"
+          transcript:
+            - speakerId: "speaker-001"
+              topic: "Introduction"
+              sentences:
+                - start: 0
+                  end: 15
+                  text: "Hi John, thanks for taking the time to meet with us today."
+                - start: 15
+                  end: 30
+                  text: "I'm excited to learn more about your engineering challenges."
+            - speakerId: "speaker-002"
+              topic: "Current Solution"
+              sentences:
+                - start: 30
+                  end: 60
+                  text: "Thanks Sarah. We've been using Acme Corp for the past two years."
+                - start: 60
+                  end: 90
+                  text: "But we're running into some scalability issues with their platform."
+            - speakerId: "speaker-002"
+              topic: "Pricing Discussion"
+              sentences:
+                - start: 1200
+                  end: 1230
+                  text: "The price is high compared to what we're paying now."
+                - start: 1230
+                  end: 1260
+                  text: "We have budget concerns about making this switch."
+        - callId: "call-003"
+          transcript:
+            - speakerId: "speaker-005"
+              topic: "Negotiation"
+              sentences:
+                - start: 0
+                  end: 20
+                  text: "Bob, let's discuss the final terms for the Gamma Corp deal."
+            - speakerId: "speaker-006"
+              topic: "Pricing Objection"
+              sentences:
+                - start: 600
+                  end: 630
+                  text: "The pricing is too expensive for our current budget cycle."
+                - start: 630
+                  end: 660
+                  text: "We need to see if there's room for negotiation on the cost."
+            - speakerId: "speaker-006"
+              topic: "Competitor Mention"
+              sentences:
+                - start: 1800
+                  end: 1830
+                  text: "GlobalSoft offered us a 20% discount on a similar solution."
+                - start: 1830
+                  end: 1860
+                  text: "Can you match that pricing?"
+        - callId: "call-002"
+          transcript:
+            - speakerId: "speaker-003"
+              topic: "Demo Introduction"
+              sentences:
+                - start: 0
+                  end: 20
+                  text: "Jane, I'm going to walk you through our platform today."
+            - speakerId: "speaker-004"
+              topic: "Competitor Comparison"
+              sentences:
+                - start: 300
+                  end: 330
+                  text: "We've been evaluating TechRival as well."
+                - start: 330
+                  end: 360
+                  text: "How does your solution compare to theirs?"

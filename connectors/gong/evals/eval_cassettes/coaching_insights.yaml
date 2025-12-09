@@ -1,0 +1,472 @@
+# Coaching Insights Cassette
+# Contains: Scorecards, Coaching metrics data
+# Used for: coaching_needs_identification, feedback_culture_metrics
+
+- test_name: users_list
+  description: Mock users data for coaching evaluation
+  entity: users
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params: {}
+  captured_request:
+    method: GET
+    path: /v2/users
+    query_params: null
+    headers: {}
+    body: null
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: true
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-users-coaching-001
+      records:
+        totalRecords: 6
+        currentPageSize: 6
+        currentPageNumber: 0
+      users:
+        - id: "user-001"
+          emailAddress: sarah.johnson@company.com
+          created: "2023-01-15T10:00:00.000Z"
+          active: true
+          firstName: Sarah
+          lastName: Johnson
+          title: Senior Sales Rep
+          managerId: "user-006"
+        - id: "user-002"
+          emailAddress: mike.chen@company.com
+          created: "2023-03-20T10:00:00.000Z"
+          active: true
+          firstName: Mike
+          lastName: Chen
+          title: Sales Rep
+          managerId: "user-006"
+        - id: "user-003"
+          emailAddress: emily.davis@company.com
+          created: "2024-09-01T10:00:00.000Z"
+          active: true
+          firstName: Emily
+          lastName: Davis
+          title: Sales Rep (New Hire)
+          managerId: "user-006"
+        - id: "user-004"
+          emailAddress: james.wilson@company.com
+          created: "2024-10-15T10:00:00.000Z"
+          active: true
+          firstName: James
+          lastName: Wilson
+          title: Sales Rep (New Hire)
+          managerId: "user-006"
+        - id: "user-005"
+          emailAddress: lisa.martinez@company.com
+          created: "2022-06-10T10:00:00.000Z"
+          active: true
+          firstName: Lisa
+          lastName: Martinez
+          title: Senior Sales Rep
+          managerId: "user-006"
+        - id: "user-006"
+          emailAddress: david.brown@company.com
+          created: "2021-01-05T10:00:00.000Z"
+          active: true
+          firstName: David
+          lastName: Brown
+          title: Sales Manager
+          managerId: null
+
+- test_name: stats_activity_scorecards_list
+  description: Mock answered scorecards for coaching needs identification
+  entity: stats_activity_scorecards
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+  captured_request:
+    method: POST
+    path: /v2/stats/activity/scorecards
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDateTime: "2024-10-01T00:00:00Z"
+        toDateTime: "2024-12-01T00:00:00Z"
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-scorecards-001
+      records:
+        totalRecords: 10
+        currentPageSize: 10
+        currentPageNumber: 0
+      answeredScorecards:
+        - scorecardId: "scorecard-001"
+          scorecardName: "Discovery Call Quality"
+          callId: "call-001"
+          reviewedUserId: "user-001"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-16T10:00:00Z"
+          overallScore: 92
+          questions:
+            - questionId: "q1"
+              questionText: "Did the rep ask discovery questions?"
+              score: 95
+              maxScore: 100
+            - questionId: "q2"
+              questionText: "Did the rep identify pain points?"
+              score: 90
+              maxScore: 100
+            - questionId: "q3"
+              questionText: "Did the rep establish next steps?"
+              score: 90
+              maxScore: 100
+        - scorecardId: "scorecard-001"
+          scorecardName: "Discovery Call Quality"
+          callId: "call-002"
+          reviewedUserId: "user-002"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-19T10:00:00Z"
+          overallScore: 78
+          questions:
+            - questionId: "q1"
+              questionText: "Did the rep ask discovery questions?"
+              score: 80
+              maxScore: 100
+            - questionId: "q2"
+              questionText: "Did the rep identify pain points?"
+              score: 75
+              maxScore: 100
+            - questionId: "q3"
+              questionText: "Did the rep establish next steps?"
+              score: 80
+              maxScore: 100
+        - scorecardId: "scorecard-001"
+          scorecardName: "Discovery Call Quality"
+          callId: "call-003"
+          reviewedUserId: "user-003"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-21T10:00:00Z"
+          overallScore: 58
+          questions:
+            - questionId: "q1"
+              questionText: "Did the rep ask discovery questions?"
+              score: 55
+              maxScore: 100
+            - questionId: "q2"
+              questionText: "Did the rep identify pain points?"
+              score: 50
+              maxScore: 100
+            - questionId: "q3"
+              questionText: "Did the rep establish next steps?"
+              score: 70
+              maxScore: 100
+        - scorecardId: "scorecard-001"
+          scorecardName: "Discovery Call Quality"
+          callId: "call-004"
+          reviewedUserId: "user-004"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-23T10:00:00Z"
+          overallScore: 52
+          questions:
+            - questionId: "q1"
+              questionText: "Did the rep ask discovery questions?"
+              score: 50
+              maxScore: 100
+            - questionId: "q2"
+              questionText: "Did the rep identify pain points?"
+              score: 45
+              maxScore: 100
+            - questionId: "q3"
+              questionText: "Did the rep establish next steps?"
+              score: 60
+              maxScore: 100
+        - scorecardId: "scorecard-001"
+          scorecardName: "Discovery Call Quality"
+          callId: "call-005"
+          reviewedUserId: "user-005"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-26T10:00:00Z"
+          overallScore: 95
+          questions:
+            - questionId: "q1"
+              questionText: "Did the rep ask discovery questions?"
+              score: 98
+              maxScore: 100
+            - questionId: "q2"
+              questionText: "Did the rep identify pain points?"
+              score: 95
+              maxScore: 100
+            - questionId: "q3"
+              questionText: "Did the rep establish next steps?"
+              score: 92
+              maxScore: 100
+        - scorecardId: "scorecard-002"
+          scorecardName: "Objection Handling"
+          callId: "call-001"
+          reviewedUserId: "user-001"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-16T11:00:00Z"
+          overallScore: 88
+          questions:
+            - questionId: "q4"
+              questionText: "Did the rep acknowledge the objection?"
+              score: 90
+              maxScore: 100
+            - questionId: "q5"
+              questionText: "Did the rep provide a relevant response?"
+              score: 85
+              maxScore: 100
+        - scorecardId: "scorecard-002"
+          scorecardName: "Objection Handling"
+          callId: "call-003"
+          reviewedUserId: "user-003"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-21T11:00:00Z"
+          overallScore: 45
+          questions:
+            - questionId: "q4"
+              questionText: "Did the rep acknowledge the objection?"
+              score: 50
+              maxScore: 100
+            - questionId: "q5"
+              questionText: "Did the rep provide a relevant response?"
+              score: 40
+              maxScore: 100
+        - scorecardId: "scorecard-002"
+          scorecardName: "Objection Handling"
+          callId: "call-004"
+          reviewedUserId: "user-004"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-23T11:00:00Z"
+          overallScore: 42
+          questions:
+            - questionId: "q4"
+              questionText: "Did the rep acknowledge the objection?"
+              score: 45
+              maxScore: 100
+            - questionId: "q5"
+              questionText: "Did the rep provide a relevant response?"
+              score: 38
+              maxScore: 100
+        - scorecardId: "scorecard-002"
+          scorecardName: "Objection Handling"
+          callId: "call-002"
+          reviewedUserId: "user-002"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-19T11:00:00Z"
+          overallScore: 72
+          questions:
+            - questionId: "q4"
+              questionText: "Did the rep acknowledge the objection?"
+              score: 75
+              maxScore: 100
+            - questionId: "q5"
+              questionText: "Did the rep provide a relevant response?"
+              score: 68
+              maxScore: 100
+        - scorecardId: "scorecard-002"
+          scorecardName: "Objection Handling"
+          callId: "call-005"
+          reviewedUserId: "user-005"
+          reviewerUserId: "user-006"
+          answeredAt: "2024-11-26T11:00:00Z"
+          overallScore: 90
+          questions:
+            - questionId: "q4"
+              questionText: "Did the rep acknowledge the objection?"
+              score: 92
+              maxScore: 100
+            - questionId: "q5"
+              questionText: "Did the rep provide a relevant response?"
+              score: 88
+              maxScore: 100
+
+- test_name: stats_activity_aggregate_list
+  description: Mock aggregated activity statistics for feedback culture
+  entity: stats_activity_aggregate
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+  captured_request:
+    method: POST
+    path: /v2/stats/activity/aggregate
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-stats-feedback-001
+      records:
+        totalRecords: 5
+        currentPageSize: 5
+        currentPageNumber: 0
+      usersAggregateActivityStats:
+        - userId: "user-001"
+          callsAsHost: 45
+          callsAttended: 52
+          callsGaveFeedback: 18
+          callsReceivedFeedback: 8
+          callsRequestedFeedback: 5
+          callsScored: 15
+          ownedCallsListened: 20
+          othersCallsListened: 25
+        - userId: "user-002"
+          callsAsHost: 38
+          callsAttended: 42
+          callsGaveFeedback: 10
+          callsReceivedFeedback: 12
+          callsRequestedFeedback: 4
+          callsScored: 12
+          ownedCallsListened: 15
+          othersCallsListened: 12
+        - userId: "user-003"
+          callsAsHost: 22
+          callsAttended: 28
+          callsGaveFeedback: 2
+          callsReceivedFeedback: 20
+          callsRequestedFeedback: 12
+          callsScored: 5
+          ownedCallsListened: 30
+          othersCallsListened: 35
+        - userId: "user-004"
+          callsAsHost: 18
+          callsAttended: 24
+          callsGaveFeedback: 1
+          callsReceivedFeedback: 18
+          callsRequestedFeedback: 10
+          callsScored: 4
+          ownedCallsListened: 25
+          othersCallsListened: 30
+        - userId: "user-005"
+          callsAsHost: 52
+          callsAttended: 58
+          callsGaveFeedback: 22
+          callsReceivedFeedback: 6
+          callsRequestedFeedback: 2
+          callsScored: 18
+          ownedCallsListened: 22
+          othersCallsListened: 18
+
+- test_name: coaching_list
+  description: Mock coaching metrics for feedback culture
+  entity: coaching
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      workspace-id: "workspace-001"
+      manager-id: "user-006"
+      from: "2024-11-01T00:00:00Z"
+      to: "2024-11-30T23:59:59Z"
+  captured_request:
+    method: GET
+    path: /v2/coaching
+    query_params:
+      workspace-id: "workspace-001"
+      manager-id: "user-006"
+      from: "2024-11-01T00:00:00Z"
+      to: "2024-11-30T23:59:59Z"
+    headers: {}
+    body: null
+    validation:
+      query_params_strict: false
+      headers_strict: false
+      body_strict: true
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-coaching-001
+      coachingData:
+        - managerId: "user-006"
+          managerName: "David Brown"
+          directReports:
+            - userId: "user-001"
+              userName: "Sarah Johnson"
+              callsReviewed: 8
+              feedbackGiven: 12
+              feedbackReceived: 5
+              coachingSessions: 2
+              lastCoachingDate: "2024-11-20T14:00:00Z"
+            - userId: "user-002"
+              userName: "Mike Chen"
+              callsReviewed: 6
+              feedbackGiven: 8
+              feedbackReceived: 10
+              coachingSessions: 3
+              lastCoachingDate: "2024-11-22T10:00:00Z"
+            - userId: "user-003"
+              userName: "Emily Davis"
+              callsReviewed: 10
+              feedbackGiven: 2
+              feedbackReceived: 18
+              coachingSessions: 5
+              lastCoachingDate: "2024-11-25T11:00:00Z"
+            - userId: "user-004"
+              userName: "James Wilson"
+              callsReviewed: 8
+              feedbackGiven: 1
+              feedbackReceived: 15
+              coachingSessions: 4
+              lastCoachingDate: "2024-11-26T09:00:00Z"
+            - userId: "user-005"
+              userName: "Lisa Martinez"
+              callsReviewed: 5
+              feedbackGiven: 15
+              feedbackReceived: 4
+              coachingSessions: 1
+              lastCoachingDate: "2024-11-15T15:00:00Z"
+          teamMetrics:
+            totalCallsReviewed: 37
+            totalFeedbackGiven: 38
+            totalFeedbackReceived: 52
+            totalCoachingSessions: 15
+            averageCoachingSessionsPerRep: 3.0

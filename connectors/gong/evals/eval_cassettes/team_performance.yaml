@@ -1,0 +1,352 @@
+# Team Performance Cassette
+# Contains: Users + Activity Stats + Interaction Stats data
+# Used for: top_performers_by_calls, talk_time_analysis, onboarding_progress
+
+- test_name: users_list
+  description: Mock users data for team performance evaluation
+  entity: users
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params: {}
+  captured_request:
+    method: GET
+    path: /v2/users
+    query_params: null
+    headers: {}
+    body: null
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: true
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-users-001
+      records:
+        totalRecords: 6
+        currentPageSize: 6
+        currentPageNumber: 0
+      users:
+        - id: "user-001"
+          emailAddress: sarah.johnson@company.com
+          created: "2023-01-15T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: Sarah
+          lastName: Johnson
+          title: Senior Sales Rep
+          phoneNumber: "+14155551001"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: "user-006"
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+        - id: "user-002"
+          emailAddress: mike.chen@company.com
+          created: "2023-03-20T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: Mike
+          lastName: Chen
+          title: Sales Rep
+          phoneNumber: "+14155551002"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: "user-006"
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+        - id: "user-003"
+          emailAddress: emily.davis@company.com
+          created: "2024-09-01T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: Emily
+          lastName: Davis
+          title: Sales Rep (New Hire)
+          phoneNumber: "+14155551003"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: "user-006"
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+        - id: "user-004"
+          emailAddress: james.wilson@company.com
+          created: "2024-10-15T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: James
+          lastName: Wilson
+          title: Sales Rep (New Hire)
+          phoneNumber: "+14155551004"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: "user-006"
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+        - id: "user-005"
+          emailAddress: lisa.martinez@company.com
+          created: "2022-06-10T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: Lisa
+          lastName: Martinez
+          title: Senior Sales Rep
+          phoneNumber: "+14155551005"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: "user-006"
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+        - id: "user-006"
+          emailAddress: david.brown@company.com
+          created: "2021-01-05T10:00:00.000Z"
+          active: true
+          emailAliases: []
+          trustedEmailAddress: null
+          firstName: David
+          lastName: Brown
+          title: Sales Manager
+          phoneNumber: "+14155551006"
+          extension: null
+          personalMeetingUrls: []
+          settings:
+            webConferencesRecorded: true
+            preventWebConferenceRecording: false
+            telephonyCallsImported: true
+            emailsImported: true
+            preventEmailImport: false
+            nonRecordedMeetingsImported: true
+            gongConnectEnabled: true
+          managerId: null
+          meetingConsentPageUrl: null
+          spokenLanguages:
+            - language: en-US
+              primary: true
+
+- test_name: stats_activity_aggregate_list
+  description: Mock aggregated activity statistics for team performance
+  entity: stats_activity_aggregate
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+  captured_request:
+    method: POST
+    path: /v2/stats/activity/aggregate
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-stats-001
+      records:
+        totalRecords: 5
+        currentPageSize: 5
+        currentPageNumber: 0
+      usersAggregateActivityStats:
+        - userId: "user-001"
+          callsAsHost: 45
+          callsAttended: 52
+          callsGaveFeedback: 12
+          callsReceivedFeedback: 8
+          callsRequestedFeedback: 5
+          callsScored: 15
+          ownedCallsListened: 20
+          othersCallsListened: 18
+        - userId: "user-002"
+          callsAsHost: 38
+          callsAttended: 42
+          callsGaveFeedback: 8
+          callsReceivedFeedback: 10
+          callsRequestedFeedback: 3
+          callsScored: 12
+          ownedCallsListened: 15
+          othersCallsListened: 10
+        - userId: "user-003"
+          callsAsHost: 22
+          callsAttended: 28
+          callsGaveFeedback: 3
+          callsReceivedFeedback: 15
+          callsRequestedFeedback: 8
+          callsScored: 5
+          ownedCallsListened: 25
+          othersCallsListened: 30
+        - userId: "user-004"
+          callsAsHost: 18
+          callsAttended: 24
+          callsGaveFeedback: 2
+          callsReceivedFeedback: 12
+          callsRequestedFeedback: 6
+          callsScored: 4
+          ownedCallsListened: 20
+          othersCallsListened: 25
+        - userId: "user-005"
+          callsAsHost: 52
+          callsAttended: 58
+          callsGaveFeedback: 15
+          callsReceivedFeedback: 6
+          callsRequestedFeedback: 2
+          callsScored: 18
+          ownedCallsListened: 22
+          othersCallsListened: 15
+
+- test_name: stats_interaction_list
+  description: Mock interaction statistics for talk-to-listen ratio analysis
+  entity: stats_interaction
+  action: list
+  auth_config:
+    access_key: ${GONG_ACCESS_KEY}
+    access_key_secret: ${GONG_ACCESS_KEY_SECRET}
+  inputs:
+    params:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+  captured_request:
+    method: POST
+    path: /v2/stats/interaction
+    query_params: null
+    headers: {}
+    body:
+      filter:
+        fromDate: "2024-11-01"
+        toDate: "2024-11-30"
+    validation:
+      query_params_strict: true
+      headers_strict: false
+      body_strict: false
+      ignore_headers:
+        - User-Agent
+        - Accept-Encoding
+        - Date
+  captured_response:
+    status_code: 200
+    headers: {}
+    body:
+      requestId: eval-interaction-001
+      records:
+        totalRecords: 5
+        currentPageSize: 5
+        currentPageNumber: 0
+      peopleInteractionStats:
+        - id: "user-001"
+          name: Sarah Johnson
+          talkRatio: 0.45
+          longestMonologue: 180
+          longestCustomerStory: 120
+          interactivity: 0.72
+          patience: 0.85
+          questionRate: 12.5
+        - id: "user-002"
+          name: Mike Chen
+          talkRatio: 0.52
+          longestMonologue: 240
+          longestCustomerStory: 90
+          interactivity: 0.65
+          patience: 0.78
+          questionRate: 10.2
+        - id: "user-003"
+          name: Emily Davis
+          talkRatio: 0.58
+          longestMonologue: 300
+          longestCustomerStory: 60
+          interactivity: 0.55
+          patience: 0.70
+          questionRate: 8.5
+        - id: "user-004"
+          name: James Wilson
+          talkRatio: 0.62
+          longestMonologue: 320
+          longestCustomerStory: 45
+          interactivity: 0.50
+          patience: 0.65
+          questionRate: 7.8
+        - id: "user-005"
+          name: Lisa Martinez
+          talkRatio: 0.42
+          longestMonologue: 150
+          longestCustomerStory: 150
+          interactivity: 0.78
+          patience: 0.90
+          questionRate: 14.2
