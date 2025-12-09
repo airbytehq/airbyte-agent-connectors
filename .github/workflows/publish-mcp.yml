@@ -9,6 +9,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment: PyPI
     permissions:
       id-token: write
       contents: read
