@@ -79,6 +79,15 @@ class Operation(BaseModel):
         ),
     )
     x_airbyte_file_url: Optional[str] = Field(None, alias="x-airbyte-file-url")
+    x_airbyte_untested: Optional[bool] = Field(
+        None,
+        alias="x-airbyte-untested",
+        description=(
+            "Mark operation as untested to skip cassette validation in readiness checks. "
+            "Use this for operations that cannot be recorded (e.g., webhooks, real-time streams). "
+            "Validation will generate a warning instead of an error when cassettes are missing."
+        ),
+    )
 
     # Future extensions (commented out, defined for future use)
     # from .extensions import PaginationConfig

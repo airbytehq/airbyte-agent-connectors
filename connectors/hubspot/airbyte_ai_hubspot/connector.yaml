@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: HubSpot API Connector
-  version: 0.1.0
+  version: 0.1.1
   description: Connector for HubSpot CRM API
   x-airbyte-connector-name: hubspot
   x-airbyte-connector-id: 36c891d9-4bd9-43ac-bad2-10e12756272c
@@ -19,10 +19,10 @@ servers:
     description: HubSpot API server
 
 security:
-  - bearerAuth: []
+  - oauth2: []
 
 paths:
-  # Contacts Resource
+  # Contacts Entities
   "/crm/v3/objects/contacts":
     get:
       summary: List contacts
@@ -30,31 +30,44 @@ paths:
       operationId: listContacts
       x-airbyte-entity: contacts
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
       parameters:
         - name: limit
           in: query
-          description: Number of items to return per page
+          description: The maximum number of results to display per page.
           schema:
             type: integer
             minimum: 1
             maximum: 100
-            default: 10
+            default: 25
         - name: after
           in: query
-          description: Pagination cursor for next page
+          description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
           schema:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
           schema:
             type: string
         - name: archived
           in: query
-          description: Whether to include archived contacts
+          description: Whether to return only results that have been archived.
           schema:
             type: boolean
-            default: false
       responses:
         "200":
           description: List of contacts
@@ -81,9 +94,29 @@ paths:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: idProperty
+          in: query
+          description: The name of a property whose values are unique for this object.
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
       responses:
         "200":
           description: Contact object
@@ -96,39 +129,158 @@ paths:
         "401":
           description: Unauthorized
 
-  # Companies Resource
+  "/crm/v3/objects/contacts/search":
+    post:
+      summary: Search contacts
+      description: Search for contacts by filtering on properties, searching through associations, and sorting results.
+      operationId: searchContacts
+      x-airbyte-entity: contacts
+      x-airbyte-action: search
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        total: $.total
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filterGroups:
+                  type: array
+                  description: Up to 6 groups of filters defining additional query criteria.
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      filters:
+                        type: array
+                        required: true
+                        items:
+                          type: object
+                          properties:
+                            operator:
+                              type: string
+                              enum:
+                                [
+                                  BETWEEN,
+                                  CONTAINS_TOKEN,
+                                  EQ,
+                                  GT,
+                                  GTE,
+                                  HAS_PROPERTY,
+                                  IN,
+                                  LT,
+                                  LTE,
+                                  NEQ,
+                                  NOT_CONTAINS_TOKEN,
+                                  NOT_HAS_PROPERTY,
+                                  NOT_IN,
+                                ]
+                              required: true
+                            propertyName:
+                              type: string
+                              description: The name of the property to apply the filter on.
+                              required: true
+                            value:
+                              type: string
+                              description: The value to match against the property.
+                            values:
+                              type: array
+                              description: The values to match against the property.
+                              items:
+                                type: string
+                properties:
+                  type: array
+                  description: A list of property names to include in the response.
+                  required: true
+                  items:
+                    type: string
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+                  required: true
+                  minimum: 1
+                  maximum: 200
+                  default: 25
+                after:
+                  type: string
+                  description: A paging cursor token for retrieving subsequent pages.
+                sorts:
+                  type: array
+                  description: Sort criteria
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      propertyName:
+                        type: string
+                      direction:
+                        type: string
+                        enum: [ASCENDING, DESCENDING]
+                query:
+                  type: string
+                  description: The search query string, up to 3000 characters.
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactsList"
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad request
+
+  # Companies Entities
   "/crm/v3/objects/companies":
     get:
       summary: List companies
-      description: Returns a paginated list of companies
+      description: Retrieve all companies, using query parameters to control the information that gets returned.
       operationId: listCompanies
       x-airbyte-entity: companies
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
       parameters:
         - name: limit
           in: query
-          description: Number of items to return per page
+          description: The maximum number of results to display per page.
           schema:
             type: integer
             minimum: 1
             maximum: 100
-            default: 10
+            default: 25
         - name: after
           in: query
-          description: Pagination cursor for next page
+          description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
           schema:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
           schema:
             type: string
         - name: archived
           in: query
-          description: Whether to include archived companies
+          description: Whether to return only results that have been archived.
           schema:
             type: boolean
-            default: false
       responses:
         "200":
           description: List of companies
@@ -155,9 +307,29 @@ paths:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: idProperty
+          in: query
+          description: The name of a property whose values are unique for this object.
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
       responses:
         "200":
           description: Company object
@@ -170,7 +342,113 @@ paths:
         "401":
           description: Unauthorized
 
-  # Deals Resource
+  "/crm/v3/objects/companies/search":
+    post:
+      summary: Search companies
+      description: Search for companies by filtering on properties, searching through associations, and sorting results.
+      operationId: searchCompanies
+      x-airbyte-entity: companies
+      x-airbyte-action: search
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        total: $.total
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filterGroups:
+                  type: array
+                  description: Up to 6 groups of filters defining additional query criteria.
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      filters:
+                        type: array
+                        required: true
+                        items:
+                          type: object
+                          properties:
+                            operator:
+                              type: string
+                              enum:
+                                [
+                                  BETWEEN,
+                                  CONTAINS_TOKEN,
+                                  EQ,
+                                  GT,
+                                  GTE,
+                                  HAS_PROPERTY,
+                                  IN,
+                                  LT,
+                                  LTE,
+                                  NEQ,
+                                  NOT_CONTAINS_TOKEN,
+                                  NOT_HAS_PROPERTY,
+                                  NOT_IN,
+                                ]
+                              required: true
+                            propertyName:
+                              type: string
+                              description: The name of the property to apply the filter on.
+                              required: true
+                            value:
+                              type: string
+                              description: The value to match against the property.
+                            values:
+                              type: array
+                              description: The values to match against the property.
+                              items:
+                                type: string
+                properties:
+                  type: array
+                  description: A list of property names to include in the response.
+                  required: true
+                  items:
+                    type: string
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+                  required: true
+                  minimum: 1
+                  maximum: 200
+                  default: 25
+                after:
+                  type: string
+                  description: A paging cursor token for retrieving subsequent pages.
+                sorts:
+                  type: array
+                  description: Sort criteria
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      propertyName:
+                        type: string
+                      direction:
+                        type: string
+                        enum: [ASCENDING, DESCENDING]
+                query:
+                  type: string
+                  description: The search query string, up to 3000 characters.
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompaniesList"
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad request
+
+  # Deals Entities
   "/crm/v3/objects/deals":
     get:
       summary: List deals
@@ -178,31 +456,44 @@ paths:
       operationId: listDeals
       x-airbyte-entity: deals
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
       parameters:
         - name: limit
           in: query
-          description: Number of items to return per page
+          description: The maximum number of results to display per page.
           schema:
             type: integer
             minimum: 1
             maximum: 100
-            default: 10
+            default: 25
         - name: after
           in: query
-          description: Pagination cursor for next page
+          description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
           schema:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
           schema:
             type: string
         - name: archived
           in: query
-          description: Whether to include archived deals
+          description: Whether to return only results that have been archived.
           schema:
             type: boolean
-            default: false
       responses:
         "200":
           description: List of deals
@@ -229,9 +520,29 @@ paths:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: idProperty
+          in: query
+          description: The name of a property whose values are unique for this object.
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
       responses:
         "200":
           description: Deal object
@@ -244,7 +555,113 @@ paths:
         "401":
           description: Unauthorized
 
-  # Tickets Resource
+  "/crm/v3/objects/deals/search":
+    post:
+      summary: Search deals
+      description: Search deals with filters and sorting
+      operationId: searchDeals
+      x-airbyte-entity: deals
+      x-airbyte-action: search
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        total: $.total
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filterGroups:
+                  type: array
+                  description: Up to 6 groups of filters defining additional query criteria.
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      filters:
+                        type: array
+                        required: true
+                        items:
+                          type: object
+                          properties:
+                            operator:
+                              type: string
+                              enum:
+                                [
+                                  BETWEEN,
+                                  CONTAINS_TOKEN,
+                                  EQ,
+                                  GT,
+                                  GTE,
+                                  HAS_PROPERTY,
+                                  IN,
+                                  LT,
+                                  LTE,
+                                  NEQ,
+                                  NOT_CONTAINS_TOKEN,
+                                  NOT_HAS_PROPERTY,
+                                  NOT_IN,
+                                ]
+                              required: true
+                            propertyName:
+                              type: string
+                              description: The name of the property to apply the filter on.
+                              required: true
+                            value:
+                              type: string
+                              description: The value to match against the property.
+                            values:
+                              type: array
+                              description: The values to match against the property.
+                              items:
+                                type: string
+                properties:
+                  type: array
+                  description: A list of property names to include in the response.
+                  required: true
+                  items:
+                    type: string
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+                  required: true
+                  minimum: 1
+                  maximum: 200
+                  default: 25
+                after:
+                  type: string
+                  description: A paging cursor token for retrieving subsequent pages.
+                sorts:
+                  type: array
+                  description: Sort criteria
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      propertyName:
+                        type: string
+                      direction:
+                        type: string
+                        enum: [ASCENDING, DESCENDING]
+                query:
+                  type: string
+                  description: The search query string, up to 3000 characters.
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DealsList"
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad request
+
+  # Tickets Entities
   "/crm/v3/objects/tickets":
     get:
       summary: List tickets
@@ -252,31 +669,44 @@ paths:
       operationId: listTickets
       x-airbyte-entity: tickets
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
       parameters:
         - name: limit
           in: query
-          description: Number of items to return per page
+          description: The maximum number of results to display per page.
           schema:
             type: integer
             minimum: 1
             maximum: 100
-            default: 10
+            default: 25
         - name: after
           in: query
-          description: Pagination cursor for next page
+          description: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
           schema:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
           schema:
             type: string
         - name: archived
           in: query
-          description: Whether to include archived tickets
+          description: Whether to return only results that have been archived.
           schema:
             type: boolean
-            default: false
       responses:
         "200":
           description: List of tickets
@@ -303,9 +733,29 @@ paths:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: idProperty
+          in: query
+          description: The name of a property whose values are unique for this object.
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
       responses:
         "200":
           description: Ticket object
@@ -318,14 +768,130 @@ paths:
         "401":
           description: Unauthorized
 
-  # Schemas Resource (for discovering custom objects)
-  "/crm/v3/schemas":
+  "/crm/v3/objects/tickets/search":
+    post:
+      summary: Search tickets
+      description: Search for tickets by filtering on properties, searching through associations, and sorting results.
+      operationId: searchTickets
+      x-airbyte-entity: tickets
+      x-airbyte-action: search
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        total: $.total
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filterGroups:
+                  type: array
+                  description: Up to 6 groups of filters defining additional query criteria.
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      filters:
+                        type: array
+                        required: true
+                        items:
+                          type: object
+                          properties:
+                            operator:
+                              type: string
+                              enum:
+                                [
+                                  BETWEEN,
+                                  CONTAINS_TOKEN,
+                                  EQ,
+                                  GT,
+                                  GTE,
+                                  HAS_PROPERTY,
+                                  IN,
+                                  LT,
+                                  LTE,
+                                  NEQ,
+                                  NOT_CONTAINS_TOKEN,
+                                  NOT_HAS_PROPERTY,
+                                  NOT_IN,
+                                ]
+                              required: true
+                            propertyName:
+                              type: string
+                              description: The name of the property to apply the filter on.
+                              required: true
+                            value:
+                              type: string
+                              description: The value to match against the property.
+                            values:
+                              type: array
+                              description: The values to match against the property.
+                              items:
+                                type: string
+                properties:
+                  type: array
+                  description: A list of property names to include in the response.
+                  required: true
+                  items:
+                    type: string
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+                  required: true
+                  minimum: 1
+                  maximum: 200
+                  default: 25
+                after:
+                  type: string
+                  description: A paging cursor token for retrieving subsequent pages.
+                sorts:
+                  type: array
+                  description: Sort criteria
+                  required: true
+                  items:
+                    type: object
+                    properties:
+                      propertyName:
+                        type: string
+                      direction:
+                        type: string
+                        enum: [ASCENDING, DESCENDING]
+                query:
+                  type: string
+                  description: The search query string, up to 3000 characters.
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TicketsList"
+        "401":
+          description: Unauthorized
+        "400":
+          description: Bad request
+
+  # Schemas Entities (for discovering custom objects)
+  "/crm-object-schemas/v3/schemas":
     get:
       summary: List custom object schemas
       description: Returns all custom object schemas to discover available custom objects
       operationId: listSchemas
       x-airbyte-entity: schemas
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
+      parameters:
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
       responses:
         "200":
           description: List of custom object schemas
@@ -336,14 +902,44 @@ paths:
         "401":
           description: Unauthorized
 
-  # Generic Objects Resource (for custom objects)
+  "/crm-object-schemas/v3/schemas/{objectType}":
+    get:
+      summary: Get a custom object schema
+      description: Get the schema for a specific custom object type
+      operationId: getSchema
+      x-airbyte-entity: schemas
+      x-airbyte-action: get
+      parameters:
+        - name: objectType
+          in: path
+          required: true
+          description: Fully qualified name or object type ID of your schema.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Custom object schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schema"
+        "404":
+          description: Schema not found
+        "401":
+          description: Unauthorized
+
+  # Generic Objects Entities (for custom objects)
   "/crm/v3/objects/{objectType}":
     get:
       summary: List objects
-      description: Returns a paginated list of objects for any custom object type
+      description: Read a page of objects. Control what is returned via the properties query param.
       operationId: listObjects
       x-airbyte-entity: objects
       x-airbyte-action: list
+      x-airbyte-record-extractor: $.results
+      x-airbyte-meta-extractor:
+        next_cursor: $.paging.next.after
+        next_link: $.paging.next.link
       parameters:
         - name: objectType
           in: path
@@ -353,28 +949,38 @@ paths:
             type: string
         - name: limit
           in: query
-          description: Number of items to return per page
+          description: The maximum number of results to display per page.
           schema:
             type: integer
             minimum: 1
             maximum: 100
-            default: 10
+            default: 25
         - name: after
           in: query
-          description: Pagination cursor for next page
+          description: The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results.
           schema:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
         - name: archived
           in: query
-          description: Whether to include archived objects
+          description: Whether to return only results that have been archived.
           schema:
             type: boolean
             default: false
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
       responses:
         "200":
           description: List of objects
@@ -390,7 +996,7 @@ paths:
   "/crm/v3/objects/{objectType}/{objectId}":
     get:
       summary: Get an object
-      description: Get a single object by ID for any custom object type
+      description: Read an Object identified by {objectId}. {objectId} refers to the internal object ID by default, or optionally any unique property value as specified by the idProperty query param. Control what is returned via the properties query param.
       operationId: getObject
       x-airbyte-entity: objects
       x-airbyte-action: get
@@ -409,7 +1015,27 @@ paths:
             type: string
         - name: properties
           in: query
-          description: Comma-separated list of properties to include
+          description: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+          schema:
+            type: string
+        - name: archived
+          in: query
+          description: Whether to return only results that have been archived.
+          schema:
+            type: boolean
+        - name: associations
+          in: query
+          description: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+          schema:
+            type: string
+        - name: idProperty
+          in: query
+          description: The name of a property whose values are unique for this object.
+          schema:
+            type: string
+        - name: propertiesWithHistory
+          in: query
+          description: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
           schema:
             type: string
       responses:
@@ -426,23 +1052,54 @@ paths:
 
 components:
   securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      description: HubSpot Private App Access Token or OAuth Access Token
+    oauth2:
+      type: oauth2
+      description: HubSpot OAuth 2.0 authentication with automatic token refresh
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.hubspot.com/oauth/authorize
+          tokenUrl: https://api.hubapi.com/oauth/v1/token
+          refreshUrl: https://api.hubapi.com/oauth/v1/token
+          scopes:
+            crm.objects.contacts.read: Read contacts
+            crm.objects.contacts.write: Write contacts
+            crm.objects.companies.read: Read companies
+            crm.objects.companies.write: Write companies
+            crm.objects.deals.read: Read deals
+            crm.objects.deals.write: Write deals
       x-airbyte-auth-config:
-        title: "Access Token Authentication"
+        title: "OAuth2 Authentication"
         type: object
         required:
+          - client_id
+          - client_secret
+          - refresh_token
           - access_token
         properties:
+          client_id:
+            type: string
+            title: "Client ID"
+            description: "Your HubSpot OAuth2 Client ID"
+          client_secret:
+            type: string
+            title: "Client Secret"
+            description: "Your HubSpot OAuth2 Client Secret"
+            airbyte_secret: true
+          refresh_token:
+            type: string
+            title: "Refresh Token"
+            description: "Your HubSpot OAuth2 Refresh Token"
+            airbyte_secret: true
           access_token:
             type: string
             title: "Access Token"
-            description: "Your HubSpot Private App Access Token or OAuth Access Token"
+            description: "Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)"
             airbyte_secret: true
         auth_mapping:
-          token: "${access_token}"
+          client_id: "${client_id}"
+          client_secret: "${client_secret}"
+          refresh_token: "${refresh_token}"
+          access_token: "${access_token}"
 
   schemas:
     # Contact schemas
@@ -457,6 +1114,19 @@ components:
         properties:
           type: object
           description: Contact properties
+          properties:
+            createdate:
+              type: [string, "null"]
+            email:
+              type: [string, "null"]
+            firstname:
+              type: [string, "null"]
+            hs_object_id:
+              type: [string, "null"]
+            lastmodifieddate:
+              type: [string, "null"]
+            lastname:
+              type: [string, "null"]
           additionalProperties: true
         createdAt:
           type: string
@@ -469,6 +1139,24 @@ components:
         archived:
           type: boolean
           description: Whether the contact is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the contact was archived
+        propertiesWithHistory:
+          type: [object, "null"]
+          description: Properties with historical values
+          additionalProperties: true
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+        objectWriteTraceId:
+          type: [string, "null"]
+          description: Trace identifier for write operations
+        url:
+          type: [string, "null"]
+          description: URL to view contact in HubSpot
 
     ContactsList:
       type: object
@@ -480,6 +1168,9 @@ components:
             $ref: "#/components/schemas/Contact"
         paging:
           $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
 
     # Company schemas
     Company:
@@ -493,6 +1184,17 @@ components:
         properties:
           type: object
           description: Company properties
+          properties:
+            createdate:
+              type: [string, "null"]
+            domain:
+              type: [string, "null"]
+            hs_lastmodifieddate:
+              type: [string, "null"]
+            hs_object_id:
+              type: [string, "null"]
+            name:
+              type: [string, "null"]
           additionalProperties: true
         createdAt:
           type: string
@@ -505,6 +1207,24 @@ components:
         archived:
           type: boolean
           description: Whether the company is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the company was archived
+        propertiesWithHistory:
+          type: [object, "null"]
+          description: Properties with historical values
+          additionalProperties: true
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+        objectWriteTraceId:
+          type: [string, "null"]
+          description: Trace identifier for write operations
+        url:
+          type: [string, "null"]
+          description: URL to view company in HubSpot
 
     CompaniesList:
       type: object
@@ -516,6 +1236,9 @@ components:
             $ref: "#/components/schemas/Company"
         paging:
           $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
 
     # Deal schemas
     Deal:
@@ -529,6 +1252,23 @@ components:
         properties:
           type: object
           description: Deal properties
+          properties:
+            amount:
+              type: [string, "null"]
+            closedate:
+              type: [string, "null"]
+            createdate:
+              type: [string, "null"]
+            dealname:
+              type: [string, "null"]
+            dealstage:
+              type: [string, "null"]
+            hs_lastmodifieddate:
+              type: [string, "null"]
+            hs_object_id:
+              type: [string, "null"]
+            pipeline:
+              type: [string, "null"]
           additionalProperties: true
         createdAt:
           type: string
@@ -541,6 +1281,24 @@ components:
         archived:
           type: boolean
           description: Whether the deal is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the deal was archived
+        propertiesWithHistory:
+          type: [object, "null"]
+          description: Properties with historical values
+          additionalProperties: true
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+        objectWriteTraceId:
+          type: [string, "null"]
+          description: Trace identifier for write operations
+        url:
+          type: [string, "null"]
+          description: URL to view deal in HubSpot
 
     DealsList:
       type: object
@@ -552,6 +1310,9 @@ components:
             $ref: "#/components/schemas/Deal"
         paging:
           $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
 
     # Ticket schemas
     Ticket:
@@ -565,6 +1326,25 @@ components:
         properties:
           type: object
           description: Ticket properties
+          properties:
+            content:
+              type: [string, "null"]
+            createdate:
+              type: [string, "null"]
+            hs_lastmodifieddate:
+              type: [string, "null"]
+            hs_object_id:
+              type: [string, "null"]
+            hs_pipeline:
+              type: [string, "null"]
+            hs_pipeline_stage:
+              type: [string, "null"]
+            hs_ticket_category:
+              type: [string, "null"]
+            hs_ticket_priority:
+              type: [string, "null"]
+            subject:
+              type: [string, "null"]
           additionalProperties: true
         createdAt:
           type: string
@@ -577,6 +1357,24 @@ components:
         archived:
           type: boolean
           description: Whether the ticket is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the ticket was archived
+        propertiesWithHistory:
+          type: [object, "null"]
+          description: Properties with historical values
+          additionalProperties: true
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+        objectWriteTraceId:
+          type: [string, "null"]
+          description: Trace identifier for write operations
+        url:
+          type: [string, "null"]
+          description: URL to view ticket in HubSpot
 
     TicketsList:
       type: object
@@ -588,6 +1386,9 @@ components:
             $ref: "#/components/schemas/Ticket"
         paging:
           $ref: "#/components/schemas/Paging"
+        total:
+          type: integer
+          description: Total number of results (search only)
 
     # Schema schemas (for custom objects discovery)
     Schema:
@@ -615,11 +1416,125 @@ components:
         fullyQualifiedName:
           type: string
           description: Fully qualified name (p{portal_id}_{object_name})
+        requiredProperties:
+          type: array
+          items:
+            type: string
+        searchableProperties:
+          type: array
+          items:
+            type: string
+        primaryDisplayProperty:
+          type: string
+        secondaryDisplayProperties:
+          type: array
+          items:
+            type: string
+        description:
+          type: [string, "null"]
+        allowsSensitiveProperties:
+          type: boolean
+        archived:
+          type: boolean
+        restorable:
+          type: boolean
+        metaType:
+          type: string
+        createdByUserId:
+          type: integer
+        updatedByUserId:
+          type: integer
         properties:
           type: array
           description: Schema properties
           items:
             type: object
+            properties:
+              name:
+                type: string
+              label:
+                type: string
+              type:
+                type: string
+              fieldType:
+                type: string
+              description:
+                type: string
+              groupName:
+                type: string
+              displayOrder:
+                type: integer
+              calculated:
+                type: boolean
+              externalOptions:
+                type: boolean
+              archived:
+                type: boolean
+              hasUniqueValue:
+                type: boolean
+              hidden:
+                type: boolean
+              formField:
+                type: boolean
+              dataSensitivity:
+                type: string
+              hubspotDefined:
+                type: boolean
+              updatedAt:
+                type: string
+              createdAt:
+                type: string
+              options:
+                type: array
+              createdUserId:
+                type: string
+              updatedUserId:
+                type: string
+              showCurrencySymbol:
+                type: boolean
+              modificationMetadata:
+                type: object
+                properties:
+                  archivable:
+                    type: boolean
+                  readOnlyDefinition:
+                    type: boolean
+                  readOnlyValue:
+                    type: boolean
+                  readOnlyOptions:
+                    type: boolean
+                additionalProperties: true
+            additionalProperties: true
+        associations:
+          type: array
+          items:
+            type: object
+            properties:
+              fromObjectTypeId:
+                type: string
+              toObjectTypeId:
+                type: string
+              name:
+                type: string
+              cardinality:
+                type: string
+              id:
+                type: string
+              inverseCardinality:
+                type: string
+              hasUserEnforcedMaxToObjectIds:
+                type: boolean
+              hasUserEnforcedMaxFromObjectIds:
+                type: boolean
+              maxToObjectIds:
+                type: integer
+              maxFromObjectIds:
+                type: integer
+              createdAt:
+                type: [string, "null"]
+              updatedAt:
+                type: [string, "null"]
+            additionalProperties: true
         createdAt:
           type: string
           format: date-time
@@ -648,6 +1563,13 @@ components:
         properties:
           type: object
           description: Object properties
+          properties:
+            hs_createdate:
+              type: [string, "null"]
+            hs_lastmodifieddate:
+              type: [string, "null"]
+            hs_object_id:
+              type: [string, "null"]
           additionalProperties: true
         createdAt:
           type: string
@@ -660,6 +1582,24 @@ components:
         archived:
           type: boolean
           description: Whether the object is archived
+        archivedAt:
+          type: [string, "null"]
+          format: date-time
+          description: Timestamp when the object was archived
+        propertiesWithHistory:
+          type: [object, "null"]
+          description: Properties with historical values
+          additionalProperties: true
+        associations:
+          type: [object, "null"]
+          description: Relationships with other CRM objects
+          additionalProperties: true
+        objectWriteTraceId:
+          type: [string, "null"]
+          description: Trace identifier for write operations
+        url:
+          type: [string, "null"]
+          description: URL to view object in HubSpot
 
     ObjectsList:
       type: object

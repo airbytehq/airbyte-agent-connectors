@@ -15,15 +15,28 @@ from pathlib import Path
 from .types import (
     CompaniesGetParams,
     CompaniesListParams,
+    CompaniesSearchParams,
+    CompaniesSearchParamsFiltergroupsItem,
+    CompaniesSearchParamsSortsItem,
     ContactsGetParams,
     ContactsListParams,
+    ContactsSearchParams,
+    ContactsSearchParamsFiltergroupsItem,
+    ContactsSearchParamsSortsItem,
     DealsGetParams,
     DealsListParams,
+    DealsSearchParams,
+    DealsSearchParamsFiltergroupsItem,
+    DealsSearchParamsSortsItem,
     ObjectsGetParams,
     ObjectsListParams,
+    SchemasGetParams,
     SchemasListParams,
     TicketsGetParams,
     TicketsListParams,
+    TicketsSearchParams,
+    TicketsSearchParamsFiltergroupsItem,
+    TicketsSearchParamsSortsItem,
 )
 
 if TYPE_CHECKING:
@@ -33,17 +46,22 @@ if TYPE_CHECKING:
 from .models import (
     HubspotExecuteResult,
     HubspotExecuteResultWithMeta,
+    ContactsListResult,
+    ContactsSearchResult,
+    CompaniesListResult,
+    CompaniesSearchResult,
+    DealsListResult,
+    DealsSearchResult,
+    TicketsListResult,
+    TicketsSearchResult,
+    SchemasListResult,
+    ObjectsListResult,
     CRMObject,
-    CompaniesList,
     Company,
     Contact,
-    ContactsList,
     Deal,
-    DealsList,
-    ObjectsList,
-    SchemasList,
+    Schema,
     Ticket,
-    TicketsList,
 )
 
 
@@ -55,21 +73,26 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "0.1.0"
+    connector_version = "0.1.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
     _EXTRACTOR_MAP = {
-        ("contacts", "list"): False,
+        ("contacts", "list"): True,
         ("contacts", "get"): False,
-        ("companies", "list"): False,
+        ("contacts", "search"): True,
+        ("companies", "list"): True,
         ("companies", "get"): False,
-        ("deals", "list"): False,
+        ("companies", "search"): True,
+        ("deals", "list"): True,
         ("deals", "get"): False,
-        ("tickets", "list"): False,
+        ("deals", "search"): True,
+        ("tickets", "list"): True,
         ("tickets", "get"): False,
-        ("schemas", "list"): False,
-        ("objects", "list"): False,
+        ("tickets", "search"): True,
+        ("schemas", "list"): True,
+        ("schemas", "get"): False,
+        ("objects", "list"): True,
         ("objects", "get"): False,
     }
 
@@ -101,7 +124,7 @@ class HubspotConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = HubspotConnector(auth_config=HubspotAuthConfig(access_token="..."))
+            connector = HubspotConnector(auth_config=HubspotAuthConfig(client_id="...", client_secret="...", refresh_token="...", access_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = HubspotConnector(
                 connector_id="connector-456",
@@ -175,7 +198,7 @@ class HubspotConnector:
         entity: Literal["contacts"],
         action: Literal["list"],
         params: "ContactsListParams"
-    ) -> "ContactsList": ...
+    ) -> "ContactsListResult": ...
 
     @overload
     async def execute(
@@ -188,10 +211,18 @@ class HubspotConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["contacts"],
+        action: Literal["search"],
+        params: "ContactsSearchParams"
+    ) -> "ContactsSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["companies"],
         action: Literal["list"],
         params: "CompaniesListParams"
-    ) -> "CompaniesList": ...
+    ) -> "CompaniesListResult": ...
 
     @overload
     async def execute(
@@ -204,10 +235,18 @@ class HubspotConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["companies"],
+        action: Literal["search"],
+        params: "CompaniesSearchParams"
+    ) -> "CompaniesSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["deals"],
         action: Literal["list"],
         params: "DealsListParams"
-    ) -> "DealsList": ...
+    ) -> "DealsListResult": ...
 
     @overload
     async def execute(
@@ -220,10 +259,18 @@ class HubspotConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["deals"],
+        action: Literal["search"],
+        params: "DealsSearchParams"
+    ) -> "DealsSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["tickets"],
         action: Literal["list"],
         params: "TicketsListParams"
-    ) -> "TicketsList": ...
+    ) -> "TicketsListResult": ...
 
     @overload
     async def execute(
@@ -236,10 +283,26 @@ class HubspotConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["tickets"],
+        action: Literal["search"],
+        params: "TicketsSearchParams"
+    ) -> "TicketsSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["schemas"],
         action: Literal["list"],
         params: "SchemasListParams"
-    ) -> "SchemasList": ...
+    ) -> "SchemasListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["schemas"],
+        action: Literal["get"],
+        params: "SchemasGetParams"
+    ) -> "Schema": ...
 
     @overload
     async def execute(
@@ -247,7 +310,7 @@ class HubspotConnector:
         entity: Literal["objects"],
         action: Literal["list"],
         params: "ObjectsListParams"
-    ) -> "ObjectsList": ...
+    ) -> "ObjectsListResult": ...
 
     @overload
     async def execute(
@@ -340,33 +403,42 @@ class ContactsQuery:
         self,
         limit: int | None = None,
         after: str | None = None,
+        associations: str | None = None,
         properties: str | None = None,
+        properties_with_history: str | None = None,
         archived: bool | None = None,
         **kwargs
-    ) -> ContactsList:
+    ) -> ContactsListResult:
         """
         Returns a paginated list of contacts
 
         Args:
-            limit: Number of items to return per page
-            after: Pagination cursor for next page
-            properties: Comma-separated list of properties to include
-            archived: Whether to include archived contacts
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
-            ContactsList
+            ContactsListResult
         """
         params = {k: v for k, v in {
             "limit": limit,
             "after": after,
+            "associations": associations,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
             "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ContactsListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -374,6 +446,10 @@ class ContactsQuery:
         self,
         contact_id: str,
         properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
         **kwargs
     ) -> Contact:
         """
@@ -381,7 +457,11 @@ class ContactsQuery:
 
         Args:
             contact_id: Contact ID
-            properties: Comma-separated list of properties to include
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
@@ -390,11 +470,58 @@ class ContactsQuery:
         params = {k: v for k, v in {
             "contactId": contact_id,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "get", params)
         return result
+
+
+
+    async def search(
+        self,
+        filter_groups: list[ContactsSearchParamsFiltergroupsItem] | None = None,
+        properties: list[str] | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        sorts: list[ContactsSearchParamsSortsItem] | None = None,
+        query: str | None = None,
+        **kwargs
+    ) -> ContactsSearchResult:
+        """
+        Search for contacts by filtering on properties, searching through associations, and sorting results.
+
+        Args:
+            filter_groups: Up to 6 groups of filters defining additional query criteria.
+            properties: A list of property names to include in the response.
+            limit: Maximum number of results to return
+            after: A paging cursor token for retrieving subsequent pages.
+            sorts: Sort criteria
+            query: The search query string, up to 3000 characters.
+            **kwargs: Additional parameters
+
+        Returns:
+            ContactsSearchResult
+        """
+        params = {k: v for k, v in {
+            "filterGroups": filter_groups,
+            "properties": properties,
+            "limit": limit,
+            "after": after,
+            "sorts": sorts,
+            "query": query,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "search", params)
+        # Cast generic envelope to concrete typed result
+        return ContactsSearchResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -411,33 +538,42 @@ class CompaniesQuery:
         self,
         limit: int | None = None,
         after: str | None = None,
+        associations: str | None = None,
         properties: str | None = None,
+        properties_with_history: str | None = None,
         archived: bool | None = None,
         **kwargs
-    ) -> CompaniesList:
+    ) -> CompaniesListResult:
         """
-        Returns a paginated list of companies
+        Retrieve all companies, using query parameters to control the information that gets returned.
 
         Args:
-            limit: Number of items to return per page
-            after: Pagination cursor for next page
-            properties: Comma-separated list of properties to include
-            archived: Whether to include archived companies
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
-            CompaniesList
+            CompaniesListResult
         """
         params = {k: v for k, v in {
             "limit": limit,
             "after": after,
+            "associations": associations,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
             "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("companies", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CompaniesListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -445,6 +581,10 @@ class CompaniesQuery:
         self,
         company_id: str,
         properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
         **kwargs
     ) -> Company:
         """
@@ -452,7 +592,11 @@ class CompaniesQuery:
 
         Args:
             company_id: Company ID
-            properties: Comma-separated list of properties to include
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
@@ -461,11 +605,58 @@ class CompaniesQuery:
         params = {k: v for k, v in {
             "companyId": company_id,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("companies", "get", params)
         return result
+
+
+
+    async def search(
+        self,
+        filter_groups: list[CompaniesSearchParamsFiltergroupsItem] | None = None,
+        properties: list[str] | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        sorts: list[CompaniesSearchParamsSortsItem] | None = None,
+        query: str | None = None,
+        **kwargs
+    ) -> CompaniesSearchResult:
+        """
+        Search for companies by filtering on properties, searching through associations, and sorting results.
+
+        Args:
+            filter_groups: Up to 6 groups of filters defining additional query criteria.
+            properties: A list of property names to include in the response.
+            limit: Maximum number of results to return
+            after: A paging cursor token for retrieving subsequent pages.
+            sorts: Sort criteria
+            query: The search query string, up to 3000 characters.
+            **kwargs: Additional parameters
+
+        Returns:
+            CompaniesSearchResult
+        """
+        params = {k: v for k, v in {
+            "filterGroups": filter_groups,
+            "properties": properties,
+            "limit": limit,
+            "after": after,
+            "sorts": sorts,
+            "query": query,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "search", params)
+        # Cast generic envelope to concrete typed result
+        return CompaniesSearchResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -482,33 +673,42 @@ class DealsQuery:
         self,
         limit: int | None = None,
         after: str | None = None,
+        associations: str | None = None,
         properties: str | None = None,
+        properties_with_history: str | None = None,
         archived: bool | None = None,
         **kwargs
-    ) -> DealsList:
+    ) -> DealsListResult:
         """
         Returns a paginated list of deals
 
         Args:
-            limit: Number of items to return per page
-            after: Pagination cursor for next page
-            properties: Comma-separated list of properties to include
-            archived: Whether to include archived deals
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
-            DealsList
+            DealsListResult
         """
         params = {k: v for k, v in {
             "limit": limit,
             "after": after,
+            "associations": associations,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
             "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("deals", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return DealsListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -516,6 +716,10 @@ class DealsQuery:
         self,
         deal_id: str,
         properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
         **kwargs
     ) -> Deal:
         """
@@ -523,7 +727,11 @@ class DealsQuery:
 
         Args:
             deal_id: Deal ID
-            properties: Comma-separated list of properties to include
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
@@ -532,11 +740,58 @@ class DealsQuery:
         params = {k: v for k, v in {
             "dealId": deal_id,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("deals", "get", params)
         return result
+
+
+
+    async def search(
+        self,
+        filter_groups: list[DealsSearchParamsFiltergroupsItem] | None = None,
+        properties: list[str] | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        sorts: list[DealsSearchParamsSortsItem] | None = None,
+        query: str | None = None,
+        **kwargs
+    ) -> DealsSearchResult:
+        """
+        Search deals with filters and sorting
+
+        Args:
+            filter_groups: Up to 6 groups of filters defining additional query criteria.
+            properties: A list of property names to include in the response.
+            limit: Maximum number of results to return
+            after: A paging cursor token for retrieving subsequent pages.
+            sorts: Sort criteria
+            query: The search query string, up to 3000 characters.
+            **kwargs: Additional parameters
+
+        Returns:
+            DealsSearchResult
+        """
+        params = {k: v for k, v in {
+            "filterGroups": filter_groups,
+            "properties": properties,
+            "limit": limit,
+            "after": after,
+            "sorts": sorts,
+            "query": query,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deals", "search", params)
+        # Cast generic envelope to concrete typed result
+        return DealsSearchResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -553,33 +808,42 @@ class TicketsQuery:
         self,
         limit: int | None = None,
         after: str | None = None,
+        associations: str | None = None,
         properties: str | None = None,
+        properties_with_history: str | None = None,
         archived: bool | None = None,
         **kwargs
-    ) -> TicketsList:
+    ) -> TicketsListResult:
         """
         Returns a paginated list of tickets
 
         Args:
-            limit: Number of items to return per page
-            after: Pagination cursor for next page
-            properties: Comma-separated list of properties to include
-            archived: Whether to include archived tickets
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.
+            associations: A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., "p12345_cars").
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
-            TicketsList
+            TicketsListResult
         """
         params = {k: v for k, v in {
             "limit": limit,
             "after": after,
+            "associations": associations,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
             "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("tickets", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return TicketsListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -587,6 +851,10 @@ class TicketsQuery:
         self,
         ticket_id: str,
         properties: str | None = None,
+        properties_with_history: str | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        archived: bool | None = None,
         **kwargs
     ) -> Ticket:
         """
@@ -594,7 +862,11 @@ class TicketsQuery:
 
         Args:
             ticket_id: Ticket ID
-            properties: Comma-separated list of properties to include
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            archived: Whether to return only results that have been archived.
             **kwargs: Additional parameters
 
         Returns:
@@ -603,11 +875,58 @@ class TicketsQuery:
         params = {k: v for k, v in {
             "ticketId": ticket_id,
             "properties": properties,
+            "propertiesWithHistory": properties_with_history,
+            "associations": associations,
+            "idProperty": id_property,
+            "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("tickets", "get", params)
         return result
+
+
+
+    async def search(
+        self,
+        filter_groups: list[TicketsSearchParamsFiltergroupsItem] | None = None,
+        properties: list[str] | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        sorts: list[TicketsSearchParamsSortsItem] | None = None,
+        query: str | None = None,
+        **kwargs
+    ) -> TicketsSearchResult:
+        """
+        Search for tickets by filtering on properties, searching through associations, and sorting results.
+
+        Args:
+            filter_groups: Up to 6 groups of filters defining additional query criteria.
+            properties: A list of property names to include in the response.
+            limit: Maximum number of results to return
+            after: A paging cursor token for retrieving subsequent pages.
+            sorts: Sort criteria
+            query: The search query string, up to 3000 characters.
+            **kwargs: Additional parameters
+
+        Returns:
+            TicketsSearchResult
+        """
+        params = {k: v for k, v in {
+            "filterGroups": filter_groups,
+            "properties": properties,
+            "limit": limit,
+            "after": after,
+            "sorts": sorts,
+            "query": query,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tickets", "search", params)
+        # Cast generic envelope to concrete typed result
+        return TicketsSearchResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -622,19 +941,53 @@ class SchemasQuery:
 
     async def list(
         self,
+        archived: bool | None = None,
         **kwargs
-    ) -> SchemasList:
+    ) -> SchemasListResult:
         """
         Returns all custom object schemas to discover available custom objects
 
+        Args:
+            archived: Whether to return only results that have been archived.
+            **kwargs: Additional parameters
+
         Returns:
-            SchemasList
+            SchemasListResult
         """
         params = {k: v for k, v in {
+            "archived": archived,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("schemas", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SchemasListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        object_type: str,
+        **kwargs
+    ) -> Schema:
+        """
+        Get the schema for a specific custom object type
+
+        Args:
+            object_type: Fully qualified name or object type ID of your schema.
+            **kwargs: Additional parameters
+
+        Returns:
+            Schema
+        """
+        params = {k: v for k, v in {
+            "objectType": object_type,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("schemas", "get", params)
         return result
 
 
@@ -655,21 +1008,25 @@ class ObjectsQuery:
         after: str | None = None,
         properties: str | None = None,
         archived: bool | None = None,
+        associations: str | None = None,
+        properties_with_history: str | None = None,
         **kwargs
-    ) -> ObjectsList:
+    ) -> ObjectsListResult:
         """
-        Returns a paginated list of objects for any custom object type
+        Read a page of objects. Control what is returned via the properties query param.
 
         Args:
             object_type: Object type ID or fully qualified name (e.g., "cars" or "p12345_cars")
-            limit: Number of items to return per page
-            after: Pagination cursor for next page
-            properties: Comma-separated list of properties to include
-            archived: Whether to include archived objects
+            limit: The maximum number of results to display per page.
+            after: The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results.
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
             **kwargs: Additional parameters
 
         Returns:
-            ObjectsList
+            ObjectsListResult
         """
         params = {k: v for k, v in {
             "objectType": object_type,
@@ -677,11 +1034,16 @@ class ObjectsQuery:
             "after": after,
             "properties": properties,
             "archived": archived,
+            "associations": associations,
+            "propertiesWithHistory": properties_with_history,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("objects", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ObjectsListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -690,15 +1052,23 @@ class ObjectsQuery:
         object_type: str,
         object_id: str,
         properties: str | None = None,
+        archived: bool | None = None,
+        associations: str | None = None,
+        id_property: str | None = None,
+        properties_with_history: str | None = None,
         **kwargs
     ) -> CRMObject:
         """
-        Get a single object by ID for any custom object type
+        Read an Object identified by {objectId}. {objectId} refers to the internal object ID by default, or optionally any unique property value as specified by the idProperty query param. Control what is returned via the properties query param.
 
         Args:
             object_type: Object type ID or fully qualified name
             object_id: Object record ID
-            properties: Comma-separated list of properties to include
+            properties: A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.
+            archived: Whether to return only results that have been archived.
+            associations: A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.
+            id_property: The name of a property whose values are unique for this object.
+            properties_with_history: A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.
             **kwargs: Additional parameters
 
         Returns:
@@ -708,6 +1078,10 @@ class ObjectsQuery:
             "objectType": object_type,
             "objectId": object_id,
             "properties": properties,
+            "archived": archived,
+            "associations": associations,
+            "idProperty": id_property,
+            "propertiesWithHistory": properties_with_history,
             **kwargs
         }.items() if v is not None}
 
