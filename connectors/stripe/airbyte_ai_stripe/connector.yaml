@@ -19,7 +19,7 @@ info:
       url: "https://docs.stripe.com/api"
     - title: Stripe API Authentication documentation
       type: authentication_guide
-      url: "https://docs.github.com/rest/overview/authenticating-to-the-rest-api"
+      url: "https://docs.stripe.com/api/authentication"
 
 servers:
   - url: https://api.stripe.com
@@ -55,13 +55,13 @@ components:
           type: string
           description: Customer's full name
         description:
-          type: string
+          type: [string, "null"]
           description: An arbitrary string attached to the customer
         phone:
-          type: string
+          type: [string, "null"]
           description: Customer's phone number
         address:
-          type: object
+          type: [object, "null"]
           description: Customer's address
           properties:
             line1:
@@ -91,6 +91,44 @@ components:
         delinquent:
           type: boolean
           description: Whether the customer has a delinquent balance
+        currency:
+          type: [string, "null"]
+          description: Three-letter ISO currency code
+        default_currency:
+          type: [string, "null"]
+          description: Default currency for the customer
+        default_source:
+          type: [string, "null"]
+          description: ID of the default payment source
+        discount:
+          type: [object, "null"]
+          description: Discount currently applied to the customer
+        invoice_prefix:
+          type: [string, "null"]
+          description: Prefix for invoice numbers
+        invoice_settings:
+          type: [object, "null"]
+          description: Invoice settings for the customer
+        livemode:
+          type: boolean
+          description: Whether the customer exists in live mode or test mode
+        next_invoice_sequence:
+          type: [integer, "null"]
+          description: The sequence to be used on the next invoice
+        preferred_locales:
+          type: [array, "null"]
+          items:
+            type: string
+          description: Customer's preferred languages
+        shipping:
+          type: [object, "null"]
+          description: Shipping information for the customer
+        tax_exempt:
+          type: [string, "null"]
+          description: Tax exemption status
+        test_clock:
+          type: [string, "null"]
+          description: ID of the test clock
       required:
         - id
         - object

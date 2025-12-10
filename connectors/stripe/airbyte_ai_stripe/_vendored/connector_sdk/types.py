@@ -114,6 +114,12 @@ class EndpointDefinition(BaseModel):
         description="Field in metadata response containing download URL (from x-airbyte-file-url extension)",
     )
 
+    # Test validation support (Airbyte extension)
+    untested: bool = Field(
+        False,
+        description="Mark operation as untested to skip cassette validation (from x-airbyte-untested extension)",
+    )
+
 
 class EntityDefinition(BaseModel):
     """Definition of an API entity."""
