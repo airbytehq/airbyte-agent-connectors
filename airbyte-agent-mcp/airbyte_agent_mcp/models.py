@@ -46,6 +46,14 @@ class ConnectorConfig(BaseModel):
             if not self.path and not self.connector_name:
                 raise ValueError(f"LOCAL connector '{self.id}' must specify either 'path' or 'connector_name'")
 
+            # Version pinning only makes sense with registry-based connectors
+            if self.path and self.version:
+                raise ValueError(
+                    f"LOCAL connector '{self.id}' uses 'path' and 'version'. "
+                    "Version pinning is only supported for registry-based connectors "
+                    "using 'connector_name'. Remove 'version' or switch to 'connector_name'."
+                )
+
 
 class Config(BaseModel):
     """Root configuration model."""
