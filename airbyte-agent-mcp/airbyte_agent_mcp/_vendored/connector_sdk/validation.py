@@ -216,8 +216,31 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             endpoint = entity.endpoints[action]
             # Check if this is a download action
             is_download = action == Action.DOWNLOAD
+            # Check if operation is marked as untested
+            is_untested = endpoint.untested
 
             if not cassette_paths:
+                # For untested operations, add a warning instead of an error
+                if is_untested:
+                    total_warnings += 1
+                    validation_results.append(
+                        {
+                            "entity": entity.name,
+                            "action": action.value,
+                            "cassettes_found": 0,
+                            "cassette_paths": [],
+                            "schema_defined": endpoint.response_schema is not None,
+                            "is_download": is_download,
+                            "untested": True,
+                            "schema_validation": [],
+                            "warnings": [
+                                f"Operation {entity.name}.{action.value} is marked as untested (x-airbyte-untested: true) and has no cassettes. Validation skipped."
+                            ],
+                        }
+                    )
+                    continue
+
+                # For tested operations, this is an error
                 operations_missing_cassettes += 1
                 validation_results.append(
                     {

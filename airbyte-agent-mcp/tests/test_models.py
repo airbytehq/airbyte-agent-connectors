@@ -58,6 +58,20 @@ def test_local_connector_with_connector_name_and_version():
     assert connector.version == "1.2.0"
 
 
+def test_local_connector_with_path_and_version_fails():
+    """Test LOCAL connector with path and version is invalid.
+
+    Version pinning is only supported for registry-based connectors.
+    """
+    with pytest.raises(ValidationError, match="Version pinning is only supported for registry-based connectors"):
+        ConnectorConfig(
+            id="test",
+            type=ConnectorType.LOCAL,
+            path="/path/to/connector.yaml",
+            version="1.0.0",
+        )
+
+
 def test_hosted_connector_valid():
     """Test HOSTED connector validation."""
     # HOSTED connectors don't require path

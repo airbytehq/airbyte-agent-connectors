@@ -330,6 +330,9 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
             # Extract file_field for download operations
             file_field = getattr(operation, "x_airbyte_file_url", None)
 
+            # Extract untested flag
+            untested = getattr(operation, "x_airbyte_untested", None) or False
+
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
@@ -347,6 +350,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 response_schema=response_schema,
                 graphql_body=graphql_body,
                 file_field=file_field,
+                untested=untested,
             )
 
             # Add to entities map

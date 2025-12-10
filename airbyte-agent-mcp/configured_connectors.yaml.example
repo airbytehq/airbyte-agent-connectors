@@ -3,8 +3,8 @@
 
 # Connector definitions
 # LOCAL connectors can be loaded from:
-# - A local file path (path field)
-# - The Airbyte registry (connector_name field)
+# - A local file path (path field) - no version pinning supported
+# - The Airbyte registry (connector_name field) - supports optional version pinning
 connectors:
   # LOCAL connector with file path
   - id: my_api
@@ -20,7 +20,7 @@ connectors:
     connector_name: stripe
     description: "Stripe connector from registry"
     secrets:
-      api_key: STRIPE_API_KEY
+      token: STRIPE_API_KEY
 
   # LOCAL connector from registry with version pinning
   - id: salesforce
