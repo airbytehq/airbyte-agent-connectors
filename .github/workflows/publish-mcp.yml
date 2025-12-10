@@ -17,9 +17,9 @@ jobs:
       - name: Install build tools
         run: pip install build twine
       - name: Build MCP package
-        run: python -m build mcp/
+        run: python -m build airbyte-agent-mcp/
       - name: Publish to PyPI
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload mcp/dist/* --skip-existing
+        run: twine upload airbyte-agent-mcp/dist/* --skip-existing
