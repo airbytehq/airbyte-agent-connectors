@@ -605,6 +605,39 @@ class LocalExecutor:
 
         return current
 
+    @staticmethod
+    def _substitute_file_field_params(
+        file_field: str,
+        params: dict[str, Any],
+    ) -> str:
+        """Substitute template variables in file_field with parameter values.
+
+        Uses Jinja2 with custom delimiters to support OpenAPI-style syntax like
+        "attachments[{index}].url" where {index} is replaced with params["index"].
+
+        Args:
+            file_field: File field path with optional template variables
+            params: Parameters from execute() call
+
+        Returns:
+            File field with template variables substituted
+
+        Example:
+            >>> _substitute_file_field_params("attachments[{attachment_index}].url", {"attachment_index": 0})
+            "attachments[0].url"
+        """
+        from jinja2 import Environment, StrictUndefined
+
+        # Use custom delimiters to match OpenAPI path parameter syntax {var}
+        # StrictUndefined raises clear error if a template variable is missing
+        env = Environment(
+            variable_start_string="{",
+            variable_end_string="}",
+            undefined=StrictUndefined,
+        )
+        template = env.from_string(file_field)
+        return template.render(params)
+
     def _build_request_body(
         self, endpoint: EndpointDefinition, params: dict[str, Any]
     ) -> dict[str, Any] | None:
@@ -1213,6 +1246,12 @@ class _DownloadOperationHandler:
 
                 # Check download mode: two-step (with file_field) or one-step (without)
                 file_field = operation.file_field
+
+                if file_field:
+                    # Substitute template variables in file_field (e.g., "attachments[{index}].url")
+                    file_field = LocalExecutor._substitute_file_field_params(
+                        file_field, params
+                    )
 
                 if file_field:
                     # Two-step download: metadata → extract URL → stream file

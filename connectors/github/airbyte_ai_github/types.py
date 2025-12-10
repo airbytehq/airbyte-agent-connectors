@@ -14,60 +14,6 @@ except ImportError:
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
-class RepositoryOwner(TypedDict):
-    """Repository owner information"""
-    login: NotRequired[str]
-    id: NotRequired[int]
-    node_id: NotRequired[str]
-    avatar_url: NotRequired[str]
-    gravatar_id: NotRequired[str]
-    url: NotRequired[str]
-    html_url: NotRequired[str]
-    followers_url: NotRequired[str]
-    following_url: NotRequired[str]
-    gists_url: NotRequired[str]
-    starred_url: NotRequired[str]
-    subscriptions_url: NotRequired[str]
-    organizations_url: NotRequired[str]
-    repos_url: NotRequired[str]
-    events_url: NotRequired[str]
-    received_events_url: NotRequired[str]
-    type: NotRequired[str]
-    site_admin: NotRequired[bool]
-
-class RepositoryPermissions(TypedDict):
-    """User permissions for the repository"""
-    admin: NotRequired[bool]
-    push: NotRequired[bool]
-    pull: NotRequired[bool]
-
-class RepositoryLicense(TypedDict):
-    """Repository license information"""
-    key: NotRequired[str]
-    name: NotRequired[str]
-    url: NotRequired[str | None]
-    spdx_id: NotRequired[str | None]
-    node_id: NotRequired[str]
-    html_url: NotRequired[str | None]
-
-class RepositorySecurityAndAnalysisAdvancedSecurity(TypedDict):
-    """Nested schema for RepositorySecurityAndAnalysis.advanced_security"""
-    status: NotRequired[str]
-
-class RepositorySecurityAndAnalysisSecretScanning(TypedDict):
-    """Nested schema for RepositorySecurityAndAnalysis.secret_scanning"""
-    status: NotRequired[str]
-
-class RepositorySecurityAndAnalysisSecretScanningPushProtection(TypedDict):
-    """Nested schema for RepositorySecurityAndAnalysis.secret_scanning_push_protection"""
-    status: NotRequired[str]
-
-class RepositorySecurityAndAnalysis(TypedDict):
-    """Security and analysis settings"""
-    advanced_security: NotRequired[RepositorySecurityAndAnalysisAdvancedSecurity]
-    secret_scanning: NotRequired[RepositorySecurityAndAnalysisSecretScanning]
-    secret_scanning_push_protection: NotRequired[RepositorySecurityAndAnalysisSecretScanningPushProtection]
-
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class RepositoriesGetParams(TypedDict):
@@ -80,10 +26,255 @@ class RepositoriesListParams(TypedDict):
     """Parameters for repositories.list operation"""
     username: str
     per_page: NotRequired[int]
+    after: NotRequired[str]
     fields: NotRequired[list[str]]
 
 class RepositoriesSearchParams(TypedDict):
     """Parameters for repositories.search operation"""
     query: str
     limit: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class OrgRepositoriesListParams(TypedDict):
+    """Parameters for org_repositories.list operation"""
+    org: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class BranchesListParams(TypedDict):
+    """Parameters for branches.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class BranchesGetParams(TypedDict):
+    """Parameters for branches.get operation"""
+    owner: str
+    repo: str
+    branch: str
+    fields: NotRequired[list[str]]
+
+class CommitsListParams(TypedDict):
+    """Parameters for commits.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class CommitsGetParams(TypedDict):
+    """Parameters for commits.get operation"""
+    owner: str
+    repo: str
+    sha: str
+    fields: NotRequired[list[str]]
+
+class ReleasesListParams(TypedDict):
+    """Parameters for releases.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class ReleasesGetParams(TypedDict):
+    """Parameters for releases.get operation"""
+    owner: str
+    repo: str
+    tag: str
+    fields: NotRequired[list[str]]
+
+class IssuesListParams(TypedDict):
+    """Parameters for issues.list operation"""
+    owner: str
+    repo: str
+    states: NotRequired[list[str]]
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class IssuesGetParams(TypedDict):
+    """Parameters for issues.get operation"""
+    owner: str
+    repo: str
+    number: int
+    fields: NotRequired[list[str]]
+
+class IssuesSearchParams(TypedDict):
+    """Parameters for issues.search operation"""
+    query: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class PullRequestsListParams(TypedDict):
+    """Parameters for pull_requests.list operation"""
+    owner: str
+    repo: str
+    states: NotRequired[list[str]]
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class PullRequestsGetParams(TypedDict):
+    """Parameters for pull_requests.get operation"""
+    owner: str
+    repo: str
+    number: int
+    fields: NotRequired[list[str]]
+
+class PullRequestsSearchParams(TypedDict):
+    """Parameters for pull_requests.search operation"""
+    query: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class ReviewsListParams(TypedDict):
+    """Parameters for reviews.list operation"""
+    owner: str
+    repo: str
+    number: int
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class CommentsListParams(TypedDict):
+    """Parameters for comments.list operation"""
+    owner: str
+    repo: str
+    number: int
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class CommentsGetParams(TypedDict):
+    """Parameters for comments.get operation"""
+    id: str
+    fields: NotRequired[list[str]]
+
+class PrCommentsListParams(TypedDict):
+    """Parameters for pr_comments.list operation"""
+    owner: str
+    repo: str
+    number: int
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class PrCommentsGetParams(TypedDict):
+    """Parameters for pr_comments.get operation"""
+    id: str
+    fields: NotRequired[list[str]]
+
+class LabelsListParams(TypedDict):
+    """Parameters for labels.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class LabelsGetParams(TypedDict):
+    """Parameters for labels.get operation"""
+    owner: str
+    repo: str
+    name: str
+    fields: NotRequired[list[str]]
+
+class MilestonesListParams(TypedDict):
+    """Parameters for milestones.list operation"""
+    owner: str
+    repo: str
+    states: NotRequired[list[str]]
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class MilestonesGetParams(TypedDict):
+    """Parameters for milestones.get operation"""
+    owner: str
+    repo: str
+    number: int
+    fields: NotRequired[list[str]]
+
+class OrganizationsGetParams(TypedDict):
+    """Parameters for organizations.get operation"""
+    org: str
+    fields: NotRequired[list[str]]
+
+class OrganizationsListParams(TypedDict):
+    """Parameters for organizations.list operation"""
+    username: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class UsersGetParams(TypedDict):
+    """Parameters for users.get operation"""
+    username: str
+    fields: NotRequired[list[str]]
+
+class UsersListParams(TypedDict):
+    """Parameters for users.list operation"""
+    org: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class UsersSearchParams(TypedDict):
+    """Parameters for users.search operation"""
+    query: str
+    limit: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class TeamsListParams(TypedDict):
+    """Parameters for teams.list operation"""
+    org: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class TeamsGetParams(TypedDict):
+    """Parameters for teams.get operation"""
+    org: str
+    team_slug: str
+    fields: NotRequired[list[str]]
+
+class TagsListParams(TypedDict):
+    """Parameters for tags.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class TagsGetParams(TypedDict):
+    """Parameters for tags.get operation"""
+    owner: str
+    repo: str
+    tag: str
+    fields: NotRequired[list[str]]
+
+class StargazersListParams(TypedDict):
+    """Parameters for stargazers.list operation"""
+    owner: str
+    repo: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class ViewerGetParams(TypedDict):
+    """Parameters for viewer.get operation"""
+    fields: NotRequired[list[str]]
+
+class ViewerRepositoriesListParams(TypedDict):
+    """Parameters for viewer_repositories.list operation"""
+    per_page: NotRequired[int]
+    after: NotRequired[str]
     fields: NotRequired[list[str]]
