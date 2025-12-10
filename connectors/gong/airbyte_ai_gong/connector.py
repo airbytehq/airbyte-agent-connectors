@@ -1018,14 +1018,14 @@ class LibraryFoldersQuery:
 
     async def list(
         self,
-        workspace_id: str | None = None,
+        workspace_id: str,
         **kwargs
     ) -> LibraryFoldersListResult:
         """
         Retrieve the folder structure of the call library
 
         Args:
-            workspace_id: Filter folders by workspace ID
+            workspace_id: Workspace ID to retrieve folders from
             **kwargs: Additional parameters
 
         Returns:

@@ -245,10 +245,11 @@ class ScorecardQuestionAnsweroptionsItem(TypedDict):
     optionText: NotRequired[str]
     score: NotRequired[float]
 
-class TrackerKeywordsItem(TypedDict):
-    """Nested schema for Tracker.keywords_item"""
-    keyword: NotRequired[str]
-    aliases: NotRequired[list[str]]
+class TrackerLanguagekeywordsItem(TypedDict):
+    """Nested schema for Tracker.languageKeywords_item"""
+    language: NotRequired[str]
+    keywords: NotRequired[list[str]]
+    includeRelatedForms: NotRequired[bool]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
@@ -319,7 +320,7 @@ class SettingsTrackersListParams(TypedDict):
 
 class LibraryFoldersListParams(TypedDict):
     """Parameters for library_folders.list operation"""
-    workspace_id: NotRequired[str]
+    workspace_id: str
 
 class LibraryFolderContentListParams(TypedDict):
     """Parameters for library_folder_content.list operation"""

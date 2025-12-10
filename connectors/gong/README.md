@@ -2,7 +2,7 @@
 
 Type-safe Gong API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.19.0
+**Package Version:** 0.19.1
 
 **Connector Version:** 0.1.0
 
