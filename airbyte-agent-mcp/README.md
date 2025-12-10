@@ -83,7 +83,7 @@ Add to `~/.claude.json`:
     "command": "uv",
     "args": [
       "--directory",
-      "/path/to/sonar/connector-mcp",
+      "/path/to/sonar/airbyte-agent-mcp",
       "run",
       "airbyte_agent_mcp"
     ],
