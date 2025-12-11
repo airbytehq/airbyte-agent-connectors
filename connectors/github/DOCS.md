@@ -82,10 +82,7 @@ Gets information about a specific GitHub repository using GraphQL
 **Python SDK**
 
 ```python
-github.repositories.get(
-    owner="<str>",
-    repo="<str>"
-)
+github.repositories.get(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -123,9 +120,7 @@ Returns a list of repositories for the specified user using GraphQL
 **Python SDK**
 
 ```python
-github.repositories.list(
-    username="<str>"
-)
+github.repositories.list(    username="<str>")
 ```
 
 **API**
@@ -165,9 +160,7 @@ Examples: "language:python stars:>1000", "topic:machine-learning", "org:facebook
 **Python SDK**
 
 ```python
-github.repositories.search(
-    query="<str>"
-)
+github.repositories.search(    query="<str>")
 ```
 
 **API**
@@ -211,9 +204,7 @@ Returns a list of repositories for the specified organization using GraphQL
 **Python SDK**
 
 ```python
-github.org_repositories.list(
-    org="<str>"
-)
+github.org_repositories.list(    org="<str>")
 ```
 
 **API**
@@ -251,10 +242,7 @@ Returns a list of branches for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.branches.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.branches.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -292,11 +280,7 @@ Gets information about a specific branch using GraphQL
 **Python SDK**
 
 ```python
-github.branches.get(
-    owner="<str>",
-    repo="<str>",
-    branch="<str>"
-)
+github.branches.get(    owner="<str>",    repo="<str>",    branch="<str>")
 ```
 
 **API**
@@ -336,10 +320,7 @@ Returns a list of commits for the default branch using GraphQL
 **Python SDK**
 
 ```python
-github.commits.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.commits.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -377,11 +358,7 @@ Gets information about a specific commit by SHA using GraphQL
 **Python SDK**
 
 ```python
-github.commits.get(
-    owner="<str>",
-    repo="<str>",
-    sha="<str>"
-)
+github.commits.get(    owner="<str>",    repo="<str>",    sha="<str>")
 ```
 
 **API**
@@ -421,10 +398,7 @@ Returns a list of releases for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.releases.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.releases.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -462,11 +436,7 @@ Gets information about a specific release by tag name using GraphQL
 **Python SDK**
 
 ```python
-github.releases.get(
-    owner="<str>",
-    repo="<str>",
-    tag="<str>"
-)
+github.releases.get(    owner="<str>",    repo="<str>",    tag="<str>")
 ```
 
 **API**
@@ -506,10 +476,7 @@ Returns a list of issues for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.issues.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.issues.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -548,11 +515,7 @@ Gets information about a specific issue using GraphQL
 **Python SDK**
 
 ```python
-github.issues.get(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.issues.get(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -590,9 +553,7 @@ Search for issues using GitHub's search syntax
 **Python SDK**
 
 ```python
-github.issues.search(
-    query="<str>"
-)
+github.issues.search(    query="<str>")
 ```
 
 **API**
@@ -633,10 +594,7 @@ Returns a list of pull requests for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.pull_requests.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.pull_requests.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -675,11 +633,7 @@ Gets information about a specific pull request using GraphQL
 **Python SDK**
 
 ```python
-github.pull_requests.get(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.pull_requests.get(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -717,9 +671,7 @@ Search for pull requests using GitHub's search syntax
 **Python SDK**
 
 ```python
-github.pull_requests.search(
-    query="<str>"
-)
+github.pull_requests.search(    query="<str>")
 ```
 
 **API**
@@ -760,11 +712,7 @@ Returns a list of reviews for the specified pull request using GraphQL
 **Python SDK**
 
 ```python
-github.reviews.list(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.reviews.list(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -806,11 +754,7 @@ Returns a list of comments for the specified issue using GraphQL
 **Python SDK**
 
 ```python
-github.comments.list(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.comments.list(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -855,9 +799,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
 **Python SDK**
 
 ```python
-github.comments.get(
-    id="<str>"
-)
+github.comments.get(    id="<str>")
 ```
 
 **API**
@@ -893,11 +835,7 @@ Returns a list of comments for the specified pull request using GraphQL
 **Python SDK**
 
 ```python
-github.pr_comments.list(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.pr_comments.list(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -942,9 +880,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
 **Python SDK**
 
 ```python
-github.pr_comments.get(
-    id="<str>"
-)
+github.pr_comments.get(    id="<str>")
 ```
 
 **API**
@@ -980,10 +916,7 @@ Returns a list of labels for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.labels.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.labels.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -1021,11 +954,7 @@ Gets information about a specific label by name using GraphQL
 **Python SDK**
 
 ```python
-github.labels.get(
-    owner="<str>",
-    repo="<str>",
-    name="<str>"
-)
+github.labels.get(    owner="<str>",    repo="<str>",    name="<str>")
 ```
 
 **API**
@@ -1065,10 +994,7 @@ Returns a list of milestones for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.milestones.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.milestones.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -1107,11 +1033,7 @@ Gets information about a specific milestone by number using GraphQL
 **Python SDK**
 
 ```python
-github.milestones.get(
-    owner="<str>",
-    repo="<str>",
-    number=<int>
-)
+github.milestones.get(    owner="<str>",    repo="<str>",    number=<int>)
 ```
 
 **API**
@@ -1151,9 +1073,7 @@ Gets information about a specific organization using GraphQL
 **Python SDK**
 
 ```python
-github.organizations.get(
-    org="<str>"
-)
+github.organizations.get(    org="<str>")
 ```
 
 **API**
@@ -1187,9 +1107,7 @@ Returns a list of organizations the user belongs to using GraphQL
 **Python SDK**
 
 ```python
-github.organizations.list(
-    username="<str>"
-)
+github.organizations.list(    username="<str>")
 ```
 
 **API**
@@ -1227,9 +1145,7 @@ Gets information about a specific user using GraphQL
 **Python SDK**
 
 ```python
-github.users.get(
-    username="<str>"
-)
+github.users.get(    username="<str>")
 ```
 
 **API**
@@ -1263,9 +1179,7 @@ Returns a list of members for the specified organization using GraphQL
 **Python SDK**
 
 ```python
-github.users.list(
-    org="<str>"
-)
+github.users.list(    org="<str>")
 ```
 
 **API**
@@ -1301,9 +1215,7 @@ Search for GitHub users using search syntax
 **Python SDK**
 
 ```python
-github.users.search(
-    query="<str>"
-)
+github.users.search(    query="<str>")
 ```
 
 **API**
@@ -1344,9 +1256,7 @@ Returns a list of teams for the specified organization using GraphQL
 **Python SDK**
 
 ```python
-github.teams.list(
-    org="<str>"
-)
+github.teams.list(    org="<str>")
 ```
 
 **API**
@@ -1382,10 +1292,7 @@ Gets information about a specific team using GraphQL
 **Python SDK**
 
 ```python
-github.teams.get(
-    org="<str>",
-    team_slug="<str>"
-)
+github.teams.get(    org="<str>",    team_slug="<str>")
 ```
 
 **API**
@@ -1423,10 +1330,7 @@ Returns a list of tags for the specified repository using GraphQL
 **Python SDK**
 
 ```python
-github.tags.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.tags.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**
@@ -1464,11 +1368,7 @@ Gets information about a specific tag by name using GraphQL
 **Python SDK**
 
 ```python
-github.tags.get(
-    owner="<str>",
-    repo="<str>",
-    tag="<str>"
-)
+github.tags.get(    owner="<str>",    repo="<str>",    tag="<str>")
 ```
 
 **API**
@@ -1508,10 +1408,7 @@ Returns a list of users who have starred the repository using GraphQL
 **Python SDK**
 
 ```python
-github.stargazers.list(
-    owner="<str>",
-    repo="<str>"
-)
+github.stargazers.list(    owner="<str>",    repo="<str>")
 ```
 
 **API**

@@ -14,11 +14,7 @@ uv pip install airbyte-ai-github
 from airbyte_ai_github import GithubConnector
 from airbyte_ai_github.models import GithubAuthConfig
 
-# Create connector
-connector = GithubConnector(auth_config=GithubAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
-
-# Use typed methods with full IDE autocomplete
-```
+connector = GithubConnector(auth_config=GithubAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))result = connector.repositories.get()```
 
 ## Documentation
 
@@ -28,8 +24,8 @@ For the service's official API docs, see [Github API Reference](https://docs.git
 
 ## Version Information
 
-**Package Version:** 0.18.3
+**Package Version:** 0.18.4
 
 **Connector Version:** 0.1.0
 
-**Generated with connector-sdk:** f2497f7128da08585d1470953e773671d33f348f
+**Generated with connector-sdk:** bdd5df6d00c95fe27bf5a01652296763fbc05614
