@@ -19,8 +19,6 @@
 [![Slack](https://img.shields.io/badge/Slack-Join_Community-4A154B?logo=slack&logoColor=white)](https://slack.airbyte.com/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/airbytehq?style=social)](https://twitter.com/airbytehq)
 
-Brought to you with love by Airbyte 💜
-
 # Airbyte AI Connectors
 
 Airbyte AI Connectors are packages that let AI agents call third‑party APIs through strongly typed, well‑documented tools. Each connector is a standalone Python package that you can use directly in your app, plug into an agent framework, or expose through MCP (coming soon) and APIs(coming soon).
@@ -122,3 +120,6 @@ We are actively expanding AI Connectors. Coming soon:
 ## Contributing / Feedback
 We actively welcome feedback, ideas, and bug reports. 
 If you're building AI agents with Airbyte AI Connectors and want to share ideas or get help, join our community on [slack](https://airbytehq.slack.com/ssb/redirect#/shared-invite/email). We’d love to hear what you're building and what connectors or capabilities you’d like to see next.
+
+
+Brought to you with love by Airbyte 💜
