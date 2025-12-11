@@ -2,11 +2,144 @@
   "connector_name": "asana",
   "class_name": "AsanaConnector",
   "package_name": "airbyte_ai_asana",
-  "package_version": "0.19.3",
+  "package_version": "0.19.4",
   "yaml_version": "0.1.0",
   "api_reference_url": "https://developers.asana.com/reference/rest-api-reference",
-  "commit_sha": "f2497f7128da08585d1470953e773671d33f348f",
+  "commit_sha": "bdd5df6d00c95fe27bf5a01652296763fbc05614",
   "auth_example": "AsanaAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": "\nfrom airbyte_ai_asana.models import AsanaAuthConfig",
+  "first_operation": {
+    "method_name": "list_tasks",
+    "http_method": "get",
+    "path": "/tasks",
+    "entity": "tasks",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "required": null,
+        "description": "Number of items to return per page"
+      },
+      {
+        "name": "offset",
+        "python_name": "offset",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9"
+        },
+        "required": null,
+        "description": "Pagination offset token"
+      },
+      {
+        "name": "project",
+        "python_name": "project",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The project to filter tasks on"
+      },
+      {
+        "name": "workspace",
+        "python_name": "workspace",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The workspace to filter tasks on"
+      },
+      {
+        "name": "section",
+        "python_name": "section",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The workspace to filter tasks on"
+      },
+      {
+        "name": "assignee",
+        "python_name": "assignee",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "123456789"
+        },
+        "required": null,
+        "description": "The assignee to filter tasks on"
+      },
+      {
+        "name": "completed_since",
+        "python_name": "completed_since",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T00:00:00Z"
+        },
+        "required": null,
+        "description": "Only return tasks that have been completed since this time"
+      },
+      {
+        "name": "modified_since",
+        "python_name": "modified_since",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T00:00:00Z"
+        },
+        "required": null,
+        "description": "Only return tasks that have been completed since this time"
+      }
+    ],
+    "params_type_name": "TasksListParams",
+    "response_type": "TasksListResult",
+    "description": "Returns a paginated list of tasks",
+    "has_record_extractor": true,
+    "has_meta_extractor": true,
+    "needs_envelope": true,
+    "record_type": "list[TaskCompact]",
+    "is_list_verb": true,
+    "meta_fields": [
+      {
+        "name": "next_page",
+        "type": "dict[str, Any] | None",
+        "schema": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "offset": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "is_download": false
+  },
   "sdk_version": "0.1.0"
 }

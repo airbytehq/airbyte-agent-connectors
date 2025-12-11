@@ -136,9 +136,7 @@ Get a single task by its ID
 **Python SDK**
 
 ```python
-asana.tasks.get(
-    task_gid="<str>"
-)
+asana.tasks.get(    task_gid="<str>")
 ```
 
 **API**
@@ -185,9 +183,7 @@ Returns all tasks in a project
 **Python SDK**
 
 ```python
-asana.project_tasks.list(
-    project_gid="<str>"
-)
+asana.project_tasks.list(    project_gid="<str>")
 ```
 
 **API**
@@ -247,9 +243,7 @@ Returns tasks that match the specified search criteria. Note - This endpoint req
 **Python SDK**
 
 ```python
-asana.workspace_task_search.list(
-    workspace_gid="<str>"
-)
+asana.workspace_task_search.list(    workspace_gid="<str>")
 ```
 
 **API**
@@ -378,9 +372,7 @@ Get a single project by its ID
 **Python SDK**
 
 ```python
-asana.projects.get(
-    project_gid="<str>"
-)
+asana.projects.get(    project_gid="<str>")
 ```
 
 **API**
@@ -454,9 +446,7 @@ Returns all projects a task is in
 **Python SDK**
 
 ```python
-asana.task_projects.list(
-    task_gid="<str>"
-)
+asana.task_projects.list(    task_gid="<str>")
 ```
 
 **API**
@@ -513,9 +503,7 @@ Returns all projects for a team
 **Python SDK**
 
 ```python
-asana.team_projects.list(
-    team_gid="<str>"
-)
+asana.team_projects.list(    team_gid="<str>")
 ```
 
 **API**
@@ -573,9 +561,7 @@ Returns all projects in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_projects.list(
-    workspace_gid="<str>"
-)
+asana.workspace_projects.list(    workspace_gid="<str>")
 ```
 
 **API**
@@ -684,9 +670,7 @@ Get a single workspace by its ID
 **Python SDK**
 
 ```python
-asana.workspaces.get(
-    workspace_gid="<str>"
-)
+asana.workspaces.get(    workspace_gid="<str>")
 ```
 
 **API**
@@ -790,9 +774,7 @@ Get a single user by their ID
 **Python SDK**
 
 ```python
-asana.users.get(
-    user_gid="<str>"
-)
+asana.users.get(    user_gid="<str>")
 ```
 
 **API**
@@ -844,9 +826,7 @@ Returns all users in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_users.list(
-    workspace_gid="<str>"
-)
+asana.workspace_users.list(    workspace_gid="<str>")
 ```
 
 **API**
@@ -903,9 +883,7 @@ Returns all users in a team
 **Python SDK**
 
 ```python
-asana.team_users.list(
-    team_gid="<str>"
-)
+asana.team_users.list(    team_gid="<str>")
 ```
 
 **API**
@@ -962,9 +940,7 @@ Get a single team by its ID
 **Python SDK**
 
 ```python
-asana.teams.get(
-    team_gid="<str>"
-)
+asana.teams.get(    team_gid="<str>")
 ```
 
 **API**
@@ -1015,9 +991,7 @@ Returns all teams in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_teams.list(
-    workspace_gid="<str>"
-)
+asana.workspace_teams.list(    workspace_gid="<str>")
 ```
 
 **API**
@@ -1074,10 +1048,7 @@ Returns all teams a user is a member of
 **Python SDK**
 
 ```python
-asana.user_teams.list(
-    user_gid="<str>",
-    organization="<str>"
-)
+asana.user_teams.list(    user_gid="<str>",    organization="<str>")
 ```
 
 **API**
