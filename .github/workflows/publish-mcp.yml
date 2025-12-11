@@ -35,7 +35,7 @@ jobs:
       - name: Send Slack notification
         uses: ./.github/actions/notification-to-slack
         with:
-          slackbot_token: ${{ secrets.SLACK_BOT_TOKEN_AIRBYTE_AI_CONNECTORS }}
+          slackbot_token: ${{ secrets.SLACK_AIRBYTE_TOOLING_BOT_API_TOKEN }}
           channel: C07PPP45S78  # #ask-devin-ai
           message_text: ":x: MCP publish workflow failed!"
           message_body: |
