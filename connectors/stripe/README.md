@@ -14,7 +14,9 @@ uv pip install airbyte-ai-stripe
 from airbyte_ai_stripe import StripeConnector
 from airbyte_ai_stripe.models import StripeAuthConfig
 
-connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))result = connector.customers.list()```
+connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))
+result = connector.customers.list()
+```
 
 ## Documentation
 
@@ -24,8 +26,8 @@ For the service's official API docs, see [Stripe API Reference](https://docs.str
 
 ## Version Information
 
-**Package Version:** 0.5.4
+**Package Version:** 0.5.5
 
 **Connector Version:** 0.1.0
 
-**Generated with connector-sdk:** bdd5df6d00c95fe27bf5a01652296763fbc05614
+**Generated with connector-sdk:** 11427ac330c199db4b55578f96eb18ab6474610e
