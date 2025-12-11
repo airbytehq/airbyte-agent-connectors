@@ -1,4 +1,4 @@
-<div align="center" style="margin-bottom: 2rem">
+<div align="center">
   <a href="https://airbyte.ai/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset=".github/images/logo-dark.svg">
@@ -7,6 +7,8 @@
     </picture>
   </a>
 </div>
+
+<p/>
 
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Publish Connectors](https://github.com/airbytehq/airbyte-ai-connectors/actions/workflows/publish.yml/badge.svg)](https://github.com/airbytehq/airbyte-ai-connectors/actions/workflows/publish.yml)
