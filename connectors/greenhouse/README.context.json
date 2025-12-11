@@ -2,10 +2,11 @@
   "connector_name": "greenhouse",
   "class_name": "GreenhouseConnector",
   "package_name": "airbyte_ai_greenhouse",
-  "package_version": "0.17.2",
+  "package_version": "0.17.3",
   "yaml_version": "0.1.0",
-  "sdk_version": "0.1.0",
-  "actions_text": "\n### Candidates Actions\n- `list_candidates()` - Returns a paginated list of all candidates in the organization\n- `get_candidate()` - Get a single candidate by ID\n\n### Applications Actions\n- `list_applications()` - Returns a paginated list of all applications\n- `get_application()` - Get a single application by ID\n\n### Jobs Actions\n- `list_jobs()` - Returns a paginated list of all jobs in the organization\n- `get_job()` - Get a single job by ID\n\n### Offers Actions\n- `list_offers()` - Returns a paginated list of all offers\n- `get_offer()` - Get a single offer by ID\n\n### Users Actions\n- `list_users()` - Returns a paginated list of all users\n- `get_user()` - Get a single user by ID\n\n### Departments Actions\n- `list_departments()` - Returns a paginated list of all departments\n- `get_department()` - Get a single department by ID\n\n### Offices Actions\n- `list_offices()` - Returns a paginated list of all offices\n- `get_office()` - Get a single office by ID\n\n### Job_Posts Actions\n- `list_job_posts()` - Returns a paginated list of all job posts\n- `get_job_post()` - Get a single job post by ID\n\n### Sources Actions\n- `list_sources()` - Returns a paginated list of all sources\n\n### Scheduled_Interviews Actions\n- `list_scheduled_interviews()` - Returns a paginated list of all scheduled interviews\n- `get_scheduled_interview()` - Get a single scheduled interview by ID\n\n### Application_Attachment Actions\n- `download_application_attachment()` - Downloads an attachment (resume, cover letter, etc.) for an application by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n\n\n### Candidate_Attachment Actions\n- `download_candidate_attachment()` - Downloads an attachment (resume, cover letter, etc.) for a candidate by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n",
+  "api_reference_url": "https://developers.greenhouse.io/harvest.html",
+  "commit_sha": "f2497f7128da08585d1470953e773671d33f348f",
   "auth_example": "GreenhouseAuthConfig(api_key=\"...\")",
-  "auth_import": "\nfrom airbyte_ai_greenhouse.models import GreenhouseAuthConfig"
+  "auth_import": "\nfrom airbyte_ai_greenhouse.models import GreenhouseAuthConfig",
+  "sdk_version": "0.1.0"
 }
