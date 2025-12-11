@@ -22,9 +22,9 @@ from .models import (
     Ticket,
     TicketsList,
     SchemaLabels,
-    SchemaAssociationsItem,
     SchemaPropertiesItemModificationmetadata,
     SchemaPropertiesItem,
+    SchemaAssociationsItem,
     Schema,
     SchemasList,
     CRMObjectProperties,
@@ -38,7 +38,6 @@ from .models import (
     DealsSearchResultMeta,
     TicketsListResultMeta,
     TicketsSearchResultMeta,
-    SchemasListResultMeta,
     ObjectsListResultMeta,
     HubspotExecuteResult,
     HubspotExecuteResultWithMeta,
@@ -94,4 +93,4 @@ from .types import (
     ObjectsGetParams
 )
 
-__all__ = ["HubspotConnector", "HubspotAuthConfig", "ContactProperties", "Contact", "PagingNext", "Paging", "ContactsList", "CompanyProperties", "Company", "CompaniesList", "DealProperties", "Deal", "DealsList", "TicketProperties", "Ticket", "TicketsList", "SchemaLabels", "SchemaAssociationsItem", "SchemaPropertiesItemModificationmetadata", "SchemaPropertiesItem", "Schema", "SchemasList", "CRMObjectProperties", "CRMObject", "ObjectsList", "ContactsListResultMeta", "ContactsSearchResultMeta", "CompaniesListResultMeta", "CompaniesSearchResultMeta", "DealsListResultMeta", "DealsSearchResultMeta", "TicketsListResultMeta", "TicketsSearchResultMeta", "SchemasListResultMeta", "ObjectsListResultMeta", "HubspotExecuteResult", "HubspotExecuteResultWithMeta", "ContactsListResult", "ContactsSearchResult", "CompaniesListResult", "CompaniesSearchResult", "DealsListResult", "DealsSearchResult", "TicketsListResult", "TicketsSearchResult", "SchemasListResult", "ObjectsListResult", "ContactsSearchParamsFiltergroupsItemFiltersItem", "ContactsSearchParamsFiltergroupsItem", "ContactsSearchParamsSortsItem", "CompaniesSearchParamsFiltergroupsItemFiltersItem", "CompaniesSearchParamsFiltergroupsItem", "CompaniesSearchParamsSortsItem", "DealsSearchParamsFiltergroupsItemFiltersItem", "DealsSearchParamsFiltergroupsItem", "DealsSearchParamsSortsItem", "TicketsSearchParamsFiltergroupsItemFiltersItem", "TicketsSearchParamsFiltergroupsItem", "TicketsSearchParamsSortsItem", "ContactProperties", "CompanyProperties", "DealProperties", "TicketProperties", "SchemaLabels", "SchemaPropertiesItemModificationmetadata", "SchemaPropertiesItem", "SchemaAssociationsItem", "CRMObjectProperties", "PagingNext", "ContactsListParams", "ContactsGetParams", "ContactsSearchParams", "CompaniesListParams", "CompaniesGetParams", "CompaniesSearchParams", "DealsListParams", "DealsGetParams", "DealsSearchParams", "TicketsListParams", "TicketsGetParams", "TicketsSearchParams", "SchemasListParams", "SchemasGetParams", "ObjectsListParams", "ObjectsGetParams"]
+__all__ = ["HubspotConnector", "HubspotAuthConfig", "ContactProperties", "Contact", "PagingNext", "Paging", "ContactsList", "CompanyProperties", "Company", "CompaniesList", "DealProperties", "Deal", "DealsList", "TicketProperties", "Ticket", "TicketsList", "SchemaLabels", "SchemaPropertiesItemModificationmetadata", "SchemaPropertiesItem", "SchemaAssociationsItem", "Schema", "SchemasList", "CRMObjectProperties", "CRMObject", "ObjectsList", "ContactsListResultMeta", "ContactsSearchResultMeta", "CompaniesListResultMeta", "CompaniesSearchResultMeta", "DealsListResultMeta", "DealsSearchResultMeta", "TicketsListResultMeta", "TicketsSearchResultMeta", "ObjectsListResultMeta", "HubspotExecuteResult", "HubspotExecuteResultWithMeta", "ContactsListResult", "ContactsSearchResult", "CompaniesListResult", "CompaniesSearchResult", "DealsListResult", "DealsSearchResult", "TicketsListResult", "TicketsSearchResult", "SchemasListResult", "ObjectsListResult", "ContactsSearchParamsFiltergroupsItemFiltersItem", "ContactsSearchParamsFiltergroupsItem", "ContactsSearchParamsSortsItem", "CompaniesSearchParamsFiltergroupsItemFiltersItem", "CompaniesSearchParamsFiltergroupsItem", "CompaniesSearchParamsSortsItem", "DealsSearchParamsFiltergroupsItemFiltersItem", "DealsSearchParamsFiltergroupsItem", "DealsSearchParamsSortsItem", "TicketsSearchParamsFiltergroupsItemFiltersItem", "TicketsSearchParamsFiltergroupsItem", "TicketsSearchParamsSortsItem", "ContactProperties", "CompanyProperties", "DealProperties", "TicketProperties", "SchemaLabels", "SchemaPropertiesItemModificationmetadata", "SchemaPropertiesItem", "SchemaAssociationsItem", "CRMObjectProperties", "PagingNext", "ContactsListParams", "ContactsGetParams", "ContactsSearchParams", "CompaniesListParams", "CompaniesGetParams", "CompaniesSearchParams", "DealsListParams", "DealsGetParams", "DealsSearchParams", "TicketsListParams", "TicketsGetParams", "TicketsSearchParams", "SchemasListParams", "SchemasGetParams", "ObjectsListParams", "ObjectsGetParams"]

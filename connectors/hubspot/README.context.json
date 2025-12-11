@@ -1,0 +1,11 @@
+{
+  "connector_name": "hubspot",
+  "class_name": "HubspotConnector",
+  "package_name": "airbyte_ai_hubspot",
+  "package_version": "0.15.3",
+  "yaml_version": "0.1.1",
+  "sdk_version": "0.1.0",
+  "actions_text": "\n### Contacts Actions\n- `list_contacts()` - Returns a paginated list of contacts\n- `get_contact()` - Get a single contact by ID\n- `search_contacts()` - Search for contacts by filtering on properties, searching through associations, and sorting results.\n\n### Companies Actions\n- `list_companies()` - Retrieve all companies, using query parameters to control the information that gets returned.\n- `get_company()` - Get a single company by ID\n- `search_companies()` - Search for companies by filtering on properties, searching through associations, and sorting results.\n\n### Deals Actions\n- `list_deals()` - Returns a paginated list of deals\n- `get_deal()` - Get a single deal by ID\n- `search_deals()` - Search deals with filters and sorting\n\n### Tickets Actions\n- `list_tickets()` - Returns a paginated list of tickets\n- `get_ticket()` - Get a single ticket by ID\n- `search_tickets()` - Search for tickets by filtering on properties, searching through associations, and sorting results.\n\n### Schemas Actions\n- `list_schemas()` - Returns all custom object schemas to discover available custom objects\n- `get_schema()` - Get the schema for a specific custom object type\n\n### Objects Actions\n- `list_objects()` - Read a page of objects. Control what is returned via the properties query param.\n- `get_object()` - Read an Object identified by {objectId}. {objectId} refers to the internal object ID by default, or optionally any unique property value as specified by the idProperty query param. Control what is returned via the properties query param.",
+  "auth_example": "HubspotAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
+  "auth_import": "\nfrom airbyte_ai_hubspot.models import HubspotAuthConfig"
+}
