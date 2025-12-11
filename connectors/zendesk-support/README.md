@@ -26,8 +26,8 @@ For the service's official API docs, see [Zendesk-Support API Reference](https:/
 
 ## Version Information
 
-**Package Version:** 0.18.5
+**Package Version:** 0.18.6
 
 **Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** 11427ac330c199db4b55578f96eb18ab6474610e
+**Generated with connector-sdk:** 8c06aa103e1f805b2e8fad3f0ba7004db3d2773a
