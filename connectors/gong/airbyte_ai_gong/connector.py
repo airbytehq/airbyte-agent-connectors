@@ -78,7 +78,7 @@ class GongConnector:
     """
 
     connector_name = "gong"
-    connector_version = "0.1.0"
+    connector_version = "0.1.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -568,7 +568,7 @@ class CallsExtensiveQuery:
 
     async def list(
         self,
-        filter: CallsExtensiveListParamsFilter | None = None,
+        filter: CallsExtensiveListParamsFilter,
         content_selector: CallsExtensiveListParamsContentselector | None = None,
         cursor: str | None = None,
         **kwargs

@@ -138,7 +138,7 @@ class CallsGetParams(TypedDict):
 
 class CallsExtensiveListParams(TypedDict):
     """Parameters for calls_extensive.list operation"""
-    filter: NotRequired[CallsExtensiveListParamsFilter]
+    filter: CallsExtensiveListParamsFilter
     content_selector: NotRequired[CallsExtensiveListParamsContentselector]
     cursor: NotRequired[str]
 

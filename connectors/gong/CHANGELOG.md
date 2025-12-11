@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.19.7] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 38493f4d
+- SDK version: 0.1.0
+
 ## [0.19.6] - 2025-12-11
 - Updated connector definition (YAML version 0.1.0)
 - Source commit: 8c06aa10

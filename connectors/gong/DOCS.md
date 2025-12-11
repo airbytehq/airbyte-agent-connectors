@@ -140,7 +140,9 @@ Get a single user by ID
 **Python SDK**
 
 ```python
-gong.users.get(    id="<str>")
+gong.users.get(
+    id="<str>"
+)
 ```
 
 **API**
@@ -275,7 +277,9 @@ Get specific call data by ID
 **Python SDK**
 
 ```python
-gong.calls.get(    id="<str>")
+gong.calls.get(
+    id="<str>"
+)
 ```
 
 **API**
@@ -341,7 +345,9 @@ Retrieve detailed call data including participants, interaction stats, and conte
 **Python SDK**
 
 ```python
-gong.calls_extensive.list()
+gong.calls_extensive.list(
+    filter={}
+)
 ```
 
 **API**
@@ -352,7 +358,10 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "calls_extensive",
-    "action": "list"
+    "action": "list",
+    "params": {
+        "filter": {}
+    }
 }'
 ```
 
@@ -361,7 +370,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
-| `filter` | `object` | No |  |
+| `filter` | `object` | Yes |  |
 | `filter.fromDateTime` | `string` | No | Start date in ISO 8601 format |
 | `filter.toDateTime` | `string` | No | End date in ISO 8601 format |
 | `filter.callIds` | `array<string>` | No | List of specific call IDs to retrieve |
@@ -947,7 +956,9 @@ Retrieve the folder structure of the call library
 **Python SDK**
 
 ```python
-gong.library_folders.list(    workspace_id="<str>")
+gong.library_folders.list(
+    workspace_id="<str>"
+)
 ```
 
 **API**
@@ -998,7 +1009,9 @@ Retrieve calls in a specific library folder
 **Python SDK**
 
 ```python
-gong.library_folder_content.list(    folder_id="<str>")
+gong.library_folder_content.list(
+    folder_id="<str>"
+)
 ```
 
 **API**
@@ -1061,7 +1074,12 @@ Retrieve coaching metrics for a manager and their direct reports
 **Python SDK**
 
 ```python
-gong.coaching.list(    workspace_id="<str>",    manager_id="<str>",    from_="<str>",    to="<str>")
+gong.coaching.list(
+    workspace_id="<str>",
+    manager_id="<str>",
+    from_="2025-01-01T00:00:00Z",
+    to="2025-01-01T00:00:00Z"
+)
 ```
 
 **API**
@@ -1076,8 +1094,8 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
     "params": {
         "workspace-id": "<str>",
         "manager-id": "<str>",
-        "from": "<str>",
-        "to": "<str>"
+        "from": "2025-01-01T00:00:00Z",
+        "to": "2025-01-01T00:00:00Z"
     }
 }'
 ```

@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Gong API Connector
-  version: 0.1.0
+  version: 0.1.1
   description: Connector for Gong API
   x-airbyte-connector-name: gong
   x-airbyte-connector-id: 32382e40-3b49-4b99-9c5c-4076501914e7
@@ -160,6 +160,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
