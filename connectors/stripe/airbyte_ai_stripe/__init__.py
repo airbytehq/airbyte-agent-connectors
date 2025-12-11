@@ -14,9 +14,8 @@ from .models import (
     StripeExecuteResultWithMeta
 )
 from .types import (
-    CustomerAddress,
     CustomersListParams,
     CustomersGetParams
 )
 
-__all__ = ["StripeConnector", "StripeAuthConfig", "CustomerAddress", "Customer", "CustomerList", "StripeExecuteResult", "StripeExecuteResultWithMeta", "CustomerAddress", "CustomersListParams", "CustomersGetParams"]
+__all__ = ["StripeConnector", "StripeAuthConfig", "CustomerAddress", "Customer", "CustomerList", "StripeExecuteResult", "StripeExecuteResultWithMeta", "CustomersListParams", "CustomersGetParams"]

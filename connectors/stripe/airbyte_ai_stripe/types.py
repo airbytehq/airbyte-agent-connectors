@@ -14,15 +14,6 @@ except ImportError:
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
-class CustomerAddress(TypedDict):
-    """Customer's address"""
-    line1: NotRequired[str]
-    line2: NotRequired[str]
-    city: NotRequired[str]
-    state: NotRequired[str]
-    postal_code: NotRequired[str]
-    country: NotRequired[str]
-
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class CustomersListParams(TypedDict):

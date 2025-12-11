@@ -518,6 +518,37 @@ class LocalExecutor:
         """
         return {key: value for key, value in params.items() if key in allowed_fields}
 
+    def _serialize_deep_object_params(
+        self, params: dict[str, Any], deep_object_param_names: list[str]
+    ) -> dict[str, Any]:
+        """Serialize deepObject parameters to bracket notation format.
+
+        Converts nested dict parameters to the deepObject format expected by APIs
+        like Stripe. For example:
+        - Input: {'created': {'gte': 123, 'lte': 456}}
+        - Output: {'created[gte]': 123, 'created[lte]': 456}
+
+        Args:
+            params: Query parameters dict (may contain nested dicts)
+            deep_object_param_names: List of parameter names that use deepObject style
+
+        Returns:
+            Dictionary with deepObject params serialized to bracket notation
+        """
+        serialized = {}
+
+        for key, value in params.items():
+            if key in deep_object_param_names and isinstance(value, dict):
+                # Serialize nested dict to bracket notation
+                for subkey, subvalue in value.items():
+                    if subvalue is not None:  # Skip None values
+                        serialized[f"{key}[{subkey}]"] = subvalue
+            else:
+                # Keep non-deepObject params as-is (already validated by _extract_query_params)
+                serialized[key] = value
+
+        return serialized
+
     @staticmethod
     def _extract_download_url(
         response: dict[str, Any],
@@ -1106,6 +1137,12 @@ class _StandardOperationHandler:
                     endpoint.query_params, params
                 )
 
+                # Serialize deepObject parameters to bracket notation
+                if endpoint.deep_object_params:
+                    query_params = self.ctx.executor._serialize_deep_object_params(
+                        query_params, endpoint.deep_object_params
+                    )
+
                 # Build request body (GraphQL or standard)
                 body = self.ctx.build_request_body(endpoint, params)
 
@@ -1237,6 +1274,12 @@ class _DownloadOperationHandler:
                 query_params = self.ctx.extract_query_params(
                     operation.query_params, params
                 )
+
+                # Serialize deepObject parameters to bracket notation
+                if operation.deep_object_params:
+                    query_params = self.ctx.executor._serialize_deep_object_params(
+                        query_params, operation.deep_object_params
+                    )
 
                 # Prepare headers (with optional Range support)
                 range_header = params.get("range_header")
