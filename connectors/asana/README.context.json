@@ -1,0 +1,11 @@
+{
+  "connector_name": "asana",
+  "class_name": "AsanaConnector",
+  "package_name": "airbyte_ai_asana",
+  "package_version": "0.19.2",
+  "yaml_version": "0.1.0",
+  "sdk_version": "0.1.0",
+  "actions_text": "\n### Tasks Actions\n- `list_tasks()` - Returns a paginated list of tasks\n- `get_task()` - Get a single task by its ID\n\n### Project_Tasks Actions\n- `list_project_tasks()` - Returns all tasks in a project\n\n### Workspace_Task_Search Actions\n- `search_workspace_tasks()` - Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account.\n\n### Projects Actions\n- `list_projects()` - Returns a paginated list of projects\n- `get_project()` - Get a single project by its ID\n\n### Task_Projects Actions\n- `list_task_projects()` - Returns all projects a task is in\n\n### Team_Projects Actions\n- `list_team_projects()` - Returns all projects for a team\n\n### Workspace_Projects Actions\n- `list_workspace_projects()` - Returns all projects in a workspace\n\n### Workspaces Actions\n- `list_workspaces()` - Returns a paginated list of workspaces\n- `get_workspace()` - Get a single workspace by its ID\n\n### Users Actions\n- `list_users()` - Returns a paginated list of users\n- `get_user()` - Get a single user by their ID\n\n### Workspace_Users Actions\n- `list_workspace_users()` - Returns all users in a workspace\n\n### Team_Users Actions\n- `list_team_users()` - Returns all users in a team\n\n### Teams Actions\n- `get_team()` - Get a single team by its ID\n\n### Workspace_Teams Actions\n- `list_workspace_teams()` - Returns all teams in a workspace\n\n### User_Teams Actions\n- `list_user_teams()` - Returns all teams a user is a member of",
+  "auth_example": "AsanaAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": "\nfrom airbyte_ai_asana.models import AsanaAuthConfig"
+}
