@@ -2,10 +2,10 @@
   "connector_name": "github",
   "class_name": "GithubConnector",
   "package_name": "airbyte_ai_github",
-  "package_version": "0.18.4",
+  "package_version": "0.18.5",
   "yaml_version": "0.1.0",
   "api_reference_url": "https://docs.github.com/en/rest",
-  "commit_sha": "bdd5df6d00c95fe27bf5a01652296763fbc05614",
+  "commit_sha": "11427ac330c199db4b55578f96eb18ab6474610e",
   "auth_example": "GithubAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": "\nfrom airbyte_ai_github.models import GithubAuthConfig",
   "first_operation": {
