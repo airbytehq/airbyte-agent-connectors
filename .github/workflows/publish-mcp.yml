@@ -19,64 +19,28 @@ jobs:
           python-version: '3.13'
       - name: Install build tools
         run: pip install build twine
-      - name: Get package version
-        id: version
+      - name: Get release info
+        id: release_info
         run: |
-          VERSION=$(python -c "import tomllib; print(tomllib.load(open('airbyte-agent-mcp/pyproject.toml', 'rb'))['project']['version'])")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Package version: $VERSION"
-      - name: Check if version exists on PyPI
-        id: check_pypi
-        run: |
-          PACKAGE_NAME="airbyte-agent-mcp"
-          VERSION="${{ steps.version.outputs.version }}"
-          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://pypi.org/pypi/${PACKAGE_NAME}/${VERSION}/json")
-          if [ "$HTTP_STATUS" = "200" ]; then
-            echo "Version $VERSION already exists on PyPI"
-            echo "should_publish=false" >> $GITHUB_OUTPUT
-          else
-            echo "Version $VERSION does not exist on PyPI (HTTP status: $HTTP_STATUS)"
-            echo "should_publish=true" >> $GITHUB_OUTPUT
-          fi
+          python scripts/release_info.py \
+            --pyproject airbyte-agent-mcp/pyproject.toml \
+            --changelog airbyte-agent-mcp/CHANGELOG.md \
+            --package-name airbyte-agent-mcp \
+            --github-output >> $GITHUB_OUTPUT
       - name: Build MCP package
-        if: steps.check_pypi.outputs.should_publish == 'true'
+        if: steps.release_info.outputs.should_publish == 'true'
         run: python -m build airbyte-agent-mcp/
       - name: Publish to PyPI
-        if: steps.check_pypi.outputs.should_publish == 'true'
+        if: steps.release_info.outputs.should_publish == 'true'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: twine upload airbyte-agent-mcp/dist/*
-      - name: Extract changelog for release notes
-        if: steps.check_pypi.outputs.should_publish == 'true'
-        id: changelog
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          CHANGELOG_FILE="airbyte-agent-mcp/CHANGELOG.md"
-          if [ -f "$CHANGELOG_FILE" ]; then
-            # Extract the section for this version (from ## [version] to the next ## [)
-            NOTES=$(awk "/^## \\[$VERSION\\]/{flag=1; next} /^## \\[/{flag=0} flag" "$CHANGELOG_FILE" | sed '/^$/d')
-            if [ -n "$NOTES" ]; then
-              echo "Found changelog notes for version $VERSION"
-              # Use heredoc for multiline output
-              {
-                echo "notes<<EOF"
-                echo "$NOTES"
-                echo "EOF"
-              } >> $GITHUB_OUTPUT
-            else
-              echo "No changelog notes found for version $VERSION"
-              echo "notes=Release of airbyte-agent-mcp version $VERSION" >> $GITHUB_OUTPUT
-            fi
-          else
-            echo "No CHANGELOG.md found"
-            echo "notes=Release of airbyte-agent-mcp version $VERSION" >> $GITHUB_OUTPUT
-          fi
       - name: Create GitHub Release
-        if: steps.check_pypi.outputs.should_publish == 'true'
+        if: steps.release_info.outputs.should_publish == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: airbyte-agent-mcp-v${{ steps.version.outputs.version }}
-          name: airbyte-agent-mcp ${{ steps.version.outputs.version }}
-          body: ${{ steps.changelog.outputs.notes }}
+          tag_name: airbyte-agent-mcp-v${{ steps.release_info.outputs.version }}
+          name: airbyte-agent-mcp ${{ steps.release_info.outputs.version }}
+          body: ${{ steps.release_info.outputs.notes }}
           generate_release_notes: false
