@@ -140,9 +140,7 @@ Get a single user by ID
 **Python SDK**
 
 ```python
-gong.users.get(
-    id="<str>"
-)
+gong.users.get(    id="<str>")
 ```
 
 **API**
@@ -277,9 +275,7 @@ Get specific call data by ID
 **Python SDK**
 
 ```python
-gong.calls.get(
-    id="<str>"
-)
+gong.calls.get(    id="<str>")
 ```
 
 **API**
@@ -435,8 +431,7 @@ Downloads the audio media file for a call. Temporarily, the request body must be
 **Python SDK**
 
 ```python
-async for chunk in gong.call_audio.download():
-    # Process each chunk (e.g., write to file)
+async for chunk in gong.call_audio.download():# Process each chunk (e.g., write to file)
     file.write(chunk)
 ```
 
@@ -478,8 +473,7 @@ Downloads the video media file for a call. Temporarily, the request body must be
 **Python SDK**
 
 ```python
-async for chunk in gong.call_video.download():
-    # Process each chunk (e.g., write to file)
+async for chunk in gong.call_video.download():# Process each chunk (e.g., write to file)
     file.write(chunk)
 ```
 
@@ -953,9 +947,7 @@ Retrieve the folder structure of the call library
 **Python SDK**
 
 ```python
-gong.library_folders.list(
-    workspace_id="<str>"
-)
+gong.library_folders.list(    workspace_id="<str>")
 ```
 
 **API**
@@ -1006,9 +998,7 @@ Retrieve calls in a specific library folder
 **Python SDK**
 
 ```python
-gong.library_folder_content.list(
-    folder_id="<str>"
-)
+gong.library_folder_content.list(    folder_id="<str>")
 ```
 
 **API**
@@ -1071,12 +1061,7 @@ Retrieve coaching metrics for a manager and their direct reports
 **Python SDK**
 
 ```python
-gong.coaching.list(
-    workspace_id="<str>",
-    manager_id="<str>",
-    from_="<str>",
-    to="<str>"
-)
+gong.coaching.list(    workspace_id="<str>",    manager_id="<str>",    from_="<str>",    to="<str>")
 ```
 
 **API**

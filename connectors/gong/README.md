@@ -14,11 +14,7 @@ uv pip install airbyte-ai-gong
 from airbyte_ai_gong import GongConnector
 from airbyte_ai_gong.models import GongAuthConfig
 
-# Create connector
-connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))
-
-# Use typed methods with full IDE autocomplete
-```
+connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))result = connector.users.list()```
 
 ## Documentation
 
@@ -28,8 +24,8 @@ For the service's official API docs, see [Gong API Reference](https://gong.app.g
 
 ## Version Information
 
-**Package Version:** 0.19.3
+**Package Version:** 0.19.4
 
 **Connector Version:** 0.1.0
 
-**Generated with connector-sdk:** f2497f7128da08585d1470953e773671d33f348f
+**Generated with connector-sdk:** bdd5df6d00c95fe27bf5a01652296763fbc05614
