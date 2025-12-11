@@ -85,6 +85,10 @@ class EndpointDefinition(BaseModel):
     description: str | None = None
     body_fields: list[str] = Field(default_factory=list)  # For POST/PUT
     query_params: list[str] = Field(default_factory=list)  # For GET
+    deep_object_params: list[str] = Field(
+        default_factory=list,
+        description="Query parameters using deepObject style (e.g., filter[key]=value)",
+    )  # For GET with deepObject query params
     path_params: list[str] = Field(default_factory=list)  # Extracted from path
     content_type: ContentType = ContentType.JSON
     request_schema: dict[str, Any] | None = None

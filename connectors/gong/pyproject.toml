@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-ai-gong"
-version = "0.19.5"
+version = "0.19.6"
 description = "Airbyte Gong Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
