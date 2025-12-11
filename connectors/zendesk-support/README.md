@@ -18,110 +18,18 @@ from airbyte_ai_zendesk_support.models import ZendeskSupportAuthConfig
 connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
 
 # Use typed methods with full IDE autocomplete
-# (See Available Actions below for all methods)
 ```
-
-## Available Actions
-
-### Tickets Actions
-- `list_tickets()` - Returns a list of all tickets in your account
-- `get_ticket()` - Returns a ticket by its ID
-
-### Users Actions
-- `list_users()` - Returns a list of all users in your account
-- `get_user()` - Returns a user by their ID
-
-### Organizations Actions
-- `list_organizations()` - Returns a list of all organizations in your account
-- `get_organization()` - Returns an organization by its ID
-
-### Groups Actions
-- `list_groups()` - Returns a list of all groups in your account
-- `get_group()` - Returns a group by its ID
-
-### Ticket_Comments Actions
-- `list_ticket_comments()` - Returns a list of comments for a specific ticket
-
-### Attachments Actions
-- `get_attachment()` - Returns an attachment by its ID
-- `download_attachment()` - Downloads the file content of a ticket attachment
-
-### Ticket_Audits Actions
-- `list_ticket_audits()` - Returns a list of all ticket audits
-- `list_audits_for_ticket()` - Returns a list of audits for a specific ticket
-
-### Ticket_Metrics Actions
-- `list_ticket_metrics()` - Returns a list of all ticket metrics
-
-### Ticket_Fields Actions
-- `list_ticket_fields()` - Returns a list of all ticket fields
-- `get_ticket_field()` - Returns a ticket field by its ID
-
-### Brands Actions
-- `list_brands()` - Returns a list of all brands for the account
-- `get_brand()` - Returns a brand by its ID
-
-### Views Actions
-- `list_views()` - Returns a list of all views for the account
-- `get_view()` - Returns a view by its ID
-
-### Macros Actions
-- `list_macros()` - Returns a list of all macros for the account
-- `get_macro()` - Returns a macro by its ID
-
-### Triggers Actions
-- `list_triggers()` - Returns a list of all triggers for the account
-- `get_trigger()` - Returns a trigger by its ID
-
-### Automations Actions
-- `list_automations()` - Returns a list of all automations for the account
-- `get_automation()` - Returns an automation by its ID
-
-### Tags Actions
-- `list_tags()` - Returns a list of all tags used in the account
-
-### Satisfaction_Ratings Actions
-- `list_satisfaction_ratings()` - Returns a list of all satisfaction ratings
-- `get_satisfaction_rating()` - Returns a satisfaction rating by its ID
-
-### Group_Memberships Actions
-- `list_group_memberships()` - Returns a list of all group memberships
-
-### Organization_Memberships Actions
-- `list_organization_memberships()` - Returns a list of all organization memberships
-
-### Sla_Policies Actions
-- `list_sla_policies()` - Returns a list of all SLA policies
-- `get_sla_policy()` - Returns an SLA policy by its ID
-
-### Ticket_Forms Actions
-- `list_ticket_forms()` - Returns a list of all ticket forms for the account
-- `get_ticket_form()` - Returns a ticket form by its ID
-
-### Articles Actions
-- `list_articles()` - Returns a list of all articles in the Help Center
-- `get_article()` - Retrieves the details of a specific article
-
-### Article_Attachments Actions
-- `list_article_attachments()` - Returns a list of all attachments for a specific article
-- `get_article_attachment_metadata()` - Retrieves the metadata of a specific attachment for a specific article
-- `download_article_attachment()` - Downloads the file content of a specific attachment
-
-## Type Definitions
-
-All response types are fully typed using Pydantic models for IDE autocomplete support.
-Import types from `airbyte_ai_zendesk_support.types`.
 
 ## Documentation
 
-Generated from OpenAPI 3.0 specification.
+For available actions and detailed API documentation, see [DOCS.md](./DOCS.md).
 
-For API documentation, see the service's official API docs.
+For the service's official API docs, see [Zendesk-Support API Reference](https://developer.zendesk.com/api-reference/ticketing/introduction/).
 
 ## Version Information
 
-**Package Version:** 0.18.2
+**Package Version:** 0.18.3
 
 **Connector Version:** 0.1.1
 
-**SDK Version:** 0.1.0
+**Generated with connector-sdk:** f2497f7128da08585d1470953e773671d33f348f
