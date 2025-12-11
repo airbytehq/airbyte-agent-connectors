@@ -1,0 +1,11 @@
+{
+  "connector_name": "stripe",
+  "class_name": "StripeConnector",
+  "package_name": "airbyte_ai_stripe",
+  "package_version": "0.5.2",
+  "yaml_version": "0.1.0",
+  "sdk_version": "0.1.0",
+  "actions_text": "\n### Customers Actions\n- `customers__list()` - Returns a list of customers\n- `customers__get()` - Gets the details of an existing customer",
+  "auth_example": "StripeAuthConfig(token=\"...\")",
+  "auth_import": "\nfrom airbyte_ai_stripe.models import StripeAuthConfig"
+}

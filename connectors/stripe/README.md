@@ -2,12 +2,6 @@
 
 Type-safe Stripe API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.5.1
-
-**Connector Version:** 0.1.0
-
-**SDK Version:** 0.1.0
-
 ## Installation
 
 ```bash
@@ -24,18 +18,18 @@ from airbyte_ai_stripe.models import StripeAuthConfig
 connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))
 
 # Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+# (See Available Actions below for all methods)
 ```
 
-## Available Operations
+## Available Actions
 
-### Customers Operations
+### Customers Actions
 - `customers__list()` - Returns a list of customers
 - `customers__get()` - Gets the details of an existing customer
 
 ## Type Definitions
 
-All response types are fully typed using TypedDict for IDE autocomplete support.
+All response types are fully typed using Pydantic models for IDE autocomplete support.
 Import types from `airbyte_ai_stripe.types`.
 
 ## Documentation
@@ -43,3 +37,11 @@ Import types from `airbyte_ai_stripe.types`.
 Generated from OpenAPI 3.0 specification.
 
 For API documentation, see the service's official API docs.
+
+## Version Information
+
+**Package Version:** 0.5.2
+
+**Connector Version:** 0.1.0
+
+**SDK Version:** 0.1.0
