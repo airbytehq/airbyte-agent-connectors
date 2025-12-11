@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-ai-greenhouse"
-version = "0.17.5"
+version = "0.17.6"
 description = "Airbyte Greenhouse Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
