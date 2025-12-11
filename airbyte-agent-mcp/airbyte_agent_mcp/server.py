@@ -16,6 +16,39 @@ logger = logging.getLogger(__name__)
 mcp = FastMCP("airbyte-agent-mcp")
 
 
+def _serialize_exception(e: Exception) -> dict:
+    """Serialize an exception to a JSON-safe dictionary.
+
+    Handles SDK exceptions that may contain non-serializable objects
+    like HTTPResponse in their __dict__.
+
+    Args:
+        e: The exception to serialize
+
+    Returns:
+        A JSON-serializable error dictionary
+    """
+    error_type = type(e).__name__
+
+    # Build error dict with safe, serializable values
+    error_dict: dict = {
+        "type": error_type,
+        "message": str(e),
+    }
+
+    # Extract useful fields from HTTP exceptions without including HTTPResponse objects
+    if hasattr(e, "status_code"):
+        error_dict["status_code"] = e.status_code
+
+    if hasattr(e, "retry_after") and e.retry_after is not None:
+        error_dict["retry_after"] = e.retry_after
+
+    if hasattr(e, "timeout_type") and e.timeout_type is not None:
+        error_dict["timeout_type"] = e.timeout_type
+
+    return error_dict
+
+
 @mcp.tool()
 async def execute(connector_id: str, entity: str, action: str, params: dict[str, Any] | None = None) -> dict:
     """Execute an operation on a connector.
@@ -71,11 +104,7 @@ async def execute(connector_id: str, entity: str, action: str, params: dict[str,
 
         response = ExecuteResponse(
             success=False,
-            error={
-                "type": "unknown",
-                "message": str(e),
-                "details": getattr(e, "__dict__", {}),
-            },
+            error=_serialize_exception(e),
             connector_id=connector_id,
             entity=entity,
             action=action,
