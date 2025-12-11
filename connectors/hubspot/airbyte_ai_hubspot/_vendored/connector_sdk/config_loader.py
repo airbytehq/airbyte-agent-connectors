@@ -304,12 +304,16 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
             # Extract parameters
             path_params = []
             query_params = []
+            deep_object_params = []
             if operation.parameters:
                 for param in operation.parameters:
                     if param.in_ == "path":
                         path_params.append(param.name)
                     elif param.in_ == "query":
                         query_params.append(param.name)
+                        # Check if this is a deepObject style parameter
+                        if hasattr(param, "style") and param.style == "deepObject":
+                            deep_object_params.append(param.name)
 
             # Extract body fields from request schema
             body_fields, request_schema, graphql_body = _extract_request_body_config(
@@ -344,6 +348,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 description=operation.description or operation.summary,
                 body_fields=body_fields,
                 query_params=query_params,
+                deep_object_params=deep_object_params,
                 path_params=path_params,
                 content_type=content_type,
                 request_schema=request_schema,

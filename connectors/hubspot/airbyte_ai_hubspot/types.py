@@ -9,7 +9,6 @@ try:
 except ImportError:
     from typing import TypedDict, NotRequired  # type: ignore[attr-defined]
 
-from typing import Any
 
 
 # ===== NESTED PARAM TYPE DEFINITIONS =====
@@ -78,109 +77,6 @@ class TicketsSearchParamsSortsItem(TypedDict):
     """Nested schema for TicketsSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
-
-class ContactProperties(TypedDict):
-    """Contact properties"""
-    createdate: NotRequired[str | None]
-    email: NotRequired[str | None]
-    firstname: NotRequired[str | None]
-    hs_object_id: NotRequired[str | None]
-    lastmodifieddate: NotRequired[str | None]
-    lastname: NotRequired[str | None]
-
-class CompanyProperties(TypedDict):
-    """Company properties"""
-    createdate: NotRequired[str | None]
-    domain: NotRequired[str | None]
-    hs_lastmodifieddate: NotRequired[str | None]
-    hs_object_id: NotRequired[str | None]
-    name: NotRequired[str | None]
-
-class DealProperties(TypedDict):
-    """Deal properties"""
-    amount: NotRequired[str | None]
-    closedate: NotRequired[str | None]
-    createdate: NotRequired[str | None]
-    dealname: NotRequired[str | None]
-    dealstage: NotRequired[str | None]
-    hs_lastmodifieddate: NotRequired[str | None]
-    hs_object_id: NotRequired[str | None]
-    pipeline: NotRequired[str | None]
-
-class TicketProperties(TypedDict):
-    """Ticket properties"""
-    content: NotRequired[str | None]
-    createdate: NotRequired[str | None]
-    hs_lastmodifieddate: NotRequired[str | None]
-    hs_object_id: NotRequired[str | None]
-    hs_pipeline: NotRequired[str | None]
-    hs_pipeline_stage: NotRequired[str | None]
-    hs_ticket_category: NotRequired[str | None]
-    hs_ticket_priority: NotRequired[str | None]
-    subject: NotRequired[str | None]
-
-class SchemaLabels(TypedDict):
-    """Display labels"""
-    singular: NotRequired[str]
-    plural: NotRequired[str]
-
-class SchemaPropertiesItemModificationmetadata(TypedDict):
-    """Nested schema for SchemaPropertiesItem.modificationMetadata"""
-    archivable: NotRequired[bool]
-    readOnlyDefinition: NotRequired[bool]
-    readOnlyValue: NotRequired[bool]
-    readOnlyOptions: NotRequired[bool]
-
-class SchemaPropertiesItem(TypedDict):
-    """Nested schema for Schema.properties_item"""
-    name: NotRequired[str]
-    label: NotRequired[str]
-    type: NotRequired[str]
-    fieldType: NotRequired[str]
-    description: NotRequired[str]
-    groupName: NotRequired[str]
-    displayOrder: NotRequired[int]
-    calculated: NotRequired[bool]
-    externalOptions: NotRequired[bool]
-    archived: NotRequired[bool]
-    hasUniqueValue: NotRequired[bool]
-    hidden: NotRequired[bool]
-    formField: NotRequired[bool]
-    dataSensitivity: NotRequired[str]
-    hubspotDefined: NotRequired[bool]
-    updatedAt: NotRequired[str]
-    createdAt: NotRequired[str]
-    options: NotRequired[list[Any]]
-    createdUserId: NotRequired[str]
-    updatedUserId: NotRequired[str]
-    showCurrencySymbol: NotRequired[bool]
-    modificationMetadata: NotRequired[SchemaPropertiesItemModificationmetadata]
-
-class SchemaAssociationsItem(TypedDict):
-    """Nested schema for Schema.associations_item"""
-    fromObjectTypeId: NotRequired[str]
-    toObjectTypeId: NotRequired[str]
-    name: NotRequired[str]
-    cardinality: NotRequired[str]
-    id: NotRequired[str]
-    inverseCardinality: NotRequired[str]
-    hasUserEnforcedMaxToObjectIds: NotRequired[bool]
-    hasUserEnforcedMaxFromObjectIds: NotRequired[bool]
-    maxToObjectIds: NotRequired[int]
-    maxFromObjectIds: NotRequired[int]
-    createdAt: NotRequired[str | None]
-    updatedAt: NotRequired[str | None]
-
-class CRMObjectProperties(TypedDict):
-    """Object properties"""
-    hs_createdate: NotRequired[str | None]
-    hs_lastmodifieddate: NotRequired[str | None]
-    hs_object_id: NotRequired[str | None]
-
-class PagingNext(TypedDict):
-    """Nested schema for Paging.next"""
-    after: NotRequired[str]
-    link: NotRequired[str]
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
