@@ -883,9 +883,6 @@ paths:
       x-airbyte-entity: schemas
       x-airbyte-action: list
       x-airbyte-record-extractor: $.results
-      x-airbyte-meta-extractor:
-        next_cursor: $.paging.next.after
-        next_link: $.paging.next.link
       parameters:
         - name: archived
           in: query

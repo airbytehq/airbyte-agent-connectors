@@ -962,8 +962,7 @@ class SchemasQuery:
         result = await self._connector.execute("schemas", "list", params)
         # Cast generic envelope to concrete typed result
         return SchemasListResult(
-            data=result.data,
-            meta=result.meta        )
+            data=result.data        )
 
 
 

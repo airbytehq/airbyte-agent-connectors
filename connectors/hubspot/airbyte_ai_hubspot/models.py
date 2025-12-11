@@ -190,23 +190,6 @@ class SchemaLabels(BaseModel):
     singular: Union[str, Any] = Field(default=None)
     plural: Union[str, Any] = Field(default=None)
 
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
-    name: Union[str, Any] = Field(default=None)
-    cardinality: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
-    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -242,6 +225,23 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: Union[str, Any] = Field(default=None, alias="updatedUserId")
     show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
+
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
+    name: Union[str, Any] = Field(default=None)
+    cardinality: Union[str, Any] = Field(default=None)
+    id: Union[str, Any] = Field(default=None)
+    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
+    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
 
 class Schema(BaseModel):
     """Custom object schema definition"""
@@ -311,75 +311,68 @@ class ContactsListResultMeta(BaseModel):
     """Metadata for contacts.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class ContactsSearchResultMeta(BaseModel):
     """Metadata for contacts.search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class CompaniesListResultMeta(BaseModel):
     """Metadata for companies.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class CompaniesSearchResultMeta(BaseModel):
     """Metadata for companies.search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class DealsListResultMeta(BaseModel):
     """Metadata for deals.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class DealsSearchResultMeta(BaseModel):
     """Metadata for deals.search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class TicketsListResultMeta(BaseModel):
     """Metadata for tickets.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class TicketsSearchResultMeta(BaseModel):
     """Metadata for tickets.search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
-
-class SchemasListResultMeta(BaseModel):
-    """Metadata for schemas.list operation"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    next_cursor: Union[Any, Any] = Field(default=None)
-    next_link: Union[Any, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 class ObjectsListResultMeta(BaseModel):
     """Metadata for objects.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    next_cursor: Union[Paging, Any] = Field(default=None)
-    next_link: Union[Paging, Any] = Field(default=None)
+    next_cursor: Union[str, Any] = Field(default=None)
+    next_link: Union[str, Any] = Field(default=None)
 
 # ===== RESPONSE ENVELOPE MODELS =====
 
@@ -437,8 +430,8 @@ TicketsListResult = HubspotExecuteResultWithMeta[list[Ticket], TicketsListResult
 TicketsSearchResult = HubspotExecuteResultWithMeta[list[Ticket], TicketsSearchResultMeta]
 """Result type for tickets.search operation with data and metadata."""
 
-SchemasListResult = HubspotExecuteResultWithMeta[list[Schema], SchemasListResultMeta]
-"""Result type for schemas.list operation with data and metadata."""
+SchemasListResult = HubspotExecuteResult[list[Schema]]
+"""Result type for schemas.list operation."""
 
 ObjectsListResult = HubspotExecuteResultWithMeta[list[CRMObject], ObjectsListResultMeta]
 """Result type for objects.list operation with data and metadata."""
