@@ -2,10 +2,11 @@
   "connector_name": "linear",
   "class_name": "LinearConnector",
   "package_name": "airbyte_ai_linear",
-  "package_version": "0.19.2",
+  "package_version": "0.19.3",
   "yaml_version": "0.1.0",
-  "sdk_version": "0.1.0",
-  "actions_text": "\n### Issues Actions\n- `list_issues()` - Returns a paginated list of issues via GraphQL with pagination support\n- `get_issue()` - Get a single issue by ID via GraphQL\n\n### Projects Actions\n- `list_projects()` - Returns a paginated list of projects via GraphQL with pagination support\n- `get_project()` - Get a single project by ID via GraphQL\n\n### Teams Actions\n- `list_teams()` - Returns a list of teams via GraphQL with pagination support\n- `get_team()` - Get a single team by ID via GraphQL",
+  "api_reference_url": "https://linear.app/developers/graphql",
+  "commit_sha": "f2497f7128da08585d1470953e773671d33f348f",
   "auth_example": "LinearAuthConfig(api_key=\"...\")",
-  "auth_import": "\nfrom airbyte_ai_linear.models import LinearAuthConfig"
+  "auth_import": "\nfrom airbyte_ai_linear.models import LinearAuthConfig",
+  "sdk_version": "0.1.0"
 }

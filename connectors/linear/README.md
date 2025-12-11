@@ -18,38 +18,18 @@ from airbyte_ai_linear.models import LinearAuthConfig
 connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
 
 # Use typed methods with full IDE autocomplete
-# (See Available Actions below for all methods)
 ```
-
-## Available Actions
-
-### Issues Actions
-- `list_issues()` - Returns a paginated list of issues via GraphQL with pagination support
-- `get_issue()` - Get a single issue by ID via GraphQL
-
-### Projects Actions
-- `list_projects()` - Returns a paginated list of projects via GraphQL with pagination support
-- `get_project()` - Get a single project by ID via GraphQL
-
-### Teams Actions
-- `list_teams()` - Returns a list of teams via GraphQL with pagination support
-- `get_team()` - Get a single team by ID via GraphQL
-
-## Type Definitions
-
-All response types are fully typed using Pydantic models for IDE autocomplete support.
-Import types from `airbyte_ai_linear.types`.
 
 ## Documentation
 
-Generated from OpenAPI 3.0 specification.
+For available actions and detailed API documentation, see [DOCS.md](./DOCS.md).
 
-For API documentation, see the service's official API docs.
+For the service's official API docs, see [Linear API Reference](https://linear.app/developers/graphql).
 
 ## Version Information
 
-**Package Version:** 0.19.2
+**Package Version:** 0.19.3
 
 **Connector Version:** 0.1.0
 
-**SDK Version:** 0.1.0
+**Generated with connector-sdk:** f2497f7128da08585d1470953e773671d33f348f
