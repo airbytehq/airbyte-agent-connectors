@@ -132,9 +132,7 @@ Get a single contact by ID
 **Python SDK**
 
 ```python
-hubspot.contacts.get(
-    contact_id="<str>"
-)
+hubspot.contacts.get(    contact_id="<str>")
 ```
 
 **API**
@@ -329,9 +327,7 @@ Get a single company by ID
 **Python SDK**
 
 ```python
-hubspot.companies.get(
-    company_id="<str>"
-)
+hubspot.companies.get(    company_id="<str>")
 ```
 
 **API**
@@ -526,9 +522,7 @@ Get a single deal by ID
 **Python SDK**
 
 ```python
-hubspot.deals.get(
-    deal_id="<str>"
-)
+hubspot.deals.get(    deal_id="<str>")
 ```
 
 **API**
@@ -723,9 +717,7 @@ Get a single ticket by ID
 **Python SDK**
 
 ```python
-hubspot.tickets.get(
-    ticket_id="<str>"
-)
+hubspot.tickets.get(    ticket_id="<str>")
 ```
 
 **API**
@@ -918,9 +910,7 @@ Get the schema for a specific custom object type
 **Python SDK**
 
 ```python
-hubspot.schemas.get(
-    object_type="<str>"
-)
+hubspot.schemas.get(    object_type="<str>")
 ```
 
 **API**
@@ -986,9 +976,7 @@ Read a page of objects. Control what is returned via the properties query param.
 **Python SDK**
 
 ```python
-hubspot.objects.list(
-    object_type="<str>"
-)
+hubspot.objects.list(    object_type="<str>")
 ```
 
 **API**
@@ -1055,10 +1043,7 @@ Read an Object identified by {objectId}. {objectId} refers to the internal objec
 **Python SDK**
 
 ```python
-hubspot.objects.get(
-    object_type="<str>",
-    object_id="<str>"
-)
+hubspot.objects.get(    object_type="<str>",    object_id="<str>")
 ```
 
 **API**
