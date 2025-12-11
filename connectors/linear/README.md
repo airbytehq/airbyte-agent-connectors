@@ -2,12 +2,6 @@
 
 Type-safe Linear API connector with full IDE autocomplete support for AI applications.
 
-**Package Version:** 0.19.1
-
-**Connector Version:** 0.1.0
-
-**SDK Version:** 0.1.0
-
 ## Installation
 
 ```bash
@@ -24,26 +18,26 @@ from airbyte_ai_linear.models import LinearAuthConfig
 connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
 
 # Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+# (See Available Actions below for all methods)
 ```
 
-## Available Operations
+## Available Actions
 
-### Issues Operations
+### Issues Actions
 - `list_issues()` - Returns a paginated list of issues via GraphQL with pagination support
 - `get_issue()` - Get a single issue by ID via GraphQL
 
-### Projects Operations
+### Projects Actions
 - `list_projects()` - Returns a paginated list of projects via GraphQL with pagination support
 - `get_project()` - Get a single project by ID via GraphQL
 
-### Teams Operations
+### Teams Actions
 - `list_teams()` - Returns a list of teams via GraphQL with pagination support
 - `get_team()` - Get a single team by ID via GraphQL
 
 ## Type Definitions
 
-All response types are fully typed using TypedDict for IDE autocomplete support.
+All response types are fully typed using Pydantic models for IDE autocomplete support.
 Import types from `airbyte_ai_linear.types`.
 
 ## Documentation
@@ -51,3 +45,11 @@ Import types from `airbyte_ai_linear.types`.
 Generated from OpenAPI 3.0 specification.
 
 For API documentation, see the service's official API docs.
+
+## Version Information
+
+**Package Version:** 0.19.2
+
+**Connector Version:** 0.1.0
+
+**SDK Version:** 0.1.0
