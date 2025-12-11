@@ -6,6 +6,9 @@ on:
     paths:
       - 'connectors/**'
 
+permissions:
+  contents: write
+
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
@@ -39,10 +42,28 @@ jobs:
         run: pip install build twine pytest pytest-asyncio httpx pydantic pyyaml python-dotenv
       - name: Install connector dependencies
         run: pip install connectors/${{ matrix.connector }}/
+      - name: Get release info
+        id: release_info
+        run: |
+          python scripts/release_info.py \
+            --pyproject connectors/${{ matrix.connector }}/pyproject.toml \
+            --changelog connectors/${{ matrix.connector }}/CHANGELOG.md \
+            --package-name airbyte-ai-${{ matrix.connector }} \
+            --github-output >> $GITHUB_OUTPUT
       - name: Build package
+        if: steps.release_info.outputs.should_publish == 'true'
         run: python -m build connectors/${{ matrix.connector }}/
       - name: Publish to PyPI
+        if: steps.release_info.outputs.should_publish == 'true'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload connectors/${{ matrix.connector }}/dist/* --skip-existing
+        run: twine upload connectors/${{ matrix.connector }}/dist/*
+      - name: Create GitHub Release
+        if: steps.release_info.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: airbyte-ai-${{ matrix.connector }}-v${{ steps.release_info.outputs.version }}
+          name: airbyte-ai-${{ matrix.connector }} ${{ steps.release_info.outputs.version }}
+          body: ${{ steps.release_info.outputs.notes }}
+          generate_release_notes: false

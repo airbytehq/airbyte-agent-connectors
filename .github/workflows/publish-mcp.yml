@@ -6,6 +6,9 @@ on:
     paths:
       - 'airbyte-agent-mcp/**'
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -16,10 +19,28 @@ jobs:
           python-version: '3.13'
       - name: Install build tools
         run: pip install build twine
+      - name: Get release info
+        id: release_info
+        run: |
+          python scripts/release_info.py \
+            --pyproject airbyte-agent-mcp/pyproject.toml \
+            --changelog airbyte-agent-mcp/CHANGELOG.md \
+            --package-name airbyte-agent-mcp \
+            --github-output >> $GITHUB_OUTPUT
       - name: Build MCP package
+        if: steps.release_info.outputs.should_publish == 'true'
         run: python -m build airbyte-agent-mcp/
       - name: Publish to PyPI
+        if: steps.release_info.outputs.should_publish == 'true'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload airbyte-agent-mcp/dist/* --skip-existing
+        run: twine upload airbyte-agent-mcp/dist/*
+      - name: Create GitHub Release
+        if: steps.release_info.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: airbyte-agent-mcp-v${{ steps.release_info.outputs.version }}
+          name: airbyte-agent-mcp ${{ steps.release_info.outputs.version }}
+          body: ${{ steps.release_info.outputs.notes }}
+          generate_release_notes: false
