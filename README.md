@@ -101,6 +101,75 @@ Inside each connector folder, you’ll find:
 * Typed methods generated from Airbyte’s connector definitions
 * Validation + error handling
 
+## Architecture
+
+### Connector SDK Execution Flow
+
+The Connector SDK enables execution of API operations defined in YAML-based OpenAPI 3.1 specifications with Airbyte extensions.
+
+```mermaid
+flowchart LR
+    subgraph Input
+        A[User Request] --> B[ExecutionConfig]
+    end
+
+    subgraph LocalExecutor
+        B --> C[Load Config]
+        C --> D[Find Operation]
+        D --> E[Build Request]
+        E --> F[Inject Auth]
+        F --> G[HTTP Request]
+        G --> H[Process Response]
+    end
+
+    subgraph Output
+        H --> I[ExecutionResult]
+    end
+```
+
+### MCP-Based Agentic Flow
+
+The Connector MCP Server exposes connector operations as MCP tools, enabling AI assistants to discover and execute API operations through a standardized protocol.
+
+```mermaid
+flowchart TB
+    subgraph AI["AI Assistant Layer"]
+        CD[Claude Desktop]
+        CU[Cursor]
+        CA[Custom Agent]
+    end
+
+    subgraph MCP["MCP Server Layer"]
+        FS[FastMCP Server]
+        CM[ConnectorManager]
+        SM[SecretsManager]
+    end
+
+    subgraph SDK["Connector SDK Layer"]
+        LE[LocalExecutor]
+        HC[HTTPClient]
+    end
+
+    subgraph APIs["External APIs"]
+        ST[Stripe]
+        GH[GitHub]
+        ZD[Zendesk]
+    end
+
+    CD <-->|stdio| FS
+    CU <-->|stdio| FS
+    CA <-->|stdio/SSE| FS
+
+    FS --> CM
+    CM --> SM
+    CM --> LE
+    LE --> HC
+
+    HC --> ST
+    HC --> GH
+    HC --> ZD
+```
+
 ## When to use these connectors
 Use Airbyte AI Connectors when you want:
 * Agent‑friendly data access: Let LLM agents call real SaaS APIs (e.g., CRM, billing, analytics) with guardrails and typed responses. 
