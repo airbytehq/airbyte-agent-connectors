@@ -14,11 +14,7 @@ uv pip install airbyte-ai-zendesk-support
 from airbyte_ai_zendesk_support import ZendeskSupportConnector
 from airbyte_ai_zendesk_support.models import ZendeskSupportAuthConfig
 
-# Create connector
-connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
-
-# Use typed methods with full IDE autocomplete
-```
+connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))result = connector.tickets.list()```
 
 ## Documentation
 
@@ -28,8 +24,8 @@ For the service's official API docs, see [Zendesk-Support API Reference](https:/
 
 ## Version Information
 
-**Package Version:** 0.18.3
+**Package Version:** 0.18.4
 
 **Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** f2497f7128da08585d1470953e773671d33f348f
+**Generated with connector-sdk:** bdd5df6d00c95fe27bf5a01652296763fbc05614

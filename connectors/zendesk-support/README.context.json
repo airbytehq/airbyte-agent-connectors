@@ -2,11 +2,100 @@
   "connector_name": "zendesk-support",
   "class_name": "ZendeskSupportConnector",
   "package_name": "airbyte_ai_zendesk_support",
-  "package_version": "0.18.3",
+  "package_version": "0.18.4",
   "yaml_version": "0.1.1",
   "api_reference_url": "https://developer.zendesk.com/api-reference/ticketing/introduction/",
-  "commit_sha": "f2497f7128da08585d1470953e773671d33f348f",
+  "commit_sha": "bdd5df6d00c95fe27bf5a01652296763fbc05614",
   "auth_example": "ZendeskSupportAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
   "auth_import": "\nfrom airbyte_ai_zendesk_support.models import ZendeskSupportAuthConfig",
+  "first_operation": {
+    "method_name": "list_tickets",
+    "http_method": "get",
+    "path": "/tickets.json",
+    "entity": "tickets",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "required": null,
+        "description": "Page number for pagination"
+      },
+      {
+        "name": "external_id",
+        "python_name": "external_id",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Lists tickets by external id"
+      },
+      {
+        "name": "sort",
+        "python_name": "sort",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "id",
+            "status",
+            "updated_at",
+            "-id",
+            "-status",
+            "-updated_at"
+          ]
+        },
+        "required": null,
+        "description": "Sort order"
+      }
+    ],
+    "params_type_name": "TicketsListParams",
+    "response_type": "TicketsListResult",
+    "description": "Returns a list of all tickets in your account",
+    "has_record_extractor": true,
+    "has_meta_extractor": true,
+    "needs_envelope": true,
+    "record_type": "list[Ticket]",
+    "is_list_verb": true,
+    "meta_fields": [
+      {
+        "name": "next_page",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "URL to the next page of results"
+        }
+      },
+      {
+        "name": "previous_page",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "URL to the previous page of results"
+        }
+      },
+      {
+        "name": "count",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Total count of records"
+        }
+      }
+    ],
+    "is_download": false
+  },
   "sdk_version": "0.1.0"
 }

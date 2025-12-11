@@ -186,9 +186,7 @@ Returns a ticket by its ID
 **Python SDK**
 
 ```python
-zendesk_support.tickets.get(
-    ticket_id="<str>"
-)
+zendesk_support.tickets.get(    ticket_id="<str>")
 ```
 
 **API**
@@ -362,9 +360,7 @@ Returns a user by their ID
 **Python SDK**
 
 ```python
-zendesk_support.users.get(
-    user_id="<str>"
-)
+zendesk_support.users.get(    user_id="<str>")
 ```
 
 **API**
@@ -511,9 +507,7 @@ Returns an organization by its ID
 **Python SDK**
 
 ```python
-zendesk_support.organizations.get(
-    organization_id="<str>"
-)
+zendesk_support.organizations.get(    organization_id="<str>")
 ```
 
 **API**
@@ -632,9 +626,7 @@ Returns a group by its ID
 **Python SDK**
 
 ```python
-zendesk_support.groups.get(
-    group_id="<str>"
-)
+zendesk_support.groups.get(    group_id="<str>")
 ```
 
 **API**
@@ -689,9 +681,7 @@ Returns a list of comments for a specific ticket
 **Python SDK**
 
 ```python
-zendesk_support.ticket_comments.list(
-    ticket_id="<str>"
-)
+zendesk_support.ticket_comments.list(    ticket_id="<str>")
 ```
 
 **API**
@@ -760,9 +750,7 @@ Returns an attachment by its ID
 **Python SDK**
 
 ```python
-zendesk_support.attachments.get(
-    attachment_id="<str>"
-)
+zendesk_support.attachments.get(    attachment_id="<str>")
 ```
 
 **API**
@@ -820,10 +808,7 @@ Downloads the file content of a ticket attachment
 **Python SDK**
 
 ```python
-async for chunk in zendesk_support.attachments.download(
-    attachment_id="<str>"
-):
-    # Process each chunk (e.g., write to file)
+async for chunk in zendesk_support.attachments.download(    attachment_id="<str>"):# Process each chunk (e.g., write to file)
     file.write(chunk)
 ```
 
@@ -918,9 +903,7 @@ Returns a list of audits for a specific ticket
 **Python SDK**
 
 ```python
-zendesk_support.ticket_audits.list(
-    ticket_id="<str>"
-)
+zendesk_support.ticket_audits.list(    ticket_id="<str>")
 ```
 
 **API**
@@ -1130,9 +1113,7 @@ Returns a ticket field by its ID
 **Python SDK**
 
 ```python
-zendesk_support.ticket_fields.get(
-    ticket_field_id="<str>"
-)
+zendesk_support.ticket_fields.get(    ticket_field_id="<str>")
 ```
 
 **API**
@@ -1268,9 +1249,7 @@ Returns a brand by its ID
 **Python SDK**
 
 ```python
-zendesk_support.brands.get(
-    brand_id="<str>"
-)
+zendesk_support.brands.get(    brand_id="<str>")
 ```
 
 **API**
@@ -1398,9 +1377,7 @@ Returns a view by its ID
 **Python SDK**
 
 ```python
-zendesk_support.views.get(
-    view_id="<str>"
-)
+zendesk_support.views.get(    view_id="<str>")
 ```
 
 **API**
@@ -1525,9 +1502,7 @@ Returns a macro by its ID
 **Python SDK**
 
 ```python
-zendesk_support.macros.get(
-    macro_id="<str>"
-)
+zendesk_support.macros.get(    macro_id="<str>")
 ```
 
 **API**
@@ -1648,9 +1623,7 @@ Returns a trigger by its ID
 **Python SDK**
 
 ```python
-zendesk_support.triggers.get(
-    trigger_id="<str>"
-)
+zendesk_support.triggers.get(    trigger_id="<str>")
 ```
 
 **API**
@@ -1769,9 +1742,7 @@ Returns an automation by its ID
 **Python SDK**
 
 ```python
-zendesk_support.automations.get(
-    automation_id="<str>"
-)
+zendesk_support.automations.get(    automation_id="<str>")
 ```
 
 **API**
@@ -1945,9 +1916,7 @@ Returns a satisfaction rating by its ID
 **Python SDK**
 
 ```python
-zendesk_support.satisfaction_ratings.get(
-    satisfaction_rating_id="<str>"
-)
+zendesk_support.satisfaction_ratings.get(    satisfaction_rating_id="<str>")
 ```
 
 **API**
@@ -2182,9 +2151,7 @@ Returns an SLA policy by its ID
 **Python SDK**
 
 ```python
-zendesk_support.sla_policies.get(
-    sla_policy_id="<str>"
-)
+zendesk_support.sla_policies.get(    sla_policy_id="<str>")
 ```
 
 **API**
@@ -2307,9 +2274,7 @@ Returns a ticket form by its ID
 **Python SDK**
 
 ```python
-zendesk_support.ticket_forms.get(
-    ticket_form_id="<str>"
-)
+zendesk_support.ticket_forms.get(    ticket_form_id="<str>")
 ```
 
 **API**
@@ -2439,9 +2404,7 @@ Retrieves the details of a specific article
 **Python SDK**
 
 ```python
-zendesk_support.articles.get(
-    id="<str>"
-)
+zendesk_support.articles.get(    id="<str>")
 ```
 
 **API**
@@ -2503,9 +2466,7 @@ Returns a list of all attachments for a specific article
 **Python SDK**
 
 ```python
-zendesk_support.article_attachments.list(
-    article_id="<str>"
-)
+zendesk_support.article_attachments.list(    article_id="<str>")
 ```
 
 **API**
@@ -2568,10 +2529,7 @@ Retrieves the metadata of a specific attachment for a specific article
 **Python SDK**
 
 ```python
-zendesk_support.article_attachments.get(
-    article_id="<str>",
-    attachment_id="<str>"
-)
+zendesk_support.article_attachments.get(    article_id="<str>",    attachment_id="<str>")
 ```
 
 **API**
@@ -2627,11 +2585,7 @@ Downloads the file content of a specific attachment
 **Python SDK**
 
 ```python
-async for chunk in zendesk_support.article_attachments.download(
-    article_id="<str>",
-    attachment_id="<str>"
-):
-    # Process each chunk (e.g., write to file)
+async for chunk in zendesk_support.article_attachments.download(    article_id="<str>",    attachment_id="<str>"):# Process each chunk (e.g., write to file)
     file.write(chunk)
 ```
 
