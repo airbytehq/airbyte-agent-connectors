@@ -1,6 +1,31 @@
 # Airbyte Github AI Connector
 
-Type-safe Github API connector with full IDE autocomplete support for AI applications.
+GitHub is a platform for version control and collaborative software development
+using Git. This connector provides access to repositories, branches, commits, issues,
+pull requests, reviews, comments, releases, organizations, teams, and users for
+development workflow analysis and project management insights.
+
+
+## Example Questions
+
+- Show me all open issues in my repositories this month
+- List the top 5 repositories I've starred recently
+- Analyze the commit trends in my main project over the last quarter
+- Find all pull requests created by [teamMember] in the past two weeks
+- Search for repositories related to machine learning in my organizations
+- Compare the number of contributors across my different team projects
+- Identify the most active branches in my main repository
+- Get details about the most recent releases in my organization
+- List all milestones for our current development sprint
+- Show me insights about pull request review patterns in our team
+
+## Unsupported Questions
+
+- Create a new issue in the project repository
+- Update the status of this pull request
+- Delete an old branch from the repository
+- Schedule a team review for this code
+- Assign a new label to this issue
 
 ## Installation
 
@@ -55,8 +80,8 @@ For the service's official API docs, see [Github API Reference](https://docs.git
 
 ## Version Information
 
-**Package Version:** 0.18.8
+**Package Version:** 0.18.9
 
-**Connector Version:** 0.1.0
+**Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
