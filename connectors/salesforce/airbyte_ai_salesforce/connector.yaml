@@ -5,8 +5,12 @@ openapi: 3.1.0
 
 info:
   title: Salesforce CRM API Connector
-  version: 1.0.2
-  description: Connector for Salesforce CRM REST API - supports core CRM objects and SOQL queries
+  version: 1.0.3
+  description: |
+    Salesforce is a cloud-based CRM platform that helps businesses manage customer
+    relationships, sales pipelines, and business operations. This connector provides
+    access to accounts, contacts, leads, opportunities, tasks, events, campaigns, cases,
+    notes, and attachments for sales analytics and customer relationship management.
   x-airbyte-connector-name: salesforce
   x-airbyte-connector-id: b117307c-14b6-41aa-9422-947e34922962
   x-airbyte-external-documentation-urls:
@@ -19,6 +23,23 @@ info:
     - type: rate_limits
       title: API Request Limits
       url: https://developer.salesforce.com/docs/atlas.en-us.salesforce_app_limits_cheatsheet.meta/salesforce_app_limits_cheatsheet/salesforce_app_limits_platform_api.htm
+  x-airbyte-example-questions:
+    supported:
+      - "Show me my top 5 opportunities this month"
+      - "List all contacts from [Company] in the last quarter"
+      - "Search for leads in the technology sector with revenue over $10M"
+      - "What trends can you identify in my recent sales pipeline?"
+      - "Summarize the open cases for my key accounts"
+      - "Find upcoming events related to my most important opportunities"
+      - "Analyze the performance of my recent marketing campaigns"
+      - "Identify the highest value opportunities I'm currently tracking"
+      - "Show me the notes and attachments for [customerX]'s account"
+    unsupported:
+      - "Create a new lead for [personX]"
+      - "Update the status of my sales opportunity"
+      - "Schedule a follow-up meeting with [customerX]"
+      - "Delete this old contact record"
+      - "Send an email to all contacts in this campaign"
 
 servers:
   - url: "{instance_url}/services/data/v59.0"

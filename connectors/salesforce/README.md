@@ -1,6 +1,30 @@
 # Airbyte Salesforce AI Connector
 
-Connector for Salesforce CRM REST API - supports core CRM objects and SOQL queries
+Salesforce is a cloud-based CRM platform that helps businesses manage customer
+relationships, sales pipelines, and business operations. This connector provides
+access to accounts, contacts, leads, opportunities, tasks, events, campaigns, cases,
+notes, and attachments for sales analytics and customer relationship management.
+
+
+## Example Questions
+
+- Show me my top 5 opportunities this month
+- List all contacts from [Company] in the last quarter
+- Search for leads in the technology sector with revenue over $10M
+- What trends can you identify in my recent sales pipeline?
+- Summarize the open cases for my key accounts
+- Find upcoming events related to my most important opportunities
+- Analyze the performance of my recent marketing campaigns
+- Identify the highest value opportunities I'm currently tracking
+- Show me the notes and attachments for [customerX]'s account
+
+## Unsupported Questions
+
+- Create a new lead for [personX]
+- Update the status of my sales opportunity
+- Schedule a follow-up meeting with [customerX]
+- Delete this old contact record
+- Send an email to all contacts in this campaign
 
 ## Installation
 
@@ -47,8 +71,8 @@ For the service's official API docs, see [Salesforce API Reference](https://deve
 
 ## Version Information
 
-**Package Version:** 0.1.2
+**Package Version:** 0.1.3
 
-**Connector Version:** 1.0.2
+**Connector Version:** 1.0.3
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
