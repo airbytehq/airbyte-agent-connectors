@@ -26,6 +26,8 @@ from ..observability import ObservabilitySession
 from ..auth_template import apply_auth_mapping
 from ..telemetry import SegmentTracker
 from ..types import (
+    AuthConfig,
+    AuthOption,
     ConnectorConfig,
     EntityDefinition,
     Action,
@@ -102,6 +104,7 @@ class LocalExecutor:
         config_path: str,
         secrets: dict[str, SecretStr] | None = None,
         auth_config: dict[str, SecretStr] | None = None,
+        auth_scheme: str | None = None,
         enable_logging: bool = False,
         log_file: str | None = None,
         execution_context: str | None = None,
@@ -122,6 +125,9 @@ class LocalExecutor:
             auth_config: User-facing auth configuration following x-airbyte-auth-config spec.
                 Will be transformed via auth_mapping to produce auth parameters.
                 Cannot be used together with secrets.
+            auth_scheme: (Multi-auth only) Explicit security scheme name to use.
+                If None, SDK will auto-select based on provided credentials.
+                Example: auth_scheme="githubOAuth"
             enable_logging: Enable request/response logging
             log_file: Path to log file (if enable_logging=True)
             execution_context: Execution context (mcp, direct, blessed, agent)
@@ -149,19 +155,13 @@ class LocalExecutor:
 
         self.config: ConnectorConfig = load_connector_config(config_path)
         self.on_token_refresh = on_token_refresh
-
-        # Determine which credentials to use and whether to apply mapping
-        if auth_config is not None:
-            # Apply auth config mapping (user-facing → auth parameters)
-            self.secrets = self._apply_auth_config_mapping(auth_config)
-        elif secrets is not None:
-            # Use secrets directly (bypass mapping - legacy behavior)
-            self.secrets = secrets
-        else:
-            # No credentials provided
-            self.secrets = None
-
         self.config_values = config_values or {}
+
+        # Handle auth selection for multi-auth or single-auth connectors
+        user_credentials = auth_config if auth_config is not None else secrets
+        selected_auth_config, self.secrets = self._initialize_auth(
+            user_credentials, auth_scheme
+        )
 
         # Create shared observability session
         self.session = ObservabilitySession(
@@ -191,7 +191,7 @@ class LocalExecutor:
         # Initialize async HTTP client with connection pooling
         self.http_client = HTTPClient(
             base_url=self.config.base_url,
-            auth_config=self.config.auth,
+            auth_config=selected_auth_config,
             secrets=self.secrets,
             config_values=self.config_values,
             logger=self.logger,
@@ -262,6 +262,11 @@ class LocalExecutor:
             # No matching auth_mapping found, use secrets as-is
             return user_secrets
 
+        # If required fields are missing and user provided no credentials,
+        # return as-is (allows empty auth for testing or optional auth)
+        if required_fields and not user_secrets:
+            return user_secrets
+
         # Convert SecretStr values to plain strings for template processing
         user_config_values = {
             key: (
@@ -282,6 +287,152 @@ class LocalExecutor:
         mapped_secrets = {key: SecretStr(value) for key, value in mapped_values.items()}
 
         return mapped_secrets
+
+    def _initialize_auth(
+        self,
+        user_credentials: dict[str, SecretStr] | None,
+        explicit_scheme: str | None,
+    ) -> tuple[AuthConfig, dict[str, SecretStr] | None]:
+        """Initialize authentication for single or multi-auth connectors.
+
+        Handles both legacy single-auth and new multi-auth connectors.
+        For multi-auth, explicit scheme selection is required.
+
+        Args:
+            user_credentials: User-provided credentials (auth_config or secrets)
+            explicit_scheme: Explicit scheme name for multi-auth (required for multi-auth)
+
+        Returns:
+            Tuple of (selected AuthConfig for HTTPClient, transformed secrets)
+
+        Raises:
+            ValueError: If multi-auth connector doesn't specify auth_scheme
+        """
+        # Multi-auth: explicit scheme selection required
+        if self.config.auth.is_multi_auth():
+            if not user_credentials:
+                available_schemes = [
+                    opt.scheme_name for opt in self.config.auth.options
+                ]
+                raise ValueError(
+                    "Multi-auth connector requires credentials. "
+                    f"Available schemes: {available_schemes}"
+                )
+
+            if not explicit_scheme:
+                available_schemes = [
+                    opt.scheme_name for opt in self.config.auth.options
+                ]
+                raise ValueError(
+                    "Multi-auth connector requires 'auth_scheme' parameter. "
+                    f"Available schemes: {available_schemes}"
+                )
+
+            selected_option, transformed_secrets = self._select_auth_option(
+                user_credentials, explicit_scheme
+            )
+
+            # Convert AuthOption to single-auth AuthConfig for HTTPClient
+            selected_auth_config = AuthConfig(
+                type=selected_option.type,
+                config=selected_option.config,
+                user_config_spec=None,  # Not needed by HTTPClient
+            )
+
+            return (selected_auth_config, transformed_secrets)
+
+        # Single-auth: use existing logic
+        if user_credentials is not None:
+            # Apply mapping if this is auth_config (not legacy secrets)
+            transformed_secrets = self._apply_auth_config_mapping(user_credentials)
+        else:
+            transformed_secrets = None
+
+        return (self.config.auth, transformed_secrets)
+
+    def _select_auth_option(
+        self,
+        user_credentials: dict[str, SecretStr],
+        scheme_name: str,
+    ) -> tuple[AuthOption, dict[str, SecretStr]]:
+        """Select authentication option by explicit scheme name.
+
+        Args:
+            user_credentials: User-provided credentials
+            scheme_name: Explicit scheme name (e.g., "githubOAuth")
+
+        Returns:
+            Tuple of (selected AuthOption, transformed secrets)
+
+        Raises:
+            ValueError: If scheme not found
+        """
+        options = self.config.auth.options
+        if not options:
+            raise ValueError("No auth options available in multi-auth config")
+
+        # Find matching scheme
+        for option in options:
+            if option.scheme_name == scheme_name:
+                transformed_secrets = self._apply_auth_mapping_for_option(
+                    user_credentials, option
+                )
+                return (option, transformed_secrets)
+
+        # Scheme not found
+        available = [opt.scheme_name for opt in options]
+        raise ValueError(
+            f"Auth scheme '{scheme_name}' not found. " f"Available schemes: {available}"
+        )
+
+    def _apply_auth_mapping_for_option(
+        self,
+        user_credentials: dict[str, SecretStr],
+        option: AuthOption,
+    ) -> dict[str, SecretStr]:
+        """Apply auth mapping for a specific auth option.
+
+        Transforms user credentials using the option's auth_mapping templates.
+
+        Args:
+            user_credentials: User-provided credentials
+            option: AuthOption to apply
+
+        Returns:
+            Transformed secrets after applying auth_mapping
+
+        Raises:
+            ValueError: If required fields are missing or mapping fails
+        """
+        if not option.user_config_spec:
+            # No mapping defined, use credentials as-is
+            return user_credentials
+
+        # Extract auth_mapping and required fields
+        user_config_spec = option.user_config_spec
+        auth_mapping = user_config_spec.auth_mapping
+        required_fields = user_config_spec.required
+
+        if not auth_mapping:
+            raise ValueError(f"No auth_mapping found for scheme '{option.scheme_name}'")
+
+        # Convert SecretStr to plain strings for template processing
+        user_config_values = {
+            key: (
+                value.get_secret_value()
+                if hasattr(value, "get_secret_value")
+                else str(value)
+            )
+            for key, value in user_credentials.items()
+        }
+
+        # Apply the auth_mapping templates
+        mapped_values = apply_auth_mapping(
+            auth_mapping, user_config_values, required_fields=required_fields
+        )
+
+        # Convert back to SecretStr
+        return {key: SecretStr(value) for key, value in mapped_values.items()}
 
     async def execute(self, config: ExecutionConfig) -> ExecutionResult:
         """Execute connector operation using handler pattern.

@@ -13,7 +13,14 @@ uv pip install airbyte-ai-hubspot
 ```python
 from airbyte_ai_hubspot import HubspotConnector, HubspotAuthConfig
 
-connector = HubspotConnector(auth_config=HubspotAuthConfig(client_id="...", client_secret="...", refresh_token="...", access_token="..."))
+connector = HubspotConnector(
+  auth_config=HubspotAuthConfig(
+    client_id="...",
+    client_secret="...",
+    refresh_token="...",
+    access_token="..."
+  )
+)
 result = connector.contacts.list()
 ```
 
@@ -35,8 +42,8 @@ For the service's official API docs, see [Hubspot API Reference](https://develop
 
 ## Version Information
 
-**Package Version:** 0.15.8
+**Package Version:** 0.15.9
 
 **Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** 9f7f8a98389c3775a4d22db1aa81fbb03020a65b
+**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
