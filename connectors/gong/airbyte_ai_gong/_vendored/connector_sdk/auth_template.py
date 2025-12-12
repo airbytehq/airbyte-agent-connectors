@@ -111,7 +111,10 @@ def apply_auth_mapping(
         user_config: Dict of user-provided field values
         required_fields: List of required field names. If a template references
             a variable not in user_config and that variable is not required,
-            the mapping is skipped. If None, all fields are treated as required.
+            the mapping is skipped. Behavior:
+            - None: all fields are treated as required (backward compatible)
+            - []: no fields are required (all optional)
+            - ["foo"]: only "foo" is required
 
     Returns:
         Dict of resolved auth parameters
@@ -120,7 +123,7 @@ def apply_auth_mapping(
         MissingVariableError: If a required template variable is not found
     """
     resolved = {}
-    required_set = set(required_fields) if required_fields else None
+    required_set = set(required_fields) if required_fields is not None else None
 
     for param, template in auth_mapping.items():
         try:

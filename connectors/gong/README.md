@@ -37,7 +37,12 @@ uv pip install airbyte-ai-gong
 ```python
 from airbyte_ai_gong import GongConnector, GongAuthConfig
 
-connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))
+connector = GongConnector(
+  auth_config=GongAuthConfig(
+    access_key="...",
+    access_key_secret="..."
+  )
+)
 result = connector.users.list()
 ```
 
@@ -69,8 +74,8 @@ For the service's official API docs, see [Gong API Reference](https://gong.app.g
 
 ## Version Information
 
-**Package Version:** 0.19.10
+**Package Version:** 0.19.11
 
 **Connector Version:** 0.1.3
 
-**Generated with connector-sdk:** 87a2243c3e5f93167e62a76e03cb92f1682434a4
+**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
