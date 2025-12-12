@@ -1,6 +1,30 @@
 # Airbyte Stripe AI Connector
 
-Type-safe Stripe API connector with full IDE autocomplete support for AI applications.
+Stripe is a payment processing platform that enables businesses to accept payments,
+manage subscriptions, and handle financial transactions. This connector provides
+access to customers for payment analytics and customer management.
+
+
+## Example Questions
+
+- Show me my top 10 customers by total revenue this month
+- List all customers who have spent over $5,000 in the last quarter
+- Analyze payment trends for my Stripe customers
+- Identify which customers have the most consistent subscription payments
+- Give me insights into my customer retention rates
+- Summarize the payment history for [customerX]
+- Compare customer spending patterns from last month to this month
+- Show me details about my highest-value Stripe customers
+- What are the key financial insights from my customer base?
+- Break down my customers by their average transaction value
+
+## Unsupported Questions
+
+- Create a new customer profile in Stripe
+- Update the billing information for [customerX]
+- Delete a customer record
+- Send a payment reminder to [customerX]
+- Schedule an automatic invoice for [Company]
 
 ## Installation
 
@@ -34,8 +58,8 @@ For the service's official API docs, see [Stripe API Reference](https://docs.str
 
 ## Version Information
 
-**Package Version:** 0.5.8
+**Package Version:** 0.5.9
 
-**Connector Version:** 0.1.0
+**Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
