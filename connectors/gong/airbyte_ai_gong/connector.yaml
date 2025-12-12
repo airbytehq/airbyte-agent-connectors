@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Gong API Connector
-  version: 0.1.2
+  version: 0.1.3
   description: |
     Gong is a revenue intelligence platform that captures and analyzes customer interactions
     across calls, emails, and web conferences. This connector provides access to users,
@@ -34,6 +34,9 @@ info:
     - type: api_reference
       title: Gong API Documentation
       url: https://gong.app.gong.io/settings/api/documentation
+    - type: api_release_history
+      title: Gong Technical Release Notes
+      url: https://help.gong.io/docs/release-notes
 
 servers:
   - url: https://api.gong.io
