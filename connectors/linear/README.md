@@ -1,6 +1,6 @@
 # Airbyte Linear AI Connector
 
-Type-safe Linear API connector with full IDE autocomplete support for AI applications.
+Connector for Linear GraphQL API
 
 ## Installation
 
@@ -11,8 +11,7 @@ uv pip install airbyte-ai-linear
 ## Usage
 
 ```python
-from airbyte_ai_linear import LinearConnector
-from airbyte_ai_linear.models import LinearAuthConfig
+from airbyte_ai_linear import LinearConnector, LinearAuthConfig
 
 connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
 result = connector.issues.list()
@@ -20,14 +19,21 @@ result = connector.issues.list()
 
 ## Documentation
 
-For available actions and detailed API documentation, see [DOCS.md](./DOCS.md).
+| Entity | Actions |
+|--------|---------|
+| Issues | [List](./REFERENCE.md#issues-list), [Get](./REFERENCE.md#issues-get) |
+| Projects | [List](./REFERENCE.md#projects-list), [Get](./REFERENCE.md#projects-get) |
+| Teams | [List](./REFERENCE.md#teams-list), [Get](./REFERENCE.md#teams-get) |
+
+
+For detailed documentation on available actions and parameters, see [REFERENCE.md](./REFERENCE.md).
 
 For the service's official API docs, see [Linear API Reference](https://linear.app/developers/graphql).
 
 ## Version Information
 
-**Package Version:** 0.19.6
+**Package Version:** 0.19.7
 
 **Connector Version:** 0.1.0
 
-**Generated with connector-sdk:** 8c06aa103e1f805b2e8fad3f0ba7004db3d2773a
+**Generated with connector-sdk:** 9f7f8a98389c3775a4d22db1aa81fbb03020a65b
