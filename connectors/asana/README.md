@@ -1,6 +1,31 @@
 # Airbyte Asana AI Connector
 
-Connector for Asana API
+Asana is a work management platform that helps teams organize, track, and manage
+projects and tasks. This connector provides access to tasks, projects, workspaces,
+teams, and users for project tracking, workload analysis, and productivity insights.
+
+
+## Example Questions
+
+- What tasks are assigned to me this week?
+- List all projects in my workspace
+- Summarize my team's workload and task completion rates
+- Show me the tasks for the [ProjectName] project
+- Who are the team members in my [TeamName] team?
+- Find all tasks related to [ClientName] across my workspaces
+- Analyze the most active projects in my workspace last month
+- Compare task completion rates between my different teams
+- Identify overdue tasks across all my projects
+- Show me details of my current workspace and its users
+
+## Unsupported Questions
+
+- Create a new task for [TeamMember]
+- Update the priority of this task
+- Delete the project [ProjectName]
+- Schedule a new team meeting
+- Add a new team member to [Workspace]
+- Move this task to another project
 
 ## Installation
 
@@ -50,8 +75,8 @@ For the service's official API docs, see [Asana API Reference](https://developer
 
 ## Version Information
 
-**Package Version:** 0.19.8
+**Package Version:** 0.19.9
 
-**Connector Version:** 0.1.0
+**Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180

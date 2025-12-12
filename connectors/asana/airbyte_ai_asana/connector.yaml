@@ -5,8 +5,11 @@ openapi: 3.1.0
 
 info:
   title: Asana API Connector
-  version: 0.1.0
-  description: Connector for Asana API
+  version: 0.1.1
+  description: |
+    Asana is a work management platform that helps teams organize, track, and manage
+    projects and tasks. This connector provides access to tasks, projects, workspaces,
+    teams, and users for project tracking, workload analysis, and productivity insights.
   x-airbyte-connector-name: asana
   x-airbyte-connector-id: d0243522-dccf-4978-8ba0-37ed47a0bdbf
   x-airbyte-external-documentation-urls:
@@ -25,6 +28,25 @@ info:
     - type: api_deprecations
       title: Asana API Deprecations
       url: https://developers.asana.com/docs/deprecations
+  x-airbyte-example-questions:
+    supported:
+      - "What tasks are assigned to me this week?"
+      - "List all projects in my workspace"
+      - "Summarize my team's workload and task completion rates"
+      - "Show me the tasks for the [ProjectName] project"
+      - "Who are the team members in my [TeamName] team?"
+      - "Find all tasks related to [ClientName] across my workspaces"
+      - "Analyze the most active projects in my workspace last month"
+      - "Compare task completion rates between my different teams"
+      - "Identify overdue tasks across all my projects"
+      - "Show me details of my current workspace and its users"
+    unsupported:
+      - "Create a new task for [TeamMember]"
+      - "Update the priority of this task"
+      - "Delete the project [ProjectName]"
+      - "Schedule a new team meeting"
+      - "Add a new team member to [Workspace]"
+      - "Move this task to another project"
 
 servers:
   - url: https://app.asana.com/api/1.0
