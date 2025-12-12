@@ -141,16 +141,17 @@ class HTTPClient:
             retry_config: Optional retry configuration for transient errors.
                 If None, uses default RetryConfig with sensible defaults.
         """
-        self.base_url = base_url.rstrip("/")
+        # Store original base_url template for re-rendering after token extraction
+        self._base_url_template = base_url.rstrip("/")
         self.config_values = config_values or {}
 
         # Substitute server variables in base_url (e.g., {subdomain} -> "mycompany")
+        self.base_url = self._base_url_template
         for var_name, var_value in self.config_values.items():
             self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
 
         self.auth_config = auth_config
         self.secrets = secrets
-        self.config_values = config_values or {}
         self.logger = logger or NullLogger()
         self.metrics = HTTPMetrics()
         self.on_token_refresh: TokenRefreshCallback = on_token_refresh
@@ -158,14 +159,23 @@ class HTTPClient:
 
         # Auth error handling with refresh lock (for strategies that support refresh)
         self._refresh_lock = asyncio.Lock()
+        # Track whether proactive credential initialization has been performed
+        self._credentials_initialized = False
 
-        # Validate base URL
+        # Validate base URL template
         if not base_url:
             raise ValueError("base_url cannot be empty")
 
-        if not base_url.startswith(("http://", "https://")):
+        # Check if base_url has unresolved template variables (e.g., {instance_url})
+        # These will be resolved later from token_extract in OAuth2 flows
+        has_unresolved_variables = "{" in self.base_url and "}" in self.base_url
+
+        # Only validate URL format if there are no unresolved variables
+        if not has_unresolved_variables and not self.base_url.startswith(
+            ("http://", "https://")
+        ):
             raise ValueError(
-                f"base_url must start with http:// or https://, got: {base_url}"
+                f"base_url must start with http:// or https://, got: {self.base_url}"
             )
 
         # Create HTTP client if not provided
@@ -263,6 +273,83 @@ class HTTPClient:
         strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
         return strategy.inject_auth(headers, self.auth_config.config, self.secrets)
 
+    async def _ensure_auth_initialized(self) -> None:
+        """Ensure authentication credentials are initialized.
+
+        For auth strategies that support proactive credential acquisition
+        (e.g., OAuth2 refresh-token-only mode), this method is called
+        before the first request to obtain necessary credentials.
+
+        Thread-safe via _refresh_lock. Only runs once per HTTPClient instance.
+        """
+        if self._credentials_initialized:
+            return
+
+        async with self._refresh_lock:
+            # Double-check after acquiring lock (another request may have initialized)
+            if self._credentials_initialized:
+                return
+
+            strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
+
+            result = await strategy.ensure_credentials(
+                config=self.auth_config.config,
+                secrets=self.secrets,
+                config_values=self.config_values,
+                http_client=None,  # Let strategy create its own client
+            )
+
+            if result:
+                # Notify callback if provided (for persistence)
+                if self.on_token_refresh is not None:
+                    try:
+                        # Build callback data with both tokens and extracted values
+                        callback_data = dict(result.tokens)
+                        if result.extracted_values:
+                            callback_data.update(result.extracted_values)
+
+                        # Support both sync and async callbacks
+                        callback_result = self.on_token_refresh(callback_data)
+                        if hasattr(callback_result, "__await__"):
+                            await callback_result
+                    except Exception as callback_error:
+                        self.logger.log_error(
+                            request_id=None,
+                            error=(
+                                "Token refresh callback failed during initialization: "
+                                f"{callback_error!s}"
+                            ),
+                            status_code=None,
+                        )
+
+                # Update secrets with new tokens (in-memory)
+                self.secrets.update(result.tokens)
+
+                # Update config_values and re-render base_url with extracted values
+                if result.extracted_values:
+                    self._apply_token_extract(result.extracted_values)
+
+            self._credentials_initialized = True
+
+    def _apply_token_extract(self, extracted_values: dict[str, str]) -> None:
+        """Apply extracted token values to config_values and re-render base_url.
+
+        This method is called after OAuth2 token refresh when the token response
+        includes values specified by x-airbyte-token-extract (e.g., instance_url
+        for Salesforce).
+
+        Args:
+            extracted_values: Dictionary of field name -> value extracted from
+                the token response
+        """
+        # Update config_values with extracted values
+        self.config_values.update(extracted_values)
+
+        # Re-render base_url with updated config_values
+        self.base_url = self._base_url_template
+        for var_name, var_value in self.config_values.items():
+            self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
+
     def _should_retry(
         self,
         exception: Exception,
@@ -359,6 +446,9 @@ class HTTPClient:
 
         This is the core request logic, separated from retry handling.
         """
+        # Ensure auth credentials are initialized (proactive refresh if needed)
+        await self._ensure_auth_initialized()
+
         # Check if path is a full URL (for CDN/external URLs)
         is_external_url = path.startswith(
             ("http://", "https://")
@@ -503,22 +593,28 @@ class HTTPClient:
             strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
 
             try:
-                new_tokens = await strategy.handle_auth_error(
+                result = await strategy.handle_auth_error(
                     status_code=status_code,
                     config=self.auth_config.config,
                     secrets=self.secrets,
                     config_values=self.config_values,
-                    http_client=self.client._client
-                    if hasattr(self.client, "_client")
-                    else None,
+                    http_client=None,  # Let strategy create its own client
                 )
 
-                if new_tokens:
+                if result:
+                    # Notify callback if provided (for persistence)
+                    # Include both tokens AND extracted values for full persistence
                     if self.on_token_refresh is not None:
                         try:
-                            result = self.on_token_refresh(new_tokens)
-                            if hasattr(result, "__await__"):
-                                await result
+                            # Build callback data with both tokens and extracted values
+                            callback_data = dict(result.tokens)
+                            if result.extracted_values:
+                                callback_data.update(result.extracted_values)
+
+                            # Support both sync and async callbacks
+                            callback_result = self.on_token_refresh(callback_data)
+                            if hasattr(callback_result, "__await__"):
+                                await callback_result
                         except Exception as callback_error:
                             self.logger.log_error(
                                 request_id=request_id,
@@ -526,7 +622,12 @@ class HTTPClient:
                                 status_code=status_code,
                             )
 
-                    self.secrets.update(new_tokens)
+                    # Update secrets with new tokens (in-memory)
+                    self.secrets.update(result.tokens)
+
+                    # Update config_values and re-render base_url with extracted values
+                    if result.extracted_values:
+                        self._apply_token_extract(result.extracted_values)
 
                     if self.secrets.get("access_token") != current_token:
                         # Retry with new token - this will go through full retry logic

@@ -13,7 +13,11 @@ uv pip install airbyte-ai-linear
 ```python
 from airbyte_ai_linear import LinearConnector, LinearAuthConfig
 
-connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
+connector = LinearConnector(
+  auth_config=LinearAuthConfig(
+    api_key="..."
+  )
+)
 result = connector.issues.list()
 ```
 
@@ -32,8 +36,8 @@ For the service's official API docs, see [Linear API Reference](https://linear.a
 
 ## Version Information
 
-**Package Version:** 0.19.7
+**Package Version:** 0.19.8
 
 **Connector Version:** 0.1.0
 
-**Generated with connector-sdk:** 9f7f8a98389c3775a4d22db1aa81fbb03020a65b
+**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
