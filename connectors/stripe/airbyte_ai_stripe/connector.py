@@ -13,8 +13,47 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
+    BalanceGetParams,
+    BalanceTransactionsGetParams,
+    BalanceTransactionsListParams,
+    BalanceTransactionsListParamsCreated,
+    ChargesGetParams,
+    ChargesListParams,
+    ChargesListParamsCreated,
+    ChargesSearchParams,
     CustomersGetParams,
     CustomersListParams,
+    CustomersListParamsCreated,
+    CustomersSearchParams,
+    DisputesGetParams,
+    DisputesListParams,
+    DisputesListParamsCreated,
+    InvoicesGetParams,
+    InvoicesListParams,
+    InvoicesListParamsCreated,
+    InvoicesSearchParams,
+    PaymentIntentsGetParams,
+    PaymentIntentsListParams,
+    PaymentIntentsListParamsCreated,
+    PaymentIntentsSearchParams,
+    PayoutsGetParams,
+    PayoutsListParams,
+    PayoutsListParamsArrivalDate,
+    PayoutsListParamsCreated,
+    ProductsGetParams,
+    ProductsListParams,
+    ProductsListParamsCreated,
+    ProductsSearchParams,
+    RefundsGetParams,
+    RefundsListParams,
+    RefundsListParamsCreated,
+    SubscriptionsGetParams,
+    SubscriptionsListParams,
+    SubscriptionsListParamsAutomaticTax,
+    SubscriptionsListParamsCreated,
+    SubscriptionsListParamsCurrentPeriodEnd,
+    SubscriptionsListParamsCurrentPeriodStart,
+    SubscriptionsSearchParams,
 )
 
 if TYPE_CHECKING:
@@ -23,8 +62,33 @@ if TYPE_CHECKING:
 from .models import (
     StripeExecuteResult,
     StripeExecuteResultWithMeta,
+    CustomersListResult,
+    CustomersSearchResult,
+    InvoicesListResult,
+    ChargesListResult,
+    SubscriptionsListResult,
+    RefundsListResult,
+    ProductsListResult,
+    ProductsSearchResult,
+    BalanceTransactionsListResult,
+    PaymentIntentsListResult,
+    PaymentIntentsSearchResult,
+    DisputesListResult,
+    PayoutsListResult,
+    Balance,
+    BalanceTransaction,
+    Charge,
+    ChargeSearchResult,
     Customer,
-    CustomerList,
+    Dispute,
+    Invoice,
+    InvoiceSearchResult,
+    PaymentIntent,
+    Payout,
+    Product,
+    Refund,
+    Subscription,
+    SubscriptionSearchResult,
 )
 
 
@@ -36,13 +100,38 @@ class StripeConnector:
     """
 
     connector_name = "stripe"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
     _EXTRACTOR_MAP = {
-        ("customers", "list"): False,
+        ("customers", "list"): True,
         ("customers", "get"): False,
+        ("customers", "search"): True,
+        ("invoices", "list"): True,
+        ("invoices", "get"): False,
+        ("invoices", "search"): False,
+        ("charges", "list"): True,
+        ("charges", "get"): False,
+        ("charges", "search"): False,
+        ("subscriptions", "list"): True,
+        ("subscriptions", "get"): False,
+        ("subscriptions", "search"): False,
+        ("refunds", "list"): True,
+        ("refunds", "get"): False,
+        ("products", "list"): True,
+        ("products", "get"): False,
+        ("products", "search"): True,
+        ("balance", "get"): False,
+        ("balance_transactions", "list"): True,
+        ("balance_transactions", "get"): False,
+        ("payment_intents", "list"): True,
+        ("payment_intents", "get"): False,
+        ("payment_intents", "search"): True,
+        ("disputes", "list"): True,
+        ("disputes", "get"): False,
+        ("payouts", "list"): True,
+        ("payouts", "get"): False,
     }
 
     def __init__(
@@ -73,7 +162,7 @@ class StripeConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))
+            connector = StripeConnector(auth_config=StripeAuthConfig(api_key="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = StripeConnector(
                 connector_id="connector-456",
@@ -128,6 +217,16 @@ class StripeConnector:
 
         # Initialize entity query objects
         self.customers = CustomersQuery(self)
+        self.invoices = InvoicesQuery(self)
+        self.charges = ChargesQuery(self)
+        self.subscriptions = SubscriptionsQuery(self)
+        self.refunds = RefundsQuery(self)
+        self.products = ProductsQuery(self)
+        self.balance = BalanceQuery(self)
+        self.balance_transactions = BalanceTransactionsQuery(self)
+        self.payment_intents = PaymentIntentsQuery(self)
+        self.disputes = DisputesQuery(self)
+        self.payouts = PayoutsQuery(self)
 
     @classmethod
     def get_default_config_path(cls) -> Path:
@@ -142,7 +241,7 @@ class StripeConnector:
         entity: Literal["customers"],
         action: Literal["list"],
         params: "CustomersListParams"
-    ) -> "CustomerList": ...
+    ) -> "CustomersListResult": ...
 
     @overload
     async def execute(
@@ -151,6 +250,206 @@ class StripeConnector:
         action: Literal["get"],
         params: "CustomersGetParams"
     ) -> "Customer": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["search"],
+        params: "CustomersSearchParams"
+    ) -> "CustomersSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoices"],
+        action: Literal["list"],
+        params: "InvoicesListParams"
+    ) -> "InvoicesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoices"],
+        action: Literal["get"],
+        params: "InvoicesGetParams"
+    ) -> "Invoice": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["invoices"],
+        action: Literal["search"],
+        params: "InvoicesSearchParams"
+    ) -> "InvoiceSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["charges"],
+        action: Literal["list"],
+        params: "ChargesListParams"
+    ) -> "ChargesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["charges"],
+        action: Literal["get"],
+        params: "ChargesGetParams"
+    ) -> "Charge": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["charges"],
+        action: Literal["search"],
+        params: "ChargesSearchParams"
+    ) -> "ChargeSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
+        action: Literal["list"],
+        params: "SubscriptionsListParams"
+    ) -> "SubscriptionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
+        action: Literal["get"],
+        params: "SubscriptionsGetParams"
+    ) -> "Subscription": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["subscriptions"],
+        action: Literal["search"],
+        params: "SubscriptionsSearchParams"
+    ) -> "SubscriptionSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["refunds"],
+        action: Literal["list"],
+        params: "RefundsListParams"
+    ) -> "RefundsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["refunds"],
+        action: Literal["get"],
+        params: "RefundsGetParams"
+    ) -> "Refund": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["list"],
+        params: "ProductsListParams"
+    ) -> "ProductsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["get"],
+        params: "ProductsGetParams"
+    ) -> "Product": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["search"],
+        params: "ProductsSearchParams"
+    ) -> "ProductsSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["balance"],
+        action: Literal["get"],
+        params: "BalanceGetParams"
+    ) -> "Balance": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["balance_transactions"],
+        action: Literal["list"],
+        params: "BalanceTransactionsListParams"
+    ) -> "BalanceTransactionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["balance_transactions"],
+        action: Literal["get"],
+        params: "BalanceTransactionsGetParams"
+    ) -> "BalanceTransaction": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intents"],
+        action: Literal["list"],
+        params: "PaymentIntentsListParams"
+    ) -> "PaymentIntentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intents"],
+        action: Literal["get"],
+        params: "PaymentIntentsGetParams"
+    ) -> "PaymentIntent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payment_intents"],
+        action: Literal["search"],
+        params: "PaymentIntentsSearchParams"
+    ) -> "PaymentIntentsSearchResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["disputes"],
+        action: Literal["list"],
+        params: "DisputesListParams"
+    ) -> "DisputesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["disputes"],
+        action: Literal["get"],
+        params: "DisputesGetParams"
+    ) -> "Dispute": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payouts"],
+        action: Literal["list"],
+        params: "PayoutsListParams"
+    ) -> "PayoutsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["payouts"],
+        action: Literal["get"],
+        params: "PayoutsGetParams"
+    ) -> "Payout": ...
 
 
     @overload
@@ -237,31 +536,37 @@ class CustomersQuery:
         starting_after: str | None = None,
         ending_before: str | None = None,
         email: str | None = None,
+        created: CustomersListParamsCreated | None = None,
         **kwargs
-    ) -> CustomerList:
+    ) -> CustomersListResult:
         """
-        Returns a list of customers
+        Returns a list of your customers. The customers are returned sorted by creation date, with the most recent customers appearing first.
 
         Args:
-            limit: A limit on the number of objects to be returned
-            starting_after: A cursor for use in pagination
-            ending_before: A cursor for use in pagination
-            email: Filter customers by email address
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            email: A case-sensitive filter on the list based on the customer's email field. The value must be a string.
+            created: Only return customers that were created during the given date interval.
             **kwargs: Additional parameters
 
         Returns:
-            CustomerList
+            CustomersListResult
         """
         params = {k: v for k, v in {
             "limit": limit,
             "starting_after": starting_after,
             "ending_before": ending_before,
             "email": email,
+            "created": created,
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("customers", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CustomersListResult(
+            data=result.data,
+            meta=result.meta        )
 
 
 
@@ -271,7 +576,7 @@ class CustomersQuery:
         **kwargs
     ) -> Customer:
         """
-        Gets the details of an existing customer
+        Retrieves a Customer object.
 
         Args:
             id: The customer ID
@@ -286,6 +591,964 @@ class CustomersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("customers", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> CustomersSearchResult:
+        """
+        Search for customers using Stripe's Search Query Language.
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomersSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "search", params)
+        # Cast generic envelope to concrete typed result
+        return CustomersSearchResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+class InvoicesQuery:
+    """
+    Query class for Invoices entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        collection_method: str | None = None,
+        created: InvoicesListParamsCreated | None = None,
+        customer: str | None = None,
+        customer_account: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        starting_after: str | None = None,
+        status: str | None = None,
+        subscription: str | None = None,
+        **kwargs
+    ) -> InvoicesListResult:
+        """
+        Returns a list of invoices
+
+        Args:
+            collection_method: The collection method of the invoices to retrieve
+            created: Only return customers that were created during the given date interval.
+            customer: Only return invoices for the customer specified by this customer ID.
+            customer_account: Only return invoices for the account specified by this account ID
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            status: The status of the invoices to retrieve
+            subscription: Only return invoices for the subscription specified by this subscription ID.
+            **kwargs: Additional parameters
+
+        Returns:
+            InvoicesListResult
+        """
+        params = {k: v for k, v in {
+            "collection_method": collection_method,
+            "created": created,
+            "customer": customer,
+            "customer_account": customer_account,
+            "ending_before": ending_before,
+            "limit": limit,
+            "starting_after": starting_after,
+            "status": status,
+            "subscription": subscription,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoices", "list", params)
+        # Cast generic envelope to concrete typed result
+        return InvoicesListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Invoice:
+        """
+        Retrieves the invoice with the given ID
+
+        Args:
+            id: The invoice ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Invoice
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoices", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> InvoiceSearchResult:
+        """
+        Search for invoices using Stripe's Search Query Language
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            InvoiceSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("invoices", "search", params)
+        return result
+
+
+
+class ChargesQuery:
+    """
+    Query class for Charges entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        created: ChargesListParamsCreated | None = None,
+        customer: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        payment_intent: str | None = None,
+        starting_after: str | None = None,
+        **kwargs
+    ) -> ChargesListResult:
+        """
+        Returns a list of charges you've previously created. The charges are returned in sorted order, with the most recent charges appearing first.
+
+        Args:
+            created: Only return customers that were created during the given date interval.
+            customer: Only return charges for the customer specified by this customer ID
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            payment_intent: Only return charges that were created by the PaymentIntent specified by this ID
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            **kwargs: Additional parameters
+
+        Returns:
+            ChargesListResult
+        """
+        params = {k: v for k, v in {
+            "created": created,
+            "customer": customer,
+            "ending_before": ending_before,
+            "limit": limit,
+            "payment_intent": payment_intent,
+            "starting_after": starting_after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("charges", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ChargesListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Charge:
+        """
+        Retrieves the details of a charge that has previously been created
+
+        Args:
+            id: The charge ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Charge
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("charges", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> ChargeSearchResult:
+        """
+        Search for charges using Stripe's Search Query Language
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don’t include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            ChargeSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("charges", "search", params)
+        return result
+
+
+
+class SubscriptionsQuery:
+    """
+    Query class for Subscriptions entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        automatic_tax: SubscriptionsListParamsAutomaticTax | None = None,
+        collection_method: str | None = None,
+        created: SubscriptionsListParamsCreated | None = None,
+        current_period_end: SubscriptionsListParamsCurrentPeriodEnd | None = None,
+        current_period_start: SubscriptionsListParamsCurrentPeriodStart | None = None,
+        customer: str | None = None,
+        customer_account: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        price: str | None = None,
+        starting_after: str | None = None,
+        status: str | None = None,
+        **kwargs
+    ) -> SubscriptionsListResult:
+        """
+        By default, returns a list of subscriptions that have not been canceled
+
+        Args:
+            automatic_tax: Filter subscriptions by their automatic tax settings.
+            collection_method: The collection method of the subscriptions to retrieve
+            created: Only return customers that were created during the given date interval.
+            current_period_end: Only return subscriptions whose minimum item current_period_end falls within the given date interval.
+            current_period_start: Only return subscriptions whose maximum item current_period_start falls within the given date interval.
+            customer: Only return subscriptions for the customer specified by this customer ID
+            customer_account: The ID of the account whose subscriptions will be retrieved.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            price: Filter for subscriptions that contain this recurring price ID.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            status: The status of the subscriptions to retrieve. Passing in a value of canceled will return all canceled subscriptions, including those belonging to deleted customers. Pass ended to find subscriptions that are canceled and subscriptions that are expired due to incomplete payment. Passing in a value of all will return subscriptions of all statuses. If no value is supplied, all subscriptions that have not been canceled are returned.
+            **kwargs: Additional parameters
+
+        Returns:
+            SubscriptionsListResult
+        """
+        params = {k: v for k, v in {
+            "automatic_tax": automatic_tax,
+            "collection_method": collection_method,
+            "created": created,
+            "current_period_end": current_period_end,
+            "current_period_start": current_period_start,
+            "customer": customer,
+            "customer_account": customer_account,
+            "ending_before": ending_before,
+            "limit": limit,
+            "price": price,
+            "starting_after": starting_after,
+            "status": status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SubscriptionsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Subscription:
+        """
+        Retrieves the subscription with the given ID
+
+        Args:
+            id: The subscription ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Subscription
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> SubscriptionSearchResult:
+        """
+        Search for subscriptions using Stripe's Search Query Language
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don't include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            SubscriptionSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("subscriptions", "search", params)
+        return result
+
+
+
+class RefundsQuery:
+    """
+    Query class for Refunds entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        charge: str | None = None,
+        created: RefundsListParamsCreated | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        payment_intent: str | None = None,
+        starting_after: str | None = None,
+        **kwargs
+    ) -> RefundsListResult:
+        """
+        Returns a list of all refunds you've previously created. The refunds are returned in sorted order, with the most recent refunds appearing first.
+
+        Args:
+            charge: Only return refunds for the charge specified by this charge ID
+            created: Only return customers that were created during the given date interval.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            payment_intent: Only return refunds for the PaymentIntent specified by this ID
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            **kwargs: Additional parameters
+
+        Returns:
+            RefundsListResult
+        """
+        params = {k: v for k, v in {
+            "charge": charge,
+            "created": created,
+            "ending_before": ending_before,
+            "limit": limit,
+            "payment_intent": payment_intent,
+            "starting_after": starting_after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("refunds", "list", params)
+        # Cast generic envelope to concrete typed result
+        return RefundsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Refund:
+        """
+        Retrieves the details of an existing refund
+
+        Args:
+            id: The refund ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Refund
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("refunds", "get", params)
+        return result
+
+
+
+class ProductsQuery:
+    """
+    Query class for Products entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        active: bool | None = None,
+        created: ProductsListParamsCreated | None = None,
+        ending_before: str | None = None,
+        ids: list[str] | None = None,
+        limit: int | None = None,
+        shippable: bool | None = None,
+        starting_after: str | None = None,
+        url: str | None = None,
+        **kwargs
+    ) -> ProductsListResult:
+        """
+        Returns a list of your products. The products are returned sorted by creation date, with the most recent products appearing first.
+
+        Args:
+            active: Only return products that are active or inactive
+            created: Only return products that were created during the given date interval.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_bar, your subsequent call can include ending_before=obj_bar in order to fetch the previous page of the list.
+            ids: Only return products with the given IDs
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            shippable: Only return products that can be shipped
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include starting_after=obj_foo in order to fetch the next page of the list.
+            url: Only return products with the given url
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductsListResult
+        """
+        params = {k: v for k, v in {
+            "active": active,
+            "created": created,
+            "ending_before": ending_before,
+            "ids": ids,
+            "limit": limit,
+            "shippable": shippable,
+            "starting_after": starting_after,
+            "url": url,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ProductsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Product:
+        """
+        Retrieves the details of an existing product. Supply the unique product ID and Stripe will return the corresponding product information.
+
+        Args:
+            id: The product ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Product
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> ProductsSearchResult:
+        """
+        Search for products using Stripe's Search Query Language.
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don't include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductsSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "search", params)
+        # Cast generic envelope to concrete typed result
+        return ProductsSearchResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+class BalanceQuery:
+    """
+    Query class for Balance entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        **kwargs
+    ) -> Balance:
+        """
+        Retrieves the current account balance, based on the authentication that was used to make the request.
+
+        Returns:
+            Balance
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("balance", "get", params)
+        return result
+
+
+
+class BalanceTransactionsQuery:
+    """
+    Query class for BalanceTransactions entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        created: BalanceTransactionsListParamsCreated | None = None,
+        currency: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        payout: str | None = None,
+        source: str | None = None,
+        starting_after: str | None = None,
+        type: str | None = None,
+        **kwargs
+    ) -> BalanceTransactionsListResult:
+        """
+        Returns a list of transactions that have contributed to the Stripe account balance (e.g., charges, transfers, and so forth). The transactions are returned in sorted order, with the most recent transactions appearing first.
+
+        Args:
+            created: Only return transactions that were created during the given date interval.
+            currency: Only return transactions in a certain currency. Three-letter ISO currency code, in lowercase.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            payout: For automatic Stripe payouts only, only returns transactions that were paid out on the specified payout ID.
+            source: Only returns the original transaction.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list.
+            type: Only returns transactions of the given type.
+            **kwargs: Additional parameters
+
+        Returns:
+            BalanceTransactionsListResult
+        """
+        params = {k: v for k, v in {
+            "created": created,
+            "currency": currency,
+            "ending_before": ending_before,
+            "limit": limit,
+            "payout": payout,
+            "source": source,
+            "starting_after": starting_after,
+            "type": type,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("balance_transactions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return BalanceTransactionsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> BalanceTransaction:
+        """
+        Retrieves the balance transaction with the given ID.
+
+        Args:
+            id: The ID of the desired balance transaction
+            **kwargs: Additional parameters
+
+        Returns:
+            BalanceTransaction
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("balance_transactions", "get", params)
+        return result
+
+
+
+class PaymentIntentsQuery:
+    """
+    Query class for PaymentIntents entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        created: PaymentIntentsListParamsCreated | None = None,
+        customer: str | None = None,
+        customer_account: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        starting_after: str | None = None,
+        **kwargs
+    ) -> PaymentIntentsListResult:
+        """
+        Returns a list of PaymentIntents. The payment intents are returned sorted by creation date, with the most recent payment intents appearing first.
+
+        Args:
+            created: Only return payment intents that were created during the given date interval.
+            customer: Only return payment intents for the customer specified by this customer ID
+            customer_account: Only return payment intents for the account specified by this account ID
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list.
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntentsListResult
+        """
+        params = {k: v for k, v in {
+            "created": created,
+            "customer": customer,
+            "customer_account": customer_account,
+            "ending_before": ending_before,
+            "limit": limit,
+            "starting_after": starting_after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intents", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PaymentIntentsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> PaymentIntent:
+        """
+        Retrieves the details of a PaymentIntent that has previously been created.
+
+        Args:
+            id: The ID of the payment intent
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntent
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intents", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: str,
+        limit: int | None = None,
+        page: str | None = None,
+        **kwargs
+    ) -> PaymentIntentsSearchResult:
+        """
+        Search for payment intents using Stripe's Search Query Language.
+
+        Args:
+            query: The search query string using Stripe's Search Query Language
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            page: A cursor for pagination across multiple pages of results. Don't include this parameter on the first call. Use the next_page value returned in a previous response to request subsequent results.
+            **kwargs: Additional parameters
+
+        Returns:
+            PaymentIntentsSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "limit": limit,
+            "page": page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payment_intents", "search", params)
+        # Cast generic envelope to concrete typed result
+        return PaymentIntentsSearchResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+class DisputesQuery:
+    """
+    Query class for Disputes entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        charge: str | None = None,
+        created: DisputesListParamsCreated | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        payment_intent: str | None = None,
+        starting_after: str | None = None,
+        **kwargs
+    ) -> DisputesListResult:
+        """
+        Returns a list of your disputes. The disputes are returned sorted by creation date, with the most recent disputes appearing first.
+
+        Args:
+            charge: Only return disputes associated to the charge specified by this charge ID
+            created: Only return disputes that were created during the given date interval.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            payment_intent: Only return disputes associated to the PaymentIntent specified by this PaymentIntent ID
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list.
+            **kwargs: Additional parameters
+
+        Returns:
+            DisputesListResult
+        """
+        params = {k: v for k, v in {
+            "charge": charge,
+            "created": created,
+            "ending_before": ending_before,
+            "limit": limit,
+            "payment_intent": payment_intent,
+            "starting_after": starting_after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("disputes", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DisputesListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Dispute:
+        """
+        Retrieves the dispute with the given ID.
+
+        Args:
+            id: The ID of the dispute
+            **kwargs: Additional parameters
+
+        Returns:
+            Dispute
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("disputes", "get", params)
+        return result
+
+
+
+class PayoutsQuery:
+    """
+    Query class for Payouts entity operations.
+    """
+
+    def __init__(self, connector: StripeConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        arrival_date: PayoutsListParamsArrivalDate | None = None,
+        created: PayoutsListParamsCreated | None = None,
+        destination: str | None = None,
+        ending_before: str | None = None,
+        limit: int | None = None,
+        starting_after: str | None = None,
+        status: str | None = None,
+        **kwargs
+    ) -> PayoutsListResult:
+        """
+        Returns a list of existing payouts sent to third-party bank accounts or payouts that Stripe sent to you. The payouts return in sorted order, with the most recently created payouts appearing first.
+
+        Args:
+            arrival_date: Filter payouts by expected arrival date range.
+            created: Only return payouts that were created during the given date interval.
+            destination: The ID of the external account the payout was sent to.
+            ending_before: A cursor for use in pagination. ending_before is an object ID that defines your place in the list.
+            limit: A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 10.
+            starting_after: A cursor for use in pagination. starting_after is an object ID that defines your place in the list.
+            status: Only return payouts that have the given status
+            **kwargs: Additional parameters
+
+        Returns:
+            PayoutsListResult
+        """
+        params = {k: v for k, v in {
+            "arrival_date": arrival_date,
+            "created": created,
+            "destination": destination,
+            "ending_before": ending_before,
+            "limit": limit,
+            "starting_after": starting_after,
+            "status": status,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payouts", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PayoutsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Payout:
+        """
+        Retrieves the details of an existing payout. Supply the unique payout ID from either a payout creation request or the payout list, and Stripe will return the corresponding payout information.
+
+        Args:
+            id: The ID of the payout
+            **kwargs: Additional parameters
+
+        Returns:
+            Payout
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("payouts", "get", params)
         return result
 
 

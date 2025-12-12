@@ -1,8 +1,8 @@
 """Performance metrics tracking."""
 
 import time
-from typing import Dict, Optional
 from contextlib import asynccontextmanager
+from typing import Dict, Optional
 
 
 class PerformanceMonitor:
