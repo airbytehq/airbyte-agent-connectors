@@ -1,7 +1,7 @@
 """Shared redaction logic for both logging and telemetry."""
 
-from typing import Dict, Any
-from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+from typing import Any, Dict
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 
 class DataRedactor:

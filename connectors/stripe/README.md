@@ -39,7 +39,7 @@ from airbyte_ai_stripe import StripeConnector, StripeAuthConfig
 
 connector = StripeConnector(
   auth_config=StripeAuthConfig(
-    token="..."
+    api_key="..."
   )
 )
 result = connector.customers.list()
@@ -49,7 +49,17 @@ result = connector.customers.list()
 
 | Entity | Actions |
 |--------|---------|
-| Customers | [List](./REFERENCE.md#customers-list), [Get](./REFERENCE.md#customers-get) |
+| Customers | [List](./REFERENCE.md#customers-list), [Get](./REFERENCE.md#customers-get), [Search](./REFERENCE.md#customers-search) |
+| Invoices | [List](./REFERENCE.md#invoices-list), [Get](./REFERENCE.md#invoices-get), [Search](./REFERENCE.md#invoices-search) |
+| Charges | [List](./REFERENCE.md#charges-list), [Get](./REFERENCE.md#charges-get), [Search](./REFERENCE.md#charges-search) |
+| Subscriptions | [List](./REFERENCE.md#subscriptions-list), [Get](./REFERENCE.md#subscriptions-get), [Search](./REFERENCE.md#subscriptions-search) |
+| Refunds | [List](./REFERENCE.md#refunds-list), [Get](./REFERENCE.md#refunds-get) |
+| Products | [List](./REFERENCE.md#products-list), [Get](./REFERENCE.md#products-get), [Search](./REFERENCE.md#products-search) |
+| Balance | [Get](./REFERENCE.md#balance-get) |
+| Balance Transactions | [List](./REFERENCE.md#balance-transactions-list), [Get](./REFERENCE.md#balance-transactions-get) |
+| Payment Intents | [List](./REFERENCE.md#payment-intents-list), [Get](./REFERENCE.md#payment-intents-get), [Search](./REFERENCE.md#payment-intents-search) |
+| Disputes | [List](./REFERENCE.md#disputes-list), [Get](./REFERENCE.md#disputes-get) |
+| Payouts | [List](./REFERENCE.md#payouts-list), [Get](./REFERENCE.md#payouts-get) |
 
 
 For detailed documentation on available actions and parameters, see [REFERENCE.md](./REFERENCE.md).
@@ -58,8 +68,8 @@ For the service's official API docs, see [Stripe API Reference](https://docs.str
 
 ## Version Information
 
-**Package Version:** 0.5.9
+**Package Version:** 0.5.10
 
-**Connector Version:** 0.1.1
+**Connector Version:** 0.1.2
 
-**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
+**Generated with connector-sdk:** 8f76f7b8b3c9c5f3bf4eb2a403e684823646246a
