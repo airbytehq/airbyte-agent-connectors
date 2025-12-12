@@ -111,7 +111,7 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
