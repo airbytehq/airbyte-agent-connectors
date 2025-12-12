@@ -1,6 +1,30 @@
 # Airbyte Linear AI Connector
 
-Connector for Linear GraphQL API
+Linear is a modern issue tracking and project management tool built for software
+development teams. This connector provides access to issues, projects, and teams
+for sprint planning, backlog management, and development workflow analysis.
+
+
+## Example Questions
+
+- Show me the open issues assigned to my team this week
+- List out all projects I'm currently involved in
+- Analyze the workload distribution across my development team
+- What are the top priority issues in our current sprint?
+- Identify the most active projects in our organization right now
+- Summarize the recent issues for [teamMember] in the last two weeks
+- Compare the issue complexity across different teams
+- Which projects have the most unresolved issues?
+- Give me an overview of my team's current project backlog
+
+## Unsupported Questions
+
+- Create a new issue for the backend team
+- Update the priority of this specific issue
+- Assign a team member to this project
+- Delete an outdated project from our workspace
+- Schedule a sprint planning meeting
+- Move an issue to a different project
 
 ## Installation
 
@@ -36,8 +60,8 @@ For the service's official API docs, see [Linear API Reference](https://linear.a
 
 ## Version Information
 
-**Package Version:** 0.19.8
+**Package Version:** 0.19.9
 
-**Connector Version:** 0.1.0
+**Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180

@@ -6,8 +6,11 @@ openapi: 3.1.0
 
 info:
   title: Linear API Connector
-  version: 0.1.0
-  description: Connector for Linear GraphQL API
+  version: 0.1.1
+  description: |
+    Linear is a modern issue tracking and project management tool built for software
+    development teams. This connector provides access to issues, projects, and teams
+    for sprint planning, backlog management, and development workflow analysis.
   x-airbyte-connector-name: linear
   x-airbyte-connector-id: 1c5d8316-ed42-4473-8fbc-2626f03f070c
   x-airbyte-external-documentation-urls:
@@ -38,6 +41,24 @@ info:
     - type: rate_limits
       title: Linear API Rate Limits
       url: https://linear.app/developers/rate-limiting
+  x-airbyte-example-questions:
+    supported:
+      - "Show me the open issues assigned to my team this week"
+      - "List out all projects I'm currently involved in"
+      - "Analyze the workload distribution across my development team"
+      - "What are the top priority issues in our current sprint?"
+      - "Identify the most active projects in our organization right now"
+      - "Summarize the recent issues for [teamMember] in the last two weeks"
+      - "Compare the issue complexity across different teams"
+      - "Which projects have the most unresolved issues?"
+      - "Give me an overview of my team's current project backlog"
+    unsupported:
+      - "Create a new issue for the backend team"
+      - "Update the priority of this specific issue"
+      - "Assign a team member to this project"
+      - "Delete an outdated project from our workspace"
+      - "Schedule a sprint planning meeting"
+      - "Move an issue to a different project"
 
 servers:
   - url: https://api.linear.app
