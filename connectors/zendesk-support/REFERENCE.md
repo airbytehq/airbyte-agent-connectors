@@ -2614,14 +2614,12 @@ These variables are used to construct the base API URL. Pass them via the `confi
 The Zendesk-Support connector supports the following authentication methods:
 
 
-### Authentication
+### OAuth 2.0
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `access_token` | `str` | Yes | OAuth2 access token |
-| `refresh_token` | `str` | No | OAuth2 refresh token (optional) |
-| `client_id` | `str` | No | OAuth2 client ID (optional) |
-| `client_secret` | `str` | No | OAuth2 client secret (optional) |
+| `access_token` | `str` | Yes | OAuth 2.0 access token |
+| `refresh_token` | `str` | No | OAuth 2.0 refresh token (optional) |
 
 #### Example
 
@@ -2630,10 +2628,8 @@ The Zendesk-Support connector supports the following authentication methods:
 ```python
 ZendeskSupportConnector(
   auth_config=ZendeskSupportAuthConfig(
-    access_token="<OAuth2 access token>",
-    refresh_token="<OAuth2 refresh token (optional)>",
-    client_id="<OAuth2 client ID (optional)>",
-    client_secret="<OAuth2 client secret (optional)>"
+    access_token="<OAuth 2.0 access token>",
+    refresh_token="<OAuth 2.0 refresh token (optional)>"
   )
 )
 ```
@@ -2647,10 +2643,45 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances' \
 --data '{
   "connector_definition_id": "79c1aa37-dae3-42ae-b333-d1c105477715",
   "auth_config": {
-    "access_token": "<OAuth2 access token>",
-    "refresh_token": "<OAuth2 refresh token (optional)>",
-    "client_id": "<OAuth2 client ID (optional)>",
-    "client_secret": "<OAuth2 client secret (optional)>"
+    "access_token": "<OAuth 2.0 access token>",
+    "refresh_token": "<OAuth 2.0 refresh token (optional)>"
+  },
+  "name": "My Zendesk-Support Connector"
+}'
+```
+
+
+### API Token
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `email` | `str` | Yes | Your Zendesk account email address |
+| `api_token` | `str` | Yes | Your Zendesk API token from Admin Center |
+
+#### Example
+
+**Python SDK**
+
+```python
+ZendeskSupportConnector(
+  auth_config=ZendeskSupportAuthConfig(
+    email="<Your Zendesk account email address>",
+    api_token="<Your Zendesk API token from Admin Center>"
+  )
+)
+```
+
+**API**
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/instances' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+  "connector_definition_id": "79c1aa37-dae3-42ae-b333-d1c105477715",
+  "auth_config": {
+    "email": "<Your Zendesk account email address>",
+    "api_token": "<Your Zendesk API token from Admin Center>"
   },
   "name": "My Zendesk-Support Connector"
 }'

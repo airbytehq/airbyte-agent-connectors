@@ -11,21 +11,29 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
 from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class ZendeskSupportAuthConfig(BaseModel):
-    """Authentication"""
+class ZendeskSupportOauth20AuthConfig(BaseModel):
+    """OAuth 2.0 - Zendesk OAuth 2.0 authentication"""
 
     model_config = ConfigDict(extra="forbid")
 
     access_token: str
-    """OAuth2 access token"""
+    """OAuth 2.0 access token"""
     refresh_token: Optional[str] = None
-    """OAuth2 refresh token (optional)"""
-    client_id: Optional[str] = None
-    """OAuth2 client ID (optional)"""
-    client_secret: Optional[str] = None
-    """OAuth2 client secret (optional)"""
+    """OAuth 2.0 refresh token (optional)"""
+
+class ZendeskSupportApiTokenAuthConfig(BaseModel):
+    """API Token - Authenticate using email and API token"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    email: str
+    """Your Zendesk account email address"""
+    api_token: str
+    """Your Zendesk API token from Admin Center"""
+
+ZendeskSupportAuthConfig = ZendeskSupportOauth20AuthConfig | ZendeskSupportApiTokenAuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 

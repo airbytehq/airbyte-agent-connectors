@@ -56,7 +56,8 @@ from .types import (
 
 if TYPE_CHECKING:
     from .models import ZendeskSupportAuthConfig
-
+# Import specific auth config classes for multi-auth isinstance checks
+from .models import ZendeskSupportOauth20AuthConfig, ZendeskSupportApiTokenAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     ZendeskSupportExecuteResult,
@@ -186,7 +187,7 @@ class ZendeskSupportConnector:
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Zendesk subdomain
         Examples:
             # Local mode (direct API calls)
-            connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
+            connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = ZendeskSupportConnector(
                 connector_id="connector-456",
@@ -232,9 +233,18 @@ class ZendeskSupportConnector:
             if subdomain:
                 config_values["subdomain"] = subdomain
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, ZendeskSupportOauth20AuthConfig):
+                    auth_scheme = "zendeskOAuth"
+                if isinstance(auth_config, ZendeskSupportApiTokenAuthConfig):
+                    auth_scheme = "zendeskAPIToken"
+
             self._executor = LocalExecutor(
                 config_path=config_path,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )

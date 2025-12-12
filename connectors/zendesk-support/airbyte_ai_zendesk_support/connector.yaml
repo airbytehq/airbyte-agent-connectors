@@ -38,6 +38,7 @@ servers:
 
 security:
   - zendeskOAuth: []
+  - zendeskAPIToken: []
 
 components:
   securitySchemes:
@@ -53,6 +54,51 @@ components:
             read: Read access to all resources
             write: Write access to all resources
             read write: Read and write access to all resources
+      x-airbyte-auth-config:
+        type: object
+        title: OAuth 2.0
+        description: Zendesk OAuth 2.0 authentication
+        required: [access_token]
+        properties:
+          access_token:
+            type: string
+            title: Access Token
+            description: OAuth 2.0 access token
+            airbyte_secret: true
+          refresh_token:
+            type: string
+            title: Refresh Token
+            description: OAuth 2.0 refresh token (optional)
+            airbyte_secret: true
+        auth_mapping:
+          access_token: "${access_token}"
+          refresh_token: "${refresh_token}"
+
+    zendeskAPIToken:
+      type: http
+      scheme: basic
+      description: |
+        Zendesk API Token authentication.
+        API tokens are managed in Admin Center at Apps and integrations > APIs > Zendesk API.
+      x-airbyte-auth-config:
+        type: object
+        title: API Token
+        description: Authenticate using email and API token
+        required: [email, api_token]
+        properties:
+          email:
+            type: string
+            format: email
+            title: Email Address
+            description: Your Zendesk account email address
+          api_token:
+            type: string
+            title: API Token
+            description: Your Zendesk API token from Admin Center
+            airbyte_secret: true
+        auth_mapping:
+          username: "${email}/token"
+          password: "${api_token}"
 
   schemas:
     # ==================== TICKETS ====================
