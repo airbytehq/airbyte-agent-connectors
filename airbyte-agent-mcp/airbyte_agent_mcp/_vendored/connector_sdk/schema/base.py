@@ -14,6 +14,26 @@ from pydantic_core import Url
 from .extensions import RetryConfig
 
 
+class ExampleQuestions(BaseModel):
+    """
+    Example questions for AI connector documentation.
+
+    Used to generate supported_questions.md and unsupported_questions.md files
+    that appear in the connector's README.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    supported: list[str] = Field(
+        default_factory=list,
+        description="Example questions the connector can handle",
+    )
+    unsupported: list[str] = Field(
+        default_factory=list,
+        description="Example questions the connector cannot handle",
+    )
+
+
 class Contact(BaseModel):
     """
     Contact information for the API.
@@ -82,6 +102,7 @@ class Info(BaseModel):
     - x-airbyte-connector-id: UUID of the connector (Airbyte extension)
     - x-airbyte-external-documentation-urls: List of external documentation URLs (Airbyte extension)
     - x-airbyte-retry-config: Retry configuration for transient errors (Airbyte extension)
+    - x-airbyte-example-questions: Example questions for AI connector README (Airbyte extension)
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -103,6 +124,9 @@ class Info(BaseModel):
     )
     x_airbyte_retry_config: Optional[RetryConfig] = Field(
         None, alias="x-airbyte-retry-config"
+    )
+    x_airbyte_example_questions: Optional[ExampleQuestions] = Field(
+        None, alias="x-airbyte-example-questions"
     )
 
 
