@@ -676,14 +676,16 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
             oneOf=None,
         )
     elif auth_type == AuthType.OAUTH2:
-        # OAuth2: access_token is required, other fields are optional.
+        # OAuth2: No fields are strictly required to support both modes:
+        # 1. Full token mode: user provides access_token (and optionally refresh credentials)
+        # 2. Refresh-token-only mode: user provides refresh_token, client_id, client_secret
         # The auth_mapping includes all fields, but apply_auth_mapping
         # will skip mappings for fields not provided by the user.
         return AirbyteAuthConfig(
             title=None,
             description=None,
             type="object",
-            required=["access_token"],
+            required=[],
             properties={
                 "access_token": AuthConfigFieldSpec(
                     type="string",
