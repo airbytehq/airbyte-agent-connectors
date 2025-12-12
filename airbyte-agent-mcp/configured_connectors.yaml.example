@@ -31,3 +31,27 @@ connectors:
     secrets:
       client_id: SALESFORCE_CLIENT_ID
       client_secret: SALESFORCE_CLIENT_SECRET
+
+  # MULTI-AUTH connector with explicit auth_scheme selection
+  # Use this for connectors that support multiple authentication methods
+  - id: zendesk-oauth
+    type: local
+    path: ../integrations/zendesk-support/connector.yaml
+    description: "Zendesk with OAuth2 authentication"
+    auth_scheme: zendeskOAuth  # Explicitly select OAuth scheme
+    config_values:
+      subdomain: YOUR_SUBDOMAIN  # Non-secret config value
+    secrets:
+      access_token: ZENDESK_ACCESS_TOKEN
+      refresh_token: ZENDESK_REFRESH_TOKEN
+
+  - id: zendesk-api-token
+    type: local
+    path: ../integrations/zendesk-support/connector.yaml
+    description: "Zendesk with API Token authentication"
+    auth_scheme: zendeskAPIToken  # Explicitly select API Token scheme
+    config_values:
+      subdomain: YOUR_SUBDOMAIN
+    secrets:
+      email: ZENDESK_EMAIL
+      api_token: ZENDESK_API_TOKEN

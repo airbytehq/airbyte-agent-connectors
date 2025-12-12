@@ -39,6 +39,8 @@ class ConnectorConfig(BaseModel):
     version: str | None = Field(None, description="Version to pin (optional, defaults to latest)")
     description: str = Field(default="", description="Human-readable description")
     secrets: dict[str, str] = Field(default_factory=dict, description="Mapping of secret param names to secret keys")
+    config_values: dict[str, str] = Field(default_factory=dict, description="Non-secret config values (e.g., subdomain, region)")
+    auth_scheme: str | None = Field(None, description="Auth scheme for multi-auth connectors (e.g., 'oauth', 'api_token')")
 
     def model_post_init(self, __context):
         """Validate connector-type-specific fields."""

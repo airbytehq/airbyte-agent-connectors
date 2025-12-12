@@ -56,16 +56,104 @@ class ParameterLocation(str, Enum):
 # Import from connector_sdk.schema for: OpenAPIConnector, Components, Schema, Operation, etc.
 
 
-class AuthConfig(BaseModel):
-    """Authentication configuration."""
+class AuthOption(BaseModel):
+    """A single authentication option in a multi-auth connector.
 
-    type: AuthType
-    config: dict[str, Any] = Field(default_factory=dict)
-    # User-facing config spec from x-airbyte-auth-config extension
+    Represents one security scheme from OpenAPI components.securitySchemes.
+    Each option defines a complete authentication method with its own type,
+    configuration, and user-facing credential specification.
+
+    Example:
+        For a connector supporting both OAuth2 and API Key auth:
+        - AuthOption(scheme_name="oauth", type=OAUTH2, ...)
+        - AuthOption(scheme_name="apikey", type=BEARER, ...)
+    """
+
+    scheme_name: str = Field(
+        description="Security scheme name from OpenAPI spec (e.g., 'githubOAuth', 'githubPAT')"
+    )
+    type: AuthType = Field(description="Authentication type for this option")
+    config: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Auth-specific configuration (e.g., OAuth2 refresh settings)",
+    )
     user_config_spec: AirbyteAuthConfig | None = Field(
         None,
-        description="User-facing authentication configuration spec from x-airbyte-auth-config",
+        description="User-facing credential specification from x-airbyte-auth-config",
     )
+
+
+class AuthConfig(BaseModel):
+    """Authentication configuration supporting single or multiple auth methods.
+
+    Connectors can define either:
+    - Single auth: One authentication method (backwards compatible)
+    - Multi-auth: Multiple authentication methods (user/agent selects one)
+
+    For single-auth connectors (most common):
+        AuthConfig(type=OAUTH2, config={...}, user_config_spec={...})
+
+    For multi-auth connectors:
+        AuthConfig(options=[
+            AuthOption(scheme_name="oauth", type=OAUTH2, ...),
+            AuthOption(scheme_name="apikey", type=BEARER, ...)
+        ])
+    """
+
+    # Single-auth mode (backwards compatible)
+    type: AuthType | None = Field(
+        None,
+        description="Authentication type (single-auth mode only)",
+    )
+    config: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Auth configuration (single-auth mode only)",
+    )
+    user_config_spec: AirbyteAuthConfig | None = Field(
+        None,
+        description="User-facing config spec from x-airbyte-auth-config (single-auth mode)",
+    )
+
+    # Multi-auth mode
+    options: list[AuthOption] | None = Field(
+        None,
+        description="Multiple authentication options (multi-auth mode only)",
+    )
+
+    def is_multi_auth(self) -> bool:
+        """Check if this configuration supports multiple authentication methods.
+
+        Returns:
+            True if multiple auth options are available, False for single-auth
+        """
+        return self.options is not None and len(self.options) > 0
+
+    def get_single_option(self) -> AuthOption:
+        """Get single auth option (for backwards compatibility).
+
+        Converts single-auth config to AuthOption format for uniform handling.
+
+        Returns:
+            AuthOption containing the single auth configuration
+
+        Raises:
+            ValueError: If this is a multi-auth config or invalid
+        """
+        if self.is_multi_auth():
+            raise ValueError(
+                "Cannot call get_single_option() on multi-auth config. "
+                "Use options list instead."
+            )
+
+        if self.type is None:
+            raise ValueError("Invalid AuthConfig: neither single-auth nor multi-auth")
+
+        return AuthOption(
+            scheme_name="default",
+            type=self.type,
+            config=self.config,
+            user_config_spec=self.user_config_spec,
+        )
 
 
 # Executor types (used by executor.py)

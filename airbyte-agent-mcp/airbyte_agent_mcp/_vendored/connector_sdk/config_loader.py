@@ -17,6 +17,7 @@ from .constants import (
 
 from .types import (
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorConfig,
     ContentType,
@@ -607,6 +608,8 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
     """
     if auth_type == AuthType.BEARER:
         return AirbyteAuthConfig(
+            title=None,
+            description=None,
             type="object",
             required=["token"],
             properties={
@@ -614,12 +617,19 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     type="string",
                     title="Bearer Token",
                     description="Authentication bearer token",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 )
             },
             auth_mapping={"token": "${token}"},
+            oneOf=None,
         )
     elif auth_type == AuthType.BASIC:
         return AirbyteAuthConfig(
+            title=None,
+            description=None,
             type="object",
             required=["username", "password"],
             properties={
@@ -627,17 +637,28 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     type="string",
                     title="Username",
                     description="Authentication username",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
                 "password": AuthConfigFieldSpec(
                     type="string",
                     title="Password",
                     description="Authentication password",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
             },
             auth_mapping={"username": "${username}", "password": "${password}"},
+            oneOf=None,
         )
     elif auth_type == AuthType.API_KEY:
         return AirbyteAuthConfig(
+            title=None,
+            description=None,
             type="object",
             required=["api_key"],
             properties={
@@ -645,15 +666,22 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     type="string",
                     title="API Key",
                     description="API authentication key",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 )
             },
             auth_mapping={"api_key": "${api_key}"},
+            oneOf=None,
         )
     elif auth_type == AuthType.OAUTH2:
         # OAuth2: access_token is required, other fields are optional.
         # The auth_mapping includes all fields, but apply_auth_mapping
         # will skip mappings for fields not provided by the user.
         return AirbyteAuthConfig(
+            title=None,
+            description=None,
             type="object",
             required=["access_token"],
             properties={
@@ -661,21 +689,37 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     type="string",
                     title="Access Token",
                     description="OAuth2 access token",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
                 "refresh_token": AuthConfigFieldSpec(
                     type="string",
                     title="Refresh Token",
                     description="OAuth2 refresh token (optional)",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
                 "client_id": AuthConfigFieldSpec(
                     type="string",
                     title="Client ID",
                     description="OAuth2 client ID (optional)",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
                 "client_secret": AuthConfigFieldSpec(
                     type="string",
                     title="Client Secret",
                     description="OAuth2 client secret (optional)",
+                    format=None,
+                    pattern=None,
+                    airbyte_secret=False,
+                    default=None,
                 ),
             },
             auth_mapping={
@@ -684,37 +728,90 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                 "client_id": "${client_id}",
                 "client_secret": "${client_secret}",
             },
+            oneOf=None,
         )
     else:
         # Unknown auth type - return minimal config
         return AirbyteAuthConfig(
+            title=None,
+            description=None,
             type="object",
+            required=None,
             properties={},
             auth_mapping={},
+            oneOf=None,
         )
 
 
 def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
     """Parse authentication configuration from OpenAPI spec.
 
+    Supports both single and multiple security schemes. For backwards compatibility,
+    single-scheme connectors continue to use the legacy AuthConfig format.
+    If no security schemes are defined, generates a default Bearer auth config.
+
     Args:
         spec: OpenAPI connector specification
 
     Returns:
-        AuthConfig with user_config_spec (explicit or generated default)
+        AuthConfig with either single or multiple auth options
     """
     if not spec.components or not spec.components.security_schemes:
-        default_config = _generate_default_auth_config(AuthType.API_KEY)
+        # Backwards compatibility: generate default Bearer auth when no schemes defined
+        default_config = _generate_default_auth_config(AuthType.BEARER)
         return AuthConfig(
-            type=AuthType.API_KEY,
-            config={},
+            type=AuthType.BEARER,
+            config={"header": "Authorization", "prefix": "Bearer"},
             user_config_spec=default_config,
+            options=None,
         )
 
-    # Get the first security scheme
-    scheme_name, scheme = next(iter(spec.components.security_schemes.items()))
+    schemes = spec.components.security_schemes
 
-    # Extract x-airbyte-auth-config if present, otherwise generate default
+    # Single scheme: backwards compatible mode
+    if len(schemes) == 1:
+        scheme_name, scheme = next(iter(schemes.items()))
+        return _parse_single_security_scheme(scheme)
+
+    # Multiple schemes: new multi-auth mode
+    options = []
+    for scheme_name, scheme in schemes.items():
+        try:
+            auth_option = _parse_security_scheme_to_option(scheme_name, scheme)
+            options.append(auth_option)
+        except Exception as e:
+            # Log warning but continue - skip invalid schemes
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Skipping invalid security scheme '{scheme_name}': {e}")
+            continue
+
+    if not options:
+        raise InvalidOpenAPIError(
+            "No valid security schemes found. Connector must define at least "
+            "one valid security scheme."
+        )
+
+    return AuthConfig(
+        type=None,
+        config={},
+        user_config_spec=None,
+        options=options,
+    )
+
+
+def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
+    """Parse a single security scheme into AuthConfig.
+
+    This extracts the existing single-scheme parsing logic for reuse.
+
+    Args:
+        scheme: SecurityScheme from OpenAPI spec
+
+    Returns:
+        AuthConfig in single-auth mode
+    """
     auth_type = AuthType.API_KEY  # Default
     auth_config = {}
 
@@ -736,27 +833,52 @@ def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
     elif scheme.type == "oauth2":
         # Parse OAuth2 configuration
         oauth2_config = _parse_oauth2_config(scheme)
-        # Use explicit x-airbyte-auth-config if present, otherwise generate default for OAuth2
-        if scheme.x_airbyte_auth_config:
-            auth_config_obj = scheme.x_airbyte_auth_config
-        else:
-            auth_config_obj = _generate_default_auth_config(AuthType.OAUTH2)
+        # Use explicit x-airbyte-auth-config if present, otherwise generate default
+        auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(
+            AuthType.OAUTH2
+        )
         return AuthConfig(
             type=AuthType.OAUTH2,
             config=oauth2_config,
             user_config_spec=auth_config_obj,
+            options=None,
         )
 
     # Use explicit x-airbyte-auth-config if present, otherwise generate default
-    if scheme.x_airbyte_auth_config:
-        auth_config_obj = scheme.x_airbyte_auth_config
-    else:
-        auth_config_obj = _generate_default_auth_config(auth_type)
+    auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(
+        auth_type
+    )
 
     return AuthConfig(
         type=auth_type,
         config=auth_config,
         user_config_spec=auth_config_obj,
+        options=None,
+    )
+
+
+def _parse_security_scheme_to_option(scheme_name: str, scheme: Any) -> AuthOption:
+    """Parse a security scheme into an AuthOption for multi-auth connectors.
+
+    Args:
+        scheme_name: Name of the security scheme (e.g., "githubOAuth")
+        scheme: SecurityScheme from OpenAPI spec
+
+    Returns:
+        AuthOption containing the parsed configuration
+
+    Raises:
+        ValueError: If scheme is invalid or unsupported
+    """
+    # Parse using existing single-scheme logic
+    single_auth = _parse_single_security_scheme(scheme)
+
+    # Convert to AuthOption
+    return AuthOption(
+        scheme_name=scheme_name,
+        type=single_auth.type,
+        config=single_auth.config,
+        user_config_spec=single_auth.user_config_spec,
     )
 
 
