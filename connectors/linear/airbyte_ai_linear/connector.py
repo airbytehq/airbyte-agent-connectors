@@ -23,7 +23,6 @@ from .types import (
 
 if TYPE_CHECKING:
     from .models import LinearAuthConfig
-
 # Import response models and envelope models at runtime
 from .models import (
     LinearExecuteResult,
