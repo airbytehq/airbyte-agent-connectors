@@ -1576,7 +1576,7 @@ The Github connector supports the following authentication methods:
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `access_token` | `str` | Yes | OAuth2 access token |
+| `access_token` | `str` | No | OAuth2 access token |
 | `refresh_token` | `str` | No | OAuth2 refresh token (optional) |
 | `client_id` | `str` | No | OAuth2 client ID (optional) |
 | `client_secret` | `str` | No | OAuth2 client secret (optional) |

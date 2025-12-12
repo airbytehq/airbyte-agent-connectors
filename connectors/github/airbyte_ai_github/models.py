@@ -18,7 +18,7 @@ class GithubAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: str
+    access_token: Optional[str] = None
     """OAuth2 access token"""
     refresh_token: Optional[str] = None
     """OAuth2 refresh token (optional)"""
