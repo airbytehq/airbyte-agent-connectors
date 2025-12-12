@@ -1,6 +1,6 @@
 # Airbyte Agent MCP Server
 
-MCP server that exposes the Airbyte Connector SDK as Model Context Protocol tools.
+MCP server that exposes the Airbyte Connector SDK as Model Context Protocol tools. This MCP server is currently in early access and should be considered experimental.
 
 ## Features
 
