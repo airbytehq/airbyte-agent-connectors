@@ -419,6 +419,55 @@ Example:
     ```
 """
 
+AIRBYTE_TOKEN_EXTRACT = "x-airbyte-token-extract"
+"""
+Extension: x-airbyte-token-extract
+Location: SecurityScheme object (in components.securitySchemes, under oauth2)
+Type: list[str]
+Required: No
+
+Description:
+    Specifies which fields to extract from OAuth2 token responses and use as server
+    variables. This is useful for APIs like Salesforce where the token response includes
+    dynamic values (e.g., instance_url) needed to construct API URLs.
+
+    When token refresh occurs, the SDK:
+    1. Extracts the specified fields from the token response
+    2. Updates config_values with extracted values
+    3. Re-renders the base_url with updated server variables
+    4. Includes extracted fields in on_token_refresh callback for persistence
+
+Precedence rules (highest wins):
+    1. Server variable `default` in YAML (lowest)
+    2. User-provided `config_values` at init (optional, may be unset)
+    3. Token-extracted values via `x-airbyte-token-extract` (highest)
+
+Validation (at connector load time):
+    - Error if extracted field doesn't match a defined server variable
+    - Error if duplicate fields in x-airbyte-token-extract
+
+Example:
+    ```yaml
+    servers:
+      - url: "{instance_url}/services/data/v59.0"
+        variables:
+          instance_url:
+            default: "https://login.salesforce.com"
+
+    components:
+      securitySchemes:
+        oauth2:
+          type: oauth2
+          flows:
+            authorizationCode:
+              tokenUrl: https://login.salesforce.com/services/oauth2/token
+              refreshUrl: https://login.salesforce.com/services/oauth2/token
+              scopes: {}
+          x-airbyte-token-extract:
+            - instance_url  # Extract from token response → updates {instance_url}
+    ```
+"""
+
 
 # =============================================================================
 # Enums and Type Definitions
@@ -508,6 +557,7 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_RECORD_EXTRACTOR,
         AIRBYTE_META_EXTRACTOR,
         AIRBYTE_FILE_URL,
+        AIRBYTE_TOKEN_EXTRACT,
     ]
 
 
@@ -586,6 +636,12 @@ EXTENSION_REGISTRY = {
         "type": "string",
         "required": "conditional",  # Required when action is 'download'
         "description": "Field in metadata response containing download URL (required for download action)",
+    },
+    AIRBYTE_TOKEN_EXTRACT: {
+        "location": "securityScheme",
+        "type": "list[str]",
+        "required": False,
+        "description": "List of fields to extract from OAuth2 token responses and use as server variables",
     },
 }
 """
