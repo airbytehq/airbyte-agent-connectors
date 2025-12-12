@@ -1,6 +1,30 @@
 # Airbyte Zendesk-Support AI Connector
 
-Type-safe Zendesk-Support API connector with full IDE autocomplete support for AI applications.
+Zendesk Support is a customer service platform that helps businesses manage support
+tickets, customer interactions, and help center content. This connector provides
+access to tickets, users, organizations, groups, comments, attachments, automations,
+triggers, macros, views, satisfaction ratings, SLA policies, and help center articles
+for customer support analytics and service performance insights.
+
+
+## Example Questions
+
+- Show me the tickets assigned to me last week
+- What are the top 5 support issues our organization has faced this month?
+- List all unresolved tickets for [customerX]
+- Analyze the satisfaction ratings for our support team in the last 30 days
+- Compare ticket resolution times across different support groups
+- Show me the details of recent tickets tagged with [specific tag]
+- Identify the most common ticket fields used in our support workflow
+- Summarize the performance of our SLA policies this quarter
+
+## Unsupported Questions
+
+- Create a new support ticket for [customerX]
+- Update the priority of this ticket
+- Assign this ticket to [teamMember]
+- Delete these old support tickets
+- Send an automatic response to [customerX]
 
 ## Installation
 
@@ -56,8 +80,8 @@ For the service's official API docs, see [Zendesk-Support API Reference](https:/
 
 ## Version Information
 
-**Package Version:** 0.18.9
+**Package Version:** 0.18.10
 
-**Connector Version:** 0.1.2
+**Connector Version:** 0.1.3
 
-**Generated with connector-sdk:** 89d7172be4e395406cb7408a4f1344e0523de2e4
+**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
