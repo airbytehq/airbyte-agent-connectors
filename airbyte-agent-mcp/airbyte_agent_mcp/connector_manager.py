@@ -90,10 +90,15 @@ class ConnectorManager:
         if connector_config.secrets:
             secrets = self.secrets_manager.get_secrets(connector_config.secrets)
 
+        # Resolve config_values from environment variables
+        config_values = {}
+        if connector_config.config_values:
+            config_values = self.secrets_manager.get_secrets(connector_config.config_values)
+
         # Get path (local or from registry)
         path = await self._get_connector_path(connector_config)
         logger.info(f"Using connector path: {path}")
-        connector = self._create_yaml_connector(path, secrets)
+        connector = self._create_yaml_connector(path, secrets, auth_scheme=connector_config.auth_scheme, config_values=config_values)
 
         logger.debug(f"Calling connector.execute({entity}, {action}, ...)")
         result = await connector.execute(ExecutionConfig(entity=entity, action=action, params=params))
@@ -109,17 +114,23 @@ class ConnectorManager:
         logger.info("Execution successful")
         return result.data
 
-    def _create_yaml_connector(self, path: str, secrets: dict[str, Any]) -> Any:
+    def _create_yaml_connector(
+        self, path: str, secrets: dict[str, Any], auth_scheme: str | None = None, config_values: dict[str, str] | None = None
+    ) -> Any:
         """Create a YAML-based connector instance.
 
         Args:
             path: Path to connector.yaml file
             secrets: Resolved secrets dict
+            auth_scheme: Auth scheme for multi-auth connectors (optional)
+            config_values: Non-secret config values like subdomain, region (optional)
 
         Returns:
             ConnectorExecutor instance
         """
-        connector = ConnectorExecutor(config_path=path, auth_config=secrets, execution_context="mcp")
+        connector = ConnectorExecutor(
+            config_path=path, auth_config=secrets, auth_scheme=auth_scheme, config_values=config_values, execution_context="mcp"
+        )
 
         return connector
 

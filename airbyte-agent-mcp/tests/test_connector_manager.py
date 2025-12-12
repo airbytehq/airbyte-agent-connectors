@@ -79,7 +79,11 @@ async def test_execute_with_secrets(simple_config):
         await manager.execute(connector_id="test_yaml", entity="customers", action="list")
 
         MockConnectorExecutor.assert_called_once_with(
-            config_path="/tmp/test_connector.yaml", auth_config={"token": "secret_api_key_value"}, execution_context="mcp"
+            config_path="/tmp/test_connector.yaml",
+            auth_config={"token": "secret_api_key_value"},
+            auth_scheme=None,
+            config_values={},
+            execution_context="mcp",
         )
 
         mock_connector.execute.assert_called_once_with(ExecutionConfig(entity="customers", action="list", params={}))
