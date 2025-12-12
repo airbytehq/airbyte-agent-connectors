@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import logging
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Literal, TypedDict
 
 import httpx
@@ -263,6 +264,20 @@ class OAuth2RefreshSecrets(OAuth2AuthSecrets, total=False):
     token_type: str
 
 
+@dataclass
+class TokenRefreshResult:
+    """Result of an OAuth2 token refresh operation.
+
+    Attributes:
+        tokens: Dictionary containing access_token, refresh_token, token_type
+        extracted_values: Optional dictionary of values extracted from token response
+            for server variable substitution (e.g., instance_url for Salesforce)
+    """
+
+    tokens: dict[str, str]
+    extracted_values: dict[str, str] | None = None
+
+
 class AuthStrategy(ABC):
     """Abstract base class for authentication strategies."""
 
@@ -312,7 +327,7 @@ class AuthStrategy(ABC):
         secrets: dict[str, Any],
         config_values: dict[str, str] | None = None,
         http_client: httpx.AsyncClient | None = None,
-    ) -> dict[str, str] | None:
+    ) -> TokenRefreshResult | None:
         """
         Handle authentication error and attempt recovery (e.g., token refresh).
 
@@ -330,19 +345,42 @@ class AuthStrategy(ABC):
                 If provided, will be reused; otherwise a new client is created.
 
         Returns:
-            Dictionary with new credentials if refresh successful, None otherwise.
-            The returned dict will be merged into the secrets dict.
-
-        Example return value:
-            {
-                "access_token": "new_token_123",
-                "refresh_token": "new_refresh_456",
-                "token_type": "Bearer"
-            }
+            TokenRefreshResult with new credentials if refresh successful, None otherwise.
+            The tokens dict will be merged into the secrets dict by the caller.
 
         Note:
             Default implementation returns None (no refresh capability).
             Strategies with refresh capability should override this method.
+        """
+        return None
+
+    async def ensure_credentials(
+        self,
+        config: dict[str, Any],
+        secrets: dict[str, Any],
+        config_values: dict[str, str] | None = None,
+        http_client: httpx.AsyncClient | None = None,
+    ) -> TokenRefreshResult | None:
+        """
+        Ensure credentials are ready for authentication.
+
+        This method is called before the first API request to allow
+        strategies to proactively obtain credentials (e.g., OAuth2 token refresh
+        when starting with only a refresh_token).
+
+        Args:
+            config: Authentication configuration from AuthConfig.config
+            secrets: Secret credentials dictionary (may be updated by caller)
+            config_values: Non-secret configuration values for template substitution
+            http_client: Optional httpx.AsyncClient for making requests
+
+        Returns:
+            TokenRefreshResult with new/updated credentials if changes were made, None otherwise.
+            The tokens dict should be merged into the secrets dict by the caller.
+
+        Note:
+            Default implementation returns None (no initialization needed).
+            Strategies like OAuth2 can override this for proactive token refresh.
         """
         return None
 
@@ -539,6 +577,13 @@ class OAuth2AuthStrategy(AuthStrategy):
         # Get access token from secrets
         access_token = secrets.get("access_token")
         if not access_token:
+            # Provide helpful error for refresh-token-only scenario
+            if secrets.get("refresh_token"):
+                raise AuthenticationError(
+                    "Missing 'access_token' in secrets. "
+                    "When using refresh-token-only mode, ensure HTTPClient.request() "
+                    "is called (it handles proactive token refresh automatically)."
+                )
             raise AuthenticationError("Missing 'access_token' in secrets")
 
         # Extract secret value (handle both SecretStr and plain str)
@@ -549,16 +594,26 @@ class OAuth2AuthStrategy(AuthStrategy):
         return headers
 
     def validate_credentials(self, secrets: OAuth2AuthSecrets) -> None:  # type: ignore[override]
-        """Validate access_token is present.
+        """Validate OAuth2 credentials are valid for authentication.
+
+        Validates that either:
+        1. access_token is present, OR
+        2. refresh_token is present (for refresh-token-only mode)
 
         Args:
             secrets: OAuth2 credentials to validate
 
         Raises:
-            AuthenticationError: If access_token is missing
+            AuthenticationError: If neither access_token nor refresh_token is present
         """
-        if not secrets.get("access_token"):
-            raise AuthenticationError("Missing 'access_token' in secrets")
+        has_access_token = bool(secrets.get("access_token"))
+        has_refresh_token = bool(secrets.get("refresh_token"))
+
+        if not has_access_token and not has_refresh_token:
+            raise AuthenticationError(
+                "Missing OAuth2 credentials. Provide either 'access_token' "
+                "or 'refresh_token' (for refresh-token-only mode)."
+            )
 
     def can_refresh(self, secrets: OAuth2RefreshSecrets) -> bool:
         """Check if token refresh is possible.
@@ -578,7 +633,7 @@ class OAuth2AuthStrategy(AuthStrategy):
         secrets: dict[str, Any],
         config_values: dict[str, str] | None = None,
         http_client: httpx.AsyncClient | None = None,
-    ) -> dict[str, str] | None:
+    ) -> TokenRefreshResult | None:
         """
         Handle OAuth2 authentication error by refreshing tokens.
 
@@ -593,12 +648,7 @@ class OAuth2AuthStrategy(AuthStrategy):
             http_client: Optional httpx.AsyncClient for making refresh requests
 
         Returns:
-            Dictionary with new tokens if refresh successful, None otherwise:
-            {
-                "access_token": "new_token",
-                "refresh_token": "new_refresh_token",  # if provided by server
-                "token_type": "Bearer"
-            }
+            TokenRefreshResult with new tokens if refresh successful, None otherwise.
 
         Note:
             Only attempts refresh on 401 (Unauthorized) errors with valid refresh_token.
@@ -617,23 +667,101 @@ class OAuth2AuthStrategy(AuthStrategy):
             return None
 
         try:
-            # Create a token refresher with the provided http_client
-            # Use provided client or let refresher create its own
-            token_refresher = OAuth2TokenRefresher(http_client, config_values)
+            # Create a token refresher
+            # Pass None for http_client - let refresher create its own
+            token_refresher = OAuth2TokenRefresher(None, config_values)
 
             # Attempt to refresh the token
-            new_tokens = await token_refresher.refresh_token(
+            return await token_refresher.refresh_token(
                 config=config,  # type: ignore[arg-type]
                 secrets=secrets,  # type: ignore[arg-type]
             )
-
-            return new_tokens
 
         except Exception as e:
             # Token refresh failed - log the error and return None
             # HTTPClient will raise the original auth error
             logger.warning("OAuth2 token refresh failed: %s", str(e))
             return None
+
+    def needs_proactive_refresh(self, secrets: dict[str, Any]) -> bool:
+        """Check if proactive token refresh is needed.
+
+        Returns True if:
+        - access_token is missing (None, empty, or not present)
+        - refresh_token is present
+
+        This indicates "refresh-token-only" mode where we need to obtain
+        an access_token before making API requests.
+
+        Args:
+            secrets: OAuth2 credentials
+
+        Returns:
+            True if proactive refresh should be attempted, False otherwise
+        """
+        has_access_token = bool(secrets.get("access_token"))
+        has_refresh_token = bool(secrets.get("refresh_token"))
+
+        return not has_access_token and has_refresh_token
+
+    async def ensure_credentials(
+        self,
+        config: dict[str, Any],
+        secrets: dict[str, Any],
+        config_values: dict[str, str] | None = None,
+        http_client: httpx.AsyncClient | None = None,
+    ) -> TokenRefreshResult | None:
+        """
+        Proactively refresh OAuth2 tokens if access_token is missing.
+
+        Called before the first API request. If access_token is missing
+        but refresh credentials are available, attempts to obtain an
+        access_token via token refresh.
+
+        Args:
+            config: OAuth2 authentication configuration
+            secrets: OAuth2 credentials (may be missing access_token)
+            config_values: Non-secret config values for URL templates
+            http_client: Optional httpx.AsyncClient for refresh request (unused)
+
+        Returns:
+            TokenRefreshResult with new tokens if refresh successful, None otherwise
+
+        Raises:
+            AuthenticationError: If refresh fails and no access_token available
+        """
+        if not self.needs_proactive_refresh(secrets):
+            return None
+
+        # Check if refresh_url is configured
+        if not config.get("refresh_url"):
+            raise AuthenticationError(
+                "Missing 'access_token' in secrets and 'refresh_url' in config. "
+                "Either provide access_token or configure refresh_url for "
+                "proactive token refresh."
+            )
+
+        try:
+            logger.info(
+                "Proactively refreshing OAuth2 token (no access_token provided)"
+            )
+
+            # Create token refresher and attempt refresh
+            # Pass None for http_client - let refresher create its own
+            token_refresher = OAuth2TokenRefresher(None, config_values)
+            result = await token_refresher.refresh_token(
+                config=config,  # type: ignore[arg-type]
+                secrets=secrets,  # type: ignore[arg-type]
+            )
+
+            logger.info("Proactive token refresh successful")
+            return result
+
+        except Exception as e:
+            # Proactive refresh failed - this is fatal since we have no access_token
+            msg = f"Failed to obtain access_token via token refresh: {e!s}"
+            logger.error(msg)
+            raise AuthenticationError(msg) from e
 
 
 class OAuth2TokenRefresher:
@@ -672,7 +800,7 @@ class OAuth2TokenRefresher:
         self,
         config: OAuth2AuthConfig,
         secrets: OAuth2RefreshSecrets,
-    ) -> dict[str, str]:
+    ) -> TokenRefreshResult:
         """Refresh the OAuth2 access token using the refresh token.
 
         This method orchestrates the token refresh flow by:
@@ -686,10 +814,9 @@ class OAuth2TokenRefresher:
             secrets: OAuth2 credentials including refresh_token and client credentials
 
         Returns:
-            Dictionary with new tokens:
-                - access_token: New access token
-                - refresh_token: New refresh token (if provided)
-                - token_type: Token type (default: "Bearer")
+            TokenRefreshResult containing:
+                - tokens: dict with access_token, refresh_token (if provided), token_type
+                - extracted_values: dict of fields extracted via x-airbyte-token-extract
 
         Raises:
             AuthenticationError: If refresh fails or required fields missing
@@ -703,7 +830,10 @@ class OAuth2TokenRefresher:
             url, headers, body_params, config
         )
 
-        return self._parse_refresh_response(response)
+        # Get token_extract config if present
+        token_extract: list[str] | None = config.get("token_extract")  # type: ignore[assignment]
+
+        return self._parse_refresh_response(response, token_extract)
 
     def _validate_refresh_requirements(
         self,
@@ -899,14 +1029,20 @@ class OAuth2TokenRefresher:
             if close_client:
                 await client.aclose()
 
-    def _parse_refresh_response(self, response_data: dict[str, Any]) -> dict[str, str]:
+    def _parse_refresh_response(
+        self,
+        response_data: dict[str, Any],
+        token_extract: list[str] | None = None,
+    ) -> TokenRefreshResult:
         """Parse and validate the token refresh response.
 
         Args:
             response_data: Parsed JSON response from token endpoint
+            token_extract: Optional list of fields to extract from response
+                and use as server variables (e.g., ["instance_url"])
 
         Returns:
-            Dictionary with new tokens (access_token, token_type, refresh_token)
+            TokenRefreshResult with tokens and optional extracted values
 
         Raises:
             AuthenticationError: If access_token is missing from response
@@ -916,16 +1052,35 @@ class OAuth2TokenRefresher:
             msg = "Token refresh response missing 'access_token'"
             raise AuthenticationError(msg)
 
-        result = {
+        tokens = {
             "access_token": new_access_token,
             "token_type": response_data.get("token_type", "Bearer"),
         }
 
         # Include new refresh_token if provided by the server
         if "refresh_token" in response_data:
-            result["refresh_token"] = response_data["refresh_token"]
+            tokens["refresh_token"] = response_data["refresh_token"]
 
-        return result
+        # Extract fields specified by x-airbyte-token-extract
+        extracted_values: dict[str, str] | None = None
+        if token_extract:
+            extracted = {}
+            for field in token_extract:
+                if field in response_data:
+                    value = response_data[field]
+                    if isinstance(value, str):
+                        extracted[field] = value
+                    else:
+                        # Convert non-string values to string for server variables
+                        extracted[field] = str(value)
+                    logger.debug(
+                        "Extracted '%s' from token response for server variable",
+                        field,
+                    )
+            if extracted:
+                extracted_values = extracted
+
+        return TokenRefreshResult(tokens=tokens, extracted_values=extracted_values)
 
 
 class AuthStrategyFactory:

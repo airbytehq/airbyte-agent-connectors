@@ -7,7 +7,8 @@ References:
 """
 
 from typing import Optional, Dict, List, Literal, Any
-from pydantic import BaseModel, Field, model_validator, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class OAuth2Flow(BaseModel):
@@ -180,6 +181,23 @@ class SecurityScheme(BaseModel):
     x_airbyte_auth_config: Optional[AirbyteAuthConfig] = Field(
         None, alias="x-airbyte-auth-config"
     )
+    x_airbyte_token_extract: Optional[List[str]] = Field(
+        None,
+        alias="x-airbyte-token-extract",
+        description="List of fields to extract from OAuth2 token responses and use as server variables",
+    )
+
+    @field_validator("x_airbyte_token_extract", mode="after")
+    @classmethod
+    def validate_token_extract(cls, v: Optional[List[str]]) -> Optional[List[str]]:
+        """Validate x-airbyte-token-extract has no duplicates."""
+        if v is not None:
+            if len(v) != len(set(v)):
+                duplicates = [x for x in v if v.count(x) > 1]
+                raise ValueError(
+                    f"x-airbyte-token-extract contains duplicate fields: {set(duplicates)}"
+                )
+        return v
 
     # Future extensions (commented out, defined for future use)
     # x_grant_type: Optional[Literal["refresh_token", "client_credentials"]] = Field(None, alias="x-grant-type")
