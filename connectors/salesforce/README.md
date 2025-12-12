@@ -13,7 +13,13 @@ uv pip install airbyte-ai-salesforce
 ```python
 from airbyte_ai_salesforce import SalesforceConnector, SalesforceAuthConfig
 
-connector = SalesforceConnector(auth_config=SalesforceAuthConfig(refresh_token="...", client_id="...", client_secret="..."))
+connector = SalesforceConnector(
+  auth_config=SalesforceAuthConfig(
+    refresh_token="...",
+    client_id="...",
+    client_secret="..."
+  )
+)
 result = connector.accounts.list()
 ```
 
@@ -41,8 +47,8 @@ For the service's official API docs, see [Salesforce API Reference](https://deve
 
 ## Version Information
 
-**Package Version:** 0.1.0
+**Package Version:** 0.1.1
 
-**Connector Version:** 1.0.1
+**Connector Version:** 1.0.2
 
-**Generated with connector-sdk:** e71241ace7779e549923d51f530bb0de88befd58
+**Generated with connector-sdk:** 244fd1c68b3331a3cc61c67f2d7625cd43909b2d

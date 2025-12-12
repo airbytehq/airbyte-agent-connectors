@@ -1963,7 +1963,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
-  "connector_definition_id": "CONNECTOR_ID",
+  "connector_definition_id": "b117307c-14b6-41aa-9422-947e34922962",
   "auth_config": {
     "refresh_token": "<OAuth refresh token for automatic token renewal>",
     "client_id": "<Connected App Consumer Key>",
