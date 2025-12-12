@@ -1,7 +1,12 @@
 openapi: 3.1.0
 info:
   title: GitHub API Connector
-  version: 0.1.0
+  version: 0.1.1
+  description: |
+    GitHub is a platform for version control and collaborative software development
+    using Git. This connector provides access to repositories, branches, commits, issues,
+    pull requests, reviews, comments, releases, organizations, teams, and users for
+    development workflow analysis and project management insights.
   x-airbyte-connector-name: github
   x-airbyte-connector-id: ef69ef6e-aa7f-4af1-a01d-ef775033524e
   x-airbyte-external-documentation-urls:
@@ -20,6 +25,24 @@ info:
     - type: authentication_guide
       title: GitHub REST API Authentication Guide
       url: https://docs.github.com/en/rest/authentication/authenticating-to-the-rest-api
+  x-airbyte-example-questions:
+    supported:
+      - "Show me all open issues in my repositories this month"
+      - "List the top 5 repositories I've starred recently"
+      - "Analyze the commit trends in my main project over the last quarter"
+      - "Find all pull requests created by [teamMember] in the past two weeks"
+      - "Search for repositories related to machine learning in my organizations"
+      - "Compare the number of contributors across my different team projects"
+      - "Identify the most active branches in my main repository"
+      - "Get details about the most recent releases in my organization"
+      - "List all milestones for our current development sprint"
+      - "Show me insights about pull request review patterns in our team"
+    unsupported:
+      - "Create a new issue in the project repository"
+      - "Update the status of this pull request"
+      - "Delete an old branch from the repository"
+      - "Schedule a team review for this code"
+      - "Assign a new label to this issue"
 
 servers:
   - url: https://api.github.com
