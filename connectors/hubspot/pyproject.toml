@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-ai-hubspot"
-version = "0.15.10"
+version = "0.15.11"
 description = "Airbyte Hubspot Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"

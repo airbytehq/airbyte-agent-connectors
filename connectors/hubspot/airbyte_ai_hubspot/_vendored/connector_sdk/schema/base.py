@@ -7,8 +7,9 @@ References:
 """
 
 from enum import StrEnum
-from typing import Optional, Dict
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+from typing import Dict, Optional
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_core import Url
 
 from .extensions import RetryConfig

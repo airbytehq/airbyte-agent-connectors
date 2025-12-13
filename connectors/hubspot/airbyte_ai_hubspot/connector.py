@@ -95,6 +95,27 @@ class HubspotConnector:
         ("objects", "get"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('contacts', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('contacts', 'get'): {'contact_id': 'contactId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('contacts', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('companies', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('companies', 'get'): {'company_id': 'companyId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('companies', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('deals', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('deals', 'get'): {'deal_id': 'dealId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('deals', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('tickets', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
+        ('tickets', 'get'): {'ticket_id': 'ticketId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
+        ('tickets', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('schemas', 'list'): {'archived': 'archived'},
+        ('schemas', 'get'): {'object_type': 'objectType'},
+        ('objects', 'list'): {'object_type': 'objectType', 'limit': 'limit', 'after': 'after', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'properties_with_history': 'propertiesWithHistory'},
+        ('objects', 'get'): {'object_type': 'objectType', 'object_id': 'objectId', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'id_property': 'idProperty', 'properties_with_history': 'propertiesWithHistory'},
+    }
+
     def __init__(
         self,
         auth_config: HubspotAuthConfig | None = None,
@@ -358,6 +379,12 @@ class HubspotConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(

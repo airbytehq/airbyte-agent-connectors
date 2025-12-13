@@ -64,8 +64,8 @@ For the service's official API docs, see [Hubspot API Reference](https://develop
 
 ## Version Information
 
-**Package Version:** 0.15.10
+**Package Version:** 0.15.11
 
 **Connector Version:** 0.1.2
 
-**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
+**Generated with connector-sdk:** 1ab72bd8e7249872a4cf66327dd1a0bf68905acb
