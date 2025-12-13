@@ -7,8 +7,9 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#parameter-object
 """
 
-from typing import Optional, Dict, Any, List, Literal, Union
-from pydantic import BaseModel, Field, ConfigDict
+from typing import Any, Dict, List, Literal, Optional, Union
+
+from pydantic import BaseModel, ConfigDict, Field
 
 from .security import SecurityScheme
 

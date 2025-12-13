@@ -1,7 +1,7 @@
 """Utility functions for working with connectors."""
 
+from collections.abc import AsyncIterator
 from pathlib import Path
-from typing import AsyncIterator
 
 
 async def save_download(

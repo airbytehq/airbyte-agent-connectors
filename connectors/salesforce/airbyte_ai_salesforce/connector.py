@@ -131,6 +131,45 @@ class SalesforceConnector:
         ("query", "list"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('accounts', 'list'): {'q': 'q'},
+        ('accounts', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('accounts', 'search'): {'q': 'q'},
+        ('contacts', 'list'): {'q': 'q'},
+        ('contacts', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('contacts', 'search'): {'q': 'q'},
+        ('leads', 'list'): {'q': 'q'},
+        ('leads', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('leads', 'search'): {'q': 'q'},
+        ('opportunities', 'list'): {'q': 'q'},
+        ('opportunities', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('opportunities', 'search'): {'q': 'q'},
+        ('tasks', 'list'): {'q': 'q'},
+        ('tasks', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('tasks', 'search'): {'q': 'q'},
+        ('events', 'list'): {'q': 'q'},
+        ('events', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('events', 'search'): {'q': 'q'},
+        ('campaigns', 'list'): {'q': 'q'},
+        ('campaigns', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('campaigns', 'search'): {'q': 'q'},
+        ('cases', 'list'): {'q': 'q'},
+        ('cases', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('cases', 'search'): {'q': 'q'},
+        ('notes', 'list'): {'q': 'q'},
+        ('notes', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('notes', 'search'): {'q': 'q'},
+        ('content_versions', 'list'): {'q': 'q'},
+        ('content_versions', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('content_versions', 'download'): {'id': 'id', 'range_header': 'range_header'},
+        ('attachments', 'list'): {'q': 'q'},
+        ('attachments', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('attachments', 'download'): {'id': 'id', 'range_header': 'range_header'},
+        ('query', 'list'): {'q': 'q'},
+    }
+
     def __init__(
         self,
         auth_config: SalesforceAuthConfig | None = None,
@@ -551,6 +590,12 @@ class SalesforceConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
