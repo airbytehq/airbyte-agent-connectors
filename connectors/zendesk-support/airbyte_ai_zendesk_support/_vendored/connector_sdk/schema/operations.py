@@ -6,12 +6,13 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#path-item-object
 """
 
-from typing import Optional, List, Dict, Any
-from pydantic import BaseModel, Field, ConfigDict, model_validator
+from typing import Any, Dict, List, Optional
 
-from .components import Parameter, RequestBody, Response, PathOverrideConfig
-from .security import SecurityRequirement
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 from ..extensions import ActionTypeLiteral
+from .components import Parameter, PathOverrideConfig, RequestBody, Response
+from .security import SecurityRequirement
 
 
 class Operation(BaseModel):

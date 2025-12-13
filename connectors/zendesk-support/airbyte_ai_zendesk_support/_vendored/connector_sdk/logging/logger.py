@@ -9,7 +9,6 @@ from typing import Any, Dict, Optional, Set
 
 from .types import LogSession, RequestLog
 
-
 # Headers to redact for security
 SENSITIVE_HEADERS: Set[str] = {
     "authorization",

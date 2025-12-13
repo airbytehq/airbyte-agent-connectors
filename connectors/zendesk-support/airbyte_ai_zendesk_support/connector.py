@@ -158,6 +158,50 @@ class ZendeskSupportConnector:
         ("article_attachments", "download"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort': 'sort'},
+        ('tickets', 'get'): {'ticket_id': 'ticket_id'},
+        ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id'},
+        ('users', 'get'): {'user_id': 'user_id'},
+        ('organizations', 'list'): {'page': 'page'},
+        ('organizations', 'get'): {'organization_id': 'organization_id'},
+        ('groups', 'list'): {'page': 'page', 'exclude_deleted': 'exclude_deleted'},
+        ('groups', 'get'): {'group_id': 'group_id'},
+        ('ticket_comments', 'list'): {'ticket_id': 'ticket_id', 'page': 'page', 'include_inline_images': 'include_inline_images', 'sort': 'sort'},
+        ('attachments', 'get'): {'attachment_id': 'attachment_id'},
+        ('attachments', 'download'): {'attachment_id': 'attachment_id', 'range_header': 'range_header'},
+        ('ticket_audits', 'list'): {'ticket_id': 'ticket_id', 'page': 'page'},
+        ('ticket_metrics', 'list'): {'page': 'page'},
+        ('ticket_fields', 'list'): {'page': 'page', 'locale': 'locale'},
+        ('ticket_fields', 'get'): {'ticket_field_id': 'ticket_field_id'},
+        ('brands', 'list'): {'page': 'page'},
+        ('brands', 'get'): {'brand_id': 'brand_id'},
+        ('views', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'group_id': 'group_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('views', 'get'): {'view_id': 'view_id'},
+        ('macros', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'category': 'category', 'group_id': 'group_id', 'only_viewable': 'only_viewable', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('macros', 'get'): {'macro_id': 'macro_id'},
+        ('triggers', 'list'): {'page': 'page', 'active': 'active', 'category_id': 'category_id', 'sort': 'sort'},
+        ('triggers', 'get'): {'trigger_id': 'trigger_id'},
+        ('automations', 'list'): {'page': 'page', 'active': 'active', 'sort': 'sort'},
+        ('automations', 'get'): {'automation_id': 'automation_id'},
+        ('tags', 'list'): {'page': 'page'},
+        ('satisfaction_ratings', 'list'): {'page': 'page', 'score': 'score', 'start_time': 'start_time', 'end_time': 'end_time'},
+        ('satisfaction_ratings', 'get'): {'satisfaction_rating_id': 'satisfaction_rating_id'},
+        ('group_memberships', 'list'): {'page': 'page'},
+        ('organization_memberships', 'list'): {'page': 'page'},
+        ('sla_policies', 'list'): {'page': 'page'},
+        ('sla_policies', 'get'): {'sla_policy_id': 'sla_policy_id'},
+        ('ticket_forms', 'list'): {'page': 'page', 'active': 'active', 'end_user_visible': 'end_user_visible'},
+        ('ticket_forms', 'get'): {'ticket_form_id': 'ticket_form_id'},
+        ('articles', 'list'): {'page': 'page', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('articles', 'get'): {'id': 'id'},
+        ('article_attachments', 'list'): {'article_id': 'article_id', 'page': 'page'},
+        ('article_attachments', 'get'): {'article_id': 'article_id', 'attachment_id': 'attachment_id'},
+        ('article_attachments', 'download'): {'article_id': 'article_id', 'attachment_id': 'attachment_id', 'range_header': 'range_header'},
+    }
+
     def __init__(
         self,
         auth_config: ZendeskSupportAuthConfig | None = None,
@@ -645,6 +689,12 @@ class ZendeskSupportConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
