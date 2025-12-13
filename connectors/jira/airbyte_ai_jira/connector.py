@@ -75,6 +75,23 @@ class JiraConnector:
         ("issue_worklogs", "get"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('issues', 'search'): {'jql': 'jql', 'next_page_token': 'nextPageToken', 'max_results': 'maxResults', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'fail_fast': 'failFast'},
+        ('issues', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'update_history': 'updateHistory', 'fail_fast': 'failFast'},
+        ('projects', 'search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'id': 'id', 'keys': 'keys', 'query': 'query', 'type_key': 'typeKey', 'category_id': 'categoryId', 'action': 'action', 'expand': 'expand', 'status': 'status'},
+        ('projects', 'get'): {'project_id_or_key': 'projectIdOrKey', 'expand': 'expand', 'properties': 'properties'},
+        ('users', 'get'): {'account_id': 'accountId', 'expand': 'expand'},
+        ('users', 'list'): {'start_at': 'startAt', 'max_results': 'maxResults'},
+        ('users', 'search'): {'query': 'query', 'start_at': 'startAt', 'max_results': 'maxResults', 'account_id': 'accountId', 'property': 'property'},
+        ('issue_fields', 'search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'type': 'type', 'id': 'id', 'query': 'query', 'order_by': 'orderBy', 'expand': 'expand'},
+        ('issue_comments', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'expand': 'expand'},
+        ('issue_comments', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'expand': 'expand'},
+        ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
+        ('issue_worklogs', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'worklog_id': 'worklogId', 'expand': 'expand'},
+    }
+
     def __init__(
         self,
         auth_config: JiraAuthConfig | None = None,
@@ -321,6 +338,12 @@ class JiraConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
