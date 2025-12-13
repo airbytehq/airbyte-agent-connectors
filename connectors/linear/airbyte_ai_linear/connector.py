@@ -57,6 +57,17 @@ class LinearConnector:
         ("teams", "get"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('issues', 'list'): {'first': 'first', 'after': 'after'},
+        ('issues', 'get'): {'id': 'id'},
+        ('projects', 'list'): {'first': 'first', 'after': 'after'},
+        ('projects', 'get'): {'id': 'id'},
+        ('teams', 'list'): {'first': 'first', 'after': 'after'},
+        ('teams', 'get'): {'id': 'id'},
+    }
+
     def __init__(
         self,
         auth_config: LinearAuthConfig | None = None,
@@ -237,6 +248,12 @@ class LinearConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
