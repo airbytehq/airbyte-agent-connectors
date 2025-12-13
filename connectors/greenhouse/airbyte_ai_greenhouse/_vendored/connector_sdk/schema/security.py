@@ -6,7 +6,7 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
 """
 
-from typing import Optional, Dict, List, Literal, Any
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 

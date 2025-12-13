@@ -3,54 +3,54 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import os
 import re
 import time
-import logging
-
-from typing import Any, AsyncIterator, Protocol
+from collections.abc import AsyncIterator
+from typing import Any, Protocol
 from urllib.parse import quote
 
 from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
+from ..auth_template import apply_auth_mapping
+from ..config_loader import load_connector_config
 from ..constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
 )
-from ..secrets import SecretStr
 from ..http_client import HTTPClient, TokenRefreshCallback
-from ..config_loader import load_connector_config
 from ..logging import NullLogger, RequestLogger
 from ..observability import ObservabilitySession
-from ..auth_template import apply_auth_mapping
+from ..schema.extensions import RetryConfig
+from ..secrets import SecretStr
 from ..telemetry import SegmentTracker
 from ..types import (
+    Action,
     AuthConfig,
     AuthOption,
     ConnectorConfig,
-    EntityDefinition,
-    Action,
     EndpointDefinition,
+    EntityDefinition,
 )
-from ..schema.extensions import RetryConfig
 
 from .models import (
+    ActionNotSupportedError,
+    EntityNotFoundError,
     ExecutionConfig,
     ExecutionResult,
-    StandardExecuteResult,
     ExecutorError,
-    EntityNotFoundError,
-    ActionNotSupportedError,
-    MissingParameterError,
     InvalidParameterError,
+    MissingParameterError,
+    StandardExecuteResult,
 )
 
 
 class _OperationContext:
     """Shared context for operation handlers."""
 
-    def __init__(self, executor: "LocalExecutor"):
+    def __init__(self, executor: LocalExecutor):
         self.executor = executor
         self.http_client = executor.http_client
         self.tracker = executor.tracker

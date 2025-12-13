@@ -7,12 +7,13 @@ These tools help ensure that connectors are ready to ship by:
 - Detecting fields present in responses but not declared in schemas
 """
 
-from pathlib import Path
-from typing import Dict, List, Tuple, Any
 from collections import defaultdict
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
 import jsonschema
 
-from .config_loader import load_connector_config, ConfigLoaderError
+from .config_loader import ConfigLoaderError, load_connector_config
 from .testing.spec_loader import load_test_spec
 from .types import Action
 

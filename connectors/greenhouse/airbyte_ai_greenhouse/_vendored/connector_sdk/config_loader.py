@@ -15,7 +15,11 @@ from .constants import (
     OPENAPI_VERSION_PREFIX,
 )
 
+from .schema import OpenAPIConnector
+from .schema.components import GraphQLBodyConfig, RequestBody
+from .schema.security import AirbyteAuthConfig, AuthConfigFieldSpec
 from .types import (
+    Action,
     AuthConfig,
     AuthOption,
     AuthType,
@@ -23,11 +27,7 @@ from .types import (
     ContentType,
     EndpointDefinition,
     EntityDefinition,
-    Action,
 )
-from .schema import OpenAPIConnector
-from .schema.components import RequestBody, GraphQLBodyConfig
-from .schema.security import AirbyteAuthConfig, AuthConfigFieldSpec
 
 
 class ConfigLoaderError(Exception):
