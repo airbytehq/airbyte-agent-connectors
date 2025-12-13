@@ -150,6 +150,48 @@ class GithubConnector:
         ("viewer_repositories", "list"): True,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('repositories', 'get'): {'owner': 'owner', 'repo': 'repo', 'fields': 'fields'},
+        ('repositories', 'list'): {'username': 'username', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('repositories', 'search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
+        ('org_repositories', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('branches', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('branches', 'get'): {'owner': 'owner', 'repo': 'repo', 'branch': 'branch', 'fields': 'fields'},
+        ('commits', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('commits', 'get'): {'owner': 'owner', 'repo': 'repo', 'sha': 'sha', 'fields': 'fields'},
+        ('releases', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('releases', 'get'): {'owner': 'owner', 'repo': 'repo', 'tag': 'tag', 'fields': 'fields'},
+        ('issues', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('issues', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
+        ('issues', 'search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('pull_requests', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('pull_requests', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
+        ('pull_requests', 'search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('reviews', 'list'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('comments', 'list'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('comments', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('pr_comments', 'list'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('pr_comments', 'get'): {'id': 'id', 'fields': 'fields'},
+        ('labels', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('labels', 'get'): {'owner': 'owner', 'repo': 'repo', 'name': 'name', 'fields': 'fields'},
+        ('milestones', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('milestones', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
+        ('organizations', 'get'): {'org': 'org', 'fields': 'fields'},
+        ('organizations', 'list'): {'username': 'username', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('users', 'get'): {'username': 'username', 'fields': 'fields'},
+        ('users', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('users', 'search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
+        ('teams', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('teams', 'get'): {'org': 'org', 'team_slug': 'team_slug', 'fields': 'fields'},
+        ('tags', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('tags', 'get'): {'owner': 'owner', 'repo': 'repo', 'tag': 'tag', 'fields': 'fields'},
+        ('stargazers', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('viewer', 'get'): {'fields': 'fields'},
+        ('viewer_repositories', 'list'): {'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+    }
+
     def __init__(
         self,
         auth_config: GithubAuthConfig | None = None,
@@ -594,6 +636,12 @@ class GithubConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(

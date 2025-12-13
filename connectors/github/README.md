@@ -80,8 +80,8 @@ For the service's official API docs, see [Github API Reference](https://docs.git
 
 ## Version Information
 
-**Package Version:** 0.18.9
+**Package Version:** 0.18.10
 
 **Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** 4d366cb586482b57efd0c680b3523bbfe48f2180
+**Generated with connector-sdk:** 1ab72bd8e7249872a4cf66327dd1a0bf68905acb
