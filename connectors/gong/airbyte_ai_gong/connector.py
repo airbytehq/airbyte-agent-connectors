@@ -102,6 +102,28 @@ class GongConnector:
         ("stats_activity_scorecards", "list"): True,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('users', 'list'): {'cursor': 'cursor'},
+        ('users', 'get'): {'id': 'id'},
+        ('calls', 'list'): {'from_date_time': 'fromDateTime', 'to_date_time': 'toDateTime', 'cursor': 'cursor'},
+        ('calls', 'get'): {'id': 'id'},
+        ('calls_extensive', 'list'): {'filter': 'filter', 'content_selector': 'contentSelector', 'cursor': 'cursor'},
+        ('call_audio', 'download'): {'filter': 'filter', 'content_selector': 'contentSelector', 'range_header': 'range_header'},
+        ('call_video', 'download'): {'filter': 'filter', 'content_selector': 'contentSelector', 'range_header': 'range_header'},
+        ('call_transcripts', 'list'): {'filter': 'filter', 'cursor': 'cursor'},
+        ('stats_activity_aggregate', 'list'): {'filter': 'filter'},
+        ('stats_activity_day_by_day', 'list'): {'filter': 'filter'},
+        ('stats_interaction', 'list'): {'filter': 'filter'},
+        ('settings_scorecards', 'list'): {'workspace_id': 'workspaceId'},
+        ('settings_trackers', 'list'): {'workspace_id': 'workspaceId'},
+        ('library_folders', 'list'): {'workspace_id': 'workspaceId'},
+        ('library_folder_content', 'list'): {'folder_id': 'folderId', 'cursor': 'cursor'},
+        ('coaching', 'list'): {'workspace_id': 'workspace-id', 'manager_id': 'manager-id', 'from_': 'from', 'to': 'to'},
+        ('stats_activity_scorecards', 'list'): {'filter': 'filter', 'cursor': 'cursor'},
+    }
+
     def __init__(
         self,
         auth_config: GongAuthConfig | None = None,
@@ -391,6 +413,12 @@ class GongConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(

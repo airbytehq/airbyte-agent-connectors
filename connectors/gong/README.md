@@ -74,8 +74,8 @@ For the service's official API docs, see [Gong API Reference](https://gong.app.g
 
 ## Version Information
 
-**Package Version:** 0.19.11
+**Package Version:** 0.19.12
 
 **Connector Version:** 0.1.3
 
-**Generated with connector-sdk:** dc79dc8b685e9d8cb980ea80f12595e31c88fdf7
+**Generated with connector-sdk:** 1ab72bd8e7249872a4cf66327dd1a0bf68905acb

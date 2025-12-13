@@ -15,28 +15,28 @@ Usage:
     print(connector.list_resources())
 """
 
-from .connector import OpenAPIConnector, Tag, ExternalDocs
-from .base import Info, Server, Contact, License, ServerVariable
-from .security import (
-    SecurityScheme,
-    SecurityRequirement,
-    OAuth2Flow,
-    OAuth2Flows,
-    AirbyteAuthConfig,
-    AuthConfigOption,
-    AuthConfigFieldSpec,
-)
+from .base import Contact, Info, License, Server, ServerVariable
 from .components import (
     Components,
-    Schema,
+    Header,
+    MediaType,
     Parameter,
     RequestBody,
     Response,
-    MediaType,
-    Header,
+    Schema,
 )
-from .operations import PathItem, Operation
+from .connector import ExternalDocs, OpenAPIConnector, Tag
 from .extensions import PaginationConfig, RateLimitConfig, RetryConfig
+from .operations import Operation, PathItem
+from .security import (
+    AirbyteAuthConfig,
+    AuthConfigFieldSpec,
+    AuthConfigOption,
+    OAuth2Flow,
+    OAuth2Flows,
+    SecurityRequirement,
+    SecurityScheme,
+)
 
 __all__ = [
     # Root model
