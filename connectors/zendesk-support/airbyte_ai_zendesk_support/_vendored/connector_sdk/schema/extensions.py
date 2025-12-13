@@ -12,7 +12,8 @@ to Operation, Schema, or other models when their respective features
 are implemented.
 """
 
-from typing import Optional, Literal
+from typing import Literal, Optional
+
 from pydantic import BaseModel, ConfigDict
 
 
