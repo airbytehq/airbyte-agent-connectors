@@ -8,13 +8,14 @@ References:
 from __future__ import annotations
 
 from typing import Any
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from ..constants import OPENAPI_VERSION_PREFIX
 
 from .base import Info, Server
-from .operations import PathItem
 from .components import Components
+from .operations import PathItem
 from .security import SecurityRequirement
 
 

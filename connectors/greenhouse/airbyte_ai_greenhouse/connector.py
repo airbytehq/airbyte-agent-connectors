@@ -90,6 +90,32 @@ class GreenhouseConnector:
         ("candidate_attachment", "download"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('candidates', 'list'): {'per_page': 'per_page', 'page': 'page'},
+        ('candidates', 'get'): {'id': 'id'},
+        ('applications', 'list'): {'per_page': 'per_page', 'page': 'page', 'created_before': 'created_before', 'created_after': 'created_after', 'last_activity_after': 'last_activity_after', 'job_id': 'job_id', 'status': 'status'},
+        ('applications', 'get'): {'id': 'id'},
+        ('jobs', 'list'): {'per_page': 'per_page', 'page': 'page'},
+        ('jobs', 'get'): {'id': 'id'},
+        ('offers', 'list'): {'per_page': 'per_page', 'page': 'page', 'created_before': 'created_before', 'created_after': 'created_after', 'resolved_after': 'resolved_after'},
+        ('offers', 'get'): {'id': 'id'},
+        ('users', 'list'): {'per_page': 'per_page', 'page': 'page', 'created_before': 'created_before', 'created_after': 'created_after', 'updated_before': 'updated_before', 'updated_after': 'updated_after'},
+        ('users', 'get'): {'id': 'id'},
+        ('departments', 'list'): {'per_page': 'per_page', 'page': 'page'},
+        ('departments', 'get'): {'id': 'id'},
+        ('offices', 'list'): {'per_page': 'per_page', 'page': 'page'},
+        ('offices', 'get'): {'id': 'id'},
+        ('job_posts', 'list'): {'per_page': 'per_page', 'page': 'page', 'live': 'live', 'active': 'active'},
+        ('job_posts', 'get'): {'id': 'id'},
+        ('sources', 'list'): {'per_page': 'per_page', 'page': 'page'},
+        ('scheduled_interviews', 'list'): {'per_page': 'per_page', 'page': 'page', 'created_before': 'created_before', 'created_after': 'created_after', 'updated_before': 'updated_before', 'updated_after': 'updated_after', 'starts_after': 'starts_after', 'ends_before': 'ends_before'},
+        ('scheduled_interviews', 'get'): {'id': 'id'},
+        ('application_attachment', 'download'): {'id': 'id', 'attachment_index': 'attachment_index', 'range_header': 'range_header'},
+        ('candidate_attachment', 'download'): {'id': 'id', 'attachment_index': 'attachment_index', 'range_header': 'range_header'},
+    }
+
     def __init__(
         self,
         auth_config: GreenhouseAuthConfig | None = None,
@@ -399,6 +425,12 @@ class GreenhouseConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
