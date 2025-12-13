@@ -68,8 +68,8 @@ For the service's official API docs, see [Stripe API Reference](https://docs.str
 
 ## Version Information
 
-**Package Version:** 0.5.10
+**Package Version:** 0.5.11
 
 **Connector Version:** 0.1.2
 
-**Generated with connector-sdk:** 8f76f7b8b3c9c5f3bf4eb2a403e684823646246a
+**Generated with connector-sdk:** 1ab72bd8e7249872a4cf66327dd1a0bf68905acb

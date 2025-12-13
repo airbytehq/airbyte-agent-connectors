@@ -134,6 +134,37 @@ class StripeConnector:
         ("payouts", "get"): False,
     }
 
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('customers', 'list'): {'limit': 'limit', 'starting_after': 'starting_after', 'ending_before': 'ending_before', 'email': 'email', 'created': 'created'},
+        ('customers', 'get'): {'id': 'id'},
+        ('customers', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('invoices', 'list'): {'collection_method': 'collection_method', 'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status', 'subscription': 'subscription'},
+        ('invoices', 'get'): {'id': 'id'},
+        ('invoices', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('charges', 'list'): {'created': 'created', 'customer': 'customer', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
+        ('charges', 'get'): {'id': 'id'},
+        ('charges', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('subscriptions', 'list'): {'automatic_tax': 'automatic_tax', 'collection_method': 'collection_method', 'created': 'created', 'current_period_end': 'current_period_end', 'current_period_start': 'current_period_start', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'price': 'price', 'starting_after': 'starting_after', 'status': 'status'},
+        ('subscriptions', 'get'): {'id': 'id'},
+        ('subscriptions', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('refunds', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
+        ('refunds', 'get'): {'id': 'id'},
+        ('products', 'list'): {'active': 'active', 'created': 'created', 'ending_before': 'ending_before', 'ids': 'ids', 'limit': 'limit', 'shippable': 'shippable', 'starting_after': 'starting_after', 'url': 'url'},
+        ('products', 'get'): {'id': 'id'},
+        ('products', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('balance_transactions', 'list'): {'created': 'created', 'currency': 'currency', 'ending_before': 'ending_before', 'limit': 'limit', 'payout': 'payout', 'source': 'source', 'starting_after': 'starting_after', 'type': 'type'},
+        ('balance_transactions', 'get'): {'id': 'id'},
+        ('payment_intents', 'list'): {'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after'},
+        ('payment_intents', 'get'): {'id': 'id'},
+        ('payment_intents', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('disputes', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
+        ('disputes', 'get'): {'id': 'id'},
+        ('payouts', 'list'): {'arrival_date': 'arrival_date', 'created': 'created', 'destination': 'destination', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status'},
+        ('payouts', 'get'): {'id': 'id'},
+    }
+
     def __init__(
         self,
         auth_config: StripeAuthConfig | None = None,
@@ -490,6 +521,12 @@ class StripeConnector:
             )
         """
         from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
