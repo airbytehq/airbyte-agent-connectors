@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-stripe"
+name = "airbyte-agent-stripe"
 version = "0.5.11"
 description = "Airbyte Stripe Connector for AI platforms"
 readme = "README.md"

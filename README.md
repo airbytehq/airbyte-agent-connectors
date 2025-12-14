@@ -11,7 +11,7 @@
 <p/>
 
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![Publish Connectors](https://github.com/airbytehq/airbyte-ai-connectors/actions/workflows/publish.yml/badge.svg)](https://github.com/airbytehq/airbyte-ai-connectors/actions/workflows/publish.yml)
+[![Publish Connectors](https://github.com/airbytehq/airbyte-agent-connectors/actions/workflows/publish.yml/badge.svg)](https://github.com/airbytehq/airbyte-agent-connectors/actions/workflows/publish.yml)
 [![License](https://img.shields.io/badge/License-Elastic_2.0-blue.svg)](LICENSE)
 [![Airbyte Stars](https://img.shields.io/github/stars/airbytehq/airbyte-agent-connectors?style=social)](https://github.com/airbytehq/airbyte-agent-connectors)
 [![Slack](https://img.shields.io/badge/Slack-Join_Community-4A154B?logo=slack&logoColor=white)](https://slack.airbyte.com/)
@@ -32,7 +32,7 @@ The Python SDK exposes Airbyte AI Connectors as native Python clients. These can
 ```yaml
 dependencies = [
     "pydantic-ai>=0.0.1",
-    "airbyte-ai-gong",
+    "airbyte-agent-gong",
 ]
 ```
 
@@ -79,7 +79,7 @@ async def get_user(user_id: str):
     return await connector.users.get(id=user_id)
 ```
 
-You can see a detailed list of supported entities and methods for each connector by navigating to its [available operations](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/gong#available-operations).
+You can see a detailed list of supported entities and methods for each connector by navigating to its [available operations](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong#available-operations).
 
 ## Connector Structure
 Each connector is a standalone Python package:

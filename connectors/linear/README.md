@@ -29,7 +29,7 @@ for sprint planning, backlog management, and development workflow analysis.
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-linear
+uv pip install airbyte-agent-linear
 ```
 
 ## Usage

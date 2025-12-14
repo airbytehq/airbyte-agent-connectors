@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-github"
+name = "airbyte-agent-github"
 version = "0.18.10"
 description = "Airbyte Github Connector for AI platforms"
 readme = "README.md"

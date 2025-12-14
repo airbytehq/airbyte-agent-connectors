@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-zendesk-support"
+name = "airbyte-agent-zendesk-support"
 version = "0.18.11"
 description = "Airbyte Zendesk-Support Connector for AI platforms"
 readme = "README.md"

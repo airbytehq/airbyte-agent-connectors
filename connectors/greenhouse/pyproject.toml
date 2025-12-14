@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-greenhouse"
+name = "airbyte-agent-greenhouse"
 version = "0.17.10"
 description = "Airbyte Greenhouse Connector for AI platforms"
 readme = "README.md"

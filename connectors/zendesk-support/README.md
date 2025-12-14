@@ -29,7 +29,7 @@ for customer support analytics and service performance insights.
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-zendesk-support
+uv pip install airbyte-agent-zendesk-support
 ```
 
 ## Usage

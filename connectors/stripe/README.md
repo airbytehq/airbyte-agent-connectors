@@ -29,7 +29,7 @@ access to customers for payment analytics and customer management.
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-stripe
+uv pip install airbyte-agent-stripe
 ```
 
 ## Usage

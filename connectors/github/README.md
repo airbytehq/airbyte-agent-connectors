@@ -30,7 +30,7 @@ development workflow analysis and project management insights.
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-github
+uv pip install airbyte-agent-github
 ```
 
 ## Usage

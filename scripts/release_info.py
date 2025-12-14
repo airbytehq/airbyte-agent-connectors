@@ -14,7 +14,7 @@ Usage:
     python scripts/release_info.py \
         --pyproject connectors/stripe/pyproject.toml \
         --changelog connectors/stripe/CHANGELOG.md \
-        --package-name airbyte-ai-stripe
+        --package-name airbyte-agent-stripe
 
     # For MCP:
     python scripts/release_info.py \
@@ -113,7 +113,7 @@ def main():
     parser.add_argument(
         "--package-name",
         required=True,
-        help="PyPI package name (e.g., airbyte-ai-stripe)",
+        help="PyPI package name (e.g., airbyte-agent-stripe)",
     )
     parser.add_argument(
         "--github-output",

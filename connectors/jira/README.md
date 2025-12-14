@@ -5,7 +5,7 @@ Connector for Jira API
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-jira
+uv pip install airbyte-agent-jira
 ```
 
 ## Usage

@@ -29,7 +29,7 @@ coaching metrics, and library content for sales performance analysis and revenue
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-gong
+uv pip install airbyte-agent-gong
 ```
 
 ## Usage

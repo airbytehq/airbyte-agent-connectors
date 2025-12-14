@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-jira"
+name = "airbyte-agent-jira"
 version = "0.1.1"
 description = "Airbyte Jira Connector for AI platforms"
 readme = "README.md"

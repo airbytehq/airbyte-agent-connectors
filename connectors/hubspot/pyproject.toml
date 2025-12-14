@@ -1,5 +1,5 @@
 [project]
-name = "airbyte-ai-hubspot"
+name = "airbyte-agent-hubspot"
 version = "0.15.11"
 description = "Airbyte Hubspot Connector for AI platforms"
 readme = "README.md"

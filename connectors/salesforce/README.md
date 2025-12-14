@@ -29,7 +29,7 @@ notes, and attachments for sales analytics and customer relationship management.
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-salesforce
+uv pip install airbyte-agent-salesforce
 ```
 
 ## Usage

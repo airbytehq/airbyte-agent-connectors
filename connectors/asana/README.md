@@ -30,7 +30,7 @@ teams, and users for project tracking, workload analysis, and productivity insig
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-asana
+uv pip install airbyte-agent-asana
 ```
 
 ## Usage
