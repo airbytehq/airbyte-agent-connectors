@@ -30,13 +30,13 @@ teams, and users for project tracking, workload analysis, and productivity insig
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-asana
+uv pip install airbyte-agent-asana
 ```
 
 ## Usage
 
 ```python
-from airbyte_ai_asana import AsanaConnector, AsanaAuthConfig
+from airbyte_agent_asana import AsanaConnector, AsanaAuthConfig
 
 connector = AsanaConnector(
   auth_config=AsanaAuthConfig(
@@ -83,8 +83,8 @@ For the service's official API docs, see [Asana API Reference](https://developer
 
 ## Version Information
 
-**Package Version:** 0.19.17
+**Package Version:** 0.19.18
 
 **Connector Version:** 0.1.4
 
-**Generated with connector-sdk:** 2a87588566814b03f5ce2400ba0c36743c859ba2
+**Generated with connector-sdk:** 85f4e6b03728cce87761a48e33f02aab68255baf

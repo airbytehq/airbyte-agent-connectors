@@ -1,6 +1,6 @@
 [project]
-name = "airbyte-ai-asana"
-version = "0.19.17"
+name = "airbyte-agent-asana"
+version = "0.19.18"
 description = "Airbyte Asana Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -45,7 +45,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["airbyte_ai_asana"]
+packages = ["airbyte_agent_asana"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"airbyte_ai_asana/connector.yaml" = "share/airbyte_ai_asana/connector.yaml"
+"airbyte_agent_asana/connector.yaml" = "share/airbyte_agent_asana/connector.yaml"
