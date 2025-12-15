@@ -49,9 +49,7 @@ class PerformanceMonitor:
         return {
             "count": metrics["count"],
             "total": metrics["total"],
-            "mean": metrics["total"] / metrics["count"]
-            if metrics["count"] > 0
-            else 0.0,
+            "mean": metrics["total"] / metrics["count"] if metrics["count"] > 0 else 0.0,
             "min": metrics["min"] if metrics["min"] != float("inf") else 0.0,
             "max": metrics["max"],
         }

@@ -60,9 +60,7 @@ class Schema(BaseModel):
     not_: Optional[Any] = Field(None, alias="not")
 
     # Metadata
-    nullable: Optional[bool] = Field(
-        None, deprecated="Use type union with null instead (OpenAPI 3.1)"
-    )
+    nullable: Optional[bool] = Field(None, deprecated="Use type union with null instead (OpenAPI 3.1)")
     read_only: Optional[bool] = Field(None, alias="readOnly")
     write_only: Optional[bool] = Field(None, alias="writeOnly")
     deprecated: Optional[bool] = None
@@ -121,9 +119,7 @@ class GraphQLBodyConfig(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    type: Literal["graphql"] = Field(
-        ..., description="Body type identifier (must be 'graphql')"
-    )
+    type: Literal["graphql"] = Field(..., description="Body type identifier (must be 'graphql')")
     query: str = Field(
         ...,
         description="GraphQL query or mutation string with optional template placeholders (e.g., {{ variable }})",
@@ -132,9 +128,7 @@ class GraphQLBodyConfig(BaseModel):
         None,
         description="Variables to substitute in the GraphQL query using template syntax (e.g., {{ param_name }})",
     )
-    operationName: Optional[str] = Field(
-        None, description="Operation name for queries with multiple operations"
-    )
+    operationName: Optional[str] = Field(None, description="Operation name for queries with multiple operations")
     default_fields: Optional[Union[str, List[str]]] = Field(
         None,
         description="Default fields to select if not provided in request parameters. Can be a string or array of field names.",
@@ -161,10 +155,7 @@ class PathOverrideConfig(BaseModel):
 
     path: str = Field(
         ...,
-        description=(
-            "Actual HTTP path to use for requests (e.g., '/graphql'). "
-            "Must start with '/'"
-        ),
+        description=("Actual HTTP path to use for requests (e.g., '/graphql'). " "Must start with '/'"),
     )
 
 
@@ -191,8 +182,7 @@ class RequestBody(BaseModel):
         None,
         alias="x-airbyte-body-type",  # AIRBYTE_BODY_TYPE
         description=(
-            "Body type and configuration. Contains 'type' field (e.g., 'graphql') "
-            "and type-specific configuration (query, variables, etc.)."
+            "Body type and configuration. Contains 'type' field (e.g., 'graphql') " "and type-specific configuration (query, variables, etc.)."
         ),
     )
 
@@ -241,12 +231,8 @@ class Components(BaseModel):
     responses: Dict[str, Response] = Field(default_factory=dict)
     parameters: Dict[str, Parameter] = Field(default_factory=dict)
     examples: Optional[Dict[str, Any]] = None
-    request_bodies: Dict[str, RequestBody] = Field(
-        default_factory=dict, alias="requestBodies"
-    )
+    request_bodies: Dict[str, RequestBody] = Field(default_factory=dict, alias="requestBodies")
     headers: Optional[Dict[str, Header]] = None
-    security_schemes: Dict[str, SecurityScheme] = Field(
-        default_factory=dict, alias="securitySchemes"
-    )
+    security_schemes: Dict[str, SecurityScheme] = Field(default_factory=dict, alias="securitySchemes")
     links: Optional[Dict[str, Any]] = None
     callbacks: Optional[Dict[str, Any]] = None

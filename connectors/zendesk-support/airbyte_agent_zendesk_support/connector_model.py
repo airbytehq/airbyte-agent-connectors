@@ -1,0 +1,3942 @@
+"""
+Connector model for zendesk-support.
+
+This file is auto-generated from the connector definition at build time.
+DO NOT EDIT MANUALLY - changes will be overwritten on next generation.
+"""
+
+from __future__ import annotations
+
+from ._vendored.connector_sdk.types import (
+    Action,
+    AuthConfig,
+    AuthOption,
+    AuthType,
+    ConnectorModel,
+    EndpointDefinition,
+    EntityDefinition,
+)
+from ._vendored.connector_sdk.schema.security import (
+    AirbyteAuthConfig,
+    AuthConfigFieldSpec,
+)
+from ._vendored.connector_sdk.schema.components import (
+    PathOverrideConfig,
+)
+
+ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
+    name='zendesk-support',
+    version='0.1.3',
+    base_url='https://{subdomain}.zendesk.com/api/v2',
+    auth=AuthConfig(
+        options=[
+            AuthOption(
+                scheme_name='zendeskOAuth',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://{{subdomain}}.zendesk.com/oauth/tokens',
+                },
+                user_config_spec=AirbyteAuthConfig(
+                    title='OAuth 2.0',
+                    description='Zendesk OAuth 2.0 authentication',
+                    type='object',
+                    required=['access_token'],
+                    properties={
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='OAuth 2.0 access token',
+                            airbyte_secret=True,
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='OAuth 2.0 refresh token (optional)',
+                            airbyte_secret=True,
+                        ),
+                    },
+                    auth_mapping={'access_token': '${access_token}', 'refresh_token': '${refresh_token}'},
+                ),
+            ),
+            AuthOption(
+                scheme_name='zendeskAPIToken',
+                type=AuthType.BASIC,
+                user_config_spec=AirbyteAuthConfig(
+                    title='API Token',
+                    description='Authenticate using email and API token',
+                    type='object',
+                    required=['email', 'api_token'],
+                    properties={
+                        'email': AuthConfigFieldSpec(
+                            title='Email Address',
+                            description='Your Zendesk account email address',
+                            format='email',
+                        ),
+                        'api_token': AuthConfigFieldSpec(
+                            title='API Token',
+                            description='Your Zendesk API token from Admin Center',
+                            airbyte_secret=True,
+                        ),
+                    },
+                    auth_mapping={'username': '${email}/token', 'password': '${api_token}'},
+                ),
+            ),
+        ],
+    ),
+    entities=[
+        EntityDefinition(
+            name='tickets',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tickets.json',
+                    action=Action.LIST,
+                    description='Returns a list of all tickets in your account',
+                    query_params=['page', 'external_id', 'sort'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'external_id': {'type': 'string', 'required': False},
+                        'sort': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'tickets': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the ticket is created'},
+                                        'url': {'type': 'string', 'description': 'The API url of this ticket'},
+                                        'external_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'An id you can use to link Zendesk Support tickets to local records',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The type of this ticket (problem, incident, question, task)',
+                                        },
+                                        'subject': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The value of the subject field for this ticket',
+                                        },
+                                        'raw_subject': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The dynamic content placeholder or the subject value',
+                                        },
+                                        'description': {'type': 'string', 'description': 'Read-only first comment on the ticket'},
+                                        'priority': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The urgency with which the ticket should be addressed (urgent, high, normal, low)',
+                                        },
+                                        'status': {
+                                            'type': 'string',
+                                            'enum': [
+                                                'new',
+                                                'open',
+                                                'pending',
+                                                'hold',
+                                                'solved',
+                                                'closed',
+                                            ],
+                                            'description': 'The state of the ticket',
+                                        },
+                                        'recipient': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The original recipient e-mail address of the ticket',
+                                        },
+                                        'requester_id': {'type': 'integer', 'description': 'The user who requested this ticket'},
+                                        'submitter_id': {'type': 'integer', 'description': 'The user who submitted the ticket'},
+                                        'assignee_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The agent currently assigned to the ticket',
+                                        },
+                                        'organization_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The organization of the requester',
+                                        },
+                                        'group_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The group this ticket is assigned to',
+                                        },
+                                        'collaborator_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': "The ids of users currently CC'ed on the ticket",
+                                        },
+                                        'follower_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'The ids of agents currently following the ticket',
+                                        },
+                                        'email_cc_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': "The ids of agents or end users currently CC'ed on the ticket",
+                                        },
+                                        'forum_topic_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The topic in the Zendesk Web portal this ticket originated from',
+                                        },
+                                        'problem_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'For tickets of type incident, the ID of the problem the incident is linked to',
+                                        },
+                                        'has_incidents': {'type': 'boolean', 'description': 'Is true if a ticket is a problem type and has one or more incidents linked to it'},
+                                        'is_public': {'type': 'boolean', 'description': 'Is true if any comments are public, false otherwise'},
+                                        'due_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'If this is a ticket of type task it has a due date',
+                                        },
+                                        'tags': {
+                                            'type': 'array',
+                                            'items': {'type': 'string'},
+                                            'description': 'The array of tags applied to this ticket',
+                                        },
+                                        'custom_fields': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Custom fields for the ticket',
+                                        },
+                                        'satisfaction_rating': {'type': 'object', 'description': 'The satisfaction rating of the ticket'},
+                                        'sharing_agreement_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'The ids of the sharing agreements used for this ticket',
+                                        },
+                                        'custom_status_id': {'type': 'integer', 'description': 'The custom ticket status id of the ticket'},
+                                        'fields': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Ticket fields',
+                                        },
+                                        'followup_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'The ids of the followups created from this ticket',
+                                        },
+                                        'ticket_form_id': {'type': 'integer', 'description': 'Enterprise only. The id of the ticket form to render for the ticket'},
+                                        'brand_id': {'type': 'integer', 'description': 'Enterprise only. The id of the brand this ticket is associated with'},
+                                        'allow_channelback': {'type': 'boolean', 'description': 'Is false if channelback is disabled, true otherwise'},
+                                        'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
+                                        'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
+                                        'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When this record was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When this record was last updated',
+                                        },
+                                        'via': {'type': 'object', 'description': 'How the ticket was created'},
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'tickets',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.tickets',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/tickets/{ticket_id}.json',
+                    action=Action.GET,
+                    description='Returns a ticket by its ID',
+                    path_params=['ticket_id'],
+                    path_params_schema={
+                        'ticket_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket': {
+                                'type': 'object',
+                                'description': 'Zendesk Support ticket object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the ticket is created'},
+                                    'url': {'type': 'string', 'description': 'The API url of this ticket'},
+                                    'external_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'An id you can use to link Zendesk Support tickets to local records',
+                                    },
+                                    'type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The type of this ticket (problem, incident, question, task)',
+                                    },
+                                    'subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The value of the subject field for this ticket',
+                                    },
+                                    'raw_subject': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The dynamic content placeholder or the subject value',
+                                    },
+                                    'description': {'type': 'string', 'description': 'Read-only first comment on the ticket'},
+                                    'priority': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The urgency with which the ticket should be addressed (urgent, high, normal, low)',
+                                    },
+                                    'status': {
+                                        'type': 'string',
+                                        'enum': [
+                                            'new',
+                                            'open',
+                                            'pending',
+                                            'hold',
+                                            'solved',
+                                            'closed',
+                                        ],
+                                        'description': 'The state of the ticket',
+                                    },
+                                    'recipient': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The original recipient e-mail address of the ticket',
+                                    },
+                                    'requester_id': {'type': 'integer', 'description': 'The user who requested this ticket'},
+                                    'submitter_id': {'type': 'integer', 'description': 'The user who submitted the ticket'},
+                                    'assignee_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The agent currently assigned to the ticket',
+                                    },
+                                    'organization_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The organization of the requester',
+                                    },
+                                    'group_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The group this ticket is assigned to',
+                                    },
+                                    'collaborator_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': "The ids of users currently CC'ed on the ticket",
+                                    },
+                                    'follower_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'The ids of agents currently following the ticket',
+                                    },
+                                    'email_cc_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': "The ids of agents or end users currently CC'ed on the ticket",
+                                    },
+                                    'forum_topic_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The topic in the Zendesk Web portal this ticket originated from',
+                                    },
+                                    'problem_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'For tickets of type incident, the ID of the problem the incident is linked to',
+                                    },
+                                    'has_incidents': {'type': 'boolean', 'description': 'Is true if a ticket is a problem type and has one or more incidents linked to it'},
+                                    'is_public': {'type': 'boolean', 'description': 'Is true if any comments are public, false otherwise'},
+                                    'due_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'If this is a ticket of type task it has a due date',
+                                    },
+                                    'tags': {
+                                        'type': 'array',
+                                        'items': {'type': 'string'},
+                                        'description': 'The array of tags applied to this ticket',
+                                    },
+                                    'custom_fields': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Custom fields for the ticket',
+                                    },
+                                    'satisfaction_rating': {'type': 'object', 'description': 'The satisfaction rating of the ticket'},
+                                    'sharing_agreement_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'The ids of the sharing agreements used for this ticket',
+                                    },
+                                    'custom_status_id': {'type': 'integer', 'description': 'The custom ticket status id of the ticket'},
+                                    'fields': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Ticket fields',
+                                    },
+                                    'followup_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'The ids of the followups created from this ticket',
+                                    },
+                                    'ticket_form_id': {'type': 'integer', 'description': 'Enterprise only. The id of the ticket form to render for the ticket'},
+                                    'brand_id': {'type': 'integer', 'description': 'Enterprise only. The id of the brand this ticket is associated with'},
+                                    'allow_channelback': {'type': 'boolean', 'description': 'Is false if channelback is disabled, true otherwise'},
+                                    'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
+                                    'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
+                                    'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When this record was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When this record was last updated',
+                                    },
+                                    'via': {'type': 'object', 'description': 'How the ticket was created'},
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'tickets',
+                            },
+                        },
+                    },
+                    record_extractor='$.ticket',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the ticket is created'},
+                    'url': {'type': 'string', 'description': 'The API url of this ticket'},
+                    'external_id': {
+                        'type': ['string', 'null'],
+                        'description': 'An id you can use to link Zendesk Support tickets to local records',
+                    },
+                    'type': {
+                        'type': ['string', 'null'],
+                        'description': 'The type of this ticket (problem, incident, question, task)',
+                    },
+                    'subject': {
+                        'type': ['string', 'null'],
+                        'description': 'The value of the subject field for this ticket',
+                    },
+                    'raw_subject': {
+                        'type': ['string', 'null'],
+                        'description': 'The dynamic content placeholder or the subject value',
+                    },
+                    'description': {'type': 'string', 'description': 'Read-only first comment on the ticket'},
+                    'priority': {
+                        'type': ['string', 'null'],
+                        'description': 'The urgency with which the ticket should be addressed (urgent, high, normal, low)',
+                    },
+                    'status': {
+                        'type': 'string',
+                        'enum': [
+                            'new',
+                            'open',
+                            'pending',
+                            'hold',
+                            'solved',
+                            'closed',
+                        ],
+                        'description': 'The state of the ticket',
+                    },
+                    'recipient': {
+                        'type': ['string', 'null'],
+                        'description': 'The original recipient e-mail address of the ticket',
+                    },
+                    'requester_id': {'type': 'integer', 'description': 'The user who requested this ticket'},
+                    'submitter_id': {'type': 'integer', 'description': 'The user who submitted the ticket'},
+                    'assignee_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The agent currently assigned to the ticket',
+                    },
+                    'organization_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The organization of the requester',
+                    },
+                    'group_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The group this ticket is assigned to',
+                    },
+                    'collaborator_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': "The ids of users currently CC'ed on the ticket",
+                    },
+                    'follower_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'The ids of agents currently following the ticket',
+                    },
+                    'email_cc_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': "The ids of agents or end users currently CC'ed on the ticket",
+                    },
+                    'forum_topic_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The topic in the Zendesk Web portal this ticket originated from',
+                    },
+                    'problem_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'For tickets of type incident, the ID of the problem the incident is linked to',
+                    },
+                    'has_incidents': {'type': 'boolean', 'description': 'Is true if a ticket is a problem type and has one or more incidents linked to it'},
+                    'is_public': {'type': 'boolean', 'description': 'Is true if any comments are public, false otherwise'},
+                    'due_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'If this is a ticket of type task it has a due date',
+                    },
+                    'tags': {
+                        'type': 'array',
+                        'items': {'type': 'string'},
+                        'description': 'The array of tags applied to this ticket',
+                    },
+                    'custom_fields': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Custom fields for the ticket',
+                    },
+                    'satisfaction_rating': {'type': 'object', 'description': 'The satisfaction rating of the ticket'},
+                    'sharing_agreement_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'The ids of the sharing agreements used for this ticket',
+                    },
+                    'custom_status_id': {'type': 'integer', 'description': 'The custom ticket status id of the ticket'},
+                    'fields': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Ticket fields',
+                    },
+                    'followup_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'The ids of the followups created from this ticket',
+                    },
+                    'ticket_form_id': {'type': 'integer', 'description': 'Enterprise only. The id of the ticket form to render for the ticket'},
+                    'brand_id': {'type': 'integer', 'description': 'Enterprise only. The id of the brand this ticket is associated with'},
+                    'allow_channelback': {'type': 'boolean', 'description': 'Is false if channelback is disabled, true otherwise'},
+                    'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
+                    'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
+                    'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When this record was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When this record was last updated',
+                    },
+                    'via': {'type': 'object', 'description': 'How the ticket was created'},
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'tickets',
+            },
+        ),
+        EntityDefinition(
+            name='users',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/users.json',
+                    action=Action.LIST,
+                    description='Returns a list of all users in your account',
+                    query_params=['page', 'role', 'external_id'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'role': {'type': 'string', 'required': False},
+                        'external_id': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'users': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support user object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the user is created'},
+                                        'url': {'type': 'string', 'description': "The user's API url"},
+                                        'name': {'type': 'string', 'description': "The user's name"},
+                                        'email': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's primary email address",
+                                        },
+                                        'alias': {
+                                            'type': ['string', 'null'],
+                                            'description': 'An alias displayed to end users',
+                                        },
+                                        'phone': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's primary phone number",
+                                        },
+                                        'time_zone': {'type': 'string', 'description': "The user's time zone"},
+                                        'locale': {'type': 'string', 'description': "The user's locale"},
+                                        'locale_id': {'type': 'integer', 'description': "The user's language identifier"},
+                                        'organization_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': "The id of the user's organization",
+                                        },
+                                        'role': {
+                                            'type': 'string',
+                                            'enum': ['end-user', 'agent', 'admin'],
+                                            'description': "The user's role",
+                                        },
+                                        'role_type': {
+                                            'type': ['integer', 'null'],
+                                            'description': "The user's role id",
+                                        },
+                                        'custom_role_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'A custom role if the user is an agent on the Enterprise plan',
+                                        },
+                                        'external_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A unique identifier from another system',
+                                        },
+                                        'tags': {
+                                            'type': 'array',
+                                            'items': {'type': 'string'},
+                                            'description': "The user's tags",
+                                        },
+                                        'active': {'type': 'boolean', 'description': 'False if the user has been deleted'},
+                                        'verified': {'type': 'boolean', 'description': "If the user's primary identity is verified or not"},
+                                        'shared': {'type': 'boolean', 'description': 'If the user is shared from a different Zendesk Support instance'},
+                                        'shared_agent': {'type': 'boolean', 'description': 'If the user is a shared agent from a different Zendesk Support instance'},
+                                        'shared_phone_number': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether the phone number is shared or not',
+                                        },
+                                        'signature': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's signature",
+                                        },
+                                        'details': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Any details you want to store about the user',
+                                        },
+                                        'notes': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Any notes you want to store about the user',
+                                        },
+                                        'suspended': {'type': 'boolean', 'description': 'If the agent is suspended'},
+                                        'restricted_agent': {'type': 'boolean', 'description': 'If the agent has any restrictions'},
+                                        'only_private_comments': {'type': 'boolean', 'description': 'True if the user can only create private comments'},
+                                        'moderator': {'type': 'boolean', 'description': 'If the user has forum moderation capabilities'},
+                                        'ticket_restriction': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Specifies which tickets the user has access to',
+                                        },
+                                        'default_group_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': "The id of the user's default group",
+                                        },
+                                        'report_csv': {'type': 'boolean', 'description': 'Whether or not the user can access the CSV report'},
+                                        'photo': {
+                                            'type': ['object', 'null'],
+                                            'description': "The user's profile picture",
+                                        },
+                                        'user_fields': {'type': 'object', 'description': 'Custom fields for the user'},
+                                        'last_login_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'The last time the user signed in to Zendesk Support',
+                                        },
+                                        'two_factor_auth_enabled': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'If two-factor authentication is enabled',
+                                        },
+                                        'iana_time_zone': {'type': 'string', 'description': "The user's IANA time zone name"},
+                                        'permanently_deleted': {'type': 'boolean', 'description': 'If the user has been permanently deleted'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the user was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the user was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'users',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.users',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/users/{user_id}.json',
+                    action=Action.GET,
+                    description='Returns a user by their ID',
+                    path_params=['user_id'],
+                    path_params_schema={
+                        'user_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'user': {
+                                'type': 'object',
+                                'description': 'Zendesk Support user object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the user is created'},
+                                    'url': {'type': 'string', 'description': "The user's API url"},
+                                    'name': {'type': 'string', 'description': "The user's name"},
+                                    'email': {
+                                        'type': ['string', 'null'],
+                                        'description': "The user's primary email address",
+                                    },
+                                    'alias': {
+                                        'type': ['string', 'null'],
+                                        'description': 'An alias displayed to end users',
+                                    },
+                                    'phone': {
+                                        'type': ['string', 'null'],
+                                        'description': "The user's primary phone number",
+                                    },
+                                    'time_zone': {'type': 'string', 'description': "The user's time zone"},
+                                    'locale': {'type': 'string', 'description': "The user's locale"},
+                                    'locale_id': {'type': 'integer', 'description': "The user's language identifier"},
+                                    'organization_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': "The id of the user's organization",
+                                    },
+                                    'role': {
+                                        'type': 'string',
+                                        'enum': ['end-user', 'agent', 'admin'],
+                                        'description': "The user's role",
+                                    },
+                                    'role_type': {
+                                        'type': ['integer', 'null'],
+                                        'description': "The user's role id",
+                                    },
+                                    'custom_role_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'A custom role if the user is an agent on the Enterprise plan',
+                                    },
+                                    'external_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'A unique identifier from another system',
+                                    },
+                                    'tags': {
+                                        'type': 'array',
+                                        'items': {'type': 'string'},
+                                        'description': "The user's tags",
+                                    },
+                                    'active': {'type': 'boolean', 'description': 'False if the user has been deleted'},
+                                    'verified': {'type': 'boolean', 'description': "If the user's primary identity is verified or not"},
+                                    'shared': {'type': 'boolean', 'description': 'If the user is shared from a different Zendesk Support instance'},
+                                    'shared_agent': {'type': 'boolean', 'description': 'If the user is a shared agent from a different Zendesk Support instance'},
+                                    'shared_phone_number': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the phone number is shared or not',
+                                    },
+                                    'signature': {
+                                        'type': ['string', 'null'],
+                                        'description': "The user's signature",
+                                    },
+                                    'details': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Any details you want to store about the user',
+                                    },
+                                    'notes': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Any notes you want to store about the user',
+                                    },
+                                    'suspended': {'type': 'boolean', 'description': 'If the agent is suspended'},
+                                    'restricted_agent': {'type': 'boolean', 'description': 'If the agent has any restrictions'},
+                                    'only_private_comments': {'type': 'boolean', 'description': 'True if the user can only create private comments'},
+                                    'moderator': {'type': 'boolean', 'description': 'If the user has forum moderation capabilities'},
+                                    'ticket_restriction': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Specifies which tickets the user has access to',
+                                    },
+                                    'default_group_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': "The id of the user's default group",
+                                    },
+                                    'report_csv': {'type': 'boolean', 'description': 'Whether or not the user can access the CSV report'},
+                                    'photo': {
+                                        'type': ['object', 'null'],
+                                        'description': "The user's profile picture",
+                                    },
+                                    'user_fields': {'type': 'object', 'description': 'Custom fields for the user'},
+                                    'last_login_at': {
+                                        'type': ['string', 'null'],
+                                        'format': 'date-time',
+                                        'description': 'The last time the user signed in to Zendesk Support',
+                                    },
+                                    'two_factor_auth_enabled': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'If two-factor authentication is enabled',
+                                    },
+                                    'iana_time_zone': {'type': 'string', 'description': "The user's IANA time zone name"},
+                                    'permanently_deleted': {'type': 'boolean', 'description': 'If the user has been permanently deleted'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the user was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the user was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'users',
+                            },
+                        },
+                    },
+                    record_extractor='$.user',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support user object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the user is created'},
+                    'url': {'type': 'string', 'description': "The user's API url"},
+                    'name': {'type': 'string', 'description': "The user's name"},
+                    'email': {
+                        'type': ['string', 'null'],
+                        'description': "The user's primary email address",
+                    },
+                    'alias': {
+                        'type': ['string', 'null'],
+                        'description': 'An alias displayed to end users',
+                    },
+                    'phone': {
+                        'type': ['string', 'null'],
+                        'description': "The user's primary phone number",
+                    },
+                    'time_zone': {'type': 'string', 'description': "The user's time zone"},
+                    'locale': {'type': 'string', 'description': "The user's locale"},
+                    'locale_id': {'type': 'integer', 'description': "The user's language identifier"},
+                    'organization_id': {
+                        'type': ['integer', 'null'],
+                        'description': "The id of the user's organization",
+                    },
+                    'role': {
+                        'type': 'string',
+                        'enum': ['end-user', 'agent', 'admin'],
+                        'description': "The user's role",
+                    },
+                    'role_type': {
+                        'type': ['integer', 'null'],
+                        'description': "The user's role id",
+                    },
+                    'custom_role_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'A custom role if the user is an agent on the Enterprise plan',
+                    },
+                    'external_id': {
+                        'type': ['string', 'null'],
+                        'description': 'A unique identifier from another system',
+                    },
+                    'tags': {
+                        'type': 'array',
+                        'items': {'type': 'string'},
+                        'description': "The user's tags",
+                    },
+                    'active': {'type': 'boolean', 'description': 'False if the user has been deleted'},
+                    'verified': {'type': 'boolean', 'description': "If the user's primary identity is verified or not"},
+                    'shared': {'type': 'boolean', 'description': 'If the user is shared from a different Zendesk Support instance'},
+                    'shared_agent': {'type': 'boolean', 'description': 'If the user is a shared agent from a different Zendesk Support instance'},
+                    'shared_phone_number': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the phone number is shared or not',
+                    },
+                    'signature': {
+                        'type': ['string', 'null'],
+                        'description': "The user's signature",
+                    },
+                    'details': {
+                        'type': ['string', 'null'],
+                        'description': 'Any details you want to store about the user',
+                    },
+                    'notes': {
+                        'type': ['string', 'null'],
+                        'description': 'Any notes you want to store about the user',
+                    },
+                    'suspended': {'type': 'boolean', 'description': 'If the agent is suspended'},
+                    'restricted_agent': {'type': 'boolean', 'description': 'If the agent has any restrictions'},
+                    'only_private_comments': {'type': 'boolean', 'description': 'True if the user can only create private comments'},
+                    'moderator': {'type': 'boolean', 'description': 'If the user has forum moderation capabilities'},
+                    'ticket_restriction': {
+                        'type': ['string', 'null'],
+                        'description': 'Specifies which tickets the user has access to',
+                    },
+                    'default_group_id': {
+                        'type': ['integer', 'null'],
+                        'description': "The id of the user's default group",
+                    },
+                    'report_csv': {'type': 'boolean', 'description': 'Whether or not the user can access the CSV report'},
+                    'photo': {
+                        'type': ['object', 'null'],
+                        'description': "The user's profile picture",
+                    },
+                    'user_fields': {'type': 'object', 'description': 'Custom fields for the user'},
+                    'last_login_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'The last time the user signed in to Zendesk Support',
+                    },
+                    'two_factor_auth_enabled': {
+                        'type': ['boolean', 'null'],
+                        'description': 'If two-factor authentication is enabled',
+                    },
+                    'iana_time_zone': {'type': 'string', 'description': "The user's IANA time zone name"},
+                    'permanently_deleted': {'type': 'boolean', 'description': 'If the user has been permanently deleted'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the user was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the user was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'users',
+            },
+        ),
+        EntityDefinition(
+            name='organizations',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/organizations.json',
+                    action=Action.LIST,
+                    description='Returns a list of all organizations in your account',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'organizations': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support organization object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the organization is created'},
+                                        'url': {'type': 'string', 'description': 'The API url of this organization'},
+                                        'name': {'type': 'string', 'description': 'A unique name for the organization'},
+                                        'details': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Any details about the organization',
+                                        },
+                                        'notes': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Any notes about the organization',
+                                        },
+                                        'group_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'New tickets from users in this organization are automatically put in this group',
+                                        },
+                                        'shared_tickets': {'type': 'boolean', 'description': "End users in this organization are able to see each other's tickets"},
+                                        'shared_comments': {'type': 'boolean', 'description': "End users in this organization are able to comment on each other's tickets"},
+                                        'external_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A unique external id to associate organizations to an external record',
+                                        },
+                                        'domain_names': {
+                                            'type': 'array',
+                                            'items': {'type': 'string'},
+                                            'description': 'An array of domain names associated with this organization',
+                                        },
+                                        'tags': {
+                                            'type': 'array',
+                                            'items': {'type': 'string'},
+                                            'description': 'The tags of the organization',
+                                        },
+                                        'organization_fields': {'type': 'object', 'description': 'Custom fields for this organization'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the organization was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the organization was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'organizations',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.organizations',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/organizations/{organization_id}.json',
+                    action=Action.GET,
+                    description='Returns an organization by its ID',
+                    path_params=['organization_id'],
+                    path_params_schema={
+                        'organization_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'organization': {
+                                'type': 'object',
+                                'description': 'Zendesk Support organization object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the organization is created'},
+                                    'url': {'type': 'string', 'description': 'The API url of this organization'},
+                                    'name': {'type': 'string', 'description': 'A unique name for the organization'},
+                                    'details': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Any details about the organization',
+                                    },
+                                    'notes': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Any notes about the organization',
+                                    },
+                                    'group_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'New tickets from users in this organization are automatically put in this group',
+                                    },
+                                    'shared_tickets': {'type': 'boolean', 'description': "End users in this organization are able to see each other's tickets"},
+                                    'shared_comments': {'type': 'boolean', 'description': "End users in this organization are able to comment on each other's tickets"},
+                                    'external_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'A unique external id to associate organizations to an external record',
+                                    },
+                                    'domain_names': {
+                                        'type': 'array',
+                                        'items': {'type': 'string'},
+                                        'description': 'An array of domain names associated with this organization',
+                                    },
+                                    'tags': {
+                                        'type': 'array',
+                                        'items': {'type': 'string'},
+                                        'description': 'The tags of the organization',
+                                    },
+                                    'organization_fields': {'type': 'object', 'description': 'Custom fields for this organization'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the organization was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the organization was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'organizations',
+                            },
+                        },
+                    },
+                    record_extractor='$.organization',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support organization object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the organization is created'},
+                    'url': {'type': 'string', 'description': 'The API url of this organization'},
+                    'name': {'type': 'string', 'description': 'A unique name for the organization'},
+                    'details': {
+                        'type': ['string', 'null'],
+                        'description': 'Any details about the organization',
+                    },
+                    'notes': {
+                        'type': ['string', 'null'],
+                        'description': 'Any notes about the organization',
+                    },
+                    'group_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'New tickets from users in this organization are automatically put in this group',
+                    },
+                    'shared_tickets': {'type': 'boolean', 'description': "End users in this organization are able to see each other's tickets"},
+                    'shared_comments': {'type': 'boolean', 'description': "End users in this organization are able to comment on each other's tickets"},
+                    'external_id': {
+                        'type': ['string', 'null'],
+                        'description': 'A unique external id to associate organizations to an external record',
+                    },
+                    'domain_names': {
+                        'type': 'array',
+                        'items': {'type': 'string'},
+                        'description': 'An array of domain names associated with this organization',
+                    },
+                    'tags': {
+                        'type': 'array',
+                        'items': {'type': 'string'},
+                        'description': 'The tags of the organization',
+                    },
+                    'organization_fields': {'type': 'object', 'description': 'Custom fields for this organization'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the organization was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the organization was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'organizations',
+            },
+        ),
+        EntityDefinition(
+            name='groups',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/groups.json',
+                    action=Action.LIST,
+                    description='Returns a list of all groups in your account',
+                    query_params=['page', 'exclude_deleted'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'exclude_deleted': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'groups': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support group object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when creating groups'},
+                                        'url': {'type': 'string', 'description': 'The API url of the group'},
+                                        'name': {'type': 'string', 'description': 'The name of the group'},
+                                        'description': {'type': 'string', 'description': 'The description of the group'},
+                                        'default': {'type': 'boolean', 'description': 'If the group is the default one for the account'},
+                                        'deleted': {'type': 'boolean', 'description': 'Deleted groups get marked as such'},
+                                        'is_public': {'type': 'boolean', 'description': 'If true, the group is public. If false, the group is private'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the group was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the group was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'groups',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.groups',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/groups/{group_id}.json',
+                    action=Action.GET,
+                    description='Returns a group by its ID',
+                    path_params=['group_id'],
+                    path_params_schema={
+                        'group_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'group': {
+                                'type': 'object',
+                                'description': 'Zendesk Support group object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when creating groups'},
+                                    'url': {'type': 'string', 'description': 'The API url of the group'},
+                                    'name': {'type': 'string', 'description': 'The name of the group'},
+                                    'description': {'type': 'string', 'description': 'The description of the group'},
+                                    'default': {'type': 'boolean', 'description': 'If the group is the default one for the account'},
+                                    'deleted': {'type': 'boolean', 'description': 'Deleted groups get marked as such'},
+                                    'is_public': {'type': 'boolean', 'description': 'If true, the group is public. If false, the group is private'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the group was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the group was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'groups',
+                            },
+                        },
+                    },
+                    record_extractor='$.group',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support group object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when creating groups'},
+                    'url': {'type': 'string', 'description': 'The API url of the group'},
+                    'name': {'type': 'string', 'description': 'The name of the group'},
+                    'description': {'type': 'string', 'description': 'The description of the group'},
+                    'default': {'type': 'boolean', 'description': 'If the group is the default one for the account'},
+                    'deleted': {'type': 'boolean', 'description': 'Deleted groups get marked as such'},
+                    'is_public': {'type': 'boolean', 'description': 'If true, the group is public. If false, the group is private'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the group was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the group was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'groups',
+            },
+        ),
+        EntityDefinition(
+            name='ticket_comments',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tickets/{ticket_id}/comments.json',
+                    action=Action.LIST,
+                    description='Returns a list of comments for a specific ticket',
+                    query_params=['page', 'include_inline_images', 'sort'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'include_inline_images': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'sort': {'type': 'string', 'required': False},
+                    },
+                    path_params=['ticket_id'],
+                    path_params_schema={
+                        'ticket_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'comments': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket comment object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the comment is created'},
+                                        'type': {'type': 'string', 'description': 'Comment or VoiceComment'},
+                                        'body': {'type': 'string', 'description': 'The comment string'},
+                                        'html_body': {'type': 'string', 'description': 'The comment formatted as HTML'},
+                                        'plain_body': {'type': 'string', 'description': 'The comment presented as plain text'},
+                                        'public': {'type': 'boolean', 'description': 'True if a public comment; false if an internal note'},
+                                        'author_id': {'type': 'integer', 'description': 'The id of the comment author'},
+                                        'attachments': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Attachments, if any',
+                                        },
+                                        'audit_id': {'type': 'integer', 'description': 'The id of the ticket audit record'},
+                                        'via': {'type': 'object', 'description': 'How the comment was created'},
+                                        'metadata': {'type': 'object', 'description': 'System information and comment flags'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the comment was created',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ticket_comments',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.comments',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket comment object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the comment is created'},
+                    'type': {'type': 'string', 'description': 'Comment or VoiceComment'},
+                    'body': {'type': 'string', 'description': 'The comment string'},
+                    'html_body': {'type': 'string', 'description': 'The comment formatted as HTML'},
+                    'plain_body': {'type': 'string', 'description': 'The comment presented as plain text'},
+                    'public': {'type': 'boolean', 'description': 'True if a public comment; false if an internal note'},
+                    'author_id': {'type': 'integer', 'description': 'The id of the comment author'},
+                    'attachments': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Attachments, if any',
+                    },
+                    'audit_id': {'type': 'integer', 'description': 'The id of the ticket audit record'},
+                    'via': {'type': 'object', 'description': 'How the comment was created'},
+                    'metadata': {'type': 'object', 'description': 'System information and comment flags'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the comment was created',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ticket_comments',
+            },
+        ),
+        EntityDefinition(
+            name='attachments',
+            actions=[Action.GET, Action.DOWNLOAD],
+            endpoints={
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/attachments/{attachment_id}.json',
+                    action=Action.GET,
+                    description='Returns an attachment by its ID',
+                    path_params=['attachment_id'],
+                    path_params_schema={
+                        'attachment_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'attachment': {
+                                'type': 'object',
+                                'description': 'Zendesk Support attachment object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                    'file_name': {'type': 'string', 'description': 'The name of the file'},
+                                    'content_url': {'type': 'string', 'description': 'A full URL where the attachment file can be downloaded'},
+                                    'mapped_content_url': {'type': 'string', 'description': 'The URL the attachment file has been mapped to'},
+                                    'content_type': {'type': 'string', 'description': 'The content type of the file'},
+                                    'size': {'type': 'integer', 'description': 'The size of the file in bytes'},
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The width of the image file',
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The height of the image file',
+                                    },
+                                    'inline': {'type': 'boolean', 'description': 'If true, the attachment is excluded from the attachment list'},
+                                    'deleted': {'type': 'boolean', 'description': 'If true, the attachment has been deleted'},
+                                    'malware_access_override': {'type': 'boolean', 'description': 'If true, access is allowed even if it has been deemed malware'},
+                                    'malware_scan_result': {'type': 'string', 'description': 'Result of malware scan'},
+                                    'url': {'type': 'string', 'description': 'A URL to access the attachment'},
+                                    'thumbnails': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'An array of attachment objects for image thumbnails',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'attachments',
+                            },
+                        },
+                    },
+                    record_extractor='$.attachment',
+                ),
+                Action.DOWNLOAD: EndpointDefinition(
+                    method='GET',
+                    path='/attachments/{attachment_id}:download',
+                    path_override=PathOverrideConfig(
+                        path='/attachments/{attachment_id}.json',
+                    ),
+                    action=Action.DOWNLOAD,
+                    description='Downloads the file content of a ticket attachment',
+                    path_params=['attachment_id'],
+                    path_params_schema={
+                        'attachment_id': {'type': 'integer', 'required': True},
+                    },
+                    file_field='attachment.content_url',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support attachment object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                    'file_name': {'type': 'string', 'description': 'The name of the file'},
+                    'content_url': {'type': 'string', 'description': 'A full URL where the attachment file can be downloaded'},
+                    'mapped_content_url': {'type': 'string', 'description': 'The URL the attachment file has been mapped to'},
+                    'content_type': {'type': 'string', 'description': 'The content type of the file'},
+                    'size': {'type': 'integer', 'description': 'The size of the file in bytes'},
+                    'width': {
+                        'type': ['integer', 'null'],
+                        'description': 'The width of the image file',
+                    },
+                    'height': {
+                        'type': ['integer', 'null'],
+                        'description': 'The height of the image file',
+                    },
+                    'inline': {'type': 'boolean', 'description': 'If true, the attachment is excluded from the attachment list'},
+                    'deleted': {'type': 'boolean', 'description': 'If true, the attachment has been deleted'},
+                    'malware_access_override': {'type': 'boolean', 'description': 'If true, access is allowed even if it has been deemed malware'},
+                    'malware_scan_result': {'type': 'string', 'description': 'Result of malware scan'},
+                    'url': {'type': 'string', 'description': 'A URL to access the attachment'},
+                    'thumbnails': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'An array of attachment objects for image thumbnails',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'attachments',
+            },
+        ),
+        EntityDefinition(
+            name='ticket_audits',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tickets/{ticket_id}/audits.json',
+                    action=Action.LIST,
+                    description='Returns a list of audits for a specific ticket',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    path_params=['ticket_id'],
+                    path_params_schema={
+                        'ticket_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'audits': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket audit object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when creating audits'},
+                                        'ticket_id': {'type': 'integer', 'description': 'The ID of the associated ticket'},
+                                        'author_id': {'type': 'integer', 'description': 'The user who created the audit'},
+                                        'metadata': {'type': 'object', 'description': 'Metadata for the audit'},
+                                        'via': {'type': 'object', 'description': 'How the audit was created'},
+                                        'events': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'An array of the events that happened in this audit',
+                                        },
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the audit was created',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ticket_audits',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.audits',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket audit object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when creating audits'},
+                    'ticket_id': {'type': 'integer', 'description': 'The ID of the associated ticket'},
+                    'author_id': {'type': 'integer', 'description': 'The user who created the audit'},
+                    'metadata': {'type': 'object', 'description': 'Metadata for the audit'},
+                    'via': {'type': 'object', 'description': 'How the audit was created'},
+                    'events': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'An array of the events that happened in this audit',
+                    },
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the audit was created',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ticket_audits',
+            },
+        ),
+        EntityDefinition(
+            name='ticket_metrics',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/ticket_metrics.json',
+                    action=Action.LIST,
+                    description='Returns a list of all ticket metrics',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket_metrics': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket metric object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned'},
+                                        'url': {'type': 'string', 'description': 'The API url of the ticket metric'},
+                                        'ticket_id': {'type': 'integer', 'description': 'Id of the associated ticket'},
+                                        'group_stations': {'type': 'integer', 'description': 'Number of groups the ticket passed through'},
+                                        'assignee_stations': {'type': 'integer', 'description': 'Number of assignees the ticket had'},
+                                        'reopens': {'type': 'integer', 'description': 'Total number of times the ticket was reopened'},
+                                        'replies': {'type': 'integer', 'description': 'The total number of times the ticket was replied to'},
+                                        'assignee_updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the assignee last updated the ticket',
+                                        },
+                                        'requester_updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the requester last updated the ticket',
+                                        },
+                                        'status_updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the status was last updated',
+                                        },
+                                        'initially_assigned_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the ticket was initially assigned',
+                                        },
+                                        'assigned_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the ticket was last assigned',
+                                        },
+                                        'solved_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'When the ticket was solved',
+                                        },
+                                        'latest_comment_added_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the latest comment was added',
+                                        },
+                                        'reply_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the first reply'},
+                                        'first_resolution_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the first resolution time'},
+                                        'full_resolution_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the full resolution'},
+                                        'agent_wait_time_in_minutes': {'type': 'object', 'description': 'Number of minutes the agent waited'},
+                                        'requester_wait_time_in_minutes': {'type': 'object', 'description': 'Number of minutes the requester waited'},
+                                        'on_hold_time_in_minutes': {'type': 'object', 'description': 'Number of minutes on hold'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the record was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the record was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ticket_metrics',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.ticket_metrics',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket metric object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned'},
+                    'url': {'type': 'string', 'description': 'The API url of the ticket metric'},
+                    'ticket_id': {'type': 'integer', 'description': 'Id of the associated ticket'},
+                    'group_stations': {'type': 'integer', 'description': 'Number of groups the ticket passed through'},
+                    'assignee_stations': {'type': 'integer', 'description': 'Number of assignees the ticket had'},
+                    'reopens': {'type': 'integer', 'description': 'Total number of times the ticket was reopened'},
+                    'replies': {'type': 'integer', 'description': 'The total number of times the ticket was replied to'},
+                    'assignee_updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the assignee last updated the ticket',
+                    },
+                    'requester_updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the requester last updated the ticket',
+                    },
+                    'status_updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the status was last updated',
+                    },
+                    'initially_assigned_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the ticket was initially assigned',
+                    },
+                    'assigned_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the ticket was last assigned',
+                    },
+                    'solved_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'When the ticket was solved',
+                    },
+                    'latest_comment_added_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the latest comment was added',
+                    },
+                    'reply_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the first reply'},
+                    'first_resolution_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the first resolution time'},
+                    'full_resolution_time_in_minutes': {'type': 'object', 'description': 'Number of minutes to the full resolution'},
+                    'agent_wait_time_in_minutes': {'type': 'object', 'description': 'Number of minutes the agent waited'},
+                    'requester_wait_time_in_minutes': {'type': 'object', 'description': 'Number of minutes the requester waited'},
+                    'on_hold_time_in_minutes': {'type': 'object', 'description': 'Number of minutes on hold'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the record was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the record was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ticket_metrics',
+            },
+        ),
+        EntityDefinition(
+            name='ticket_fields',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/ticket_fields.json',
+                    action=Action.LIST,
+                    description='Returns a list of all ticket fields',
+                    query_params=['page', 'locale'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'locale': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket_fields': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket field object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                        'url': {'type': 'string', 'description': 'The URL for this resource'},
+                                        'type': {'type': 'string', 'description': 'The type of the custom field'},
+                                        'title': {'type': 'string', 'description': 'The title of the custom field'},
+                                        'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder'},
+                                        'description': {'type': 'string', 'description': 'Describes the purpose of the ticket field'},
+                                        'raw_description': {'type': 'string', 'description': 'The dynamic content placeholder for description'},
+                                        'position': {'type': 'integer', 'description': 'A relative position for the ticket field'},
+                                        'active': {'type': 'boolean', 'description': 'Whether this field is available'},
+                                        'required': {'type': 'boolean', 'description': 'If true, agents must enter a value in the field'},
+                                        'collapsed_for_agents': {'type': 'boolean', 'description': 'If true, the field is shown to agents by default'},
+                                        'regexp_for_validation': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Regular expression for validation',
+                                        },
+                                        'title_in_portal': {'type': 'string', 'description': 'The title of the ticket field for end users'},
+                                        'raw_title_in_portal': {'type': 'string', 'description': 'The dynamic content placeholder for title in portal'},
+                                        'visible_in_portal': {'type': 'boolean', 'description': 'Whether this field is visible to end users'},
+                                        'editable_in_portal': {'type': 'boolean', 'description': 'Whether this field is editable by end users'},
+                                        'required_in_portal': {'type': 'boolean', 'description': 'If true, end users must enter a value in the field'},
+                                        'tag': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A tag value to set for checkbox fields',
+                                        },
+                                        'custom_field_options': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Required for multiselect or tagger fields',
+                                        },
+                                        'system_field_options': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Presented for system ticket fields of type tagger',
+                                        },
+                                        'sub_type_id': {'type': 'integer', 'description': 'For system ticket fields of type priority and status'},
+                                        'removable': {'type': 'boolean', 'description': 'If false, this field is a system field that must be present'},
+                                        'agent_description': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A description only agents can see',
+                                        },
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the ticket field was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the ticket field was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ticket_fields',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.ticket_fields',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/ticket_fields/{ticket_field_id}.json',
+                    action=Action.GET,
+                    description='Returns a ticket field by its ID',
+                    path_params=['ticket_field_id'],
+                    path_params_schema={
+                        'ticket_field_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket_field': {
+                                'type': 'object',
+                                'description': 'Zendesk Support ticket field object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                    'url': {'type': 'string', 'description': 'The URL for this resource'},
+                                    'type': {'type': 'string', 'description': 'The type of the custom field'},
+                                    'title': {'type': 'string', 'description': 'The title of the custom field'},
+                                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder'},
+                                    'description': {'type': 'string', 'description': 'Describes the purpose of the ticket field'},
+                                    'raw_description': {'type': 'string', 'description': 'The dynamic content placeholder for description'},
+                                    'position': {'type': 'integer', 'description': 'A relative position for the ticket field'},
+                                    'active': {'type': 'boolean', 'description': 'Whether this field is available'},
+                                    'required': {'type': 'boolean', 'description': 'If true, agents must enter a value in the field'},
+                                    'collapsed_for_agents': {'type': 'boolean', 'description': 'If true, the field is shown to agents by default'},
+                                    'regexp_for_validation': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Regular expression for validation',
+                                    },
+                                    'title_in_portal': {'type': 'string', 'description': 'The title of the ticket field for end users'},
+                                    'raw_title_in_portal': {'type': 'string', 'description': 'The dynamic content placeholder for title in portal'},
+                                    'visible_in_portal': {'type': 'boolean', 'description': 'Whether this field is visible to end users'},
+                                    'editable_in_portal': {'type': 'boolean', 'description': 'Whether this field is editable by end users'},
+                                    'required_in_portal': {'type': 'boolean', 'description': 'If true, end users must enter a value in the field'},
+                                    'tag': {
+                                        'type': ['string', 'null'],
+                                        'description': 'A tag value to set for checkbox fields',
+                                    },
+                                    'custom_field_options': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Required for multiselect or tagger fields',
+                                    },
+                                    'system_field_options': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Presented for system ticket fields of type tagger',
+                                    },
+                                    'sub_type_id': {'type': 'integer', 'description': 'For system ticket fields of type priority and status'},
+                                    'removable': {'type': 'boolean', 'description': 'If false, this field is a system field that must be present'},
+                                    'agent_description': {
+                                        'type': ['string', 'null'],
+                                        'description': 'A description only agents can see',
+                                    },
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the ticket field was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the ticket field was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'ticket_fields',
+                            },
+                        },
+                    },
+                    record_extractor='$.ticket_field',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket field object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                    'url': {'type': 'string', 'description': 'The URL for this resource'},
+                    'type': {'type': 'string', 'description': 'The type of the custom field'},
+                    'title': {'type': 'string', 'description': 'The title of the custom field'},
+                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder'},
+                    'description': {'type': 'string', 'description': 'Describes the purpose of the ticket field'},
+                    'raw_description': {'type': 'string', 'description': 'The dynamic content placeholder for description'},
+                    'position': {'type': 'integer', 'description': 'A relative position for the ticket field'},
+                    'active': {'type': 'boolean', 'description': 'Whether this field is available'},
+                    'required': {'type': 'boolean', 'description': 'If true, agents must enter a value in the field'},
+                    'collapsed_for_agents': {'type': 'boolean', 'description': 'If true, the field is shown to agents by default'},
+                    'regexp_for_validation': {
+                        'type': ['string', 'null'],
+                        'description': 'Regular expression for validation',
+                    },
+                    'title_in_portal': {'type': 'string', 'description': 'The title of the ticket field for end users'},
+                    'raw_title_in_portal': {'type': 'string', 'description': 'The dynamic content placeholder for title in portal'},
+                    'visible_in_portal': {'type': 'boolean', 'description': 'Whether this field is visible to end users'},
+                    'editable_in_portal': {'type': 'boolean', 'description': 'Whether this field is editable by end users'},
+                    'required_in_portal': {'type': 'boolean', 'description': 'If true, end users must enter a value in the field'},
+                    'tag': {
+                        'type': ['string', 'null'],
+                        'description': 'A tag value to set for checkbox fields',
+                    },
+                    'custom_field_options': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Required for multiselect or tagger fields',
+                    },
+                    'system_field_options': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Presented for system ticket fields of type tagger',
+                    },
+                    'sub_type_id': {'type': 'integer', 'description': 'For system ticket fields of type priority and status'},
+                    'removable': {'type': 'boolean', 'description': 'If false, this field is a system field that must be present'},
+                    'agent_description': {
+                        'type': ['string', 'null'],
+                        'description': 'A description only agents can see',
+                    },
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the ticket field was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the ticket field was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ticket_fields',
+            },
+        ),
+        EntityDefinition(
+            name='brands',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/brands.json',
+                    action=Action.LIST,
+                    description='Returns a list of all brands for the account',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'brands': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support brand object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'The ID automatically assigned when the brand is created'},
+                                        'url': {'type': 'string', 'description': 'The API url of this brand'},
+                                        'name': {'type': 'string', 'description': 'The name of the brand'},
+                                        'brand_url': {'type': 'string', 'description': 'The url of the brand'},
+                                        'subdomain': {'type': 'string', 'description': 'The subdomain of the brand'},
+                                        'host_mapping': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The hostmapping to this brand, if any',
+                                        },
+                                        'has_help_center': {'type': 'boolean', 'description': 'If the brand has a Help Center'},
+                                        'help_center_state': {'type': 'string', 'description': 'The state of the Help Center'},
+                                        'active': {'type': 'boolean', 'description': 'If the brand is active'},
+                                        'default': {'type': 'boolean', 'description': 'Is the brand the default brand for this account'},
+                                        'is_deleted': {'type': 'boolean', 'description': 'If the brand object is deleted or not'},
+                                        'logo': {
+                                            'type': ['object', 'null'],
+                                            'description': 'A file represented as an Attachment object',
+                                        },
+                                        'ticket_form_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'The ids of ticket forms that are available for use by a brand',
+                                        },
+                                        'signature_template': {'type': 'string', 'description': 'The signature template for a brand'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the brand was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the brand was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'brands',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.brands',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/brands/{brand_id}.json',
+                    action=Action.GET,
+                    description='Returns a brand by its ID',
+                    path_params=['brand_id'],
+                    path_params_schema={
+                        'brand_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'brand': {
+                                'type': 'object',
+                                'description': 'Zendesk Support brand object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'The ID automatically assigned when the brand is created'},
+                                    'url': {'type': 'string', 'description': 'The API url of this brand'},
+                                    'name': {'type': 'string', 'description': 'The name of the brand'},
+                                    'brand_url': {'type': 'string', 'description': 'The url of the brand'},
+                                    'subdomain': {'type': 'string', 'description': 'The subdomain of the brand'},
+                                    'host_mapping': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The hostmapping to this brand, if any',
+                                    },
+                                    'has_help_center': {'type': 'boolean', 'description': 'If the brand has a Help Center'},
+                                    'help_center_state': {'type': 'string', 'description': 'The state of the Help Center'},
+                                    'active': {'type': 'boolean', 'description': 'If the brand is active'},
+                                    'default': {'type': 'boolean', 'description': 'Is the brand the default brand for this account'},
+                                    'is_deleted': {'type': 'boolean', 'description': 'If the brand object is deleted or not'},
+                                    'logo': {
+                                        'type': ['object', 'null'],
+                                        'description': 'A file represented as an Attachment object',
+                                    },
+                                    'ticket_form_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'The ids of ticket forms that are available for use by a brand',
+                                    },
+                                    'signature_template': {'type': 'string', 'description': 'The signature template for a brand'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the brand was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the brand was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'brands',
+                            },
+                        },
+                    },
+                    record_extractor='$.brand',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support brand object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'The ID automatically assigned when the brand is created'},
+                    'url': {'type': 'string', 'description': 'The API url of this brand'},
+                    'name': {'type': 'string', 'description': 'The name of the brand'},
+                    'brand_url': {'type': 'string', 'description': 'The url of the brand'},
+                    'subdomain': {'type': 'string', 'description': 'The subdomain of the brand'},
+                    'host_mapping': {
+                        'type': ['string', 'null'],
+                        'description': 'The hostmapping to this brand, if any',
+                    },
+                    'has_help_center': {'type': 'boolean', 'description': 'If the brand has a Help Center'},
+                    'help_center_state': {'type': 'string', 'description': 'The state of the Help Center'},
+                    'active': {'type': 'boolean', 'description': 'If the brand is active'},
+                    'default': {'type': 'boolean', 'description': 'Is the brand the default brand for this account'},
+                    'is_deleted': {'type': 'boolean', 'description': 'If the brand object is deleted or not'},
+                    'logo': {
+                        'type': ['object', 'null'],
+                        'description': 'A file represented as an Attachment object',
+                    },
+                    'ticket_form_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'The ids of ticket forms that are available for use by a brand',
+                    },
+                    'signature_template': {'type': 'string', 'description': 'The signature template for a brand'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the brand was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the brand was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'brands',
+            },
+        ),
+        EntityDefinition(
+            name='views',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/views.json',
+                    action=Action.LIST,
+                    description='Returns a list of all views for the account',
+                    query_params=[
+                        'page',
+                        'access',
+                        'active',
+                        'group_id',
+                        'sort_by',
+                        'sort_order',
+                    ],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'access': {'type': 'string', 'required': False},
+                        'active': {'type': 'boolean', 'required': False},
+                        'group_id': {'type': 'integer', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'views': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support view object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the view is created'},
+                                        'url': {'type': 'string', 'description': 'The URL for this resource'},
+                                        'title': {'type': 'string', 'description': 'The title of the view'},
+                                        'active': {'type': 'boolean', 'description': 'Whether the view is active'},
+                                        'position': {'type': 'integer', 'description': 'The position of the view'},
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The description of the view',
+                                        },
+                                        'execution': {'type': 'object', 'description': 'An object describing how the view should be executed'},
+                                        'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the view will be executed'},
+                                        'restriction': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Who may access this view',
+                                        },
+                                        'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the view was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the view was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'views',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.views',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/views/{view_id}.json',
+                    action=Action.GET,
+                    description='Returns a view by its ID',
+                    path_params=['view_id'],
+                    path_params_schema={
+                        'view_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'view': {
+                                'type': 'object',
+                                'description': 'Zendesk Support view object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the view is created'},
+                                    'url': {'type': 'string', 'description': 'The URL for this resource'},
+                                    'title': {'type': 'string', 'description': 'The title of the view'},
+                                    'active': {'type': 'boolean', 'description': 'Whether the view is active'},
+                                    'position': {'type': 'integer', 'description': 'The position of the view'},
+                                    'description': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The description of the view',
+                                    },
+                                    'execution': {'type': 'object', 'description': 'An object describing how the view should be executed'},
+                                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the view will be executed'},
+                                    'restriction': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Who may access this view',
+                                    },
+                                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the view was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the view was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'views',
+                            },
+                        },
+                    },
+                    record_extractor='$.view',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support view object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the view is created'},
+                    'url': {'type': 'string', 'description': 'The URL for this resource'},
+                    'title': {'type': 'string', 'description': 'The title of the view'},
+                    'active': {'type': 'boolean', 'description': 'Whether the view is active'},
+                    'position': {'type': 'integer', 'description': 'The position of the view'},
+                    'description': {
+                        'type': ['string', 'null'],
+                        'description': 'The description of the view',
+                    },
+                    'execution': {'type': 'object', 'description': 'An object describing how the view should be executed'},
+                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the view will be executed'},
+                    'restriction': {
+                        'type': ['object', 'null'],
+                        'description': 'Who may access this view',
+                    },
+                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the view was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the view was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'views',
+            },
+        ),
+        EntityDefinition(
+            name='macros',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/macros.json',
+                    action=Action.LIST,
+                    description='Returns a list of all macros for the account',
+                    query_params=[
+                        'page',
+                        'access',
+                        'active',
+                        'category',
+                        'group_id',
+                        'only_viewable',
+                        'sort_by',
+                        'sort_order',
+                    ],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'access': {'type': 'string', 'required': False},
+                        'active': {'type': 'boolean', 'required': False},
+                        'category': {'type': 'integer', 'required': False},
+                        'group_id': {'type': 'integer', 'required': False},
+                        'only_viewable': {'type': 'boolean', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'macros': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support macro object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the macro is created'},
+                                        'url': {'type': 'string', 'description': "A URL to access the macro's details"},
+                                        'title': {'type': 'string', 'description': 'The title of the macro'},
+                                        'active': {'type': 'boolean', 'description': 'Useful for determining if the macro should be displayed'},
+                                        'position': {'type': 'integer', 'description': 'The position of the macro'},
+                                        'description': {'type': 'string', 'description': 'The description of the macro'},
+                                        'actions': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Actions to perform when macro is applied',
+                                        },
+                                        'restriction': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Who may access this macro',
+                                        },
+                                        'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the macro was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the macro was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'macros',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.macros',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/macros/{macro_id}.json',
+                    action=Action.GET,
+                    description='Returns a macro by its ID',
+                    path_params=['macro_id'],
+                    path_params_schema={
+                        'macro_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'macro': {
+                                'type': 'object',
+                                'description': 'Zendesk Support macro object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the macro is created'},
+                                    'url': {'type': 'string', 'description': "A URL to access the macro's details"},
+                                    'title': {'type': 'string', 'description': 'The title of the macro'},
+                                    'active': {'type': 'boolean', 'description': 'Useful for determining if the macro should be displayed'},
+                                    'position': {'type': 'integer', 'description': 'The position of the macro'},
+                                    'description': {'type': 'string', 'description': 'The description of the macro'},
+                                    'actions': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Actions to perform when macro is applied',
+                                    },
+                                    'restriction': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Who may access this macro',
+                                    },
+                                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the macro was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the macro was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'macros',
+                            },
+                        },
+                    },
+                    record_extractor='$.macro',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support macro object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the macro is created'},
+                    'url': {'type': 'string', 'description': "A URL to access the macro's details"},
+                    'title': {'type': 'string', 'description': 'The title of the macro'},
+                    'active': {'type': 'boolean', 'description': 'Useful for determining if the macro should be displayed'},
+                    'position': {'type': 'integer', 'description': 'The position of the macro'},
+                    'description': {'type': 'string', 'description': 'The description of the macro'},
+                    'actions': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Actions to perform when macro is applied',
+                    },
+                    'restriction': {
+                        'type': ['object', 'null'],
+                        'description': 'Who may access this macro',
+                    },
+                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the macro was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the macro was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'macros',
+            },
+        ),
+        EntityDefinition(
+            name='triggers',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/triggers.json',
+                    action=Action.LIST,
+                    description='Returns a list of all triggers for the account',
+                    query_params=[
+                        'page',
+                        'active',
+                        'category_id',
+                        'sort',
+                    ],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'active': {'type': 'boolean', 'required': False},
+                        'category_id': {'type': 'string', 'required': False},
+                        'sort': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'triggers': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support trigger object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                        'url': {'type': 'string', 'description': 'The URL of the trigger'},
+                                        'title': {'type': 'string', 'description': 'The title of the trigger'},
+                                        'active': {'type': 'boolean', 'description': 'Whether the trigger is active'},
+                                        'position': {'type': 'integer', 'description': 'Position of the trigger'},
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The description of the trigger',
+                                        },
+                                        'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the trigger will execute'},
+                                        'actions': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'An array of actions',
+                                        },
+                                        'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                        'category_id': {'type': 'string', 'description': 'The ID of the category the trigger belongs to'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the trigger was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the trigger was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'triggers',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.triggers',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/triggers/{trigger_id}.json',
+                    action=Action.GET,
+                    description='Returns a trigger by its ID',
+                    path_params=['trigger_id'],
+                    path_params_schema={
+                        'trigger_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'trigger': {
+                                'type': 'object',
+                                'description': 'Zendesk Support trigger object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                    'url': {'type': 'string', 'description': 'The URL of the trigger'},
+                                    'title': {'type': 'string', 'description': 'The title of the trigger'},
+                                    'active': {'type': 'boolean', 'description': 'Whether the trigger is active'},
+                                    'position': {'type': 'integer', 'description': 'Position of the trigger'},
+                                    'description': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The description of the trigger',
+                                    },
+                                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the trigger will execute'},
+                                    'actions': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'An array of actions',
+                                    },
+                                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                    'category_id': {'type': 'string', 'description': 'The ID of the category the trigger belongs to'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the trigger was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the trigger was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'triggers',
+                            },
+                        },
+                    },
+                    record_extractor='$.trigger',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support trigger object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                    'url': {'type': 'string', 'description': 'The URL of the trigger'},
+                    'title': {'type': 'string', 'description': 'The title of the trigger'},
+                    'active': {'type': 'boolean', 'description': 'Whether the trigger is active'},
+                    'position': {'type': 'integer', 'description': 'Position of the trigger'},
+                    'description': {
+                        'type': ['string', 'null'],
+                        'description': 'The description of the trigger',
+                    },
+                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the trigger will execute'},
+                    'actions': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'An array of actions',
+                    },
+                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                    'category_id': {'type': 'string', 'description': 'The ID of the category the trigger belongs to'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the trigger was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the trigger was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'triggers',
+            },
+        ),
+        EntityDefinition(
+            name='automations',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/automations.json',
+                    action=Action.LIST,
+                    description='Returns a list of all automations for the account',
+                    query_params=['page', 'active', 'sort'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'active': {'type': 'boolean', 'required': False},
+                        'sort': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'automations': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support automation object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                        'url': {'type': 'string', 'description': 'The URL of the automation'},
+                                        'title': {'type': 'string', 'description': 'The title of the automation'},
+                                        'active': {'type': 'boolean', 'description': 'Whether the automation is active'},
+                                        'position': {'type': 'integer', 'description': 'The position of the automation'},
+                                        'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the automation will execute'},
+                                        'actions': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'An array of actions',
+                                        },
+                                        'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the automation was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the automation was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'automations',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.automations',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/automations/{automation_id}.json',
+                    action=Action.GET,
+                    description='Returns an automation by its ID',
+                    path_params=['automation_id'],
+                    path_params_schema={
+                        'automation_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'automation': {
+                                'type': 'object',
+                                'description': 'Zendesk Support automation object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                                    'url': {'type': 'string', 'description': 'The URL of the automation'},
+                                    'title': {'type': 'string', 'description': 'The title of the automation'},
+                                    'active': {'type': 'boolean', 'description': 'Whether the automation is active'},
+                                    'position': {'type': 'integer', 'description': 'The position of the automation'},
+                                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the automation will execute'},
+                                    'actions': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'An array of actions',
+                                    },
+                                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the automation was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the automation was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'automations',
+                            },
+                        },
+                    },
+                    record_extractor='$.automation',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support automation object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when created'},
+                    'url': {'type': 'string', 'description': 'The URL of the automation'},
+                    'title': {'type': 'string', 'description': 'The title of the automation'},
+                    'active': {'type': 'boolean', 'description': 'Whether the automation is active'},
+                    'position': {'type': 'integer', 'description': 'The position of the automation'},
+                    'conditions': {'type': 'object', 'description': 'An object that describes the conditions under which the automation will execute'},
+                    'actions': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'An array of actions',
+                    },
+                    'raw_title': {'type': 'string', 'description': 'The dynamic content placeholder for title'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the automation was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the automation was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'automations',
+            },
+        ),
+        EntityDefinition(
+            name='tags',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tags.json',
+                    action=Action.LIST,
+                    description='Returns a list of all tags used in the account',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'tags': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support tag object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'The name of the tag'},
+                                        'count': {'type': 'integer', 'description': 'The number of tickets with this tag'},
+                                    },
+                                    'required': ['name'],
+                                    'x-airbyte-entity-name': 'tags',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.tags',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support tag object',
+                'properties': {
+                    'name': {'type': 'string', 'description': 'The name of the tag'},
+                    'count': {'type': 'integer', 'description': 'The number of tickets with this tag'},
+                },
+                'required': ['name'],
+                'x-airbyte-entity-name': 'tags',
+            },
+        ),
+        EntityDefinition(
+            name='satisfaction_ratings',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/satisfaction_ratings.json',
+                    action=Action.LIST,
+                    description='Returns a list of all satisfaction ratings',
+                    query_params=[
+                        'page',
+                        'score',
+                        'start_time',
+                        'end_time',
+                    ],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'score': {'type': 'string', 'required': False},
+                        'start_time': {'type': 'integer', 'required': False},
+                        'end_time': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'satisfaction_ratings': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support satisfaction rating object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned'},
+                                        'url': {'type': 'string', 'description': 'The API url of this rating'},
+                                        'assignee_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The id of agent assigned to at the time of rating',
+                                        },
+                                        'group_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The id of group assigned to at the time of rating',
+                                        },
+                                        'requester_id': {'type': 'integer', 'description': 'The id of ticket requester submitting the rating'},
+                                        'ticket_id': {'type': 'integer', 'description': 'The id of the ticket being rated'},
+                                        'score': {'type': 'string', 'description': 'The rating (offered, unoffered, good, bad)'},
+                                        'comment': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Feedback comment',
+                                        },
+                                        'reason': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The reason for a bad rating',
+                                        },
+                                        'reason_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The id of a reason selected by the requester',
+                                        },
+                                        'reason_code': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'The reason code for the selection',
+                                        },
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When this record was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When this record was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'satisfaction_ratings',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.satisfaction_ratings',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/satisfaction_ratings/{satisfaction_rating_id}.json',
+                    action=Action.GET,
+                    description='Returns a satisfaction rating by its ID',
+                    path_params=['satisfaction_rating_id'],
+                    path_params_schema={
+                        'satisfaction_rating_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'satisfaction_rating': {
+                                'type': 'object',
+                                'description': 'Zendesk Support satisfaction rating object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned'},
+                                    'url': {'type': 'string', 'description': 'The API url of this rating'},
+                                    'assignee_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The id of agent assigned to at the time of rating',
+                                    },
+                                    'group_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The id of group assigned to at the time of rating',
+                                    },
+                                    'requester_id': {'type': 'integer', 'description': 'The id of ticket requester submitting the rating'},
+                                    'ticket_id': {'type': 'integer', 'description': 'The id of the ticket being rated'},
+                                    'score': {'type': 'string', 'description': 'The rating (offered, unoffered, good, bad)'},
+                                    'comment': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Feedback comment',
+                                    },
+                                    'reason': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The reason for a bad rating',
+                                    },
+                                    'reason_id': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The id of a reason selected by the requester',
+                                    },
+                                    'reason_code': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'The reason code for the selection',
+                                    },
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When this record was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When this record was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'satisfaction_ratings',
+                            },
+                        },
+                    },
+                    record_extractor='$.satisfaction_rating',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support satisfaction rating object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned'},
+                    'url': {'type': 'string', 'description': 'The API url of this rating'},
+                    'assignee_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The id of agent assigned to at the time of rating',
+                    },
+                    'group_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The id of group assigned to at the time of rating',
+                    },
+                    'requester_id': {'type': 'integer', 'description': 'The id of ticket requester submitting the rating'},
+                    'ticket_id': {'type': 'integer', 'description': 'The id of the ticket being rated'},
+                    'score': {'type': 'string', 'description': 'The rating (offered, unoffered, good, bad)'},
+                    'comment': {
+                        'type': ['string', 'null'],
+                        'description': 'Feedback comment',
+                    },
+                    'reason': {
+                        'type': ['string', 'null'],
+                        'description': 'The reason for a bad rating',
+                    },
+                    'reason_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The id of a reason selected by the requester',
+                    },
+                    'reason_code': {
+                        'type': ['integer', 'null'],
+                        'description': 'The reason code for the selection',
+                    },
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When this record was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When this record was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'satisfaction_ratings',
+            },
+        ),
+        EntityDefinition(
+            name='group_memberships',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/group_memberships.json',
+                    action=Action.LIST,
+                    description='Returns a list of all group memberships',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'group_memberships': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support group membership object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned upon creation'},
+                                        'url': {'type': 'string', 'description': 'The API url of this record'},
+                                        'user_id': {'type': 'integer', 'description': 'The id of an agent'},
+                                        'group_id': {'type': 'integer', 'description': 'The id of a group'},
+                                        'default': {'type': 'boolean', 'description': "If true, tickets assigned directly to the agent will assume this membership's group"},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the group membership was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the group membership was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'group_memberships',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.group_memberships',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support group membership object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned upon creation'},
+                    'url': {'type': 'string', 'description': 'The API url of this record'},
+                    'user_id': {'type': 'integer', 'description': 'The id of an agent'},
+                    'group_id': {'type': 'integer', 'description': 'The id of a group'},
+                    'default': {'type': 'boolean', 'description': "If true, tickets assigned directly to the agent will assume this membership's group"},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the group membership was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the group membership was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'group_memberships',
+            },
+        ),
+        EntityDefinition(
+            name='organization_memberships',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/organization_memberships.json',
+                    action=Action.LIST,
+                    description='Returns a list of all organization memberships',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'organization_memberships': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support organization membership object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the membership is created'},
+                                        'url': {'type': 'string', 'description': 'The API url of this membership'},
+                                        'user_id': {'type': 'integer', 'description': 'The ID of the user for whom this memberships belongs'},
+                                        'organization_id': {'type': 'integer', 'description': 'The ID of the organization associated with this user'},
+                                        'default': {'type': 'boolean', 'description': 'If true, this is the default organization for the user'},
+                                        'organization_name': {'type': 'string', 'description': 'The name of the organization'},
+                                        'view_tickets': {'type': 'boolean', 'description': 'If true, this user can view tickets from this organization'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the membership was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the membership was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'organization_memberships',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.organization_memberships',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support organization membership object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the membership is created'},
+                    'url': {'type': 'string', 'description': 'The API url of this membership'},
+                    'user_id': {'type': 'integer', 'description': 'The ID of the user for whom this memberships belongs'},
+                    'organization_id': {'type': 'integer', 'description': 'The ID of the organization associated with this user'},
+                    'default': {'type': 'boolean', 'description': 'If true, this is the default organization for the user'},
+                    'organization_name': {'type': 'string', 'description': 'The name of the organization'},
+                    'view_tickets': {'type': 'boolean', 'description': 'If true, this user can view tickets from this organization'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the membership was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the membership was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'organization_memberships',
+            },
+        ),
+        EntityDefinition(
+            name='sla_policies',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/slas/policies.json',
+                    action=Action.LIST,
+                    description='Returns a list of all SLA policies',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'sla_policies': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support SLA policy object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when the SLA policy is created'},
+                                        'url': {'type': 'string', 'description': 'URL of the SLA policy'},
+                                        'title': {'type': 'string', 'description': 'The title of the SLA policy'},
+                                        'description': {'type': 'string', 'description': 'The description of the SLA policy'},
+                                        'position': {'type': 'integer', 'description': 'Position of the SLA policy'},
+                                        'filter': {'type': 'object', 'description': 'Filter for the SLA policy'},
+                                        'policy_metrics': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Array of policy metrics',
+                                        },
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the SLA policy was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the SLA policy was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'sla_policies',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.sla_policies',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/slas/policies/{sla_policy_id}.json',
+                    action=Action.GET,
+                    description='Returns an SLA policy by its ID',
+                    path_params=['sla_policy_id'],
+                    path_params_schema={
+                        'sla_policy_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'sla_policy': {
+                                'type': 'object',
+                                'description': 'Zendesk Support SLA policy object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when the SLA policy is created'},
+                                    'url': {'type': 'string', 'description': 'URL of the SLA policy'},
+                                    'title': {'type': 'string', 'description': 'The title of the SLA policy'},
+                                    'description': {'type': 'string', 'description': 'The description of the SLA policy'},
+                                    'position': {'type': 'integer', 'description': 'Position of the SLA policy'},
+                                    'filter': {'type': 'object', 'description': 'Filter for the SLA policy'},
+                                    'policy_metrics': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Array of policy metrics',
+                                    },
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the SLA policy was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the SLA policy was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'sla_policies',
+                            },
+                        },
+                    },
+                    record_extractor='$.sla_policy',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support SLA policy object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when the SLA policy is created'},
+                    'url': {'type': 'string', 'description': 'URL of the SLA policy'},
+                    'title': {'type': 'string', 'description': 'The title of the SLA policy'},
+                    'description': {'type': 'string', 'description': 'The description of the SLA policy'},
+                    'position': {'type': 'integer', 'description': 'Position of the SLA policy'},
+                    'filter': {'type': 'object', 'description': 'Filter for the SLA policy'},
+                    'policy_metrics': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Array of policy metrics',
+                    },
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the SLA policy was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the SLA policy was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'sla_policies',
+            },
+        ),
+        EntityDefinition(
+            name='ticket_forms',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/ticket_forms.json',
+                    action=Action.LIST,
+                    description='Returns a list of all ticket forms for the account',
+                    query_params=['page', 'active', 'end_user_visible'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'active': {'type': 'boolean', 'required': False},
+                        'end_user_visible': {'type': 'boolean', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket_forms': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support ticket form object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'Automatically assigned when creating ticket forms'},
+                                        'url': {'type': 'string', 'description': 'URL of the ticket form'},
+                                        'name': {'type': 'string', 'description': 'The name of the form'},
+                                        'display_name': {'type': 'string', 'description': 'The name of the form that is displayed to an end user'},
+                                        'raw_name': {'type': 'string', 'description': 'The dynamic content placeholder for name'},
+                                        'raw_display_name': {'type': 'string', 'description': 'The dynamic content placeholder for display_name'},
+                                        'position': {'type': 'integer', 'description': 'The position of this form among other forms'},
+                                        'active': {'type': 'boolean', 'description': 'If the form is set as active'},
+                                        'end_user_visible': {'type': 'boolean', 'description': 'Is the form visible to the end user'},
+                                        'default': {'type': 'boolean', 'description': 'Is the form the default form for this account'},
+                                        'in_all_brands': {'type': 'boolean', 'description': 'Is the form available for use in all brands'},
+                                        'restricted_brand_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'ids of brands that this form is restricted to',
+                                        },
+                                        'ticket_field_ids': {
+                                            'type': 'array',
+                                            'items': {'type': 'integer'},
+                                            'description': 'ids of all ticket fields which are in this form',
+                                        },
+                                        'agent_conditions': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Array of condition sets for agent workspaces',
+                                        },
+                                        'end_user_conditions': {
+                                            'type': 'array',
+                                            'items': {'type': 'object'},
+                                            'description': 'Array of condition sets for end user products',
+                                        },
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the ticket form was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'When the ticket form was last updated',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ticket_forms',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.ticket_forms',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/ticket_forms/{ticket_form_id}.json',
+                    action=Action.GET,
+                    description='Returns a ticket form by its ID',
+                    path_params=['ticket_form_id'],
+                    path_params_schema={
+                        'ticket_form_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'ticket_form': {
+                                'type': 'object',
+                                'description': 'Zendesk Support ticket form object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'Automatically assigned when creating ticket forms'},
+                                    'url': {'type': 'string', 'description': 'URL of the ticket form'},
+                                    'name': {'type': 'string', 'description': 'The name of the form'},
+                                    'display_name': {'type': 'string', 'description': 'The name of the form that is displayed to an end user'},
+                                    'raw_name': {'type': 'string', 'description': 'The dynamic content placeholder for name'},
+                                    'raw_display_name': {'type': 'string', 'description': 'The dynamic content placeholder for display_name'},
+                                    'position': {'type': 'integer', 'description': 'The position of this form among other forms'},
+                                    'active': {'type': 'boolean', 'description': 'If the form is set as active'},
+                                    'end_user_visible': {'type': 'boolean', 'description': 'Is the form visible to the end user'},
+                                    'default': {'type': 'boolean', 'description': 'Is the form the default form for this account'},
+                                    'in_all_brands': {'type': 'boolean', 'description': 'Is the form available for use in all brands'},
+                                    'restricted_brand_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'ids of brands that this form is restricted to',
+                                    },
+                                    'ticket_field_ids': {
+                                        'type': 'array',
+                                        'items': {'type': 'integer'},
+                                        'description': 'ids of all ticket fields which are in this form',
+                                    },
+                                    'agent_conditions': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Array of condition sets for agent workspaces',
+                                    },
+                                    'end_user_conditions': {
+                                        'type': 'array',
+                                        'items': {'type': 'object'},
+                                        'description': 'Array of condition sets for end user products',
+                                    },
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the ticket form was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'When the ticket form was last updated',
+                                    },
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'ticket_forms',
+                            },
+                        },
+                    },
+                    record_extractor='$.ticket_form',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support ticket form object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'Automatically assigned when creating ticket forms'},
+                    'url': {'type': 'string', 'description': 'URL of the ticket form'},
+                    'name': {'type': 'string', 'description': 'The name of the form'},
+                    'display_name': {'type': 'string', 'description': 'The name of the form that is displayed to an end user'},
+                    'raw_name': {'type': 'string', 'description': 'The dynamic content placeholder for name'},
+                    'raw_display_name': {'type': 'string', 'description': 'The dynamic content placeholder for display_name'},
+                    'position': {'type': 'integer', 'description': 'The position of this form among other forms'},
+                    'active': {'type': 'boolean', 'description': 'If the form is set as active'},
+                    'end_user_visible': {'type': 'boolean', 'description': 'Is the form visible to the end user'},
+                    'default': {'type': 'boolean', 'description': 'Is the form the default form for this account'},
+                    'in_all_brands': {'type': 'boolean', 'description': 'Is the form available for use in all brands'},
+                    'restricted_brand_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'ids of brands that this form is restricted to',
+                    },
+                    'ticket_field_ids': {
+                        'type': 'array',
+                        'items': {'type': 'integer'},
+                        'description': 'ids of all ticket fields which are in this form',
+                    },
+                    'agent_conditions': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Array of condition sets for agent workspaces',
+                    },
+                    'end_user_conditions': {
+                        'type': 'array',
+                        'items': {'type': 'object'},
+                        'description': 'Array of condition sets for end user products',
+                    },
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the ticket form was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'When the ticket form was last updated',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ticket_forms',
+            },
+        ),
+        EntityDefinition(
+            name='articles',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/help_center/articles.json',
+                    action=Action.LIST,
+                    description='Returns a list of all articles in the Help Center',
+                    query_params=['page', 'sort_by', 'sort_order'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'asc',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'articles': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Help Center article object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'The unique ID of the article'},
+                                        'url': {'type': 'string', 'description': 'The API URL of the article'},
+                                        'html_url': {'type': 'string', 'description': 'The public URL of the article'},
+                                        'title': {'type': 'string', 'description': 'The title of the article'},
+                                        'body': {'type': 'string', 'description': 'The body content of the article (HTML)'},
+                                        'locale': {'type': 'string', 'description': 'The locale of the article'},
+                                        'author_id': {'type': 'integer', 'description': 'The ID of the user who created the article'},
+                                        'section_id': {'type': 'integer', 'description': 'The ID of the section the article belongs to'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the article was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the article was last updated',
+                                        },
+                                        'vote_sum': {'type': 'integer', 'description': 'Sum of upvotes and downvotes'},
+                                        'vote_count': {'type': 'integer', 'description': 'Number of votes'},
+                                        'label_names': {
+                                            'type': 'array',
+                                            'items': {'type': 'string'},
+                                            'description': 'List of label names associated with the article',
+                                        },
+                                        'draft': {'type': 'boolean', 'description': 'Whether the article is a draft'},
+                                        'promoted': {'type': 'boolean', 'description': 'Whether the article is promoted'},
+                                        'position': {'type': 'integer', 'description': 'Position of the article in the section'},
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'articles',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.articles',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/help_center/articles/{id}.json',
+                    action=Action.GET,
+                    description='Retrieves the details of a specific article',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'article': {
+                                'type': 'object',
+                                'description': 'Help Center article object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'The unique ID of the article'},
+                                    'url': {'type': 'string', 'description': 'The API URL of the article'},
+                                    'html_url': {'type': 'string', 'description': 'The public URL of the article'},
+                                    'title': {'type': 'string', 'description': 'The title of the article'},
+                                    'body': {'type': 'string', 'description': 'The body content of the article (HTML)'},
+                                    'locale': {'type': 'string', 'description': 'The locale of the article'},
+                                    'author_id': {'type': 'integer', 'description': 'The ID of the user who created the article'},
+                                    'section_id': {'type': 'integer', 'description': 'The ID of the section the article belongs to'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the article was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the article was last updated',
+                                    },
+                                    'vote_sum': {'type': 'integer', 'description': 'Sum of upvotes and downvotes'},
+                                    'vote_count': {'type': 'integer', 'description': 'Number of votes'},
+                                    'label_names': {
+                                        'type': 'array',
+                                        'items': {'type': 'string'},
+                                        'description': 'List of label names associated with the article',
+                                    },
+                                    'draft': {'type': 'boolean', 'description': 'Whether the article is a draft'},
+                                    'promoted': {'type': 'boolean', 'description': 'Whether the article is promoted'},
+                                    'position': {'type': 'integer', 'description': 'Position of the article in the section'},
+                                },
+                                'required': ['id'],
+                                'x-airbyte-entity-name': 'articles',
+                            },
+                        },
+                    },
+                    record_extractor='$.article',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Help Center article object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'The unique ID of the article'},
+                    'url': {'type': 'string', 'description': 'The API URL of the article'},
+                    'html_url': {'type': 'string', 'description': 'The public URL of the article'},
+                    'title': {'type': 'string', 'description': 'The title of the article'},
+                    'body': {'type': 'string', 'description': 'The body content of the article (HTML)'},
+                    'locale': {'type': 'string', 'description': 'The locale of the article'},
+                    'author_id': {'type': 'integer', 'description': 'The ID of the user who created the article'},
+                    'section_id': {'type': 'integer', 'description': 'The ID of the section the article belongs to'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the article was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the article was last updated',
+                    },
+                    'vote_sum': {'type': 'integer', 'description': 'Sum of upvotes and downvotes'},
+                    'vote_count': {'type': 'integer', 'description': 'Number of votes'},
+                    'label_names': {
+                        'type': 'array',
+                        'items': {'type': 'string'},
+                        'description': 'List of label names associated with the article',
+                    },
+                    'draft': {'type': 'boolean', 'description': 'Whether the article is a draft'},
+                    'promoted': {'type': 'boolean', 'description': 'Whether the article is promoted'},
+                    'position': {'type': 'integer', 'description': 'Position of the article in the section'},
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'articles',
+            },
+        ),
+        EntityDefinition(
+            name='article_attachments',
+            actions=[Action.LIST, Action.GET, Action.DOWNLOAD],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/help_center/articles/{article_id}/attachments.json',
+                    action=Action.LIST,
+                    description='Returns a list of all attachments for a specific article',
+                    query_params=['page'],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                    },
+                    path_params=['article_id'],
+                    path_params_schema={
+                        'article_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'article_attachments': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Article attachment object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'The unique ID of the attachment'},
+                                        'url': {
+                                            'type': 'string',
+                                            'format': 'uri',
+                                            'description': 'The API URL of the attachment',
+                                        },
+                                        'article_id': {'type': 'integer', 'description': 'The ID of the article this attachment belongs to'},
+                                        'file_name': {'type': 'string', 'description': 'The name of the attached file'},
+                                        'content_type': {'type': 'string', 'description': 'The MIME type of the attachment'},
+                                        'content_url': {
+                                            'type': 'string',
+                                            'format': 'uri',
+                                            'description': 'The URL to download the attachment',
+                                        },
+                                        'size': {'type': 'integer', 'description': 'The size of the attachment in bytes'},
+                                        'inline': {'type': 'boolean', 'description': 'Whether the attachment is displayed inline'},
+                                        'created_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the attachment was created',
+                                        },
+                                        'updated_at': {
+                                            'type': 'string',
+                                            'format': 'date-time',
+                                            'description': 'The time the attachment was last updated',
+                                        },
+                                    },
+                                    'required': ['id', 'file_name'],
+                                    'x-airbyte-entity-name': 'article_attachments',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.article_attachments',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/help_center/articles/{article_id}/attachments/{attachment_id}',
+                    action=Action.GET,
+                    description='Retrieves the metadata of a specific attachment for a specific article',
+                    path_params=['article_id', 'attachment_id'],
+                    path_params_schema={
+                        'article_id': {'type': 'integer', 'required': True},
+                        'attachment_id': {'type': 'integer', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'article_attachment': {
+                                'type': 'object',
+                                'description': 'Article attachment object',
+                                'properties': {
+                                    'id': {'type': 'integer', 'description': 'The unique ID of the attachment'},
+                                    'url': {
+                                        'type': 'string',
+                                        'format': 'uri',
+                                        'description': 'The API URL of the attachment',
+                                    },
+                                    'article_id': {'type': 'integer', 'description': 'The ID of the article this attachment belongs to'},
+                                    'file_name': {'type': 'string', 'description': 'The name of the attached file'},
+                                    'content_type': {'type': 'string', 'description': 'The MIME type of the attachment'},
+                                    'content_url': {
+                                        'type': 'string',
+                                        'format': 'uri',
+                                        'description': 'The URL to download the attachment',
+                                    },
+                                    'size': {'type': 'integer', 'description': 'The size of the attachment in bytes'},
+                                    'inline': {'type': 'boolean', 'description': 'Whether the attachment is displayed inline'},
+                                    'created_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the attachment was created',
+                                    },
+                                    'updated_at': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'The time the attachment was last updated',
+                                    },
+                                },
+                                'required': ['id', 'file_name'],
+                                'x-airbyte-entity-name': 'article_attachments',
+                            },
+                        },
+                    },
+                    record_extractor='$.article_attachment',
+                ),
+                Action.DOWNLOAD: EndpointDefinition(
+                    method='GET',
+                    path='/help_center/articles/{article_id}/attachments/{attachment_id}:download',
+                    path_override=PathOverrideConfig(
+                        path='/help_center/articles/{article_id}/attachments/{attachment_id}',
+                    ),
+                    action=Action.DOWNLOAD,
+                    description='Downloads the file content of a specific attachment',
+                    path_params=['article_id', 'attachment_id'],
+                    path_params_schema={
+                        'article_id': {'type': 'integer', 'required': True},
+                        'attachment_id': {'type': 'integer', 'required': True},
+                    },
+                    file_field='article_attachment.content_url',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Article attachment object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'The unique ID of the attachment'},
+                    'url': {
+                        'type': 'string',
+                        'format': 'uri',
+                        'description': 'The API URL of the attachment',
+                    },
+                    'article_id': {'type': 'integer', 'description': 'The ID of the article this attachment belongs to'},
+                    'file_name': {'type': 'string', 'description': 'The name of the attached file'},
+                    'content_type': {'type': 'string', 'description': 'The MIME type of the attachment'},
+                    'content_url': {
+                        'type': 'string',
+                        'format': 'uri',
+                        'description': 'The URL to download the attachment',
+                    },
+                    'size': {'type': 'integer', 'description': 'The size of the attachment in bytes'},
+                    'inline': {'type': 'boolean', 'description': 'Whether the attachment is displayed inline'},
+                    'created_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the attachment was created',
+                    },
+                    'updated_at': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'The time the attachment was last updated',
+                    },
+                },
+                'required': ['id', 'file_name'],
+                'x-airbyte-entity-name': 'article_attachments',
+            },
+        ),
+    ],
+)

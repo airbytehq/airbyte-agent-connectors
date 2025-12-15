@@ -611,8 +611,7 @@ class OAuth2AuthStrategy(AuthStrategy):
 
         if not has_access_token and not has_refresh_token:
             raise AuthenticationError(
-                "Missing OAuth2 credentials. Provide either 'access_token' "
-                "or 'refresh_token' (for refresh-token-only mode)."
+                "Missing OAuth2 credentials. Provide either 'access_token' " "or 'refresh_token' (for refresh-token-only mode)."
             )
 
     def can_refresh(self, secrets: OAuth2RefreshSecrets) -> bool:
@@ -742,9 +741,7 @@ class OAuth2AuthStrategy(AuthStrategy):
             )
 
         try:
-            logger.info(
-                "Proactively refreshing OAuth2 token (no access_token provided)"
-            )
+            logger.info("Proactively refreshing OAuth2 token (no access_token provided)")
 
             # Create token refresher and attempt refresh
             # Pass None for http_client - let refresher create its own
@@ -826,9 +823,7 @@ class OAuth2TokenRefresher:
         url = self._render_refresh_url(config, secrets)
         headers, body_params = self._build_refresh_request(config, secrets)
 
-        response = await self._execute_refresh_request(
-            url, headers, body_params, config
-        )
+        response = await self._execute_refresh_request(url, headers, body_params, config)
 
         # Get token_extract config if present
         token_extract: list[str] | None = config.get("token_extract")  # type: ignore[assignment]
@@ -893,14 +888,10 @@ class OAuth2TokenRefresher:
 
         # Build template context with priority: config_values > config > secrets
         template_context = dict(config)  # Auth config values
-        template_context.update(
-            self._config_values
-        )  # Non-secret config (higher priority)
+        template_context.update(self._config_values)  # Non-secret config (higher priority)
 
         # Add commonly needed secret values (but not sensitive tokens)
-        template_context["client_id"] = extract_secret_value(
-            secrets.get("client_id", "")
-        )
+        template_context["client_id"] = extract_secret_value(secrets.get("client_id", ""))
 
         return Template(refresh_url).render(template_context)
 
@@ -934,9 +925,7 @@ class OAuth2TokenRefresher:
         }
 
         # Build headers based on auth style
-        headers = self._build_auth_headers(
-            auth_style, client_id_value, client_secret_value
-        )
+        headers = self._build_auth_headers(auth_style, client_id_value, client_secret_value)
 
         # Add client credentials to body if using body auth style
         if auth_style == "body":

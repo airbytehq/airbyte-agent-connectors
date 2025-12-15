@@ -11,7 +11,7 @@ Provides:
 from __future__ import annotations
 
 from .auth_strategies import AuthStrategy
-from .config_loader import load_connector_config
+from .connector_model_loader import load_connector_model
 from .constants import SDK_VERSION
 from .exceptions import (
     AuthenticationError,
@@ -35,7 +35,7 @@ from .executor import (
 from .http_client import HTTPClient
 from .logging import LogSession, NullLogger, RequestLog, RequestLogger
 from .performance import PerformanceMonitor, instrument
-from .types import Action, AuthType, ConnectorConfig, EntityDefinition
+from .types import Action, AuthType, ConnectorModel, EntityDefinition
 from .utils import save_download
 
 __version__ = SDK_VERSION
@@ -50,11 +50,11 @@ __all__ = [
     "ExecutionConfig",
     "ExecutionResult",
     # Types
-    "ConnectorConfig",
+    "ConnectorModel",
     "Action",
     "AuthType",
     "EntityDefinition",
-    "load_connector_config",
+    "load_connector_model",
     # Authentication
     "AuthStrategy",
     # Executor Exceptions

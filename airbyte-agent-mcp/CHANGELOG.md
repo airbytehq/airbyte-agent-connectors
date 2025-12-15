@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.1.29] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: c4c39c27
+- SDK version: 0.1.0
+
+## [0.1.28] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: 85f4e6b0
+- SDK version: 0.1.0
+
+## [0.1.27] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: 77ce3325
+- SDK version: 0.1.0
+
+## [0.1.26] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: 0bfa6500
+- SDK version: 0.1.0
+
+## [0.1.25] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: ea5a02a3
+- SDK version: 0.1.0
+
+## [0.1.24] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: f13dee0a
+- SDK version: 0.1.0
+
+## [0.1.23] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: d79da1e7
+- SDK version: 0.1.0
+
+## [0.1.22] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: 0e48ca4e
+- SDK version: 0.1.0
+
+## [0.1.21] - 2025-12-15
+- Updated airbyte-agent-mcp package
+- Source commit: 06e7d5c6
+- SDK version: 0.1.0
+
 ## [0.1.20] - 2025-12-13
 - Updated airbyte-agent-mcp package
 - Source commit: 1ab72bd8

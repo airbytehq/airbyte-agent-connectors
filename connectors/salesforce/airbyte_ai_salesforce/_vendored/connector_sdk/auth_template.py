@@ -17,10 +17,7 @@ class MissingVariableError(ValueError):
     def __init__(self, var_name: str, available_fields: list):
         self.var_name = var_name
         self.available_fields = available_fields
-        super().__init__(
-            f"Template variable '${{{var_name}}}' not found in config. "
-            f"Available fields: {available_fields}"
-        )
+        super().__init__(f"Template variable '${{{var_name}}}' not found in config. " f"Available fields: {available_fields}")
 
 
 def apply_template(template: str, values: Dict[str, str]) -> str:

@@ -57,9 +57,7 @@ class OpenAPIConnector(BaseModel):
     typos and unknown extensions.
     """
 
-    model_config = ConfigDict(
-        populate_by_name=True, extra="forbid", validate_default=True
-    )
+    model_config = ConfigDict(populate_by_name=True, extra="forbid", validate_default=True)
 
     # Required fields
     openapi: str
@@ -78,9 +76,7 @@ class OpenAPIConnector(BaseModel):
     def validate_openapi_version(cls, v: str) -> str:
         """Validate that OpenAPI version is 3.1.x."""
         if not v.startswith(OPENAPI_VERSION_PREFIX):
-            raise ValueError(
-                f"OpenAPI version must be {OPENAPI_VERSION_PREFIX}x, got: {v}"
-            )
+            raise ValueError(f"OpenAPI version must be {OPENAPI_VERSION_PREFIX}x, got: {v}")
         return v
 
     def get_entity_operations(self, entity_name: str) -> list[tuple[str, str, Any]]:

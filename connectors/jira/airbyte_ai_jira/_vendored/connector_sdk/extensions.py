@@ -514,9 +514,7 @@ class BodyType(str, Enum):
 
 
 # Type alias for use in Pydantic models
-ActionTypeLiteral = Literal[
-    "get", "list", "create", "update", "delete", "search", "download"
-]
+ActionTypeLiteral = Literal["get", "list", "create", "update", "delete", "search", "download"]
 
 
 # =============================================================================
@@ -628,7 +626,10 @@ EXTENSION_REGISTRY = {
         "location": "operation",
         "type": "dict[str, str]",
         "required": False,
-        "description": "Dictionary mapping field names to JSONPath expressions for extracting metadata (pagination, request IDs, etc.) from response envelopes",
+        "description": (
+            "Dictionary mapping field names to JSONPath expressions for extracting metadata "
+            "(pagination, request IDs, etc.) from response envelopes"
+        ),
     },
     AIRBYTE_FILE_URL: {
         "location": "operation",

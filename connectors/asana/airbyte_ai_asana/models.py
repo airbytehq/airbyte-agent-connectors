@@ -9,15 +9,16 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class AsanaAuthConfig(BaseModel):
+class AsanaAsanaOauth20AuthConfig(BaseModel):
     """Asana OAuth 2.0"""
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: str
+    access_token: Optional[str] = None
     """OAuth access token for API requests"""
     refresh_token: str
     """OAuth refresh token for automatic token renewal"""
@@ -25,6 +26,16 @@ class AsanaAuthConfig(BaseModel):
     """Connected App Consumer Key"""
     client_secret: str
     """Connected App Consumer Secret"""
+
+class AsanaPersonalAccessTokenAuthConfig(BaseModel):
+    """Personal Access Token"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    token: str
+    """Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps"""
+
+AsanaAuthConfig = AsanaAsanaOauth20AuthConfig | AsanaPersonalAccessTokenAuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
@@ -80,6 +91,30 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
 class ProjectWorkspace(BaseModel):
     """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -96,22 +131,6 @@ class ProjectCurrentStatusUpdate(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     resource_subtype: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
 
 class ProjectCurrentStatusAuthor(BaseModel):
     """Nested schema for ProjectCurrentStatus.author"""
@@ -142,14 +161,6 @@ class ProjectCurrentStatus(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
-
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
 
 class ProjectFollowersItem(BaseModel):
     """Nested schema for Project.followers_item"""
@@ -347,6 +358,160 @@ class TeamsList(BaseModel):
     data: Union[list[TeamCompact], Any] = Field(default=None)
     next_page: Union[TeamsListNextPage | None, Any] = Field(default=None)
 
+class AttachmentCompact(BaseModel):
+    """Compact attachment object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+
+class AttachmentParent(BaseModel):
+    """The parent object this attachment is attached to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None, description="The subtype of the parent resource")
+    """The subtype of the parent resource"""
+
+class Attachment(BaseModel):
+    """Full attachment object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    download_url: Union[str | None, Any] = Field(default=None)
+    permanent_url: Union[str | None, Any] = Field(default=None)
+    host: Union[str, Any] = Field(default=None)
+    parent: Union[AttachmentParent, Any] = Field(default=None)
+    view_url: Union[str | None, Any] = Field(default=None)
+    size: Union[int | None, Any] = Field(default=None)
+
+class AttachmentResponse(BaseModel):
+    """Attachment response wrapper"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[Attachment, Any] = Field(default=None)
+
+class AttachmentsListNextPage(BaseModel):
+    """Nested schema for AttachmentsList.next_page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    offset: Union[str, Any] = Field(default=None)
+    path: Union[str, Any] = Field(default=None)
+    uri: Union[str, Any] = Field(default=None)
+
+class AttachmentsList(BaseModel):
+    """Paginated list of attachments containing compact attachment objects"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AttachmentCompact], Any] = Field(default=None)
+    next_page: Union[AttachmentsListNextPage | None, Any] = Field(default=None)
+
+class TagCompact(BaseModel):
+    """Compact tag object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+
+class TagWorkspace(BaseModel):
+    """Nested schema for Tag.workspace"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class Tag(BaseModel):
+    """Full tag object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    color: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    followers: Union[list[Any], Any] = Field(default=None)
+    notes: Union[str, Any] = Field(default=None)
+    permalink_url: Union[str, Any] = Field(default=None)
+    workspace: Union[TagWorkspace, Any] = Field(default=None)
+
+class TagResponse(BaseModel):
+    """Tag response wrapper"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[Tag, Any] = Field(default=None)
+
+class TagsListNextPage(BaseModel):
+    """Nested schema for TagsList.next_page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    offset: Union[str, Any] = Field(default=None)
+    path: Union[str, Any] = Field(default=None)
+    uri: Union[str, Any] = Field(default=None)
+
+class TagsList(BaseModel):
+    """Paginated list of tags containing compact tag objects"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[TagCompact], Any] = Field(default=None)
+    next_page: Union[TagsListNextPage | None, Any] = Field(default=None)
+
+class SectionCompact(BaseModel):
+    """Compact section object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+
+class SectionProject(BaseModel):
+    """Nested schema for Section.project"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class Section(BaseModel):
+    """Full section object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    project: Union[SectionProject, Any] = Field(default=None)
+
+class SectionResponse(BaseModel):
+    """Section response wrapper"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[Section, Any] = Field(default=None)
+
+class SectionsListNextPage(BaseModel):
+    """Nested schema for SectionsList.next_page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    offset: Union[str, Any] = Field(default=None)
+    path: Union[str, Any] = Field(default=None)
+    uri: Union[str, Any] = Field(default=None)
+
+class SectionsList(BaseModel):
+    """Paginated list of sections containing compact section objects"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[SectionCompact], Any] = Field(default=None)
+    next_page: Union[SectionsListNextPage | None, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
@@ -424,6 +589,42 @@ class WorkspaceTeamsListResultMeta(BaseModel):
 
 class UserTeamsListResultMeta(BaseModel):
     """Metadata for user_teams.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class AttachmentsListResultMeta(BaseModel):
+    """Metadata for attachments.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class WorkspaceTagsListResultMeta(BaseModel):
+    """Metadata for workspace_tags.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class ProjectSectionsListResultMeta(BaseModel):
+    """Metadata for project_sections.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class TaskSubtasksListResultMeta(BaseModel):
+    """Metadata for task_subtasks.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class TaskDependenciesListResultMeta(BaseModel):
+    """Metadata for task_dependencies.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class TaskDependentsListResultMeta(BaseModel):
+    """Metadata for task_dependents.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
@@ -513,4 +714,31 @@ WorkspaceTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], Workspa
 
 UserTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], UserTeamsListResultMeta]
 """Result type for user_teams.list operation with data and metadata."""
+
+AttachmentsListResult = AsanaExecuteResultWithMeta[list[AttachmentCompact], AttachmentsListResultMeta]
+"""Result type for attachments.list operation with data and metadata."""
+
+AttachmentsGetResult = AsanaExecuteResult[Attachment]
+"""Result type for attachments.get operation."""
+
+WorkspaceTagsListResult = AsanaExecuteResultWithMeta[list[TagCompact], WorkspaceTagsListResultMeta]
+"""Result type for workspace_tags.list operation with data and metadata."""
+
+TagsGetResult = AsanaExecuteResult[Tag]
+"""Result type for tags.get operation."""
+
+ProjectSectionsListResult = AsanaExecuteResultWithMeta[list[SectionCompact], ProjectSectionsListResultMeta]
+"""Result type for project_sections.list operation with data and metadata."""
+
+SectionsGetResult = AsanaExecuteResult[Section]
+"""Result type for sections.get operation."""
+
+TaskSubtasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TaskSubtasksListResultMeta]
+"""Result type for task_subtasks.list operation with data and metadata."""
+
+TaskDependenciesListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TaskDependenciesListResultMeta]
+"""Result type for task_dependencies.list operation with data and metadata."""
+
+TaskDependentsListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TaskDependentsListResultMeta]
+"""Result type for task_dependents.list operation with data and metadata."""
 

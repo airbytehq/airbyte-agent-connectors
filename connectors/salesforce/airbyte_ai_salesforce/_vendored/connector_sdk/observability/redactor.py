@@ -34,10 +34,7 @@ class DataRedactor:
         """Redact sensitive headers."""
         redacted = {}
         for key, value in headers.items():
-            if any(
-                pattern in key.lower()
-                for pattern in DataRedactor.SENSITIVE_HEADER_PATTERNS
-            ):
+            if any(pattern in key.lower() for pattern in DataRedactor.SENSITIVE_HEADER_PATTERNS):
                 redacted[key] = "***REDACTED***"
             else:
                 redacted[key] = value
@@ -48,10 +45,7 @@ class DataRedactor:
         """Redact sensitive parameters."""
         redacted = {}
         for key, value in params.items():
-            if any(
-                pattern in key.lower()
-                for pattern in DataRedactor.SENSITIVE_PARAM_PATTERNS
-            ):
+            if any(pattern in key.lower() for pattern in DataRedactor.SENSITIVE_PARAM_PATTERNS):
                 redacted[key] = "***REDACTED***"
             else:
                 redacted[key] = value
@@ -68,10 +62,7 @@ class DataRedactor:
         redacted_params = {}
 
         for key, values in params.items():
-            if any(
-                pattern in key.lower()
-                for pattern in DataRedactor.SENSITIVE_PARAM_PATTERNS
-            ):
+            if any(pattern in key.lower() for pattern in DataRedactor.SENSITIVE_PARAM_PATTERNS):
                 redacted_params[key] = ["***REDACTED***"] * len(values)
             else:
                 redacted_params[key] = values

@@ -6,7 +6,7 @@ import logging
 from typing import Any
 
 from ._vendored.connector_sdk import LocalExecutor as ConnectorExecutor
-from ._vendored.connector_sdk.config_loader import load_connector_config
+from ._vendored.connector_sdk.connector_model_loader import load_connector_model
 from ._vendored.connector_sdk.executor.models import ExecutionConfig
 
 from airbyte_agent_mcp.models import Config, ConnectorConfig, ConnectorInfo, ConnectorType, DiscoverConnectorsResponse
@@ -194,14 +194,14 @@ class ConnectorManager:
             List of entity info dicts
         """
 
-        # Load and parse the connector config using SDK
-        connector_config = load_connector_config(path)
+        # Load and parse the connector model using SDK
+        connector_model = load_connector_model(path)
 
         # Build parameter lookup from OpenAPI spec for full metadata
-        param_lookup = self._build_param_lookup(connector_config)
+        param_lookup = self._build_param_lookup(connector_model)
 
         entities = []
-        for entity_def in connector_config.entities:
+        for entity_def in connector_model.entities:
             description = ""
             parameters: dict[str, list[dict[str, Any]]] = {}
 
@@ -278,18 +278,18 @@ class ConnectorManager:
 
         return entities
 
-    def _build_param_lookup(self, connector_config: Any) -> dict[tuple[str, str], dict[str, dict[str, Any]]]:
+    def _build_param_lookup(self, connector_model: Any) -> dict[tuple[str, str], dict[str, dict[str, Any]]]:
         """Build a lookup of parameter metadata from OpenAPI spec.
 
         Args:
-            connector_config: Loaded ConnectorConfig with openapi_spec
+            connector_model: Loaded connector model with openapi_spec
 
         Returns:
             Dict mapping (path, method) -> {param_name -> {type, description, required}}
         """
         lookup: dict[tuple[str, str], dict[str, dict[str, Any]]] = {}
 
-        openapi_spec = getattr(connector_config, "openapi_spec", None)
+        openapi_spec = getattr(connector_model, "openapi_spec", None)
         if not openapi_spec or not hasattr(openapi_spec, "paths"):
             return lookup
 

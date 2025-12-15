@@ -15,7 +15,7 @@ from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
 from ..auth_template import apply_auth_mapping
-from ..config_loader import load_connector_config
+from ..connector_model_loader import load_connector_model
 from ..constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
@@ -30,7 +30,7 @@ from ..types import (
     Action,
     AuthConfig,
     AuthOption,
-    ConnectorConfig,
+    ConnectorModel,
     EndpointDefinition,
     EntityDefinition,
 )
@@ -101,7 +101,8 @@ class LocalExecutor:
 
     def __init__(
         self,
-        config_path: str,
+        config_path: str | None = None,
+        model: ConnectorModel | None = None,
         secrets: dict[str, SecretStr] | None = None,
         auth_config: dict[str, SecretStr] | None = None,
         auth_scheme: str | None = None,
@@ -118,7 +119,9 @@ class LocalExecutor:
         """Initialize async executor.
 
         Args:
-            config_path: Path to connector.yaml
+            config_path: Path to connector.yaml.
+                If neither config_path nor model is provided, an error will be raised.
+            model: ConnectorModel object to execute.
             secrets: (Legacy) Auth parameters that bypass x-airbyte-auth-config mapping.
                 Directly passed to auth strategies (e.g., {"username": "...", "password": "..."}).
                 Cannot be used together with auth_config.
@@ -145,7 +148,7 @@ class LocalExecutor:
                 the connector.yaml x-airbyte-retry-config. If None, uses connector.yaml
                 config or SDK defaults.
         """
-        # Validate mutual exclusivity
+        # Validate mutual exclusivity of secrets and auth_config
         if secrets is not None and auth_config is not None:
             raise ValueError(
                 "Cannot provide both 'secrets' and 'auth_config' parameters. "
@@ -153,36 +156,42 @@ class LocalExecutor:
                 "or 'secrets' for direct auth parameters (legacy)."
             )
 
-        self.config: ConnectorConfig = load_connector_config(config_path)
+        # Validate mutual exclusivity of config_path and model
+        if config_path is not None and model is not None:
+            raise ValueError("Cannot provide both 'config_path' and 'model' parameters.")
+
+        if config_path is None and model is None:
+            raise ValueError("Must provide either 'config_path' or 'model' parameter.")
+
+        # Load model from path or use provided model
+        if config_path is not None:
+            self.model: ConnectorModel = load_connector_model(config_path)
+        else:
+            self.model: ConnectorModel = model
+
         self.on_token_refresh = on_token_refresh
         self.config_values = config_values or {}
 
         # Handle auth selection for multi-auth or single-auth connectors
         user_credentials = auth_config if auth_config is not None else secrets
-        selected_auth_config, self.secrets = self._initialize_auth(
-            user_credentials, auth_scheme
-        )
+        selected_auth_config, self.secrets = self._initialize_auth(user_credentials, auth_scheme)
 
         # Create shared observability session
         self.session = ObservabilitySession(
-            connector_name=self.config.name,
-            connector_version=getattr(self.config, "version", None),
-            execution_context=(
-                execution_context or os.getenv("AIRBYTE_EXECUTION_CONTEXT", "direct")
-            ),
+            connector_name=self.model.name,
+            connector_version=getattr(self.model, "version", None),
+            execution_context=(execution_context or os.getenv("AIRBYTE_EXECUTION_CONTEXT", "direct")),
         )
 
         # Initialize telemetry tracker
         self.tracker = SegmentTracker(self.session)
-        self.tracker.track_connector_init(
-            connector_version=getattr(self.config, "version", None)
-        )
+        self.tracker.track_connector_init(connector_version=getattr(self.model, "version", None))
 
         # Initialize logger
         if enable_logging:
             self.logger = RequestLogger(
                 log_file=log_file,
-                connector_name=self.config.name,
+                connector_name=self.model.name,
                 max_logs=max_logs,
             )
         else:
@@ -190,7 +199,7 @@ class LocalExecutor:
 
         # Initialize async HTTP client with connection pooling
         self.http_client = HTTPClient(
-            base_url=self.config.base_url,
+            base_url=self.model.base_url,
             auth_config=selected_auth_config,
             secrets=self.secrets,
             config_values=self.config_values,
@@ -198,17 +207,15 @@ class LocalExecutor:
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
             on_token_refresh=on_token_refresh,
-            retry_config=retry_config or self.config.retry_config,
+            retry_config=retry_config or self.model.retry_config,
         )
 
         # Build O(1) lookup indexes
-        self._entity_index: dict[str, EntityDefinition] = {
-            entity.name: entity for entity in self.config.entities
-        }
+        self._entity_index: dict[str, EntityDefinition] = {entity.name: entity for entity in self.model.entities}
 
         # Build O(1) operation index: (entity, action) -> endpoint
         self._operation_index: dict[tuple[str, Action], Any] = {}
-        for entity in self.config.entities:
+        for entity in self.model.entities:
             for action in entity.actions:
                 endpoint = entity.endpoints.get(action)
                 if endpoint:
@@ -221,9 +228,7 @@ class LocalExecutor:
             _StandardOperationHandler(op_context),
         ]
 
-    def _apply_auth_config_mapping(
-        self, user_secrets: dict[str, SecretStr]
-    ) -> dict[str, SecretStr]:
+    def _apply_auth_config_mapping(self, user_secrets: dict[str, SecretStr]) -> dict[str, SecretStr]:
         """Apply auth_mapping from x-airbyte-auth-config to transform user secrets.
 
         This method takes user-provided secrets (e.g., {"api_token": "abc123"}) and
@@ -236,11 +241,11 @@ class LocalExecutor:
         Returns:
             Transformed secrets matching the auth scheme requirements
         """
-        if not self.config.auth.user_config_spec:
+        if not self.model.auth.user_config_spec:
             # No x-airbyte-auth-config defined, use secrets as-is
             return user_secrets
 
-        user_config_spec = self.config.auth.user_config_spec
+        user_config_spec = self.model.auth.user_config_spec
         auth_mapping = None
         required_fields: list[str] | None = None
 
@@ -269,19 +274,12 @@ class LocalExecutor:
 
         # Convert SecretStr values to plain strings for template processing
         user_config_values = {
-            key: (
-                value.get_secret_value()
-                if hasattr(value, "get_secret_value")
-                else str(value)
-            )
-            for key, value in user_secrets.items()
+            key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value)) for key, value in user_secrets.items()
         }
 
         # Apply the auth_mapping templates, passing required_fields so optional
         # fields that are not provided can be skipped
-        mapped_values = apply_auth_mapping(
-            auth_mapping, user_config_values, required_fields=required_fields
-        )
+        mapped_values = apply_auth_mapping(auth_mapping, user_config_values, required_fields=required_fields)
 
         # Convert back to SecretStr
         mapped_secrets = {key: SecretStr(value) for key, value in mapped_values.items()}
@@ -296,41 +294,32 @@ class LocalExecutor:
         """Initialize authentication for single or multi-auth connectors.
 
         Handles both legacy single-auth and new multi-auth connectors.
-        For multi-auth, explicit scheme selection is required.
+        For multi-auth, the auth scheme can be explicitly provided or inferred
+        from the provided credentials by matching against each scheme's required fields.
 
         Args:
             user_credentials: User-provided credentials (auth_config or secrets)
-            explicit_scheme: Explicit scheme name for multi-auth (required for multi-auth)
+            explicit_scheme: Explicit scheme name for multi-auth (optional, will be
+                inferred from credentials if not provided)
 
         Returns:
             Tuple of (selected AuthConfig for HTTPClient, transformed secrets)
 
         Raises:
-            ValueError: If multi-auth connector doesn't specify auth_scheme
+            ValueError: If multi-auth connector can't determine which scheme to use
         """
-        # Multi-auth: explicit scheme selection required
-        if self.config.auth.is_multi_auth():
+        # Multi-auth: explicit scheme selection or inference from credentials
+        if self.model.auth.is_multi_auth():
             if not user_credentials:
-                available_schemes = [
-                    opt.scheme_name for opt in self.config.auth.options
-                ]
-                raise ValueError(
-                    "Multi-auth connector requires credentials. "
-                    f"Available schemes: {available_schemes}"
-                )
+                available_schemes = [opt.scheme_name for opt in self.model.auth.options]
+                raise ValueError(f"Multi-auth connector requires credentials. Available schemes: {available_schemes}")
 
-            if not explicit_scheme:
-                available_schemes = [
-                    opt.scheme_name for opt in self.config.auth.options
-                ]
-                raise ValueError(
-                    "Multi-auth connector requires 'auth_scheme' parameter. "
-                    f"Available schemes: {available_schemes}"
-                )
-
-            selected_option, transformed_secrets = self._select_auth_option(
-                user_credentials, explicit_scheme
-            )
+            # If explicit scheme provided, use it directly
+            if explicit_scheme:
+                selected_option, transformed_secrets = self._select_auth_option(user_credentials, explicit_scheme)
+            else:
+                # Infer auth scheme from provided credentials
+                selected_option, transformed_secrets = self._infer_auth_scheme(user_credentials)
 
             # Convert AuthOption to single-auth AuthConfig for HTTPClient
             selected_auth_config = AuthConfig(
@@ -348,7 +337,68 @@ class LocalExecutor:
         else:
             transformed_secrets = None
 
-        return (self.config.auth, transformed_secrets)
+        return (self.model.auth, transformed_secrets)
+
+    def _infer_auth_scheme(
+        self,
+        user_credentials: dict[str, SecretStr],
+    ) -> tuple[AuthOption, dict[str, SecretStr]]:
+        """Infer authentication scheme from provided credentials.
+
+        Matches user credentials against each auth option's required fields
+        to determine which scheme to use.
+
+        Args:
+            user_credentials: User-provided credentials
+
+        Returns:
+            Tuple of (inferred AuthOption, transformed secrets)
+
+        Raises:
+            ValueError: If no scheme matches, or multiple schemes match
+        """
+        options = self.model.auth.options
+        if not options:
+            raise ValueError("No auth options available in multi-auth config")
+
+        # Get the credential keys provided by the user
+        provided_keys = set(user_credentials.keys())
+
+        # Find all options where all required fields are present
+        matching_options: list[AuthOption] = []
+        for option in options:
+            if option.user_config_spec and option.user_config_spec.required:
+                required_fields = set(option.user_config_spec.required)
+                if required_fields.issubset(provided_keys):
+                    matching_options.append(option)
+            elif not option.user_config_spec or not option.user_config_spec.required:
+                # Option has no required fields - it matches any credentials
+                matching_options.append(option)
+
+        # Handle matching results
+        if len(matching_options) == 0:
+            # No matches - provide helpful error message
+            scheme_requirements = []
+            for opt in options:
+                required = opt.user_config_spec.required if opt.user_config_spec and opt.user_config_spec.required else []
+                scheme_requirements.append(f"  - {opt.scheme_name}: requires {required}")
+            raise ValueError(
+                f"Could not infer auth scheme from provided credentials. "
+                f"Provided keys: {list(provided_keys)}. "
+                f"Available schemes and their required fields:\n" + "\n".join(scheme_requirements)
+            )
+
+        if len(matching_options) > 1:
+            # Multiple matches - need explicit scheme
+            matching_names = [opt.scheme_name for opt in matching_options]
+            raise ValueError(
+                f"Multiple auth schemes match the provided credentials: {matching_names}. Please specify 'auth_scheme' explicitly to disambiguate."
+            )
+
+        # Exactly one match - use it
+        selected_option = matching_options[0]
+        transformed_secrets = self._apply_auth_mapping_for_option(user_credentials, selected_option)
+        return (selected_option, transformed_secrets)
 
     def _select_auth_option(
         self,
@@ -367,23 +417,19 @@ class LocalExecutor:
         Raises:
             ValueError: If scheme not found
         """
-        options = self.config.auth.options
+        options = self.model.auth.options
         if not options:
             raise ValueError("No auth options available in multi-auth config")
 
         # Find matching scheme
         for option in options:
             if option.scheme_name == scheme_name:
-                transformed_secrets = self._apply_auth_mapping_for_option(
-                    user_credentials, option
-                )
+                transformed_secrets = self._apply_auth_mapping_for_option(user_credentials, option)
                 return (option, transformed_secrets)
 
         # Scheme not found
         available = [opt.scheme_name for opt in options]
-        raise ValueError(
-            f"Auth scheme '{scheme_name}' not found. " f"Available schemes: {available}"
-        )
+        raise ValueError(f"Auth scheme '{scheme_name}' not found. Available schemes: {available}")
 
     def _apply_auth_mapping_for_option(
         self,
@@ -418,18 +464,11 @@ class LocalExecutor:
 
         # Convert SecretStr to plain strings for template processing
         user_config_values = {
-            key: (
-                value.get_secret_value()
-                if hasattr(value, "get_secret_value")
-                else str(value)
-            )
-            for key, value in user_credentials.items()
+            key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value)) for key, value in user_credentials.items()
         }
 
         # Apply the auth_mapping templates
-        mapped_values = apply_auth_mapping(
-            auth_mapping, user_config_values, required_fields=required_fields
-        )
+        mapped_values = apply_auth_mapping(auth_mapping, user_config_values, required_fields=required_fields)
 
         # Convert back to SecretStr
         return {key: SecretStr(value) for key, value in mapped_values.items()}
@@ -455,21 +494,13 @@ class LocalExecutor:
         """
         try:
             # Convert config to internal format
-            action = (
-                Action(config.action)
-                if isinstance(config.action, str)
-                else config.action
-            )
+            action = Action(config.action) if isinstance(config.action, str) else config.action
             params = config.params or {}
 
             # Dispatch to handler (handlers handle telemetry internally)
-            handler = next(
-                (h for h in self._operation_handlers if h.can_handle(action)), None
-            )
+            handler = next((h for h in self._operation_handlers if h.can_handle(action)), None)
             if not handler:
-                raise ExecutorError(
-                    f"No handler registered for action '{action.value}'."
-                )
+                raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
             # Execute handler
             result = handler.execute_operation(config.entity, action, params)
@@ -534,9 +565,7 @@ class LocalExecutor:
         action = Action(action) if isinstance(action, str) else action
 
         # Delegate to the appropriate handler
-        handler = next(
-            (h for h in self._operation_handlers if h.can_handle(action)), None
-        )
+        handler = next((h for h in self._operation_handlers if h.can_handle(action)), None)
         if not handler:
             raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
@@ -548,9 +577,7 @@ class LocalExecutor:
             # Download operation returns AsyncIterator directly
             return result
 
-    async def execute_batch(
-        self, operations: list[tuple[str, str | Action, dict[str, Any] | None]]
-    ) -> list[dict[str, Any] | AsyncIterator[bytes]]:
+    async def execute_batch(self, operations: list[tuple[str, str | Action, dict[str, Any] | None]]) -> list[dict[str, Any] | AsyncIterator[bytes]]:
         """Execute multiple operations concurrently (supports all action types including download).
 
         Args:
@@ -580,13 +607,9 @@ class LocalExecutor:
             params = params or {}
 
             # Find appropriate handler
-            handler = next(
-                (h for h in self._operation_handlers if h.can_handle(action)), None
-            )
+            handler = next((h for h in self._operation_handlers if h.can_handle(action)), None)
             if not handler:
-                raise ExecutorError(
-                    f"No handler registered for action '{action.value}'."
-                )
+                raise ExecutorError(f"No handler registered for action '{action.value}'.")
 
             # Call handler directly (exceptions propagate naturally)
             tasks.append(handler.execute_operation(entity, action, params))
@@ -625,25 +648,20 @@ class LocalExecutor:
         for placeholder in placeholders:
             if placeholder not in params:
                 raise MissingParameterError(
-                    f"Missing required path parameter '{placeholder}' for path '{path_template}'. "
-                    f"Provided parameters: {list(params.keys())}"
+                    f"Missing required path parameter '{placeholder}' for path '{path_template}'. Provided parameters: {list(params.keys())}"
                 )
 
             # Validate parameter value is not None or empty string
             value = params[placeholder]
             if value is None or (isinstance(value, str) and value.strip() == ""):
-                raise InvalidParameterError(
-                    f"Path parameter '{placeholder}' cannot be None or empty string"
-                )
+                raise InvalidParameterError(f"Path parameter '{placeholder}' cannot be None or empty string")
 
             encoded_value = quote(str(value), safe="")
             path = path.replace(f"{{{placeholder}}}", encoded_value)
 
         return path
 
-    def _extract_query_params(
-        self, allowed_params: list[str], params: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _extract_query_params(self, allowed_params: list[str], params: dict[str, Any]) -> dict[str, Any]:
         """Extract query parameters from params.
 
         Args:
@@ -655,9 +673,7 @@ class LocalExecutor:
         """
         return {key: value for key, value in params.items() if key in allowed_params}
 
-    def _extract_body(
-        self, allowed_fields: list[str], params: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _extract_body(self, allowed_fields: list[str], params: dict[str, Any]) -> dict[str, Any]:
         """Extract body fields from params.
 
         Args:
@@ -669,9 +685,7 @@ class LocalExecutor:
         """
         return {key: value for key, value in params.items() if key in allowed_fields}
 
-    def _serialize_deep_object_params(
-        self, params: dict[str, Any], deep_object_param_names: list[str]
-    ) -> dict[str, Any]:
+    def _serialize_deep_object_params(self, params: dict[str, Any], deep_object_param_names: list[str]) -> dict[str, Any]:
         """Serialize deepObject parameters to bracket notation format.
 
         Converts nested dict parameters to the deepObject format expected by APIs
@@ -737,8 +751,7 @@ class LocalExecutor:
                 # Navigate to the field
                 if not isinstance(current, dict):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
                     )
 
                 if field_name not in current:
@@ -751,15 +764,13 @@ class LocalExecutor:
                 array_value = current[field_name]
                 if not isinstance(array_value, list):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected list at '{field_name}', got {type(array_value).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected list at '{field_name}', got {type(array_value).__name__}"
                     )
 
                 # Check index bounds
                 if index >= len(array_value):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
+                        f"Cannot extract download URL for {entity}: Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
                     )
 
                 current = array_value[index]
@@ -767,23 +778,18 @@ class LocalExecutor:
                 # Regular dict navigation
                 if not isinstance(current, dict):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
                     )
 
                 if part not in current:
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
+                        f"Cannot extract download URL for {entity}: Field '{part}' not found in response. Available fields: {list(current.keys())}"
                     )
 
                 current = current[part]
 
         if not isinstance(current, str):
-            raise ExecutorError(
-                f"Cannot extract download URL for {entity}: "
-                f"Expected string at '{file_field}', got {type(current).__name__}"
-            )
+            raise ExecutorError(f"Cannot extract download URL for {entity}: Expected string at '{file_field}', got {type(current).__name__}")
 
         return current
 
@@ -820,9 +826,7 @@ class LocalExecutor:
         template = env.from_string(file_field)
         return template.render(params)
 
-    def _build_request_body(
-        self, endpoint: EndpointDefinition, params: dict[str, Any]
-    ) -> dict[str, Any] | None:
+    def _build_request_body(self, endpoint: EndpointDefinition, params: dict[str, Any]) -> dict[str, Any] | None:
         """Build request body (GraphQL or standard).
 
         Args:
@@ -838,9 +842,7 @@ class LocalExecutor:
             return self._extract_body(endpoint.body_fields, params)
         return None
 
-    def _determine_request_format(
-        self, endpoint: EndpointDefinition, body: dict[str, Any] | None
-    ) -> dict[str, Any]:
+    def _determine_request_format(self, endpoint: EndpointDefinition, body: dict[str, Any] | None) -> dict[str, Any]:
         """Determine json/data parameters for HTTP request.
 
         GraphQL always uses JSON, regardless of content_type setting.
@@ -864,9 +866,7 @@ class LocalExecutor:
 
         return {}
 
-    def _process_graphql_fields(
-        self, query: str, graphql_config: dict[str, Any], params: dict[str, Any]
-    ) -> str:
+    def _process_graphql_fields(self, query: str, graphql_config: dict[str, Any], params: dict[str, Any]) -> str:
         """Process GraphQL query field selection.
 
         Handles:
@@ -903,9 +903,7 @@ class LocalExecutor:
 
         return query
 
-    def _build_graphql_body(
-        self, graphql_config: dict[str, Any], params: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _build_graphql_body(self, graphql_config: dict[str, Any], params: dict[str, Any]) -> dict[str, Any]:
         """Build GraphQL request body with variable substitution and field selection.
 
         Args:
@@ -924,9 +922,7 @@ class LocalExecutor:
 
         # Substitute variables from params
         if "variables" in graphql_config and graphql_config["variables"]:
-            body["variables"] = self._interpolate_variables(
-                graphql_config["variables"], params
-            )
+            body["variables"] = self._interpolate_variables(graphql_config["variables"], params)
 
         # Add operation name if specified
         if "operationName" in graphql_config:
@@ -979,17 +975,13 @@ class LocalExecutor:
             return query
 
         # Convert field list to GraphQL field selection
-        graphql_fields = [
-            self._convert_nested_field_to_graphql(field) for field in fields
-        ]
+        graphql_fields = [self._convert_nested_field_to_graphql(field) for field in fields]
 
         # Replace placeholder with field list
         fields_str = " ".join(graphql_fields)
         return query.replace("{{ fields }}", fields_str)
 
-    def _interpolate_variables(
-        self, variables: dict[str, Any], params: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _interpolate_variables(self, variables: dict[str, Any], params: dict[str, Any]) -> dict[str, Any]:
         """Recursively interpolate variables using params.
 
         Preserves types (doesn't stringify everything).
@@ -1084,10 +1076,7 @@ class LocalExecutor:
                 return matches[0]
 
         except Exception as e:
-            logging.warning(
-                f"Failed to apply record extractor '{extractor}': {e}. "
-                f"Returning original response."
-            )
+            logging.warning(f"Failed to apply record extractor '{extractor}': {e}. Returning original response.")
             return response_data
 
     def _extract_metadata(
@@ -1141,17 +1130,12 @@ class LocalExecutor:
 
             except Exception as e:
                 # Log error but continue with other fields
-                logging.warning(
-                    f"Failed to apply meta extractor for field '{field_name}' "
-                    f"with path '{jsonpath_expr_str}': {e}. Setting to None."
-                )
+                logging.warning(f"Failed to apply meta extractor for field '{field_name}' with path '{jsonpath_expr_str}': {e}. Setting to None.")
                 extracted_meta[field_name] = None
 
         return extracted_meta
 
-    def _validate_required_body_fields(
-        self, endpoint: Any, params: dict[str, Any], action: Action, entity: str
-    ) -> None:
+    def _validate_required_body_fields(self, endpoint: Any, params: dict[str, Any], action: Action, entity: str) -> None:
         """Validate that required body fields are present for CREATE/UPDATE operations.
 
         Args:
@@ -1181,8 +1165,7 @@ class LocalExecutor:
 
         if missing_fields:
             raise MissingParameterError(
-                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. "
-                f"Provided parameters: {list(params.keys())}"
+                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. Provided parameters: {list(params.keys())}"
             )
 
     async def close(self):
@@ -1223,17 +1206,13 @@ class _StandardOperationHandler:
             Action.AUTHORIZE,
         }
 
-    async def execute_operation(
-        self, entity: str, action: Action, params: dict[str, Any]
-    ) -> StandardExecuteResult:
+    async def execute_operation(self, entity: str, action: Action, params: dict[str, Any]) -> StandardExecuteResult:
         """Execute standard REST operation with full telemetry and error handling."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span(
-            "airbyte.local_executor.execute_operation"
-        ) as span:
+        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
-            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.name", self.ctx.executor.model.name)
             span.set_attribute("connector.entity", entity)
             span.set_attribute("connector.action", action.value)
             if params:
@@ -1252,47 +1231,32 @@ class _StandardOperationHandler:
                 entity_def = self.ctx.entity_index.get(entity)
                 if not entity_def:
                     available_entities = list(self.ctx.entity_index.keys())
-                    raise EntityNotFoundError(
-                        f"Entity '{entity}' not found in connector. "
-                        f"Available entities: {available_entities}"
-                    )
+                    raise EntityNotFoundError(f"Entity '{entity}' not found in connector. Available entities: {available_entities}")
 
                 # Check if action is supported
                 if action not in entity_def.actions:
                     supported_actions = [a.value for a in entity_def.actions]
                     raise ActionNotSupportedError(
-                        f"Action '{action.value}' not supported for entity '{entity}'. "
-                        f"Supported actions: {supported_actions}"
+                        f"Action '{action.value}' not supported for entity '{entity}'. Supported actions: {supported_actions}"
                     )
 
                 # O(1) operation lookup
                 endpoint = self.ctx.operation_index.get((entity, action))
                 if not endpoint:
-                    raise ExecutorError(
-                        f"No endpoint defined for {entity}.{action.value}. "
-                        f"This is a configuration error."
-                    )
+                    raise ExecutorError(f"No endpoint defined for {entity}.{action.value}. This is a configuration error.")
 
                 # Validate required body fields for CREATE/UPDATE operations
                 self.ctx.validate_required_body_fields(endpoint, params, action, entity)
 
                 # Build request parameters
                 # Use path_override if available, otherwise use the OpenAPI path
-                actual_path = (
-                    endpoint.path_override.path
-                    if endpoint.path_override
-                    else endpoint.path
-                )
+                actual_path = endpoint.path_override.path if endpoint.path_override else endpoint.path
                 path = self.ctx.build_path(actual_path, params)
-                query_params = self.ctx.extract_query_params(
-                    endpoint.query_params, params
-                )
+                query_params = self.ctx.extract_query_params(endpoint.query_params, params)
 
                 # Serialize deepObject parameters to bracket notation
                 if endpoint.deep_object_params:
-                    query_params = self.ctx.executor._serialize_deep_object_params(
-                        query_params, endpoint.deep_object_params
-                    )
+                    query_params = self.ctx.executor._serialize_deep_object_params(query_params, endpoint.deep_object_params)
 
                 # Build request body (GraphQL or standard)
                 body = self.ctx.build_request_body(endpoint, params)
@@ -1374,17 +1338,13 @@ class _DownloadOperationHandler:
         """Check if this handler can handle the given action."""
         return action == Action.DOWNLOAD
 
-    async def execute_operation(
-        self, entity: str, action: Action, params: dict[str, Any]
-    ) -> AsyncIterator[bytes]:
+    async def execute_operation(self, entity: str, action: Action, params: dict[str, Any]) -> AsyncIterator[bytes]:
         """Execute download operation (one-step or two-step) with full telemetry."""
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.local")
 
-        with tracer.start_as_current_span(
-            "airbyte.local_executor.execute_operation"
-        ) as span:
+        with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
-            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.name", self.ctx.executor.model.name)
             span.set_attribute("connector.entity", entity)
             span.set_attribute("connector.action", action.value)
             if params:
@@ -1402,35 +1362,23 @@ class _DownloadOperationHandler:
                 # Look up entity
                 entity_def = self.ctx.entity_index.get(entity)
                 if not entity_def:
-                    raise EntityNotFoundError(
-                        f"Entity '{entity}' not found in connector. "
-                        f"Available entities: {list(self.ctx.entity_index.keys())}"
-                    )
+                    raise EntityNotFoundError(f"Entity '{entity}' not found in connector. Available entities: {list(self.ctx.entity_index.keys())}")
 
                 # Look up operation
                 operation = self.ctx.operation_index.get((entity, action))
                 if not operation:
                     raise ActionNotSupportedError(
-                        f"Action '{action.value}' not supported for entity '{entity}'. "
-                        f"Supported actions: {[a.value for a in entity_def.actions]}"
+                        f"Action '{action.value}' not supported for entity '{entity}'. Supported actions: {[a.value for a in entity_def.actions]}"
                     )
 
                 # Common setup for both download modes
-                actual_path = (
-                    operation.path_override.path
-                    if operation.path_override
-                    else operation.path
-                )
+                actual_path = operation.path_override.path if operation.path_override else operation.path
                 path = self.ctx.build_path(actual_path, params)
-                query_params = self.ctx.extract_query_params(
-                    operation.query_params, params
-                )
+                query_params = self.ctx.extract_query_params(operation.query_params, params)
 
                 # Serialize deepObject parameters to bracket notation
                 if operation.deep_object_params:
-                    query_params = self.ctx.executor._serialize_deep_object_params(
-                        query_params, operation.deep_object_params
-                    )
+                    query_params = self.ctx.executor._serialize_deep_object_params(query_params, operation.deep_object_params)
 
                 # Prepare headers (with optional Range support)
                 range_header = params.get("range_header")
@@ -1443,9 +1391,7 @@ class _DownloadOperationHandler:
 
                 if file_field:
                     # Substitute template variables in file_field (e.g., "attachments[{index}].url")
-                    file_field = LocalExecutor._substitute_file_field_params(
-                        file_field, params
-                    )
+                    file_field = LocalExecutor._substitute_file_field_params(file_field, params)
 
                 if file_field:
                     # Two-step download: metadata → extract URL → stream file
@@ -1454,12 +1400,8 @@ class _DownloadOperationHandler:
                         endpoint=operation,
                         params=params,
                     )
-                    request_format = self.ctx.determine_request_format(
-                        operation, request_body
-                    )
-                    self.ctx.validate_required_body_fields(
-                        operation, params, action, entity
-                    )
+                    request_format = self.ctx.determine_request_format(operation, request_body)
+                    self.ctx.validate_required_body_fields(operation, params, action, entity)
 
                     metadata_response = await self.ctx.http_client.request(
                         method=operation.method,
@@ -1501,9 +1443,7 @@ class _DownloadOperationHandler:
 
                 # Stream file chunks
                 default_chunk_size = 8 * 1024 * 1024  # 8 MB
-                async for chunk in file_response.original_response.aiter_bytes(
-                    chunk_size=default_chunk_size
-                ):
+                async for chunk in file_response.original_response.aiter_bytes(chunk_size=default_chunk_size):
                     # Log each chunk for cassette recording
                     self.ctx.logger.log_chunk_fetch(chunk)
                     yield chunk
