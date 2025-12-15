@@ -38,11 +38,7 @@ from .types import AuthConfig, AuthType
 
 # Type alias for token refresh callback
 # Supports both sync and async callbacks for flexibility
-TokenRefreshCallback = (
-    Callable[[dict[str, str]], None]
-    | Callable[[dict[str, str]], Awaitable[None]]
-    | None
-)
+TokenRefreshCallback = Callable[[dict[str, str]], None] | Callable[[dict[str, str]], Awaitable[None]] | None
 
 
 class HTTPMetrics:
@@ -171,12 +167,8 @@ class HTTPClient:
         has_unresolved_variables = "{" in self.base_url and "}" in self.base_url
 
         # Only validate URL format if there are no unresolved variables
-        if not has_unresolved_variables and not self.base_url.startswith(
-            ("http://", "https://")
-        ):
-            raise ValueError(
-                f"base_url must start with http:// or https://, got: {self.base_url}"
-            )
+        if not has_unresolved_variables and not self.base_url.startswith(("http://", "https://")):
+            raise ValueError(f"base_url must start with http:// or https://, got: {self.base_url}")
 
         # Create HTTP client if not provided
         if client is None:
@@ -239,24 +231,18 @@ class HTTPClient:
         if self.auth_config.type == AuthType.API_KEY:
             api_key = self.secrets.get("api_key")
             if not api_key:
-                raise AuthenticationError(
-                    "Missing required credential 'api_key' for API_KEY authentication"
-                )
+                raise AuthenticationError("Missing required credential 'api_key' for API_KEY authentication")
 
         elif self.auth_config.type == AuthType.BEARER:
             token = self.secrets.get("token") or self.secrets.get("api_key")
             if not token:
-                raise AuthenticationError(
-                    "Missing required credential 'token' or 'api_key' for BEARER authentication"
-                )
+                raise AuthenticationError("Missing required credential 'token' or 'api_key' for BEARER authentication")
 
         elif self.auth_config.type == AuthType.BASIC:
             username = self.secrets.get("username")
             password = self.secrets.get("password")
             if not username or not password:
-                raise AuthenticationError(
-                    "Missing required credentials 'username' and 'password' for BASIC authentication"
-                )
+                raise AuthenticationError("Missing required credentials 'username' and 'password' for BASIC authentication")
 
     def _inject_auth(self, headers: dict[str, str]) -> dict[str, str]:
         """Inject authentication into request headers.
@@ -315,10 +301,7 @@ class HTTPClient:
                     except Exception as callback_error:
                         self.logger.log_error(
                             request_id=None,
-                            error=(
-                                "Token refresh callback failed during initialization: "
-                                f"{callback_error!s}"
-                            ),
+                            error=("Token refresh callback failed during initialization: " f"{callback_error!s}"),
                             status_code=None,
                         )
 
@@ -379,9 +362,7 @@ class HTTPClient:
             return True
 
         # Check network error retries
-        if self.retry_config.retry_on_network_error and isinstance(
-            exception, NetworkError
-        ):
+        if self.retry_config.retry_on_network_error and isinstance(exception, NetworkError):
             return True
 
         return False
@@ -401,9 +382,7 @@ class HTTPClient:
         """
         # Try Retry-After header first
         header_name = self.retry_config.retry_after_header
-        header_value = response_headers.get(header_name) or response_headers.get(
-            header_name.lower()
-        )
+        header_value = response_headers.get(header_name) or response_headers.get(header_name.lower())
 
         if header_value:
             try:
@@ -419,9 +398,7 @@ class HTTPClient:
                 pass  # Fall through to exponential backoff
 
         # Exponential backoff: initial_delay * (base ^ attempt)
-        delay = self.retry_config.initial_delay_seconds * (
-            self.retry_config.exponential_base**attempt
-        )
+        delay = self.retry_config.initial_delay_seconds * (self.retry_config.exponential_base**attempt)
         delay = min(delay, self.retry_config.max_delay_seconds)
 
         # Apply full jitter to prevent thundering herd
@@ -450,14 +427,8 @@ class HTTPClient:
         await self._ensure_auth_initialized()
 
         # Check if path is a full URL (for CDN/external URLs)
-        is_external_url = path.startswith(
-            ("http://", "https://")
-        ) and not path.startswith(self.base_url)
-        url = (
-            path
-            if path.startswith(("http://", "https://"))
-            else f"{self.base_url}{path}"
-        )
+        is_external_url = path.startswith(("http://", "https://")) and not path.startswith(self.base_url)
+        url = path if path.startswith(("http://", "https://")) else f"{self.base_url}{path}"
 
         # Prepare headers with auth (skip for external URLs like pre-signed S3)
         request_headers = headers or {}
@@ -514,10 +485,7 @@ class HTTPClient:
                 elif "application/json" in content_type or not content_type:
                     response_data = await response.json()
                 else:
-                    error_msg = (
-                        f"Expected JSON response for {method.upper()} {url}, "
-                        f"got content-type: {content_type}"
-                    )
+                    error_msg = f"Expected JSON response for {method.upper()} {url}, " f"got content-type: {content_type}"
                     raise HTTPClientError(error_msg)
 
             except ValueError as e:
@@ -535,9 +503,7 @@ class HTTPClient:
         except AuthenticationError as e:
             # Auth error (401, 403) - handle token refresh
             status_code = e.status_code if hasattr(e, "status_code") else 401
-            result = await self._handle_auth_error(
-                e, request_id, method, path, params, json, data, headers
-            )
+            result = await self._handle_auth_error(e, request_id, method, path, params, json, data, headers)
             if result is not None:
                 return result  # Token refresh succeeded, return the retry result
             raise  # Token refresh failed or not applicable
@@ -545,9 +511,7 @@ class HTTPClient:
         except (RateLimitError, HTTPStatusError, TimeoutError, NetworkError) as e:
             # These may be retried by the caller
             status_code = getattr(e, "status_code", 0) or 0
-            self.logger.log_error(
-                request_id=request_id, error=str(e), status_code=status_code or None
-            )
+            self.logger.log_error(request_id=request_id, error=str(e), status_code=status_code or None)
             raise
 
         except HTTPClientError as e:
@@ -647,9 +611,7 @@ class HTTPClient:
                     status_code=status_code,
                 )
 
-        self.logger.log_error(
-            request_id=request_id, error=str(error), status_code=status_code
-        )
+        self.logger.log_error(request_id=request_id, error=str(error), status_code=status_code)
 
     async def request(
         self,
@@ -688,9 +650,7 @@ class HTTPClient:
         """
         for attempt in range(self.retry_config.max_attempts):
             try:
-                return await self._execute_request(
-                    method, path, params, json, data, headers, stream=stream
-                )
+                return await self._execute_request(method, path, params, json, data, headers, stream=stream)
             except (RateLimitError, HTTPStatusError, TimeoutError, NetworkError) as e:
                 status_code = getattr(e, "status_code", None)
                 headers_from_error = getattr(e, "headers", {}) or {}
