@@ -78,9 +78,7 @@ class HostedExecutor:
         self.connector_id = connector_id
         self.airbyte_client_id = airbyte_client_id
         self.airbyte_client_secret = airbyte_client_secret
-        self.api_url = api_url or os.getenv(
-            "AIRBYTE_CONNECTOR_API_URL", "http://localhost:8001"
-        )
+        self.api_url = api_url or os.getenv("AIRBYTE_CONNECTOR_API_URL", "http://localhost:8001")
 
         # Create synchronous HTTP client
         # We use sync client even though execute() is async for simplicity
