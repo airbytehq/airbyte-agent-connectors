@@ -415,7 +415,7 @@ class LocalExecutor:
 
         # Scheme not found
         available = [opt.scheme_name for opt in options]
-        raise ValueError(f"Auth scheme '{scheme_name}' not found. " f"Available schemes: {available}")
+        raise ValueError(f"Auth scheme '{scheme_name}' not found. Available schemes: {available}")
 
     def _apply_auth_mapping_for_option(
         self,

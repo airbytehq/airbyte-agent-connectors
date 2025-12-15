@@ -53,10 +53,7 @@ class Operation(BaseModel):
     x_airbyte_path_override: Optional[PathOverrideConfig] = Field(
         None,
         alias="x-airbyte-path-override",
-        description=(
-            "Override path for HTTP requests when OpenAPI path "
-            "differs from actual endpoint"
-        ),
+        description=("Override path for HTTP requests when OpenAPI path " "differs from actual endpoint"),
     )
     x_airbyte_record_extractor: Optional[str] = Field(
         None,
@@ -111,15 +108,11 @@ class Operation(BaseModel):
         if action == "download":
             # If file_url is provided, it must be non-empty
             if file_url is not None and not file_url.strip():
-                raise ValueError(
-                    "x-airbyte-file-url must be non-empty when provided for download operations"
-                )
+                raise ValueError("x-airbyte-file-url must be non-empty when provided for download operations")
         else:
             # Non-download actions cannot have file_url
             if file_url is not None:
-                raise ValueError(
-                    f"x-airbyte-file-url can only be used with x-airbyte-action: download, but action is '{action}'"
-                )
+                raise ValueError(f"x-airbyte-file-url can only be used with x-airbyte-action: download, but action is '{action}'")
 
         return self
 
