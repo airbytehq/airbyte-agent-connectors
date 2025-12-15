@@ -80,38 +80,6 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
 class ProjectCurrentStatusUpdate(BaseModel):
     """Nested schema for Project.current_status_update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -121,8 +89,8 @@ class ProjectCurrentStatusUpdate(BaseModel):
     resource_subtype: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -158,6 +126,38 @@ class ProjectCurrentStatus(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
+
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
 
 class Project(BaseModel):
     """Full project object"""

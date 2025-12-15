@@ -76,8 +76,8 @@ For the service's official API docs, see [Asana API Reference](https://developer
 
 ## Version Information
 
-**Package Version:** 0.19.12
+**Package Version:** 0.19.13
 
-**Connector Version:** 0.1.2
+**Connector Version:** 0.1.3
 
-**Generated with connector-sdk:** 114c8114c2a7c515801a371b2519b1c67614f9bc
+**Generated with connector-sdk:** 228889616b46be2e101ae765a39615c18b7c5f18
