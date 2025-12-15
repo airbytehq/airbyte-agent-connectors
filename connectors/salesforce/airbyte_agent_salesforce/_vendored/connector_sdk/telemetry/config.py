@@ -4,7 +4,7 @@ import os
 from enum import Enum
 
 # Hardcoded Segment write key for Airbyte telemetry
-SEGMENT_WRITE_KEY = "zHeE6sffXQCENrvPHzrhPUdXj7v7gt2u"
+SEGMENT_WRITE_KEY = "sFM7q98HtHTMmCW3d6nsPWYCIdrbs7gq"
 
 
 class TelemetryMode(Enum):
