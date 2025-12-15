@@ -1,4 +1,4 @@
-"""Load and parse connector YAML configuration."""
+"""Load and parse connector YAML definitions into ConnectorModel objects."""
 
 from __future__ import annotations
 
@@ -23,38 +23,38 @@ from .types import (
     AuthConfig,
     AuthOption,
     AuthType,
-    ConnectorConfig,
+    ConnectorModel,
     ContentType,
     EndpointDefinition,
     EntityDefinition,
 )
 
 
-class ConfigLoaderError(Exception):
-    """Base exception for configuration loading errors."""
+class ConnectorModelLoaderError(Exception):
+    """Base exception for connector model loading errors."""
 
     pass
 
 
-class InvalidYAMLError(ConfigLoaderError):
+class InvalidYAMLError(ConnectorModelLoaderError):
     """Raised when YAML syntax is invalid."""
 
     pass
 
 
-class InvalidOpenAPIError(ConfigLoaderError):
+class InvalidOpenAPIError(ConnectorModelLoaderError):
     """Raised when OpenAPI specification is invalid."""
 
     pass
 
 
-class DuplicateEntityError(ConfigLoaderError):
+class DuplicateEntityError(ConnectorModelLoaderError):
     """Raised when duplicate entity names are detected."""
 
     pass
 
 
-class TokenExtractValidationError(ConfigLoaderError):
+class TokenExtractValidationError(ConnectorModelLoaderError):
     """Raised when x-airbyte-token-extract references invalid server variables."""
 
     pass
@@ -229,14 +229,14 @@ def _extract_request_body_config(
     return body_fields, request_schema, graphql_body
 
 
-def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConfig:
-    """Convert OpenAPI spec to ConnectorConfig format.
+def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel:
+    """Convert OpenAPI spec to ConnectorModel format.
 
     Args:
         spec: OpenAPI connector specification (fully validated)
 
     Returns:
-        ConnectorConfig with entities and endpoints
+        ConnectorModel with entities and endpoints
     """
     # Validate x-airbyte-token-extract against server variables
     _validate_token_extract(spec)
@@ -279,12 +279,12 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
 
             if not entity_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-entity in operation {method_name.upper()} {path}. " f"All operations must specify an entity."
+                    f"Missing required x-airbyte-entity in operation {method_name.upper()} {path}. All operations must specify an entity."
                 )
 
             if not action_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-action in operation {method_name.upper()} {path}. " f"All operations must specify an action."
+                    f"Missing required x-airbyte-action in operation {method_name.upper()} {path}. All operations must specify an action."
                 )
 
             # Convert to Action enum
@@ -294,7 +294,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 # Provide clear error for invalid actions
                 valid_actions = ", ".join([a.value for a in Action])
                 raise InvalidOpenAPIError(
-                    f"Invalid action '{action_name}' in operation {method_name.upper()} {path}. " f"Valid actions are: {valid_actions}"
+                    f"Invalid action '{action_name}' in operation {method_name.upper()} {path}. Valid actions are: {valid_actions}"
                 )
 
             # Determine content type
@@ -405,8 +405,8 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
     # Extract retry config from x-airbyte-retry-config extension
     retry_config = spec.info.x_airbyte_retry_config
 
-    # Create ConnectorConfig
-    config = ConnectorConfig(
+    # Create ConnectorModel
+    model = ConnectorModel(
         name=name,
         version=version,
         base_url=base_url,
@@ -416,7 +416,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         retry_config=retry_config,
     )
 
-    return config
+    return model
 
 
 def _get_attribute_flexible(obj: Any, *names: str) -> Any:
@@ -760,7 +760,7 @@ def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
             continue
 
     if not options:
-        raise InvalidOpenAPIError("No valid security schemes found. Connector must define at least " "one valid security scheme.")
+        raise InvalidOpenAPIError("No valid security schemes found. Connector must define at least one valid security scheme.")
 
     return AuthConfig(
         type=None,
@@ -847,56 +847,56 @@ def _parse_security_scheme_to_option(scheme_name: str, scheme: Any) -> AuthOptio
     )
 
 
-def load_connector_config(config_path: str | Path) -> ConnectorConfig:
-    """Load connector configuration from YAML file.
+def load_connector_model(definition_path: str | Path) -> ConnectorModel:
+    """Load connector model from YAML definition file.
 
     Supports both OpenAPI 3.1 format and legacy format.
 
     Args:
-        config_path: Path to connector.yaml file
+        definition_path: Path to connector.yaml file
 
     Returns:
-        Parsed ConnectorConfig
+        Parsed ConnectorModel
 
     Raises:
-        FileNotFoundError: If config file doesn't exist
+        FileNotFoundError: If definition file doesn't exist
         ValueError: If YAML is invalid
     """
-    config_path = Path(config_path)
+    definition_path = Path(definition_path)
 
-    if not config_path.exists():
-        raise FileNotFoundError(f"Connector config not found: {config_path}")
+    if not definition_path.exists():
+        raise FileNotFoundError(f"Connector definition not found: {definition_path}")
 
     # Load YAML with error handling
     try:
-        with open(config_path) as f:
-            raw_config = yaml.safe_load(f)
+        with open(definition_path) as f:
+            raw_definition = yaml.safe_load(f)
     except yaml.YAMLError as e:
-        raise InvalidYAMLError(f"Invalid YAML syntax in {config_path}: {e}")
+        raise InvalidYAMLError(f"Invalid YAML syntax in {definition_path}: {e}")
     except Exception as e:
-        raise ConfigLoaderError(f"Error reading config file {config_path}: {e}")
+        raise ConnectorModelLoaderError(f"Error reading definition file {definition_path}: {e}")
 
-    if not raw_config:
+    if not raw_definition:
         raise ValueError("Invalid connector.yaml: empty file")
 
     # Detect format: OpenAPI if 'openapi' key exists
-    if "openapi" in raw_config:
-        spec = parse_openapi_spec(raw_config)
-        return convert_openapi_to_connector_config(spec)
+    if "openapi" in raw_definition:
+        spec = parse_openapi_spec(raw_definition)
+        return convert_openapi_to_connector_model(spec)
 
     # Legacy format
-    if "connector" not in raw_config:
+    if "connector" not in raw_definition:
         raise ValueError("Invalid connector.yaml: missing 'connector' or 'openapi' key")
 
     # Parse connector metadata
-    connector_meta = raw_config["connector"]
+    connector_meta = raw_definition["connector"]
 
     # Parse auth config
-    auth_config = raw_config.get("auth", {})
+    auth_config = raw_definition.get("auth", {})
 
     # Parse entities
     entities = []
-    for entity_data in raw_config.get("entities", []):
+    for entity_data in raw_definition.get("entities", []):
         # Parse endpoints for each action
         endpoints_dict = {}
         for action_str in entity_data.get("actions", []):
@@ -926,13 +926,13 @@ def load_connector_config(config_path: str | Path) -> ConnectorConfig:
         )
         entities.append(entity)
 
-    # Build ConnectorConfig
-    config = ConnectorConfig(
+    # Build ConnectorModel
+    model = ConnectorModel(
         name=connector_meta["name"],
         version=connector_meta.get("version", OPENAPI_DEFAULT_VERSION),
-        base_url=raw_config.get("base_url", connector_meta.get("base_url", "")),
+        base_url=raw_definition.get("base_url", connector_meta.get("base_url", "")),
         auth=auth_config,
         entities=entities,
     )
 
-    return config
+    return model

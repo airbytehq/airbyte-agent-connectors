@@ -9,23 +9,26 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
-from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class GithubAuthConfig(BaseModel):
-    """Authentication"""
+class GithubGithubOauth20AuthConfig(BaseModel):
+    """GitHub OAuth 2.0"""
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: Optional[str] = None
-    """OAuth2 access token"""
-    refresh_token: Optional[str] = None
-    """OAuth2 refresh token (optional)"""
-    client_id: Optional[str] = None
-    """OAuth2 client ID (optional)"""
-    client_secret: Optional[str] = None
-    """OAuth2 client secret (optional)"""
+    access_token: str
+    """OAuth 2.0 access token"""
+
+class GithubGithubPersonalAccessTokenAuthConfig(BaseModel):
+    """GitHub Personal Access Token"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    token: str
+    """GitHub personal access token (fine-grained or classic)"""
+
+GithubAuthConfig = GithubGithubOauth20AuthConfig | GithubGithubPersonalAccessTokenAuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 

@@ -15,7 +15,10 @@ import jsonschema
 import yaml
 from jsonpath_ng import parse as parse_jsonpath
 
-from .config_loader import ConfigLoaderError, load_connector_config
+from .connector_model_loader import (
+    ConnectorModelLoaderError,
+    load_connector_model,
+)
 from .testing.spec_loader import load_test_spec
 from .types import Action, EndpointDefinition
 
@@ -563,8 +566,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         }
 
     try:
-        config = load_connector_config(config_file)
-    except ConfigLoaderError as e:
+        config = load_connector_model(config_file)
+    except ConnectorModelLoaderError as e:
         return {"success": False, "error": f"Failed to load connector.yaml: {str(e)}"}
 
     # Load the raw spec for extractor validation

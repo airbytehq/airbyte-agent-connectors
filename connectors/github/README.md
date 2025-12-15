@@ -40,10 +40,7 @@ from airbyte_ai_github import GithubConnector, GithubAuthConfig
 
 connector = GithubConnector(
   auth_config=GithubAuthConfig(
-    access_token="...",
-    refresh_token="...",
-    client_id="...",
-    client_secret="..."
+    access_token="..."
   )
 )
 result = connector.repositories.get()
@@ -80,8 +77,8 @@ For the service's official API docs, see [Github API Reference](https://docs.git
 
 ## Version Information
 
-**Package Version:** 0.18.15
+**Package Version:** 0.18.16
 
-**Connector Version:** 0.1.1
+**Connector Version:** 0.1.2
 
-**Generated with connector-sdk:** 0bfa6500a4fcf1cba2cffcc4d7ec640a76bbc568
+**Generated with connector-sdk:** 274aa10c7055ebd746723ae7d54e9a62a081a52d

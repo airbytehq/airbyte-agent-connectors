@@ -15,7 +15,7 @@ from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
 from ..auth_template import apply_auth_mapping
-from ..config_loader import load_connector_config
+from ..connector_model_loader import load_connector_model
 from ..constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
@@ -30,7 +30,7 @@ from ..types import (
     Action,
     AuthConfig,
     AuthOption,
-    ConnectorConfig,
+    ConnectorModel,
     EndpointDefinition,
     EntityDefinition,
 )
@@ -101,7 +101,8 @@ class LocalExecutor:
 
     def __init__(
         self,
-        config_path: str,
+        config_path: str | None = None,
+        model: ConnectorModel | None = None,
         secrets: dict[str, SecretStr] | None = None,
         auth_config: dict[str, SecretStr] | None = None,
         auth_scheme: str | None = None,
@@ -118,7 +119,9 @@ class LocalExecutor:
         """Initialize async executor.
 
         Args:
-            config_path: Path to connector.yaml
+            config_path: Path to connector.yaml.
+                If neither config_path nor model is provided, an error will be raised.
+            model: ConnectorModel object to execute.
             secrets: (Legacy) Auth parameters that bypass x-airbyte-auth-config mapping.
                 Directly passed to auth strategies (e.g., {"username": "...", "password": "..."}).
                 Cannot be used together with auth_config.
@@ -145,7 +148,7 @@ class LocalExecutor:
                 the connector.yaml x-airbyte-retry-config. If None, uses connector.yaml
                 config or SDK defaults.
         """
-        # Validate mutual exclusivity
+        # Validate mutual exclusivity of secrets and auth_config
         if secrets is not None and auth_config is not None:
             raise ValueError(
                 "Cannot provide both 'secrets' and 'auth_config' parameters. "
@@ -153,7 +156,19 @@ class LocalExecutor:
                 "or 'secrets' for direct auth parameters (legacy)."
             )
 
-        self.config: ConnectorConfig = load_connector_config(config_path)
+        # Validate mutual exclusivity of config_path and model
+        if config_path is not None and model is not None:
+            raise ValueError("Cannot provide both 'config_path' and 'model' parameters.")
+
+        if config_path is None and model is None:
+            raise ValueError("Must provide either 'config_path' or 'model' parameter.")
+
+        # Load model from path or use provided model
+        if config_path is not None:
+            self.model: ConnectorModel = load_connector_model(config_path)
+        else:
+            self.model: ConnectorModel = model
+
         self.on_token_refresh = on_token_refresh
         self.config_values = config_values or {}
 
@@ -163,20 +178,20 @@ class LocalExecutor:
 
         # Create shared observability session
         self.session = ObservabilitySession(
-            connector_name=self.config.name,
-            connector_version=getattr(self.config, "version", None),
+            connector_name=self.model.name,
+            connector_version=getattr(self.model, "version", None),
             execution_context=(execution_context or os.getenv("AIRBYTE_EXECUTION_CONTEXT", "direct")),
         )
 
         # Initialize telemetry tracker
         self.tracker = SegmentTracker(self.session)
-        self.tracker.track_connector_init(connector_version=getattr(self.config, "version", None))
+        self.tracker.track_connector_init(connector_version=getattr(self.model, "version", None))
 
         # Initialize logger
         if enable_logging:
             self.logger = RequestLogger(
                 log_file=log_file,
-                connector_name=self.config.name,
+                connector_name=self.model.name,
                 max_logs=max_logs,
             )
         else:
@@ -184,7 +199,7 @@ class LocalExecutor:
 
         # Initialize async HTTP client with connection pooling
         self.http_client = HTTPClient(
-            base_url=self.config.base_url,
+            base_url=self.model.base_url,
             auth_config=selected_auth_config,
             secrets=self.secrets,
             config_values=self.config_values,
@@ -192,15 +207,15 @@ class LocalExecutor:
             max_connections=max_connections,
             max_keepalive_connections=max_keepalive_connections,
             on_token_refresh=on_token_refresh,
-            retry_config=retry_config or self.config.retry_config,
+            retry_config=retry_config or self.model.retry_config,
         )
 
         # Build O(1) lookup indexes
-        self._entity_index: dict[str, EntityDefinition] = {entity.name: entity for entity in self.config.entities}
+        self._entity_index: dict[str, EntityDefinition] = {entity.name: entity for entity in self.model.entities}
 
         # Build O(1) operation index: (entity, action) -> endpoint
         self._operation_index: dict[tuple[str, Action], Any] = {}
-        for entity in self.config.entities:
+        for entity in self.model.entities:
             for action in entity.actions:
                 endpoint = entity.endpoints.get(action)
                 if endpoint:
@@ -226,11 +241,11 @@ class LocalExecutor:
         Returns:
             Transformed secrets matching the auth scheme requirements
         """
-        if not self.config.auth.user_config_spec:
+        if not self.model.auth.user_config_spec:
             # No x-airbyte-auth-config defined, use secrets as-is
             return user_secrets
 
-        user_config_spec = self.config.auth.user_config_spec
+        user_config_spec = self.model.auth.user_config_spec
         auth_mapping = None
         required_fields: list[str] | None = None
 
@@ -294,10 +309,10 @@ class LocalExecutor:
             ValueError: If multi-auth connector can't determine which scheme to use
         """
         # Multi-auth: explicit scheme selection or inference from credentials
-        if self.config.auth.is_multi_auth():
+        if self.model.auth.is_multi_auth():
             if not user_credentials:
-                available_schemes = [opt.scheme_name for opt in self.config.auth.options]
-                raise ValueError("Multi-auth connector requires credentials. " f"Available schemes: {available_schemes}")
+                available_schemes = [opt.scheme_name for opt in self.model.auth.options]
+                raise ValueError(f"Multi-auth connector requires credentials. Available schemes: {available_schemes}")
 
             # If explicit scheme provided, use it directly
             if explicit_scheme:
@@ -322,7 +337,7 @@ class LocalExecutor:
         else:
             transformed_secrets = None
 
-        return (self.config.auth, transformed_secrets)
+        return (self.model.auth, transformed_secrets)
 
     def _infer_auth_scheme(
         self,
@@ -342,7 +357,7 @@ class LocalExecutor:
         Raises:
             ValueError: If no scheme matches, or multiple schemes match
         """
-        options = self.config.auth.options
+        options = self.model.auth.options
         if not options:
             raise ValueError("No auth options available in multi-auth config")
 
@@ -377,8 +392,7 @@ class LocalExecutor:
             # Multiple matches - need explicit scheme
             matching_names = [opt.scheme_name for opt in matching_options]
             raise ValueError(
-                f"Multiple auth schemes match the provided credentials: {matching_names}. "
-                f"Please specify 'auth_scheme' explicitly to disambiguate."
+                f"Multiple auth schemes match the provided credentials: {matching_names}. Please specify 'auth_scheme' explicitly to disambiguate."
             )
 
         # Exactly one match - use it
@@ -403,7 +417,7 @@ class LocalExecutor:
         Raises:
             ValueError: If scheme not found
         """
-        options = self.config.auth.options
+        options = self.model.auth.options
         if not options:
             raise ValueError("No auth options available in multi-auth config")
 
@@ -634,7 +648,7 @@ class LocalExecutor:
         for placeholder in placeholders:
             if placeholder not in params:
                 raise MissingParameterError(
-                    f"Missing required path parameter '{placeholder}' for path '{path_template}'. " f"Provided parameters: {list(params.keys())}"
+                    f"Missing required path parameter '{placeholder}' for path '{path_template}'. Provided parameters: {list(params.keys())}"
                 )
 
             # Validate parameter value is not None or empty string
@@ -737,7 +751,7 @@ class LocalExecutor:
                 # Navigate to the field
                 if not isinstance(current, dict):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: " f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
                     )
 
                 if field_name not in current:
@@ -750,13 +764,13 @@ class LocalExecutor:
                 array_value = current[field_name]
                 if not isinstance(array_value, list):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: " f"Expected list at '{field_name}', got {type(array_value).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected list at '{field_name}', got {type(array_value).__name__}"
                     )
 
                 # Check index bounds
                 if index >= len(array_value):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: " f"Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
+                        f"Cannot extract download URL for {entity}: Index {index} out of bounds for '{field_name}' (length: {len(array_value)})"
                     )
 
                 current = array_value[index]
@@ -764,19 +778,18 @@ class LocalExecutor:
                 # Regular dict navigation
                 if not isinstance(current, dict):
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: " f"Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
+                        f"Cannot extract download URL for {entity}: Expected dict at '{'.'.join(parts[:i])}', got {type(current).__name__}"
                     )
 
                 if part not in current:
                     raise ExecutorError(
-                        f"Cannot extract download URL for {entity}: "
-                        f"Field '{part}' not found in response. Available fields: {list(current.keys())}"
+                        f"Cannot extract download URL for {entity}: Field '{part}' not found in response. Available fields: {list(current.keys())}"
                     )
 
                 current = current[part]
 
         if not isinstance(current, str):
-            raise ExecutorError(f"Cannot extract download URL for {entity}: " f"Expected string at '{file_field}', got {type(current).__name__}")
+            raise ExecutorError(f"Cannot extract download URL for {entity}: Expected string at '{file_field}', got {type(current).__name__}")
 
         return current
 
@@ -1063,7 +1076,7 @@ class LocalExecutor:
                 return matches[0]
 
         except Exception as e:
-            logging.warning(f"Failed to apply record extractor '{extractor}': {e}. " f"Returning original response.")
+            logging.warning(f"Failed to apply record extractor '{extractor}': {e}. Returning original response.")
             return response_data
 
     def _extract_metadata(
@@ -1117,7 +1130,7 @@ class LocalExecutor:
 
             except Exception as e:
                 # Log error but continue with other fields
-                logging.warning(f"Failed to apply meta extractor for field '{field_name}' " f"with path '{jsonpath_expr_str}': {e}. Setting to None.")
+                logging.warning(f"Failed to apply meta extractor for field '{field_name}' with path '{jsonpath_expr_str}': {e}. Setting to None.")
                 extracted_meta[field_name] = None
 
         return extracted_meta
@@ -1152,7 +1165,7 @@ class LocalExecutor:
 
         if missing_fields:
             raise MissingParameterError(
-                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. " f"Provided parameters: {list(params.keys())}"
+                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. Provided parameters: {list(params.keys())}"
             )
 
     async def close(self):
@@ -1199,7 +1212,7 @@ class _StandardOperationHandler:
 
         with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
-            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.name", self.ctx.executor.model.name)
             span.set_attribute("connector.entity", entity)
             span.set_attribute("connector.action", action.value)
             if params:
@@ -1218,19 +1231,19 @@ class _StandardOperationHandler:
                 entity_def = self.ctx.entity_index.get(entity)
                 if not entity_def:
                     available_entities = list(self.ctx.entity_index.keys())
-                    raise EntityNotFoundError(f"Entity '{entity}' not found in connector. " f"Available entities: {available_entities}")
+                    raise EntityNotFoundError(f"Entity '{entity}' not found in connector. Available entities: {available_entities}")
 
                 # Check if action is supported
                 if action not in entity_def.actions:
                     supported_actions = [a.value for a in entity_def.actions]
                     raise ActionNotSupportedError(
-                        f"Action '{action.value}' not supported for entity '{entity}'. " f"Supported actions: {supported_actions}"
+                        f"Action '{action.value}' not supported for entity '{entity}'. Supported actions: {supported_actions}"
                     )
 
                 # O(1) operation lookup
                 endpoint = self.ctx.operation_index.get((entity, action))
                 if not endpoint:
-                    raise ExecutorError(f"No endpoint defined for {entity}.{action.value}. " f"This is a configuration error.")
+                    raise ExecutorError(f"No endpoint defined for {entity}.{action.value}. This is a configuration error.")
 
                 # Validate required body fields for CREATE/UPDATE operations
                 self.ctx.validate_required_body_fields(endpoint, params, action, entity)
@@ -1331,7 +1344,7 @@ class _DownloadOperationHandler:
 
         with tracer.start_as_current_span("airbyte.local_executor.execute_operation") as span:
             # Add span attributes
-            span.set_attribute("connector.name", self.ctx.executor.config.name)
+            span.set_attribute("connector.name", self.ctx.executor.model.name)
             span.set_attribute("connector.entity", entity)
             span.set_attribute("connector.action", action.value)
             if params:
@@ -1349,15 +1362,13 @@ class _DownloadOperationHandler:
                 # Look up entity
                 entity_def = self.ctx.entity_index.get(entity)
                 if not entity_def:
-                    raise EntityNotFoundError(
-                        f"Entity '{entity}' not found in connector. " f"Available entities: {list(self.ctx.entity_index.keys())}"
-                    )
+                    raise EntityNotFoundError(f"Entity '{entity}' not found in connector. Available entities: {list(self.ctx.entity_index.keys())}")
 
                 # Look up operation
                 operation = self.ctx.operation_index.get((entity, action))
                 if not operation:
                     raise ActionNotSupportedError(
-                        f"Action '{action.value}' not supported for entity '{entity}'. " f"Supported actions: {[a.value for a in entity_def.actions]}"
+                        f"Action '{action.value}' not supported for entity '{entity}'. Supported actions: {[a.value for a in entity_def.actions]}"
                     )
 
                 # Common setup for both download modes

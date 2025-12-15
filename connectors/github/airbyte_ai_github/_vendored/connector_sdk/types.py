@@ -225,8 +225,8 @@ class EntityDefinition(BaseModel):
     entity_schema: dict[str, Any] | None = Field(default=None, alias="schema")
 
 
-class ConnectorConfig(BaseModel):
-    """Complete connector configuration loaded from YAML."""
+class ConnectorModel(BaseModel):
+    """Complete connector model loaded from YAML definition."""
 
     model_config = ConfigDict(use_enum_values=True)
 

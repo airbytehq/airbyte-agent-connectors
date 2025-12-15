@@ -10,7 +10,7 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
-from pathlib import Path
+from .connector_model import GithubConnectorModel
 
 from .types import (
     BranchesGetParams,
@@ -54,6 +54,8 @@ from .types import (
 
 if TYPE_CHECKING:
     from .models import GithubAuthConfig
+# Import specific auth config classes for multi-auth isinstance checks
+from .models import GithubGithubOauth20AuthConfig, GithubGithubPersonalAccessTokenAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     GithubExecuteResult,
@@ -106,7 +108,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -195,7 +197,6 @@ class GithubConnector:
     def __init__(
         self,
         auth_config: GithubAuthConfig | None = None,
-        config_path: str | None = None,
         connector_id: str | None = None,
         airbyte_client_id: str | None = None,
         airbyte_client_secret: str | None = None,
@@ -210,7 +211,6 @@ class GithubConnector:
 
         Args:
             auth_config: Typed authentication configuration (required for local mode)
-            config_path: Optional path to connector config (uses bundled default if None)
             connector_id: Connector ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
@@ -220,7 +220,7 @@ class GithubConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = GithubConnector(auth_config=GithubAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
+            connector = GithubConnector(auth_config=GithubAuthConfig(access_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = GithubConnector(
                 connector_id="connector-456",
@@ -258,15 +258,21 @@ class GithubConnector:
 
             from ._vendored.connector_sdk.executor import LocalExecutor
 
-            if not config_path:
-                config_path = str(self.get_default_config_path())
-
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, GithubGithubOauth20AuthConfig):
+                    auth_scheme = "githubOAuth"
+                if isinstance(auth_config, GithubGithubPersonalAccessTokenAuthConfig):
+                    auth_scheme = "githubPAT"
+
             self._executor = LocalExecutor(
-                config_path=config_path,
+                model=GithubConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
@@ -293,11 +299,6 @@ class GithubConnector:
         self.stargazers = StargazersQuery(self)
         self.viewer = ViewerQuery(self)
         self.viewer_repositories = ViewerRepositoriesQuery(self)
-
-    @classmethod
-    def get_default_config_path(cls) -> Path:
-        """Get path to bundled connector config."""
-        return Path(__file__).parent / "connector.yaml"
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
