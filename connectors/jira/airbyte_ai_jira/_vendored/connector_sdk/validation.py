@@ -615,7 +615,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                             "untested": True,
                             "schema_validation": [],
                             "warnings": [
-                                f"Operation {entity.name}.{action.value} is marked as untested (x-airbyte-untested: true) and has no cassettes. Validation skipped."
+                                f"Operation {entity.name}.{action.value} is marked as untested "
+                                f"(x-airbyte-untested: true) and has no cassettes. Validation skipped."
                             ],
                         }
                     )
