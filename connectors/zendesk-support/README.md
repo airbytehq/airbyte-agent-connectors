@@ -80,8 +80,8 @@ For the service's official API docs, see [Zendesk-Support API Reference](https:/
 
 ## Version Information
 
-**Package Version:** 0.18.17
+**Package Version:** 0.18.18
 
 **Connector Version:** 0.1.3
 
-**Generated with connector-sdk:** 85f4e6b03728cce87761a48e33f02aab68255baf
+**Generated with connector-sdk:** c4c39c2797ecd929407c9417c728d425f77b37ed
