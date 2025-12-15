@@ -41,9 +41,7 @@ async def save_download(
 
     # Check if file exists
     if file_path.exists() and not overwrite:
-        raise FileExistsError(
-            f"File already exists: {file_path}. Use overwrite=True to replace it."
-        )
+        raise FileExistsError(f"File already exists: {file_path}. Use overwrite=True to replace it.")
 
     # Create parent directories if needed
     file_path.parent.mkdir(parents=True, exist_ok=True)

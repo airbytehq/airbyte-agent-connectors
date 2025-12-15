@@ -160,9 +160,7 @@ def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
 
     # Check if version is 3.1.x (we don't support 2.x or 3.0.x)
     if not openapi_version.startswith(OPENAPI_VERSION_PREFIX):
-        raise InvalidOpenAPIError(
-            f"Unsupported OpenAPI version: {openapi_version}. Only {OPENAPI_VERSION_PREFIX}x is supported."
-        )
+        raise InvalidOpenAPIError(f"Unsupported OpenAPI version: {openapi_version}. Only {OPENAPI_VERSION_PREFIX}x is supported.")
 
     # Validate required top-level fields
     if "info" not in raw_config:
@@ -213,9 +211,7 @@ def _extract_request_body_config(
         # Check if it's GraphQL type (it's a GraphQLBodyConfig Pydantic model)
         if isinstance(body_type_config, GraphQLBodyConfig):
             # Convert Pydantic model to dict, excluding None values
-            graphql_body = body_type_config.model_dump(
-                exclude_none=True, by_alias=False
-            )
+            graphql_body = body_type_config.model_dump(exclude_none=True, by_alias=False)
             return body_fields, request_schema, graphql_body
 
     # Parse standard request body
@@ -249,9 +245,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
     spec_dict = spec.model_dump(by_alias=True, exclude_none=True)
 
     # Extract connector name and version
-    name = spec.info.x_airbyte_connector_name or spec.info.title.lower().replace(
-        " ", "-"
-    )
+    name = spec.info.x_airbyte_connector_name or spec.info.title.lower().replace(" ", "-")
     version = spec.info.version
 
     # Parse authentication first to get token_extract fields
@@ -285,14 +279,12 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
 
             if not entity_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-entity in operation {method_name.upper()} {path}. "
-                    f"All operations must specify an entity."
+                    f"Missing required x-airbyte-entity in operation {method_name.upper()} {path}. " f"All operations must specify an entity."
                 )
 
             if not action_name:
                 raise InvalidOpenAPIError(
-                    f"Missing required x-airbyte-action in operation {method_name.upper()} {path}. "
-                    f"All operations must specify an action."
+                    f"Missing required x-airbyte-action in operation {method_name.upper()} {path}. " f"All operations must specify an action."
                 )
 
             # Convert to Action enum
@@ -302,17 +294,13 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                 # Provide clear error for invalid actions
                 valid_actions = ", ".join([a.value for a in Action])
                 raise InvalidOpenAPIError(
-                    f"Invalid action '{action_name}' in operation {method_name.upper()} {path}. "
-                    f"Valid actions are: {valid_actions}"
+                    f"Invalid action '{action_name}' in operation {method_name.upper()} {path}. " f"Valid actions are: {valid_actions}"
                 )
 
             # Determine content type
             content_type = ContentType.JSON
             if operation.request_body and operation.request_body.content:
-                if (
-                    "application/x-www-form-urlencoded"
-                    in operation.request_body.content
-                ):
+                if "application/x-www-form-urlencoded" in operation.request_body.content:
                     content_type = ContentType.FORM_URLENCODED
                 elif "multipart/form-data" in operation.request_body.content:
                     content_type = ContentType.FORM_DATA
@@ -346,9 +334,7 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
                             deep_object_params.append(param.name)
 
             # Extract body fields from request schema
-            body_fields, request_schema, graphql_body = _extract_request_body_config(
-                operation.request_body, spec_dict
-            )
+            body_fields, request_schema, graphql_body = _extract_request_body_config(operation.request_body, spec_dict)
 
             # Extract response schema
             response_schema = None
@@ -409,16 +395,11 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
         if spec.components:
             # Look for a schema matching the entity name
             for schema_name, schema_def in spec.components.schemas.items():
-                if (
-                    schema_def.x_airbyte_entity_name == entity_name
-                    or schema_name.lower() == entity_name.lower()
-                ):
+                if schema_def.x_airbyte_entity_name == entity_name or schema_name.lower() == entity_name.lower():
                     schema = schema_def.model_dump(by_alias=True)
                     break
 
-        entity = EntityDefinition(
-            name=entity_name, actions=actions, endpoints=endpoints_dict, schema=schema
-        )
+        entity = EntityDefinition(name=entity_name, actions=actions, endpoints=endpoints_dict, schema=schema)
         entities.append(entity)
 
     # Extract retry config from x-airbyte-retry-config extension
@@ -779,10 +760,7 @@ def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
             continue
 
     if not options:
-        raise InvalidOpenAPIError(
-            "No valid security schemes found. Connector must define at least "
-            "one valid security scheme."
-        )
+        raise InvalidOpenAPIError("No valid security schemes found. Connector must define at least " "one valid security scheme.")
 
     return AuthConfig(
         type=None,
@@ -825,9 +803,7 @@ def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
         # Parse OAuth2 configuration
         oauth2_config = _parse_oauth2_config(scheme)
         # Use explicit x-airbyte-auth-config if present, otherwise generate default
-        auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(
-            AuthType.OAUTH2
-        )
+        auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(AuthType.OAUTH2)
         return AuthConfig(
             type=AuthType.OAUTH2,
             config=oauth2_config,
@@ -836,9 +812,7 @@ def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
         )
 
     # Use explicit x-airbyte-auth-config if present, otherwise generate default
-    auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(
-        auth_type
-    )
+    auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(auth_type)
 
     return AuthConfig(
         type=auth_type,
