@@ -71,8 +71,8 @@ For the service's official API docs, see [Salesforce API Reference](https://deve
 
 ## Version Information
 
-**Package Version:** 0.1.8
+**Package Version:** 0.1.9
 
 **Connector Version:** 1.0.3
 
-**Generated with connector-sdk:** ea5a02a30ab621aa2eddda817abbb39548aa96a2
+**Generated with connector-sdk:** 0bfa6500a4fcf1cba2cffcc4d7ec640a76bbc568
