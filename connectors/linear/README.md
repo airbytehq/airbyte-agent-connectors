@@ -60,8 +60,8 @@ For the service's official API docs, see [Linear API Reference](https://linear.a
 
 ## Version Information
 
-**Package Version:** 0.19.14
+**Package Version:** 0.19.15
 
 **Connector Version:** 0.1.1
 
-**Generated with connector-sdk:** ea5a02a30ab621aa2eddda817abbb39548aa96a2
+**Generated with connector-sdk:** 0bfa6500a4fcf1cba2cffcc4d7ec640a76bbc568

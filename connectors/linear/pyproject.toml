@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-ai-linear"
-version = "0.19.14"
+version = "0.19.15"
 description = "Airbyte Linear Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
