@@ -257,25 +257,14 @@ def convert_openapi_to_connector_config(spec: OpenAPIConnector) -> ConnectorConf
     # Parse authentication first to get token_extract fields
     auth_config = _parse_auth_from_openapi(spec)
 
-    # Get token_extract fields (variables that will be dynamically set from token response)
-    token_extract_fields: set[str] = set()
-    if auth_config.config and "token_extract" in auth_config.config:
-        token_extract_fields = set(auth_config.config["token_extract"])
-
-    # Extract base URL from servers and apply default variable values
-    # Skip substitution for variables in token_extract (they're set dynamically)
+    # Extract base URL from servers - keep variable placeholders intact
+    # Variables will be substituted at runtime by HTTPClient using:
+    # - config_values: for user-provided values like subdomain
+    # - token_extract: for OAuth dynamic values like instance_url
+    # DO NOT substitute defaults here - that would prevent runtime substitution
     base_url = ""
     if spec.servers:
         base_url = spec.servers[0].url
-        # Substitute default values for server variables (e.g., {subdomain} -> default)
-        # but keep template variables that are in token_extract (e.g., {instance_url})
-        if spec.servers[0].variables:
-            for var_name, var_config in spec.servers[0].variables.items():
-                if var_name in token_extract_fields:
-                    # Skip - this variable will be set from token response
-                    continue
-                if var_config.default:
-                    base_url = base_url.replace(f"{{{var_name}}}", var_config.default)
 
     # Group operations by entity
     entities_map: dict[str, dict[str, EndpointDefinition]] = {}
