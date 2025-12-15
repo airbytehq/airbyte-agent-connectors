@@ -40,8 +40,8 @@ For the service's official API docs, see [Jira API Reference](https://developer.
 
 ## Version Information
 
-**Package Version:** 0.1.5
+**Package Version:** 0.1.6
 
 **Connector Version:** 1.0.2
 
-**Generated with connector-sdk:** ea5a02a30ab621aa2eddda817abbb39548aa96a2
+**Generated with connector-sdk:** 0bfa6500a4fcf1cba2cffcc4d7ec640a76bbc568
