@@ -166,9 +166,7 @@ def resolve_env_var_references(
 
                 if env_value is None or env_value == "":
                     if strict:
-                        raise SecretResolutionError(
-                            f"Environment variable '{env_var_name}' not found or empty"
-                        )
+                        raise SecretResolutionError(f"Environment variable '{env_var_name}' not found or empty")
                     # In non-strict mode, keep the original reference
                     return match.group(0)
 
