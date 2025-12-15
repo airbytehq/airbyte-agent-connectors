@@ -60,8 +60,7 @@ class LogSession(BaseModel):
     )
     chunk_logs: List[bytes] = Field(
         default_factory=list,
-        description="Captured chunks from streaming responses. "
-        "Each chunk is logged when log_chunk_fetch() is called.",
+        description="Captured chunks from streaming responses. " "Each chunk is logged when log_chunk_fetch() is called.",
     )
 
     @field_validator("chunk_logs", mode="before")
