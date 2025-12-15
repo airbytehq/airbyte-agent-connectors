@@ -79,9 +79,7 @@ class HTTPXClient:
             pool=timeout.pool,
         )
 
-    def _convert_response(
-        self, httpx_response: httpx.Response, *, stream: bool = False
-    ) -> HTTPResponse:
+    def _convert_response(self, httpx_response: httpx.Response, *, stream: bool = False) -> HTTPResponse:
         """Convert httpx.Response to SDK HTTPResponse.
 
         Args:
@@ -171,9 +169,7 @@ class HTTPXClient:
                 original_error=e,
             ) from e
 
-    async def _handle_http_error(
-        self, httpx_response: httpx.Response, sdk_response: HTTPResponse
-    ) -> None:
+    async def _handle_http_error(self, httpx_response: httpx.Response, sdk_response: HTTPResponse) -> None:
         """Handle HTTP error responses by raising appropriate SDK exceptions.
 
         Args:
@@ -190,9 +186,7 @@ class HTTPXClient:
         # Try to get error message from response
         try:
             error_data = httpx_response.json()
-            error_message = (
-                error_data.get("message") or error_data.get("error") or str(error_data)
-            )
+            error_message = error_data.get("message") or error_data.get("error") or str(error_data)
         except Exception:
             error_message = httpx_response.text or f"HTTP {status_code} error"
 

@@ -105,17 +105,11 @@ class AirbyteAuthConfig(BaseModel):
     @model_validator(mode="after")
     def validate_config_structure(self) -> "AirbyteAuthConfig":
         """Validate that either single option or oneOf is provided, not both."""
-        has_single = (
-            self.type is not None
-            or self.properties is not None
-            or self.auth_mapping is not None
-        )
+        has_single = self.type is not None or self.properties is not None or self.auth_mapping is not None
         has_one_of = self.one_of is not None and len(self.one_of) > 0
 
         if not has_single and not has_one_of:
-            raise ValueError(
-                "Either single auth option (type/properties/auth_mapping) or oneOf must be provided"
-            )
+            raise ValueError("Either single auth option (type/properties/auth_mapping) or oneOf must be provided")
 
         if has_single and has_one_of:
             raise ValueError("Cannot have both single auth option and oneOf")
@@ -175,12 +169,8 @@ class SecurityScheme(BaseModel):
 
     # Airbyte extensions
     x_token_path: Optional[str] = Field(None, alias="x-airbyte-token-path")
-    x_token_refresh: Optional[Dict[str, Any]] = Field(
-        None, alias="x-airbyte-token-refresh"
-    )
-    x_airbyte_auth_config: Optional[AirbyteAuthConfig] = Field(
-        None, alias="x-airbyte-auth-config"
-    )
+    x_token_refresh: Optional[Dict[str, Any]] = Field(None, alias="x-airbyte-token-refresh")
+    x_airbyte_auth_config: Optional[AirbyteAuthConfig] = Field(None, alias="x-airbyte-auth-config")
     x_airbyte_token_extract: Optional[List[str]] = Field(
         None,
         alias="x-airbyte-token-extract",
@@ -194,9 +184,7 @@ class SecurityScheme(BaseModel):
         if v is not None:
             if len(v) != len(set(v)):
                 duplicates = [x for x in v if v.count(x) > 1]
-                raise ValueError(
-                    f"x-airbyte-token-extract contains duplicate fields: {set(duplicates)}"
-                )
+                raise ValueError(f"x-airbyte-token-extract contains duplicate fields: {set(duplicates)}")
         return v
 
     # Future extensions (commented out, defined for future use)

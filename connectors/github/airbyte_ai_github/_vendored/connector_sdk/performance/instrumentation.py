@@ -50,9 +50,7 @@ def instrument(metric_name: str) -> Callable[[F], F]:
                 if success:
                     logger.debug(f"[{metric_name}] completed in {duration_ms:.2f}ms")
                 else:
-                    logger.warning(
-                        f"[{metric_name}] failed after {duration_ms:.2f}ms: {error}"
-                    )
+                    logger.warning(f"[{metric_name}] failed after {duration_ms:.2f}ms: {error}")
 
         return wrapper  # type: ignore
 
