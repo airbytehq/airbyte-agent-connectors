@@ -37,9 +37,7 @@ class SegmentTracker:
                 self._analytics = analytics
                 self._log_startup_message()
             except ImportError:
-                logger.warning(
-                    "Telemetry disabled: segment-analytics-python not installed"
-                )
+                logger.warning("Telemetry disabled: segment-analytics-python not installed")
                 self.enabled = False
 
     def _log_startup_message(self):
