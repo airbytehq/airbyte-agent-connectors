@@ -14,14 +14,14 @@ from .models import (
     TasksListNextPage,
     TasksList,
     ProjectCompact,
-    ProjectCurrentStatusUpdate,
     ProjectFollowersItem,
-    ProjectTeam,
     ProjectWorkspace,
-    ProjectOwner,
+    ProjectTeam,
     ProjectMembersItem,
-    ProjectCurrentStatusAuthor,
+    ProjectCurrentStatusUpdate,
+    ProjectOwner,
     ProjectCurrentStatusCreatedBy,
+    ProjectCurrentStatusAuthor,
     ProjectCurrentStatus,
     Project,
     ProjectResponse,
@@ -44,6 +44,12 @@ from .models import (
     TeamResponse,
     TeamsListNextPage,
     TeamsList,
+    AttachmentCompact,
+    AttachmentParent,
+    Attachment,
+    AttachmentResponse,
+    AttachmentsListNextPage,
+    AttachmentsList,
     TasksListResultMeta,
     ProjectTasksListResultMeta,
     WorkspaceTaskSearchListResultMeta,
@@ -57,6 +63,7 @@ from .models import (
     TeamUsersListResultMeta,
     WorkspaceTeamsListResultMeta,
     UserTeamsListResultMeta,
+    AttachmentsListResultMeta,
     AsanaExecuteResult,
     AsanaExecuteResultWithMeta,
     TasksListResult,
@@ -76,7 +83,9 @@ from .models import (
     TeamUsersListResult,
     TeamsGetResult,
     WorkspaceTeamsListResult,
-    UserTeamsListResult
+    UserTeamsListResult,
+    AttachmentsListResult,
+    AttachmentsGetResult
 )
 from .types import (
     TasksListParams,
@@ -96,7 +105,10 @@ from .types import (
     TeamUsersListParams,
     TeamsGetParams,
     WorkspaceTeamsListParams,
-    UserTeamsListParams
+    UserTeamsListParams,
+    AttachmentsListParams,
+    AttachmentsGetParams,
+    AttachmentsDownloadParams
 )
 
-__all__ = ["AsanaConnector", "AsanaAuthConfig", "TaskCompactCreatedBy", "TaskCompact", "Task", "TaskResponse", "TasksListNextPage", "TasksList", "ProjectCompact", "ProjectCurrentStatusUpdate", "ProjectFollowersItem", "ProjectTeam", "ProjectWorkspace", "ProjectOwner", "ProjectMembersItem", "ProjectCurrentStatusAuthor", "ProjectCurrentStatusCreatedBy", "ProjectCurrentStatus", "Project", "ProjectResponse", "ProjectsListNextPage", "ProjectsList", "WorkspaceCompact", "Workspace", "WorkspaceResponse", "WorkspacesListNextPage", "WorkspacesList", "UserCompact", "UserWorkspacesItem", "User", "UserResponse", "UsersListNextPage", "UsersList", "TeamCompact", "TeamOrganization", "Team", "TeamResponse", "TeamsListNextPage", "TeamsList", "TasksListResultMeta", "ProjectTasksListResultMeta", "WorkspaceTaskSearchListResultMeta", "ProjectsListResultMeta", "TaskProjectsListResultMeta", "TeamProjectsListResultMeta", "WorkspaceProjectsListResultMeta", "WorkspacesListResultMeta", "UsersListResultMeta", "WorkspaceUsersListResultMeta", "TeamUsersListResultMeta", "WorkspaceTeamsListResultMeta", "UserTeamsListResultMeta", "AsanaExecuteResult", "AsanaExecuteResultWithMeta", "TasksListResult", "ProjectTasksListResult", "TasksGetResult", "WorkspaceTaskSearchListResult", "ProjectsListResult", "ProjectsGetResult", "TaskProjectsListResult", "TeamProjectsListResult", "WorkspaceProjectsListResult", "WorkspacesListResult", "WorkspacesGetResult", "UsersListResult", "UsersGetResult", "WorkspaceUsersListResult", "TeamUsersListResult", "TeamsGetResult", "WorkspaceTeamsListResult", "UserTeamsListResult", "TasksListParams", "ProjectTasksListParams", "TasksGetParams", "WorkspaceTaskSearchListParams", "ProjectsListParams", "ProjectsGetParams", "TaskProjectsListParams", "TeamProjectsListParams", "WorkspaceProjectsListParams", "WorkspacesListParams", "WorkspacesGetParams", "UsersListParams", "UsersGetParams", "WorkspaceUsersListParams", "TeamUsersListParams", "TeamsGetParams", "WorkspaceTeamsListParams", "UserTeamsListParams"]
+__all__ = ["AsanaConnector", "AsanaAuthConfig", "TaskCompactCreatedBy", "TaskCompact", "Task", "TaskResponse", "TasksListNextPage", "TasksList", "ProjectCompact", "ProjectFollowersItem", "ProjectWorkspace", "ProjectTeam", "ProjectMembersItem", "ProjectCurrentStatusUpdate", "ProjectOwner", "ProjectCurrentStatusCreatedBy", "ProjectCurrentStatusAuthor", "ProjectCurrentStatus", "Project", "ProjectResponse", "ProjectsListNextPage", "ProjectsList", "WorkspaceCompact", "Workspace", "WorkspaceResponse", "WorkspacesListNextPage", "WorkspacesList", "UserCompact", "UserWorkspacesItem", "User", "UserResponse", "UsersListNextPage", "UsersList", "TeamCompact", "TeamOrganization", "Team", "TeamResponse", "TeamsListNextPage", "TeamsList", "AttachmentCompact", "AttachmentParent", "Attachment", "AttachmentResponse", "AttachmentsListNextPage", "AttachmentsList", "TasksListResultMeta", "ProjectTasksListResultMeta", "WorkspaceTaskSearchListResultMeta", "ProjectsListResultMeta", "TaskProjectsListResultMeta", "TeamProjectsListResultMeta", "WorkspaceProjectsListResultMeta", "WorkspacesListResultMeta", "UsersListResultMeta", "WorkspaceUsersListResultMeta", "TeamUsersListResultMeta", "WorkspaceTeamsListResultMeta", "UserTeamsListResultMeta", "AttachmentsListResultMeta", "AsanaExecuteResult", "AsanaExecuteResultWithMeta", "TasksListResult", "ProjectTasksListResult", "TasksGetResult", "WorkspaceTaskSearchListResult", "ProjectsListResult", "ProjectsGetResult", "TaskProjectsListResult", "TeamProjectsListResult", "WorkspaceProjectsListResult", "WorkspacesListResult", "WorkspacesGetResult", "UsersListResult", "UsersGetResult", "WorkspaceUsersListResult", "TeamUsersListResult", "TeamsGetResult", "WorkspaceTeamsListResult", "UserTeamsListResult", "AttachmentsListResult", "AttachmentsGetResult", "TasksListParams", "ProjectTasksListParams", "TasksGetParams", "WorkspaceTaskSearchListParams", "ProjectsListParams", "ProjectsGetParams", "TaskProjectsListParams", "TeamProjectsListParams", "WorkspaceProjectsListParams", "WorkspacesListParams", "WorkspacesGetParams", "UsersListParams", "UsersGetParams", "WorkspaceUsersListParams", "TeamUsersListParams", "TeamsGetParams", "WorkspaceTeamsListParams", "UserTeamsListParams", "AttachmentsListParams", "AttachmentsGetParams", "AttachmentsDownloadParams"]

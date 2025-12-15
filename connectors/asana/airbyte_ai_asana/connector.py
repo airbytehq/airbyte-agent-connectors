@@ -4,7 +4,7 @@ asana connector.
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, overload
+from typing import TYPE_CHECKING, Any, AsyncIterator, overload
 try:
     from typing import Literal
 except ImportError:
@@ -13,6 +13,9 @@ except ImportError:
 from pathlib import Path
 
 from .types import (
+    AttachmentsDownloadParams,
+    AttachmentsGetParams,
+    AttachmentsListParams,
     ProjectTasksListParams,
     ProjectsGetParams,
     ProjectsListParams,
@@ -57,6 +60,8 @@ from .models import (
     TeamsGetResult,
     WorkspaceTeamsListResult,
     UserTeamsListResult,
+    AttachmentsListResult,
+    AttachmentsGetResult,
 )
 
 
@@ -68,7 +73,7 @@ class AsanaConnector:
     """
 
     connector_name = "asana"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -91,6 +96,9 @@ class AsanaConnector:
         ("teams", "get"): True,
         ("workspace_teams", "list"): True,
         ("user_teams", "list"): True,
+        ("attachments", "list"): True,
+        ("attachments", "get"): True,
+        ("attachments", "download"): False,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -114,6 +122,9 @@ class AsanaConnector:
         ('teams', 'get'): {'team_gid': 'team_gid'},
         ('workspace_teams', 'list'): {'workspace_gid': 'workspace_gid', 'limit': 'limit', 'offset': 'offset'},
         ('user_teams', 'list'): {'user_gid': 'user_gid', 'organization': 'organization', 'limit': 'limit', 'offset': 'offset'},
+        ('attachments', 'list'): {'parent': 'parent', 'limit': 'limit', 'offset': 'offset'},
+        ('attachments', 'get'): {'attachment_gid': 'attachment_gid'},
+        ('attachments', 'download'): {'attachment_gid': 'attachment_gid', 'range_header': 'range_header'},
     }
 
     def __init__(
@@ -212,6 +223,7 @@ class AsanaConnector:
         self.teams = TeamsQuery(self)
         self.workspace_teams = WorkspaceTeamsQuery(self)
         self.user_teams = UserTeamsQuery(self)
+        self.attachments = AttachmentsQuery(self)
 
     @classmethod
     def get_default_config_path(cls) -> Path:
@@ -363,6 +375,30 @@ class AsanaConnector:
         action: Literal["list"],
         params: "UserTeamsListParams"
     ) -> "UserTeamsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["attachments"],
+        action: Literal["list"],
+        params: "AttachmentsListParams"
+    ) -> "AttachmentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["attachments"],
+        action: Literal["get"],
+        params: "AttachmentsGetParams"
+    ) -> "AttachmentsGetResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["attachments"],
+        action: Literal["download"],
+        params: "AttachmentsDownloadParams"
+    ) -> "AsyncIterator[bytes]": ...
 
 
     @overload
@@ -1222,4 +1258,136 @@ class UserTeamsQuery:
             data=result.data,
             meta=result.meta        )
 
+
+
+class AttachmentsQuery:
+    """
+    Query class for Attachments entity operations.
+    """
+
+    def __init__(self, connector: AsanaConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        parent: str,
+        limit: int | None = None,
+        offset: str | None = None,
+        **kwargs
+    ) -> AttachmentsListResult:
+        """
+        Returns a list of attachments for an object (task, project, etc.)
+
+        Args:
+            parent: Globally unique identifier for the object to fetch attachments for (e.g., a task GID)
+            limit: Number of items to return per page
+            offset: Pagination offset token
+            **kwargs: Additional parameters
+
+        Returns:
+            AttachmentsListResult
+        """
+        params = {k: v for k, v in {
+            "parent": parent,
+            "limit": limit,
+            "offset": offset,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("attachments", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AttachmentsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+
+
+    async def get(
+        self,
+        attachment_gid: str,
+        **kwargs
+    ) -> AttachmentsGetResult:
+        """
+        Get details for a single attachment by its GID
+
+        Args:
+            attachment_gid: Globally unique identifier for the attachment
+            **kwargs: Additional parameters
+
+        Returns:
+            AttachmentsGetResult
+        """
+        params = {k: v for k, v in {
+            "attachment_gid": attachment_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("attachments", "get", params)
+        # Cast generic envelope to concrete typed result
+        return AttachmentsGetResult(
+            data=result.data        )
+
+
+
+    async def download(
+        self,
+        attachment_gid: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> AsyncIterator[bytes]:
+        """
+        Downloads the file content of an attachment. This operation first retrieves the attachment
+metadata to get the download_url, then downloads the file from that URL.
+
+
+        Args:
+            attachment_gid: Globally unique identifier for the attachment
+            range_header: Optional Range header for partial downloads (e.g., 'bytes=0-99')
+            **kwargs: Additional parameters
+
+        Returns:
+            AsyncIterator[bytes]
+        """
+        params = {k: v for k, v in {
+            "attachment_gid": attachment_gid,
+            "range_header": range_header,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("attachments", "download", params)
+        return result
+
+
+    async def download_local(
+        self,
+        attachment_gid: str,
+        path: str,
+        range_header: str | None = None,
+        **kwargs
+    ) -> Path:
+        """
+        Downloads the file content of an attachment. This operation first retrieves the attachment
+metadata to get the download_url, then downloads the file from that URL.
+ and save to file.
+
+        Args:
+            attachment_gid: Globally unique identifier for the attachment
+            range_header: Optional Range header for partial downloads (e.g., 'bytes=0-99')
+            path: File path to save downloaded content
+            **kwargs: Additional parameters
+
+        Returns:
+            str: Path to the downloaded file
+        """
+        from ._vendored.connector_sdk import save_download
+
+        # Get the async iterator
+        content_iterator = await self.download(
+            attachment_gid=attachment_gid,
+            range_header=range_header,
+            **kwargs
+        )
+
+        return await save_download(content_iterator, path)
 

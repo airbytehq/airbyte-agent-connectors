@@ -5,7 +5,7 @@ openapi: 3.1.0
 
 info:
   title: Asana API Connector
-  version: 0.1.1
+  version: 0.1.2
   description: |
     Asana is a work management platform that helps teams organize, track, and manage
     projects and tasks. This connector provides access to tasks, projects, workspaces,
@@ -875,6 +875,108 @@ paths:
         "401":
           description: Unauthorized
 
+  # Attachments endpoints
+  "/attachments":
+    get:
+      summary: List attachments
+      description: Returns a list of attachments for an object (task, project, etc.)
+      operationId: listAttachments
+      x-airbyte-entity: attachments
+      x-airbyte-action: list
+      x-airbyte-record-extractor: "$.data"
+      x-airbyte-meta-extractor:
+        next_page: $.next_page
+      parameters:
+        - name: parent
+          in: query
+          required: true
+          description: Globally unique identifier for the object to fetch attachments for (e.g., a task GID)
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of items to return per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Pagination offset token
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of attachments
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttachmentsList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Parent object not found
+
+  "/attachments/{attachment_gid}":
+    get:
+      summary: Get an attachment
+      description: Get details for a single attachment by its GID
+      operationId: getAttachment
+      x-airbyte-entity: attachments
+      x-airbyte-action: get
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+        - name: attachment_gid
+          in: path
+          required: true
+          description: Globally unique identifier for the attachment
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Attachment object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AttachmentResponse"
+        "404":
+          description: Attachment not found
+        "401":
+          description: Unauthorized
+
+  "/attachments/{attachment_gid}:download":
+    get:
+      summary: Download attachment
+      description: |
+        Downloads the file content of an attachment. This operation first retrieves the attachment
+        metadata to get the download_url, then downloads the file from that URL.
+      operationId: downloadAttachment
+      x-airbyte-entity: attachments
+      x-airbyte-action: download
+      x-airbyte-file-url: data.download_url
+      x-airbyte-path-override:
+        path: /attachments/{attachment_gid}
+      parameters:
+        - name: attachment_gid
+          in: path
+          required: true
+          description: Globally unique identifier for the attachment
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Attachment file content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Attachment not found
+        "401":
+          description: Unauthorized
+
 components:
   securitySchemes:
     oauth2:
@@ -894,6 +996,9 @@ components:
             # projects:write: Write access to projects
             # users:read: Read access to users
             # workspaces:read: Read access to workspaces
+      x-airbyte-token-refresh:
+        auth_style: body
+        body_format: form
       x-airbyte-auth-config:
         title: "Asana OAuth 2.0"
         type: object
@@ -1467,6 +1572,102 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/TeamCompact"
+        next_page:
+          type: ["object", "null"]
+          properties:
+            offset:
+              type: string
+            path:
+              type: string
+            uri:
+              type: string
+
+    # Attachment schemas
+    AttachmentCompact:
+      type: object
+      x-airbyte-entity-name: attachments
+      description: Compact attachment object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (attachment)
+        name:
+          type: string
+          description: The name of the attachment
+        resource_subtype:
+          type: string
+          description: The type of the attachment (e.g., external, dropbox, gdrive, asana, etc.)
+
+    Attachment:
+      type: object
+      description: Full attachment object
+      properties:
+        gid:
+          type: string
+          description: Globally unique identifier
+        resource_type:
+          type: string
+          description: Resource type (attachment)
+        name:
+          type: string
+          description: The name of the attachment
+        resource_subtype:
+          type: string
+          description: The type of the attachment (e.g., external, dropbox, gdrive, etc.)
+        created_at:
+          type: string
+          format: date-time
+          description: The time at which this attachment was created
+        download_url:
+          type: ["string", "null"]
+          format: uri
+          description: The URL where the attachment can be downloaded. May be null if the attachment is hosted externally.
+        permanent_url:
+          type: ["string", "null"]
+          format: uri
+          description: The permanent URL of the attachment. May be null if the attachment does not support permanent URLs.
+        host:
+          type: string
+          description: The service hosting the attachment (asana, dropbox, gdrive, box, etc.)
+        parent:
+          type: object
+          description: The parent object this attachment is attached to
+          properties:
+            gid:
+              type: string
+            resource_type:
+              type: string
+            name:
+              type: string
+            resource_subtype:
+              type: string
+              description: The subtype of the parent resource
+        view_url:
+          type: ["string", "null"]
+          format: uri
+          description: The URL where the attachment can be viewed in a browser
+        size:
+          type: ["integer", "null"]
+          description: The size of the attachment in bytes
+
+    AttachmentResponse:
+      type: object
+      description: Attachment response wrapper
+      properties:
+        data:
+          $ref: "#/components/schemas/Attachment"
+
+    AttachmentsList:
+      type: object
+      description: Paginated list of attachments containing compact attachment objects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/AttachmentCompact"
         next_page:
           type: ["object", "null"]
           properties:

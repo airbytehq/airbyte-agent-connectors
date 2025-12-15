@@ -18,6 +18,7 @@
 | Teams | [Get](#teams-get) |
 | Workspace Teams | [List](#workspace-teams-list) |
 | User Teams | [List](#user-teams-list) |
+| Attachments | [List](#attachments-list), [Get](#attachments-get), [Download](#attachments-download) |
 
 ### Tasks
 
@@ -1077,6 +1078,162 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 | `next_page` | `object \| null` |  |
 
 </details>
+
+### Attachments
+
+#### Attachments List
+
+Returns a list of attachments for an object (task, project, etc.)
+
+**Python SDK**
+
+```python
+asana.attachments.list(
+    parent="<str>"
+)
+```
+
+**API**
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connector_instance_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "attachments",
+    "action": "list",
+    "params": {
+        "parent": "<str>"
+    }
+}'
+```
+
+
+**Params**
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `parent` | `string` | Yes | Globally unique identifier for the object to fetch attachments for (e.g., a task GID) |
+| `limit` | `integer` | No | Number of items to return per page |
+| `offset` | `string` | No | Pagination offset token |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+**Records**
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `resource_subtype` | `string` |  |
+
+
+**Meta**
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_page` | `object \| null` |  |
+
+</details>
+
+#### Attachments Get
+
+Get details for a single attachment by its GID
+
+**Python SDK**
+
+```python
+asana.attachments.get(
+    attachment_gid="<str>"
+)
+```
+
+**API**
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connector_instance_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "attachments",
+    "action": "get",
+    "params": {
+        "attachment_gid": "<str>"
+    }
+}'
+```
+
+
+**Params**
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `attachment_gid` | `string` | Yes | Globally unique identifier for the attachment |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+**Records**
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `resource_subtype` | `string` |  |
+| `created_at` | `string` |  |
+| `download_url` | `string \| null` |  |
+| `permanent_url` | `string \| null` |  |
+| `host` | `string` |  |
+| `parent` | `object` |  |
+| `view_url` | `string \| null` |  |
+| `size` | `integer \| null` |  |
+
+
+</details>
+
+#### Attachments Download
+
+Downloads the file content of an attachment. This operation first retrieves the attachment
+metadata to get the download_url, then downloads the file from that URL.
+
+
+**Python SDK**
+
+```python
+async for chunk in asana.attachments.download(    attachment_gid="<str>"):# Process each chunk (e.g., write to file)
+    file.write(chunk)
+```
+
+> **Note**: Download operations return an async iterator of bytes chunks for memory-efficient streaming. Use `async for` to process chunks as they arrive.
+
+**API**
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connector_instance_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "attachments",
+    "action": "download",
+    "params": {
+        "attachment_gid": "<str>"
+    }
+}'
+```
+
+
+**Params**
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `attachment_gid` | `string` | Yes | Globally unique identifier for the attachment |
+| `range_header` | `string` | No | Optional Range header for partial downloads (e.g., 'bytes=0-99') |
+
 
 
 

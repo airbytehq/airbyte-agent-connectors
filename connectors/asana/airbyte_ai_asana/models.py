@@ -80,25 +80,8 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-
 class ProjectFollowersItem(BaseModel):
     """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -113,8 +96,8 @@ class ProjectWorkspace(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -129,8 +112,17 @@ class ProjectMembersItem(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectCurrentStatusAuthor(BaseModel):
-    """Nested schema for ProjectCurrentStatus.author"""
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -139,6 +131,14 @@ class ProjectCurrentStatusAuthor(BaseModel):
 
 class ProjectCurrentStatusCreatedBy(BaseModel):
     """Nested schema for ProjectCurrentStatus.created_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectCurrentStatusAuthor(BaseModel):
+    """Nested schema for ProjectCurrentStatus.author"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -347,6 +347,62 @@ class TeamsList(BaseModel):
     data: Union[list[TeamCompact], Any] = Field(default=None)
     next_page: Union[TeamsListNextPage | None, Any] = Field(default=None)
 
+class AttachmentCompact(BaseModel):
+    """Compact attachment object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+
+class AttachmentParent(BaseModel):
+    """The parent object this attachment is attached to"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None, description="The subtype of the parent resource")
+    """The subtype of the parent resource"""
+
+class Attachment(BaseModel):
+    """Full attachment object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    download_url: Union[str | None, Any] = Field(default=None)
+    permanent_url: Union[str | None, Any] = Field(default=None)
+    host: Union[str, Any] = Field(default=None)
+    parent: Union[AttachmentParent, Any] = Field(default=None)
+    view_url: Union[str | None, Any] = Field(default=None)
+    size: Union[int | None, Any] = Field(default=None)
+
+class AttachmentResponse(BaseModel):
+    """Attachment response wrapper"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[Attachment, Any] = Field(default=None)
+
+class AttachmentsListNextPage(BaseModel):
+    """Nested schema for AttachmentsList.next_page"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    offset: Union[str, Any] = Field(default=None)
+    path: Union[str, Any] = Field(default=None)
+    uri: Union[str, Any] = Field(default=None)
+
+class AttachmentsList(BaseModel):
+    """Paginated list of attachments containing compact attachment objects"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AttachmentCompact], Any] = Field(default=None)
+    next_page: Union[AttachmentsListNextPage | None, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
@@ -424,6 +480,12 @@ class WorkspaceTeamsListResultMeta(BaseModel):
 
 class UserTeamsListResultMeta(BaseModel):
     """Metadata for user_teams.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class AttachmentsListResultMeta(BaseModel):
+    """Metadata for attachments.list operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
@@ -513,4 +575,10 @@ WorkspaceTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], Workspa
 
 UserTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], UserTeamsListResultMeta]
 """Result type for user_teams.list operation with data and metadata."""
+
+AttachmentsListResult = AsanaExecuteResultWithMeta[list[AttachmentCompact], AttachmentsListResultMeta]
+"""Result type for attachments.list operation with data and metadata."""
+
+AttachmentsGetResult = AsanaExecuteResult[Attachment]
+"""Result type for attachments.get operation."""
 

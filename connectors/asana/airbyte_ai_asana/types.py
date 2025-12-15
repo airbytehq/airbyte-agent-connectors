@@ -140,3 +140,18 @@ class UserTeamsListParams(TypedDict):
     organization: str
     limit: NotRequired[int]
     offset: NotRequired[str]
+
+class AttachmentsListParams(TypedDict):
+    """Parameters for attachments.list operation"""
+    parent: str
+    limit: NotRequired[int]
+    offset: NotRequired[str]
+
+class AttachmentsGetParams(TypedDict):
+    """Parameters for attachments.get operation"""
+    attachment_gid: str
+
+class AttachmentsDownloadParams(TypedDict):
+    """Parameters for attachments.download operation"""
+    attachment_gid: str
+    range_header: NotRequired[str]
