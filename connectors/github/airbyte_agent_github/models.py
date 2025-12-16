@@ -178,3 +178,12 @@ ViewerGetResult = GithubExecuteResult[dict[str, Any]]
 ViewerRepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for viewer_repositories.list operation."""
 
+ProjectsListResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for projects.list operation."""
+
+ProjectsGetResult = GithubExecuteResult[dict[str, Any]]
+"""Result type for projects.get operation."""
+
+ProjectItemsListResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for project_items.list operation."""
+

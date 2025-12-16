@@ -31,6 +31,9 @@ from .types import (
     OrganizationsListParams,
     PrCommentsGetParams,
     PrCommentsListParams,
+    ProjectItemsListParams,
+    ProjectsGetParams,
+    ProjectsListParams,
     PullRequestsGetParams,
     PullRequestsListParams,
     PullRequestsSearchParams,
@@ -97,6 +100,9 @@ from .models import (
     StargazersListResult,
     ViewerGetResult,
     ViewerRepositoriesListResult,
+    ProjectsListResult,
+    ProjectsGetResult,
+    ProjectItemsListResult,
 )
 
 
@@ -108,7 +114,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.2"
+    connector_version = "0.1.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -150,6 +156,9 @@ class GithubConnector:
         ("stargazers", "list"): True,
         ("viewer", "get"): True,
         ("viewer_repositories", "list"): True,
+        ("projects", "list"): True,
+        ("projects", "get"): True,
+        ("project_items", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -192,6 +201,9 @@ class GithubConnector:
         ('stargazers', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('viewer', 'get'): {'fields': 'fields'},
         ('viewer_repositories', 'list'): {'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('projects', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('projects', 'get'): {'org': 'org', 'project_number': 'project_number', 'fields': 'fields'},
+        ('project_items', 'list'): {'org': 'org', 'project_number': 'project_number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
     }
 
     def __init__(
@@ -299,6 +311,8 @@ class GithubConnector:
         self.stargazers = StargazersQuery(self)
         self.viewer = ViewerQuery(self)
         self.viewer_repositories = ViewerRepositoriesQuery(self)
+        self.projects = ProjectsQuery(self)
+        self.project_items = ProjectItemsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -598,6 +612,30 @@ class GithubConnector:
         params: "ViewerRepositoriesListParams"
     ) -> "ViewerRepositoriesListResult": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["projects"],
+        action: Literal["list"],
+        params: "ProjectsListParams"
+    ) -> "ProjectsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["projects"],
+        action: Literal["get"],
+        params: "ProjectsGetParams"
+    ) -> "ProjectsGetResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["project_items"],
+        action: Literal["list"],
+        params: "ProjectItemsListParams"
+    ) -> "ProjectItemsListResult": ...
+
 
     @overload
     async def execute(
@@ -770,11 +808,7 @@ Examples: "language:python stars:>1000", "topic:machine-learning", "org:facebook
 
 
         Args:
-            query: GitHub repository search query. Examples:
-- "language:python stars:>1000"
-- "topic:machine-learning"
-- "org:facebook is:public"
-
+            query: GitHub repository search query using GitHub's search syntax
             limit: Number of results to return
             after: Cursor for pagination (from previous response's endCursor)
             fields: Optional array of field names to select.
@@ -1196,10 +1230,7 @@ class IssuesQuery:
         Search for issues using GitHub's search syntax
 
         Args:
-            query: GitHub issue search query. Examples:
-- "repo:owner/name is:issue is:open"
-- "repo:owner/name is:issue label:bug"
-
+            query: GitHub issue search query using GitHub's search syntax
             per_page: The number of results per page
             after: Cursor for pagination
             fields: Optional array of field names to select
@@ -1322,10 +1353,7 @@ class PullRequestsQuery:
         Search for pull requests using GitHub's search syntax
 
         Args:
-            query: GitHub PR search query. Examples:
-- "repo:owner/name type:pr is:open"
-- "repo:owner/name type:pr author:username"
-
+            query: GitHub pull request search query using GitHub's search syntax
             per_page: The number of results per page
             after: Cursor for pagination
             fields: Optional array of field names to select
@@ -1905,10 +1933,7 @@ class UsersQuery:
         Search for GitHub users using search syntax
 
         Args:
-            query: GitHub user search query. Examples:
-- "location:san francisco"
-- "followers:>1000"
-
+            query: GitHub user search query using GitHub's search syntax
             limit: Number of results to return
             after: Cursor for pagination
             fields: Optional array of field names to select
@@ -2222,6 +2247,136 @@ automatically lists repositories for the current authenticated user.
         result = await self._connector.execute("viewer_repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return ViewerRepositoriesListResult(
+            data=result.data        )
+
+
+
+class ProjectsQuery:
+    """
+    Query class for Projects entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        org: str,
+        per_page: int | None = None,
+        after: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> ProjectsListResult:
+        """
+        Returns a list of GitHub Projects V2 for the specified organization.
+Projects V2 are the new project boards that replaced classic projects.
+
+
+        Args:
+            org: The organization login/username
+            per_page: The number of results per page
+            after: Cursor for pagination (from previous response's endCursor)
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            ProjectsListResult
+        """
+        params = {k: v for k, v in {
+            "org": org,
+            "per_page": per_page,
+            "after": after,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("projects", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ProjectsListResult(
+            data=result.data        )
+
+
+
+    async def get(
+        self,
+        org: str,
+        project_number: int,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> ProjectsGetResult:
+        """
+        Gets information about a specific GitHub Project V2 by number
+
+        Args:
+            org: The organization login/username
+            project_number: The project number
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            ProjectsGetResult
+        """
+        params = {k: v for k, v in {
+            "org": org,
+            "project_number": project_number,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("projects", "get", params)
+        # Cast generic envelope to concrete typed result
+        return ProjectsGetResult(
+            data=result.data        )
+
+
+
+class ProjectItemsQuery:
+    """
+    Query class for ProjectItems entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        org: str,
+        project_number: int,
+        per_page: int | None = None,
+        after: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> ProjectItemsListResult:
+        """
+        Returns a list of items (issues, pull requests, draft issues) in a GitHub Project V2.
+Each item includes its field values like Status, Priority, etc.
+
+
+        Args:
+            org: The organization login/username
+            project_number: The project number
+            per_page: The number of results per page
+            after: Cursor for pagination (from previous response's endCursor)
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            ProjectItemsListResult
+        """
+        params = {k: v for k, v in {
+            "org": org,
+            "project_number": project_number,
+            "per_page": per_page,
+            "after": after,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("project_items", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ProjectItemsListResult(
             data=result.data        )
 
 

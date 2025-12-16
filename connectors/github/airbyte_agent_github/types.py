@@ -278,3 +278,24 @@ class ViewerRepositoriesListParams(TypedDict):
     per_page: NotRequired[int]
     after: NotRequired[str]
     fields: NotRequired[list[str]]
+
+class ProjectsListParams(TypedDict):
+    """Parameters for projects.list operation"""
+    org: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class ProjectsGetParams(TypedDict):
+    """Parameters for projects.get operation"""
+    org: str
+    project_number: int
+    fields: NotRequired[list[str]]
+
+class ProjectItemsListParams(TypedDict):
+    """Parameters for project_items.list operation"""
+    org: str
+    project_number: int
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]

@@ -45,7 +45,10 @@ from .models import (
     TagsGetResult,
     StargazersListResult,
     ViewerGetResult,
-    ViewerRepositoriesListResult
+    ViewerRepositoriesListResult,
+    ProjectsListResult,
+    ProjectsGetResult,
+    ProjectItemsListResult
 )
 from .types import (
     RepositoriesGetParams,
@@ -84,7 +87,10 @@ from .types import (
     TagsGetParams,
     StargazersListParams,
     ViewerGetParams,
-    ViewerRepositoriesListParams
+    ViewerRepositoriesListParams,
+    ProjectsListParams,
+    ProjectsGetParams,
+    ProjectItemsListParams
 )
 
-__all__ = ["GithubConnector", "GithubAuthConfig", "GithubExecuteResult", "GithubExecuteResultWithMeta", "RepositoriesGetResult", "RepositoriesListResult", "RepositoriesSearchResult", "OrgRepositoriesListResult", "BranchesListResult", "BranchesGetResult", "CommitsListResult", "CommitsGetResult", "ReleasesListResult", "ReleasesGetResult", "IssuesListResult", "IssuesGetResult", "IssuesSearchResult", "PullRequestsListResult", "PullRequestsGetResult", "PullRequestsSearchResult", "ReviewsListResult", "CommentsListResult", "CommentsGetResult", "PrCommentsListResult", "PrCommentsGetResult", "LabelsListResult", "LabelsGetResult", "MilestonesListResult", "MilestonesGetResult", "OrganizationsGetResult", "OrganizationsListResult", "UsersGetResult", "UsersListResult", "UsersSearchResult", "TeamsListResult", "TeamsGetResult", "TagsListResult", "TagsGetResult", "StargazersListResult", "ViewerGetResult", "ViewerRepositoriesListResult", "RepositoriesGetParams", "RepositoriesListParams", "RepositoriesSearchParams", "OrgRepositoriesListParams", "BranchesListParams", "BranchesGetParams", "CommitsListParams", "CommitsGetParams", "ReleasesListParams", "ReleasesGetParams", "IssuesListParams", "IssuesGetParams", "IssuesSearchParams", "PullRequestsListParams", "PullRequestsGetParams", "PullRequestsSearchParams", "ReviewsListParams", "CommentsListParams", "CommentsGetParams", "PrCommentsListParams", "PrCommentsGetParams", "LabelsListParams", "LabelsGetParams", "MilestonesListParams", "MilestonesGetParams", "OrganizationsGetParams", "OrganizationsListParams", "UsersGetParams", "UsersListParams", "UsersSearchParams", "TeamsListParams", "TeamsGetParams", "TagsListParams", "TagsGetParams", "StargazersListParams", "ViewerGetParams", "ViewerRepositoriesListParams"]
+__all__ = ["GithubConnector", "GithubAuthConfig", "GithubExecuteResult", "GithubExecuteResultWithMeta", "RepositoriesGetResult", "RepositoriesListResult", "RepositoriesSearchResult", "OrgRepositoriesListResult", "BranchesListResult", "BranchesGetResult", "CommitsListResult", "CommitsGetResult", "ReleasesListResult", "ReleasesGetResult", "IssuesListResult", "IssuesGetResult", "IssuesSearchResult", "PullRequestsListResult", "PullRequestsGetResult", "PullRequestsSearchResult", "ReviewsListResult", "CommentsListResult", "CommentsGetResult", "PrCommentsListResult", "PrCommentsGetResult", "LabelsListResult", "LabelsGetResult", "MilestonesListResult", "MilestonesGetResult", "OrganizationsGetResult", "OrganizationsListResult", "UsersGetResult", "UsersListResult", "UsersSearchResult", "TeamsListResult", "TeamsGetResult", "TagsListResult", "TagsGetResult", "StargazersListResult", "ViewerGetResult", "ViewerRepositoriesListResult", "ProjectsListResult", "ProjectsGetResult", "ProjectItemsListResult", "RepositoriesGetParams", "RepositoriesListParams", "RepositoriesSearchParams", "OrgRepositoriesListParams", "BranchesListParams", "BranchesGetParams", "CommitsListParams", "CommitsGetParams", "ReleasesListParams", "ReleasesGetParams", "IssuesListParams", "IssuesGetParams", "IssuesSearchParams", "PullRequestsListParams", "PullRequestsGetParams", "PullRequestsSearchParams", "ReviewsListParams", "CommentsListParams", "CommentsGetParams", "PrCommentsListParams", "PrCommentsGetParams", "LabelsListParams", "LabelsGetParams", "MilestonesListParams", "MilestonesGetParams", "OrganizationsGetParams", "OrganizationsListParams", "UsersGetParams", "UsersListParams", "UsersSearchParams", "TeamsListParams", "TeamsGetParams", "TagsListParams", "TagsGetParams", "StargazersListParams", "ViewerGetParams", "ViewerRepositoriesListParams", "ProjectsListParams", "ProjectsGetParams", "ProjectItemsListParams"]

@@ -26,7 +26,7 @@ from ._vendored.connector_sdk.schema.components import (
 
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     name='github',
-    version='0.1.2',
+    version='0.1.3',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
@@ -2364,6 +2364,202 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.viewer.repositories.nodes',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='projects',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:projects:list',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of GitHub Projects V2 for the specified organization.\nProjects V2 are the new project boards that replaced classic projects.\n',
+                    query_params=[
+                        'org',
+                        'per_page',
+                        'after',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'org': {'type': 'string', 'required': True},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 20,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'organization': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'projectsV2': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'pageInfo': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'hasNextPage': {'type': 'boolean'},
+                                                            'endCursor': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'nodes': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'object'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query ListProjects($org: String!, $first: Int!, $after: String) {\n  organization(login: $org) {\n    projectsV2(first: $first, after: $after, orderBy: {field: UPDATED_AT, direction: DESC}) {\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        {{ fields }}\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'org': '{{ org }}',
+                            'first': '{{ per_page }}',
+                            'after': '{{ after }}',
+                        },
+                        'default_fields': 'id number title shortDescription url closed public createdAt updatedAt creator { login }',
+                    },
+                    record_extractor='$.data.organization.projectsV2.nodes',
+                ),
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:projects:get',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description='Gets information about a specific GitHub Project V2 by number',
+                    query_params=['org', 'project_number', 'fields'],
+                    query_params_schema={
+                        'org': {'type': 'string', 'required': True},
+                        'project_number': {'type': 'integer', 'required': True},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'organization': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'projectV2': {'type': 'object', 'description': 'Project object with selected fields'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query GetProject($org: String!, $number: Int!) {\n  organization(login: $org) {\n    projectV2(number: $number) {\n      {{ fields }}\n    }\n  }\n}\n',
+                        'variables': {'org': '{{ org }}', 'number': '{{ project_number }}'},
+                        'default_fields': 'id number title shortDescription readme url closed public createdAt updatedAt creator { login } fields(first: 20) { nodes { ... on ProjectV2SingleSelectField { id name options { id name color description } } ... on ProjectV2Field { id name dataType } } }',
+                    },
+                    record_extractor='$.data.organization.projectV2',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='project_items',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:project_items:list',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of items (issues, pull requests, draft issues) in a GitHub Project V2.\nEach item includes its field values like Status, Priority, etc.\n',
+                    query_params=[
+                        'org',
+                        'project_number',
+                        'per_page',
+                        'after',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'org': {'type': 'string', 'required': True},
+                        'project_number': {'type': 'integer', 'required': True},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'organization': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'projectV2': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'pageInfo': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'hasNextPage': {'type': 'boolean'},
+                                                                    'endCursor': {
+                                                                        'type': ['string', 'null'],
+                                                                    },
+                                                                },
+                                                            },
+                                                            'nodes': {
+                                                                'type': 'array',
+                                                                'items': {'type': 'object'},
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query ListProjectItems($org: String!, $number: Int!, $first: Int!, $after: String) {\n  organization(login: $org) {\n    projectV2(number: $number) {\n      items(first: $first, after: $after) {\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n        nodes {\n          {{ fields }}\n        }\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'org': '{{ org }}',
+                            'number': '{{ project_number }}',
+                            'first': '{{ per_page }}',
+                            'after': '{{ after }}',
+                        },
+                        'default_fields': 'id\ntype\ncreatedAt\nupdatedAt\nisArchived\ncontent {\n  ... on Issue {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on PullRequest {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on DraftIssue {\n    id\n    title\n    body\n    createdAt\n    updatedAt\n    creator { login }\n  }\n}\nfieldValues(first: 20) {\n  nodes {\n    ... on ProjectV2ItemFieldSingleSelectValue {\n      name\n      field { ... on ProjectV2SingleSelectField { name } }\n    }\n    ... on ProjectV2ItemFieldTextValue {\n      text\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldDateValue {\n      date\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldNumberValue {\n      number\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldIterationValue {\n      title\n      startDate\n      duration\n      field { ... on ProjectV2IterationField { name } }\n    }\n    ... on ProjectV2ItemFieldLabelValue {\n      labels(first: 10) { nodes { name color } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldUserValue {\n      users(first: 5) { nodes { login } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldRepositoryValue {\n      repository { nameWithOwner }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldMilestoneValue {\n      milestone { title number }\n      field { ... on ProjectV2Field { name } }\n    }\n  }\n}\n',
+                    },
+                    record_extractor='$.data.organization.projectV2.items.nodes',
                 ),
             },
         ),
