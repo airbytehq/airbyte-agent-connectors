@@ -79,7 +79,7 @@ def validate_connectors(config: Config) -> list[str]:
             elif connector.connector_name:
                 # Registry-based connector: validation happens lazily on first use
                 logger.debug(
-                    f"LOCAL connector '{connector.id}' uses registry " f"(connector_name={connector.connector_name}), skipping startup validation"
+                    f"LOCAL connector '{connector.id}' uses registry (connector_name={connector.connector_name}), skipping startup validation"
                 )
         elif connector.type == ConnectorType.HOSTED:
             # HOSTED connectors are not implemented yet
