@@ -58,7 +58,29 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload connectors/${{ matrix.connector }}/dist/*
+        run: |
+          max_attempts=5
+          attempt=1
+          base_delay=10
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            if twine upload connectors/${{ matrix.connector }}/dist/*; then
+              echo "Upload successful!"
+              exit 0
+            fi
+            
+            if [ $attempt -eq $max_attempts ]; then
+              echo "All $max_attempts attempts failed."
+              exit 1
+            fi
+            
+            # Exponential backoff: 10s, 20s, 40s, 80s
+            delay=$((base_delay * (2 ** (attempt - 1))))
+            echo "Upload failed. Retrying in ${delay}s..."
+            sleep $delay
+            attempt=$((attempt + 1))
+          done
       - name: Create GitHub Release
         if: steps.release_info.outputs.should_publish == 'true'
         uses: softprops/action-gh-release@v2
