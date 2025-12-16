@@ -35,7 +35,8 @@ connectors/
 │   ├── airbyte_agent_gong/
 │   ├── pyproject.toml
 │   ├── CHANGELOG.md
-│   └── README.md
+│   ├── README.md
+│   └── REFERENCE.md
 ├── github/
 │   └── ...
 └── ...
@@ -47,7 +48,7 @@ Inside each connector folder, you’ll find:
 * Validation + error handling
 
 ## When to use these connectors
-Use Airbyte AI Connectors when you want:
+Use Airbyte Agent Connectors when you want:
 * Agent‑friendly data access: Let LLM agents call real SaaS APIs (e.g., CRM, billing, analytics) with guardrails and typed responses. 
 * Consistent auth and schemas: Reuse a uniform configuration and error‑handling pattern across many APIs. Use connectors inside frameworks like PydanticAI, LangChain, or any custom agent loop
 * Composable building blocks: Combine multiple connectors in a single agent to orchestrate multi‑system workflows. 
@@ -63,7 +64,7 @@ We are actively expanding AI Connectors. Coming soon:
 
 ## Contributing / Feedback
 We actively welcome feedback, ideas, and bug reports. 
-If you're building AI agents with Airbyte AI Connectors and want to share ideas or get help, join our community on [slack](https://airbytehq.slack.com/ssb/redirect#/shared-invite/email). We’d love to hear what you're building and what connectors or capabilities you’d like to see next.
+If you're building AI agents with Airbyte Agent Connectors and want to share ideas or get help, join our community on [slack](https://airbytehq.slack.com/ssb/redirect#/shared-invite/email). We’d love to hear what you're building and what connectors or capabilities you’d like to see next.
 
 
 Brought to you with love by Airbyte 💜
@@ -86,7 +87,7 @@ The tutorial assumes you have basic knowledge of the following tools, but most s
 
 Before you begin this tutorial, ensure you have the following.
 
-- [Python](https://www.python.org/downloads/) version 3.10 or later
+- [Python](https://www.python.org/downloads/) version 3.13 or later
 - [uv](https://github.com/astral-sh/uv)
 - A [GitHub personal access token](https://github.com/settings/tokens). For this tutorial, a classic token with `repo` scope is sufficient.
 - An [OpenAI API key](https://platform.openai.com/api-keys). This tutorial uses OpenAI, but Pydantic AI supports other LLM providers if you prefer.
