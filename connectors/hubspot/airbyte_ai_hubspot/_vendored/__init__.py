@@ -1,1 +1,0 @@
-"""Vendored connector-sdk runtime."""
