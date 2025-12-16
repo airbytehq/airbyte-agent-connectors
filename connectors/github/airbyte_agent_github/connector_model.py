@@ -26,7 +26,7 @@ from ._vendored.connector_sdk.schema.components import (
 
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     name='github',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
