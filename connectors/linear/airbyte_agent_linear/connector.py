@@ -71,24 +71,22 @@ class LinearConnector:
     def __init__(
         self,
         auth_config: LinearAuthConfig | None = None,
-        connector_id: str | None = None,
+        external_user_id: str | None = None,
         airbyte_client_id: str | None = None,
         airbyte_client_secret: str | None = None,
-        airbyte_connector_api_url: str | None = None,
         on_token_refresh: Any | None = None    ):
         """
         Initialize a new linear connector instance.
 
         Supports both local and hosted execution modes:
         - Local mode: Provide `auth_config` for direct API calls
-        - Hosted mode: Provide `connector_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
+        - Hosted mode: Provide `external_user_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
 
         Args:
             auth_config: Typed authentication configuration (required for local mode)
-            connector_id: Connector ID (required for hosted mode)
+            external_user_id: External user ID (required for hosted mode)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
-            airbyte_connector_api_url: Airbyte connector API URL (defaults to Airbyte Cloud API URL)
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
@@ -97,7 +95,7 @@ class LinearConnector:
             connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = LinearConnector(
-                connector_id="connector-456",
+                external_user_id="user-123",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789"
             )
@@ -113,20 +111,20 @@ class LinearConnector:
                 on_token_refresh=save_tokens
             )
         """
-        # Hosted mode: connector_id, airbyte_client_id, and airbyte_client_secret provided
-        if connector_id and airbyte_client_id and airbyte_client_secret:
+        # Hosted mode: external_user_id, airbyte_client_id, and airbyte_client_secret provided
+        if external_user_id and airbyte_client_id and airbyte_client_secret:
             from ._vendored.connector_sdk.executor import HostedExecutor
             self._executor = HostedExecutor(
-                connector_id=connector_id,
+                external_user_id=external_user_id,
                 airbyte_client_id=airbyte_client_id,
                 airbyte_client_secret=airbyte_client_secret,
-                api_url=airbyte_connector_api_url,
+                connector_definition_id=str(LinearConnectorModel.id),
             )
         else:
             # Local mode: auth_config required
             if not auth_config:
                 raise ValueError(
-                    "Either provide (connector_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
+                    "Either provide (external_user_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
                     "or auth_config for local mode"
                 )
 
