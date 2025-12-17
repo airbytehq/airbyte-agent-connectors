@@ -32,7 +32,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.accounts.list(
+await salesforce.accounts.list(
     q="<str>"
 )
 ```
@@ -90,7 +90,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.accounts.get(
+await salesforce.accounts.get(
     id="<str>"
 )
 ```
@@ -145,7 +145,7 @@ Use SOQL (list action) for structured queries with specific field conditions.
 **Python SDK**
 
 ```python
-salesforce.accounts.search(
+await salesforce.accounts.search(
     q="<str>"
 )
 ```
@@ -201,7 +201,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.contacts.list(
+await salesforce.contacts.list(
     q="<str>"
 )
 ```
@@ -259,7 +259,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.contacts.get(
+await salesforce.contacts.get(
     id="<str>"
 )
 ```
@@ -313,7 +313,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.contacts.search(
+await salesforce.contacts.search(
     q="<str>"
 )
 ```
@@ -368,7 +368,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.leads.list(
+await salesforce.leads.list(
     q="<str>"
 )
 ```
@@ -426,7 +426,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.leads.get(
+await salesforce.leads.get(
     id="<str>"
 )
 ```
@@ -480,7 +480,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.leads.search(
+await salesforce.leads.search(
     q="<str>"
 )
 ```
@@ -535,7 +535,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.opportunities.list(
+await salesforce.opportunities.list(
     q="<str>"
 )
 ```
@@ -593,7 +593,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.opportunities.get(
+await salesforce.opportunities.get(
     id="<str>"
 )
 ```
@@ -647,7 +647,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.opportunities.search(
+await salesforce.opportunities.search(
     q="<str>"
 )
 ```
@@ -702,7 +702,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.tasks.list(
+await salesforce.tasks.list(
     q="<str>"
 )
 ```
@@ -760,7 +760,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.tasks.get(
+await salesforce.tasks.get(
     id="<str>"
 )
 ```
@@ -814,7 +814,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.tasks.search(
+await salesforce.tasks.search(
     q="<str>"
 )
 ```
@@ -869,7 +869,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.events.list(
+await salesforce.events.list(
     q="<str>"
 )
 ```
@@ -927,7 +927,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.events.get(
+await salesforce.events.get(
     id="<str>"
 )
 ```
@@ -981,7 +981,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.events.search(
+await salesforce.events.search(
     q="<str>"
 )
 ```
@@ -1036,7 +1036,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.campaigns.list(
+await salesforce.campaigns.list(
     q="<str>"
 )
 ```
@@ -1094,7 +1094,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.campaigns.get(
+await salesforce.campaigns.get(
     id="<str>"
 )
 ```
@@ -1148,7 +1148,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.campaigns.search(
+await salesforce.campaigns.search(
     q="<str>"
 )
 ```
@@ -1203,7 +1203,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.cases.list(
+await salesforce.cases.list(
     q="<str>"
 )
 ```
@@ -1262,7 +1262,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.cases.get(
+await salesforce.cases.get(
     id="<str>"
 )
 ```
@@ -1317,7 +1317,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.cases.search(
+await salesforce.cases.search(
     q="<str>"
 )
 ```
@@ -1372,7 +1372,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.notes.list(
+await salesforce.notes.list(
     q="<str>"
 )
 ```
@@ -1430,7 +1430,7 @@ Use the `fields` parameter to retrieve only specific fields for better performan
 **Python SDK**
 
 ```python
-salesforce.notes.get(
+await salesforce.notes.get(
     id="<str>"
 )
 ```
@@ -1484,7 +1484,7 @@ SOSL is optimized for text-based searches across multiple fields.
 **Python SDK**
 
 ```python
-salesforce.notes.search(
+await salesforce.notes.search(
     q="<str>"
 )
 ```
@@ -1540,7 +1540,7 @@ Note: ContentVersion does not support FIELDS(STANDARD), so specific fields must 
 **Python SDK**
 
 ```python
-salesforce.content_versions.list(
+await salesforce.content_versions.list(
     q="<str>"
 )
 ```
@@ -1603,7 +1603,7 @@ Use the download action to retrieve the actual file binary.
 **Python SDK**
 
 ```python
-salesforce.content_versions.get(
+await salesforce.content_versions.get(
     id="<str>"
 )
 ```
@@ -1708,7 +1708,7 @@ Note: Attachments are a legacy feature; consider using ContentVersion (Salesforc
 **Python SDK**
 
 ```python
-salesforce.attachments.list(
+await salesforce.attachments.list(
     q="<str>"
 )
 ```
@@ -1770,7 +1770,7 @@ Note: Attachments are a legacy feature; consider using ContentVersion for new im
 **Python SDK**
 
 ```python
-salesforce.attachments.get(
+await salesforce.attachments.get(
     id="<str>"
 )
 ```
@@ -1872,7 +1872,7 @@ For pagination, check the response: if `done` is false, use `nextRecordsUrl` to 
 **Python SDK**
 
 ```python
-salesforce.query.list(
+await salesforce.query.list(
     q="<str>"
 )
 ```
