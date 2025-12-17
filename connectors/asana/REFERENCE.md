@@ -40,7 +40,7 @@ Returns a paginated list of tasks
 **Python SDK**
 
 ```python
-asana.tasks.list()
+await asana.tasks.list()
 ```
 
 **API**
@@ -99,7 +99,7 @@ Get a single task by its ID
 **Python SDK**
 
 ```python
-asana.tasks.get(
+await asana.tasks.get(
     task_gid="<str>"
 )
 ```
@@ -148,7 +148,7 @@ Returns all tasks in a project
 **Python SDK**
 
 ```python
-asana.project_tasks.list(
+await asana.project_tasks.list(
     project_gid="<str>"
 )
 ```
@@ -210,7 +210,7 @@ Returns tasks that match the specified search criteria. Note - This endpoint req
 **Python SDK**
 
 ```python
-asana.workspace_task_search.list(
+await asana.workspace_task_search.list(
     workspace_gid="<str>"
 )
 ```
@@ -287,7 +287,7 @@ Returns a paginated list of projects
 **Python SDK**
 
 ```python
-asana.projects.list()
+await asana.projects.list()
 ```
 
 **API**
@@ -341,7 +341,7 @@ Get a single project by its ID
 **Python SDK**
 
 ```python
-asana.projects.get(
+await asana.projects.get(
     project_gid="<str>"
 )
 ```
@@ -417,7 +417,7 @@ Returns all projects a task is in
 **Python SDK**
 
 ```python
-asana.task_projects.list(
+await asana.task_projects.list(
     task_gid="<str>"
 )
 ```
@@ -476,7 +476,7 @@ Returns all projects for a team
 **Python SDK**
 
 ```python
-asana.team_projects.list(
+await asana.team_projects.list(
     team_gid="<str>"
 )
 ```
@@ -536,7 +536,7 @@ Returns all projects in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_projects.list(
+await asana.workspace_projects.list(
     workspace_gid="<str>"
 )
 ```
@@ -596,7 +596,7 @@ Returns a paginated list of workspaces
 **Python SDK**
 
 ```python
-asana.workspaces.list()
+await asana.workspaces.list()
 ```
 
 **API**
@@ -647,7 +647,7 @@ Get a single workspace by its ID
 **Python SDK**
 
 ```python
-asana.workspaces.get(
+await asana.workspaces.get(
     workspace_gid="<str>"
 )
 ```
@@ -700,7 +700,7 @@ Returns a paginated list of users
 **Python SDK**
 
 ```python
-asana.users.list()
+await asana.users.list()
 ```
 
 **API**
@@ -753,7 +753,7 @@ Get a single user by their ID
 **Python SDK**
 
 ```python
-asana.users.get(
+await asana.users.get(
     user_gid="<str>"
 )
 ```
@@ -807,7 +807,7 @@ Returns all users in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_users.list(
+await asana.workspace_users.list(
     workspace_gid="<str>"
 )
 ```
@@ -866,7 +866,7 @@ Returns all users in a team
 **Python SDK**
 
 ```python
-asana.team_users.list(
+await asana.team_users.list(
     team_gid="<str>"
 )
 ```
@@ -925,7 +925,7 @@ Get a single team by its ID
 **Python SDK**
 
 ```python
-asana.teams.get(
+await asana.teams.get(
     team_gid="<str>"
 )
 ```
@@ -978,7 +978,7 @@ Returns all teams in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_teams.list(
+await asana.workspace_teams.list(
     workspace_gid="<str>"
 )
 ```
@@ -1037,7 +1037,7 @@ Returns all teams a user is a member of
 **Python SDK**
 
 ```python
-asana.user_teams.list(
+await asana.user_teams.list(
     user_gid="<str>",
     organization="<str>"
 )
@@ -1099,7 +1099,7 @@ Returns a list of attachments for an object (task, project, etc.)
 **Python SDK**
 
 ```python
-asana.attachments.list(
+await asana.attachments.list(
     parent="<str>"
 )
 ```
@@ -1157,7 +1157,7 @@ Get details for a single attachment by its GID
 **Python SDK**
 
 ```python
-asana.attachments.get(
+await asana.attachments.get(
     attachment_gid="<str>"
 )
 ```
@@ -1255,7 +1255,7 @@ Returns all tags in a workspace
 **Python SDK**
 
 ```python
-asana.workspace_tags.list(
+await asana.workspace_tags.list(
     workspace_gid="<str>"
 )
 ```
@@ -1314,7 +1314,7 @@ Get a single tag by its ID
 **Python SDK**
 
 ```python
-asana.tags.get(
+await asana.tags.get(
     tag_gid="<str>"
 )
 ```
@@ -1371,7 +1371,7 @@ Returns all sections in a project
 **Python SDK**
 
 ```python
-asana.project_sections.list(
+await asana.project_sections.list(
     project_gid="<str>"
 )
 ```
@@ -1430,7 +1430,7 @@ Get a single section by its ID
 **Python SDK**
 
 ```python
-asana.sections.get(
+await asana.sections.get(
     section_gid="<str>"
 )
 ```
@@ -1483,7 +1483,7 @@ Returns all subtasks of a task
 **Python SDK**
 
 ```python
-asana.task_subtasks.list(
+await asana.task_subtasks.list(
     task_gid="<str>"
 )
 ```
@@ -1544,7 +1544,7 @@ Returns all tasks that this task depends on
 **Python SDK**
 
 ```python
-asana.task_dependencies.list(
+await asana.task_dependencies.list(
     task_gid="<str>"
 )
 ```
@@ -1605,7 +1605,7 @@ Returns all tasks that depend on this task
 **Python SDK**
 
 ```python
-asana.task_dependents.list(
+await asana.task_dependents.list(
     task_gid="<str>"
 )
 ```
