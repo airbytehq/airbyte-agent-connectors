@@ -19,8 +19,12 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from uuid import (
+    UUID,
+)
 
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
     version='0.1.2',
     base_url='https://api.hubapi.com',
