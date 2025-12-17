@@ -22,8 +22,12 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from uuid import (
+    UUID,
+)
 
 LinearConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
     version='0.1.1',
     base_url='https://api.linear.app',

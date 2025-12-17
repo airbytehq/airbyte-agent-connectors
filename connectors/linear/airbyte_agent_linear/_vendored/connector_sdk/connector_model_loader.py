@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import jsonref
 import yaml
@@ -105,7 +106,7 @@ def resolve_schema_refs(schema: Any, spec_dict: dict) -> dict[str, Any]:
 
     try:
         # Resolve all references
-        resolved_spec = jsonref.replace_refs(
+        resolved_spec = jsonref.replace_refs(  # type: ignore[union-attr]
             temp_spec,
             base_uri="",
             jsonschema=True,  # Use JSONSchema draft 7 semantics
@@ -117,9 +118,11 @@ def resolve_schema_refs(schema: Any, spec_dict: dict) -> dict[str, Any]:
 
         # Remove any remaining jsonref proxy objects by converting to plain dict
         return _deproxy_schema(resolved_schema)
-    except (jsonref.JsonRefError, KeyError, RecursionError):
+    except (AttributeError, KeyError, RecursionError, Exception):
         # If resolution fails, return the original schema
         # This allows the system to continue even with malformed $refs
+        # AttributeError covers the case where jsonref might be None
+        # Exception catches jsonref.JsonRefError and other jsonref exceptions
         return schema_dict
 
 
@@ -404,9 +407,13 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
     # Extract retry config from x-airbyte-retry-config extension
     retry_config = spec.info.x_airbyte_retry_config
+    connector_id = spec.info.x_airbyte_connector_id
+    if not connector_id:
+        raise InvalidOpenAPIError("Missing required x-airbyte-connector-id field")
 
     # Create ConnectorModel
     model = ConnectorModel(
+        id=connector_id,
         name=name,
         version=version,
         base_url=base_url,
@@ -926,8 +933,20 @@ def load_connector_model(definition_path: str | Path) -> ConnectorModel:
         )
         entities.append(entity)
 
+    # Get connector ID
+    connector_id_value = connector_meta.get("id")
+    if connector_id_value:
+        # Try to parse as UUID (handles string UUIDs)
+        if isinstance(connector_id_value, str):
+            connector_id = UUID(connector_id_value)
+        else:
+            connector_id = connector_id_value
+    else:
+        raise ValueError
+
     # Build ConnectorModel
     model = ConnectorModel(
+        id=connector_id,
         name=connector_meta["name"],
         version=connector_meta.get("version", OPENAPI_DEFAULT_VERSION),
         base_url=raw_definition.get("base_url", connector_meta.get("base_url", "")),
