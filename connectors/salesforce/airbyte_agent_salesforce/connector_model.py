@@ -22,8 +22,12 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from uuid import (
+    UUID,
+)
 
 SalesforceConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('b117307c-14b6-41aa-9422-947e34922962'),
     name='salesforce',
     version='1.0.3',
     base_url='{instance_url}/services/data/v59.0',

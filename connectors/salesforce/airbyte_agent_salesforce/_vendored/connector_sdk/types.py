@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import Any
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -230,6 +231,7 @@ class ConnectorModel(BaseModel):
 
     model_config = ConfigDict(use_enum_values=True)
 
+    id: UUID
     name: str
     version: str = OPENAPI_DEFAULT_VERSION
     base_url: str
