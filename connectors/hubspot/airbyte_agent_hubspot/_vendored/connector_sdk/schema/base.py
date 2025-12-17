@@ -8,6 +8,7 @@ References:
 
 from enum import StrEnum
 from typing import Dict, Optional
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_core import Url
@@ -117,7 +118,7 @@ class Info(BaseModel):
 
     # Airbyte extension
     x_airbyte_connector_name: Optional[str] = Field(None, alias="x-airbyte-connector-name")
-    x_airbyte_connector_id: Optional[str] = Field(None, alias="x-airbyte-connector-id")
+    x_airbyte_connector_id: Optional[UUID] = Field(None, alias="x-airbyte-connector-id")
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(..., alias="x-airbyte-external-documentation-urls")
     x_airbyte_retry_config: Optional[RetryConfig] = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: Optional[ExampleQuestions] = Field(None, alias="x-airbyte-example-questions")
