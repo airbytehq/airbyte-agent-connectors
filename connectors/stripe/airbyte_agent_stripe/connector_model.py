@@ -19,8 +19,12 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from uuid import (
+    UUID,
+)
 
 StripeConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('e094cb9a-26de-4645-8761-65c0c425d1de'),
     name='stripe',
     version='0.1.2',
     base_url='https://api.stripe.com',
