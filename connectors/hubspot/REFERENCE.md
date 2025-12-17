@@ -24,7 +24,7 @@ Returns a paginated list of contacts
 **Python SDK**
 
 ```python
-hubspot.contacts.list()
+await hubspot.contacts.list()
 ```
 
 **API**
@@ -87,7 +87,7 @@ Get a single contact by ID
 **Python SDK**
 
 ```python
-hubspot.contacts.get(
+await hubspot.contacts.get(
     contact_id="<str>"
 )
 ```
@@ -148,7 +148,7 @@ Search for contacts by filtering on properties, searching through associations, 
 **Python SDK**
 
 ```python
-hubspot.contacts.search()
+await hubspot.contacts.search()
 ```
 
 **API**
@@ -221,7 +221,7 @@ Retrieve all companies, using query parameters to control the information that g
 **Python SDK**
 
 ```python
-hubspot.companies.list()
+await hubspot.companies.list()
 ```
 
 **API**
@@ -284,7 +284,7 @@ Get a single company by ID
 **Python SDK**
 
 ```python
-hubspot.companies.get(
+await hubspot.companies.get(
     company_id="<str>"
 )
 ```
@@ -345,7 +345,7 @@ Search for companies by filtering on properties, searching through associations,
 **Python SDK**
 
 ```python
-hubspot.companies.search()
+await hubspot.companies.search()
 ```
 
 **API**
@@ -418,7 +418,7 @@ Returns a paginated list of deals
 **Python SDK**
 
 ```python
-hubspot.deals.list()
+await hubspot.deals.list()
 ```
 
 **API**
@@ -481,7 +481,7 @@ Get a single deal by ID
 **Python SDK**
 
 ```python
-hubspot.deals.get(
+await hubspot.deals.get(
     deal_id="<str>"
 )
 ```
@@ -542,7 +542,7 @@ Search deals with filters and sorting
 **Python SDK**
 
 ```python
-hubspot.deals.search()
+await hubspot.deals.search()
 ```
 
 **API**
@@ -615,7 +615,7 @@ Returns a paginated list of tickets
 **Python SDK**
 
 ```python
-hubspot.tickets.list()
+await hubspot.tickets.list()
 ```
 
 **API**
@@ -678,7 +678,7 @@ Get a single ticket by ID
 **Python SDK**
 
 ```python
-hubspot.tickets.get(
+await hubspot.tickets.get(
     ticket_id="<str>"
 )
 ```
@@ -739,7 +739,7 @@ Search for tickets by filtering on properties, searching through associations, a
 **Python SDK**
 
 ```python
-hubspot.tickets.search()
+await hubspot.tickets.search()
 ```
 
 **API**
@@ -812,7 +812,7 @@ Returns all custom object schemas to discover available custom objects
 **Python SDK**
 
 ```python
-hubspot.schemas.list()
+await hubspot.schemas.list()
 ```
 
 **API**
@@ -873,7 +873,7 @@ Get the schema for a specific custom object type
 **Python SDK**
 
 ```python
-hubspot.schemas.get(
+await hubspot.schemas.get(
     object_type="<str>"
 )
 ```
@@ -941,7 +941,7 @@ Read a page of objects. Control what is returned via the properties query param.
 **Python SDK**
 
 ```python
-hubspot.objects.list(
+await hubspot.objects.list(
     object_type="<str>"
 )
 ```
@@ -1010,7 +1010,7 @@ Read an Object identified by \{objectId\}. \{objectId\} refers to the internal o
 **Python SDK**
 
 ```python
-hubspot.objects.get(
+await hubspot.objects.get(
     object_type="<str>",
     object_id="<str>"
 )
