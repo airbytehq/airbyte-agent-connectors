@@ -113,6 +113,7 @@ info:
   title: Test Connector
   version: 1.0.0
   x-airbyte-connector-name: test
+  x-airbyte-connector-id: 00000000-0000-0000-0000-000000000099
   x-airbyte-external-documentation-urls:
     - type: other
       title: Airbyte Documentation
@@ -189,6 +190,7 @@ info:
   title: Test Connector
   version: 1.0.0
   x-airbyte-connector-name: test
+  x-airbyte-connector-id: 00000000-0000-0000-0000-000000000099
   x-airbyte-external-documentation-urls:
     - type: other
       title: Airbyte Documentation
@@ -254,6 +256,7 @@ info:
   title: Test Connector
   version: 1.0.0
   x-airbyte-connector-name: test
+  x-airbyte-connector-id: 00000000-0000-0000-0000-000000000099
   x-airbyte-external-documentation-urls:
     - type: other
       title: Airbyte Documentation
@@ -338,6 +341,7 @@ info:
   title: Test Connector
   version: 1.0.0
   x-airbyte-connector-name: test
+  x-airbyte-connector-id: 00000000-0000-0000-0000-000000000099
   x-airbyte-external-documentation-urls:
     - type: other
       title: Airbyte Documentation
@@ -424,6 +428,7 @@ info:
   title: Test Connector
   version: 1.0.0
   x-airbyte-connector-name: test
+  x-airbyte-connector-id: 00000000-0000-0000-0000-000000000099
   x-airbyte-external-documentation-urls:
     - type: other
       title: Airbyte Documentation
