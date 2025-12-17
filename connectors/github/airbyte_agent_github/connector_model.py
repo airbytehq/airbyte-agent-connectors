@@ -23,8 +23,12 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from uuid import (
+    UUID,
+)
 
 GithubConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('ef69ef6e-aa7f-4af1-a01d-ef775033524e'),
     name='github',
     version='0.1.5',
     base_url='https://api.github.com',
