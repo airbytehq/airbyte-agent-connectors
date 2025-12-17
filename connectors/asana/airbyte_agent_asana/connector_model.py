@@ -23,8 +23,12 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from uuid import (
+    UUID,
+)
 
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
+    id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
     version='0.1.4',
     base_url='https://app.asana.com/api/1.0',
