@@ -1,6 +1,10 @@
-# Zendesk-Support
+# Zendesk-Support full reference
 
-## Supported Entities and Actions
+This is the full reference documentation for the Zendesk-Support agent connector.
+
+## Supported entities and actions
+
+The Zendesk-Support connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
@@ -52,7 +56,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -147,7 +151,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -229,7 +233,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -323,7 +327,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -404,7 +408,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -472,7 +476,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -529,7 +533,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -593,7 +597,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -650,7 +654,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -721,7 +725,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -782,7 +786,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -815,7 +819,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -876,7 +880,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -935,7 +939,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1008,7 +1012,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1088,7 +1092,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1156,7 +1160,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1226,7 +1230,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1285,7 +1289,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1356,7 +1360,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1411,7 +1415,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1483,7 +1487,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1537,7 +1541,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1606,7 +1610,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1661,7 +1665,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1727,7 +1731,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1780,7 +1784,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1833,7 +1837,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1903,7 +1907,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1959,7 +1963,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2017,7 +2021,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2077,7 +2081,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2140,7 +2144,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2192,7 +2196,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2265,7 +2269,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2325,7 +2329,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2397,7 +2401,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2461,7 +2465,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2528,7 +2532,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2587,7 +2591,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 ```
 
 
-**Params**
+**Parameters**
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -2600,18 +2604,16 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 
 ## Configuration
 
-The connector requires the following configuration variables:
+The Zendesk-Support connector requires the following configuration variables. These variables are used to construct the base API URL. Pass them via the `config` parameter when initializing the connector.
 
 | Variable | Type | Required | Default | Description |
 |----------|------|----------|---------|-------------|
 | `subdomain` | `string` | Yes | your-subdomain | Your Zendesk subdomain |
 
-These variables are used to construct the base API URL. Pass them via the `config` parameter when initializing the connector.
-
 
 ## Authentication
 
-The Zendesk-Support connector supports the following authentication methods:
+The Zendesk-Support connector supports the following authentication methods.
 
 
 ### OAuth 2.0

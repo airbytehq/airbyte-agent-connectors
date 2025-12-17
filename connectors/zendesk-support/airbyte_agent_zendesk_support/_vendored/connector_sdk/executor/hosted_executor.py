@@ -1,11 +1,10 @@
-"""Hosted executor for proxying operations through the backend API."""
+"""Hosted executor for proxying operations through the cloud API."""
 
 from __future__ import annotations
 
-import os
-
-import httpx
 from opentelemetry import trace
+
+from ..cloud_utils import AirbyteCloudClient
 
 from .models import (
     ExecutionConfig,
@@ -14,30 +13,36 @@ from .models import (
 
 
 class HostedExecutor:
-    """Executor that proxies execution through the Sonar backend API.
+    """Executor that proxies execution through the Airbyte Cloud API.
 
-    This is the "hosted mode" executor that makes HTTP calls to the backend API
-    instead of directly calling external services. The backend handles all
+    This is the "hosted mode" executor that makes HTTP calls to the cloud API
+    instead of directly calling external services. The cloud API handles all
     connector logic, secrets management, and execution.
 
-    The API URL is configured at initialization via the api_url parameter,
-    which defaults to the AIRBYTE_CONNECTOR_API_URL environment variable.
+    The executor takes an external_user_id and uses the AirbyteCloudClient to:
+    1. Authenticate with the Airbyte Platform (bearer token with caching)
+    2. Look up the user's connector instance
+    3. Execute the connector operation via the cloud API
 
     Implements ExecutorProtocol.
 
     Example:
+        # Create executor with user ID, credentials, and connector definition ID
         executor = HostedExecutor(
-            connector_id="stripe-prod-123",
+            external_user_id="user-123",
             airbyte_client_id="client_abc123",
-            airbyte_client_secret="secret_xyz789"
+            airbyte_client_secret="secret_xyz789",
+            connector_definition_id="abc123-def456-ghi789",
         )
 
-        config = ExecutionConfig(
+        # Execute an operation
+        execution_config = ExecutionConfig(
             entity="customers",
-            action="list"
+            action="list",
+            params={"limit": 10}
         )
 
-        result = await executor.execute(config)
+        result = await executor.execute(execution_config)
         if result.success:
             print(f"Data: {result.data}")
         else:
@@ -46,53 +51,45 @@ class HostedExecutor:
 
     def __init__(
         self,
-        connector_id: str,
+        external_user_id: str,
         airbyte_client_id: str,
         airbyte_client_secret: str,
-        api_url: str | None = None,
+        connector_definition_id: str,
     ):
         """Initialize hosted executor.
 
         Args:
-            connector_id: ID of the connector to execute (e.g., "stripe-prod-123")
+            external_user_id: User identifier in the Airbyte system
             airbyte_client_id: Airbyte client ID for authentication
             airbyte_client_secret: Airbyte client secret for authentication
-            api_url: API URL for the hosted executor backend. Defaults to
-                AIRBYTE_CONNECTOR_API_URL environment variable or "http://localhost:8001"
+            connector_definition_id: Connector definition ID used to look up
+                the user's connector instance.
 
         Example:
             executor = HostedExecutor(
-                connector_id="my-connector-id",
-                airbyte_client_id="client_abc123",
-                airbyte_client_secret="secret_xyz789"
-            )
-
-            # Or with custom API URL:
-            executor = HostedExecutor(
-                connector_id="my-connector-id",
+                external_user_id="user-123",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789",
-                api_url="https://api.production.com"
+                connector_definition_id="abc123-def456-ghi789",
             )
         """
-        self.connector_id = connector_id
-        self.airbyte_client_id = airbyte_client_id
-        self.airbyte_client_secret = airbyte_client_secret
-        self.api_url = api_url or os.getenv("AIRBYTE_CONNECTOR_API_URL", "http://localhost:8001")
+        self._external_user_id = external_user_id
+        self._connector_definition_id = connector_definition_id
 
-        # Create synchronous HTTP client
-        # We use sync client even though execute() is async for simplicity
-        # The async wrapper allows it to work with the protocol
-        self.client = httpx.Client(
-            timeout=httpx.Timeout(300.0),  # 5 minute timeout
-            follow_redirects=True,
+        # Create AirbyteCloudClient for API interactions
+        self._cloud_client = AirbyteCloudClient(
+            client_id=airbyte_client_id,
+            client_secret=airbyte_client_secret,
         )
 
     async def execute(self, config: ExecutionConfig) -> ExecutionResult:
-        """Execute connector via backend API (ExecutorProtocol implementation).
+        """Execute connector via cloud API (ExecutorProtocol implementation).
 
-        Makes an HTTP POST request to /connectors/{connector_id}/execute with
-        OAuth authentication and the configuration in the request body.
+        Flow:
+        1. Get connector id from connector model
+        2. Look up the user's connector instance ID
+        3. Execute the connector operation via the cloud API
+        4. Parse the response into ExecutionResult
 
         Args:
             config: Execution configuration (entity, action, params)
@@ -101,88 +98,100 @@ class HostedExecutor:
             ExecutionResult with success/failure status
 
         Raises:
+            ValueError: If no instance or multiple instances found for user
             httpx.HTTPStatusError: If API returns 4xx/5xx status code
             httpx.RequestError: If network request fails
 
         Example:
             config = ExecutionConfig(
                 entity="customers",
-                action="list"
+                action="list",
+                params={"limit": 10}
             )
             result = await executor.execute(config)
         """
         tracer = trace.get_tracer("airbyte.connector-sdk.executor.hosted")
 
         with tracer.start_as_current_span("airbyte.hosted_executor.execute") as span:
-            # Add span attributes
-            span.set_attribute("connector.id", self.connector_id)
+            # Add span attributes for observability
+            span.set_attribute("connector.definition_id", self._connector_definition_id)
             span.set_attribute("connector.entity", config.entity)
             span.set_attribute("connector.action", config.action)
-            span.set_attribute("connector.api_url", self.api_url)
+            span.set_attribute("user.external_id", self._external_user_id)
             if config.params:
                 # Only add non-sensitive param keys
                 span.set_attribute("connector.param_keys", list(config.params.keys()))
 
-            # Build API URL from instance api_url
-            url = f"{self.api_url}/connectors/{self.connector_id}/execute"
-            span.set_attribute("http.url", url)
-
-            # Build request body matching ExecutionRequest model
-            # Extract entity, action, and params from config attributes
-            request_body = {
-                "entity": config.entity,
-                "action": config.action,
-                "params": config.params,
-            }
-
             try:
-                # Make synchronous HTTP request
-                # (wrapped in async method for protocol compatibility)
-                response = self.client.post(url, json=request_body)
+                # Step 1: Get connector definition id
+                connector_definition_id = self._connector_definition_id
 
-                # Add response status code to span
-                span.set_attribute("http.status_code", response.status_code)
+                # Step 2: Get the connector instance ID for this user
+                instance_id = await self._cloud_client.get_connector_instance_id(
+                    external_user_id=self._external_user_id,
+                    connector_definition_id=connector_definition_id,
+                )
 
-                # Raise exception for 4xx/5xx status codes
-                response.raise_for_status()
+                span.set_attribute("connector.instance_id", instance_id)
 
-                # Parse JSON response
-                result_data = response.json()
+                # Step 3: Execute the connector via the cloud API
+                response = await self._cloud_client.execute_connector(
+                    instance_id=instance_id,
+                    entity=config.entity,
+                    action=config.action,
+                    params=config.params,
+                )
+
+                # Step 4: Parse the response into ExecutionResult
+                # The response_data is a dict from the API
+                result = self._parse_execution_result(response)
 
                 # Mark span as successful
-                span.set_attribute("connector.success", True)
+                span.set_attribute("connector.success", result.success)
 
-                # Return success result
-                return ExecutionResult(success=True, data=result_data, error=None)
+                return result
 
-            except httpx.HTTPStatusError as e:
-                # HTTP error (4xx, 5xx) - record and re-raise
+            except ValueError as e:
+                # Instance lookup validation error (0 or >1 instances)
                 span.set_attribute("connector.success", False)
-                span.set_attribute("connector.error_type", "HTTPStatusError")
-                span.set_attribute("http.status_code", e.response.status_code)
+                span.set_attribute("connector.error_type", "ValueError")
                 span.record_exception(e)
                 raise
 
             except Exception as e:
-                # Catch-all for any other unexpected exceptions
+                # HTTP errors and other exceptions
                 span.set_attribute("connector.success", False)
                 span.set_attribute("connector.error_type", type(e).__name__)
                 span.record_exception(e)
                 raise
 
-    def close(self):
-        """Close the HTTP client.
+    def _parse_execution_result(self, response: dict) -> ExecutionResult:
+        """Parse API response into ExecutionResult.
 
-        Call this when you're done using the executor to clean up resources.
+        Args:
+            response_data: Raw JSON response from the cloud API
+
+        Returns:
+            ExecutionResult with parsed data
+        """
+
+        return ExecutionResult(
+            success=True,
+            data=response["result"],
+            meta=response.get("connector_metadata"),
+            error=None,
+        )
+
+    async def close(self):
+        """Close the cloud client and cleanup resources.
+
+        Call this when you're done using the executor to clean up HTTP connections.
 
         Example:
-            executor = HostedExecutor(
-                workspace_id="workspace-123",
-                connector_id="my-connector"
-            )
+            executor = HostedExecutor(...)
             try:
                 result = await executor.execute(config)
             finally:
-                executor.close()
+                await executor.close()
         """
-        self.client.close()
+        await self._cloud_client.close()
