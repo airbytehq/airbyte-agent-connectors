@@ -42,7 +42,7 @@ connector = LinearConnector(
     api_key="..."
   )
 )
-result = connector.issues.list()
+result = await connector.issues.list()
 ```
 
 ## Full documentation
@@ -62,6 +62,6 @@ For the service's official API docs, see the [Linear API reference](https://line
 
 ## Version information
 
-- **Package version:** 0.19.18
+- **Package version:** 0.19.19
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 6a6c981ea241fe65b8f71e85c9c284c151b35b69
+- **Generated with Connector SDK commit SHA:** af45652142962c8574c427e5e2e6eb2db22445eb

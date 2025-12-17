@@ -21,7 +21,7 @@ Returns a paginated list of issues via GraphQL with pagination support
 **Python SDK**
 
 ```python
-linear.issues.list()
+await linear.issues.list()
 ```
 
 **API**
@@ -64,7 +64,7 @@ Get a single issue by ID via GraphQL
 **Python SDK**
 
 ```python
-linear.issues.get(
+await linear.issues.get(
     id="<str>"
 )
 ```
@@ -113,7 +113,7 @@ Returns a paginated list of projects via GraphQL with pagination support
 **Python SDK**
 
 ```python
-linear.projects.list()
+await linear.projects.list()
 ```
 
 **API**
@@ -156,7 +156,7 @@ Get a single project by ID via GraphQL
 **Python SDK**
 
 ```python
-linear.projects.get(
+await linear.projects.get(
     id="<str>"
 )
 ```
@@ -205,7 +205,7 @@ Returns a list of teams via GraphQL with pagination support
 **Python SDK**
 
 ```python
-linear.teams.list()
+await linear.teams.list()
 ```
 
 **API**
@@ -248,7 +248,7 @@ Get a single team by ID via GraphQL
 **Python SDK**
 
 ```python
-linear.teams.get(
+await linear.teams.get(
     id="<str>"
 )
 ```
