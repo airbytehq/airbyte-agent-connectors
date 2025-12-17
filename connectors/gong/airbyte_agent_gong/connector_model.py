@@ -10,6 +10,7 @@ from __future__ import annotations
 from ._vendored.connector_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -25,28 +26,55 @@ from ._vendored.connector_sdk.schema.components import (
 
 GongConnectorModel: ConnectorModel = ConnectorModel(
     name='gong',
-    version='0.1.3',
+    version='0.1.5',
     base_url='https://api.gong.io',
     auth=AuthConfig(
-        type=AuthType.BASIC,
-        user_config_spec=AirbyteAuthConfig(
-            title='Access Key Authentication',
-            type='object',
-            required=['access_key', 'access_key_secret'],
-            properties={
-                'access_key': AuthConfigFieldSpec(
-                    title='Access Key',
-                    description='Your Gong API Access Key',
-                    airbyte_secret=True,
+        options=[
+            AuthOption(
+                scheme_name='oauth2',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://app.gong.io/oauth2/generate-customer-token',
+                },
+                user_config_spec=AirbyteAuthConfig(
+                    title='OAuth 2.0 Authentication',
+                    type='object',
+                    required=['access_token'],
+                    properties={
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your Gong OAuth2 Access Token. Token refresh is managed externally.',
+                            airbyte_secret=True,
+                        ),
+                    },
+                    auth_mapping={'access_token': '${access_token}'},
                 ),
-                'access_key_secret': AuthConfigFieldSpec(
-                    title='Access Key Secret',
-                    description='Your Gong API Access Key Secret',
-                    airbyte_secret=True,
+            ),
+            AuthOption(
+                scheme_name='basicAuth',
+                type=AuthType.BASIC,
+                user_config_spec=AirbyteAuthConfig(
+                    title='Access Key Authentication',
+                    type='object',
+                    required=['access_key', 'access_key_secret'],
+                    properties={
+                        'access_key': AuthConfigFieldSpec(
+                            title='Access Key',
+                            description='Your Gong API Access Key',
+                            airbyte_secret=True,
+                        ),
+                        'access_key_secret': AuthConfigFieldSpec(
+                            title='Access Key Secret',
+                            description='Your Gong API Access Key Secret',
+                            airbyte_secret=True,
+                        ),
+                    },
+                    auth_mapping={'username': '${access_key}', 'password': '${access_key_secret}'},
                 ),
-            },
-            auth_mapping={'username': '${access_key}', 'password': '${access_key_secret}'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(

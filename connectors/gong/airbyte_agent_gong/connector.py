@@ -46,6 +46,8 @@ from .types import (
 
 if TYPE_CHECKING:
     from .models import GongAuthConfig
+# Import specific auth config classes for multi-auth isinstance checks
+from .models import GongOauth20AuthenticationAuthConfig, GongAccessKeyAuthenticationAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     GongExecuteResult,
@@ -77,7 +79,7 @@ class GongConnector:
     """
 
     connector_name = "gong"
-    connector_version = "0.1.3"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -150,7 +152,7 @@ class GongConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))
+            connector = GongConnector(auth_config=GongAuthConfig(access_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = GongConnector(
                 connector_id="connector-456",
@@ -191,9 +193,18 @@ class GongConnector:
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, GongOauth20AuthenticationAuthConfig):
+                    auth_scheme = "oauth2"
+                if isinstance(auth_config, GongAccessKeyAuthenticationAuthConfig):
+                    auth_scheme = "basicAuth"
+
             self._executor = LocalExecutor(
                 model=GongConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
