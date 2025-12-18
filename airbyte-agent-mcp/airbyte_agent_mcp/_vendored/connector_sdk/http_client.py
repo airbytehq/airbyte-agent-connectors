@@ -147,6 +147,9 @@ class HTTPClient:
             self.base_url = self.base_url.replace(f"{{{var_name}}}", var_value)
 
         self.auth_config = auth_config
+        assert (
+            self.auth_config.type is not None
+        ), "auth_config.type cannot be None"  # Should never be None when instantiated via the local executor flow
         self.secrets = secrets
         self.logger = logger or NullLogger()
         self.metrics = HTTPMetrics()
@@ -296,12 +299,12 @@ class HTTPClient:
 
                         # Support both sync and async callbacks
                         callback_result = self.on_token_refresh(callback_data)
-                        if hasattr(callback_result, "__await__"):
+                        if callback_result is not None and hasattr(callback_result, "__await__"):
                             await callback_result
                     except Exception as callback_error:
                         self.logger.log_error(
                             request_id=None,
-                            error=("Token refresh callback failed during initialization: " f"{callback_error!s}"),
+                            error=(f"Token refresh callback failed during initialization: {callback_error!s}"),
                             status_code=None,
                         )
 
@@ -485,7 +488,7 @@ class HTTPClient:
                 elif "application/json" in content_type or not content_type:
                     response_data = await response.json()
                 else:
-                    error_msg = f"Expected JSON response for {method.upper()} {url}, " f"got content-type: {content_type}"
+                    error_msg = f"Expected JSON response for {method.upper()} {url}, got content-type: {content_type}"
                     raise HTTPClientError(error_msg)
 
             except ValueError as e:
@@ -556,6 +559,7 @@ class HTTPClient:
             current_token = self.secrets.get("access_token")
             strategy = AuthStrategyFactory.get_strategy(self.auth_config.type)
 
+            # Try to refresh credentials
             try:
                 result = await strategy.handle_auth_error(
                     status_code=status_code,
@@ -564,53 +568,56 @@ class HTTPClient:
                     config_values=self.config_values,
                     http_client=None,  # Let strategy create its own client
                 )
-
-                if result:
-                    # Notify callback if provided (for persistence)
-                    # Include both tokens AND extracted values for full persistence
-                    if self.on_token_refresh is not None:
-                        try:
-                            # Build callback data with both tokens and extracted values
-                            callback_data = dict(result.tokens)
-                            if result.extracted_values:
-                                callback_data.update(result.extracted_values)
-
-                            # Support both sync and async callbacks
-                            callback_result = self.on_token_refresh(callback_data)
-                            if hasattr(callback_result, "__await__"):
-                                await callback_result
-                        except Exception as callback_error:
-                            self.logger.log_error(
-                                request_id=request_id,
-                                error=f"Token refresh callback failed: {str(callback_error)}",
-                                status_code=status_code,
-                            )
-
-                    # Update secrets with new tokens (in-memory)
-                    self.secrets.update(result.tokens)
-
-                    # Update config_values and re-render base_url with extracted values
-                    if result.extracted_values:
-                        self._apply_token_extract(result.extracted_values)
-
-                    if self.secrets.get("access_token") != current_token:
-                        # Retry with new token - this will go through full retry logic
-                        return await self.request(
-                            method=method,
-                            path=path,
-                            params=params,
-                            json=json,
-                            data=data,
-                            headers=headers,
-                        )
-
             except Exception as refresh_error:
                 self.logger.log_error(
                     request_id=request_id,
                     error=f"Credential refresh failed: {str(refresh_error)}",
                     status_code=status_code,
                 )
+                result = None
 
+            # If refresh succeeded, update tokens and retry
+            if result:
+                # Notify callback if provided (for persistence)
+                # Include both tokens AND extracted values for full persistence
+                if self.on_token_refresh is not None:
+                    try:
+                        # Build callback data with both tokens and extracted values
+                        callback_data = dict(result.tokens)
+                        if result.extracted_values:
+                            callback_data.update(result.extracted_values)
+
+                        # Support both sync and async callbacks
+                        callback_result = self.on_token_refresh(callback_data)
+                        if callback_result is not None and hasattr(callback_result, "__await__"):
+                            await callback_result
+                    except Exception as callback_error:
+                        self.logger.log_error(
+                            request_id=request_id,
+                            error=f"Token refresh callback failed: {str(callback_error)}",
+                            status_code=status_code,
+                        )
+
+                # Update secrets with new tokens (in-memory)
+                self.secrets.update(result.tokens)
+
+                # Update config_values and re-render base_url with extracted values
+                if result.extracted_values:
+                    self._apply_token_extract(result.extracted_values)
+
+                if self.secrets.get("access_token") != current_token:
+                    # Retry with new token - this will go through full retry logic
+                    # Any errors from this retry will propagate to the caller
+                    return await self.request(
+                        method=method,
+                        path=path,
+                        params=params,
+                        json=json,
+                        data=data,
+                        headers=headers,
+                    )
+
+        # Refresh failed or token didn't change, log and let original error propagate
         self.logger.log_error(request_id=request_id, error=str(error), status_code=status_code)
 
     async def request(
