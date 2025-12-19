@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.35] - 2025-12-19
+- Updated airbyte-agent-mcp package
+- Source commit: e996e848
+- SDK version: 0.1.0
+
 ## [0.1.34] - 2025-12-18
 - Updated airbyte-agent-mcp package
 - Source commit: f7c55d3e
