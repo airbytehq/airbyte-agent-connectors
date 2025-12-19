@@ -1679,7 +1679,7 @@ The Asana connector supports the following authentication methods.
 
 ```python
 AsanaConnector(
-  auth_config=AsanaAuthConfig(
+  auth_config=AsanaOauth2AuthConfig(
     access_token="<OAuth access token for API requests>",
     refresh_token="<OAuth refresh token for automatic token renewal>",
     client_id="<Connected App Consumer Key>",
@@ -1719,7 +1719,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances' \
 
 ```python
 AsanaConnector(
-  auth_config=AsanaAuthConfig(
+  auth_config=AsanaPersonalAccessTokenAuthConfig(
     token="<Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps>"
   )
 )
