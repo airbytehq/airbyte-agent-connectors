@@ -35,11 +35,16 @@ uv pip install airbyte-agent-asana
 
 ## Usage
 
+This connector supports multiple authentication methods:
+
+### OAuth 2
+
 ```python
-from airbyte_agent_asana import AsanaConnector, AsanaAuthConfig
+from airbyte_agent_asana import AsanaConnector
+from airbyte_agent_asana.models import AsanaOauth2AuthConfig
 
 connector = AsanaConnector(
-  auth_config=AsanaAuthConfig(
+  auth_config=AsanaOauth2AuthConfig(
     access_token="...",
     refresh_token="...",
     client_id="...",
@@ -48,6 +53,21 @@ connector = AsanaConnector(
 )
 result = await connector.tasks.list()
 ```
+
+### Personal Access Token
+
+```python
+from airbyte_agent_asana import AsanaConnector
+from airbyte_agent_asana.models import AsanaPersonalAccessTokenAuthConfig
+
+connector = AsanaConnector(
+  auth_config=AsanaPersonalAccessTokenAuthConfig(
+    token="..."
+  )
+)
+result = await connector.tasks.list()
+```
+
 
 ## Full documentation
 
@@ -85,6 +105,6 @@ For the service's official API docs, see the [Asana API reference](https://devel
 
 ## Version information
 
-- **Package version:** 0.19.23
+- **Package version:** 0.19.24
 - **Connector version:** 0.1.5
-- **Generated with Connector SDK commit SHA:** 07f8a58d1e66c482b15b787e88fa0bcf83ba79ae
+- **Generated with Connector SDK commit SHA:** e996e848c6d55a9640a0cfa24ab5b34a275f9ceb
