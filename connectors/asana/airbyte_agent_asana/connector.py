@@ -46,7 +46,7 @@ from .types import (
 if TYPE_CHECKING:
     from .models import AsanaAuthConfig
 # Import specific auth config classes for multi-auth isinstance checks
-from .models import AsanaAsanaOauth20AuthConfig, AsanaPersonalAccessTokenAuthConfig
+from .models import AsanaOauth2AuthConfig, AsanaPersonalAccessTokenAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     AsanaExecuteResult,
@@ -89,7 +89,7 @@ class AsanaConnector:
     """
 
     connector_name = "asana"
-    connector_version = "0.1.4"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -225,7 +225,7 @@ class AsanaConnector:
             # Multi-auth connector: detect auth scheme from auth_config type
             auth_scheme: str | None = None
             if auth_config:
-                if isinstance(auth_config, AsanaAsanaOauth20AuthConfig):
+                if isinstance(auth_config, AsanaOauth2AuthConfig):
                     auth_scheme = "oauth2"
                 if isinstance(auth_config, AsanaPersonalAccessTokenAuthConfig):
                     auth_scheme = "personalAccessToken"

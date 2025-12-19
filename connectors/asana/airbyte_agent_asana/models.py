@@ -13,8 +13,8 @@ from typing import Optional
 
 # Authentication configuration - multiple options available
 
-class AsanaAsanaOauth20AuthConfig(BaseModel):
-    """Asana OAuth 2.0"""
+class AsanaOauth2AuthConfig(BaseModel):
+    """OAuth 2"""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -35,7 +35,7 @@ class AsanaPersonalAccessTokenAuthConfig(BaseModel):
     token: str
     """Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps"""
 
-AsanaAuthConfig = AsanaAsanaOauth20AuthConfig | AsanaPersonalAccessTokenAuthConfig
+AsanaAuthConfig = AsanaOauth2AuthConfig | AsanaPersonalAccessTokenAuthConfig
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
@@ -99,23 +99,6 @@ class ProjectWorkspace(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
-
 class ProjectFollowersItem(BaseModel):
     """Nested schema for Project.followers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -132,8 +115,16 @@ class ProjectMembersItem(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectCurrentStatusAuthor(BaseModel):
-    """Nested schema for ProjectCurrentStatus.author"""
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -142,6 +133,14 @@ class ProjectCurrentStatusAuthor(BaseModel):
 
 class ProjectCurrentStatusCreatedBy(BaseModel):
     """Nested schema for ProjectCurrentStatus.created_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectCurrentStatusAuthor(BaseModel):
+    """Nested schema for ProjectCurrentStatus.author"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -162,13 +161,14 @@ class ProjectCurrentStatus(BaseModel):
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
 
 class Project(BaseModel):
     """Full project object"""

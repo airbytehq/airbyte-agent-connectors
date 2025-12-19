@@ -1664,7 +1664,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/instances/{your_connec
 The Asana connector supports the following authentication methods.
 
 
-### Asana OAuth 2.0
+### OAuth 2
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
