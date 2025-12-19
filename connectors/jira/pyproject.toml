@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-jira"
-version = "0.1.12"
+version = "0.1.13"
 description = "Airbyte Jira Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
