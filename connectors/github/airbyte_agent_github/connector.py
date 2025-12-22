@@ -114,7 +114,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.6"
+    connector_version = "0.1.7"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
