@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-salesforce"
-version = "0.1.17"
+version = "0.1.18"
 description = "Airbyte Salesforce Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.9"
