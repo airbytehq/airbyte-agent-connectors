@@ -89,7 +89,7 @@ class AsanaConnector:
     """
 
     connector_name = "asana"
-    connector_version = "0.1.5"
+    connector_version = "0.1.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
@@ -588,7 +588,7 @@ class TasksQuery:
         **kwargs
     ) -> TasksListResult:
         """
-        Returns a paginated list of tasks
+        Returns a paginated list of tasks. Must include either a project OR a section OR a workspace AND assignee parameter.
 
         Args:
             limit: Number of items to return per page
@@ -730,7 +730,7 @@ class WorkspaceTaskSearchQuery:
         **kwargs
     ) -> WorkspaceTaskSearchListResult:
         """
-        Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account.
+        Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account. At least one search parameter must be provided.
 
         Args:
             workspace_gid: Workspace GID to search tasks in

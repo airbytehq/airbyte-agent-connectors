@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.5',
+    version='0.1.6',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -104,7 +104,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     method='GET',
                     path='/tasks',
                     action=Action.LIST,
-                    description='Returns a paginated list of tasks',
+                    description='Returns a paginated list of tasks. Must include either a project OR a section OR a workspace AND assignee parameter.',
                     query_params=[
                         'limit',
                         'offset',
@@ -394,7 +394,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     method='GET',
                     path='/workspaces/{workspace_gid}/tasks/search',
                     action=Action.LIST,
-                    description='Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account.',
+                    description='Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account. At least one search parameter must be provided.',
                     query_params=[
                         'limit',
                         'offset',
@@ -416,11 +416,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'sort_ascending',
                     ],
                     query_params_schema={
-                        'limit': {
-                            'type': 'integer',
-                            'required': False,
-                            'default': 20,
-                        },
+                        'limit': {'type': 'integer', 'required': False},
                         'offset': {'type': 'string', 'required': False},
                         'text': {'type': 'string', 'required': False},
                         'completed': {'type': 'boolean', 'required': False},
