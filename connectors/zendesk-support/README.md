@@ -9,6 +9,8 @@ for customer support analytics and service performance insights.
 
 ## Example questions
 
+The Zendesk-Support connector is optimized to handle prompts like these.
+
 - Show me the tickets assigned to me last week
 - What are the top 5 support issues our organization has faced this month?
 - List all unresolved tickets for {customer}
@@ -19,6 +21,8 @@ for customer support analytics and service performance insights.
 - Summarize the performance of our SLA policies this quarter
 
 ## Unsupported questions
+
+The Zendesk-Support connector isn't currently able to handle prompts like these.
 
 - Create a new support ticket for {customer}
 - Update the priority of this ticket
@@ -103,6 +107,6 @@ For the service's official API docs, see the [Zendesk-Support API reference](htt
 
 ## Version information
 
-- **Package version:** 0.18.25
+- **Package version:** 0.18.26
 - **Connector version:** 0.1.4
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
