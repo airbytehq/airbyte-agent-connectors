@@ -7,6 +7,8 @@ teams, and users for project tracking, workload analysis, and productivity insig
 
 ## Example questions
 
+The Asana connector is optimized to handle prompts like these.
+
 - What tasks are assigned to me this week?
 - List all projects in my workspace
 - Summarize my team's workload and task completion rates
@@ -19,6 +21,8 @@ teams, and users for project tracking, workload analysis, and productivity insig
 - Show me details of my current workspace and its users
 
 ## Unsupported questions
+
+The Asana connector isn't currently able to handle prompts like these.
 
 - Create a new task for [TeamMember]
 - Update the priority of this task
@@ -105,6 +109,6 @@ For the service's official API docs, see the [Asana API reference](https://devel
 
 ## Version information
 
-- **Package version:** 0.19.27
+- **Package version:** 0.19.28
 - **Connector version:** 0.1.6
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
