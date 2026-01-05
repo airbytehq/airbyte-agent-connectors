@@ -8,6 +8,8 @@ notes, and attachments for sales analytics and customer relationship management.
 
 ## Example questions
 
+The Salesforce connector is optimized to handle prompts like these.
+
 - Show me my top 5 opportunities this month
 - List all contacts from {company} in the last quarter
 - Search for leads in the technology sector with revenue over $10M
@@ -19,6 +21,8 @@ notes, and attachments for sales analytics and customer relationship management.
 - Show me the notes and attachments for {customer}'s account
 
 ## Unsupported questions
+
+The Salesforce connector isn't currently able to handle prompts like these.
 
 - Create a new lead for {person}
 - Update the status of my sales opportunity
@@ -74,6 +78,6 @@ For the service's official API docs, see the [Salesforce API reference](https://
 
 ## Version information
 
-- **Package version:** 0.1.18
+- **Package version:** 0.1.19
 - **Connector version:** 1.0.4
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
