@@ -4,6 +4,8 @@ Connector for Jira API
 
 ## Example questions
 
+The Jira connector is optimized to handle prompts like these.
+
 - Show me all open issues in the {project_key} project
 - What issues are assigned to {team_member} this week?
 - Find all high priority bugs in our current sprint
@@ -21,6 +23,8 @@ Connector for Jira API
 - List all worklogs for {issue_key} this month
 
 ## Unsupported questions
+
+The Jira connector isn't currently able to handle prompts like these.
 
 - Create a new issue in {project_key}
 - Update the status of {issue_key}
@@ -70,6 +74,6 @@ For the service's official API docs, see the [Jira API reference](https://develo
 
 ## Version information
 
-- **Package version:** 0.1.15
+- **Package version:** 0.1.16
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
