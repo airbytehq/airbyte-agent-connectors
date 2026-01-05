@@ -8,6 +8,8 @@ for recruiting analytics and talent acquisition insights.
 
 ## Example questions
 
+The Greenhouse connector is optimized to handle prompts like these.
+
 - Show me candidates from {company} who applied last month
 - What are the top 5 sources for our job applications this quarter?
 - List all open jobs in the Sales department
@@ -20,6 +22,8 @@ for recruiting analytics and talent acquisition insights.
 - Find the most active departments in recruiting this month
 
 ## Unsupported questions
+
+The Greenhouse connector isn't currently able to handle prompts like these.
 
 - Create a new job posting for the marketing team
 - Schedule an interview for {candidate}
@@ -74,6 +78,6 @@ For the service's official API docs, see the [Greenhouse API reference](https://
 
 ## Version information
 
-- **Package version:** 0.17.24
+- **Package version:** 0.17.25
 - **Connector version:** 0.1.2
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
