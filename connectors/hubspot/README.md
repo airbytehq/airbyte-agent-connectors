@@ -7,6 +7,8 @@ tickets, and custom objects for customer relationship management and sales analy
 
 ## Example questions
 
+The Hubspot connector is optimized to handle prompts like these.
+
 - Show me all deals from {company} this quarter
 - What are the top 5 most valuable deals in my pipeline right now?
 - List recent tickets from {customer} and analyze their support trends
@@ -17,6 +19,8 @@ tickets, and custom objects for customer relationship management and sales analy
 - Find all tickets related to a specific product issue and summarize their status
 
 ## Unsupported questions
+
+The Hubspot connector isn't currently able to handle prompts like these.
 
 - Create a new contact record for {person}
 - Update the contact information for {customer}
@@ -67,6 +71,6 @@ For the service's official API docs, see the [Hubspot API reference](https://dev
 
 ## Version information
 
-- **Package version:** 0.15.25
+- **Package version:** 0.15.26
 - **Connector version:** 0.1.3
-- **Generated with Connector SDK commit SHA:** 0eb1b1c4afe2ae6607371288233ef427ccad1b80
+- **Generated with Connector SDK commit SHA:** 3e2742932eecef344732bfedb7036ca6299c8f80
