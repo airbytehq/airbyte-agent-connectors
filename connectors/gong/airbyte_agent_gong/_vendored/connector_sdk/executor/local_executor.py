@@ -674,16 +674,16 @@ class LocalExecutor:
         return {key: value for key, value in params.items() if key in allowed_params}
 
     def _extract_body(self, allowed_fields: list[str], params: dict[str, Any]) -> dict[str, Any]:
-        """Extract body fields from params.
+        """Extract body fields from params, filtering out None values.
 
         Args:
             allowed_fields: List of allowed body field names
             params: All parameters
 
         Returns:
-            Dictionary of body fields
+            Dictionary of body fields with None values filtered out
         """
-        return {key: value for key, value in params.items() if key in allowed_fields}
+        return {key: value for key, value in params.items() if key in allowed_fields and value is not None}
 
     def _serialize_deep_object_params(self, params: dict[str, Any], deep_object_param_names: list[str]) -> dict[str, Any]:
         """Serialize deepObject parameters to bracket notation format.
@@ -838,11 +838,7 @@ class LocalExecutor:
         """
         if endpoint.graphql_body:
             # Extract defaults from query_params_schema for GraphQL variable interpolation
-            param_defaults = {
-                name: schema.get("default")
-                for name, schema in endpoint.query_params_schema.items()
-                if "default" in schema
-            }
+            param_defaults = {name: schema.get("default") for name, schema in endpoint.query_params_schema.items() if "default" in schema}
             return self._build_graphql_body(endpoint.graphql_body, params, param_defaults)
         elif endpoint.body_fields:
             return self._extract_body(endpoint.body_fields, params)
@@ -934,9 +930,7 @@ class LocalExecutor:
 
         # Substitute variables from params
         if "variables" in graphql_config and graphql_config["variables"]:
-            body["variables"] = self._interpolate_variables(
-                graphql_config["variables"], params, param_defaults
-            )
+            body["variables"] = self._interpolate_variables(graphql_config["variables"], params, param_defaults)
 
         # Add operation name if specified
         if "operationName" in graphql_config:
@@ -1180,21 +1174,18 @@ class LocalExecutor:
         if action not in (Action.CREATE, Action.UPDATE):
             return
 
-        # Check if endpoint has body fields defined
-        if not endpoint.body_fields:
+        # Get the request schema to find truly required fields
+        request_schema = endpoint.request_schema
+        if not request_schema:
             return
 
-        # For now, we treat all body_fields as potentially required for CREATE/UPDATE
-        # In a more advanced implementation, we could parse the request schema
-        # to identify truly required fields
-        missing_fields = []
-        for field in endpoint.body_fields:
-            if field not in params:
-                missing_fields.append(field)
+        # Only validate fields explicitly marked as required in the schema
+        required_fields = request_schema.get("required", [])
+        missing_fields = [field for field in required_fields if field not in params]
 
         if missing_fields:
             raise MissingParameterError(
-                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. Provided parameters: {list(params.keys())}"
+                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. " f"Provided parameters: {list(params.keys())}"
             )
 
     async def close(self):
