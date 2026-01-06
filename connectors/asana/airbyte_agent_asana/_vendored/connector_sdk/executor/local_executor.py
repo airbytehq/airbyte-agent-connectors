@@ -837,7 +837,13 @@ class LocalExecutor:
             Request body dict or None if no body needed
         """
         if endpoint.graphql_body:
-            return self._build_graphql_body(endpoint.graphql_body, params)
+            # Extract defaults from query_params_schema for GraphQL variable interpolation
+            param_defaults = {
+                name: schema.get("default")
+                for name, schema in endpoint.query_params_schema.items()
+                if "default" in schema
+            }
+            return self._build_graphql_body(endpoint.graphql_body, params, param_defaults)
         elif endpoint.body_fields:
             return self._extract_body(endpoint.body_fields, params)
         return None
@@ -903,12 +909,18 @@ class LocalExecutor:
 
         return query
 
-    def _build_graphql_body(self, graphql_config: dict[str, Any], params: dict[str, Any]) -> dict[str, Any]:
+    def _build_graphql_body(
+        self,
+        graphql_config: dict[str, Any],
+        params: dict[str, Any],
+        param_defaults: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Build GraphQL request body with variable substitution and field selection.
 
         Args:
             graphql_config: GraphQL configuration from x-airbyte-body-type extension
             params: Parameters from execute() call
+            param_defaults: Default values for params from query_params_schema
 
         Returns:
             GraphQL request body: {"query": "...", "variables": {...}}
@@ -922,7 +934,9 @@ class LocalExecutor:
 
         # Substitute variables from params
         if "variables" in graphql_config and graphql_config["variables"]:
-            body["variables"] = self._interpolate_variables(graphql_config["variables"], params)
+            body["variables"] = self._interpolate_variables(
+                graphql_config["variables"], params, param_defaults
+            )
 
         # Add operation name if specified
         if "operationName" in graphql_config:
@@ -981,7 +995,12 @@ class LocalExecutor:
         fields_str = " ".join(graphql_fields)
         return query.replace("{{ fields }}", fields_str)
 
-    def _interpolate_variables(self, variables: dict[str, Any], params: dict[str, Any]) -> dict[str, Any]:
+    def _interpolate_variables(
+        self,
+        variables: dict[str, Any],
+        params: dict[str, Any],
+        param_defaults: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Recursively interpolate variables using params.
 
         Preserves types (doesn't stringify everything).
@@ -990,15 +1009,18 @@ class LocalExecutor:
         - Direct replacement: "{{ owner }}" → params["owner"] (preserves type)
         - Nested objects: {"input": {"name": "{{ name }}"}}
         - Arrays: [{"id": "{{ id }}"}]
-        - Unsubstituted placeholders: "{{ states }}" → None (for optional params)
+        - Default values: "{{ per_page }}" → param_defaults["per_page"] if not in params
+        - Unsubstituted placeholders: "{{ states }}" → None (for optional params without defaults)
 
         Args:
             variables: Variables dict with template placeholders
             params: Parameters to substitute
+            param_defaults: Default values for params from query_params_schema
 
         Returns:
             Interpolated variables dict with types preserved
         """
+        defaults = param_defaults or {}
 
         def interpolate_value(value: Any) -> Any:
             if isinstance(value, str):
@@ -1012,8 +1034,15 @@ class LocalExecutor:
                         value = value.replace(placeholder, str(param_value))
 
                 # Check if any unsubstituted placeholders remain
-                # If so, return None (treats as "not provided" for optional params)
                 if re.search(r"\{\{\s*\w+\s*\}\}", value):
+                    # Extract placeholder name and check for default value
+                    match = re.search(r"\{\{\s*(\w+)\s*\}\}", value)
+                    if match:
+                        param_name = match.group(1)
+                        if param_name in defaults:
+                            # Use default value (preserves type)
+                            return defaults[param_name]
+                    # No default found - return None (for optional params)
                     return None
 
                 return value
