@@ -4,6 +4,7 @@ asana connector.
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any, AsyncIterator, overload
 try:
     from typing import Literal
@@ -11,6 +12,7 @@ except ImportError:
     from typing_extensions import Literal
 
 from .connector_model import AsanaConnectorModel
+from ._vendored.connector_sdk.introspection import describe_entities
 
 from .types import (
     AttachmentsDownloadParams,
@@ -563,6 +565,51 @@ class AsanaConnector:
         else:
             # No extractors - return raw response data
             return result.data
+
+    # ===== INTROSPECTION METHODS =====
+
+    def describe(self) -> list[dict[str, Any]]:
+        """
+        Describe available entities, actions, and parameters.
+
+        Returns a list of entity descriptions with:
+        - entity_name: Name of the entity (e.g., "contacts", "deals")
+        - description: Entity description from the first endpoint
+        - available_actions: List of actions (e.g., ["list", "get", "create"])
+        - parameters: Dict mapping action -> list of parameter dicts
+
+        Example:
+            entities = connector.describe()
+            for entity in entities:
+                print(f"{entity['entity_name']}: {entity['available_actions']}")
+        """
+        return describe_entities(AsanaConnectorModel)
+
+    def entity_schema(self, entity: str) -> dict[str, Any] | None:
+        """
+        Get the JSON schema for an entity.
+
+        Args:
+            entity: Entity name (e.g., "contacts", "companies")
+
+        Returns:
+            JSON schema dict describing the entity structure, or None if not found.
+
+        Example:
+            schema = connector.entity_schema("contacts")
+            if schema:
+                print(f"Contact properties: {list(schema.get('properties', {}).keys())}")
+        """
+        entity_def = next(
+            (e for e in AsanaConnectorModel.entities if e.name == entity),
+            None
+        )
+        if entity_def is None:
+            logging.getLogger(__name__).warning(
+                f"Entity '{entity}' not found. Available entities: "
+                f"{[e.name for e in AsanaConnectorModel.entities]}"
+            )
+        return entity_def.entity_schema if entity_def else None
 
 
 
