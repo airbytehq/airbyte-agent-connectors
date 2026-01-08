@@ -1,0 +1,51 @@
+[project]
+name = "airbyte-agent-google-drive"
+version = "0.1.0"
+description = "Airbyte Google-Drive Connector for AI platforms"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Elastic-2.0"}
+authors = [
+    {name = "Airbyte", email = "contact@airbyte.io"}
+]
+keywords = ["airbyte", "google-drive", "connector", "api"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: Other/Proprietary License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "pydantic>=2.0.0",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0.0",
+    "segment-analytics-python>=2.2.0",
+    "jsonref>=1.1.0",
+    "jsonpath-ng>=1.6.1",
+    "jinja2>=3.0.0",
+    "opentelemetry-api>=1.37.0",
+    "opentelemetry-sdk>=1.37.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/airbytehq/airbyte-embedded"
+Documentation = "https://github.com/airbytehq/airbyte-embedded/tree/main/integrations"
+Repository = "https://github.com/airbytehq/airbyte-embedded"
+Issues = "https://github.com/airbytehq/airbyte-embedded/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["airbyte_agent_google_drive"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"airbyte_agent_google_drive/connector.yaml" = "share/airbyte_agent_google_drive/connector.yaml"
