@@ -77,6 +77,10 @@ class AuthConfigOption(BaseModel):
         default_factory=dict,
         description="Mapping from auth parameters (e.g., 'username', 'password', 'token') to template strings using ${field} syntax",
     )
+    replication_auth_key_mapping: Optional[Dict[str, str]] = Field(
+        None,
+        description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
+    )
 
 
 class AirbyteAuthConfig(BaseModel):
@@ -98,6 +102,12 @@ class AirbyteAuthConfig(BaseModel):
     required: Optional[List[str]] = None
     properties: Optional[Dict[str, AuthConfigFieldSpec]] = None
     auth_mapping: Optional[Dict[str, str]] = None
+
+    # Replication connector auth mapping
+    replication_auth_key_mapping: Optional[Dict[str, str]] = Field(
+        None,
+        description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
+    )
 
     # Multiple options (oneOf)
     one_of: Optional[List[AuthConfigOption]] = Field(None, alias="oneOf")
