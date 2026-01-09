@@ -203,7 +203,7 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
     - Response structure documentation with pagination hints
     - Example questions if available in the OpenAPI spec
 
-    This is used by the @airbyte_description decorator to populate
+    This is used by the Connector.describe class method decorator to populate
     function docstrings for AI framework integration.
 
     Args:
