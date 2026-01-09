@@ -159,6 +159,38 @@ Example:
     ```
 """
 
+AIRBYTE_STREAM_NAME = "x-airbyte-stream-name"
+"""
+Extension: x-airbyte-stream-name
+Location: Schema object (in components.schemas)
+Type: string
+Required: No
+
+Description:
+    Specifies the Airbyte stream name for cache lookup purposes. This maps the entity
+    to the corresponding Airbyte stream, enabling cache-based data retrieval. When
+    specified, the EntityDefinition.stream_name field will be populated with this value.
+
+    This extension is placed on Schema objects alongside x-airbyte-entity-name, following
+    the same pattern. The stream name is an entity-level property (not operation-level)
+    since an entity maps to exactly one Airbyte stream.
+
+Example:
+    ```yaml
+    components:
+      schemas:
+        Customer:
+          type: object
+          x-airbyte-entity-name: customers
+          x-airbyte-stream-name: customers
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+    ```
+"""
+
 AIRBYTE_TOKEN_PATH = "x-airbyte-token-path"
 """
 Extension: x-airbyte-token-path
@@ -548,6 +580,7 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_ENTITY,
         AIRBYTE_ACTION,
         AIRBYTE_ENTITY_NAME,
+        AIRBYTE_STREAM_NAME,
         AIRBYTE_TOKEN_PATH,
         AIRBYTE_BODY_TYPE,
         AIRBYTE_PATH_OVERRIDE,
@@ -593,6 +626,12 @@ EXTENSION_REGISTRY = {
         "type": "string",
         "required": False,
         "description": "Links schema to an entity/stream",
+    },
+    AIRBYTE_STREAM_NAME: {
+        "location": "schema",
+        "type": "string",
+        "required": False,
+        "description": "Maps entity to Airbyte stream for cache lookup",
     },
     AIRBYTE_TOKEN_PATH: {
         "location": "securityScheme",
