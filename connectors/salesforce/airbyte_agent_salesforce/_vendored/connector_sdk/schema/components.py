@@ -65,8 +65,9 @@ class Schema(BaseModel):
     write_only: Optional[bool] = Field(None, alias="writeOnly")
     deprecated: Optional[bool] = None
 
-    # Airbyte extension
+    # Airbyte extensions
     x_airbyte_entity_name: Optional[str] = Field(None, alias="x-airbyte-entity-name")
+    x_airbyte_stream_name: Optional[str] = Field(None, alias="x-airbyte-stream-name")
 
 
 class Parameter(BaseModel):
