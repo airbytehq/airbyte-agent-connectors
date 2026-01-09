@@ -74,6 +74,6 @@ For the service's official API docs, see the [Jira API reference](https://develo
 
 ## Version information
 
-- **Package version:** 0.1.21
+- **Package version:** 0.1.22
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 3bcb33e8122bbe7f7e52f786cc94c8d2f3ba9e12
+- **Generated with Connector SDK commit SHA:** 3c7bfdfd1100dd20420a61cec56549b65820ea0f
