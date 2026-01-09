@@ -5,15 +5,14 @@ gong connector.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, AsyncIterator, overload
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, AsyncIterator, overload
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
 
 from .connector_model import GongConnectorModel
-from ._vendored.connector_sdk.introspection import describe_entities
-
+from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
     CallAudioDownloadParams,
     CallAudioDownloadParamsContentselector,
@@ -45,7 +44,6 @@ from .types import (
     UsersListParams,
     WorkspacesListParams,
 )
-
 if TYPE_CHECKING:
     from .models import GongAuthConfig
 # Import specific auth config classes for multi-auth isinstance checks
@@ -71,6 +69,9 @@ from .models import (
     CoachingListResult,
     StatsActivityScorecardsListResult,
 )
+
+# TypeVar for decorator type preservation
+_F = TypeVar("_F", bound=Callable[..., Any])
 
 
 class GongConnector:
@@ -451,9 +452,46 @@ class GongConnector:
 
     # ===== INTROSPECTION METHODS =====
 
-    def describe(self) -> list[dict[str, Any]]:
+    @classmethod
+    def describe(cls, func: _F) -> _F:
         """
-        Describe available entities, actions, and parameters.
+        Decorator that populates a function's docstring with connector capabilities.
+
+        This class method can be used as a decorator to automatically generate
+        comprehensive documentation for AI tool functions.
+
+        Usage:
+            @mcp.tool()
+            @GongConnector.describe
+            async def execute(entity: str, action: str, params: dict):
+                '''Execute operations.'''
+                ...
+
+        The decorated function's __doc__ will be updated with:
+        - Available entities and their actions
+        - Parameter signatures with required (*) and optional (?) markers
+        - Response structure documentation
+        - Example questions (if available in OpenAPI spec)
+
+        Args:
+            func: The function to decorate
+
+        Returns:
+            The same function with updated __doc__
+        """
+        description = generate_tool_description(GongConnectorModel)
+
+        original_doc = func.__doc__ or ""
+        if original_doc.strip():
+            func.__doc__ = f"{original_doc.strip()}\n\n{description}"
+        else:
+            func.__doc__ = description
+
+        return func
+
+    def list_entities(self) -> list[dict[str, Any]]:
+        """
+        Get structured data about available entities, actions, and parameters.
 
         Returns a list of entity descriptions with:
         - entity_name: Name of the entity (e.g., "contacts", "deals")
@@ -462,7 +500,7 @@ class GongConnector:
         - parameters: Dict mapping action -> list of parameter dicts
 
         Example:
-            entities = connector.describe()
+            entities = connector.list_entities()
             for entity in entities:
                 print(f"{entity['entity_name']}: {entity['available_actions']}")
         """
