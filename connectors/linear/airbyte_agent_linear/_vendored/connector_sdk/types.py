@@ -221,6 +221,10 @@ class EntityDefinition(BaseModel):
     model_config = {"populate_by_name": True}
 
     name: str
+    stream_name: str | None = Field(
+        default=None,
+        description="Airbyte stream name for cache lookup (from x-airbyte-stream-name schema extension)",
+    )
     actions: list[Action]
     endpoints: dict[Action, EndpointDefinition]
     entity_schema: dict[str, Any] | None = Field(default=None, alias="schema")
