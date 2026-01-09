@@ -43,6 +43,13 @@ class PaginationRecords(BaseModel):
     current_page_number: Union[int, Any] = Field(default=None, alias="currentPageNumber")
     cursor: Union[str, Any] = Field(default=None)
 
+class UserSpokenlanguagesItem(BaseModel):
+    """Nested schema for User.spokenLanguages_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: Union[str, Any] = Field(default=None)
+    primary: Union[bool, Any] = Field(default=None)
+
 class UserSettings(BaseModel):
     """User settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -54,13 +61,6 @@ class UserSettings(BaseModel):
     prevent_email_import: Union[bool, Any] = Field(default=None, alias="preventEmailImport")
     non_recorded_meetings_imported: Union[bool, Any] = Field(default=None, alias="nonRecordedMeetingsImported")
     gong_connect_enabled: Union[bool, Any] = Field(default=None, alias="gongConnectEnabled")
-
-class UserSpokenlanguagesItem(BaseModel):
-    """Nested schema for User.spokenLanguages_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: Union[str, Any] = Field(default=None)
-    primary: Union[bool, Any] = Field(default=None)
 
 class User(BaseModel):
     """User object"""
@@ -190,12 +190,36 @@ class TranscriptsResponse(BaseModel):
     records: Union[PaginationRecords, Any] = Field(default=None)
     request_id: Union[str, Any] = Field(default=None, alias="requestId")
 
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
-    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    count: Union[int, Any] = Field(default=None)
+    type: Union[str, Any] = Field(default=None)
+    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    duration: Union[float, Any] = Field(default=None)
+
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
+    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
+    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
+
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
 
 class ExtensiveCallMetadata(BaseModel):
     """Call metadata"""
@@ -241,37 +265,6 @@ class ExtensiveCallMetadata(BaseModel):
     """Meeting URL"""
     calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
     """Calendar event ID"""
-
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
-
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
-    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    duration: Union[float, Any] = Field(default=None)
-
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
-    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
-    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
 
 class ExtensiveCallInteractionQuestions(BaseModel):
     """Nested schema for ExtensiveCallInteraction.questions"""
@@ -349,6 +342,13 @@ class ExtensiveCallPartiesItem(BaseModel):
     """Phone number"""
     context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
+    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""
