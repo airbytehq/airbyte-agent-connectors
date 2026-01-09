@@ -13,7 +13,6 @@ from __future__ import annotations
 from .auth_strategies import AuthStrategy
 from .connector_model_loader import load_connector_model
 from .constants import SDK_VERSION
-from .decorators import airbyte_description
 from .exceptions import (
     AuthenticationError,
     HTTPClientError,
@@ -80,6 +79,4 @@ __all__ = [
     "instrument",
     # Utilities
     "save_download",
-    # Decorators for AI integration
-    "airbyte_description",
 ]
