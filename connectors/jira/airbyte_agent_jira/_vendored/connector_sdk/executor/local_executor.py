@@ -844,10 +844,58 @@ class LocalExecutor:
             return self._extract_body(endpoint.body_fields, params)
         return None
 
+    def _flatten_form_data(self, data: dict[str, Any], parent_key: str = "") -> dict[str, Any]:
+        """Flatten nested dict/list structures into bracket notation for form encoding.
+
+        Stripe and similar APIs require nested arrays/objects to be encoded using bracket
+        notation when using application/x-www-form-urlencoded content type.
+
+        Args:
+            data: Nested dict with arrays/objects to flatten
+            parent_key: Parent key for nested structures (used in recursion)
+
+        Returns:
+            Flattened dict with bracket notation keys
+
+        Examples:
+            >>> _flatten_form_data({"items": [{"price": "p1", "qty": 1}]})
+            {"items[0][price]": "p1", "items[0][qty]": 1}
+
+            >>> _flatten_form_data({"customer": "cus_123", "metadata": {"key": "value"}})
+            {"customer": "cus_123", "metadata[key]": "value"}
+        """
+        flattened = {}
+
+        for key, value in data.items():
+            new_key = f"{parent_key}[{key}]" if parent_key else key
+
+            if isinstance(value, dict):
+                # Recursively flatten nested dicts
+                flattened.update(self._flatten_form_data(value, new_key))
+            elif isinstance(value, list):
+                # Flatten arrays with indexed bracket notation
+                for i, item in enumerate(value):
+                    indexed_key = f"{new_key}[{i}]"
+                    if isinstance(item, dict):
+                        # Nested dict in array - recurse
+                        flattened.update(self._flatten_form_data(item, indexed_key))
+                    elif isinstance(item, list):
+                        # Nested list in array - recurse
+                        flattened.update(self._flatten_form_data({str(i): item}, new_key))
+                    else:
+                        # Primitive value in array
+                        flattened[indexed_key] = item
+            else:
+                # Primitive value - add directly
+                flattened[new_key] = value
+
+        return flattened
+
     def _determine_request_format(self, endpoint: EndpointDefinition, body: dict[str, Any] | None) -> dict[str, Any]:
         """Determine json/data parameters for HTTP request.
 
         GraphQL always uses JSON, regardless of content_type setting.
+        For form-encoded requests, nested structures are flattened into bracket notation.
 
         Args:
             endpoint: Endpoint definition
@@ -864,7 +912,9 @@ class LocalExecutor:
         if is_graphql or endpoint.content_type.value == "application/json":
             return {"json": body}
         elif endpoint.content_type.value == "application/x-www-form-urlencoded":
-            return {"data": body}
+            # Flatten nested structures for form encoding
+            flattened_body = self._flatten_form_data(body)
+            return {"data": flattened_body}
 
         return {}
 
