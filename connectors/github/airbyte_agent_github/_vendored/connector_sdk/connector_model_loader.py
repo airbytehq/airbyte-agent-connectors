@@ -393,16 +393,24 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     for entity_name, endpoints_dict in entities_map.items():
         actions = list(endpoints_dict.keys())
 
-        # Get schema from components if available
+        # Get schema and stream_name from components if available
         schema = None
+        entity_stream_name = None
         if spec.components:
             # Look for a schema matching the entity name
             for schema_name, schema_def in spec.components.schemas.items():
                 if schema_def.x_airbyte_entity_name == entity_name or schema_name.lower() == entity_name.lower():
                     schema = schema_def.model_dump(by_alias=True)
+                    entity_stream_name = schema_def.x_airbyte_stream_name
                     break
 
-        entity = EntityDefinition(name=entity_name, actions=actions, endpoints=endpoints_dict, schema=schema)
+        entity = EntityDefinition(
+            name=entity_name,
+            stream_name=entity_stream_name,
+            actions=actions,
+            endpoints=endpoints_dict,
+            schema=schema,
+        )
         entities.append(entity)
 
     # Extract retry config from x-airbyte-retry-config extension
