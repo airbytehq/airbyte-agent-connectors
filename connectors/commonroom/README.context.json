@@ -1,0 +1,155 @@
+{
+  "connector_name": "commonroom",
+  "class_name": "CommonroomConnector",
+  "package_name": "airbyte_agent_commonroom",
+  "package_version": "0.1.0",
+  "yaml_version": "0.1.0",
+  "api_reference_url": "https://docs.commonroom.io/",
+  "commit_sha": "unknown",
+  "auth_example": "CommonroomAuthConfig(api_token=\"...\")",
+  "auth_import": ", CommonroomAuthConfig",
+  "auth_config": {
+    "type_name": "CommonroomAuthConfig",
+    "base_name": "Commonroom",
+    "options": [
+      {
+        "title": "API Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_token",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "API token for authenticating with CommonRoom API. Create a token at https://app.commonroom.io/ under Settings | API tokens."
+          }
+        ],
+        "type_suffix": "ApiTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "custom_description": "Commonroom is a community management platform that helps companies understand and engage\nwith their community members. This connector provides access to API token status, custom fields,\nactivity types, segments, and tags for community analytics and management.\n",
+  "supported_questions": null,
+  "unsupported_questions": null,
+  "first_operation": {
+    "method_name": "get_api_token_status",
+    "http_method": "get",
+    "path": "/api-token-status",
+    "entity": "api_token_status",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "ApiTokenStatusListParams",
+    "response_type": "ApiTokenStatus",
+    "description": "Returns the status and metadata of the current API token",
+    "has_record_extractor": false,
+    "has_meta_extractor": false,
+    "needs_envelope": false,
+    "record_type": null,
+    "is_list_verb": true,
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "api_token_status": [
+      {
+        "method_name": "get_api_token_status",
+        "http_method": "get",
+        "path": "/api-token-status",
+        "entity": "api_token_status",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ApiTokenStatusListParams",
+        "response_type": "ApiTokenStatus",
+        "description": "Returns the status and metadata of the current API token",
+        "has_record_extractor": false,
+        "has_meta_extractor": false,
+        "needs_envelope": false,
+        "record_type": null,
+        "is_list_verb": true,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contact_custom_fields": [
+      {
+        "method_name": "list_contact_custom_fields",
+        "http_method": "get",
+        "path": "/members/customFields",
+        "entity": "contact_custom_fields",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ContactCustomFieldsListParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns all custom fields defined for contacts/members",
+        "has_record_extractor": false,
+        "has_meta_extractor": false,
+        "needs_envelope": false,
+        "record_type": null,
+        "is_list_verb": true,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "activity_types": [
+      {
+        "method_name": "list_activity_types",
+        "http_method": "get",
+        "path": "/activityTypes",
+        "entity": "activity_types",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ActivityTypesListParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns all activity types in the community",
+        "has_record_extractor": false,
+        "has_meta_extractor": false,
+        "needs_envelope": false,
+        "record_type": null,
+        "is_list_verb": true,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "segments": [
+      {
+        "method_name": "list_segments",
+        "http_method": "get",
+        "path": "/segments",
+        "entity": "segments",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SegmentsListParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns all segments in the community",
+        "has_record_extractor": false,
+        "has_meta_extractor": false,
+        "needs_envelope": false,
+        "record_type": null,
+        "is_list_verb": true,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "list_tags",
+        "http_method": "get",
+        "path": "/tags",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Returns all tags in the community",
+        "has_record_extractor": true,
+        "has_meta_extractor": false,
+        "needs_envelope": true,
+        "record_type": "list[Tag]",
+        "is_list_verb": true,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  }
+}

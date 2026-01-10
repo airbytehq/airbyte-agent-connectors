@@ -1,0 +1,252 @@
+# Commonroom API Connector
+# Generated from Airbyte declarative manifest
+
+openapi: 3.1.0
+
+info:
+  title: Commonroom API Connector
+  version: 0.1.0
+  description: |
+    Commonroom is a community management platform that helps companies understand and engage
+    with their community members. This connector provides access to API token status, custom fields,
+    activity types, segments, and tags for community analytics and management.
+  x-airbyte-connector-name: commonroom
+  x-airbyte-connector-id: 152171eb-bedf-46d7-b2c9-c8a91b9fd5b4
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Commonroom API Documentation
+      url: https://docs.commonroom.io/
+
+servers:
+  - url: https://api.commonroom.io/community/v1
+    description: Commonroom API server
+
+security:
+  - bearerAuth: []
+
+paths:
+  "/api-token-status":
+    get:
+      summary: Get API token status
+      description: Returns the status and metadata of the current API token
+      operationId: getApiTokenStatus
+      x-airbyte-entity: api_token_status
+      x-airbyte-action: list
+      responses:
+        "200":
+          description: API token status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiTokenStatus"
+
+  "/members/customFields":
+    get:
+      summary: List contact custom fields
+      description: Returns all custom fields defined for contacts/members
+      operationId: listContactCustomFields
+      x-airbyte-entity: contact_custom_fields
+      x-airbyte-action: list
+      responses:
+        "200":
+          description: List of custom fields
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ContactCustomField"
+
+  "/activityTypes":
+    get:
+      summary: List activity types
+      description: Returns all activity types in the community
+      operationId: listActivityTypes
+      x-airbyte-entity: activity_types
+      x-airbyte-action: list
+      responses:
+        "200":
+          description: List of activity types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityType"
+
+  "/segments":
+    get:
+      summary: List segments
+      description: Returns all segments in the community
+      operationId: listSegments
+      x-airbyte-entity: segments
+      x-airbyte-action: list
+      responses:
+        "200":
+          description: List of segments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Segment"
+
+  "/tags":
+    get:
+      summary: List tags
+      description: Returns all tags in the community
+      operationId: listTags
+      x-airbyte-entity: tags
+      x-airbyte-action: list
+      x-airbyte-record-extractor: "$.labels"
+      responses:
+        "200":
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  labels:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Tag"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API Token authentication. Create a token at https://app.commonroom.io/ under Settings | API tokens.
+      x-airbyte-auth-config:
+        title: API Token Authentication
+        type: object
+        required:
+          - api_token
+        properties:
+          api_token:
+            type: string
+            title: API Token
+            description: API token for authenticating with CommonRoom API. Create a token at https://app.commonroom.io/ under Settings | API tokens.
+            airbyte_secret: true
+        auth_mapping:
+          token: "${api_token}"
+
+  schemas:
+    ApiTokenStatus:
+      type: object
+      description: API token status information
+      properties:
+        jti:
+          type:
+            - string
+            - "null"
+          description: JWT ID - unique identifier for the token
+        iat:
+          type:
+            - integer
+            - "null"
+          description: Issued at timestamp
+        exp:
+          type:
+            - integer
+            - "null"
+          description: Expiration timestamp
+        sub:
+          type:
+            - string
+            - "null"
+          description: Subject (user/service identifier)
+
+    ContactCustomField:
+      type: object
+      description: Custom field definition for contacts
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the custom field
+        type:
+          type:
+            - string
+            - "null"
+          description: Field type (e.g., text, number, date)
+        name:
+          type:
+            - string
+            - "null"
+          description: Display name of the field
+        values:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: Possible values for enum-type fields
+        multivalue:
+          type:
+            - boolean
+            - "null"
+          description: Whether the field accepts multiple values
+
+    ActivityType:
+      type: object
+      description: Activity type definition
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the activity type
+        displayName:
+          type:
+            - string
+            - "null"
+          description: Display name of the activity type
+
+    Segment:
+      type: object
+      description: Segment definition
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the segment
+        name:
+          type:
+            - string
+            - "null"
+          description: Name of the segment
+
+    Tag:
+      type: object
+      description: Tag definition
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the tag
+        name:
+          type:
+            - string
+            - "null"
+          description: Name of the tag
+        description:
+          type:
+            - string
+            - "null"
+          description: Description of the tag
+        createdAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+          description: When the tag was created
+        deletedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+          description: When the tag was deleted (if applicable)
+        entityTypes:
+          type:
+            - array
+            - "null"
+          items:
+            type: string
+          description: Entity types this tag can be applied to
