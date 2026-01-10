@@ -16,6 +16,18 @@ info:
     - type: api_reference
       title: Commonroom API Documentation
       url: https://docs.commonroom.io/
+  x-airbyte-example-questions:
+    supported:
+      - "What activity types are available in my community?"
+      - "List all segments in my community"
+      - "What custom fields are defined for contacts?"
+      - "Show me all tags in my community"
+      - "What is the status of my API token?"
+    unsupported:
+      - "Create a new segment"
+      - "Add a tag to a contact"
+      - "Update a custom field value"
+      - "Delete a tag"
 
 servers:
   - url: https://api.commonroom.io/community/v1
