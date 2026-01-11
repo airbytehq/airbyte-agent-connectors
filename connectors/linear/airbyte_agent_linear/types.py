@@ -3,7 +3,7 @@ Type definitions for linear connector.
 """
 from __future__ import annotations
 
-# Use typing_extensions.TypedDict for Pydantic compatibility on Python < 3.12
+# Use typing_extensions.TypedDict for Pydantic compatibility
 try:
     from typing_extensions import TypedDict, NotRequired
 except ImportError:
