@@ -74,5 +74,5 @@ except PackageNotFoundError:
     SDK_VERSION = "0.0.0-dev"
 """Current version of the Airbyte SDK."""
 
-MINIMUM_PYTHON_VERSION = "3.9"
+MINIMUM_PYTHON_VERSION = "3.13"
 """Minimum Python version required to run the SDK."""
