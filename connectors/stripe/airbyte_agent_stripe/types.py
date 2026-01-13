@@ -119,8 +119,20 @@ class CustomersListParams(TypedDict):
     email: NotRequired[str]
     created: NotRequired[CustomersListParamsCreated]
 
+class CustomersCreateParams(TypedDict):
+    """Parameters for customers.create operation"""
+    pass
+
 class CustomersGetParams(TypedDict):
     """Parameters for customers.get operation"""
+    id: str
+
+class CustomersUpdateParams(TypedDict):
+    """Parameters for customers.update operation"""
+    id: str
+
+class CustomersDeleteParams(TypedDict):
+    """Parameters for customers.delete operation"""
     id: str
 
 class CustomersSearchParams(TypedDict):
@@ -204,6 +216,10 @@ class RefundsListParams(TypedDict):
     payment_intent: NotRequired[str]
     starting_after: NotRequired[str]
 
+class RefundsCreateParams(TypedDict):
+    """Parameters for refunds.create operation"""
+    pass
+
 class RefundsGetParams(TypedDict):
     """Parameters for refunds.get operation"""
     id: str
@@ -219,8 +235,20 @@ class ProductsListParams(TypedDict):
     starting_after: NotRequired[str]
     url: NotRequired[str]
 
+class ProductsCreateParams(TypedDict):
+    """Parameters for products.create operation"""
+    pass
+
 class ProductsGetParams(TypedDict):
     """Parameters for products.get operation"""
+    id: str
+
+class ProductsUpdateParams(TypedDict):
+    """Parameters for products.update operation"""
+    id: str
+
+class ProductsDeleteParams(TypedDict):
+    """Parameters for products.delete operation"""
     id: str
 
 class ProductsSearchParams(TypedDict):
