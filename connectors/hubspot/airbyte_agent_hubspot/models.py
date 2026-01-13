@@ -219,6 +219,13 @@ class SchemaPropertiesItem(BaseModel):
     show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
 
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
+
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -235,13 +242,6 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
     created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
     updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
-
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
