@@ -1,6 +1,6 @@
 """Telemetry event models."""
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from typing import Any, Dict, Optional
 
@@ -13,6 +13,7 @@ class BaseEvent:
     session_id: str
     user_id: str
     execution_context: str
+    is_internal_user: bool = field(default=False, kw_only=True)
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert event to dictionary with ISO formatted timestamp."""
