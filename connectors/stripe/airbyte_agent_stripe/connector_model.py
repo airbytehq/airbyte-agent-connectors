@@ -12,6 +12,7 @@ from ._vendored.connector_sdk.types import (
     AuthConfig,
     AuthType,
     ConnectorModel,
+    ContentType,
     EndpointDefinition,
     EntityDefinition,
 )
@@ -26,7 +27,7 @@ from uuid import (
 StripeConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e094cb9a-26de-4645-8761-65c0c425d1de'),
     name='stripe',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.stripe.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -48,7 +49,14 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='customers',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+                Action.SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -989,6 +997,949 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'has_more': '$.has_more'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v1/customers',
+                    action=Action.CREATE,
+                    description='Creates a new customer object.',
+                    body_fields=[
+                        'email',
+                        'name',
+                        'description',
+                        'phone',
+                        'address',
+                        'metadata',
+                    ],
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'email': {'type': 'string', 'description': "Customer's email address"},
+                            'name': {'type': 'string', 'description': "The customer's full name or business name"},
+                            'description': {'type': 'string', 'description': 'An arbitrary string attached to the object'},
+                            'phone': {'type': 'string', 'description': "The customer's phone number"},
+                            'address': {
+                                'type': 'object',
+                                'description': "The customer's address",
+                                'properties': {
+                                    'line1': {'type': 'string', 'description': 'Address line 1'},
+                                    'line2': {'type': 'string', 'description': 'Address line 2'},
+                                    'city': {'type': 'string', 'description': 'City, district, suburb, town, or village'},
+                                    'state': {'type': 'string', 'description': 'State, county, province, or region'},
+                                    'postal_code': {'type': 'string', 'description': 'ZIP or postal code'},
+                                    'country': {'type': 'string', 'description': 'Two-letter country code (ISO 3166-1 alpha-2)'},
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique identifier for the customer'},
+                            'object': {
+                                'type': 'string',
+                                'description': "String representing the object's type",
+                                'enum': ['customer'],
+                            },
+                            'address': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's address",
+                                'properties': {
+                                    'city': {
+                                        'type': ['string', 'null'],
+                                        'description': 'City, district, suburb, town, or village',
+                                    },
+                                    'country': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                    },
+                                    'line1': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Address line 1, such as the street, PO Box, or company name',
+                                    },
+                                    'line2': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Address line 2, such as the apartment, suite, unit, or building',
+                                    },
+                                    'postal_code': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ZIP or postal code',
+                                    },
+                                    'state': {
+                                        'type': ['string', 'null'],
+                                        'description': 'State, county, province, or region',
+                                    },
+                                },
+                            },
+                            'balance': {'type': 'integer', 'description': 'The current balance stored on the customer'},
+                            'business_name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's business name",
+                            },
+                            'cash_balance': {
+                                'type': ['object', 'null'],
+                                'description': 'The current funds being held by Stripe on behalf of the customer',
+                                'properties': {
+                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                    'available': {
+                                        'type': ['object', 'null'],
+                                        'description': 'A hash of all cash balances available to this customer',
+                                    },
+                                    'customer': {'type': 'string', 'description': 'The ID of the customer whose cash balance this object represents'},
+                                    'customer_account': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the account whose cash balance this object represents',
+                                    },
+                                    'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                    'settings': {
+                                        'type': 'object',
+                                        'description': 'A hash of settings for this cash balance',
+                                        'properties': {
+                                            'reconciliation_mode': {
+                                                'type': 'string',
+                                                'enum': ['automatic', 'manual'],
+                                                'description': 'The configuration for how funds that land in the customer cash balance are reconciled',
+                                            },
+                                            'using_merchant_default': {'type': 'boolean', 'description': "A flag to indicate if reconciliation mode returned is the user's default or is specific to this customer cash balance"},
+                                        },
+                                    },
+                                },
+                            },
+                            'created': {
+                                'type': 'integer',
+                                'format': 'int64',
+                                'description': 'Time at which the object was created (Unix timestamp)',
+                            },
+                            'currency': {
+                                'type': ['string', 'null'],
+                                'description': 'Three-letter ISO code for the currency the customer can be charged in for recurring billing purposes',
+                            },
+                            'customer_account': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the customer account associated with this customer',
+                            },
+                            'default_currency': {
+                                'type': ['string', 'null'],
+                                'description': 'The default currency for the customer',
+                            },
+                            'default_source': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the default payment source for the customer',
+                            },
+                            'delinquent': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the customer is delinquent on payments',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'An arbitrary string attached to the object',
+                            },
+                            'discount': {
+                                'type': ['object', 'null'],
+                                'description': 'Describes the current discount active on the customer, if there is one',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the discount object'},
+                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                    'checkout_session': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The Checkout session that this coupon is applied to, if applicable',
+                                    },
+                                    'customer': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the customer associated with this discount',
+                                    },
+                                    'customer_account': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the account associated with this discount',
+                                    },
+                                    'end': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'If the coupon has a duration of repeating, the date that this discount will end',
+                                    },
+                                    'invoice': {
+                                        'type': ['string', 'null'],
+                                        'description': "The invoice that the discount's coupon was applied to",
+                                    },
+                                    'invoice_item': {
+                                        'type': ['string', 'null'],
+                                        'description': "The invoice item that the discount's coupon was applied to",
+                                    },
+                                    'promotion_code': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The promotion code applied to create this discount',
+                                    },
+                                    'source': {
+                                        'type': 'object',
+                                        'description': 'The source of the discount',
+                                        'properties': {
+                                            'coupon': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The coupon that was redeemed to create this discount',
+                                            },
+                                            'type': {
+                                                'type': 'string',
+                                                'enum': ['coupon'],
+                                                'description': 'The source type of the discount',
+                                            },
+                                        },
+                                    },
+                                    'start': {'type': 'integer', 'description': 'Date that the coupon was applied'},
+                                    'subscription': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The subscription that this coupon is applied to',
+                                    },
+                                    'subscription_item': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The subscription item that this coupon is applied to',
+                                    },
+                                },
+                            },
+                            'email': {
+                                'type': ['string', 'null'],
+                                'format': 'email',
+                                'description': "The customer's email address",
+                            },
+                            'individual_name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's individual name",
+                            },
+                            'invoice_credit_balance': {'type': 'object', 'description': 'The current multi-currency balances stored on the customer'},
+                            'invoice_prefix': {
+                                'type': ['string', 'null'],
+                                'description': 'The prefix for the customer used to generate unique invoice numbers',
+                            },
+                            'invoice_settings': {
+                                'type': 'object',
+                                'description': "The customer's default invoice settings",
+                                'properties': {
+                                    'custom_fields': {
+                                        'type': ['array', 'null'],
+                                        'description': 'Default custom fields to be displayed on invoices for this customer',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'The name of the custom field'},
+                                                'value': {'type': 'string', 'description': 'The value of the custom field'},
+                                            },
+                                        },
+                                    },
+                                    'default_payment_method': {
+                                        'type': ['string', 'null'],
+                                        'description': "ID of a payment method that's attached to the customer",
+                                    },
+                                    'footer': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Default footer to be displayed on invoices for this customer',
+                                    },
+                                    'rendering_options': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Default options for invoice PDF rendering for this customer',
+                                        'properties': {
+                                            'amount_tax_display': {
+                                                'type': ['string', 'null'],
+                                                'description': 'How line-item prices and amounts will be displayed with respect to tax on invoice PDFs',
+                                            },
+                                            'template': {
+                                                'type': ['string', 'null'],
+                                                'description': "ID of the invoice rendering template to be used for this customer's invoices",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                            'metadata': {
+                                'type': 'object',
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's full name or business name",
+                            },
+                            'next_invoice_sequence': {
+                                'type': ['integer', 'null'],
+                                'description': "The suffix of the customer's next invoice number",
+                            },
+                            'phone': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's phone number",
+                            },
+                            'preferred_locales': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': "The customer's preferred locales (languages), ordered by preference",
+                            },
+                            'shipping': {
+                                'type': ['object', 'null'],
+                                'description': 'Mailing and shipping address for the customer',
+                                'properties': {
+                                    'address': {
+                                        'type': 'object',
+                                        'description': 'Customer shipping address',
+                                        'properties': {
+                                            'city': {
+                                                'type': ['string', 'null'],
+                                                'description': 'City, district, suburb, town, or village',
+                                            },
+                                            'country': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                            },
+                                            'line1': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Address line 1, such as the street, PO Box, or company name',
+                                            },
+                                            'line2': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Address line 2, such as the apartment, suite, unit, or building',
+                                            },
+                                            'postal_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'ZIP or postal code',
+                                            },
+                                            'state': {
+                                                'type': ['string', 'null'],
+                                                'description': 'State, county, province, or region',
+                                            },
+                                        },
+                                    },
+                                    'name': {'type': 'string', 'description': 'Customer name'},
+                                    'phone': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Customer phone (including extension)',
+                                    },
+                                },
+                            },
+                            'sources': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's payment sources, if any",
+                                'properties': {
+                                    'object': {
+                                        'type': 'string',
+                                        'enum': ['list'],
+                                        'description': "String representing the object's type",
+                                    },
+                                    'data': {
+                                        'type': 'array',
+                                        'description': 'Details about each object',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                'account': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The account this bank account belongs to',
+                                                },
+                                                'account_holder_name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The name of the person or business that owns the bank account',
+                                                },
+                                                'account_holder_type': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The type of entity that holds the account',
+                                                },
+                                                'account_type': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The bank account type',
+                                                },
+                                                'available_payout_methods': {
+                                                    'type': ['array', 'null'],
+                                                    'description': 'A set of available payout methods for this bank account',
+                                                    'items': {
+                                                        'type': 'string',
+                                                        'enum': ['instant', 'standard'],
+                                                    },
+                                                },
+                                                'bank_name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Name of the bank associated with the routing number',
+                                                },
+                                                'country': {'type': 'string', 'description': 'Two-letter ISO code representing the country the bank account is located in'},
+                                                'currency': {'type': 'string', 'description': 'Three-letter ISO code for the currency paid out to the bank account'},
+                                                'customer': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The ID of the customer that the bank account is associated with',
+                                                },
+                                                'fingerprint': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Uniquely identifies this particular bank account',
+                                                },
+                                                'last4': {'type': 'string', 'description': 'The last four digits of the bank account number'},
+                                                'metadata': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Set of key-value pairs that you can attach to an object',
+                                                    'additionalProperties': {'type': 'string'},
+                                                },
+                                                'routing_number': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The routing transit number for the bank account',
+                                                },
+                                                'status': {'type': 'string', 'description': 'The status of the bank account'},
+                                            },
+                                        },
+                                    },
+                                    'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                    'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                },
+                            },
+                            'subscriptions': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's current subscriptions, if any",
+                                'properties': {
+                                    'object': {
+                                        'type': 'string',
+                                        'enum': ['list'],
+                                        'description': "String representing the object's type",
+                                    },
+                                    'data': {
+                                        'type': 'array',
+                                        'description': 'Details about each subscription',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                'object': {
+                                                    'type': 'string',
+                                                    'description': "String representing the object's type",
+                                                    'enum': ['subscription'],
+                                                },
+                                                'application': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the Connect Application that created the subscription',
+                                                },
+                                                'application_fee_percent': {
+                                                    'type': ['number', 'null'],
+                                                    'format': 'float',
+                                                    'description': 'A non-negative decimal between 0 and 100, with at most two decimal places',
+                                                },
+                                                'automatic_tax': {
+                                                    'type': 'object',
+                                                    'description': 'Automatic tax settings for this subscription',
+                                                    'properties': {
+                                                        'disabled_reason': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'If Stripe disabled automatic tax, this enum describes why',
+                                                        },
+                                                        'enabled': {'type': 'boolean', 'description': 'Whether Stripe automatically computes tax on this subscription'},
+                                                        'liability': {
+                                                            'type': ['object', 'null'],
+                                                            'description': "The account that's liable for tax",
+                                                            'properties': {
+                                                                'account': {
+                                                                    'type': ['string', 'null'],
+                                                                    'description': 'The connected account being referenced when type is account',
+                                                                },
+                                                                'type': {
+                                                                    'type': 'string',
+                                                                    'enum': ['account', 'self'],
+                                                                    'description': 'Type of the account referenced',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'billing_cycle_anchor': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'The reference point that aligns future billing cycle dates',
+                                                },
+                                                'billing_cycle_anchor_config': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The fixed values used to calculate the billing_cycle_anchor',
+                                                    'properties': {
+                                                        'day_of_month': {'type': 'integer', 'description': 'The day of the month of the billing_cycle_anchor'},
+                                                        'hour': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The hour of the day of the billing_cycle_anchor',
+                                                        },
+                                                        'minute': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The minute of the hour of the billing_cycle_anchor',
+                                                        },
+                                                        'month': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The month to start full cycle billing periods',
+                                                        },
+                                                        'second': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The second of the minute of the billing_cycle_anchor',
+                                                        },
+                                                    },
+                                                },
+                                                'billing_mode': {
+                                                    'type': 'object',
+                                                    'description': 'Controls how prorations and invoices for subscriptions are calculated and orchestrated',
+                                                    'properties': {
+                                                        'flexible': {
+                                                            'type': ['object', 'null'],
+                                                            'description': 'Configure behavior for flexible billing mode',
+                                                            'properties': {
+                                                                'proration_discounts': {
+                                                                    'type': 'string',
+                                                                    'enum': ['included', 'itemized'],
+                                                                    'description': 'Controls how invoices and invoice items display proration amounts and discount amounts',
+                                                                },
+                                                            },
+                                                        },
+                                                        'type': {
+                                                            'type': 'string',
+                                                            'enum': ['classic', 'flexible'],
+                                                            'description': 'Controls how prorations and invoices for subscriptions are calculated and orchestrated',
+                                                        },
+                                                        'updated_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'format': 'int64',
+                                                            'description': 'Details on when the current billing_mode was adopted',
+                                                        },
+                                                    },
+                                                },
+                                                'billing_thresholds': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period',
+                                                    'properties': {
+                                                        'amount_gte': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Monetary threshold that triggers the subscription to create an invoice',
+                                                        },
+                                                        'reset_billing_cycle_anchor': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Indicates if the billing_cycle_anchor should be reset when a threshold is reached',
+                                                        },
+                                                    },
+                                                },
+                                                'cancel_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'A date in the future at which the subscription will automatically get canceled',
+                                                },
+                                                'cancel_at_period_end': {'type': 'boolean', 'description': 'Whether this subscription will (if status=active) or did (if status=canceled) cancel at the end of the current billing period'},
+                                                'canceled_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has been canceled, the date of that cancellation',
+                                                },
+                                                'cancellation_details': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Details about why this subscription was cancelled',
+                                                    'properties': {
+                                                        'comment': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Additional comments about why the user canceled the subscription',
+                                                        },
+                                                        'feedback': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'The customer submitted reason for why they canceled',
+                                                        },
+                                                        'reason': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Why this subscription was canceled',
+                                                        },
+                                                    },
+                                                },
+                                                'collection_method': {
+                                                    'type': 'string',
+                                                    'enum': ['charge_automatically', 'send_invoice'],
+                                                    'description': 'Either charge_automatically, or send_invoice',
+                                                },
+                                                'created': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Time at which the object was created. Measured in seconds since the Unix epoch',
+                                                },
+                                                'currency': {'type': 'string', 'description': 'Three-letter ISO currency code, in lowercase'},
+                                                'customer': {'type': 'string', 'description': 'ID of the customer who owns the subscription'},
+                                                'customer_account': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the account who owns the subscription',
+                                                },
+                                                'days_until_due': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Number of days a customer has to pay invoices generated by this subscription',
+                                                },
+                                                'default_payment_method': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the default payment method for the subscription',
+                                                },
+                                                'default_source': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the default payment source for the subscription',
+                                                },
+                                                'default_tax_rates': {
+                                                    'type': ['array', 'null'],
+                                                    'description': 'The tax rates that will apply to any subscription item that does not have tax_rates set',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                            'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                            'active': {'type': 'boolean', 'description': 'Defaults to true'},
+                                                            'country': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                                            },
+                                                            'created': {
+                                                                'type': 'integer',
+                                                                'format': 'int64',
+                                                                'description': 'Time at which the object was created',
+                                                            },
+                                                            'description': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'An arbitrary string attached to the tax rate for your internal use only',
+                                                            },
+                                                            'display_name': {'type': 'string', 'description': 'The display name of the tax rates'},
+                                                            'effective_percentage': {
+                                                                'type': ['number', 'null'],
+                                                                'description': 'Actual/effective tax rate percentage out of 100',
+                                                            },
+                                                            'flat_amount': {
+                                                                'type': ['object', 'null'],
+                                                                'description': 'The amount of the tax rate when the rate_type is flat_amount',
+                                                                'properties': {
+                                                                    'amount': {'type': 'integer', 'description': 'Amount of the tax when the rate_type is flat_amount'},
+                                                                    'currency': {'type': 'string', 'description': 'Three-letter ISO currency code, in lowercase'},
+                                                                },
+                                                            },
+                                                            'inclusive': {'type': 'boolean', 'description': 'This specifies if the tax rate is inclusive or exclusive'},
+                                                            'jurisdiction': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'The jurisdiction for the tax rate',
+                                                            },
+                                                            'jurisdiction_level': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': [
+                                                                    'city',
+                                                                    'country',
+                                                                    'county',
+                                                                    'district',
+                                                                    'multiple',
+                                                                    'state',
+                                                                ],
+                                                                'description': 'The level of the jurisdiction that imposes this tax rate',
+                                                            },
+                                                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                                            'metadata': {
+                                                                'type': ['object', 'null'],
+                                                                'description': 'Set of key-value pairs',
+                                                                'additionalProperties': {'type': 'string'},
+                                                            },
+                                                            'percentage': {'type': 'number', 'description': 'Tax rate percentage out of 100'},
+                                                            'rate_type': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': ['flat_amount', 'percentage'],
+                                                                'description': 'Indicates the type of tax rate applied to the taxable amount',
+                                                            },
+                                                            'state': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'ISO 3166-2 subdivision code, without country prefix',
+                                                            },
+                                                            'tax_type': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': [
+                                                                    'amusement_tax',
+                                                                    'communications_tax',
+                                                                    'gst',
+                                                                    'hst',
+                                                                    'igst',
+                                                                    'jct',
+                                                                    'lease_tax',
+                                                                    'pst',
+                                                                    'qst',
+                                                                    'retail_delivery_fee',
+                                                                    'rst',
+                                                                    'sales_tax',
+                                                                    'service_tax',
+                                                                    'vat',
+                                                                ],
+                                                                'description': 'The high-level tax type',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'description': {
+                                                    'type': ['string', 'null'],
+                                                    'description': "The subscription's description, meant to be displayable to the customer",
+                                                },
+                                                'discounts': {
+                                                    'type': 'array',
+                                                    'items': {'type': 'string'},
+                                                    'description': 'The discounts applied to the subscription',
+                                                },
+                                                'ended_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has ended, the date the subscription ended',
+                                                },
+                                                'invoice_settings': {
+                                                    'type': 'object',
+                                                    'description': 'All invoices will be billed using the specified settings',
+                                                    'properties': {
+                                                        'account_tax_ids': {
+                                                            'type': ['array', 'null'],
+                                                            'description': 'The account tax IDs associated with the subscription',
+                                                            'items': {'type': 'string'},
+                                                        },
+                                                        'issuer': {
+                                                            'type': 'object',
+                                                            'description': 'The connected account that issues the invoice',
+                                                            'properties': {
+                                                                'account': {
+                                                                    'type': ['string', 'null'],
+                                                                    'description': 'The connected account being referenced when type is account',
+                                                                },
+                                                                'type': {
+                                                                    'type': 'string',
+                                                                    'enum': ['account', 'self'],
+                                                                    'description': 'Type of the account referenced',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'List of subscription items, each with an attached price',
+                                                    'properties': {
+                                                        'object': {
+                                                            'type': 'string',
+                                                            'enum': ['list'],
+                                                            'description': "String representing the object's type",
+                                                        },
+                                                        'data': {
+                                                            'type': 'array',
+                                                            'description': 'Details about each object',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                                    'billing_thresholds': {
+                                                                        'type': ['object', 'null'],
+                                                                        'description': 'Define thresholds at which an invoice will be sent',
+                                                                        'properties': {
+                                                                            'usage_gte': {
+                                                                                'type': ['integer', 'null'],
+                                                                                'description': 'Usage threshold that triggers the subscription to create an invoice',
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    'created': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': 'Time at which the object was created',
+                                                                    },
+                                                                    'current_period_end': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': "The end time of this subscription item's current billing period",
+                                                                    },
+                                                                    'current_period_start': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': "The start time of this subscription item's current billing period",
+                                                                    },
+                                                                    'discounts': {
+                                                                        'type': 'array',
+                                                                        'items': {'type': 'string'},
+                                                                        'description': 'The discounts applied to the subscription item',
+                                                                    },
+                                                                    'metadata': {
+                                                                        'type': 'object',
+                                                                        'description': 'Set of key-value pairs',
+                                                                        'additionalProperties': {'type': 'string'},
+                                                                    },
+                                                                    'plan': {
+                                                                        'type': ['object', 'null'],
+                                                                        'description': 'The plan the customer is subscribed to (deprecated, use price instead)',
+                                                                        'additionalProperties': True,
+                                                                    },
+                                                                    'price': {
+                                                                        'type': 'object',
+                                                                        'description': 'The price the customer is subscribed to',
+                                                                        'additionalProperties': True,
+                                                                    },
+                                                                    'quantity': {
+                                                                        'type': ['integer', 'null'],
+                                                                        'description': 'The quantity of the plan to which the customer should be subscribed',
+                                                                    },
+                                                                    'subscription': {'type': 'string', 'description': 'The subscription this subscription_item belongs to'},
+                                                                    'tax_rates': {
+                                                                        'type': ['array', 'null'],
+                                                                        'description': 'The tax rates which apply to this subscription_item',
+                                                                        'items': {'type': 'object', 'additionalProperties': True},
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                                        'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                                        'total_count': {'type': 'integer', 'description': 'The total count of items in the list'},
+                                                    },
+                                                },
+                                                'latest_invoice': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The most recent invoice this subscription has generated',
+                                                },
+                                                'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                                'metadata': {
+                                                    'type': 'object',
+                                                    'additionalProperties': {'type': 'string'},
+                                                    'description': 'Set of key-value pairs',
+                                                },
+                                                'next_pending_invoice_item_invoice': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'Specifies the approximate timestamp on which any pending invoice items will be billed',
+                                                },
+                                                'on_behalf_of': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The account (if any) the charge was made on behalf of for charges associated with this subscription',
+                                                },
+                                                'pause_collection': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'If specified, payment collection for this subscription will be paused',
+                                                    'properties': {
+                                                        'behavior': {
+                                                            'type': 'string',
+                                                            'enum': ['keep_as_draft', 'mark_uncollectible', 'void'],
+                                                            'description': 'The payment collection behavior for this subscription while paused',
+                                                        },
+                                                        'resumes_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'format': 'int64',
+                                                            'description': 'The time after which the subscription will resume collecting payments',
+                                                        },
+                                                    },
+                                                },
+                                                'payment_settings': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Payment settings passed on to invoices created by the subscription',
+                                                    'properties': {
+                                                        'payment_method_options': {
+                                                            'type': ['object', 'null'],
+                                                            'description': 'Payment-method-specific configuration to provide to invoices',
+                                                            'additionalProperties': True,
+                                                        },
+                                                        'payment_method_types': {
+                                                            'type': ['array', 'null'],
+                                                            'description': 'The list of payment method types to provide to every invoice',
+                                                            'items': {'type': 'string'},
+                                                        },
+                                                    },
+                                                },
+                                                'status': {
+                                                    'type': 'string',
+                                                    'enum': [
+                                                        'incomplete',
+                                                        'incomplete_expired',
+                                                        'trialing',
+                                                        'active',
+                                                        'past_due',
+                                                        'canceled',
+                                                        'unpaid',
+                                                        'paused',
+                                                    ],
+                                                    'description': 'The status of the subscription',
+                                                },
+                                                'current_period_start': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Start of the current period for which the subscription has been invoiced',
+                                                },
+                                                'current_period_end': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'End of the current period for which the subscription has been invoiced',
+                                                },
+                                                'start_date': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Date when the subscription was first created',
+                                                },
+                                                'trial_start': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has a trial, the beginning of that trial',
+                                                },
+                                                'trial_end': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has a trial, the end of that trial',
+                                                },
+                                                'discount': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The discount applied to the subscription',
+                                                },
+                                                'plan': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The subscription plan (deprecated, use price instead)',
+                                                },
+                                                'quantity': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'The quantity of the subscription',
+                                                },
+                                                'schedule': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The schedule attached to the subscription',
+                                                },
+                                                'test_clock': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the test clock this subscription belongs to',
+                                                },
+                                                'transfer_data': {
+                                                    'type': ['object', 'null'],
+                                                    'description': "The account (if any) the subscription's payments will be attributed to for tax reporting",
+                                                },
+                                                'trial_settings': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Settings related to subscription trials',
+                                                    'properties': {
+                                                        'end_behavior': {
+                                                            'type': 'object',
+                                                            'properties': {
+                                                                'missing_payment_method': {'type': 'string', 'description': 'Behavior when the trial ends and payment method is missing'},
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'pending_invoice_item_interval': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Specifies an interval for how often to bill for any pending invoice items',
+                                                },
+                                                'pending_setup_intent': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The ID of the SetupIntent to be confirmed',
+                                                },
+                                                'pending_update': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid',
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'subscriptions',
+                                        },
+                                    },
+                                    'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                    'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                },
+                            },
+                            'tax_exempt': {
+                                'type': ['string', 'null'],
+                                'description': "Describes the customer's tax exemption status",
+                            },
+                            'test_clock': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the test clock this customer belongs to',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'customers',
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/v1/customers/{id}',
@@ -1899,6 +2850,975 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'x-airbyte-entity-name': 'customers',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/v1/customers/{id}',
+                    action=Action.UPDATE,
+                    description='Updates the specified customer by setting the values of the parameters passed.',
+                    body_fields=[
+                        'email',
+                        'name',
+                        'description',
+                        'phone',
+                        'address',
+                        'metadata',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'email': {'type': 'string', 'description': "Customer's email address"},
+                            'name': {'type': 'string', 'description': "The customer's full name or business name"},
+                            'description': {'type': 'string', 'description': 'An arbitrary string attached to the object'},
+                            'phone': {'type': 'string', 'description': "The customer's phone number"},
+                            'address': {
+                                'type': 'object',
+                                'description': "The customer's address",
+                                'properties': {
+                                    'line1': {'type': 'string', 'description': 'Address line 1'},
+                                    'line2': {'type': 'string', 'description': 'Address line 2'},
+                                    'city': {'type': 'string', 'description': 'City, district, suburb, town, or village'},
+                                    'state': {'type': 'string', 'description': 'State, county, province, or region'},
+                                    'postal_code': {'type': 'string', 'description': 'ZIP or postal code'},
+                                    'country': {'type': 'string', 'description': 'Two-letter country code (ISO 3166-1 alpha-2)'},
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique identifier for the customer'},
+                            'object': {
+                                'type': 'string',
+                                'description': "String representing the object's type",
+                                'enum': ['customer'],
+                            },
+                            'address': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's address",
+                                'properties': {
+                                    'city': {
+                                        'type': ['string', 'null'],
+                                        'description': 'City, district, suburb, town, or village',
+                                    },
+                                    'country': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                    },
+                                    'line1': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Address line 1, such as the street, PO Box, or company name',
+                                    },
+                                    'line2': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Address line 2, such as the apartment, suite, unit, or building',
+                                    },
+                                    'postal_code': {
+                                        'type': ['string', 'null'],
+                                        'description': 'ZIP or postal code',
+                                    },
+                                    'state': {
+                                        'type': ['string', 'null'],
+                                        'description': 'State, county, province, or region',
+                                    },
+                                },
+                            },
+                            'balance': {'type': 'integer', 'description': 'The current balance stored on the customer'},
+                            'business_name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's business name",
+                            },
+                            'cash_balance': {
+                                'type': ['object', 'null'],
+                                'description': 'The current funds being held by Stripe on behalf of the customer',
+                                'properties': {
+                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                    'available': {
+                                        'type': ['object', 'null'],
+                                        'description': 'A hash of all cash balances available to this customer',
+                                    },
+                                    'customer': {'type': 'string', 'description': 'The ID of the customer whose cash balance this object represents'},
+                                    'customer_account': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the account whose cash balance this object represents',
+                                    },
+                                    'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                    'settings': {
+                                        'type': 'object',
+                                        'description': 'A hash of settings for this cash balance',
+                                        'properties': {
+                                            'reconciliation_mode': {
+                                                'type': 'string',
+                                                'enum': ['automatic', 'manual'],
+                                                'description': 'The configuration for how funds that land in the customer cash balance are reconciled',
+                                            },
+                                            'using_merchant_default': {'type': 'boolean', 'description': "A flag to indicate if reconciliation mode returned is the user's default or is specific to this customer cash balance"},
+                                        },
+                                    },
+                                },
+                            },
+                            'created': {
+                                'type': 'integer',
+                                'format': 'int64',
+                                'description': 'Time at which the object was created (Unix timestamp)',
+                            },
+                            'currency': {
+                                'type': ['string', 'null'],
+                                'description': 'Three-letter ISO code for the currency the customer can be charged in for recurring billing purposes',
+                            },
+                            'customer_account': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the customer account associated with this customer',
+                            },
+                            'default_currency': {
+                                'type': ['string', 'null'],
+                                'description': 'The default currency for the customer',
+                            },
+                            'default_source': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the default payment source for the customer',
+                            },
+                            'delinquent': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the customer is delinquent on payments',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'An arbitrary string attached to the object',
+                            },
+                            'discount': {
+                                'type': ['object', 'null'],
+                                'description': 'Describes the current discount active on the customer, if there is one',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the discount object'},
+                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                    'checkout_session': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The Checkout session that this coupon is applied to, if applicable',
+                                    },
+                                    'customer': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the customer associated with this discount',
+                                    },
+                                    'customer_account': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The ID of the account associated with this discount',
+                                    },
+                                    'end': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'If the coupon has a duration of repeating, the date that this discount will end',
+                                    },
+                                    'invoice': {
+                                        'type': ['string', 'null'],
+                                        'description': "The invoice that the discount's coupon was applied to",
+                                    },
+                                    'invoice_item': {
+                                        'type': ['string', 'null'],
+                                        'description': "The invoice item that the discount's coupon was applied to",
+                                    },
+                                    'promotion_code': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The promotion code applied to create this discount',
+                                    },
+                                    'source': {
+                                        'type': 'object',
+                                        'description': 'The source of the discount',
+                                        'properties': {
+                                            'coupon': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The coupon that was redeemed to create this discount',
+                                            },
+                                            'type': {
+                                                'type': 'string',
+                                                'enum': ['coupon'],
+                                                'description': 'The source type of the discount',
+                                            },
+                                        },
+                                    },
+                                    'start': {'type': 'integer', 'description': 'Date that the coupon was applied'},
+                                    'subscription': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The subscription that this coupon is applied to',
+                                    },
+                                    'subscription_item': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The subscription item that this coupon is applied to',
+                                    },
+                                },
+                            },
+                            'email': {
+                                'type': ['string', 'null'],
+                                'format': 'email',
+                                'description': "The customer's email address",
+                            },
+                            'individual_name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's individual name",
+                            },
+                            'invoice_credit_balance': {'type': 'object', 'description': 'The current multi-currency balances stored on the customer'},
+                            'invoice_prefix': {
+                                'type': ['string', 'null'],
+                                'description': 'The prefix for the customer used to generate unique invoice numbers',
+                            },
+                            'invoice_settings': {
+                                'type': 'object',
+                                'description': "The customer's default invoice settings",
+                                'properties': {
+                                    'custom_fields': {
+                                        'type': ['array', 'null'],
+                                        'description': 'Default custom fields to be displayed on invoices for this customer',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'The name of the custom field'},
+                                                'value': {'type': 'string', 'description': 'The value of the custom field'},
+                                            },
+                                        },
+                                    },
+                                    'default_payment_method': {
+                                        'type': ['string', 'null'],
+                                        'description': "ID of a payment method that's attached to the customer",
+                                    },
+                                    'footer': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Default footer to be displayed on invoices for this customer',
+                                    },
+                                    'rendering_options': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Default options for invoice PDF rendering for this customer',
+                                        'properties': {
+                                            'amount_tax_display': {
+                                                'type': ['string', 'null'],
+                                                'description': 'How line-item prices and amounts will be displayed with respect to tax on invoice PDFs',
+                                            },
+                                            'template': {
+                                                'type': ['string', 'null'],
+                                                'description': "ID of the invoice rendering template to be used for this customer's invoices",
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                            'metadata': {
+                                'type': 'object',
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's full name or business name",
+                            },
+                            'next_invoice_sequence': {
+                                'type': ['integer', 'null'],
+                                'description': "The suffix of the customer's next invoice number",
+                            },
+                            'phone': {
+                                'type': ['string', 'null'],
+                                'description': "The customer's phone number",
+                            },
+                            'preferred_locales': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': "The customer's preferred locales (languages), ordered by preference",
+                            },
+                            'shipping': {
+                                'type': ['object', 'null'],
+                                'description': 'Mailing and shipping address for the customer',
+                                'properties': {
+                                    'address': {
+                                        'type': 'object',
+                                        'description': 'Customer shipping address',
+                                        'properties': {
+                                            'city': {
+                                                'type': ['string', 'null'],
+                                                'description': 'City, district, suburb, town, or village',
+                                            },
+                                            'country': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                            },
+                                            'line1': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Address line 1, such as the street, PO Box, or company name',
+                                            },
+                                            'line2': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Address line 2, such as the apartment, suite, unit, or building',
+                                            },
+                                            'postal_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'ZIP or postal code',
+                                            },
+                                            'state': {
+                                                'type': ['string', 'null'],
+                                                'description': 'State, county, province, or region',
+                                            },
+                                        },
+                                    },
+                                    'name': {'type': 'string', 'description': 'Customer name'},
+                                    'phone': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Customer phone (including extension)',
+                                    },
+                                },
+                            },
+                            'sources': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's payment sources, if any",
+                                'properties': {
+                                    'object': {
+                                        'type': 'string',
+                                        'enum': ['list'],
+                                        'description': "String representing the object's type",
+                                    },
+                                    'data': {
+                                        'type': 'array',
+                                        'description': 'Details about each object',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                'account': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The account this bank account belongs to',
+                                                },
+                                                'account_holder_name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The name of the person or business that owns the bank account',
+                                                },
+                                                'account_holder_type': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The type of entity that holds the account',
+                                                },
+                                                'account_type': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The bank account type',
+                                                },
+                                                'available_payout_methods': {
+                                                    'type': ['array', 'null'],
+                                                    'description': 'A set of available payout methods for this bank account',
+                                                    'items': {
+                                                        'type': 'string',
+                                                        'enum': ['instant', 'standard'],
+                                                    },
+                                                },
+                                                'bank_name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Name of the bank associated with the routing number',
+                                                },
+                                                'country': {'type': 'string', 'description': 'Two-letter ISO code representing the country the bank account is located in'},
+                                                'currency': {'type': 'string', 'description': 'Three-letter ISO code for the currency paid out to the bank account'},
+                                                'customer': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The ID of the customer that the bank account is associated with',
+                                                },
+                                                'fingerprint': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Uniquely identifies this particular bank account',
+                                                },
+                                                'last4': {'type': 'string', 'description': 'The last four digits of the bank account number'},
+                                                'metadata': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Set of key-value pairs that you can attach to an object',
+                                                    'additionalProperties': {'type': 'string'},
+                                                },
+                                                'routing_number': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The routing transit number for the bank account',
+                                                },
+                                                'status': {'type': 'string', 'description': 'The status of the bank account'},
+                                            },
+                                        },
+                                    },
+                                    'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                    'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                },
+                            },
+                            'subscriptions': {
+                                'type': ['object', 'null'],
+                                'description': "The customer's current subscriptions, if any",
+                                'properties': {
+                                    'object': {
+                                        'type': 'string',
+                                        'enum': ['list'],
+                                        'description': "String representing the object's type",
+                                    },
+                                    'data': {
+                                        'type': 'array',
+                                        'description': 'Details about each subscription',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                'object': {
+                                                    'type': 'string',
+                                                    'description': "String representing the object's type",
+                                                    'enum': ['subscription'],
+                                                },
+                                                'application': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the Connect Application that created the subscription',
+                                                },
+                                                'application_fee_percent': {
+                                                    'type': ['number', 'null'],
+                                                    'format': 'float',
+                                                    'description': 'A non-negative decimal between 0 and 100, with at most two decimal places',
+                                                },
+                                                'automatic_tax': {
+                                                    'type': 'object',
+                                                    'description': 'Automatic tax settings for this subscription',
+                                                    'properties': {
+                                                        'disabled_reason': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'If Stripe disabled automatic tax, this enum describes why',
+                                                        },
+                                                        'enabled': {'type': 'boolean', 'description': 'Whether Stripe automatically computes tax on this subscription'},
+                                                        'liability': {
+                                                            'type': ['object', 'null'],
+                                                            'description': "The account that's liable for tax",
+                                                            'properties': {
+                                                                'account': {
+                                                                    'type': ['string', 'null'],
+                                                                    'description': 'The connected account being referenced when type is account',
+                                                                },
+                                                                'type': {
+                                                                    'type': 'string',
+                                                                    'enum': ['account', 'self'],
+                                                                    'description': 'Type of the account referenced',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'billing_cycle_anchor': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'The reference point that aligns future billing cycle dates',
+                                                },
+                                                'billing_cycle_anchor_config': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The fixed values used to calculate the billing_cycle_anchor',
+                                                    'properties': {
+                                                        'day_of_month': {'type': 'integer', 'description': 'The day of the month of the billing_cycle_anchor'},
+                                                        'hour': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The hour of the day of the billing_cycle_anchor',
+                                                        },
+                                                        'minute': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The minute of the hour of the billing_cycle_anchor',
+                                                        },
+                                                        'month': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The month to start full cycle billing periods',
+                                                        },
+                                                        'second': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'The second of the minute of the billing_cycle_anchor',
+                                                        },
+                                                    },
+                                                },
+                                                'billing_mode': {
+                                                    'type': 'object',
+                                                    'description': 'Controls how prorations and invoices for subscriptions are calculated and orchestrated',
+                                                    'properties': {
+                                                        'flexible': {
+                                                            'type': ['object', 'null'],
+                                                            'description': 'Configure behavior for flexible billing mode',
+                                                            'properties': {
+                                                                'proration_discounts': {
+                                                                    'type': 'string',
+                                                                    'enum': ['included', 'itemized'],
+                                                                    'description': 'Controls how invoices and invoice items display proration amounts and discount amounts',
+                                                                },
+                                                            },
+                                                        },
+                                                        'type': {
+                                                            'type': 'string',
+                                                            'enum': ['classic', 'flexible'],
+                                                            'description': 'Controls how prorations and invoices for subscriptions are calculated and orchestrated',
+                                                        },
+                                                        'updated_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'format': 'int64',
+                                                            'description': 'Details on when the current billing_mode was adopted',
+                                                        },
+                                                    },
+                                                },
+                                                'billing_thresholds': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Define thresholds at which an invoice will be sent, and the subscription advanced to a new billing period',
+                                                    'properties': {
+                                                        'amount_gte': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Monetary threshold that triggers the subscription to create an invoice',
+                                                        },
+                                                        'reset_billing_cycle_anchor': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Indicates if the billing_cycle_anchor should be reset when a threshold is reached',
+                                                        },
+                                                    },
+                                                },
+                                                'cancel_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'A date in the future at which the subscription will automatically get canceled',
+                                                },
+                                                'cancel_at_period_end': {'type': 'boolean', 'description': 'Whether this subscription will (if status=active) or did (if status=canceled) cancel at the end of the current billing period'},
+                                                'canceled_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has been canceled, the date of that cancellation',
+                                                },
+                                                'cancellation_details': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Details about why this subscription was cancelled',
+                                                    'properties': {
+                                                        'comment': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Additional comments about why the user canceled the subscription',
+                                                        },
+                                                        'feedback': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'The customer submitted reason for why they canceled',
+                                                        },
+                                                        'reason': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Why this subscription was canceled',
+                                                        },
+                                                    },
+                                                },
+                                                'collection_method': {
+                                                    'type': 'string',
+                                                    'enum': ['charge_automatically', 'send_invoice'],
+                                                    'description': 'Either charge_automatically, or send_invoice',
+                                                },
+                                                'created': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Time at which the object was created. Measured in seconds since the Unix epoch',
+                                                },
+                                                'currency': {'type': 'string', 'description': 'Three-letter ISO currency code, in lowercase'},
+                                                'customer': {'type': 'string', 'description': 'ID of the customer who owns the subscription'},
+                                                'customer_account': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the account who owns the subscription',
+                                                },
+                                                'days_until_due': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Number of days a customer has to pay invoices generated by this subscription',
+                                                },
+                                                'default_payment_method': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the default payment method for the subscription',
+                                                },
+                                                'default_source': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the default payment source for the subscription',
+                                                },
+                                                'default_tax_rates': {
+                                                    'type': ['array', 'null'],
+                                                    'description': 'The tax rates that will apply to any subscription item that does not have tax_rates set',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                            'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                            'active': {'type': 'boolean', 'description': 'Defaults to true'},
+                                                            'country': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Two-letter country code (ISO 3166-1 alpha-2)',
+                                                            },
+                                                            'created': {
+                                                                'type': 'integer',
+                                                                'format': 'int64',
+                                                                'description': 'Time at which the object was created',
+                                                            },
+                                                            'description': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'An arbitrary string attached to the tax rate for your internal use only',
+                                                            },
+                                                            'display_name': {'type': 'string', 'description': 'The display name of the tax rates'},
+                                                            'effective_percentage': {
+                                                                'type': ['number', 'null'],
+                                                                'description': 'Actual/effective tax rate percentage out of 100',
+                                                            },
+                                                            'flat_amount': {
+                                                                'type': ['object', 'null'],
+                                                                'description': 'The amount of the tax rate when the rate_type is flat_amount',
+                                                                'properties': {
+                                                                    'amount': {'type': 'integer', 'description': 'Amount of the tax when the rate_type is flat_amount'},
+                                                                    'currency': {'type': 'string', 'description': 'Three-letter ISO currency code, in lowercase'},
+                                                                },
+                                                            },
+                                                            'inclusive': {'type': 'boolean', 'description': 'This specifies if the tax rate is inclusive or exclusive'},
+                                                            'jurisdiction': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'The jurisdiction for the tax rate',
+                                                            },
+                                                            'jurisdiction_level': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': [
+                                                                    'city',
+                                                                    'country',
+                                                                    'county',
+                                                                    'district',
+                                                                    'multiple',
+                                                                    'state',
+                                                                ],
+                                                                'description': 'The level of the jurisdiction that imposes this tax rate',
+                                                            },
+                                                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                                            'metadata': {
+                                                                'type': ['object', 'null'],
+                                                                'description': 'Set of key-value pairs',
+                                                                'additionalProperties': {'type': 'string'},
+                                                            },
+                                                            'percentage': {'type': 'number', 'description': 'Tax rate percentage out of 100'},
+                                                            'rate_type': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': ['flat_amount', 'percentage'],
+                                                                'description': 'Indicates the type of tax rate applied to the taxable amount',
+                                                            },
+                                                            'state': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'ISO 3166-2 subdivision code, without country prefix',
+                                                            },
+                                                            'tax_type': {
+                                                                'type': ['string', 'null'],
+                                                                'enum': [
+                                                                    'amusement_tax',
+                                                                    'communications_tax',
+                                                                    'gst',
+                                                                    'hst',
+                                                                    'igst',
+                                                                    'jct',
+                                                                    'lease_tax',
+                                                                    'pst',
+                                                                    'qst',
+                                                                    'retail_delivery_fee',
+                                                                    'rst',
+                                                                    'sales_tax',
+                                                                    'service_tax',
+                                                                    'vat',
+                                                                ],
+                                                                'description': 'The high-level tax type',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'description': {
+                                                    'type': ['string', 'null'],
+                                                    'description': "The subscription's description, meant to be displayable to the customer",
+                                                },
+                                                'discounts': {
+                                                    'type': 'array',
+                                                    'items': {'type': 'string'},
+                                                    'description': 'The discounts applied to the subscription',
+                                                },
+                                                'ended_at': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has ended, the date the subscription ended',
+                                                },
+                                                'invoice_settings': {
+                                                    'type': 'object',
+                                                    'description': 'All invoices will be billed using the specified settings',
+                                                    'properties': {
+                                                        'account_tax_ids': {
+                                                            'type': ['array', 'null'],
+                                                            'description': 'The account tax IDs associated with the subscription',
+                                                            'items': {'type': 'string'},
+                                                        },
+                                                        'issuer': {
+                                                            'type': 'object',
+                                                            'description': 'The connected account that issues the invoice',
+                                                            'properties': {
+                                                                'account': {
+                                                                    'type': ['string', 'null'],
+                                                                    'description': 'The connected account being referenced when type is account',
+                                                                },
+                                                                'type': {
+                                                                    'type': 'string',
+                                                                    'enum': ['account', 'self'],
+                                                                    'description': 'Type of the account referenced',
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'List of subscription items, each with an attached price',
+                                                    'properties': {
+                                                        'object': {
+                                                            'type': 'string',
+                                                            'enum': ['list'],
+                                                            'description': "String representing the object's type",
+                                                        },
+                                                        'data': {
+                                                            'type': 'array',
+                                                            'description': 'Details about each object',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string', 'description': 'Unique identifier for the object'},
+                                                                    'object': {'type': 'string', 'description': "String representing the object's type"},
+                                                                    'billing_thresholds': {
+                                                                        'type': ['object', 'null'],
+                                                                        'description': 'Define thresholds at which an invoice will be sent',
+                                                                        'properties': {
+                                                                            'usage_gte': {
+                                                                                'type': ['integer', 'null'],
+                                                                                'description': 'Usage threshold that triggers the subscription to create an invoice',
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    'created': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': 'Time at which the object was created',
+                                                                    },
+                                                                    'current_period_end': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': "The end time of this subscription item's current billing period",
+                                                                    },
+                                                                    'current_period_start': {
+                                                                        'type': 'integer',
+                                                                        'format': 'int64',
+                                                                        'description': "The start time of this subscription item's current billing period",
+                                                                    },
+                                                                    'discounts': {
+                                                                        'type': 'array',
+                                                                        'items': {'type': 'string'},
+                                                                        'description': 'The discounts applied to the subscription item',
+                                                                    },
+                                                                    'metadata': {
+                                                                        'type': 'object',
+                                                                        'description': 'Set of key-value pairs',
+                                                                        'additionalProperties': {'type': 'string'},
+                                                                    },
+                                                                    'plan': {
+                                                                        'type': ['object', 'null'],
+                                                                        'description': 'The plan the customer is subscribed to (deprecated, use price instead)',
+                                                                        'additionalProperties': True,
+                                                                    },
+                                                                    'price': {
+                                                                        'type': 'object',
+                                                                        'description': 'The price the customer is subscribed to',
+                                                                        'additionalProperties': True,
+                                                                    },
+                                                                    'quantity': {
+                                                                        'type': ['integer', 'null'],
+                                                                        'description': 'The quantity of the plan to which the customer should be subscribed',
+                                                                    },
+                                                                    'subscription': {'type': 'string', 'description': 'The subscription this subscription_item belongs to'},
+                                                                    'tax_rates': {
+                                                                        'type': ['array', 'null'],
+                                                                        'description': 'The tax rates which apply to this subscription_item',
+                                                                        'items': {'type': 'object', 'additionalProperties': True},
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                        'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                                        'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                                        'total_count': {'type': 'integer', 'description': 'The total count of items in the list'},
+                                                    },
+                                                },
+                                                'latest_invoice': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The most recent invoice this subscription has generated',
+                                                },
+                                                'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or false if in test mode'},
+                                                'metadata': {
+                                                    'type': 'object',
+                                                    'additionalProperties': {'type': 'string'},
+                                                    'description': 'Set of key-value pairs',
+                                                },
+                                                'next_pending_invoice_item_invoice': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'Specifies the approximate timestamp on which any pending invoice items will be billed',
+                                                },
+                                                'on_behalf_of': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The account (if any) the charge was made on behalf of for charges associated with this subscription',
+                                                },
+                                                'pause_collection': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'If specified, payment collection for this subscription will be paused',
+                                                    'properties': {
+                                                        'behavior': {
+                                                            'type': 'string',
+                                                            'enum': ['keep_as_draft', 'mark_uncollectible', 'void'],
+                                                            'description': 'The payment collection behavior for this subscription while paused',
+                                                        },
+                                                        'resumes_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'format': 'int64',
+                                                            'description': 'The time after which the subscription will resume collecting payments',
+                                                        },
+                                                    },
+                                                },
+                                                'payment_settings': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Payment settings passed on to invoices created by the subscription',
+                                                    'properties': {
+                                                        'payment_method_options': {
+                                                            'type': ['object', 'null'],
+                                                            'description': 'Payment-method-specific configuration to provide to invoices',
+                                                            'additionalProperties': True,
+                                                        },
+                                                        'payment_method_types': {
+                                                            'type': ['array', 'null'],
+                                                            'description': 'The list of payment method types to provide to every invoice',
+                                                            'items': {'type': 'string'},
+                                                        },
+                                                    },
+                                                },
+                                                'status': {
+                                                    'type': 'string',
+                                                    'enum': [
+                                                        'incomplete',
+                                                        'incomplete_expired',
+                                                        'trialing',
+                                                        'active',
+                                                        'past_due',
+                                                        'canceled',
+                                                        'unpaid',
+                                                        'paused',
+                                                    ],
+                                                    'description': 'The status of the subscription',
+                                                },
+                                                'current_period_start': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Start of the current period for which the subscription has been invoiced',
+                                                },
+                                                'current_period_end': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'End of the current period for which the subscription has been invoiced',
+                                                },
+                                                'start_date': {
+                                                    'type': 'integer',
+                                                    'format': 'int64',
+                                                    'description': 'Date when the subscription was first created',
+                                                },
+                                                'trial_start': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has a trial, the beginning of that trial',
+                                                },
+                                                'trial_end': {
+                                                    'type': ['integer', 'null'],
+                                                    'format': 'int64',
+                                                    'description': 'If the subscription has a trial, the end of that trial',
+                                                },
+                                                'discount': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The discount applied to the subscription',
+                                                },
+                                                'plan': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'The subscription plan (deprecated, use price instead)',
+                                                },
+                                                'quantity': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'The quantity of the subscription',
+                                                },
+                                                'schedule': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The schedule attached to the subscription',
+                                                },
+                                                'test_clock': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'ID of the test clock this subscription belongs to',
+                                                },
+                                                'transfer_data': {
+                                                    'type': ['object', 'null'],
+                                                    'description': "The account (if any) the subscription's payments will be attributed to for tax reporting",
+                                                },
+                                                'trial_settings': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Settings related to subscription trials',
+                                                    'properties': {
+                                                        'end_behavior': {
+                                                            'type': 'object',
+                                                            'properties': {
+                                                                'missing_payment_method': {'type': 'string', 'description': 'Behavior when the trial ends and payment method is missing'},
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                'pending_invoice_item_interval': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'Specifies an interval for how often to bill for any pending invoice items',
+                                                },
+                                                'pending_setup_intent': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The ID of the SetupIntent to be confirmed',
+                                                },
+                                                'pending_update': {
+                                                    'type': ['object', 'null'],
+                                                    'description': 'If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid',
+                                                },
+                                            },
+                                            'x-airbyte-entity-name': 'subscriptions',
+                                        },
+                                    },
+                                    'has_more': {'type': 'boolean', 'description': 'True if this list has another page of items after this one'},
+                                    'url': {'type': 'string', 'description': 'The URL where this list can be accessed'},
+                                },
+                            },
+                            'tax_exempt': {
+                                'type': ['string', 'null'],
+                                'description': "Describes the customer's tax exemption status",
+                            },
+                            'test_clock': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the test clock this customer belongs to',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'customers',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/v1/customers/{id}',
+                    action=Action.DELETE,
+                    description='Permanently deletes a customer. It cannot be undone.',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the deleted customer'},
+                            'object': {
+                                'type': 'string',
+                                'enum': ['customer'],
+                                'description': "String representing the object's type",
+                            },
+                            'deleted': {'type': 'boolean', 'description': 'Always true for a deleted object'},
+                        },
                     },
                 ),
                 Action.SEARCH: EndpointDefinition(
@@ -11338,7 +13258,7 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='refunds',
-            actions=[Action.LIST, Action.GET],
+            actions=[Action.LIST, Action.CREATE, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -11812,6 +13732,475 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'has_more': '$.has_more'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v1/refunds',
+                    action=Action.CREATE,
+                    description='When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it. Creating a new refund will refund a charge that has previously been created but not yet refunded.',
+                    body_fields=[
+                        'charge',
+                        'payment_intent',
+                        'amount',
+                        'metadata',
+                        'reason',
+                        'refund_application_fee',
+                        'reverse_transfer',
+                    ],
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'charge': {'type': 'string', 'description': 'The identifier of the charge to refund'},
+                            'payment_intent': {'type': 'string', 'description': 'The identifier of the PaymentIntent to refund'},
+                            'amount': {'type': 'integer', 'description': 'A positive integer in the smallest currency unit representing how much to refund. Can refund only up to the remaining, unrefunded amount'},
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                            'reason': {
+                                'type': 'string',
+                                'enum': ['duplicate', 'fraudulent', 'requested_by_customer'],
+                                'description': 'String indicating the reason for the refund',
+                            },
+                            'refund_application_fee': {'type': 'boolean', 'description': 'Whether to refund the application fee'},
+                            'reverse_transfer': {'type': 'boolean', 'description': 'Whether to reverse the transfer'},
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique identifier for the refund'},
+                            'object': {
+                                'type': 'string',
+                                'description': "String representing the object's type",
+                                'enum': ['refund'],
+                            },
+                            'amount': {'type': 'integer', 'description': 'Amount refunded (in smallest currency unit)'},
+                            'balance_transaction': {
+                                'type': ['string', 'null'],
+                                'description': 'Balance transaction that describes the impact on your account balance',
+                            },
+                            'charge': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the charge that was refunded',
+                            },
+                            'created': {
+                                'type': 'integer',
+                                'format': 'int64',
+                                'description': 'Time at which the refund was created (Unix timestamp)',
+                            },
+                            'currency': {'type': 'string', 'description': 'Three-letter ISO currency code (lowercase)'},
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'An arbitrary string attached to the object',
+                            },
+                            'destination_details': {
+                                'type': ['object', 'null'],
+                                'description': 'Transaction-specific details for the refund',
+                                'properties': {
+                                    'affirm': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a affirm refund, this hash contains the transaction specific details',
+                                    },
+                                    'afterpay_clearpay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a afterpay_clearpay refund, this hash contains the transaction specific details',
+                                    },
+                                    'alipay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a alipay refund, this hash contains the transaction specific details',
+                                    },
+                                    'alma': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a alma refund, this hash contains the transaction specific details',
+                                    },
+                                    'amazon_pay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a amazon_pay refund, this hash contains the transaction specific details',
+                                    },
+                                    'au_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a au_bank_transfer refund, this hash contains the transaction specific details',
+                                    },
+                                    'blik': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a blik refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'network_decline_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'For refunds declined by the network, a decline code provided by the network',
+                                            },
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'br_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a br_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'card': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a card refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Value of the reference number assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference number on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                            'reference_type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of the reference number assigned to the refund',
+                                            },
+                                            'type': {
+                                                'type': 'string',
+                                                'description': 'The type of refund',
+                                                'enum': ['pending', 'refund', 'reversal'],
+                                            },
+                                        },
+                                    },
+                                    'cashapp': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a cashapp refund, this hash contains the transaction specific details',
+                                    },
+                                    'crypto': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a crypto refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The transaction hash of the refund',
+                                            },
+                                        },
+                                    },
+                                    'customer_cash_balance': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a customer_cash_balance refund, this hash contains the transaction specific details',
+                                    },
+                                    'eps': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a eps refund, this hash contains the transaction specific details',
+                                    },
+                                    'eu_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a eu_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'gb_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a gb_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'giropay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a giropay refund, this hash contains the transaction specific details',
+                                    },
+                                    'grabpay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a grabpay refund, this hash contains the transaction specific details',
+                                    },
+                                    'jp_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a jp_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'klarna': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a klarna refund, this hash contains the transaction specific details',
+                                    },
+                                    'mb_way': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a mb_way refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'multibanco': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a multibanco refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'mx_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a mx_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'nz_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a nz_bank_transfer refund, this hash contains the transaction specific details',
+                                    },
+                                    'p24': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a p24 refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'paynow': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a paynow refund, this hash contains the transaction specific details',
+                                    },
+                                    'paypal': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a paypal refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'network_decline_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'For refunds declined by the network, a decline code provided by the network',
+                                            },
+                                        },
+                                    },
+                                    'pix': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a pix refund, this hash contains the transaction specific details',
+                                    },
+                                    'revolut': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a revolut refund, this hash contains the transaction specific details',
+                                    },
+                                    'sofort': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a sofort refund, this hash contains the transaction specific details',
+                                    },
+                                    'swish': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a swish refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'network_decline_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'For refunds declined by the network, a decline code provided by the network',
+                                            },
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'th_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a th_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'twint': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a twint refund, this hash contains the transaction specific details',
+                                    },
+                                    'type': {'type': 'string', 'description': 'The type of transaction-specific details of the payment method used in the refund'},
+                                    'us_bank_transfer': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a us_bank_transfer refund, this hash contains the transaction specific details',
+                                        'properties': {
+                                            'reference': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The reference assigned to the refund',
+                                            },
+                                            'reference_status': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Status of the reference on the refund',
+                                                'enum': ['pending', 'available', 'unavailable'],
+                                            },
+                                        },
+                                    },
+                                    'wechat_pay': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a wechat_pay refund, this hash contains the transaction specific details',
+                                    },
+                                    'zip': {
+                                        'type': ['object', 'null'],
+                                        'description': 'If this is a zip refund, this hash contains the transaction specific details',
+                                    },
+                                },
+                            },
+                            'failure_balance_transaction': {
+                                'type': ['string', 'null'],
+                                'description': 'After the refund fails, this balance transaction describes the adjustment made on your account balance',
+                            },
+                            'failure_reason': {
+                                'type': ['string', 'null'],
+                                'description': 'Reason for refund failure if status is failed',
+                            },
+                            'instructions_email': {
+                                'type': ['string', 'null'],
+                                'description': 'Email address to which instructions for refund were sent',
+                            },
+                            'metadata': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Set of key-value pairs for storing additional information',
+                            },
+                            'next_action': {
+                                'type': ['object', 'null'],
+                                'description': 'If the refund has a status of requires_action, this property describes what the refund needs to continue processing',
+                                'properties': {
+                                    'display_details': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Contains the refund details',
+                                        'properties': {
+                                            'email_sent': {
+                                                'type': 'object',
+                                                'description': 'Contains information about the email sent to the customer',
+                                                'properties': {
+                                                    'email_sent_at': {
+                                                        'type': 'integer',
+                                                        'format': 'int64',
+                                                        'description': 'The timestamp when the email was sent',
+                                                    },
+                                                    'email_sent_to': {'type': 'string', 'description': "The recipient's email address"},
+                                                },
+                                            },
+                                            'expires_at': {
+                                                'type': 'integer',
+                                                'format': 'int64',
+                                                'description': 'The expiry timestamp',
+                                            },
+                                        },
+                                    },
+                                    'type': {'type': 'string', 'description': 'Type of the next action to perform'},
+                                },
+                            },
+                            'payment_intent': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the PaymentIntent that was refunded',
+                            },
+                            'pending_reason': {
+                                'type': ['string', 'null'],
+                                'description': 'Reason for why the refund is pending',
+                                'enum': ['processing', 'insufficient_funds', 'charge_pending'],
+                            },
+                            'reason': {
+                                'type': ['string', 'null'],
+                                'description': 'Reason for the refund',
+                            },
+                            'receipt_number': {
+                                'type': ['string', 'null'],
+                                'description': 'Transaction number that appears on email receipts sent for this refund',
+                            },
+                            'source_transfer_reversal': {
+                                'type': ['string', 'null'],
+                                'description': 'The transfer reversal that is associated with the refund',
+                            },
+                            'status': {
+                                'type': ['string', 'null'],
+                                'description': 'Status of the refund',
+                                'enum': [
+                                    'pending',
+                                    'requires_action',
+                                    'succeeded',
+                                    'failed',
+                                    'canceled',
+                                ],
+                            },
+                            'transfer_reversal': {
+                                'type': ['string', 'null'],
+                                'description': 'If the refund is associated with a transfer, the ID of the transfer reversal',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'refunds',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -12693,7 +15082,14 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='products',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+                Action.SEARCH,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -12836,6 +15232,171 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'has_more': '$.has_more'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v1/products',
+                    action=Action.CREATE,
+                    description="Creates a new product object. Your product's name, description, and other information will be displayed in all product and invoice displays.",
+                    body_fields=[
+                        'name',
+                        'active',
+                        'description',
+                        'id',
+                        'images',
+                        'marketing_features',
+                        'metadata',
+                        'package_dimensions',
+                        'shippable',
+                        'statement_descriptor',
+                        'tax_code',
+                        'unit_label',
+                        'url',
+                    ],
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string', 'description': "The product's name, meant to be displayable to the customer"},
+                            'active': {'type': 'boolean', 'description': 'Whether the product is available for purchase. Defaults to true'},
+                            'description': {'type': 'string', 'description': "The product's description, meant to be displayable to the customer"},
+                            'id': {'type': 'string', 'description': 'An identifier will be randomly generated by Stripe. You can optionally override this ID, but the ID must be unique across all products in your Stripe account'},
+                            'images': {
+                                'type': 'array',
+                                'description': 'A list of up to 8 URLs of images for this product',
+                                'items': {'type': 'string'},
+                            },
+                            'marketing_features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 marketing features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'The marketing feature name. Up to 80 characters long'},
+                                    },
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                            'package_dimensions': {
+                                'type': 'object',
+                                'description': 'The dimensions of this product for shipping purposes',
+                                'properties': {
+                                    'height': {'type': 'number', 'description': 'Height, in inches'},
+                                    'length': {'type': 'number', 'description': 'Length, in inches'},
+                                    'weight': {'type': 'number', 'description': 'Weight, in ounces'},
+                                    'width': {'type': 'number', 'description': 'Width, in inches'},
+                                },
+                            },
+                            'shippable': {'type': 'boolean', 'description': 'Whether this product is shipped (i.e., physical goods)'},
+                            'statement_descriptor': {'type': 'string', 'description': "Extra information about a product which will appear on your customer's credit card statement. At most 22 characters"},
+                            'tax_code': {'type': 'string', 'description': 'A tax code ID'},
+                            'unit_label': {'type': 'string', 'description': 'A label that represents units of this product. Max 12 characters'},
+                            'url': {'type': 'string', 'description': 'A URL of a publicly-accessible webpage for this product'},
+                        },
+                        'required': ['name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique identifier for the product'},
+                            'object': {
+                                'type': 'string',
+                                'description': "String representing the object's type",
+                                'enum': ['product'],
+                            },
+                            'active': {'type': 'boolean', 'description': 'Whether the product is currently available for purchase'},
+                            'attributes': {
+                                'type': 'array',
+                                'description': 'A list of up to 5 alphanumeric attributes that each SKU can have',
+                                'items': {'type': 'string'},
+                            },
+                            'created': {'type': 'integer', 'description': 'Time at which the product was created, measured in seconds since the Unix epoch'},
+                            'default_price': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the Price object that is the default price for this product',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': "The product's description, meant to be displayable to the customer",
+                            },
+                            'features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'The feature name'},
+                                    },
+                                },
+                            },
+                            'images': {
+                                'type': 'array',
+                                'description': 'A list of up to 8 URLs of images for this product',
+                                'items': {'type': 'string'},
+                            },
+                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or the value false if the object exists in test mode'},
+                            'marketing_features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 marketing features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The marketing feature name. Up to 80 characters long',
+                                        },
+                                    },
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                            'name': {'type': 'string', 'description': "The product's name, meant to be displayable to the customer"},
+                            'package_dimensions': {
+                                'type': ['object', 'null'],
+                                'description': 'The dimensions of this product for shipping purposes',
+                                'properties': {
+                                    'height': {'type': 'number', 'description': 'Height, in inches'},
+                                    'length': {'type': 'number', 'description': 'Length, in inches'},
+                                    'weight': {'type': 'number', 'description': 'Weight, in ounces'},
+                                    'width': {'type': 'number', 'description': 'Width, in inches'},
+                                },
+                            },
+                            'shippable': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this product is shipped (i.e., physical goods)',
+                            },
+                            'statement_descriptor': {
+                                'type': ['string', 'null'],
+                                'description': "Extra information about a product which will appear on your customer's credit card statement",
+                            },
+                            'tax_code': {
+                                'type': ['string', 'null'],
+                                'description': 'A tax code ID',
+                            },
+                            'type': {
+                                'type': 'string',
+                                'description': "The type of the product. Either 'good' for physical goods or 'service' for digital services",
+                                'enum': ['good', 'service'],
+                            },
+                            'unit_label': {
+                                'type': ['string', 'null'],
+                                'description': 'A label that represents units of this product',
+                            },
+                            'updated': {'type': 'integer', 'description': 'Time at which the product was last updated, measured in seconds since the Unix epoch'},
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'A URL of a publicly-accessible webpage for this product',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'products',
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/v1/products/{id}',
@@ -12942,6 +15503,196 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'x-airbyte-entity-name': 'products',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/v1/products/{id}',
+                    action=Action.UPDATE,
+                    description='Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.',
+                    body_fields=[
+                        'active',
+                        'name',
+                        'description',
+                        'default_price',
+                        'images',
+                        'marketing_features',
+                        'metadata',
+                        'package_dimensions',
+                        'shippable',
+                        'statement_descriptor',
+                        'tax_code',
+                        'unit_label',
+                        'url',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'active': {'type': 'boolean', 'description': 'Whether the product is available for purchase'},
+                            'name': {'type': 'string', 'description': "The product's name, meant to be displayable to the customer"},
+                            'description': {'type': 'string', 'description': "The product's description, meant to be displayable to the customer"},
+                            'default_price': {'type': 'string', 'description': 'The ID of the Price object that is the default price for this product'},
+                            'images': {
+                                'type': 'array',
+                                'description': 'A list of up to 8 URLs of images for this product',
+                                'items': {'type': 'string'},
+                            },
+                            'marketing_features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 marketing features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'The marketing feature name. Up to 80 characters long'},
+                                    },
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                            'package_dimensions': {
+                                'type': 'object',
+                                'description': 'The dimensions of this product for shipping purposes',
+                                'properties': {
+                                    'height': {'type': 'number', 'description': 'Height, in inches'},
+                                    'length': {'type': 'number', 'description': 'Length, in inches'},
+                                    'weight': {'type': 'number', 'description': 'Weight, in ounces'},
+                                    'width': {'type': 'number', 'description': 'Width, in inches'},
+                                },
+                            },
+                            'shippable': {'type': 'boolean', 'description': 'Whether this product is shipped (i.e., physical goods)'},
+                            'statement_descriptor': {'type': 'string', 'description': "Extra information about a product which will appear on your customer's credit card statement. At most 22 characters"},
+                            'tax_code': {'type': 'string', 'description': 'A tax code ID'},
+                            'unit_label': {'type': 'string', 'description': 'A label that represents units of this product. Max 12 characters'},
+                            'url': {'type': 'string', 'description': 'A URL of a publicly-accessible webpage for this product'},
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique identifier for the product'},
+                            'object': {
+                                'type': 'string',
+                                'description': "String representing the object's type",
+                                'enum': ['product'],
+                            },
+                            'active': {'type': 'boolean', 'description': 'Whether the product is currently available for purchase'},
+                            'attributes': {
+                                'type': 'array',
+                                'description': 'A list of up to 5 alphanumeric attributes that each SKU can have',
+                                'items': {'type': 'string'},
+                            },
+                            'created': {'type': 'integer', 'description': 'Time at which the product was created, measured in seconds since the Unix epoch'},
+                            'default_price': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the Price object that is the default price for this product',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': "The product's description, meant to be displayable to the customer",
+                            },
+                            'features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'The feature name'},
+                                    },
+                                },
+                            },
+                            'images': {
+                                'type': 'array',
+                                'description': 'A list of up to 8 URLs of images for this product',
+                                'items': {'type': 'string'},
+                            },
+                            'livemode': {'type': 'boolean', 'description': 'Has the value true if the object exists in live mode or the value false if the object exists in test mode'},
+                            'marketing_features': {
+                                'type': 'array',
+                                'description': 'A list of up to 15 marketing features for this product',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The marketing feature name. Up to 80 characters long',
+                                        },
+                                    },
+                                },
+                            },
+                            'metadata': {
+                                'type': 'object',
+                                'description': 'Set of key-value pairs that you can attach to an object',
+                                'additionalProperties': {'type': 'string'},
+                            },
+                            'name': {'type': 'string', 'description': "The product's name, meant to be displayable to the customer"},
+                            'package_dimensions': {
+                                'type': ['object', 'null'],
+                                'description': 'The dimensions of this product for shipping purposes',
+                                'properties': {
+                                    'height': {'type': 'number', 'description': 'Height, in inches'},
+                                    'length': {'type': 'number', 'description': 'Length, in inches'},
+                                    'weight': {'type': 'number', 'description': 'Weight, in ounces'},
+                                    'width': {'type': 'number', 'description': 'Width, in inches'},
+                                },
+                            },
+                            'shippable': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this product is shipped (i.e., physical goods)',
+                            },
+                            'statement_descriptor': {
+                                'type': ['string', 'null'],
+                                'description': "Extra information about a product which will appear on your customer's credit card statement",
+                            },
+                            'tax_code': {
+                                'type': ['string', 'null'],
+                                'description': 'A tax code ID',
+                            },
+                            'type': {
+                                'type': 'string',
+                                'description': "The type of the product. Either 'good' for physical goods or 'service' for digital services",
+                                'enum': ['good', 'service'],
+                            },
+                            'unit_label': {
+                                'type': ['string', 'null'],
+                                'description': 'A label that represents units of this product',
+                            },
+                            'updated': {'type': 'integer', 'description': 'Time at which the product was last updated, measured in seconds since the Unix epoch'},
+                            'url': {
+                                'type': ['string', 'null'],
+                                'description': 'A URL of a publicly-accessible webpage for this product',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'products',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/v1/products/{id}',
+                    action=Action.DELETE,
+                    description='Deletes a product. Deleting a product is only possible if it has no prices associated with it.',
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the deleted product'},
+                            'object': {
+                                'type': 'string',
+                                'enum': ['product'],
+                                'description': "String representing the object's type",
+                            },
+                            'deleted': {'type': 'boolean', 'description': 'Always true for a deleted object'},
+                        },
                     },
                 ),
                 Action.SEARCH: EndpointDefinition(

@@ -22,10 +22,13 @@ from .types import (
     ChargesListParams,
     ChargesListParamsCreated,
     ChargesSearchParams,
+    CustomersCreateParams,
+    CustomersDeleteParams,
     CustomersGetParams,
     CustomersListParams,
     CustomersListParamsCreated,
     CustomersSearchParams,
+    CustomersUpdateParams,
     DisputesGetParams,
     DisputesListParams,
     DisputesListParamsCreated,
@@ -41,10 +44,14 @@ from .types import (
     PayoutsListParams,
     PayoutsListParamsArrivalDate,
     PayoutsListParamsCreated,
+    ProductsCreateParams,
+    ProductsDeleteParams,
     ProductsGetParams,
     ProductsListParams,
     ProductsListParamsCreated,
     ProductsSearchParams,
+    ProductsUpdateParams,
+    RefundsCreateParams,
     RefundsGetParams,
     RefundsListParams,
     RefundsListParamsCreated,
@@ -80,12 +87,14 @@ from .models import (
     Charge,
     ChargeSearchResult,
     Customer,
+    CustomerDeletedResponse,
     Dispute,
     Invoice,
     InvoiceSearchResult,
     PaymentIntent,
     Payout,
     Product,
+    ProductDeletedResponse,
     Refund,
     Subscription,
     SubscriptionSearchResult,
@@ -103,13 +112,16 @@ class StripeConnector:
     """
 
     connector_name = "stripe"
-    connector_version = "0.1.3"
+    connector_version = "0.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
     _EXTRACTOR_MAP = {
         ("customers", "list"): True,
+        ("customers", "create"): False,
         ("customers", "get"): False,
+        ("customers", "update"): False,
+        ("customers", "delete"): False,
         ("customers", "search"): True,
         ("invoices", "list"): True,
         ("invoices", "get"): False,
@@ -121,9 +133,13 @@ class StripeConnector:
         ("subscriptions", "get"): False,
         ("subscriptions", "search"): False,
         ("refunds", "list"): True,
+        ("refunds", "create"): False,
         ("refunds", "get"): False,
         ("products", "list"): True,
+        ("products", "create"): False,
         ("products", "get"): False,
+        ("products", "update"): False,
+        ("products", "delete"): False,
         ("products", "search"): True,
         ("balance", "get"): False,
         ("balance_transactions", "list"): True,
@@ -142,6 +158,8 @@ class StripeConnector:
     _PARAM_MAP = {
         ('customers', 'list'): {'limit': 'limit', 'starting_after': 'starting_after', 'ending_before': 'ending_before', 'email': 'email', 'created': 'created'},
         ('customers', 'get'): {'id': 'id'},
+        ('customers', 'update'): {'id': 'id'},
+        ('customers', 'delete'): {'id': 'id'},
         ('customers', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('invoices', 'list'): {'collection_method': 'collection_method', 'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status', 'subscription': 'subscription'},
         ('invoices', 'get'): {'id': 'id'},
@@ -156,6 +174,8 @@ class StripeConnector:
         ('refunds', 'get'): {'id': 'id'},
         ('products', 'list'): {'active': 'active', 'created': 'created', 'ending_before': 'ending_before', 'ids': 'ids', 'limit': 'limit', 'shippable': 'shippable', 'starting_after': 'starting_after', 'url': 'url'},
         ('products', 'get'): {'id': 'id'},
+        ('products', 'update'): {'id': 'id'},
+        ('products', 'delete'): {'id': 'id'},
         ('products', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('balance_transactions', 'list'): {'created': 'created', 'currency': 'currency', 'ending_before': 'ending_before', 'limit': 'limit', 'payout': 'payout', 'source': 'source', 'starting_after': 'starting_after', 'type': 'type'},
         ('balance_transactions', 'get'): {'id': 'id'},
@@ -269,9 +289,33 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["customers"],
+        action: Literal["create"],
+        params: "CustomersCreateParams"
+    ) -> "Customer": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
         action: Literal["get"],
         params: "CustomersGetParams"
     ) -> "Customer": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["update"],
+        params: "CustomersUpdateParams"
+    ) -> "Customer": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["customers"],
+        action: Literal["delete"],
+        params: "CustomersDeleteParams"
+    ) -> "CustomerDeletedResponse": ...
 
     @overload
     async def execute(
@@ -365,6 +409,14 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["refunds"],
+        action: Literal["create"],
+        params: "RefundsCreateParams"
+    ) -> "Refund": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["refunds"],
         action: Literal["get"],
         params: "RefundsGetParams"
     ) -> "Refund": ...
@@ -381,9 +433,33 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["products"],
+        action: Literal["create"],
+        params: "ProductsCreateParams"
+    ) -> "Product": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
         action: Literal["get"],
         params: "ProductsGetParams"
     ) -> "Product": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["update"],
+        params: "ProductsUpdateParams"
+    ) -> "Product": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["products"],
+        action: Literal["delete"],
+        params: "ProductsDeleteParams"
+    ) -> "ProductDeletedResponse": ...
 
     @overload
     async def execute(
@@ -680,6 +756,25 @@ class CustomersQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> Customer:
+        """
+        Creates a new customer object.
+
+        Returns:
+            Customer
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -701,6 +796,56 @@ class CustomersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("customers", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Customer:
+        """
+        Updates the specified customer by setting the values of the parameters passed.
+
+        Args:
+            id: The customer ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Customer
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> CustomerDeletedResponse:
+        """
+        Permanently deletes a customer. It cannot be undone.
+
+        Args:
+            id: The customer ID
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomerDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("customers", "delete", params)
         return result
 
 
@@ -1142,6 +1287,25 @@ class RefundsQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> Refund:
+        """
+        When you create a new refund, you must specify a Charge or a PaymentIntent object on which to create it. Creating a new refund will refund a charge that has previously been created but not yet refunded.
+
+        Returns:
+            Refund
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("refunds", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1225,6 +1389,25 @@ class ProductsQuery:
 
 
 
+    async def create(
+        self,
+        **kwargs
+    ) -> Product:
+        """
+        Creates a new product object. Your product's name, description, and other information will be displayed in all product and invoice displays.
+
+        Returns:
+            Product
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1246,6 +1429,56 @@ class ProductsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("products", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> Product:
+        """
+        Updates the specific product by setting the values of the parameters passed. Any parameters not provided will be left unchanged.
+
+        Args:
+            id: The product ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Product
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> ProductDeletedResponse:
+        """
+        Deletes a product. Deleting a product is only possible if it has no prices associated with it.
+
+        Args:
+            id: The product ID
+            **kwargs: Additional parameters
+
+        Returns:
+            ProductDeletedResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("products", "delete", params)
         return result
 
 
