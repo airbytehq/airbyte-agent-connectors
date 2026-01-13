@@ -3,46 +3,40 @@
 import logging
 import uuid
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any, Dict, Optional
 
+from .config import SDKConfig, load_config
+
 logger = logging.getLogger(__name__)
+
+# Cache the config at module level to avoid repeated reads
+_cached_config: Optional[SDKConfig] = None
+
+
+def _get_config() -> SDKConfig:
+    """Get cached SDK config or load from file."""
+    global _cached_config
+    if _cached_config is None:
+        _cached_config = load_config()
+    return _cached_config
+
+
+def _clear_config_cache() -> None:
+    """Clear the cached config. Used for testing."""
+    global _cached_config
+    _cached_config = None
 
 
 def get_persistent_user_id() -> str:
     """
-    Get or create an anonymous user ID stored in the home directory.
+    Get the persistent anonymous user ID.
 
-    The ID is stored in ~/.airbyte/ai_sdk_user_id and persists across all sessions.
-    If the file doesn't exist, a new UUID is generated and saved.
+    Now reads from ~/.airbyte/connector-sdk/config.yaml
 
     Returns:
         An anonymous UUID string that uniquely identifies this user across sessions.
     """
-    try:
-        # Create .airbyte directory in home folder if it doesn't exist
-        airbyte_dir = Path.home() / ".airbyte"
-        airbyte_dir.mkdir(exist_ok=True)
-
-        # Path to user ID file
-        user_id_file = airbyte_dir / "ai_sdk_user_id"
-
-        # Try to read existing user ID
-        if user_id_file.exists():
-            user_id = user_id_file.read_text().strip()
-            if user_id:  # Validate it's not empty
-                return user_id
-
-        # Generate new user ID if file doesn't exist or is empty
-        user_id = str(uuid.uuid4())
-        user_id_file.write_text(user_id)
-        logger.debug(f"Generated new anonymous user ID: {user_id}")
-
-        return user_id
-    except Exception as e:
-        # If we can't read/write the file, generate a session-only ID
-        logger.debug(f"Could not access anonymous user ID file: {e}")
-        return str(uuid.uuid4())
+    return _get_config().user_id
 
 
 def get_public_ip() -> Optional[str]:
@@ -65,6 +59,18 @@ def get_public_ip() -> Optional[str]:
         return None
 
 
+def get_is_internal_user() -> bool:
+    """
+    Check if the current user is an internal Airbyte user.
+
+    Now reads from ~/.airbyte/connector-sdk/config.yaml
+    Environment variable AIRBYTE_INTERNAL_USER can override.
+
+    Returns False if not set or on any error.
+    """
+    return _get_config().is_internal_user
+
+
 class ObservabilitySession:
     """Shared session context for both logging and telemetry."""
 
@@ -84,6 +90,7 @@ class ObservabilitySession:
         self.operation_count = 0
         self.metadata: Dict[str, Any] = {}
         self.public_ip = get_public_ip()
+        self.is_internal_user = get_is_internal_user()
 
     def increment_operations(self):
         """Increment the operation counter."""
