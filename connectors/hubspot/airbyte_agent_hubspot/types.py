@@ -14,67 +14,67 @@ except ImportError:
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
-class ContactsSearchParamsFiltergroupsItemFiltersItem(TypedDict):
-    """Nested schema for ContactsSearchParamsFiltergroupsItem.filters_item"""
+class ContactsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
+    """Nested schema for ContactsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
     propertyName: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
-class ContactsSearchParamsFiltergroupsItem(TypedDict):
-    """Nested schema for ContactsSearchParams.filterGroups_item"""
-    filters: NotRequired[list[ContactsSearchParamsFiltergroupsItemFiltersItem]]
+class ContactsApiSearchParamsFiltergroupsItem(TypedDict):
+    """Nested schema for ContactsApiSearchParams.filterGroups_item"""
+    filters: NotRequired[list[ContactsApiSearchParamsFiltergroupsItemFiltersItem]]
 
-class ContactsSearchParamsSortsItem(TypedDict):
-    """Nested schema for ContactsSearchParams.sorts_item"""
+class ContactsApiSearchParamsSortsItem(TypedDict):
+    """Nested schema for ContactsApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
 
-class CompaniesSearchParamsFiltergroupsItemFiltersItem(TypedDict):
-    """Nested schema for CompaniesSearchParamsFiltergroupsItem.filters_item"""
+class CompaniesApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
+    """Nested schema for CompaniesApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
     propertyName: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
-class CompaniesSearchParamsFiltergroupsItem(TypedDict):
-    """Nested schema for CompaniesSearchParams.filterGroups_item"""
-    filters: NotRequired[list[CompaniesSearchParamsFiltergroupsItemFiltersItem]]
+class CompaniesApiSearchParamsFiltergroupsItem(TypedDict):
+    """Nested schema for CompaniesApiSearchParams.filterGroups_item"""
+    filters: NotRequired[list[CompaniesApiSearchParamsFiltergroupsItemFiltersItem]]
 
-class CompaniesSearchParamsSortsItem(TypedDict):
-    """Nested schema for CompaniesSearchParams.sorts_item"""
+class CompaniesApiSearchParamsSortsItem(TypedDict):
+    """Nested schema for CompaniesApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
 
-class DealsSearchParamsFiltergroupsItemFiltersItem(TypedDict):
-    """Nested schema for DealsSearchParamsFiltergroupsItem.filters_item"""
+class DealsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
+    """Nested schema for DealsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
     propertyName: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
-class DealsSearchParamsFiltergroupsItem(TypedDict):
-    """Nested schema for DealsSearchParams.filterGroups_item"""
-    filters: NotRequired[list[DealsSearchParamsFiltergroupsItemFiltersItem]]
+class DealsApiSearchParamsFiltergroupsItem(TypedDict):
+    """Nested schema for DealsApiSearchParams.filterGroups_item"""
+    filters: NotRequired[list[DealsApiSearchParamsFiltergroupsItemFiltersItem]]
 
-class DealsSearchParamsSortsItem(TypedDict):
-    """Nested schema for DealsSearchParams.sorts_item"""
+class DealsApiSearchParamsSortsItem(TypedDict):
+    """Nested schema for DealsApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
 
-class TicketsSearchParamsFiltergroupsItemFiltersItem(TypedDict):
-    """Nested schema for TicketsSearchParamsFiltergroupsItem.filters_item"""
+class TicketsApiSearchParamsFiltergroupsItemFiltersItem(TypedDict):
+    """Nested schema for TicketsApiSearchParamsFiltergroupsItem.filters_item"""
     operator: NotRequired[str]
     propertyName: NotRequired[str]
     value: NotRequired[str]
     values: NotRequired[list[str]]
 
-class TicketsSearchParamsFiltergroupsItem(TypedDict):
-    """Nested schema for TicketsSearchParams.filterGroups_item"""
-    filters: NotRequired[list[TicketsSearchParamsFiltergroupsItemFiltersItem]]
+class TicketsApiSearchParamsFiltergroupsItem(TypedDict):
+    """Nested schema for TicketsApiSearchParams.filterGroups_item"""
+    filters: NotRequired[list[TicketsApiSearchParamsFiltergroupsItemFiltersItem]]
 
-class TicketsSearchParamsSortsItem(TypedDict):
-    """Nested schema for TicketsSearchParams.sorts_item"""
+class TicketsApiSearchParamsSortsItem(TypedDict):
+    """Nested schema for TicketsApiSearchParams.sorts_item"""
     propertyName: NotRequired[str]
     direction: NotRequired[str]
 
@@ -98,13 +98,13 @@ class ContactsGetParams(TypedDict):
     id_property: NotRequired[str]
     archived: NotRequired[bool]
 
-class ContactsSearchParams(TypedDict):
-    """Parameters for contacts.search operation"""
-    filter_groups: NotRequired[list[ContactsSearchParamsFiltergroupsItem]]
+class ContactsApiSearchParams(TypedDict):
+    """Parameters for contacts.api_search operation"""
+    filter_groups: NotRequired[list[ContactsApiSearchParamsFiltergroupsItem]]
     properties: NotRequired[list[str]]
     limit: NotRequired[int]
     after: NotRequired[str]
-    sorts: NotRequired[list[ContactsSearchParamsSortsItem]]
+    sorts: NotRequired[list[ContactsApiSearchParamsSortsItem]]
     query: NotRequired[str]
 
 class CompaniesListParams(TypedDict):
@@ -125,13 +125,13 @@ class CompaniesGetParams(TypedDict):
     id_property: NotRequired[str]
     archived: NotRequired[bool]
 
-class CompaniesSearchParams(TypedDict):
-    """Parameters for companies.search operation"""
-    filter_groups: NotRequired[list[CompaniesSearchParamsFiltergroupsItem]]
+class CompaniesApiSearchParams(TypedDict):
+    """Parameters for companies.api_search operation"""
+    filter_groups: NotRequired[list[CompaniesApiSearchParamsFiltergroupsItem]]
     properties: NotRequired[list[str]]
     limit: NotRequired[int]
     after: NotRequired[str]
-    sorts: NotRequired[list[CompaniesSearchParamsSortsItem]]
+    sorts: NotRequired[list[CompaniesApiSearchParamsSortsItem]]
     query: NotRequired[str]
 
 class DealsListParams(TypedDict):
@@ -152,13 +152,13 @@ class DealsGetParams(TypedDict):
     id_property: NotRequired[str]
     archived: NotRequired[bool]
 
-class DealsSearchParams(TypedDict):
-    """Parameters for deals.search operation"""
-    filter_groups: NotRequired[list[DealsSearchParamsFiltergroupsItem]]
+class DealsApiSearchParams(TypedDict):
+    """Parameters for deals.api_search operation"""
+    filter_groups: NotRequired[list[DealsApiSearchParamsFiltergroupsItem]]
     properties: NotRequired[list[str]]
     limit: NotRequired[int]
     after: NotRequired[str]
-    sorts: NotRequired[list[DealsSearchParamsSortsItem]]
+    sorts: NotRequired[list[DealsApiSearchParamsSortsItem]]
     query: NotRequired[str]
 
 class TicketsListParams(TypedDict):
@@ -179,13 +179,13 @@ class TicketsGetParams(TypedDict):
     id_property: NotRequired[str]
     archived: NotRequired[bool]
 
-class TicketsSearchParams(TypedDict):
-    """Parameters for tickets.search operation"""
-    filter_groups: NotRequired[list[TicketsSearchParamsFiltergroupsItem]]
+class TicketsApiSearchParams(TypedDict):
+    """Parameters for tickets.api_search operation"""
+    filter_groups: NotRequired[list[TicketsApiSearchParamsFiltergroupsItem]]
     properties: NotRequired[list[str]]
     limit: NotRequired[int]
     after: NotRequired[str]
-    sorts: NotRequired[list[TicketsSearchParamsSortsItem]]
+    sorts: NotRequired[list[TicketsApiSearchParamsSortsItem]]
     query: NotRequired[str]
 
 class SchemasListParams(TypedDict):

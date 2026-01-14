@@ -14,30 +14,30 @@ except ImportError:
 from .connector_model import HubspotConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
+    CompaniesApiSearchParams,
+    CompaniesApiSearchParamsFiltergroupsItem,
+    CompaniesApiSearchParamsSortsItem,
     CompaniesGetParams,
     CompaniesListParams,
-    CompaniesSearchParams,
-    CompaniesSearchParamsFiltergroupsItem,
-    CompaniesSearchParamsSortsItem,
+    ContactsApiSearchParams,
+    ContactsApiSearchParamsFiltergroupsItem,
+    ContactsApiSearchParamsSortsItem,
     ContactsGetParams,
     ContactsListParams,
-    ContactsSearchParams,
-    ContactsSearchParamsFiltergroupsItem,
-    ContactsSearchParamsSortsItem,
+    DealsApiSearchParams,
+    DealsApiSearchParamsFiltergroupsItem,
+    DealsApiSearchParamsSortsItem,
     DealsGetParams,
     DealsListParams,
-    DealsSearchParams,
-    DealsSearchParamsFiltergroupsItem,
-    DealsSearchParamsSortsItem,
     ObjectsGetParams,
     ObjectsListParams,
     SchemasGetParams,
     SchemasListParams,
+    TicketsApiSearchParams,
+    TicketsApiSearchParamsFiltergroupsItem,
+    TicketsApiSearchParamsSortsItem,
     TicketsGetParams,
     TicketsListParams,
-    TicketsSearchParams,
-    TicketsSearchParamsFiltergroupsItem,
-    TicketsSearchParamsSortsItem,
 )
 if TYPE_CHECKING:
     from .models import HubspotAuthConfig
@@ -46,13 +46,13 @@ from .models import (
     HubspotExecuteResult,
     HubspotExecuteResultWithMeta,
     ContactsListResult,
-    ContactsSearchResult,
+    ContactsApiSearchResult,
     CompaniesListResult,
-    CompaniesSearchResult,
+    CompaniesApiSearchResult,
     DealsListResult,
-    DealsSearchResult,
+    DealsApiSearchResult,
     TicketsListResult,
-    TicketsSearchResult,
+    TicketsApiSearchResult,
     SchemasListResult,
     ObjectsListResult,
     CRMObject,
@@ -82,16 +82,16 @@ class HubspotConnector:
     _EXTRACTOR_MAP = {
         ("contacts", "list"): True,
         ("contacts", "get"): False,
-        ("contacts", "search"): True,
+        ("contacts", "api_search"): True,
         ("companies", "list"): True,
         ("companies", "get"): False,
-        ("companies", "search"): True,
+        ("companies", "api_search"): True,
         ("deals", "list"): True,
         ("deals", "get"): False,
-        ("deals", "search"): True,
+        ("deals", "api_search"): True,
         ("tickets", "list"): True,
         ("tickets", "get"): False,
-        ("tickets", "search"): True,
+        ("tickets", "api_search"): True,
         ("schemas", "list"): True,
         ("schemas", "get"): False,
         ("objects", "list"): True,
@@ -103,16 +103,16 @@ class HubspotConnector:
     _PARAM_MAP = {
         ('contacts', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
         ('contacts', 'get'): {'contact_id': 'contactId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
-        ('contacts', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('contacts', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('companies', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
         ('companies', 'get'): {'company_id': 'companyId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
-        ('companies', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('companies', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('deals', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
         ('deals', 'get'): {'deal_id': 'dealId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
-        ('deals', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('deals', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('tickets', 'list'): {'limit': 'limit', 'after': 'after', 'associations': 'associations', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'archived': 'archived'},
         ('tickets', 'get'): {'ticket_id': 'ticketId', 'properties': 'properties', 'properties_with_history': 'propertiesWithHistory', 'associations': 'associations', 'id_property': 'idProperty', 'archived': 'archived'},
-        ('tickets', 'search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
+        ('tickets', 'api_search'): {'filter_groups': 'filterGroups', 'properties': 'properties', 'limit': 'limit', 'after': 'after', 'sorts': 'sorts', 'query': 'query'},
         ('schemas', 'list'): {'archived': 'archived'},
         ('schemas', 'get'): {'object_type': 'objectType'},
         ('objects', 'list'): {'object_type': 'objectType', 'limit': 'limit', 'after': 'after', 'properties': 'properties', 'archived': 'archived', 'associations': 'associations', 'properties_with_history': 'propertiesWithHistory'},
@@ -223,9 +223,9 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
-        action: Literal["search"],
-        params: "ContactsSearchParams"
-    ) -> "ContactsSearchResult": ...
+        action: Literal["api_search"],
+        params: "ContactsApiSearchParams"
+    ) -> "ContactsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -247,9 +247,9 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["companies"],
-        action: Literal["search"],
-        params: "CompaniesSearchParams"
-    ) -> "CompaniesSearchResult": ...
+        action: Literal["api_search"],
+        params: "CompaniesApiSearchParams"
+    ) -> "CompaniesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -271,9 +271,9 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["deals"],
-        action: Literal["search"],
-        params: "DealsSearchParams"
-    ) -> "DealsSearchResult": ...
+        action: Literal["api_search"],
+        params: "DealsApiSearchParams"
+    ) -> "DealsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -295,9 +295,9 @@ class HubspotConnector:
     async def execute(
         self,
         entity: Literal["tickets"],
-        action: Literal["search"],
-        params: "TicketsSearchParams"
-    ) -> "TicketsSearchResult": ...
+        action: Literal["api_search"],
+        params: "TicketsApiSearchParams"
+    ) -> "TicketsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -581,16 +581,16 @@ class ContactsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
-        filter_groups: list[ContactsSearchParamsFiltergroupsItem] | None = None,
+        filter_groups: list[ContactsApiSearchParamsFiltergroupsItem] | None = None,
         properties: list[str] | None = None,
         limit: int | None = None,
         after: str | None = None,
-        sorts: list[ContactsSearchParamsSortsItem] | None = None,
+        sorts: list[ContactsApiSearchParamsSortsItem] | None = None,
         query: str | None = None,
         **kwargs
-    ) -> ContactsSearchResult:
+    ) -> ContactsApiSearchResult:
         """
         Search for contacts by filtering on properties, searching through associations, and sorting results.
 
@@ -604,7 +604,7 @@ class ContactsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ContactsSearchResult
+            ContactsApiSearchResult
         """
         params = {k: v for k, v in {
             "filterGroups": filter_groups,
@@ -616,9 +616,9 @@ class ContactsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("contacts", "search", params)
+        result = await self._connector.execute("contacts", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return ContactsSearchResult(
+        return ContactsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -716,16 +716,16 @@ class CompaniesQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
-        filter_groups: list[CompaniesSearchParamsFiltergroupsItem] | None = None,
+        filter_groups: list[CompaniesApiSearchParamsFiltergroupsItem] | None = None,
         properties: list[str] | None = None,
         limit: int | None = None,
         after: str | None = None,
-        sorts: list[CompaniesSearchParamsSortsItem] | None = None,
+        sorts: list[CompaniesApiSearchParamsSortsItem] | None = None,
         query: str | None = None,
         **kwargs
-    ) -> CompaniesSearchResult:
+    ) -> CompaniesApiSearchResult:
         """
         Search for companies by filtering on properties, searching through associations, and sorting results.
 
@@ -739,7 +739,7 @@ class CompaniesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            CompaniesSearchResult
+            CompaniesApiSearchResult
         """
         params = {k: v for k, v in {
             "filterGroups": filter_groups,
@@ -751,9 +751,9 @@ class CompaniesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("companies", "search", params)
+        result = await self._connector.execute("companies", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return CompaniesSearchResult(
+        return CompaniesApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -851,16 +851,16 @@ class DealsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
-        filter_groups: list[DealsSearchParamsFiltergroupsItem] | None = None,
+        filter_groups: list[DealsApiSearchParamsFiltergroupsItem] | None = None,
         properties: list[str] | None = None,
         limit: int | None = None,
         after: str | None = None,
-        sorts: list[DealsSearchParamsSortsItem] | None = None,
+        sorts: list[DealsApiSearchParamsSortsItem] | None = None,
         query: str | None = None,
         **kwargs
-    ) -> DealsSearchResult:
+    ) -> DealsApiSearchResult:
         """
         Search deals with filters and sorting
 
@@ -874,7 +874,7 @@ class DealsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            DealsSearchResult
+            DealsApiSearchResult
         """
         params = {k: v for k, v in {
             "filterGroups": filter_groups,
@@ -886,9 +886,9 @@ class DealsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("deals", "search", params)
+        result = await self._connector.execute("deals", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return DealsSearchResult(
+        return DealsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -986,16 +986,16 @@ class TicketsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
-        filter_groups: list[TicketsSearchParamsFiltergroupsItem] | None = None,
+        filter_groups: list[TicketsApiSearchParamsFiltergroupsItem] | None = None,
         properties: list[str] | None = None,
         limit: int | None = None,
         after: str | None = None,
-        sorts: list[TicketsSearchParamsSortsItem] | None = None,
+        sorts: list[TicketsApiSearchParamsSortsItem] | None = None,
         query: str | None = None,
         **kwargs
-    ) -> TicketsSearchResult:
+    ) -> TicketsApiSearchResult:
         """
         Search for tickets by filtering on properties, searching through associations, and sorting results.
 
@@ -1009,7 +1009,7 @@ class TicketsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TicketsSearchResult
+            TicketsApiSearchResult
         """
         params = {k: v for k, v in {
             "filterGroups": filter_groups,
@@ -1021,9 +1021,9 @@ class TicketsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("tickets", "search", params)
+        result = await self._connector.execute("tickets", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return TicketsSearchResult(
+        return TicketsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
