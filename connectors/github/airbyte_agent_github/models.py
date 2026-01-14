@@ -73,8 +73,8 @@ RepositoriesGetResult = GithubExecuteResult[dict[str, Any]]
 RepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for repositories.list operation."""
 
-RepositoriesSearchResult = GithubExecuteResult[list[dict[str, Any]]]
-"""Result type for repositories.search operation."""
+RepositoriesApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for repositories.api_search operation."""
 
 OrgRepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for org_repositories.list operation."""
@@ -103,8 +103,8 @@ IssuesListResult = GithubExecuteResult[list[dict[str, Any]]]
 IssuesGetResult = GithubExecuteResult[dict[str, Any]]
 """Result type for issues.get operation."""
 
-IssuesSearchResult = GithubExecuteResult[list[dict[str, Any]]]
-"""Result type for issues.search operation."""
+IssuesApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for issues.api_search operation."""
 
 PullRequestsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for pull_requests.list operation."""
@@ -112,8 +112,8 @@ PullRequestsListResult = GithubExecuteResult[list[dict[str, Any]]]
 PullRequestsGetResult = GithubExecuteResult[dict[str, Any]]
 """Result type for pull_requests.get operation."""
 
-PullRequestsSearchResult = GithubExecuteResult[list[dict[str, Any]]]
-"""Result type for pull_requests.search operation."""
+PullRequestsApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for pull_requests.api_search operation."""
 
 ReviewsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for reviews.list operation."""
@@ -154,8 +154,8 @@ UsersGetResult = GithubExecuteResult[dict[str, Any]]
 UsersListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for users.list operation."""
 
-UsersSearchResult = GithubExecuteResult[list[dict[str, Any]]]
-"""Result type for users.search operation."""
+UsersApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for users.api_search operation."""
 
 TeamsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for teams.list operation."""
