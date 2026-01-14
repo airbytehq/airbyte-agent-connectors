@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import logging
 import os
 import re
@@ -11,6 +12,7 @@ from collections.abc import AsyncIterator
 from typing import Any, Protocol
 from urllib.parse import quote
 
+from jinja2 import Environment, StrictUndefined
 from jsonpath_ng import parse as parse_jsonpath
 from opentelemetry import trace
 
@@ -506,8 +508,6 @@ class LocalExecutor:
             result = handler.execute_operation(config.entity, action, params)
 
             # Check if it's an async generator (download) or awaitable (standard)
-            import inspect
-
             if inspect.isasyncgen(result):
                 # Download operation: return generator directly
                 return ExecutionResult(
@@ -814,7 +814,6 @@ class LocalExecutor:
             >>> _substitute_file_field_params("attachments[{attachment_index}].url", {"attachment_index": 0})
             "attachments[0].url"
         """
-        from jinja2 import Environment, StrictUndefined
 
         # Use custom delimiters to match OpenAPI path parameter syntax {var}
         # StrictUndefined raises clear error if a template variable is missing
@@ -1235,7 +1234,7 @@ class LocalExecutor:
 
         if missing_fields:
             raise MissingParameterError(
-                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. " f"Provided parameters: {list(params.keys())}"
+                f"Missing required body fields for {entity}.{action.value}: {missing_fields}. Provided parameters: {list(params.keys())}"
             )
 
     async def close(self):

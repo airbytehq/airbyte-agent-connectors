@@ -149,7 +149,7 @@ class AirbyteCloudClient:
         instances = data["instances"]
 
         if len(instances) == 0:
-            raise ValueError(f"No connector instance found for user '{external_user_id}' " f"and connector '{connector_definition_id}'")
+            raise ValueError(f"No connector instance found for user '{external_user_id}' and connector '{connector_definition_id}'")
 
         if len(instances) > 1:
             raise ValueError(
