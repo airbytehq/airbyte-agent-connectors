@@ -61,7 +61,7 @@ class Operation(BaseModel):
         description=(
             "JSONPath expression to extract records from API response envelopes. "
             "When specified, executor extracts data at this path instead of returning "
-            "full response. Returns array for list/search actions, single record for "
+            "full response. Returns array for list/api_search actions, single record for "
             "get/create/update/delete actions."
         ),
     )
