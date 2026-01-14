@@ -64,12 +64,17 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                 'client_id': '${client_id}',
                 'client_secret': '${client_secret}',
             },
+            replication_auth_key_mapping={
+                'client_id': 'client_id',
+                'client_secret': 'client_secret',
+                'refresh_token': 'refresh_token',
+            },
         ),
     ),
     entities=[
         EntityDefinition(
             name='accounts',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -148,13 +153,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'accounts',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:accounts',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for accounts using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields and objects.\nUse SOQL (list action) for structured queries with specific field conditions.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -206,7 +211,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='contacts',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -285,13 +290,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'contacts',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:contacts',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for contacts using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -343,7 +348,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='leads',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -422,13 +427,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'leads',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:leads',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for leads using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -480,7 +485,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='opportunities',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -559,13 +564,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'opportunities',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:opportunities',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for opportunities using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -617,7 +622,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='tasks',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -696,13 +701,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'tasks',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:tasks',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for tasks using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -754,7 +759,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='events',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -833,13 +838,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'events',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:events',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for events using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -891,7 +896,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='campaigns',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -970,13 +975,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'campaigns',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:campaigns',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for campaigns using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -1028,7 +1033,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='cases',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1109,13 +1114,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'cases',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:cases',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for cases using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={
@@ -1168,7 +1173,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='notes',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1247,13 +1252,13 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'notes',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/search:notes',
                     path_override=PathOverrideConfig(
                         path='/search',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for notes using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n',
                     query_params=['q'],
                     query_params_schema={

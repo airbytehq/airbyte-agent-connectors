@@ -14,40 +14,40 @@ except ImportError:
 from .connector_model import SalesforceConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
+    AccountsApiSearchParams,
     AccountsGetParams,
     AccountsListParams,
-    AccountsSearchParams,
     AttachmentsDownloadParams,
     AttachmentsGetParams,
     AttachmentsListParams,
+    CampaignsApiSearchParams,
     CampaignsGetParams,
     CampaignsListParams,
-    CampaignsSearchParams,
+    CasesApiSearchParams,
     CasesGetParams,
     CasesListParams,
-    CasesSearchParams,
+    ContactsApiSearchParams,
     ContactsGetParams,
     ContactsListParams,
-    ContactsSearchParams,
     ContentVersionsDownloadParams,
     ContentVersionsGetParams,
     ContentVersionsListParams,
+    EventsApiSearchParams,
     EventsGetParams,
     EventsListParams,
-    EventsSearchParams,
+    LeadsApiSearchParams,
     LeadsGetParams,
     LeadsListParams,
-    LeadsSearchParams,
+    NotesApiSearchParams,
     NotesGetParams,
     NotesListParams,
-    NotesSearchParams,
+    OpportunitiesApiSearchParams,
     OpportunitiesGetParams,
     OpportunitiesListParams,
-    OpportunitiesSearchParams,
     QueryListParams,
+    TasksApiSearchParams,
     TasksGetParams,
     TasksListParams,
-    TasksSearchParams,
 )
 if TYPE_CHECKING:
     from .models import SalesforceAuthConfig
@@ -100,31 +100,31 @@ class SalesforceConnector:
     _EXTRACTOR_MAP = {
         ("accounts", "list"): False,
         ("accounts", "get"): False,
-        ("accounts", "search"): False,
+        ("accounts", "api_search"): False,
         ("contacts", "list"): False,
         ("contacts", "get"): False,
-        ("contacts", "search"): False,
+        ("contacts", "api_search"): False,
         ("leads", "list"): False,
         ("leads", "get"): False,
-        ("leads", "search"): False,
+        ("leads", "api_search"): False,
         ("opportunities", "list"): False,
         ("opportunities", "get"): False,
-        ("opportunities", "search"): False,
+        ("opportunities", "api_search"): False,
         ("tasks", "list"): False,
         ("tasks", "get"): False,
-        ("tasks", "search"): False,
+        ("tasks", "api_search"): False,
         ("events", "list"): False,
         ("events", "get"): False,
-        ("events", "search"): False,
+        ("events", "api_search"): False,
         ("campaigns", "list"): False,
         ("campaigns", "get"): False,
-        ("campaigns", "search"): False,
+        ("campaigns", "api_search"): False,
         ("cases", "list"): False,
         ("cases", "get"): False,
-        ("cases", "search"): False,
+        ("cases", "api_search"): False,
         ("notes", "list"): False,
         ("notes", "get"): False,
-        ("notes", "search"): False,
+        ("notes", "api_search"): False,
         ("content_versions", "list"): False,
         ("content_versions", "get"): False,
         ("content_versions", "download"): False,
@@ -139,31 +139,31 @@ class SalesforceConnector:
     _PARAM_MAP = {
         ('accounts', 'list'): {'q': 'q'},
         ('accounts', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('accounts', 'search'): {'q': 'q'},
+        ('accounts', 'api_search'): {'q': 'q'},
         ('contacts', 'list'): {'q': 'q'},
         ('contacts', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('contacts', 'search'): {'q': 'q'},
+        ('contacts', 'api_search'): {'q': 'q'},
         ('leads', 'list'): {'q': 'q'},
         ('leads', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('leads', 'search'): {'q': 'q'},
+        ('leads', 'api_search'): {'q': 'q'},
         ('opportunities', 'list'): {'q': 'q'},
         ('opportunities', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('opportunities', 'search'): {'q': 'q'},
+        ('opportunities', 'api_search'): {'q': 'q'},
         ('tasks', 'list'): {'q': 'q'},
         ('tasks', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('tasks', 'search'): {'q': 'q'},
+        ('tasks', 'api_search'): {'q': 'q'},
         ('events', 'list'): {'q': 'q'},
         ('events', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('events', 'search'): {'q': 'q'},
+        ('events', 'api_search'): {'q': 'q'},
         ('campaigns', 'list'): {'q': 'q'},
         ('campaigns', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('campaigns', 'search'): {'q': 'q'},
+        ('campaigns', 'api_search'): {'q': 'q'},
         ('cases', 'list'): {'q': 'q'},
         ('cases', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('cases', 'search'): {'q': 'q'},
+        ('cases', 'api_search'): {'q': 'q'},
         ('notes', 'list'): {'q': 'q'},
         ('notes', 'get'): {'id': 'id', 'fields': 'fields'},
-        ('notes', 'search'): {'q': 'q'},
+        ('notes', 'api_search'): {'q': 'q'},
         ('content_versions', 'list'): {'q': 'q'},
         ('content_versions', 'get'): {'id': 'id', 'fields': 'fields'},
         ('content_versions', 'download'): {'id': 'id', 'range_header': 'range_header'},
@@ -290,8 +290,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["accounts"],
-        action: Literal["search"],
-        params: "AccountsSearchParams"
+        action: Literal["api_search"],
+        params: "AccountsApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -314,8 +314,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
-        action: Literal["search"],
-        params: "ContactsSearchParams"
+        action: Literal["api_search"],
+        params: "ContactsApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -338,8 +338,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["leads"],
-        action: Literal["search"],
-        params: "LeadsSearchParams"
+        action: Literal["api_search"],
+        params: "LeadsApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -362,8 +362,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["opportunities"],
-        action: Literal["search"],
-        params: "OpportunitiesSearchParams"
+        action: Literal["api_search"],
+        params: "OpportunitiesApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -386,8 +386,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["tasks"],
-        action: Literal["search"],
-        params: "TasksSearchParams"
+        action: Literal["api_search"],
+        params: "TasksApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -410,8 +410,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["events"],
-        action: Literal["search"],
-        params: "EventsSearchParams"
+        action: Literal["api_search"],
+        params: "EventsApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -434,8 +434,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["campaigns"],
-        action: Literal["search"],
-        params: "CampaignsSearchParams"
+        action: Literal["api_search"],
+        params: "CampaignsApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -458,8 +458,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["cases"],
-        action: Literal["search"],
-        params: "CasesSearchParams"
+        action: Literal["api_search"],
+        params: "CasesApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -482,8 +482,8 @@ class SalesforceConnector:
     async def execute(
         self,
         entity: Literal["notes"],
-        action: Literal["search"],
-        params: "NotesSearchParams"
+        action: Literal["api_search"],
+        params: "NotesApiSearchParams"
     ) -> "SearchResult": ...
 
     @overload
@@ -771,7 +771,7 @@ Example: "Id,Name,Industry,AnnualRevenue,Website"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -799,7 +799,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("accounts", "search", params)
+        result = await self._connector.execute("accounts", "api_search", params)
         return result
 
 
@@ -875,7 +875,7 @@ Example: "Id,FirstName,LastName,Email,Phone,AccountId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -901,7 +901,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("contacts", "search", params)
+        result = await self._connector.execute("contacts", "api_search", params)
         return result
 
 
@@ -977,7 +977,7 @@ Example: "Id,FirstName,LastName,Email,Company,Status,LeadSource"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1003,7 +1003,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("leads", "search", params)
+        result = await self._connector.execute("leads", "api_search", params)
         return result
 
 
@@ -1079,7 +1079,7 @@ Example: "Id,Name,Amount,StageName,CloseDate,AccountId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1105,7 +1105,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("opportunities", "search", params)
+        result = await self._connector.execute("opportunities", "api_search", params)
         return result
 
 
@@ -1181,7 +1181,7 @@ Example: "Id,Subject,Status,Priority,ActivityDate,WhoId,WhatId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1207,7 +1207,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("tasks", "search", params)
+        result = await self._connector.execute("tasks", "api_search", params)
         return result
 
 
@@ -1283,7 +1283,7 @@ Example: "Id,Subject,StartDateTime,EndDateTime,Location,WhoId,WhatId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1309,7 +1309,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("events", "search", params)
+        result = await self._connector.execute("events", "api_search", params)
         return result
 
 
@@ -1385,7 +1385,7 @@ Example: "Id,Name,Type,Status,StartDate,EndDate,IsActive"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1411,7 +1411,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("campaigns", "search", params)
+        result = await self._connector.execute("campaigns", "api_search", params)
         return result
 
 
@@ -1487,7 +1487,7 @@ Example: "Id,CaseNumber,Subject,Status,Priority,ContactId,AccountId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1513,7 +1513,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("cases", "search", params)
+        result = await self._connector.execute("cases", "api_search", params)
         return result
 
 
@@ -1589,7 +1589,7 @@ Example: "Id,Title,Body,ParentId,OwnerId"
 
 
 
-    async def search(
+    async def api_search(
         self,
         q: str,
         **kwargs
@@ -1615,7 +1615,7 @@ Examples:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("notes", "search", params)
+        result = await self._connector.execute("notes", "api_search", params)
         return result
 
 
