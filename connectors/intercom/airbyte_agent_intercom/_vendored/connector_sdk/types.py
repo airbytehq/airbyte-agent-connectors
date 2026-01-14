@@ -140,7 +140,7 @@ class AuthConfig(BaseModel):
             ValueError: If this is a multi-auth config or invalid
         """
         if self.is_multi_auth():
-            raise ValueError("Cannot call get_single_option() on multi-auth config. " "Use options list instead.")
+            raise ValueError("Cannot call get_single_option() on multi-auth config. Use options list instead.")
 
         if self.type is None:
             raise ValueError("Invalid AuthConfig: neither single-auth nor multi-auth")
@@ -161,7 +161,7 @@ class EndpointDefinition(BaseModel):
     path: str  # e.g., /v1/customers/{id} (OpenAPI path)
     path_override: PathOverrideConfig | None = Field(
         None,
-        description=("Path override config from x-airbyte-path-override. " "When set, overrides the path for actual HTTP requests."),
+        description=("Path override config from x-airbyte-path-override. When set, overrides the path for actual HTTP requests."),
     )
     action: Action | None = None  # Semantic action (get, list, create, update, delete)
     description: str | None = None

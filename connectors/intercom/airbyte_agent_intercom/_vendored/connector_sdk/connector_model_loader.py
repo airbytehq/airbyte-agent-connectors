@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from pathlib import Path
 from typing import Any
@@ -768,8 +769,6 @@ def _parse_auth_from_openapi(spec: OpenAPIConnector) -> AuthConfig:
             options.append(auth_option)
         except Exception as e:
             # Log warning but continue - skip invalid schemes
-            import logging
-
             logger = logging.getLogger(__name__)
             logger.warning(f"Skipping invalid security scheme '{scheme_name}': {e}")
             continue
