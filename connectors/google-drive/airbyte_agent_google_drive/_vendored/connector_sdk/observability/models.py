@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 @dataclass
@@ -12,8 +12,8 @@ class OperationMetadata:
     entity: str
     action: str
     timestamp: datetime
-    timing_ms: Optional[float] = None
-    status_code: Optional[int] = None
-    error_type: Optional[str] = None
-    error_message: Optional[str] = None
-    params: Optional[Dict[str, Any]] = None
+    timing_ms: float | None = None
+    status_code: int | None = None
+    error_type: str | None = None
+    error_message: str | None = None
+    params: Dict[str, Any] | None = None
