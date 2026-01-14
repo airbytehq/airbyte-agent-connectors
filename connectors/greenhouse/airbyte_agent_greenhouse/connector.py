@@ -484,7 +484,7 @@ class GreenhouseConnector:
 
         original_doc = func.__doc__ or ""
         if original_doc.strip():
-            func.__doc__ = f"{original_doc.strip()}\n\n{description}"
+            func.__doc__ = f"{original_doc.strip()}\n{description}"
         else:
             func.__doc__ = description
 
