@@ -6,7 +6,7 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
 """
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -20,9 +20,9 @@ class OAuth2Flow(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    authorization_url: Optional[str] = Field(None, alias="authorizationUrl")
-    token_url: Optional[str] = Field(None, alias="tokenUrl")
-    refresh_url: Optional[str] = Field(None, alias="refreshUrl")
+    authorization_url: str | None = Field(None, alias="authorizationUrl")
+    token_url: str | None = Field(None, alias="tokenUrl")
+    refresh_url: str | None = Field(None, alias="refreshUrl")
     scopes: Dict[str, str] = Field(default_factory=dict)
 
 
@@ -35,10 +35,10 @@ class OAuth2Flows(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    implicit: Optional[OAuth2Flow] = None
-    password: Optional[OAuth2Flow] = None
-    client_credentials: Optional[OAuth2Flow] = Field(None, alias="clientCredentials")
-    authorization_code: Optional[OAuth2Flow] = Field(None, alias="authorizationCode")
+    implicit: OAuth2Flow | None = None
+    password: OAuth2Flow | None = None
+    client_credentials: OAuth2Flow | None = Field(None, alias="clientCredentials")
+    authorization_code: OAuth2Flow | None = Field(None, alias="authorizationCode")
 
 
 class AuthConfigFieldSpec(BaseModel):
@@ -51,12 +51,12 @@ class AuthConfigFieldSpec(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     type: Literal["string", "integer", "boolean", "number"] = "string"
-    title: Optional[str] = None
-    description: Optional[str] = None
-    format: Optional[str] = None  # e.g., "email", "uri"
-    pattern: Optional[str] = None  # Regex validation
+    title: str | None = None
+    description: str | None = None
+    format: str | None = None  # e.g., "email", "uri"
+    pattern: str | None = None  # Regex validation
     airbyte_secret: bool = Field(False, alias="airbyte_secret")
-    default: Optional[Any] = None
+    default: Any | None = None
 
 
 class AuthConfigOption(BaseModel):
@@ -68,8 +68,8 @@ class AuthConfigOption(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    title: Optional[str] = None
-    description: Optional[str] = None
+    title: str | None = None
+    description: str | None = None
     type: Literal["object"] = "object"
     required: List[str] = Field(default_factory=list)
     properties: Dict[str, AuthConfigFieldSpec] = Field(default_factory=dict)
@@ -77,7 +77,7 @@ class AuthConfigOption(BaseModel):
         default_factory=dict,
         description="Mapping from auth parameters (e.g., 'username', 'password', 'token') to template strings using ${field} syntax",
     )
-    replication_auth_key_mapping: Optional[Dict[str, str]] = Field(
+    replication_auth_key_mapping: Dict[str, str] | None = Field(
         None,
         description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
     )
@@ -96,21 +96,21 @@ class AirbyteAuthConfig(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Single option fields
-    title: Optional[str] = None
-    description: Optional[str] = None
-    type: Optional[Literal["object"]] = None
-    required: Optional[List[str]] = None
-    properties: Optional[Dict[str, AuthConfigFieldSpec]] = None
-    auth_mapping: Optional[Dict[str, str]] = None
+    title: str | None = None
+    description: str | None = None
+    type: Literal["object"] | None = None
+    required: List[str] | None = None
+    properties: Dict[str, AuthConfigFieldSpec] | None = None
+    auth_mapping: Dict[str, str] | None = None
 
     # Replication connector auth mapping
-    replication_auth_key_mapping: Optional[Dict[str, str]] = Field(
+    replication_auth_key_mapping: Dict[str, str] | None = Field(
         None,
         description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
     )
 
     # Multiple options (oneOf)
-    one_of: Optional[List[AuthConfigOption]] = Field(None, alias="oneOf")
+    one_of: List[AuthConfigOption] | None = Field(None, alias="oneOf")
 
     @model_validator(mode="after")
     def validate_config_structure(self) -> "AirbyteAuthConfig":
@@ -161,27 +161,27 @@ class SecurityScheme(BaseModel):
 
     # Standard OpenAPI fields
     type: Literal["apiKey", "http", "oauth2", "openIdConnect"]
-    description: Optional[str] = None
+    description: str | None = None
 
     # apiKey specific
-    name: Optional[str] = None
-    in_: Optional[Literal["query", "header", "cookie"]] = Field(None, alias="in")
+    name: str | None = None
+    in_: Literal["query", "header", "cookie"] | None = Field(None, alias="in")
 
     # http specific
-    scheme: Optional[str] = None  # e.g., "basic", "bearer", "digest"
-    bearer_format: Optional[str] = Field(None, alias="bearerFormat")
+    scheme: str | None = None  # e.g., "basic", "bearer", "digest"
+    bearer_format: str | None = Field(None, alias="bearerFormat")
 
     # oauth2 specific
-    flows: Optional[OAuth2Flows] = None
+    flows: OAuth2Flows | None = None
 
     # openIdConnect specific
-    open_id_connect_url: Optional[str] = Field(None, alias="openIdConnectUrl")
+    open_id_connect_url: str | None = Field(None, alias="openIdConnectUrl")
 
     # Airbyte extensions
-    x_token_path: Optional[str] = Field(None, alias="x-airbyte-token-path")
-    x_token_refresh: Optional[Dict[str, Any]] = Field(None, alias="x-airbyte-token-refresh")
-    x_airbyte_auth_config: Optional[AirbyteAuthConfig] = Field(None, alias="x-airbyte-auth-config")
-    x_airbyte_token_extract: Optional[List[str]] = Field(
+    x_token_path: str | None = Field(None, alias="x-airbyte-token-path")
+    x_token_refresh: Dict[str, Any] | None = Field(None, alias="x-airbyte-token-refresh")
+    x_airbyte_auth_config: AirbyteAuthConfig | None = Field(None, alias="x-airbyte-auth-config")
+    x_airbyte_token_extract: List[str] | None = Field(
         None,
         alias="x-airbyte-token-extract",
         description="List of fields to extract from OAuth2 token responses and use as server variables",
@@ -189,7 +189,7 @@ class SecurityScheme(BaseModel):
 
     @field_validator("x_airbyte_token_extract", mode="after")
     @classmethod
-    def validate_token_extract(cls, v: Optional[List[str]]) -> Optional[List[str]]:
+    def validate_token_extract(cls, v: List[str] | None) -> List[str] | None:
         """Validate x-airbyte-token-extract has no duplicates."""
         if v is not None:
             if len(v) != len(set(v)):
