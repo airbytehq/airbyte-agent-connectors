@@ -3,14 +3,14 @@
 import logging
 import uuid
 from datetime import UTC, datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from .config import SDKConfig, load_config
 
 logger = logging.getLogger(__name__)
 
 # Cache the config at module level to avoid repeated reads
-_cached_config: Optional[SDKConfig] = None
+_cached_config: SDKConfig | None = None
 
 
 def _get_config() -> SDKConfig:
@@ -39,7 +39,7 @@ def get_persistent_user_id() -> str:
     return _get_config().user_id
 
 
-def get_public_ip() -> Optional[str]:
+def get_public_ip() -> str | None:
     """
     Fetch the public IP address of the user.
 
@@ -47,6 +47,8 @@ def get_public_ip() -> Optional[str]:
     Uses httpx for a robust HTTP request to a public IP service.
     """
     try:
+        # NOTE: Import here intentionally - this is a non-critical network call
+        # that may fail. Importing at module level would make httpx a hard dependency.
         import httpx
 
         # Use a short timeout to avoid blocking
@@ -77,9 +79,9 @@ class ObservabilitySession:
     def __init__(
         self,
         connector_name: str,
-        connector_version: Optional[str] = None,
+        connector_version: str | None = None,
         execution_context: str = "direct",
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
     ):
         self.session_id = session_id or str(uuid.uuid4())
         self.user_id = get_persistent_user_id()
