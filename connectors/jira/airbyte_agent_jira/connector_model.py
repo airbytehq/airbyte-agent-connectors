@@ -49,12 +49,12 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='issues',
-            actions=[Action.SEARCH, Action.GET],
+            actions=[Action.API_SEARCH, Action.GET],
             endpoints={
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/search/jql',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Retrieve issues based on JQL query with pagination support',
                     query_params=[
                         'jql',
@@ -623,12 +623,12 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='projects',
-            actions=[Action.SEARCH, Action.GET],
+            actions=[Action.API_SEARCH, Action.GET],
             endpoints={
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/project/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search and filter projects with advanced query parameters',
                     query_params=[
                         'startAt',
@@ -1200,7 +1200,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='users',
-            actions=[Action.GET, Action.LIST, Action.SEARCH],
+            actions=[Action.GET, Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1471,10 +1471,10 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/user/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for users using a query string',
                     query_params=[
                         'query',
@@ -1742,7 +1742,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='issue_fields',
-            actions=[Action.LIST, Action.SEARCH],
+            actions=[Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1847,10 +1847,10 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/field/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search and filter issue fields with query parameters',
                     query_params=[
                         'startAt',

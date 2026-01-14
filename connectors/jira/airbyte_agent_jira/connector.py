@@ -16,17 +16,17 @@ from ._vendored.connector_sdk.introspection import describe_entities, generate_t
 from .types import (
     IssueCommentsGetParams,
     IssueCommentsListParams,
+    IssueFieldsApiSearchParams,
     IssueFieldsListParams,
-    IssueFieldsSearchParams,
     IssueWorklogsGetParams,
     IssueWorklogsListParams,
+    IssuesApiSearchParams,
     IssuesGetParams,
-    IssuesSearchParams,
+    ProjectsApiSearchParams,
     ProjectsGetParams,
-    ProjectsSearchParams,
+    UsersApiSearchParams,
     UsersGetParams,
     UsersListParams,
-    UsersSearchParams,
 )
 if TYPE_CHECKING:
     from .models import JiraAuthConfig
@@ -34,8 +34,8 @@ if TYPE_CHECKING:
 from .models import (
     JiraExecuteResult,
     JiraExecuteResultWithMeta,
-    IssuesSearchResult,
-    ProjectsSearchResult,
+    IssuesApiSearchResult,
+    ProjectsApiSearchResult,
     IssueCommentsListResult,
     IssueWorklogsListResult,
     Issue,
@@ -63,15 +63,15 @@ class JiraConnector:
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision
     _EXTRACTOR_MAP = {
-        ("issues", "search"): True,
+        ("issues", "api_search"): True,
         ("issues", "get"): False,
-        ("projects", "search"): True,
+        ("projects", "api_search"): True,
         ("projects", "get"): False,
         ("users", "get"): False,
         ("users", "list"): False,
-        ("users", "search"): False,
+        ("users", "api_search"): False,
         ("issue_fields", "list"): False,
-        ("issue_fields", "search"): False,
+        ("issue_fields", "api_search"): False,
         ("issue_comments", "list"): True,
         ("issue_comments", "get"): False,
         ("issue_worklogs", "list"): True,
@@ -81,14 +81,14 @@ class JiraConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('issues', 'search'): {'jql': 'jql', 'next_page_token': 'nextPageToken', 'max_results': 'maxResults', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'fail_fast': 'failFast'},
+        ('issues', 'api_search'): {'jql': 'jql', 'next_page_token': 'nextPageToken', 'max_results': 'maxResults', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'fail_fast': 'failFast'},
         ('issues', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'update_history': 'updateHistory', 'fail_fast': 'failFast'},
-        ('projects', 'search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'id': 'id', 'keys': 'keys', 'query': 'query', 'type_key': 'typeKey', 'category_id': 'categoryId', 'action': 'action', 'expand': 'expand', 'status': 'status'},
+        ('projects', 'api_search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'id': 'id', 'keys': 'keys', 'query': 'query', 'type_key': 'typeKey', 'category_id': 'categoryId', 'action': 'action', 'expand': 'expand', 'status': 'status'},
         ('projects', 'get'): {'project_id_or_key': 'projectIdOrKey', 'expand': 'expand', 'properties': 'properties'},
         ('users', 'get'): {'account_id': 'accountId', 'expand': 'expand'},
         ('users', 'list'): {'start_at': 'startAt', 'max_results': 'maxResults'},
-        ('users', 'search'): {'query': 'query', 'start_at': 'startAt', 'max_results': 'maxResults', 'account_id': 'accountId', 'property': 'property'},
-        ('issue_fields', 'search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'type': 'type', 'id': 'id', 'query': 'query', 'order_by': 'orderBy', 'expand': 'expand'},
+        ('users', 'api_search'): {'query': 'query', 'start_at': 'startAt', 'max_results': 'maxResults', 'account_id': 'accountId', 'property': 'property'},
+        ('issue_fields', 'api_search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'type': 'type', 'id': 'id', 'query': 'query', 'order_by': 'orderBy', 'expand': 'expand'},
         ('issue_comments', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'expand': 'expand'},
         ('issue_comments', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'expand': 'expand'},
         ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
@@ -190,9 +190,9 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["issues"],
-        action: Literal["search"],
-        params: "IssuesSearchParams"
-    ) -> "IssuesSearchResult": ...
+        action: Literal["api_search"],
+        params: "IssuesApiSearchParams"
+    ) -> "IssuesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -206,9 +206,9 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["projects"],
-        action: Literal["search"],
-        params: "ProjectsSearchParams"
-    ) -> "ProjectsSearchResult": ...
+        action: Literal["api_search"],
+        params: "ProjectsApiSearchParams"
+    ) -> "ProjectsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -238,8 +238,8 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["users"],
-        action: Literal["search"],
-        params: "UsersSearchParams"
+        action: Literal["api_search"],
+        params: "UsersApiSearchParams"
     ) -> "dict[str, Any]": ...
 
     @overload
@@ -254,8 +254,8 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["issue_fields"],
-        action: Literal["search"],
-        params: "IssueFieldsSearchParams"
+        action: Literal["api_search"],
+        params: "IssueFieldsApiSearchParams"
     ) -> "IssueFieldSearchResults": ...
 
     @overload
@@ -457,7 +457,7 @@ class IssuesQuery:
         """Initialize query with connector reference."""
         self._connector = connector
 
-    async def search(
+    async def api_search(
         self,
         jql: str | None = None,
         next_page_token: str | None = None,
@@ -468,7 +468,7 @@ class IssuesQuery:
         fields_by_keys: bool | None = None,
         fail_fast: bool | None = None,
         **kwargs
-    ) -> IssuesSearchResult:
+    ) -> IssuesApiSearchResult:
         """
         Retrieve issues based on JQL query with pagination support
 
@@ -484,7 +484,7 @@ class IssuesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            IssuesSearchResult
+            IssuesApiSearchResult
         """
         params = {k: v for k, v in {
             "jql": jql,
@@ -498,9 +498,9 @@ class IssuesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return IssuesSearchResult(
+        return IssuesApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -558,7 +558,7 @@ class ProjectsQuery:
         """Initialize query with connector reference."""
         self._connector = connector
 
-    async def search(
+    async def api_search(
         self,
         start_at: int | None = None,
         max_results: int | None = None,
@@ -572,7 +572,7 @@ class ProjectsQuery:
         expand: str | None = None,
         status: list[str] | None = None,
         **kwargs
-    ) -> ProjectsSearchResult:
+    ) -> ProjectsApiSearchResult:
         """
         Search and filter projects with advanced query parameters
 
@@ -591,7 +591,7 @@ class ProjectsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ProjectsSearchResult
+            ProjectsApiSearchResult
         """
         params = {k: v for k, v in {
             "startAt": start_at,
@@ -608,9 +608,9 @@ class ProjectsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return ProjectsSearchResult(
+        return ProjectsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -712,7 +712,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str | None = None,
         start_at: int | None = None,
@@ -744,7 +744,7 @@ class UsersQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "api_search", params)
         return result
 
 
@@ -777,7 +777,7 @@ class IssueFieldsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         start_at: int | None = None,
         max_results: int | None = None,
@@ -815,7 +815,7 @@ class IssueFieldsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("issue_fields", "search", params)
+        result = await self._connector.execute("issue_fields", "api_search", params)
         return result
 
 

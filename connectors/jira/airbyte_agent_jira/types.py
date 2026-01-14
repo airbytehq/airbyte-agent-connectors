@@ -16,8 +16,8 @@ except ImportError:
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
-class IssuesSearchParams(TypedDict):
-    """Parameters for issues.search operation"""
+class IssuesApiSearchParams(TypedDict):
+    """Parameters for issues.api_search operation"""
     jql: NotRequired[str]
     next_page_token: NotRequired[str]
     max_results: NotRequired[int]
@@ -37,8 +37,8 @@ class IssuesGetParams(TypedDict):
     update_history: NotRequired[bool]
     fail_fast: NotRequired[bool]
 
-class ProjectsSearchParams(TypedDict):
-    """Parameters for projects.search operation"""
+class ProjectsApiSearchParams(TypedDict):
+    """Parameters for projects.api_search operation"""
     start_at: NotRequired[int]
     max_results: NotRequired[int]
     order_by: NotRequired[str]
@@ -67,8 +67,8 @@ class UsersListParams(TypedDict):
     start_at: NotRequired[int]
     max_results: NotRequired[int]
 
-class UsersSearchParams(TypedDict):
-    """Parameters for users.search operation"""
+class UsersApiSearchParams(TypedDict):
+    """Parameters for users.api_search operation"""
     query: NotRequired[str]
     start_at: NotRequired[int]
     max_results: NotRequired[int]
@@ -79,8 +79,8 @@ class IssueFieldsListParams(TypedDict):
     """Parameters for issue_fields.list operation"""
     pass
 
-class IssueFieldsSearchParams(TypedDict):
-    """Parameters for issue_fields.search operation"""
+class IssueFieldsApiSearchParams(TypedDict):
+    """Parameters for issue_fields.api_search operation"""
     start_at: NotRequired[int]
     max_results: NotRequired[int]
     type: NotRequired[list[str]]
