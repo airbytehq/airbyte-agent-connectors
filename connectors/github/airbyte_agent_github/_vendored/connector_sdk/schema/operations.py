@@ -6,7 +6,7 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#path-item-object
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
@@ -34,28 +34,28 @@ class Operation(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Standard OpenAPI fields
-    tags: Optional[List[str]] = None
-    summary: Optional[str] = None
-    description: Optional[str] = None
-    external_docs: Optional[Dict[str, Any]] = Field(None, alias="externalDocs")
-    operation_id: Optional[str] = Field(None, alias="operationId")
-    parameters: Optional[List[Parameter]] = None
-    request_body: Optional[RequestBody] = Field(None, alias="requestBody")
+    tags: List[str] | None = None
+    summary: str | None = None
+    description: str | None = None
+    external_docs: Dict[str, Any] | None = Field(None, alias="externalDocs")
+    operation_id: str | None = Field(None, alias="operationId")
+    parameters: List[Parameter] | None = None
+    request_body: RequestBody | None = Field(None, alias="requestBody")
     responses: Dict[str, Response] = Field(default_factory=dict)
-    callbacks: Optional[Dict[str, Any]] = None
-    deprecated: Optional[bool] = None
-    security: Optional[List[SecurityRequirement]] = None
-    servers: Optional[List[Any]] = None  # Can override root servers
+    callbacks: Dict[str, Any] | None = None
+    deprecated: bool | None = None
+    security: List[SecurityRequirement] | None = None
+    servers: List[Any] | None = None  # Can override root servers
 
     # Airbyte extensions
     x_airbyte_entity: str = Field(..., alias="x-airbyte-entity")
     x_airbyte_action: ActionTypeLiteral = Field(..., alias="x-airbyte-action")
-    x_airbyte_path_override: Optional[PathOverrideConfig] = Field(
+    x_airbyte_path_override: PathOverrideConfig | None = Field(
         None,
         alias="x-airbyte-path-override",
-        description=("Override path for HTTP requests when OpenAPI path " "differs from actual endpoint"),
+        description=("Override path for HTTP requests when OpenAPI path differs from actual endpoint"),
     )
-    x_airbyte_record_extractor: Optional[str] = Field(
+    x_airbyte_record_extractor: str | None = Field(
         None,
         alias="x-airbyte-record-extractor",
         description=(
@@ -65,7 +65,7 @@ class Operation(BaseModel):
             "get/create/update/delete actions."
         ),
     )
-    x_airbyte_meta_extractor: Optional[Dict[str, str]] = Field(
+    x_airbyte_meta_extractor: Dict[str, str] | None = Field(
         None,
         alias="x-airbyte-meta-extractor",
         description=(
@@ -76,8 +76,8 @@ class Operation(BaseModel):
             "Example: {'pagination': '$.pagination', 'request_id': '$.requestId'}"
         ),
     )
-    x_airbyte_file_url: Optional[str] = Field(None, alias="x-airbyte-file-url")
-    x_airbyte_untested: Optional[bool] = Field(
+    x_airbyte_file_url: str | None = Field(None, alias="x-airbyte-file-url")
+    x_airbyte_untested: bool | None = Field(
         None,
         alias="x-airbyte-untested",
         description=(
@@ -127,20 +127,20 @@ class PathItem(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     # Common fields for all operations
-    summary: Optional[str] = None
-    description: Optional[str] = None
-    servers: Optional[List[Any]] = None
-    parameters: Optional[List[Parameter]] = None
+    summary: str | None = None
+    description: str | None = None
+    servers: List[Any] | None = None
+    parameters: List[Parameter] | None = None
 
     # HTTP methods (all optional)
-    get: Optional[Operation] = None
-    put: Optional[Operation] = None
-    post: Optional[Operation] = None
-    delete: Optional[Operation] = None
-    options: Optional[Operation] = None
-    head: Optional[Operation] = None
-    patch: Optional[Operation] = None
-    trace: Optional[Operation] = None
+    get: Operation | None = None
+    put: Operation | None = None
+    post: Operation | None = None
+    delete: Operation | None = None
+    options: Operation | None = None
+    head: Operation | None = None
+    patch: Operation | None = None
+    trace: Operation | None = None
 
     # Reference support
-    ref: Optional[str] = Field(None, alias="$ref")
+    ref: str | None = Field(None, alias="$ref")
