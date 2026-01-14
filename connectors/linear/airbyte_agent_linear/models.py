@@ -13,12 +13,12 @@ from typing import TypeVar, Generic, Union, Any
 # Authentication configuration
 
 class LinearAuthConfig(BaseModel):
-    """Authentication"""
+    """Linear API Key Authentication - Authenticate using your Linear API key"""
 
     model_config = ConfigDict(extra="forbid")
 
     api_key: str
-    """API authentication key"""
+    """Your Linear API key from Settings > API > Personal API keys"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
