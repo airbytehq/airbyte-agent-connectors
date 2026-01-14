@@ -666,8 +666,7 @@ EXTENSION_REGISTRY = {
         "type": "dict[str, str]",
         "required": False,
         "description": (
-            "Dictionary mapping field names to JSONPath expressions for extracting metadata "
-            "(pagination, request IDs, etc.) from response envelopes"
+            "Dictionary mapping field names to JSONPath expressions for extracting metadata (pagination, request IDs, etc.) from response envelopes"
         ),
     },
     AIRBYTE_FILE_URL: {
