@@ -4,7 +4,6 @@ import logging
 import platform
 import sys
 from datetime import datetime
-from typing import Optional
 
 from ..observability import ObservabilitySession
 
@@ -20,7 +19,7 @@ class SegmentTracker:
     def __init__(
         self,
         session: ObservabilitySession,
-        mode: Optional[TelemetryMode] = None,
+        mode: TelemetryMode | None = None,
     ):
         self.session = session
         self.mode = mode or TelemetryConfig.get_mode()
@@ -31,6 +30,8 @@ class SegmentTracker:
 
         if self.enabled:
             try:
+                # NOTE: Import here intentionally - segment is an optional dependency.
+                # This allows the SDK to work without telemetry if segment is not installed.
                 import segment.analytics as analytics
 
                 analytics.write_key = SEGMENT_WRITE_KEY
@@ -47,7 +48,7 @@ class SegmentTracker:
 
     def track_connector_init(
         self,
-        connector_version: Optional[str] = None,
+        connector_version: str | None = None,
     ) -> None:
         """Track connector initialization."""
         if not self.enabled or not self._analytics:
@@ -82,9 +83,9 @@ class SegmentTracker:
         self,
         entity: str,
         action: str,
-        status_code: Optional[int],
+        status_code: int | None,
         timing_ms: float,
-        error_type: Optional[str] = None,
+        error_type: str | None = None,
     ) -> None:
         """Track API operation."""
         # Always track success/failure counts (useful even when tracking is disabled)
