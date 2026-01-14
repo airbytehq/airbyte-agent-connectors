@@ -22,7 +22,7 @@ class Action(str, Enum):
     UPDATE = "update"
     DELETE = "delete"
     LIST = "list"
-    SEARCH = "search"
+    API_SEARCH = "api_search"
     DOWNLOAD = "download"
     AUTHORIZE = "authorize"
 

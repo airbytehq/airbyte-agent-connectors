@@ -232,7 +232,7 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
     # Response structure (brief, includes pagination hint)
     lines.append("")
     lines.append("RESPONSE STRUCTURE:")
-    lines.append("  - list/search: {data: [...], meta: {has_more: bool}}")
+    lines.append("  - list/api_search: {data: [...], meta: {has_more: bool}}")
     lines.append("  - get: Returns entity directly (no envelope)")
     lines.append("  To paginate: pass starting_after=<last_id> while has_more is true")
 
