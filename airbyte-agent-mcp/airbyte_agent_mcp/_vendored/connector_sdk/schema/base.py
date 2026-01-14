@@ -7,7 +7,7 @@ References:
 """
 
 from enum import StrEnum
-from typing import Dict, Optional
+from typing import Dict
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -45,9 +45,9 @@ class Contact(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    name: Optional[str] = None
-    url: Optional[str] = None
-    email: Optional[str] = None
+    name: str | None = None
+    url: str | None = None
+    email: str | None = None
 
 
 class License(BaseModel):
@@ -60,7 +60,7 @@ class License(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     name: str
-    url: Optional[str] = None
+    url: str | None = None
 
 
 class DocUrlType(StrEnum):
@@ -85,7 +85,7 @@ class DocUrl(BaseModel):
 
     url: str
     type: DocUrlType
-    title: Optional[str] = None
+    title: str | None = None
 
     @field_validator("url")
     def validate_url(cls, v):
@@ -111,17 +111,17 @@ class Info(BaseModel):
 
     title: str
     version: str
-    description: Optional[str] = None
-    terms_of_service: Optional[str] = Field(None, alias="termsOfService")
-    contact: Optional[Contact] = None
-    license: Optional[License] = None
+    description: str | None = None
+    terms_of_service: str | None = Field(None, alias="termsOfService")
+    contact: Contact | None = None
+    license: License | None = None
 
     # Airbyte extension
-    x_airbyte_connector_name: Optional[str] = Field(None, alias="x-airbyte-connector-name")
-    x_airbyte_connector_id: Optional[UUID] = Field(None, alias="x-airbyte-connector-id")
+    x_airbyte_connector_name: str | None = Field(None, alias="x-airbyte-connector-name")
+    x_airbyte_connector_id: UUID | None = Field(None, alias="x-airbyte-connector-id")
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(..., alias="x-airbyte-external-documentation-urls")
-    x_airbyte_retry_config: Optional[RetryConfig] = Field(None, alias="x-airbyte-retry-config")
-    x_airbyte_example_questions: Optional[ExampleQuestions] = Field(None, alias="x-airbyte-example-questions")
+    x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
+    x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
 
 
 class ServerVariable(BaseModel):
@@ -133,9 +133,9 @@ class ServerVariable(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    enum: Optional[list[str]] = None
+    enum: list[str] | None = None
     default: str
-    description: Optional[str] = None
+    description: str | None = None
 
 
 class Server(BaseModel):
@@ -148,7 +148,7 @@ class Server(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     url: str
-    description: Optional[str] = None
+    description: str | None = None
     variables: Dict[str, ServerVariable] = Field(default_factory=dict)
 
     @field_validator("url")
