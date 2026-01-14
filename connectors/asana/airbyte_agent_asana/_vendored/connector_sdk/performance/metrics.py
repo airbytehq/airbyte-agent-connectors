@@ -2,7 +2,7 @@
 
 import time
 from contextlib import asynccontextmanager
-from typing import Dict, Optional
+from typing import Dict
 
 
 class PerformanceMonitor:
@@ -33,7 +33,7 @@ class PerformanceMonitor:
         metrics["min"] = min(metrics["min"], duration)
         metrics["max"] = max(metrics["max"], duration)
 
-    def get_stats(self, metric_name: str) -> Optional[Dict[str, float]]:
+    def get_stats(self, metric_name: str) -> Dict[str, float] | None:
         """Get statistics for a metric.
 
         Args:
@@ -62,7 +62,7 @@ class PerformanceMonitor:
         """
         return {name: self.get_stats(name) for name in self._metrics.keys()}
 
-    def reset(self, metric_name: Optional[str] = None):
+    def reset(self, metric_name: str | None = None):
         """Reset metrics.
 
         Args:
