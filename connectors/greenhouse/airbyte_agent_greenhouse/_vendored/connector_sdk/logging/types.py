@@ -2,7 +2,7 @@
 
 import base64
 from datetime import UTC, datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, ConfigDict, Field, field_serializer, field_validator
 
@@ -27,12 +27,12 @@ class RequestLog(BaseModel):
     url: str
     path: str
     headers: Dict[str, str] = Field(default_factory=dict)
-    params: Optional[Dict[str, Any]] = None
-    body: Optional[Any] = None
-    response_status: Optional[int] = None
-    response_body: Optional[Any] = None
-    timing_ms: Optional[float] = None
-    error: Optional[str] = None
+    params: Dict[str, Any] | None = None
+    body: Any | None = None
+    response_status: int | None = None
+    response_body: Any | None = None
+    timing_ms: float | None = None
+    error: str | None = None
 
     @field_serializer("timestamp")
     def serialize_datetime(self, value: datetime) -> str:
@@ -50,9 +50,9 @@ class LogSession(BaseModel):
 
     session_id: str
     started_at: datetime = Field(default_factory=_utc_now)
-    connector_name: Optional[str] = None
+    connector_name: str | None = None
     logs: List[RequestLog] = Field(default_factory=list)
-    max_logs: Optional[int] = Field(
+    max_logs: int | None = Field(
         default=10000,
         description="Maximum number of logs to keep in memory. "
         "When limit is reached, oldest logs should be flushed before removal. "
@@ -60,7 +60,7 @@ class LogSession(BaseModel):
     )
     chunk_logs: List[bytes] = Field(
         default_factory=list,
-        description="Captured chunks from streaming responses. " "Each chunk is logged when log_chunk_fetch() is called.",
+        description="Captured chunks from streaming responses. Each chunk is logged when log_chunk_fetch() is called.",
     )
 
     @field_validator("chunk_logs", mode="before")

@@ -6,7 +6,7 @@ import tempfile
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import yaml
 
@@ -53,7 +53,7 @@ def _delete_legacy_files() -> None:
             logger.debug(f"Could not delete legacy file {legacy_path}: {e}")
 
 
-def _migrate_legacy_config() -> Optional[SDKConfig]:
+def _migrate_legacy_config() -> SDKConfig | None:
     """
     Migrate from legacy file-based config to new YAML format.
 
