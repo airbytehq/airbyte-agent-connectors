@@ -69,6 +69,11 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                 'client_id': '${client_id}',
                 'client_secret': '${client_secret}',
             },
+            replication_auth_key_mapping={
+                'client_id': 'client_id',
+                'client_secret': 'client_secret',
+                'refresh_token': 'refresh_token',
+            },
         ),
     ),
     entities=[
