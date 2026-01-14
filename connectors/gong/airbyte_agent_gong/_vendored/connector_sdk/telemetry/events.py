@@ -2,7 +2,7 @@
 
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 
 @dataclass
@@ -30,8 +30,8 @@ class ConnectorInitEvent(BaseEvent):
     python_version: str
     os_name: str
     os_version: str
-    public_ip: Optional[str] = None
-    connector_version: Optional[str] = None
+    public_ip: str | None = None
+    connector_version: str | None = None
 
 
 @dataclass
@@ -42,9 +42,9 @@ class OperationEvent(BaseEvent):
     entity: str
     action: str
     timing_ms: float
-    public_ip: Optional[str] = None
-    status_code: Optional[int] = None
-    error_type: Optional[str] = None
+    public_ip: str | None = None
+    status_code: int | None = None
+    error_type: str | None = None
 
 
 @dataclass
@@ -56,4 +56,4 @@ class SessionEndEvent(BaseEvent):
     operation_count: int
     success_count: int
     failure_count: int
-    public_ip: Optional[str] = None
+    public_ip: str | None = None

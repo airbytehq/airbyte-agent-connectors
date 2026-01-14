@@ -80,6 +80,8 @@ class HTTPResponse:
             HTTPStatusError: For 4xx or 5xx status codes.
         """
         if 400 <= self._status_code < 600:
+            # NOTE: Import here intentionally to avoid circular import.
+            # exceptions.py imports HTTPResponse for type hints.
             from .exceptions import HTTPStatusError
 
             raise HTTPStatusError(
