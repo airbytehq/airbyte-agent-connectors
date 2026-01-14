@@ -12,7 +12,7 @@ to Operation, Schema, or other models when their respective features
 are implemented.
 """
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict
 
@@ -33,22 +33,22 @@ class PaginationConfig(BaseModel):
     limit_param: str = "limit"
 
     # Cursor-based pagination
-    cursor_param: Optional[str] = None
-    cursor_source: Optional[Literal["body", "headers"]] = "body"
-    cursor_path: Optional[str] = None
+    cursor_param: str | None = None
+    cursor_source: Literal["body", "headers"] | None = "body"
+    cursor_path: str | None = None
 
     # Offset-based pagination
-    offset_param: Optional[str] = None
+    offset_param: str | None = None
 
     # Page-based pagination
-    page_param: Optional[str] = None
+    page_param: str | None = None
 
     # Response parsing
     data_path: str = "data"
-    has_more_path: Optional[str] = None
+    has_more_path: str | None = None
 
     # Limits
-    max_page_size: Optional[int] = None
+    max_page_size: int | None = None
     default_page_size: int = 100
 
 
@@ -66,7 +66,7 @@ class RateLimitConfig(BaseModel):
 
     max_requests: int
     time_window_seconds: int
-    retry_after_header: Optional[str] = "Retry-After"
+    retry_after_header: str | None = "Retry-After"
     respect_retry_after: bool = True
 
 
