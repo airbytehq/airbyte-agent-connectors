@@ -26,24 +26,29 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
         user_config_spec=AirbyteAuthConfig(
+            title='Jira API Token Authentication',
+            description='Authenticate using your Atlassian account email and API token',
             type='object',
             required=['username', 'password'],
             properties={
                 'username': AuthConfigFieldSpec(
-                    title='Username',
-                    description='Authentication username',
+                    title='Email Address',
+                    description='Your Atlassian account email address',
+                    format='email',
                 ),
                 'password': AuthConfigFieldSpec(
-                    title='Password',
-                    description='Authentication password',
+                    title='API Token',
+                    description='Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens',
+                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'username': '${username}', 'password': '${password}'},
+            replication_auth_key_mapping={'username': 'username', 'password': 'password'},
         ),
     ),
     entities=[
