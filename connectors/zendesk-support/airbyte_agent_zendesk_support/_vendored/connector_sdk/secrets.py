@@ -14,7 +14,7 @@ Example:
 
 import os
 import re
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from pydantic import SecretStr
 
@@ -72,7 +72,7 @@ class SecretResolutionError(Exception):
 def resolve_env_var_references(
     secret_mappings: Dict[str, Any],
     strict: bool = True,
-    env_vars: Optional[Dict[str, str]] = None,
+    env_vars: Dict[str, str] | None = None,
 ) -> Dict[str, str]:
     """Resolve environment variable references in secret values.
 
