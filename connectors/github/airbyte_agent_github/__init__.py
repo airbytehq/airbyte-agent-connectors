@@ -11,7 +11,7 @@ from .models import (
     GithubExecuteResultWithMeta,
     RepositoriesGetResult,
     RepositoriesListResult,
-    RepositoriesSearchResult,
+    RepositoriesApiSearchResult,
     OrgRepositoriesListResult,
     BranchesListResult,
     BranchesGetResult,
@@ -21,10 +21,10 @@ from .models import (
     ReleasesGetResult,
     IssuesListResult,
     IssuesGetResult,
-    IssuesSearchResult,
+    IssuesApiSearchResult,
     PullRequestsListResult,
     PullRequestsGetResult,
-    PullRequestsSearchResult,
+    PullRequestsApiSearchResult,
     ReviewsListResult,
     CommentsListResult,
     CommentsGetResult,
@@ -38,7 +38,7 @@ from .models import (
     OrganizationsListResult,
     UsersGetResult,
     UsersListResult,
-    UsersSearchResult,
+    UsersApiSearchResult,
     TeamsListResult,
     TeamsGetResult,
     TagsListResult,
@@ -53,7 +53,7 @@ from .models import (
 from .types import (
     RepositoriesGetParams,
     RepositoriesListParams,
-    RepositoriesSearchParams,
+    RepositoriesApiSearchParams,
     OrgRepositoriesListParams,
     BranchesListParams,
     BranchesGetParams,
@@ -63,10 +63,10 @@ from .types import (
     ReleasesGetParams,
     IssuesListParams,
     IssuesGetParams,
-    IssuesSearchParams,
+    IssuesApiSearchParams,
     PullRequestsListParams,
     PullRequestsGetParams,
-    PullRequestsSearchParams,
+    PullRequestsApiSearchParams,
     ReviewsListParams,
     CommentsListParams,
     CommentsGetParams,
@@ -80,7 +80,7 @@ from .types import (
     OrganizationsListParams,
     UsersGetParams,
     UsersListParams,
-    UsersSearchParams,
+    UsersApiSearchParams,
     TeamsListParams,
     TeamsGetParams,
     TagsListParams,
@@ -93,4 +93,4 @@ from .types import (
     ProjectItemsListParams
 )
 
-__all__ = ["GithubConnector", "GithubAuthConfig", "GithubExecuteResult", "GithubExecuteResultWithMeta", "RepositoriesGetResult", "RepositoriesListResult", "RepositoriesSearchResult", "OrgRepositoriesListResult", "BranchesListResult", "BranchesGetResult", "CommitsListResult", "CommitsGetResult", "ReleasesListResult", "ReleasesGetResult", "IssuesListResult", "IssuesGetResult", "IssuesSearchResult", "PullRequestsListResult", "PullRequestsGetResult", "PullRequestsSearchResult", "ReviewsListResult", "CommentsListResult", "CommentsGetResult", "PrCommentsListResult", "PrCommentsGetResult", "LabelsListResult", "LabelsGetResult", "MilestonesListResult", "MilestonesGetResult", "OrganizationsGetResult", "OrganizationsListResult", "UsersGetResult", "UsersListResult", "UsersSearchResult", "TeamsListResult", "TeamsGetResult", "TagsListResult", "TagsGetResult", "StargazersListResult", "ViewerGetResult", "ViewerRepositoriesListResult", "ProjectsListResult", "ProjectsGetResult", "ProjectItemsListResult", "RepositoriesGetParams", "RepositoriesListParams", "RepositoriesSearchParams", "OrgRepositoriesListParams", "BranchesListParams", "BranchesGetParams", "CommitsListParams", "CommitsGetParams", "ReleasesListParams", "ReleasesGetParams", "IssuesListParams", "IssuesGetParams", "IssuesSearchParams", "PullRequestsListParams", "PullRequestsGetParams", "PullRequestsSearchParams", "ReviewsListParams", "CommentsListParams", "CommentsGetParams", "PrCommentsListParams", "PrCommentsGetParams", "LabelsListParams", "LabelsGetParams", "MilestonesListParams", "MilestonesGetParams", "OrganizationsGetParams", "OrganizationsListParams", "UsersGetParams", "UsersListParams", "UsersSearchParams", "TeamsListParams", "TeamsGetParams", "TagsListParams", "TagsGetParams", "StargazersListParams", "ViewerGetParams", "ViewerRepositoriesListParams", "ProjectsListParams", "ProjectsGetParams", "ProjectItemsListParams"]
+__all__ = ["GithubConnector", "GithubAuthConfig", "GithubExecuteResult", "GithubExecuteResultWithMeta", "RepositoriesGetResult", "RepositoriesListResult", "RepositoriesApiSearchResult", "OrgRepositoriesListResult", "BranchesListResult", "BranchesGetResult", "CommitsListResult", "CommitsGetResult", "ReleasesListResult", "ReleasesGetResult", "IssuesListResult", "IssuesGetResult", "IssuesApiSearchResult", "PullRequestsListResult", "PullRequestsGetResult", "PullRequestsApiSearchResult", "ReviewsListResult", "CommentsListResult", "CommentsGetResult", "PrCommentsListResult", "PrCommentsGetResult", "LabelsListResult", "LabelsGetResult", "MilestonesListResult", "MilestonesGetResult", "OrganizationsGetResult", "OrganizationsListResult", "UsersGetResult", "UsersListResult", "UsersApiSearchResult", "TeamsListResult", "TeamsGetResult", "TagsListResult", "TagsGetResult", "StargazersListResult", "ViewerGetResult", "ViewerRepositoriesListResult", "ProjectsListResult", "ProjectsGetResult", "ProjectItemsListResult", "RepositoriesGetParams", "RepositoriesListParams", "RepositoriesApiSearchParams", "OrgRepositoriesListParams", "BranchesListParams", "BranchesGetParams", "CommitsListParams", "CommitsGetParams", "ReleasesListParams", "ReleasesGetParams", "IssuesListParams", "IssuesGetParams", "IssuesApiSearchParams", "PullRequestsListParams", "PullRequestsGetParams", "PullRequestsApiSearchParams", "ReviewsListParams", "CommentsListParams", "CommentsGetParams", "PrCommentsListParams", "PrCommentsGetParams", "LabelsListParams", "LabelsGetParams", "MilestonesListParams", "MilestonesGetParams", "OrganizationsGetParams", "OrganizationsListParams", "UsersGetParams", "UsersListParams", "UsersApiSearchParams", "TeamsListParams", "TeamsGetParams", "TagsListParams", "TagsGetParams", "StargazersListParams", "ViewerGetParams", "ViewerRepositoriesListParams", "ProjectsListParams", "ProjectsGetParams", "ProjectItemsListParams"]

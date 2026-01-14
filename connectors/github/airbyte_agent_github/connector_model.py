@@ -50,6 +50,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'access_token': '${access_token}'},
+                    replication_auth_key_mapping={'access_token': 'access_token'},
                 ),
             ),
             AuthOption(
@@ -68,6 +69,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'token': '${token}'},
+                    replication_auth_key_mapping={'personal_access_token': 'token'},
                 ),
             ),
         ],
@@ -75,7 +77,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='repositories',
-            actions=[Action.GET, Action.LIST, Action.SEARCH],
+            actions=[Action.GET, Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -180,13 +182,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.user.repositories.nodes',
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/graphql:repositories',
                     path_override=PathOverrideConfig(
                         path='/graphql',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for GitHub repositories using GitHub\'s powerful search syntax.\nExamples: "language:python stars:>1000", "topic:machine-learning", "org:facebook is:public"\n',
                     query_params=[
                         'query',
@@ -713,7 +715,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='issues',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -838,13 +840,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.repository.issue',
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/graphql:issues:search',
                     path_override=PathOverrideConfig(
                         path='/graphql',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description="Search for issues using GitHub's search syntax",
                     query_params=[
                         'query',
@@ -907,7 +909,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='pull_requests',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -1032,13 +1034,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.repository.pullRequest',
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/graphql:pull_requests:search',
                     path_override=PathOverrideConfig(
                         path='/graphql',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description="Search for pull requests using GitHub's search syntax",
                     query_params=[
                         'query',
@@ -1785,7 +1787,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='users',
-            actions=[Action.GET, Action.LIST, Action.SEARCH],
+            actions=[Action.GET, Action.LIST, Action.API_SEARCH],
             endpoints={
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1888,13 +1890,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.organization.membersWithRole.nodes',
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/graphql:users:search',
                     path_override=PathOverrideConfig(
                         path='/graphql',
                     ),
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for GitHub users using search syntax',
                     query_params=[
                         'query',

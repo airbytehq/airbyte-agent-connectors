@@ -29,8 +29,8 @@ class RepositoriesListParams(TypedDict):
     after: NotRequired[str]
     fields: NotRequired[list[str]]
 
-class RepositoriesSearchParams(TypedDict):
-    """Parameters for repositories.search operation"""
+class RepositoriesApiSearchParams(TypedDict):
+    """Parameters for repositories.api_search operation"""
     query: str
     limit: NotRequired[int]
     after: NotRequired[str]
@@ -104,8 +104,8 @@ class IssuesGetParams(TypedDict):
     number: int
     fields: NotRequired[list[str]]
 
-class IssuesSearchParams(TypedDict):
-    """Parameters for issues.search operation"""
+class IssuesApiSearchParams(TypedDict):
+    """Parameters for issues.api_search operation"""
     query: str
     per_page: NotRequired[int]
     after: NotRequired[str]
@@ -127,8 +127,8 @@ class PullRequestsGetParams(TypedDict):
     number: int
     fields: NotRequired[list[str]]
 
-class PullRequestsSearchParams(TypedDict):
-    """Parameters for pull_requests.search operation"""
+class PullRequestsApiSearchParams(TypedDict):
+    """Parameters for pull_requests.api_search operation"""
     query: str
     per_page: NotRequired[int]
     after: NotRequired[str]
@@ -226,8 +226,8 @@ class UsersListParams(TypedDict):
     after: NotRequired[str]
     fields: NotRequired[list[str]]
 
-class UsersSearchParams(TypedDict):
-    """Parameters for users.search operation"""
+class UsersApiSearchParams(TypedDict):
+    """Parameters for users.api_search operation"""
     query: str
     limit: NotRequired[int]
     after: NotRequired[str]

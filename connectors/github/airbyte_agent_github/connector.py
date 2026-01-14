@@ -20,9 +20,9 @@ from .types import (
     CommentsListParams,
     CommitsGetParams,
     CommitsListParams,
+    IssuesApiSearchParams,
     IssuesGetParams,
     IssuesListParams,
-    IssuesSearchParams,
     LabelsGetParams,
     LabelsListParams,
     MilestonesGetParams,
@@ -35,23 +35,23 @@ from .types import (
     ProjectItemsListParams,
     ProjectsGetParams,
     ProjectsListParams,
+    PullRequestsApiSearchParams,
     PullRequestsGetParams,
     PullRequestsListParams,
-    PullRequestsSearchParams,
     ReleasesGetParams,
     ReleasesListParams,
+    RepositoriesApiSearchParams,
     RepositoriesGetParams,
     RepositoriesListParams,
-    RepositoriesSearchParams,
     ReviewsListParams,
     StargazersListParams,
     TagsGetParams,
     TagsListParams,
     TeamsGetParams,
     TeamsListParams,
+    UsersApiSearchParams,
     UsersGetParams,
     UsersListParams,
-    UsersSearchParams,
     ViewerGetParams,
     ViewerRepositoriesListParams,
 )
@@ -65,7 +65,7 @@ from .models import (
     GithubExecuteResultWithMeta,
     RepositoriesGetResult,
     RepositoriesListResult,
-    RepositoriesSearchResult,
+    RepositoriesApiSearchResult,
     OrgRepositoriesListResult,
     BranchesListResult,
     BranchesGetResult,
@@ -75,10 +75,10 @@ from .models import (
     ReleasesGetResult,
     IssuesListResult,
     IssuesGetResult,
-    IssuesSearchResult,
+    IssuesApiSearchResult,
     PullRequestsListResult,
     PullRequestsGetResult,
-    PullRequestsSearchResult,
+    PullRequestsApiSearchResult,
     ReviewsListResult,
     CommentsListResult,
     CommentsGetResult,
@@ -92,7 +92,7 @@ from .models import (
     OrganizationsListResult,
     UsersGetResult,
     UsersListResult,
-    UsersSearchResult,
+    UsersApiSearchResult,
     TeamsListResult,
     TeamsGetResult,
     TagsListResult,
@@ -124,7 +124,7 @@ class GithubConnector:
     _EXTRACTOR_MAP = {
         ("repositories", "get"): True,
         ("repositories", "list"): True,
-        ("repositories", "search"): True,
+        ("repositories", "api_search"): True,
         ("org_repositories", "list"): True,
         ("branches", "list"): True,
         ("branches", "get"): True,
@@ -134,10 +134,10 @@ class GithubConnector:
         ("releases", "get"): True,
         ("issues", "list"): True,
         ("issues", "get"): True,
-        ("issues", "search"): True,
+        ("issues", "api_search"): True,
         ("pull_requests", "list"): True,
         ("pull_requests", "get"): True,
-        ("pull_requests", "search"): True,
+        ("pull_requests", "api_search"): True,
         ("reviews", "list"): True,
         ("comments", "list"): True,
         ("comments", "get"): True,
@@ -151,7 +151,7 @@ class GithubConnector:
         ("organizations", "list"): True,
         ("users", "get"): True,
         ("users", "list"): True,
-        ("users", "search"): True,
+        ("users", "api_search"): True,
         ("teams", "list"): True,
         ("teams", "get"): True,
         ("tags", "list"): True,
@@ -169,7 +169,7 @@ class GithubConnector:
     _PARAM_MAP = {
         ('repositories', 'get'): {'owner': 'owner', 'repo': 'repo', 'fields': 'fields'},
         ('repositories', 'list'): {'username': 'username', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
-        ('repositories', 'search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
+        ('repositories', 'api_search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
         ('org_repositories', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('branches', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('branches', 'get'): {'owner': 'owner', 'repo': 'repo', 'branch': 'branch', 'fields': 'fields'},
@@ -179,10 +179,10 @@ class GithubConnector:
         ('releases', 'get'): {'owner': 'owner', 'repo': 'repo', 'tag': 'tag', 'fields': 'fields'},
         ('issues', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('issues', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
-        ('issues', 'search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('issues', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('pull_requests', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('pull_requests', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
-        ('pull_requests', 'search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('pull_requests', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('reviews', 'list'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('comments', 'list'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('comments', 'get'): {'id': 'id', 'fields': 'fields'},
@@ -196,7 +196,7 @@ class GithubConnector:
         ('organizations', 'list'): {'username': 'username', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('users', 'get'): {'username': 'username', 'fields': 'fields'},
         ('users', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
-        ('users', 'search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
+        ('users', 'api_search'): {'query': 'query', 'limit': 'limit', 'after': 'after', 'fields': 'fields'},
         ('teams', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('teams', 'get'): {'org': 'org', 'team_slug': 'team_slug', 'fields': 'fields'},
         ('tags', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
@@ -337,9 +337,9 @@ class GithubConnector:
     async def execute(
         self,
         entity: Literal["repositories"],
-        action: Literal["search"],
-        params: "RepositoriesSearchParams"
-    ) -> "RepositoriesSearchResult": ...
+        action: Literal["api_search"],
+        params: "RepositoriesApiSearchParams"
+    ) -> "RepositoriesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -417,9 +417,9 @@ class GithubConnector:
     async def execute(
         self,
         entity: Literal["issues"],
-        action: Literal["search"],
-        params: "IssuesSearchParams"
-    ) -> "IssuesSearchResult": ...
+        action: Literal["api_search"],
+        params: "IssuesApiSearchParams"
+    ) -> "IssuesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -441,9 +441,9 @@ class GithubConnector:
     async def execute(
         self,
         entity: Literal["pull_requests"],
-        action: Literal["search"],
-        params: "PullRequestsSearchParams"
-    ) -> "PullRequestsSearchResult": ...
+        action: Literal["api_search"],
+        params: "PullRequestsApiSearchParams"
+    ) -> "PullRequestsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -553,9 +553,9 @@ class GithubConnector:
     async def execute(
         self,
         entity: Literal["users"],
-        action: Literal["search"],
-        params: "UsersSearchParams"
-    ) -> "UsersSearchResult": ...
+        action: Literal["api_search"],
+        params: "UsersApiSearchParams"
+    ) -> "UsersApiSearchResult": ...
 
     @overload
     async def execute(
@@ -877,14 +877,14 @@ If not provided, uses default fields.
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
         after: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> RepositoriesSearchResult:
+    ) -> RepositoriesApiSearchResult:
         """
         Search for GitHub repositories using GitHub's powerful search syntax.
 Examples: "language:python stars:>1000", "topic:machine-learning", "org:facebook is:public"
@@ -900,7 +900,7 @@ If not provided, uses default fields.
             **kwargs: Additional parameters
 
         Returns:
-            RepositoriesSearchResult
+            RepositoriesApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -910,9 +910,9 @@ If not provided, uses default fields.
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("repositories", "search", params)
+        result = await self._connector.execute("repositories", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return RepositoriesSearchResult(
+        return RepositoriesApiSearchResult(
             data=result.data        )
 
 
@@ -1301,14 +1301,14 @@ class IssuesQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         per_page: int | None = None,
         after: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> IssuesSearchResult:
+    ) -> IssuesApiSearchResult:
         """
         Search for issues using GitHub's search syntax
 
@@ -1320,7 +1320,7 @@ class IssuesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            IssuesSearchResult
+            IssuesApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1330,9 +1330,9 @@ class IssuesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return IssuesSearchResult(
+        return IssuesApiSearchResult(
             data=result.data        )
 
 
@@ -1424,14 +1424,14 @@ class PullRequestsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         per_page: int | None = None,
         after: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> PullRequestsSearchResult:
+    ) -> PullRequestsApiSearchResult:
         """
         Search for pull requests using GitHub's search syntax
 
@@ -1443,7 +1443,7 @@ class PullRequestsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            PullRequestsSearchResult
+            PullRequestsApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1453,9 +1453,9 @@ class PullRequestsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("pull_requests", "search", params)
+        result = await self._connector.execute("pull_requests", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return PullRequestsSearchResult(
+        return PullRequestsApiSearchResult(
             data=result.data        )
 
 
@@ -2004,14 +2004,14 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
         after: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> UsersSearchResult:
+    ) -> UsersApiSearchResult:
         """
         Search for GitHub users using search syntax
 
@@ -2023,7 +2023,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            UsersSearchResult
+            UsersApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -2033,9 +2033,9 @@ class UsersQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return UsersSearchResult(
+        return UsersApiSearchResult(
             data=result.data        )
 
 
