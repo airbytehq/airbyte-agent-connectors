@@ -45,6 +45,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'username': '${api_key}', 'password': ''},
+            replication_auth_key_mapping={'api_key': 'api_key'},
         ),
     ),
     entities=[
