@@ -5,7 +5,7 @@ import json
 import time
 import uuid
 from pathlib import Path
-from typing import Any, Dict, Optional, Set
+from typing import Any, Dict, Set
 
 from .types import LogSession, RequestLog
 
@@ -31,9 +31,9 @@ class RequestLogger:
 
     def __init__(
         self,
-        log_file: Optional[str] = None,
-        connector_name: Optional[str] = None,
-        max_logs: Optional[int] = 10000,
+        log_file: str | None = None,
+        connector_name: str | None = None,
+        max_logs: int | None = 10000,
     ):
         """
         Initialize the request logger.
@@ -99,9 +99,9 @@ class RequestLogger:
         method: str,
         url: str,
         path: str,
-        headers: Optional[Dict[str, str]] = None,
-        params: Optional[Dict[str, Any]] = None,
-        body: Optional[Any] = None,
+        headers: Dict[str, str] | None = None,
+        params: Dict[str, Any] | None = None,
+        body: Any | None = None,
     ) -> str:
         """
         Log the start of an HTTP request.
@@ -133,7 +133,7 @@ class RequestLogger:
         self,
         request_id: str,
         status_code: int,
-        response_body: Optional[Any] = None,
+        response_body: Any | None = None,
     ) -> None:
         """
         Log a successful HTTP response.
@@ -176,7 +176,7 @@ class RequestLogger:
         self,
         request_id: str,
         error: str,
-        status_code: Optional[int] = None,
+        status_code: int | None = None,
     ) -> None:
         """
         Log an HTTP request error.
