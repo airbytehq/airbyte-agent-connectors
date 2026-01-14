@@ -73,6 +73,11 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'client_id': '${client_id}',
                         'client_secret': '${client_secret}',
                     },
+                    replication_auth_key_mapping={
+                        'client_id': 'client_id',
+                        'client_secret': 'client_secret',
+                        'refresh_token': 'refresh_token',
+                    },
                 ),
             ),
             AuthOption(
@@ -91,6 +96,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'token': '${token}'},
+                    replication_auth_key_mapping={'personal_access_token': 'token'},
                 ),
             ),
         ],
