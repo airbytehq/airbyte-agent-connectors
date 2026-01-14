@@ -314,8 +314,8 @@ class ContactsListResultMeta(BaseModel):
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
-class ContactsSearchResultMeta(BaseModel):
-    """Metadata for contacts.search operation"""
+class ContactsApiSearchResultMeta(BaseModel):
+    """Metadata for contacts.api_search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -329,8 +329,8 @@ class CompaniesListResultMeta(BaseModel):
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
-class CompaniesSearchResultMeta(BaseModel):
-    """Metadata for companies.search operation"""
+class CompaniesApiSearchResultMeta(BaseModel):
+    """Metadata for companies.api_search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -344,8 +344,8 @@ class DealsListResultMeta(BaseModel):
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
-class DealsSearchResultMeta(BaseModel):
-    """Metadata for deals.search operation"""
+class DealsApiSearchResultMeta(BaseModel):
+    """Metadata for deals.api_search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -359,8 +359,8 @@ class TicketsListResultMeta(BaseModel):
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
-class TicketsSearchResultMeta(BaseModel):
-    """Metadata for tickets.search operation"""
+class TicketsApiSearchResultMeta(BaseModel):
+    """Metadata for tickets.api_search operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -409,26 +409,26 @@ class HubspotExecuteResultWithMeta(HubspotExecuteResult[T], Generic[T, S]):
 ContactsListResult = HubspotExecuteResultWithMeta[list[Contact], ContactsListResultMeta]
 """Result type for contacts.list operation with data and metadata."""
 
-ContactsSearchResult = HubspotExecuteResultWithMeta[list[Contact], ContactsSearchResultMeta]
-"""Result type for contacts.search operation with data and metadata."""
+ContactsApiSearchResult = HubspotExecuteResultWithMeta[list[Contact], ContactsApiSearchResultMeta]
+"""Result type for contacts.api_search operation with data and metadata."""
 
 CompaniesListResult = HubspotExecuteResultWithMeta[list[Company], CompaniesListResultMeta]
 """Result type for companies.list operation with data and metadata."""
 
-CompaniesSearchResult = HubspotExecuteResultWithMeta[list[Company], CompaniesSearchResultMeta]
-"""Result type for companies.search operation with data and metadata."""
+CompaniesApiSearchResult = HubspotExecuteResultWithMeta[list[Company], CompaniesApiSearchResultMeta]
+"""Result type for companies.api_search operation with data and metadata."""
 
 DealsListResult = HubspotExecuteResultWithMeta[list[Deal], DealsListResultMeta]
 """Result type for deals.list operation with data and metadata."""
 
-DealsSearchResult = HubspotExecuteResultWithMeta[list[Deal], DealsSearchResultMeta]
-"""Result type for deals.search operation with data and metadata."""
+DealsApiSearchResult = HubspotExecuteResultWithMeta[list[Deal], DealsApiSearchResultMeta]
+"""Result type for deals.api_search operation with data and metadata."""
 
 TicketsListResult = HubspotExecuteResultWithMeta[list[Ticket], TicketsListResultMeta]
 """Result type for tickets.list operation with data and metadata."""
 
-TicketsSearchResult = HubspotExecuteResultWithMeta[list[Ticket], TicketsSearchResultMeta]
-"""Result type for tickets.search operation with data and metadata."""
+TicketsApiSearchResult = HubspotExecuteResultWithMeta[list[Ticket], TicketsApiSearchResultMeta]
+"""Result type for tickets.api_search operation with data and metadata."""
 
 SchemasListResult = HubspotExecuteResult[list[Schema]]
 """Result type for schemas.list operation."""

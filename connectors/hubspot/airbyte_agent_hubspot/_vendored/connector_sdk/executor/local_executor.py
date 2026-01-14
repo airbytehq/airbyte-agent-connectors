@@ -1129,7 +1129,7 @@ class LocalExecutor:
         if not action:
             return response_data
 
-        is_array_action = action in (Action.LIST, Action.SEARCH)
+        is_array_action = action in (Action.LIST, Action.API_SEARCH)
 
         try:
             # Parse and apply JSONPath expression
@@ -1259,7 +1259,7 @@ class LocalExecutor:
 
 
 class _StandardOperationHandler:
-    """Handler for standard REST operations (GET, LIST, CREATE, UPDATE, DELETE, SEARCH, AUTHORIZE)."""
+    """Handler for standard REST operations (GET, LIST, CREATE, UPDATE, DELETE, API_SEARCH, AUTHORIZE)."""
 
     def __init__(self, context: _OperationContext):
         self.ctx = context
@@ -1272,7 +1272,7 @@ class _StandardOperationHandler:
             Action.CREATE,
             Action.UPDATE,
             Action.DELETE,
-            Action.SEARCH,
+            Action.API_SEARCH,
             Action.AUTHORIZE,
         }
 

@@ -71,12 +71,17 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                 'refresh_token': '${refresh_token}',
                 'access_token': '${access_token}',
             },
+            replication_auth_key_mapping={
+                'client_id': 'client_id',
+                'client_secret': 'client_secret',
+                'refresh_token': 'refresh_token',
+            },
         ),
     ),
     entities=[
         EntityDefinition(
             name='contacts',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -287,10 +292,10 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'contacts',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/crm/v3/objects/contacts/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for contacts by filtering on properties, searching through associations, and sorting results.',
                     body_fields=[
                         'filterGroups',
@@ -553,7 +558,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='companies',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -758,10 +763,10 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'companies',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/crm/v3/objects/companies/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for companies by filtering on properties, searching through associations, and sorting results.',
                     body_fields=[
                         'filterGroups',
@@ -1018,7 +1023,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='deals',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1241,10 +1246,10 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'deals',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/crm/v3/objects/deals/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search deals with filters and sorting',
                     body_fields=[
                         'filterGroups',
@@ -1519,7 +1524,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='tickets',
-            actions=[Action.LIST, Action.GET, Action.SEARCH],
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1748,10 +1753,10 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'tickets',
                     },
                 ),
-                Action.SEARCH: EndpointDefinition(
+                Action.API_SEARCH: EndpointDefinition(
                     method='POST',
                     path='/crm/v3/objects/tickets/search',
-                    action=Action.SEARCH,
+                    action=Action.API_SEARCH,
                     description='Search for tickets by filtering on properties, searching through associations, and sorting results.',
                     body_fields=[
                         'filterGroups',
