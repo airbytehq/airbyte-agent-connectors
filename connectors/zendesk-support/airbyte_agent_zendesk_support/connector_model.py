@@ -60,6 +60,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'access_token': '${access_token}', 'refresh_token': '${refresh_token}'},
+                    replication_auth_key_mapping={'access_token': 'access_token'},
                 ),
             ),
             AuthOption(
@@ -83,6 +84,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'username': '${email}/token', 'password': '${api_token}'},
+                    replication_auth_key_mapping={'email': 'email', 'api_token': 'api_token'},
                 ),
             ),
         ],

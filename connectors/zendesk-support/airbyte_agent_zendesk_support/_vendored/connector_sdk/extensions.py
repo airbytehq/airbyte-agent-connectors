@@ -527,8 +527,8 @@ class ActionType(str, Enum):
     DELETE = "delete"
     """Delete a record"""
 
-    SEARCH = "search"
-    """Search for records matching specific query criteria"""
+    API_SEARCH = "api_search"
+    """Search for records matching specific query criteria via API"""
 
     DOWNLOAD = "download"
     """Download file content from a URL specified in the metadata response"""
@@ -546,7 +546,7 @@ class BodyType(str, Enum):
 
 
 # Type alias for use in Pydantic models
-ActionTypeLiteral = Literal["get", "list", "create", "update", "delete", "search", "download"]
+ActionTypeLiteral = Literal["get", "list", "create", "update", "delete", "api_search", "download"]
 
 
 # =============================================================================
