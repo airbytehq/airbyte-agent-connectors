@@ -29,21 +29,25 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.2',
+    version='0.1.3',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
         config={'header': 'Authorization', 'in': 'header'},
         user_config_spec=AirbyteAuthConfig(
+            title='Linear API Key Authentication',
+            description='Authenticate using your Linear API key',
             type='object',
             required=['api_key'],
             properties={
                 'api_key': AuthConfigFieldSpec(
                     title='API Key',
-                    description='API authentication key',
+                    description='Your Linear API key from Settings > API > Personal API keys',
+                    airbyte_secret=True,
                 ),
             },
-            auth_mapping={'api_key': '${api_key}'},
+            auth_mapping={'Authorization': '${api_key}'},
+            replication_auth_key_mapping={'api_key': 'api_key'},
         ),
     ),
     entities=[
