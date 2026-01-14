@@ -43,6 +43,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'token': '${access_token}'},
+            replication_auth_key_mapping={'access_token': 'access_token'},
         ),
     ),
     entities=[
