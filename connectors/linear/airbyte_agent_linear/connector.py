@@ -47,7 +47,7 @@ class LinearConnector:
     """
 
     connector_name = "linear"
-    connector_version = "0.1.3"
+    connector_version = "0.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> has_extractors for envelope wrapping decision

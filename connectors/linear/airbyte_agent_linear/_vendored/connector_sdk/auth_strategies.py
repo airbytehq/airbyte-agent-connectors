@@ -610,9 +610,7 @@ class OAuth2AuthStrategy(AuthStrategy):
         has_refresh_token = bool(secrets.get("refresh_token"))
 
         if not has_access_token and not has_refresh_token:
-            raise AuthenticationError(
-                "Missing OAuth2 credentials. Provide either 'access_token' " "or 'refresh_token' (for refresh-token-only mode)."
-            )
+            raise AuthenticationError("Missing OAuth2 credentials. Provide either 'access_token' or 'refresh_token' (for refresh-token-only mode).")
 
     def can_refresh(self, secrets: OAuth2RefreshSecrets) -> bool:
         """Check if token refresh is possible.
@@ -1106,8 +1104,7 @@ class AuthStrategyFactory:
         strategy = cls._strategies.get(auth_type)
         if strategy is None:
             raise AuthenticationError(
-                f"Authentication type '{auth_type.value}' is not implemented. "
-                f"Supported types: {', '.join(s.value for s in cls._strategies.keys())}"
+                f"Authentication type '{auth_type.value}' is not implemented. Supported types: {', '.join(s.value for s in cls._strategies.keys())}"
             )
         return strategy
 
