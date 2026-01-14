@@ -135,8 +135,8 @@ class CustomersDeleteParams(TypedDict):
     """Parameters for customers.delete operation"""
     id: str
 
-class CustomersSearchParams(TypedDict):
-    """Parameters for customers.search operation"""
+class CustomersApiSearchParams(TypedDict):
+    """Parameters for customers.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
@@ -157,8 +157,8 @@ class InvoicesGetParams(TypedDict):
     """Parameters for invoices.get operation"""
     id: str
 
-class InvoicesSearchParams(TypedDict):
-    """Parameters for invoices.search operation"""
+class InvoicesApiSearchParams(TypedDict):
+    """Parameters for invoices.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
@@ -176,8 +176,8 @@ class ChargesGetParams(TypedDict):
     """Parameters for charges.get operation"""
     id: str
 
-class ChargesSearchParams(TypedDict):
-    """Parameters for charges.search operation"""
+class ChargesApiSearchParams(TypedDict):
+    """Parameters for charges.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
@@ -201,8 +201,8 @@ class SubscriptionsGetParams(TypedDict):
     """Parameters for subscriptions.get operation"""
     id: str
 
-class SubscriptionsSearchParams(TypedDict):
-    """Parameters for subscriptions.search operation"""
+class SubscriptionsApiSearchParams(TypedDict):
+    """Parameters for subscriptions.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
@@ -251,8 +251,8 @@ class ProductsDeleteParams(TypedDict):
     """Parameters for products.delete operation"""
     id: str
 
-class ProductsSearchParams(TypedDict):
-    """Parameters for products.search operation"""
+class ProductsApiSearchParams(TypedDict):
+    """Parameters for products.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]
@@ -289,8 +289,8 @@ class PaymentIntentsGetParams(TypedDict):
     """Parameters for payment_intents.get operation"""
     id: str
 
-class PaymentIntentsSearchParams(TypedDict):
-    """Parameters for payment_intents.search operation"""
+class PaymentIntentsApiSearchParams(TypedDict):
+    """Parameters for payment_intents.api_search operation"""
     query: str
     limit: NotRequired[int]
     page: NotRequired[str]

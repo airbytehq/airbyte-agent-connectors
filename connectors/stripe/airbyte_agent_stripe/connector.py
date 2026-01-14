@@ -18,50 +18,50 @@ from .types import (
     BalanceTransactionsGetParams,
     BalanceTransactionsListParams,
     BalanceTransactionsListParamsCreated,
+    ChargesApiSearchParams,
     ChargesGetParams,
     ChargesListParams,
     ChargesListParamsCreated,
-    ChargesSearchParams,
+    CustomersApiSearchParams,
     CustomersCreateParams,
     CustomersDeleteParams,
     CustomersGetParams,
     CustomersListParams,
     CustomersListParamsCreated,
-    CustomersSearchParams,
     CustomersUpdateParams,
     DisputesGetParams,
     DisputesListParams,
     DisputesListParamsCreated,
+    InvoicesApiSearchParams,
     InvoicesGetParams,
     InvoicesListParams,
     InvoicesListParamsCreated,
-    InvoicesSearchParams,
+    PaymentIntentsApiSearchParams,
     PaymentIntentsGetParams,
     PaymentIntentsListParams,
     PaymentIntentsListParamsCreated,
-    PaymentIntentsSearchParams,
     PayoutsGetParams,
     PayoutsListParams,
     PayoutsListParamsArrivalDate,
     PayoutsListParamsCreated,
+    ProductsApiSearchParams,
     ProductsCreateParams,
     ProductsDeleteParams,
     ProductsGetParams,
     ProductsListParams,
     ProductsListParamsCreated,
-    ProductsSearchParams,
     ProductsUpdateParams,
     RefundsCreateParams,
     RefundsGetParams,
     RefundsListParams,
     RefundsListParamsCreated,
+    SubscriptionsApiSearchParams,
     SubscriptionsGetParams,
     SubscriptionsListParams,
     SubscriptionsListParamsAutomaticTax,
     SubscriptionsListParamsCreated,
     SubscriptionsListParamsCurrentPeriodEnd,
     SubscriptionsListParamsCurrentPeriodStart,
-    SubscriptionsSearchParams,
 )
 if TYPE_CHECKING:
     from .models import StripeAuthConfig
@@ -70,16 +70,16 @@ from .models import (
     StripeExecuteResult,
     StripeExecuteResultWithMeta,
     CustomersListResult,
-    CustomersSearchResult,
+    CustomersApiSearchResult,
     InvoicesListResult,
     ChargesListResult,
     SubscriptionsListResult,
     RefundsListResult,
     ProductsListResult,
-    ProductsSearchResult,
+    ProductsApiSearchResult,
     BalanceTransactionsListResult,
     PaymentIntentsListResult,
-    PaymentIntentsSearchResult,
+    PaymentIntentsApiSearchResult,
     DisputesListResult,
     PayoutsListResult,
     Balance,
@@ -122,16 +122,16 @@ class StripeConnector:
         ("customers", "get"): False,
         ("customers", "update"): False,
         ("customers", "delete"): False,
-        ("customers", "search"): True,
+        ("customers", "api_search"): True,
         ("invoices", "list"): True,
         ("invoices", "get"): False,
-        ("invoices", "search"): False,
+        ("invoices", "api_search"): False,
         ("charges", "list"): True,
         ("charges", "get"): False,
-        ("charges", "search"): False,
+        ("charges", "api_search"): False,
         ("subscriptions", "list"): True,
         ("subscriptions", "get"): False,
-        ("subscriptions", "search"): False,
+        ("subscriptions", "api_search"): False,
         ("refunds", "list"): True,
         ("refunds", "create"): False,
         ("refunds", "get"): False,
@@ -140,13 +140,13 @@ class StripeConnector:
         ("products", "get"): False,
         ("products", "update"): False,
         ("products", "delete"): False,
-        ("products", "search"): True,
+        ("products", "api_search"): True,
         ("balance", "get"): False,
         ("balance_transactions", "list"): True,
         ("balance_transactions", "get"): False,
         ("payment_intents", "list"): True,
         ("payment_intents", "get"): False,
-        ("payment_intents", "search"): True,
+        ("payment_intents", "api_search"): True,
         ("disputes", "list"): True,
         ("disputes", "get"): False,
         ("payouts", "list"): True,
@@ -160,28 +160,28 @@ class StripeConnector:
         ('customers', 'get'): {'id': 'id'},
         ('customers', 'update'): {'id': 'id'},
         ('customers', 'delete'): {'id': 'id'},
-        ('customers', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('customers', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('invoices', 'list'): {'collection_method': 'collection_method', 'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status', 'subscription': 'subscription'},
         ('invoices', 'get'): {'id': 'id'},
-        ('invoices', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('invoices', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('charges', 'list'): {'created': 'created', 'customer': 'customer', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('charges', 'get'): {'id': 'id'},
-        ('charges', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('charges', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('subscriptions', 'list'): {'automatic_tax': 'automatic_tax', 'collection_method': 'collection_method', 'created': 'created', 'current_period_end': 'current_period_end', 'current_period_start': 'current_period_start', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'price': 'price', 'starting_after': 'starting_after', 'status': 'status'},
         ('subscriptions', 'get'): {'id': 'id'},
-        ('subscriptions', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('subscriptions', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('refunds', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('refunds', 'get'): {'id': 'id'},
         ('products', 'list'): {'active': 'active', 'created': 'created', 'ending_before': 'ending_before', 'ids': 'ids', 'limit': 'limit', 'shippable': 'shippable', 'starting_after': 'starting_after', 'url': 'url'},
         ('products', 'get'): {'id': 'id'},
         ('products', 'update'): {'id': 'id'},
         ('products', 'delete'): {'id': 'id'},
-        ('products', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('products', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('balance_transactions', 'list'): {'created': 'created', 'currency': 'currency', 'ending_before': 'ending_before', 'limit': 'limit', 'payout': 'payout', 'source': 'source', 'starting_after': 'starting_after', 'type': 'type'},
         ('balance_transactions', 'get'): {'id': 'id'},
         ('payment_intents', 'list'): {'created': 'created', 'customer': 'customer', 'customer_account': 'customer_account', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after'},
         ('payment_intents', 'get'): {'id': 'id'},
-        ('payment_intents', 'search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
+        ('payment_intents', 'api_search'): {'query': 'query', 'limit': 'limit', 'page': 'page'},
         ('disputes', 'list'): {'charge': 'charge', 'created': 'created', 'ending_before': 'ending_before', 'limit': 'limit', 'payment_intent': 'payment_intent', 'starting_after': 'starting_after'},
         ('disputes', 'get'): {'id': 'id'},
         ('payouts', 'list'): {'arrival_date': 'arrival_date', 'created': 'created', 'destination': 'destination', 'ending_before': 'ending_before', 'limit': 'limit', 'starting_after': 'starting_after', 'status': 'status'},
@@ -321,9 +321,9 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["customers"],
-        action: Literal["search"],
-        params: "CustomersSearchParams"
-    ) -> "CustomersSearchResult": ...
+        action: Literal["api_search"],
+        params: "CustomersApiSearchParams"
+    ) -> "CustomersApiSearchResult": ...
 
     @overload
     async def execute(
@@ -345,8 +345,8 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["invoices"],
-        action: Literal["search"],
-        params: "InvoicesSearchParams"
+        action: Literal["api_search"],
+        params: "InvoicesApiSearchParams"
     ) -> "InvoiceSearchResult": ...
 
     @overload
@@ -369,8 +369,8 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["charges"],
-        action: Literal["search"],
-        params: "ChargesSearchParams"
+        action: Literal["api_search"],
+        params: "ChargesApiSearchParams"
     ) -> "ChargeSearchResult": ...
 
     @overload
@@ -393,8 +393,8 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["subscriptions"],
-        action: Literal["search"],
-        params: "SubscriptionsSearchParams"
+        action: Literal["api_search"],
+        params: "SubscriptionsApiSearchParams"
     ) -> "SubscriptionSearchResult": ...
 
     @overload
@@ -465,9 +465,9 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["products"],
-        action: Literal["search"],
-        params: "ProductsSearchParams"
-    ) -> "ProductsSearchResult": ...
+        action: Literal["api_search"],
+        params: "ProductsApiSearchParams"
+    ) -> "ProductsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -513,9 +513,9 @@ class StripeConnector:
     async def execute(
         self,
         entity: Literal["payment_intents"],
-        action: Literal["search"],
-        params: "PaymentIntentsSearchParams"
-    ) -> "PaymentIntentsSearchResult": ...
+        action: Literal["api_search"],
+        params: "PaymentIntentsApiSearchParams"
+    ) -> "PaymentIntentsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -850,13 +850,13 @@ class CustomersQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> CustomersSearchResult:
+    ) -> CustomersApiSearchResult:
         """
         Search for customers using Stripe's Search Query Language.
 
@@ -867,7 +867,7 @@ class CustomersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            CustomersSearchResult
+            CustomersApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -876,9 +876,9 @@ class CustomersQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("customers", "search", params)
+        result = await self._connector.execute("customers", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return CustomersSearchResult(
+        return CustomersApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -970,7 +970,7 @@ class InvoicesQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
@@ -996,7 +996,7 @@ class InvoicesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("invoices", "search", params)
+        result = await self._connector.execute("invoices", "api_search", params)
         return result
 
 
@@ -1078,7 +1078,7 @@ class ChargesQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
@@ -1104,7 +1104,7 @@ class ChargesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("charges", "search", params)
+        result = await self._connector.execute("charges", "api_search", params)
         return result
 
 
@@ -1204,7 +1204,7 @@ class SubscriptionsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
@@ -1230,7 +1230,7 @@ class SubscriptionsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("subscriptions", "search", params)
+        result = await self._connector.execute("subscriptions", "api_search", params)
         return result
 
 
@@ -1483,13 +1483,13 @@ class ProductsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> ProductsSearchResult:
+    ) -> ProductsApiSearchResult:
         """
         Search for products using Stripe's Search Query Language.
 
@@ -1500,7 +1500,7 @@ class ProductsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ProductsSearchResult
+            ProductsApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1509,9 +1509,9 @@ class ProductsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("products", "search", params)
+        result = await self._connector.execute("products", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return ProductsSearchResult(
+        return ProductsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
@@ -1705,13 +1705,13 @@ class PaymentIntentsQuery:
 
 
 
-    async def search(
+    async def api_search(
         self,
         query: str,
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> PaymentIntentsSearchResult:
+    ) -> PaymentIntentsApiSearchResult:
         """
         Search for payment intents using Stripe's Search Query Language.
 
@@ -1722,7 +1722,7 @@ class PaymentIntentsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            PaymentIntentsSearchResult
+            PaymentIntentsApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1731,9 +1731,9 @@ class PaymentIntentsQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("payment_intents", "search", params)
+        result = await self._connector.execute("payment_intents", "api_search", params)
         # Cast generic envelope to concrete typed result
-        return PaymentIntentsSearchResult(
+        return PaymentIntentsApiSearchResult(
             data=result.data,
             meta=result.meta        )
 
