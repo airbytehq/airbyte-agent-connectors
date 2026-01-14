@@ -25,8 +25,8 @@ class AccountsGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class AccountsSearchParams(TypedDict):
-    """Parameters for accounts.search operation"""
+class AccountsApiSearchParams(TypedDict):
+    """Parameters for accounts.api_search operation"""
     q: str
 
 class ContactsListParams(TypedDict):
@@ -38,8 +38,8 @@ class ContactsGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class ContactsSearchParams(TypedDict):
-    """Parameters for contacts.search operation"""
+class ContactsApiSearchParams(TypedDict):
+    """Parameters for contacts.api_search operation"""
     q: str
 
 class LeadsListParams(TypedDict):
@@ -51,8 +51,8 @@ class LeadsGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class LeadsSearchParams(TypedDict):
-    """Parameters for leads.search operation"""
+class LeadsApiSearchParams(TypedDict):
+    """Parameters for leads.api_search operation"""
     q: str
 
 class OpportunitiesListParams(TypedDict):
@@ -64,8 +64,8 @@ class OpportunitiesGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class OpportunitiesSearchParams(TypedDict):
-    """Parameters for opportunities.search operation"""
+class OpportunitiesApiSearchParams(TypedDict):
+    """Parameters for opportunities.api_search operation"""
     q: str
 
 class TasksListParams(TypedDict):
@@ -77,8 +77,8 @@ class TasksGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class TasksSearchParams(TypedDict):
-    """Parameters for tasks.search operation"""
+class TasksApiSearchParams(TypedDict):
+    """Parameters for tasks.api_search operation"""
     q: str
 
 class EventsListParams(TypedDict):
@@ -90,8 +90,8 @@ class EventsGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class EventsSearchParams(TypedDict):
-    """Parameters for events.search operation"""
+class EventsApiSearchParams(TypedDict):
+    """Parameters for events.api_search operation"""
     q: str
 
 class CampaignsListParams(TypedDict):
@@ -103,8 +103,8 @@ class CampaignsGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class CampaignsSearchParams(TypedDict):
-    """Parameters for campaigns.search operation"""
+class CampaignsApiSearchParams(TypedDict):
+    """Parameters for campaigns.api_search operation"""
     q: str
 
 class CasesListParams(TypedDict):
@@ -116,8 +116,8 @@ class CasesGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class CasesSearchParams(TypedDict):
-    """Parameters for cases.search operation"""
+class CasesApiSearchParams(TypedDict):
+    """Parameters for cases.api_search operation"""
     q: str
 
 class NotesListParams(TypedDict):
@@ -129,8 +129,8 @@ class NotesGetParams(TypedDict):
     id: str
     fields: NotRequired[str]
 
-class NotesSearchParams(TypedDict):
-    """Parameters for notes.search operation"""
+class NotesApiSearchParams(TypedDict):
+    """Parameters for notes.api_search operation"""
     q: str
 
 class ContentVersionsListParams(TypedDict):
