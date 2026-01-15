@@ -21,7 +21,7 @@ class HostedExecutor:
 
     The executor takes an external_user_id and uses the AirbyteCloudClient to:
     1. Authenticate with the Airbyte Platform (bearer token with caching)
-    2. Look up the user's connector instance
+    2. Look up the user's connector
     3. Execute the connector operation via the cloud API
 
     Implements ExecutorProtocol.
@@ -63,7 +63,7 @@ class HostedExecutor:
             airbyte_client_id: Airbyte client ID for authentication
             airbyte_client_secret: Airbyte client secret for authentication
             connector_definition_id: Connector definition ID used to look up
-                the user's connector instance.
+                the user's connector.
 
         Example:
             executor = HostedExecutor(
@@ -86,8 +86,8 @@ class HostedExecutor:
         """Execute connector via cloud API (ExecutorProtocol implementation).
 
         Flow:
-        1. Get connector id from connector model
-        2. Look up the user's connector instance ID
+        1. Get connector definition id from executor config
+        2. Look up the user's connector ID
         3. Execute the connector operation via the cloud API
         4. Parse the response into ExecutionResult
 
@@ -98,7 +98,7 @@ class HostedExecutor:
             ExecutionResult with success/failure status
 
         Raises:
-            ValueError: If no instance or multiple instances found for user
+            ValueError: If no connector or multiple connectors found for user
             httpx.HTTPStatusError: If API returns 4xx/5xx status code
             httpx.RequestError: If network request fails
 
@@ -126,24 +126,23 @@ class HostedExecutor:
                 # Step 1: Get connector definition id
                 connector_definition_id = self._connector_definition_id
 
-                # Step 2: Get the connector instance ID for this user
-                instance_id = await self._cloud_client.get_connector_instance_id(
+                # Step 2: Get the connector ID for this user
+                connector_id = await self._cloud_client.get_connector_id(
                     external_user_id=self._external_user_id,
                     connector_definition_id=connector_definition_id,
                 )
 
-                span.set_attribute("connector.instance_id", instance_id)
+                span.set_attribute("connector.connector_id", connector_id)
 
                 # Step 3: Execute the connector via the cloud API
                 response = await self._cloud_client.execute_connector(
-                    instance_id=instance_id,
+                    connector_id=connector_id,
                     entity=config.entity,
                     action=config.action,
                     params=config.params,
                 )
 
                 # Step 4: Parse the response into ExecutionResult
-                # The response_data is a dict from the API
                 result = self._parse_execution_result(response)
 
                 # Mark span as successful
@@ -152,7 +151,7 @@ class HostedExecutor:
                 return result
 
             except ValueError as e:
-                # Instance lookup validation error (0 or >1 instances)
+                # Connector lookup validation error (0 or >1 connectors)
                 span.set_attribute("connector.success", False)
                 span.set_attribute("connector.error_type", "ValueError")
                 span.record_exception(e)
