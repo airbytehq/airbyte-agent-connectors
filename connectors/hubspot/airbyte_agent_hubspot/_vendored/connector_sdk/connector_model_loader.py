@@ -519,13 +519,14 @@ def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
                 config["refresh_url"] = refresh_url
 
     # Extract custom refresh configuration from x-airbyte-token-refresh extension
+    # Note: x_token_refresh is a Dict[str, Any], not a Pydantic model, so use .get()
     x_token_refresh = getattr(scheme, "x_token_refresh", None)
     if x_token_refresh:
-        auth_style = getattr(x_token_refresh, "auth_style", None)
+        auth_style = x_token_refresh.get("auth_style")
         if auth_style:
             config["auth_style"] = auth_style
 
-        body_format = getattr(x_token_refresh, "body_format", None)
+        body_format = x_token_refresh.get("body_format")
         if body_format:
             config["body_format"] = body_format
 
