@@ -85,6 +85,6 @@ For the service's official API docs, see the [Google-Drive API reference](https:
 
 ## Version information
 
-- **Package version:** 0.1.11
+- **Package version:** 0.1.12
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 10173eb17aec4347d9ef4f993e10cd63d63fa847
+- **Generated with Connector SDK commit SHA:** b7138b411130e18a6ece05c58de092aa28ca0474
