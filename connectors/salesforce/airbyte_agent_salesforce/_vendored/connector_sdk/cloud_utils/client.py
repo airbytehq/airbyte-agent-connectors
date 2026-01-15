@@ -13,7 +13,7 @@ class AirbyteCloudClient:
 
     Handles authentication, token caching, and API calls to:
     - Get bearer tokens for authentication
-    - Look up connector instances for users
+    - Look up connectors for users
     - Execute connectors via the cloud API
 
     Example:
@@ -22,15 +22,15 @@ class AirbyteCloudClient:
             client_secret="your-client-secret"
         )
 
-        # Get a connector instance
-        instance_id = await client.get_connector_instance_id(
+        # Get a connector ID
+        connector_id = await client.get_connector_id(
             external_user_id="user-123",
-            connector_definition_id="stripe-def-456"
+            connector_definition_id="550e8400-e29b-41d4-a716-446655440000"
         )
 
         # Execute the connector
         result = await client.execute_connector(
-            instance_id=instance_id,
+            connector_id=connector_id,
             entity="customers",
             action="list",
             params={"limit": 10}
@@ -105,37 +105,37 @@ class AirbyteCloudClient:
 
         return access_token
 
-    async def get_connector_instance_id(
+    async def get_connector_id(
         self,
         external_user_id: str,
         connector_definition_id: str,
     ) -> str:
-        """Get connector instance ID for a user.
+        """Get connector ID for a user.
 
-        Looks up the connector instance that belongs to the specified user
-        and connector definition. Validates that exactly one instance exists.
+        Looks up the connector that belongs to the specified user
+        and connector definition. Validates that exactly one connector exists.
 
         Args:
             external_user_id: User identifier in the Airbyte system
             connector_definition_id: UUID of the connector definition
 
         Returns:
-            Connector instance ID (UUID string)
+            Connector ID (UUID string)
 
         Raises:
-            ValueError: If 0 or more than 1 instance is found
+            ValueError: If 0 or more than 1 connector is found
             httpx.HTTPStatusError: If API returns 4xx/5xx status code
             httpx.RequestError: If network request fails
 
         Example:
-            instance_id = await client.get_connector_instance_id(
+            connector_id = await client.get_connector_id(
                 external_user_id="user-123",
                 connector_definition_id="550e8400-e29b-41d4-a716-446655440000"
             )
         """
 
         token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/connectors/instances_for_user"
+        url = f"{self.API_BASE_URL}/api/v1/connectors/connectors_for_user"
         params = {
             "external_user_id": external_user_id,
             "definition_id": connector_definition_id,
@@ -146,24 +146,24 @@ class AirbyteCloudClient:
         response.raise_for_status()
 
         data = response.json()
-        instances = data["instances"]
+        connectors = data["connectors"]
 
-        if len(instances) == 0:
-            raise ValueError(f"No connector instance found for user '{external_user_id}' and connector '{connector_definition_id}'")
+        if len(connectors) == 0:
+            raise ValueError(f"No connector found for user '{external_user_id}' and connector definition '{connector_definition_id}'")
 
-        if len(instances) > 1:
+        if len(connectors) > 1:
             raise ValueError(
-                f"Multiple connector instances found for user '{external_user_id}' "
-                f"and connector '{connector_definition_id}'. Expected exactly 1, "
-                f"found {len(instances)}"
+                f"Multiple connectors found for user '{external_user_id}' "
+                f"and connector definition '{connector_definition_id}'. Expected exactly 1, "
+                f"found {len(connectors)}"
             )
 
-        instance_id = instances[0]["id"]
-        return instance_id
+        connector_id = connectors[0]["id"]
+        return connector_id
 
     async def execute_connector(
         self,
-        instance_id: str,
+        connector_id: str,
         entity: str,
         action: str,
         params: dict[str, Any] | None,
@@ -171,7 +171,7 @@ class AirbyteCloudClient:
         """Execute a connector operation.
 
         Args:
-            instance_id: Connector instance UUID
+            connector_id: Connector UUID (source ID)
             entity: Entity name (e.g., "customers", "invoices")
             action: Operation action (e.g., "list", "get", "create")
             params: Optional parameters for the operation
@@ -185,14 +185,14 @@ class AirbyteCloudClient:
 
         Example:
             result = await client.execute_connector(
-                instance_id="inst-123",
+                connector_id="550e8400-e29b-41d4-a716-446655440000",
                 entity="customers",
                 action="list",
                 params={"limit": 10}
             )
         """
         token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/connectors/instances/{instance_id}/execute"
+        url = f"{self.API_BASE_URL}/api/v1/connectors/sources/{connector_id}/execute"
         headers = {"Authorization": f"Bearer {token}"}
         request_body = {
             "entity": entity,
