@@ -475,7 +475,7 @@ class ArticleAttachment(BaseModel):
 # Meta types for operations that extract metadata (e.g., pagination info)
 
 class TicketsListResultMeta(BaseModel):
-    """Metadata for tickets.list operation"""
+    """Metadata for tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -483,7 +483,7 @@ class TicketsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class UsersListResultMeta(BaseModel):
-    """Metadata for users.list operation"""
+    """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -491,7 +491,7 @@ class UsersListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class OrganizationsListResultMeta(BaseModel):
-    """Metadata for organizations.list operation"""
+    """Metadata for organizations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -499,7 +499,7 @@ class OrganizationsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class GroupsListResultMeta(BaseModel):
-    """Metadata for groups.list operation"""
+    """Metadata for groups.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -507,7 +507,7 @@ class GroupsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TicketCommentsListResultMeta(BaseModel):
-    """Metadata for ticket_comments.list operation"""
+    """Metadata for ticket_comments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -515,7 +515,7 @@ class TicketCommentsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TicketAuditsListResultMeta(BaseModel):
-    """Metadata for ticket_audits.list operation"""
+    """Metadata for ticket_audits.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -523,7 +523,7 @@ class TicketAuditsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TicketMetricsListResultMeta(BaseModel):
-    """Metadata for ticket_metrics.list operation"""
+    """Metadata for ticket_metrics.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -531,7 +531,7 @@ class TicketMetricsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TicketFieldsListResultMeta(BaseModel):
-    """Metadata for ticket_fields.list operation"""
+    """Metadata for ticket_fields.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -539,7 +539,7 @@ class TicketFieldsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class BrandsListResultMeta(BaseModel):
-    """Metadata for brands.list operation"""
+    """Metadata for brands.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -547,7 +547,7 @@ class BrandsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class ViewsListResultMeta(BaseModel):
-    """Metadata for views.list operation"""
+    """Metadata for views.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -555,7 +555,7 @@ class ViewsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class MacrosListResultMeta(BaseModel):
-    """Metadata for macros.list operation"""
+    """Metadata for macros.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -563,7 +563,7 @@ class MacrosListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TriggersListResultMeta(BaseModel):
-    """Metadata for triggers.list operation"""
+    """Metadata for triggers.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -571,7 +571,7 @@ class TriggersListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class AutomationsListResultMeta(BaseModel):
-    """Metadata for automations.list operation"""
+    """Metadata for automations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -579,7 +579,7 @@ class AutomationsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TagsListResultMeta(BaseModel):
-    """Metadata for tags.list operation"""
+    """Metadata for tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -587,7 +587,7 @@ class TagsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class SatisfactionRatingsListResultMeta(BaseModel):
-    """Metadata for satisfaction_ratings.list operation"""
+    """Metadata for satisfaction_ratings.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -595,7 +595,7 @@ class SatisfactionRatingsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class GroupMembershipsListResultMeta(BaseModel):
-    """Metadata for group_memberships.list operation"""
+    """Metadata for group_memberships.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -603,7 +603,7 @@ class GroupMembershipsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class OrganizationMembershipsListResultMeta(BaseModel):
-    """Metadata for organization_memberships.list operation"""
+    """Metadata for organization_memberships.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -611,7 +611,7 @@ class OrganizationMembershipsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class SlaPoliciesListResultMeta(BaseModel):
-    """Metadata for sla_policies.list operation"""
+    """Metadata for sla_policies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -619,7 +619,7 @@ class SlaPoliciesListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class TicketFormsListResultMeta(BaseModel):
-    """Metadata for ticket_forms.list operation"""
+    """Metadata for ticket_forms.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -627,7 +627,7 @@ class TicketFormsListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class ArticlesListResultMeta(BaseModel):
-    """Metadata for articles.list operation"""
+    """Metadata for articles.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -635,7 +635,7 @@ class ArticlesListResultMeta(BaseModel):
     count: Union[int, Any] = Field(default=None)
 
 class ArticleAttachmentsListResultMeta(BaseModel):
-    """Metadata for article_attachments.list operation"""
+    """Metadata for article_attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -677,32 +677,17 @@ class ZendeskSupportExecuteResultWithMeta(ZendeskSupportExecuteResult[T], Generi
 TicketsListResult = ZendeskSupportExecuteResultWithMeta[list[Ticket], TicketsListResultMeta]
 """Result type for tickets.list operation with data and metadata."""
 
-TicketsGetResult = ZendeskSupportExecuteResult[Ticket]
-"""Result type for tickets.get operation."""
-
 UsersListResult = ZendeskSupportExecuteResultWithMeta[list[User], UsersListResultMeta]
 """Result type for users.list operation with data and metadata."""
-
-UsersGetResult = ZendeskSupportExecuteResult[User]
-"""Result type for users.get operation."""
 
 OrganizationsListResult = ZendeskSupportExecuteResultWithMeta[list[Organization], OrganizationsListResultMeta]
 """Result type for organizations.list operation with data and metadata."""
 
-OrganizationsGetResult = ZendeskSupportExecuteResult[Organization]
-"""Result type for organizations.get operation."""
-
 GroupsListResult = ZendeskSupportExecuteResultWithMeta[list[Group], GroupsListResultMeta]
 """Result type for groups.list operation with data and metadata."""
 
-GroupsGetResult = ZendeskSupportExecuteResult[Group]
-"""Result type for groups.get operation."""
-
 TicketCommentsListResult = ZendeskSupportExecuteResultWithMeta[list[TicketComment], TicketCommentsListResultMeta]
 """Result type for ticket_comments.list operation with data and metadata."""
-
-AttachmentsGetResult = ZendeskSupportExecuteResult[Attachment]
-"""Result type for attachments.get operation."""
 
 TicketAuditsListResult = ZendeskSupportExecuteResultWithMeta[list[TicketAudit], TicketAuditsListResultMeta]
 """Result type for ticket_audits.list operation with data and metadata."""
@@ -716,47 +701,26 @@ TicketMetricsListResult = ZendeskSupportExecuteResultWithMeta[list[TicketMetric]
 TicketFieldsListResult = ZendeskSupportExecuteResultWithMeta[list[TicketField], TicketFieldsListResultMeta]
 """Result type for ticket_fields.list operation with data and metadata."""
 
-TicketFieldsGetResult = ZendeskSupportExecuteResult[TicketField]
-"""Result type for ticket_fields.get operation."""
-
 BrandsListResult = ZendeskSupportExecuteResultWithMeta[list[Brand], BrandsListResultMeta]
 """Result type for brands.list operation with data and metadata."""
-
-BrandsGetResult = ZendeskSupportExecuteResult[Brand]
-"""Result type for brands.get operation."""
 
 ViewsListResult = ZendeskSupportExecuteResultWithMeta[list[View], ViewsListResultMeta]
 """Result type for views.list operation with data and metadata."""
 
-ViewsGetResult = ZendeskSupportExecuteResult[View]
-"""Result type for views.get operation."""
-
 MacrosListResult = ZendeskSupportExecuteResultWithMeta[list[Macro], MacrosListResultMeta]
 """Result type for macros.list operation with data and metadata."""
-
-MacrosGetResult = ZendeskSupportExecuteResult[Macro]
-"""Result type for macros.get operation."""
 
 TriggersListResult = ZendeskSupportExecuteResultWithMeta[list[Trigger], TriggersListResultMeta]
 """Result type for triggers.list operation with data and metadata."""
 
-TriggersGetResult = ZendeskSupportExecuteResult[Trigger]
-"""Result type for triggers.get operation."""
-
 AutomationsListResult = ZendeskSupportExecuteResultWithMeta[list[Automation], AutomationsListResultMeta]
 """Result type for automations.list operation with data and metadata."""
-
-AutomationsGetResult = ZendeskSupportExecuteResult[Automation]
-"""Result type for automations.get operation."""
 
 TagsListResult = ZendeskSupportExecuteResultWithMeta[list[Tag], TagsListResultMeta]
 """Result type for tags.list operation with data and metadata."""
 
 SatisfactionRatingsListResult = ZendeskSupportExecuteResultWithMeta[list[SatisfactionRating], SatisfactionRatingsListResultMeta]
 """Result type for satisfaction_ratings.list operation with data and metadata."""
-
-SatisfactionRatingsGetResult = ZendeskSupportExecuteResult[SatisfactionRating]
-"""Result type for satisfaction_ratings.get operation."""
 
 GroupMembershipsListResult = ZendeskSupportExecuteResultWithMeta[list[GroupMembership], GroupMembershipsListResultMeta]
 """Result type for group_memberships.list operation with data and metadata."""
@@ -767,24 +731,12 @@ OrganizationMembershipsListResult = ZendeskSupportExecuteResultWithMeta[list[Org
 SlaPoliciesListResult = ZendeskSupportExecuteResultWithMeta[list[SLAPolicy], SlaPoliciesListResultMeta]
 """Result type for sla_policies.list operation with data and metadata."""
 
-SlaPoliciesGetResult = ZendeskSupportExecuteResult[SLAPolicy]
-"""Result type for sla_policies.get operation."""
-
 TicketFormsListResult = ZendeskSupportExecuteResultWithMeta[list[TicketForm], TicketFormsListResultMeta]
 """Result type for ticket_forms.list operation with data and metadata."""
-
-TicketFormsGetResult = ZendeskSupportExecuteResult[TicketForm]
-"""Result type for ticket_forms.get operation."""
 
 ArticlesListResult = ZendeskSupportExecuteResultWithMeta[list[Article], ArticlesListResultMeta]
 """Result type for articles.list operation with data and metadata."""
 
-ArticlesGetResult = ZendeskSupportExecuteResult[Article]
-"""Result type for articles.get operation."""
-
 ArticleAttachmentsListResult = ZendeskSupportExecuteResultWithMeta[list[ArticleAttachment], ArticleAttachmentsListResultMeta]
 """Result type for article_attachments.list operation with data and metadata."""
-
-ArticleAttachmentsGetResult = ZendeskSupportExecuteResult[ArticleAttachment]
-"""Result type for article_attachments.get operation."""
 
