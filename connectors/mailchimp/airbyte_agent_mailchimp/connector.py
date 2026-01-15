@@ -70,6 +70,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class MailchimpConnector:
     """
     Type-safe Mailchimp API connector.
