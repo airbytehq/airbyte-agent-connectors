@@ -12,9 +12,9 @@ to Operation, Schema, or other models when their respective features
 are implemented.
 """
 
-from typing import Literal
+from typing import Literal, Optional
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class PaginationConfig(BaseModel):
@@ -107,3 +107,96 @@ class RetryConfig(BaseModel):
     # Header-based delay extraction
     retry_after_header: str = "Retry-After"
     retry_after_format: Literal["seconds", "milliseconds", "unix_timestamp"] = "seconds"
+
+
+class CacheFieldConfig(BaseModel):
+    """
+    Field configuration for cache mapping.
+
+    Defines a single field in a cache entity, with optional name aliasing
+    to map between user-facing field names and cache storage names.
+
+    Used in x-airbyte-cache extension for api_search operations.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    name: str
+    x_airbyte_name: Optional[str] = Field(default=None, alias="x-airbyte-name")
+    type: str | list[str]
+    description: str
+
+    @property
+    def cache_name(self) -> str:
+        """Return cache name, falling back to name if alias not specified."""
+        return self.x_airbyte_name or self.name
+
+
+class CacheEntityConfig(BaseModel):
+    """
+    Entity configuration for cache mapping.
+
+    Defines a cache-enabled entity with its fields and optional name aliasing
+    to map between user-facing entity names and cache storage names.
+
+    Used in x-airbyte-cache extension for api_search operations.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    entity: str
+    x_airbyte_name: Optional[str] = Field(default=None, alias="x-airbyte-name")
+    fields: list[CacheFieldConfig]
+
+    @property
+    def cache_name(self) -> str:
+        """Return cache entity name, falling back to entity if alias not specified."""
+        return self.x_airbyte_name or self.entity
+
+
+class CacheConfig(BaseModel):
+    """
+    Cache configuration extension (x-airbyte-cache).
+
+    Defines cache-enabled entities and their field mappings for api_search operations.
+    Supports optional name aliasing via x-airbyte-name for both entities and fields,
+    enabling bidirectional mapping between user-facing names and cache storage names.
+
+    This extension is added to the Info model and provides field-level mapping for
+    search operations that use cached data.
+
+    Example YAML usage:
+        info:
+          title: Stripe API
+          x-airbyte-cache:
+            entities:
+              - entity: customers
+                stream: customers
+                fields:
+                  - name: email
+                    type: ["null", "string"]
+                    description: "Customer email address"
+                  - name: customer_name
+                    x-airbyte-name: name
+                    type: ["null", "string"]
+                    description: "Customer full name"
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    entities: list[CacheEntityConfig]
+
+    def get_entity_mapping(self, user_entity: str) -> Optional[CacheEntityConfig]:
+        """
+        Get entity config by user-facing name.
+
+        Args:
+            user_entity: User-facing entity name to look up
+
+        Returns:
+            CacheEntityConfig if found, None otherwise
+        """
+        for entity in self.entities:
+            if entity.entity == user_entity:
+                return entity
+        return None
