@@ -42,3 +42,4 @@ class TeamsListParams(TypedDict):
 class TeamsGetParams(TypedDict):
     """Parameters for teams.get operation"""
     id: str
+

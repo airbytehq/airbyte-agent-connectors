@@ -42,6 +42,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class LinearConnector:
     """
     Type-safe Linear API connector.
