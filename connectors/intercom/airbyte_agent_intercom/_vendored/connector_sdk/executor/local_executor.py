@@ -1098,35 +1098,93 @@ class LocalExecutor:
 
         return interpolate_value(variables)
 
+    def _wrap_primitives(self, data: Any) -> dict[str, Any] | list[dict[str, Any]] | None:
+        """Wrap primitive values in dict format for consistent response structure.
+
+        Transforms primitive API responses into dict format so downstream code
+        can always expect dict-based data structures.
+
+        Args:
+            data: Response data (could be primitive, list, dict, or None)
+
+        Returns:
+            - If data is a primitive (str, int, float, bool): {"value": data}
+            - If data is a list: wraps all non-dict elements as {"value": item}
+            - If data is already a dict or list of dicts: unchanged
+            - If data is None: None
+
+        Examples:
+            >>> executor._wrap_primitives(42)
+            {"value": 42}
+            >>> executor._wrap_primitives([1, 2, 3])
+            [{"value": 1}, {"value": 2}, {"value": 3}]
+            >>> executor._wrap_primitives([1, {"id": 2}, 3])
+            [{"value": 1}, {"id": 2}, {"value": 3}]
+            >>> executor._wrap_primitives([[1, 2], 3])
+            [{"value": [1, 2]}, {"value": 3}]
+            >>> executor._wrap_primitives({"id": 1})
+            {"id": 1}  # unchanged
+        """
+        if data is None:
+            return None
+
+        # Handle primitive scalars
+        if isinstance(data, (bool, str, int, float)):
+            return {"value": data}
+
+        # Handle lists - wrap non-dict elements
+        if isinstance(data, list):
+            if not data:
+                return []  # Empty list unchanged
+
+            wrapped = []
+            for item in data:
+                if isinstance(item, dict):
+                    wrapped.append(item)
+                else:
+                    wrapped.append({"value": item})
+            return wrapped
+
+        # Dict - return unchanged
+        if isinstance(data, dict):
+            return data
+
+        # Unknown type - wrap for safety
+        return {"value": data}
+
     def _extract_records(
         self,
-        response_data: dict[str, Any],
+        response_data: Any,
         endpoint: EndpointDefinition,
-    ) -> dict[str, Any] | list[Any] | None:
+    ) -> dict[str, Any] | list[dict[str, Any]] | None:
         """Extract records from response using record extractor.
 
         Type inference based on action:
         - list, search: Returns array ([] if not found)
         - get, create, update, delete: Returns single record (None if not found)
 
+        Automatically wraps primitive values (int, str, float, bool) in {"value": primitive}
+        format to ensure consistent dict-based responses for downstream code.
+
         Args:
-            response_data: Full API response
+            response_data: Full API response (can be dict, list, primitive, or None)
             endpoint: Endpoint with optional record extractor and action
 
         Returns:
             - Extracted data if extractor configured and path found
             - [] or None if path not found (based on action)
             - Original response if no extractor configured or on error
+            - Primitives are wrapped as {"value": primitive}
         """
         # Check if endpoint has record extractor
         extractor = endpoint.record_extractor
         if not extractor:
-            return response_data
+            return self._wrap_primitives(response_data)
 
         # Determine if this action returns array or single record
         action = endpoint.action
         if not action:
-            return response_data
+            return self._wrap_primitives(response_data)
 
         is_array_action = action in (Action.LIST, Action.API_SEARCH)
 
@@ -1139,17 +1197,19 @@ class LocalExecutor:
                 # Path not found - return empty based on action
                 return [] if is_array_action else None
 
-            # Return extracted data
+            # Return extracted data with primitive wrapping
             if is_array_action:
                 # For array actions, return the array (or list of matches)
-                return matches[0] if len(matches) == 1 else matches
+                result = matches[0] if len(matches) == 1 else matches
             else:
                 # For single record actions, return first match
-                return matches[0]
+                result = matches[0]
+
+            return self._wrap_primitives(result)
 
         except Exception as e:
             logging.warning(f"Failed to apply record extractor '{extractor}': {e}. Returning original response.")
-            return response_data
+            return self._wrap_primitives(response_data)
 
     def _extract_metadata(
         self,
