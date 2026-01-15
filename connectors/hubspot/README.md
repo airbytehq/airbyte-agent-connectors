@@ -71,6 +71,6 @@ For the service's official API docs, see the [Hubspot API reference](https://dev
 
 ## Version information
 
-- **Package version:** 0.15.43
-- **Connector version:** 0.1.3
-- **Generated with Connector SDK commit SHA:** 3521119342fc2a44fcae909505ffb1e7b75557eb
+- **Package version:** 0.15.44
+- **Connector version:** 0.1.4
+- **Generated with Connector SDK commit SHA:** 236c9a8a1ad9a58544f539eb1f5c6f37dc425208
