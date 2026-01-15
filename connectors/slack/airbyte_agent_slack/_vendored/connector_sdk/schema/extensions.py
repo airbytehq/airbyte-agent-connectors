@@ -109,12 +109,39 @@ class RetryConfig(BaseModel):
     retry_after_format: Literal["seconds", "milliseconds", "unix_timestamp"] = "seconds"
 
 
+class CacheFieldProperty(BaseModel):
+    """
+    Nested property definition for object-type cache fields.
+
+    Supports recursive nesting to represent complex nested schemas in cache field definitions.
+    Used when a cache field has type 'object' and needs to define its internal structure.
+
+    Example YAML usage:
+        - name: collaboration
+          type: ['null', 'object']
+          description: "Collaboration data"
+          properties:
+            brief:
+              type: ['null', 'string']
+            comments:
+              type: ['null', 'array']
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    type: str | list[str]
+    properties: dict[str, "CacheFieldProperty"] | None = None
+
+
 class CacheFieldConfig(BaseModel):
     """
     Field configuration for cache mapping.
 
     Defines a single field in a cache entity, with optional name aliasing
     to map between user-facing field names and cache storage names.
+
+    For object-type fields, supports nested properties to define the internal structure
+    of complex nested schemas.
 
     Used in x-airbyte-cache extension for api_search operations.
     """
@@ -125,6 +152,7 @@ class CacheFieldConfig(BaseModel):
     x_airbyte_name: str | None = Field(default=None, alias="x-airbyte-name")
     type: str | list[str]
     description: str
+    properties: dict[str, CacheFieldProperty] | None = None
 
     @property
     def cache_name(self) -> str:
