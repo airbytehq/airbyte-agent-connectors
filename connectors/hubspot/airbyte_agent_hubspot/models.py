@@ -183,13 +183,6 @@ class TicketsList(BaseModel):
     paging: Union[Paging, Any] = Field(default=None)
     total: Union[int, Any] = Field(default=None)
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -242,6 +235,13 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
     created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
     updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
@@ -308,14 +308,14 @@ class ObjectsList(BaseModel):
 # Meta types for operations that extract metadata (e.g., pagination info)
 
 class ContactsListResultMeta(BaseModel):
-    """Metadata for contacts.list operation"""
+    """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
 class ContactsApiSearchResultMeta(BaseModel):
-    """Metadata for contacts.api_search operation"""
+    """Metadata for contacts.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -323,14 +323,14 @@ class ContactsApiSearchResultMeta(BaseModel):
     next_link: Union[str, Any] = Field(default=None)
 
 class CompaniesListResultMeta(BaseModel):
-    """Metadata for companies.list operation"""
+    """Metadata for companies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
 class CompaniesApiSearchResultMeta(BaseModel):
-    """Metadata for companies.api_search operation"""
+    """Metadata for companies.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -338,14 +338,14 @@ class CompaniesApiSearchResultMeta(BaseModel):
     next_link: Union[str, Any] = Field(default=None)
 
 class DealsListResultMeta(BaseModel):
-    """Metadata for deals.list operation"""
+    """Metadata for deals.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
 class DealsApiSearchResultMeta(BaseModel):
-    """Metadata for deals.api_search operation"""
+    """Metadata for deals.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -353,14 +353,14 @@ class DealsApiSearchResultMeta(BaseModel):
     next_link: Union[str, Any] = Field(default=None)
 
 class TicketsListResultMeta(BaseModel):
-    """Metadata for tickets.list operation"""
+    """Metadata for tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_cursor: Union[str, Any] = Field(default=None)
     next_link: Union[str, Any] = Field(default=None)
 
 class TicketsApiSearchResultMeta(BaseModel):
-    """Metadata for tickets.api_search operation"""
+    """Metadata for tickets.Action.API_SEARCH operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     total: Union[int, Any] = Field(default=None)
@@ -368,7 +368,7 @@ class TicketsApiSearchResultMeta(BaseModel):
     next_link: Union[str, Any] = Field(default=None)
 
 class ObjectsListResultMeta(BaseModel):
-    """Metadata for objects.list operation"""
+    """Metadata for objects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_cursor: Union[str, Any] = Field(default=None)
