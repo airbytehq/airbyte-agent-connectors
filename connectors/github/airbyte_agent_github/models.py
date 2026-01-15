@@ -67,9 +67,6 @@ class GithubExecuteResultWithMeta(GithubExecuteResult[T], Generic[T, S]):
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-RepositoriesGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for repositories.get operation."""
-
 RepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for repositories.list operation."""
 
@@ -82,35 +79,20 @@ OrgRepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 BranchesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for branches.list operation."""
 
-BranchesGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for branches.get operation."""
-
 CommitsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for commits.list operation."""
-
-CommitsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for commits.get operation."""
 
 ReleasesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for releases.list operation."""
 
-ReleasesGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for releases.get operation."""
-
 IssuesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for issues.list operation."""
-
-IssuesGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for issues.get operation."""
 
 IssuesApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for issues.api_search operation."""
 
 PullRequestsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for pull_requests.list operation."""
-
-PullRequestsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for pull_requests.get operation."""
 
 PullRequestsApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for pull_requests.api_search operation."""
@@ -121,35 +103,17 @@ ReviewsListResult = GithubExecuteResult[list[dict[str, Any]]]
 CommentsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for comments.list operation."""
 
-CommentsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for comments.get operation."""
-
 PrCommentsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for pr_comments.list operation."""
-
-PrCommentsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for pr_comments.get operation."""
 
 LabelsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for labels.list operation."""
 
-LabelsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for labels.get operation."""
-
 MilestonesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for milestones.list operation."""
 
-MilestonesGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for milestones.get operation."""
-
-OrganizationsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for organizations.get operation."""
-
 OrganizationsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for organizations.list operation."""
-
-UsersGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for users.get operation."""
 
 UsersListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for users.list operation."""
@@ -160,29 +124,17 @@ UsersApiSearchResult = GithubExecuteResult[list[dict[str, Any]]]
 TeamsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for teams.list operation."""
 
-TeamsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for teams.get operation."""
-
 TagsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for tags.list operation."""
 
-TagsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for tags.get operation."""
-
 StargazersListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for stargazers.list operation."""
-
-ViewerGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for viewer.get operation."""
 
 ViewerRepositoriesListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for viewer_repositories.list operation."""
 
 ProjectsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for projects.list operation."""
-
-ProjectsGetResult = GithubExecuteResult[dict[str, Any]]
-"""Result type for projects.get operation."""
 
 ProjectItemsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for project_items.list operation."""
