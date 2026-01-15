@@ -50,13 +50,6 @@ class PaginationRecords(BaseModel):
     current_page_number: Union[int, Any] = Field(default=None, alias="currentPageNumber")
     cursor: Union[str, Any] = Field(default=None)
 
-class UserSpokenlanguagesItem(BaseModel):
-    """Nested schema for User.spokenLanguages_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: Union[str, Any] = Field(default=None)
-    primary: Union[bool, Any] = Field(default=None)
-
 class UserSettings(BaseModel):
     """User settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -68,6 +61,13 @@ class UserSettings(BaseModel):
     prevent_email_import: Union[bool, Any] = Field(default=None, alias="preventEmailImport")
     non_recorded_meetings_imported: Union[bool, Any] = Field(default=None, alias="nonRecordedMeetingsImported")
     gong_connect_enabled: Union[bool, Any] = Field(default=None, alias="gongConnectEnabled")
+
+class UserSpokenlanguagesItem(BaseModel):
+    """Nested schema for User.spokenLanguages_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: Union[str, Any] = Field(default=None)
+    primary: Union[bool, Any] = Field(default=None)
 
 class User(BaseModel):
     """User object"""
@@ -197,13 +197,6 @@ class TranscriptsResponse(BaseModel):
     records: Union[PaginationRecords, Any] = Field(default=None)
     request_id: Union[str, Any] = Field(default=None, alias="requestId")
 
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
-    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
-
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -258,13 +251,6 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallInteractionQuestions(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.questions"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
-    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
-
 class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
     """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -274,12 +260,57 @@ class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
     value: Union[float, Any] = Field(default=None, description="Stat value")
     """Stat value"""
 
+class ExtensiveCallInteractionQuestions(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.questions"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
+    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
+
 class ExtensiveCallInteraction(BaseModel):
     """Interaction statistics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
     questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
+
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
+    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
+
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    count: Union[int, Any] = Field(default=None)
+    type: Union[str, Any] = Field(default=None)
+    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
+
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    duration: Union[float, Any] = Field(default=None)
+
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
+    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
+    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
+
+class ExtensiveCallCollaboration(BaseModel):
+    """Collaboration data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
 
 class ExtensiveCallMetadata(BaseModel):
     """Call metadata"""
@@ -325,37 +356,6 @@ class ExtensiveCallMetadata(BaseModel):
     """Meeting URL"""
     calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
     """Calendar event ID"""
-
-class ExtensiveCallCollaboration(BaseModel):
-    """Collaboration data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
-
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    duration: Union[float, Any] = Field(default=None)
-
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
-    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
-
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
-    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
-    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""
@@ -756,6 +756,212 @@ class GongExecuteResultWithMeta(GongExecuteResult[T], Generic[T, S]):
     """
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
+
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """Indicates if the user is currently active or not"""
+    created: str | None = None
+    """The timestamp denoting when the user account was created"""
+    email_address: str | None = None
+    """The primary email address associated with the user"""
+    email_aliases: list[Any] | None = None
+    """Additional email addresses that can be used to reach the user"""
+    extension: str | None = None
+    """The phone extension number for the user"""
+    first_name: str | None = None
+    """The first name of the user"""
+    id: str | None = None
+    """Unique identifier for the user"""
+    last_name: str | None = None
+    """The last name of the user"""
+    manager_id: str | None = None
+    """The ID of the user's manager"""
+    meeting_consent_page_url: str | None = None
+    """URL for the consent page related to meetings"""
+    personal_meeting_urls: list[Any] | None = None
+    """URLs for personal meeting rooms assigned to the user"""
+    phone_number: str | None = None
+    """The phone number associated with the user"""
+    settings: dict[str, Any] | None = None
+    """User-specific settings and configurations"""
+    spoken_languages: list[Any] | None = None
+    """Languages spoken by the user"""
+    title: str | None = None
+    """The job title or position of the user"""
+    trusted_email_address: str | None = None
+    """An email address that is considered trusted for the user"""
+
+
+class CallsSearchData(BaseModel):
+    """Search result data for calls entity."""
+    model_config = ConfigDict(extra="allow")
+
+    calendar_event_id: str | None = None
+    """Unique identifier for the calendar event associated with the call."""
+    client_unique_id: str | None = None
+    """Unique identifier for the client related to the call."""
+    custom_data: str | None = None
+    """Custom data associated with the call."""
+    direction: str | None = None
+    """Direction of the call (inbound/outbound)."""
+    duration: int | None = None
+    """Duration of the call in seconds."""
+    id: str | None = None
+    """Unique identifier for the call."""
+    is_private: bool | None = None
+    """Indicates if the call is private or not."""
+    language: str | None = None
+    """Language used in the call."""
+    media: str | None = None
+    """Media type used for communication (voice, video, etc.)."""
+    meeting_url: str | None = None
+    """URL for accessing the meeting associated with the call."""
+    primary_user_id: str | None = None
+    """Unique identifier for the primary user involved in the call."""
+    purpose: str | None = None
+    """Purpose or topic of the call."""
+    scheduled: str | None = None
+    """Scheduled date and time of the call."""
+    scope: str | None = None
+    """Scope or extent of the call."""
+    sdr_disposition: str | None = None
+    """Disposition set by the sales development representative."""
+    started: str | None = None
+    """Start date and time of the call."""
+    system: str | None = None
+    """System information related to the call."""
+    title: str | None = None
+    """Title or headline of the call."""
+    url: str | None = None
+    """URL associated with the call."""
+    workspace_id: str | None = None
+    """Identifier for the workspace to which the call belongs."""
+
+
+class CallsExtensiveSearchData(BaseModel):
+    """Search result data for calls_extensive entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """Unique identifier for the call (from metaData.id)."""
+    startdatetime: str | None = None
+    """Datetime for extensive calls."""
+    collaboration: dict[str, Any] | None = None
+    """Collaboration information added to the call"""
+    content: dict[str, Any] | None = None
+    """Analysis of the interaction content."""
+    context: dict[str, Any] | None = None
+    """A list of the agenda of each part of the call."""
+    interaction: dict[str, Any] | None = None
+    """Metrics collected around the interaction during the call."""
+    media: dict[str, Any] | None = None
+    """The media urls of the call."""
+    meta_data: dict[str, Any] | None = None
+    """call's metadata."""
+    parties: list[Any] | None = None
+    """A list of the call's participants"""
+
+
+class SettingsScorecardsSearchData(BaseModel):
+    """Search result data for settings_scorecards entity."""
+    model_config = ConfigDict(extra="allow")
+
+    created: str | None = None
+    """The timestamp when the scorecard was created"""
+    enabled: bool | None = None
+    """Indicates if the scorecard is enabled or disabled"""
+    questions: list[Any] | None = None
+    """An array of questions related to the scorecard"""
+    scorecard_id: str | None = None
+    """The unique identifier of the scorecard"""
+    scorecard_name: str | None = None
+    """The name of the scorecard"""
+    updated: str | None = None
+    """The timestamp when the scorecard was last updated"""
+    updater_user_id: str | None = None
+    """The user ID of the person who last updated the scorecard"""
+    workspace_id: str | None = None
+    """The unique identifier of the workspace associated with the scorecard"""
+
+
+class StatsActivityScorecardsSearchData(BaseModel):
+    """Search result data for stats_activity_scorecards entity."""
+    model_config = ConfigDict(extra="allow")
+
+    answered_scorecard_id: str | None = None
+    """Unique identifier for the answered scorecard instance."""
+    answers: list[Any] | None = None
+    """Contains the answered questions in the scorecards"""
+    call_id: str | None = None
+    """Unique identifier for the call associated with the answered scorecard."""
+    call_start_time: str | None = None
+    """Timestamp indicating the start time of the call."""
+    review_time: str | None = None
+    """Timestamp indicating when the review of the answered scorecard was completed."""
+    reviewed_user_id: str | None = None
+    """Unique identifier for the user whose performance was reviewed."""
+    reviewer_user_id: str | None = None
+    """Unique identifier for the user who performed the review."""
+    scorecard_id: str | None = None
+    """Unique identifier for the scorecard template used."""
+    scorecard_name: str | None = None
+    """Name or title of the scorecard template used."""
+    visibility_type: str | None = None
+    """Type indicating the visibility permissions for the answered scorecard."""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class SearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class SearchResult(BaseModel, Generic[D]):
+    """Result from search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[SearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+UsersSearchResult = SearchResult[UsersSearchData]
+"""Search result type for users entity."""
+
+CallsSearchResult = SearchResult[CallsSearchData]
+"""Search result type for calls entity."""
+
+CallsExtensiveSearchResult = SearchResult[CallsExtensiveSearchData]
+"""Search result type for calls_extensive entity."""
+
+SettingsScorecardsSearchResult = SearchResult[SettingsScorecardsSearchData]
+"""Search result type for settings_scorecards entity."""
+
+StatsActivityScorecardsSearchResult = SearchResult[StatsActivityScorecardsSearchData]
+"""Search result type for stats_activity_scorecards entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====

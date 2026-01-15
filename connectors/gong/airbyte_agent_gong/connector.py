@@ -43,6 +43,17 @@ from .types import (
     UsersGetParams,
     UsersListParams,
     WorkspacesListParams,
+    SearchParams,
+    UsersSearchFilter,
+    UsersSearchQuery,
+    CallsSearchFilter,
+    CallsSearchQuery,
+    CallsExtensiveSearchFilter,
+    CallsExtensiveSearchQuery,
+    SettingsScorecardsSearchFilter,
+    SettingsScorecardsSearchQuery,
+    StatsActivityScorecardsSearchFilter,
+    StatsActivityScorecardsSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import GongAuthConfig
@@ -80,10 +91,23 @@ from .models import (
     UserDetailedActivity,
     UserInteractionStats,
     Workspace,
+    SearchHit,
+    SearchResult,
+    UsersSearchData,
+    UsersSearchResult,
+    CallsSearchData,
+    CallsSearchResult,
+    CallsExtensiveSearchData,
+    CallsExtensiveSearchResult,
+    SettingsScorecardsSearchData,
+    SettingsScorecardsSearchResult,
+    StatsActivityScorecardsSearchData,
+    StatsActivityScorecardsSearchResult,
 )
 
 # TypeVar for decorator type preservation
 _F = TypeVar("_F", bound=Callable[..., Any])
+
 
 
 class GongConnector:
@@ -609,6 +633,75 @@ class UsersQuery:
 
 
 
+    async def search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - active: Indicates if the user is currently active or not
+        - created: The timestamp denoting when the user account was created
+        - email_address: The primary email address associated with the user
+        - email_aliases: Additional email addresses that can be used to reach the user
+        - extension: The phone extension number for the user
+        - first_name: The first name of the user
+        - id: Unique identifier for the user
+        - last_name: The last name of the user
+        - manager_id: The ID of the user's manager
+        - meeting_consent_page_url: URL for the consent page related to meetings
+        - personal_meeting_urls: URLs for personal meeting rooms assigned to the user
+        - phone_number: The phone number associated with the user
+        - settings: User-specific settings and configurations
+        - spoken_languages: Languages spoken by the user
+        - title: The job title or position of the user
+        - trusted_email_address: An email address that is considered trusted for the user
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with hits (list of SearchHit[UsersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "search", params)
+
+        # Parse response into typed result
+        return UsersSearchResult(
+            hits=[
+                SearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class CallsQuery:
     """
     Query class for Calls entity operations.
@@ -678,6 +771,79 @@ class CallsQuery:
 
 
 
+    async def search(
+        self,
+        query: CallsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CallsSearchResult:
+        """
+        Search calls records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CallsSearchFilter):
+        - calendar_event_id: Unique identifier for the calendar event associated with the call.
+        - client_unique_id: Unique identifier for the client related to the call.
+        - custom_data: Custom data associated with the call.
+        - direction: Direction of the call (inbound/outbound).
+        - duration: Duration of the call in seconds.
+        - id: Unique identifier for the call.
+        - is_private: Indicates if the call is private or not.
+        - language: Language used in the call.
+        - media: Media type used for communication (voice, video, etc.).
+        - meeting_url: URL for accessing the meeting associated with the call.
+        - primary_user_id: Unique identifier for the primary user involved in the call.
+        - purpose: Purpose or topic of the call.
+        - scheduled: Scheduled date and time of the call.
+        - scope: Scope or extent of the call.
+        - sdr_disposition: Disposition set by the sales development representative.
+        - started: Start date and time of the call.
+        - system: System information related to the call.
+        - title: Title or headline of the call.
+        - url: URL associated with the call.
+        - workspace_id: Identifier for the workspace to which the call belongs.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CallsSearchResult with hits (list of SearchHit[CallsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("calls", "search", params)
+
+        # Parse response into typed result
+        return CallsSearchResult(
+            hits=[
+                SearchHit[CallsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CallsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class CallsExtensiveQuery:
     """
     Query class for CallsExtensive entity operations.
@@ -721,6 +887,68 @@ class CallsExtensiveQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: CallsExtensiveSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CallsExtensiveSearchResult:
+        """
+        Search calls_extensive records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CallsExtensiveSearchFilter):
+        - id: Unique identifier for the call (from metaData.id).
+        - startdatetime: Datetime for extensive calls.
+        - collaboration: Collaboration information added to the call
+        - content: Analysis of the interaction content.
+        - context: A list of the agenda of each part of the call.
+        - interaction: Metrics collected around the interaction during the call.
+        - media: The media urls of the call.
+        - meta_data: call's metadata.
+        - parties: A list of the call's participants
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CallsExtensiveSearchResult with hits (list of SearchHit[CallsExtensiveSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("calls_extensive", "search", params)
+
+        # Parse response into typed result
+        return CallsExtensiveSearchResult(
+            hits=[
+                SearchHit[CallsExtensiveSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CallsExtensiveSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class CallAudioQuery:
     """
@@ -1099,6 +1327,67 @@ class SettingsScorecardsQuery:
 
 
 
+    async def search(
+        self,
+        query: SettingsScorecardsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> SettingsScorecardsSearchResult:
+        """
+        Search settings_scorecards records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (SettingsScorecardsSearchFilter):
+        - created: The timestamp when the scorecard was created
+        - enabled: Indicates if the scorecard is enabled or disabled
+        - questions: An array of questions related to the scorecard
+        - scorecard_id: The unique identifier of the scorecard
+        - scorecard_name: The name of the scorecard
+        - updated: The timestamp when the scorecard was last updated
+        - updater_user_id: The user ID of the person who last updated the scorecard
+        - workspace_id: The unique identifier of the workspace associated with the scorecard
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            SettingsScorecardsSearchResult with hits (list of SearchHit[SettingsScorecardsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("settings_scorecards", "search", params)
+
+        # Parse response into typed result
+        return SettingsScorecardsSearchResult(
+            hits=[
+                SearchHit[SettingsScorecardsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=SettingsScorecardsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class SettingsTrackersQuery:
     """
     Query class for SettingsTrackers entity operations.
@@ -1300,3 +1589,66 @@ class StatsActivityScorecardsQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: StatsActivityScorecardsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> StatsActivityScorecardsSearchResult:
+        """
+        Search stats_activity_scorecards records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (StatsActivityScorecardsSearchFilter):
+        - answered_scorecard_id: Unique identifier for the answered scorecard instance.
+        - answers: Contains the answered questions in the scorecards
+        - call_id: Unique identifier for the call associated with the answered scorecard.
+        - call_start_time: Timestamp indicating the start time of the call.
+        - review_time: Timestamp indicating when the review of the answered scorecard was completed.
+        - reviewed_user_id: Unique identifier for the user whose performance was reviewed.
+        - reviewer_user_id: Unique identifier for the user who performed the review.
+        - scorecard_id: Unique identifier for the scorecard template used.
+        - scorecard_name: Name or title of the scorecard template used.
+        - visibility_type: Type indicating the visibility permissions for the answered scorecard.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            StatsActivityScorecardsSearchResult with hits (list of SearchHit[StatsActivityScorecardsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("stats_activity_scorecards", "search", params)
+
+        # Parse response into typed result
+        return StatsActivityScorecardsSearchResult(
+            hits=[
+                SearchHit[StatsActivityScorecardsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=StatsActivityScorecardsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
