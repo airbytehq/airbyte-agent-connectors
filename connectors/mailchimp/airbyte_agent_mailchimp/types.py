@@ -161,3 +161,4 @@ class UnsubscribesListParams(TypedDict):
     campaign_id: str
     count: NotRequired[int]
     offset: NotRequired[int]
+
