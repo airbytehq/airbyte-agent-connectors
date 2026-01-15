@@ -26,7 +26,7 @@ from uuid import (
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.hubapi.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -72,9 +72,10 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                 'access_token': '${access_token}',
             },
             replication_auth_key_mapping={
-                'client_id': 'client_id',
-                'client_secret': 'client_secret',
-                'refresh_token': 'refresh_token',
+                'credentials.client_id': 'client_id',
+                'credentials.client_secret': 'client_secret',
+                'credentials.refresh_token': 'refresh_token',
+                'credentials.access_token': 'access_token',
             },
         ),
     ),
