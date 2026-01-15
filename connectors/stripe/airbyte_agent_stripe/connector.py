@@ -1,5 +1,5 @@
 """
-stripe connector.
+Stripe connector.
 """
 
 from __future__ import annotations
@@ -72,8 +72,11 @@ from .models import (
     CustomersListResult,
     CustomersApiSearchResult,
     InvoicesListResult,
+    InvoicesApiSearchResult,
     ChargesListResult,
+    ChargesApiSearchResult,
     SubscriptionsListResult,
+    SubscriptionsApiSearchResult,
     RefundsListResult,
     ProductsListResult,
     ProductsApiSearchResult,
@@ -115,42 +118,42 @@ class StripeConnector:
     connector_version = "0.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("customers", "list"): True,
-        ("customers", "create"): False,
-        ("customers", "get"): False,
-        ("customers", "update"): False,
-        ("customers", "delete"): False,
+        ("customers", "create"): None,
+        ("customers", "get"): None,
+        ("customers", "update"): None,
+        ("customers", "delete"): None,
         ("customers", "api_search"): True,
         ("invoices", "list"): True,
-        ("invoices", "get"): False,
-        ("invoices", "api_search"): False,
+        ("invoices", "get"): None,
+        ("invoices", "api_search"): True,
         ("charges", "list"): True,
-        ("charges", "get"): False,
-        ("charges", "api_search"): False,
+        ("charges", "get"): None,
+        ("charges", "api_search"): True,
         ("subscriptions", "list"): True,
-        ("subscriptions", "get"): False,
-        ("subscriptions", "api_search"): False,
+        ("subscriptions", "get"): None,
+        ("subscriptions", "api_search"): True,
         ("refunds", "list"): True,
-        ("refunds", "create"): False,
-        ("refunds", "get"): False,
+        ("refunds", "create"): None,
+        ("refunds", "get"): None,
         ("products", "list"): True,
-        ("products", "create"): False,
-        ("products", "get"): False,
-        ("products", "update"): False,
-        ("products", "delete"): False,
+        ("products", "create"): None,
+        ("products", "get"): None,
+        ("products", "update"): None,
+        ("products", "delete"): None,
         ("products", "api_search"): True,
-        ("balance", "get"): False,
+        ("balance", "get"): None,
         ("balance_transactions", "list"): True,
-        ("balance_transactions", "get"): False,
+        ("balance_transactions", "get"): None,
         ("payment_intents", "list"): True,
-        ("payment_intents", "get"): False,
+        ("payment_intents", "get"): None,
         ("payment_intents", "api_search"): True,
         ("disputes", "list"): True,
-        ("disputes", "get"): False,
+        ("disputes", "get"): None,
         ("payouts", "list"): True,
-        ("payouts", "get"): False,
+        ("payouts", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -347,7 +350,7 @@ class StripeConnector:
         entity: Literal["invoices"],
         action: Literal["api_search"],
         params: "InvoicesApiSearchParams"
-    ) -> "InvoiceSearchResult": ...
+    ) -> "InvoicesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -371,7 +374,7 @@ class StripeConnector:
         entity: Literal["charges"],
         action: Literal["api_search"],
         params: "ChargesApiSearchParams"
-    ) -> "ChargeSearchResult": ...
+    ) -> "ChargesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -395,7 +398,7 @@ class StripeConnector:
         entity: Literal["subscriptions"],
         action: Literal["api_search"],
         params: "SubscriptionsApiSearchParams"
-    ) -> "SubscriptionSearchResult": ...
+    ) -> "SubscriptionsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -608,7 +611,7 @@ class StripeConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -752,7 +755,8 @@ class CustomersQuery:
         # Cast generic envelope to concrete typed result
         return CustomersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -880,7 +884,8 @@ class CustomersQuery:
         # Cast generic envelope to concrete typed result
         return CustomersApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -941,7 +946,8 @@ class InvoicesQuery:
         # Cast generic envelope to concrete typed result
         return InvoicesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -976,7 +982,7 @@ class InvoicesQuery:
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> InvoiceSearchResult:
+    ) -> InvoicesApiSearchResult:
         """
         Search for invoices using Stripe's Search Query Language
 
@@ -987,7 +993,7 @@ class InvoicesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            InvoiceSearchResult
+            InvoicesApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -997,7 +1003,10 @@ class InvoicesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("invoices", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return InvoicesApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1049,7 +1058,8 @@ class ChargesQuery:
         # Cast generic envelope to concrete typed result
         return ChargesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1084,7 +1094,7 @@ class ChargesQuery:
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> ChargeSearchResult:
+    ) -> ChargesApiSearchResult:
         """
         Search for charges using Stripe's Search Query Language
 
@@ -1095,7 +1105,7 @@ class ChargesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ChargeSearchResult
+            ChargesApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1105,7 +1115,10 @@ class ChargesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("charges", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ChargesApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1175,7 +1188,8 @@ class SubscriptionsQuery:
         # Cast generic envelope to concrete typed result
         return SubscriptionsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1210,7 +1224,7 @@ class SubscriptionsQuery:
         limit: int | None = None,
         page: str | None = None,
         **kwargs
-    ) -> SubscriptionSearchResult:
+    ) -> SubscriptionsApiSearchResult:
         """
         Search for subscriptions using Stripe's Search Query Language
 
@@ -1221,7 +1235,7 @@ class SubscriptionsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            SubscriptionSearchResult
+            SubscriptionsApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -1231,7 +1245,10 @@ class SubscriptionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("subscriptions", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return SubscriptionsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1283,7 +1300,8 @@ class RefundsQuery:
         # Cast generic envelope to concrete typed result
         return RefundsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1385,7 +1403,8 @@ class ProductsQuery:
         # Cast generic envelope to concrete typed result
         return ProductsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1513,7 +1532,8 @@ class ProductsQuery:
         # Cast generic envelope to concrete typed result
         return ProductsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1599,7 +1619,8 @@ class BalanceTransactionsQuery:
         # Cast generic envelope to concrete typed result
         return BalanceTransactionsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1676,7 +1697,8 @@ class PaymentIntentsQuery:
         # Cast generic envelope to concrete typed result
         return PaymentIntentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1735,7 +1757,8 @@ class PaymentIntentsQuery:
         # Cast generic envelope to concrete typed result
         return PaymentIntentsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1787,7 +1810,8 @@ class DisputesQuery:
         # Cast generic envelope to concrete typed result
         return DisputesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1867,7 +1891,8 @@ class PayoutsQuery:
         # Cast generic envelope to concrete typed result
         return PayoutsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
