@@ -139,3 +139,4 @@ class ChangesStartPageTokenGetParams(TypedDict):
 class AboutGetParams(TypedDict):
     """Parameters for about.get operation"""
     fields: NotRequired[str]
+
