@@ -7,6 +7,7 @@ References:
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -15,7 +16,7 @@ from ..constants import OPENAPI_VERSION_PREFIX
 
 from .base import Info, Server
 from .components import Components
-from .operations import PathItem
+from .operations import Operation, PathItem
 from .security import SecurityRequirement
 
 
@@ -31,6 +32,10 @@ class Tag(BaseModel):
     name: str
     description: str | None = None
     external_docs: dict[str, Any] | None = Field(None, alias="externalDocs")
+
+
+# HTTP methods supported by OpenAPI operations
+HTTP_METHODS = frozenset({"get", "post", "put", "patch", "delete", "options", "head", "trace"})
 
 
 class ExternalDocs(BaseModel):
@@ -79,7 +84,7 @@ class OpenAPIConnector(BaseModel):
             raise ValueError(f"OpenAPI version must be {OPENAPI_VERSION_PREFIX}x, got: {v}")
         return v
 
-    def get_entity_operations(self, entity_name: str) -> list[tuple[str, str, Any]]:
+    def get_entity_operations(self, entity_name: str) -> list[tuple[str, str, Operation]]:
         """
         Get all operations for a specific entity.
 
@@ -89,22 +94,7 @@ class OpenAPIConnector(BaseModel):
         Returns:
             List of tuples: (path, method, operation)
         """
-        results = []
-        for path, path_item in self.paths.items():
-            for method in [
-                "get",
-                "post",
-                "put",
-                "patch",
-                "delete",
-                "options",
-                "head",
-                "trace",
-            ]:
-                operation = getattr(path_item, method, None)
-                if operation and operation.x_airbyte_entity == entity_name:
-                    results.append((path, method, operation))
-        return results
+        return [(path, method, op) for path, method, op in self._iter_operations() if op.x_airbyte_entity == entity_name]
 
     def list_entities(self) -> list[str]:
         """
@@ -113,19 +103,18 @@ class OpenAPIConnector(BaseModel):
         Returns:
             Sorted list of unique entity names
         """
-        entities = set()
-        for path_item in self.paths.values():
-            for method in [
-                "get",
-                "post",
-                "put",
-                "patch",
-                "delete",
-                "options",
-                "head",
-                "trace",
-            ]:
-                operation = getattr(path_item, method, None)
-                if operation and operation.x_airbyte_entity:
-                    entities.add(operation.x_airbyte_entity)
+        entities = {op.x_airbyte_entity for _, _, op in self._iter_operations() if op.x_airbyte_entity}
         return sorted(entities)
+
+    def _iter_operations(self) -> Iterator[tuple[str, str, Operation]]:
+        """
+        Iterate over all operations in the spec.
+
+        Yields:
+            Tuples of (path, method, operation) for each defined operation
+        """
+        for path, path_item in self.paths.items():
+            for method in HTTP_METHODS:
+                operation = getattr(path_item, method, None)
+                if operation:
+                    yield path, method, operation
