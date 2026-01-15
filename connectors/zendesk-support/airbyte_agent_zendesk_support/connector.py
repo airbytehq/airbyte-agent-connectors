@@ -1,5 +1,5 @@
 """
-zendesk-support connector.
+Zendesk-Support connector.
 """
 
 from __future__ import annotations
@@ -63,43 +63,49 @@ from .models import (
     ZendeskSupportExecuteResult,
     ZendeskSupportExecuteResultWithMeta,
     TicketsListResult,
-    TicketsGetResult,
     UsersListResult,
-    UsersGetResult,
     OrganizationsListResult,
-    OrganizationsGetResult,
     GroupsListResult,
-    GroupsGetResult,
     TicketCommentsListResult,
-    AttachmentsGetResult,
     TicketAuditsListResult,
     TicketAuditsListResult,
     TicketMetricsListResult,
     TicketFieldsListResult,
-    TicketFieldsGetResult,
     BrandsListResult,
-    BrandsGetResult,
     ViewsListResult,
-    ViewsGetResult,
     MacrosListResult,
-    MacrosGetResult,
     TriggersListResult,
-    TriggersGetResult,
     AutomationsListResult,
-    AutomationsGetResult,
     TagsListResult,
     SatisfactionRatingsListResult,
-    SatisfactionRatingsGetResult,
     GroupMembershipsListResult,
     OrganizationMembershipsListResult,
     SlaPoliciesListResult,
-    SlaPoliciesGetResult,
     TicketFormsListResult,
-    TicketFormsGetResult,
     ArticlesListResult,
-    ArticlesGetResult,
     ArticleAttachmentsListResult,
-    ArticleAttachmentsGetResult,
+    Article,
+    ArticleAttachment,
+    Attachment,
+    Automation,
+    Brand,
+    Group,
+    GroupMembership,
+    Macro,
+    Organization,
+    OrganizationMembership,
+    SLAPolicy,
+    SatisfactionRating,
+    Tag,
+    Ticket,
+    TicketAudit,
+    TicketComment,
+    TicketField,
+    TicketForm,
+    TicketMetric,
+    Trigger,
+    User,
+    View,
 )
 
 # TypeVar for decorator type preservation
@@ -117,48 +123,48 @@ class ZendeskSupportConnector:
     connector_version = "0.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("tickets", "list"): True,
-        ("tickets", "get"): True,
+        ("tickets", "get"): None,
         ("users", "list"): True,
-        ("users", "get"): True,
+        ("users", "get"): None,
         ("organizations", "list"): True,
-        ("organizations", "get"): True,
+        ("organizations", "get"): None,
         ("groups", "list"): True,
-        ("groups", "get"): True,
+        ("groups", "get"): None,
         ("ticket_comments", "list"): True,
-        ("attachments", "get"): True,
-        ("attachments", "download"): False,
+        ("attachments", "get"): None,
+        ("attachments", "download"): None,
         ("ticket_audits", "list"): True,
         ("ticket_audits", "list"): True,
         ("ticket_metrics", "list"): True,
         ("ticket_fields", "list"): True,
-        ("ticket_fields", "get"): True,
+        ("ticket_fields", "get"): None,
         ("brands", "list"): True,
-        ("brands", "get"): True,
+        ("brands", "get"): None,
         ("views", "list"): True,
-        ("views", "get"): True,
+        ("views", "get"): None,
         ("macros", "list"): True,
-        ("macros", "get"): True,
+        ("macros", "get"): None,
         ("triggers", "list"): True,
-        ("triggers", "get"): True,
+        ("triggers", "get"): None,
         ("automations", "list"): True,
-        ("automations", "get"): True,
+        ("automations", "get"): None,
         ("tags", "list"): True,
         ("satisfaction_ratings", "list"): True,
-        ("satisfaction_ratings", "get"): True,
+        ("satisfaction_ratings", "get"): None,
         ("group_memberships", "list"): True,
         ("organization_memberships", "list"): True,
         ("sla_policies", "list"): True,
-        ("sla_policies", "get"): True,
+        ("sla_policies", "get"): None,
         ("ticket_forms", "list"): True,
-        ("ticket_forms", "get"): True,
+        ("ticket_forms", "get"): None,
         ("articles", "list"): True,
-        ("articles", "get"): True,
+        ("articles", "get"): None,
         ("article_attachments", "list"): True,
-        ("article_attachments", "get"): True,
-        ("article_attachments", "download"): False,
+        ("article_attachments", "get"): None,
+        ("article_attachments", "download"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -335,7 +341,7 @@ class ZendeskSupportConnector:
         entity: Literal["tickets"],
         action: Literal["get"],
         params: "TicketsGetParams"
-    ) -> "TicketsGetResult": ...
+    ) -> "Ticket": ...
 
     @overload
     async def execute(
@@ -351,7 +357,7 @@ class ZendeskSupportConnector:
         entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
-    ) -> "UsersGetResult": ...
+    ) -> "User": ...
 
     @overload
     async def execute(
@@ -367,7 +373,7 @@ class ZendeskSupportConnector:
         entity: Literal["organizations"],
         action: Literal["get"],
         params: "OrganizationsGetParams"
-    ) -> "OrganizationsGetResult": ...
+    ) -> "Organization": ...
 
     @overload
     async def execute(
@@ -383,7 +389,7 @@ class ZendeskSupportConnector:
         entity: Literal["groups"],
         action: Literal["get"],
         params: "GroupsGetParams"
-    ) -> "GroupsGetResult": ...
+    ) -> "Group": ...
 
     @overload
     async def execute(
@@ -399,7 +405,7 @@ class ZendeskSupportConnector:
         entity: Literal["attachments"],
         action: Literal["get"],
         params: "AttachmentsGetParams"
-    ) -> "AttachmentsGetResult": ...
+    ) -> "Attachment": ...
 
     @overload
     async def execute(
@@ -447,7 +453,7 @@ class ZendeskSupportConnector:
         entity: Literal["ticket_fields"],
         action: Literal["get"],
         params: "TicketFieldsGetParams"
-    ) -> "TicketFieldsGetResult": ...
+    ) -> "TicketField": ...
 
     @overload
     async def execute(
@@ -463,7 +469,7 @@ class ZendeskSupportConnector:
         entity: Literal["brands"],
         action: Literal["get"],
         params: "BrandsGetParams"
-    ) -> "BrandsGetResult": ...
+    ) -> "Brand": ...
 
     @overload
     async def execute(
@@ -479,7 +485,7 @@ class ZendeskSupportConnector:
         entity: Literal["views"],
         action: Literal["get"],
         params: "ViewsGetParams"
-    ) -> "ViewsGetResult": ...
+    ) -> "View": ...
 
     @overload
     async def execute(
@@ -495,7 +501,7 @@ class ZendeskSupportConnector:
         entity: Literal["macros"],
         action: Literal["get"],
         params: "MacrosGetParams"
-    ) -> "MacrosGetResult": ...
+    ) -> "Macro": ...
 
     @overload
     async def execute(
@@ -511,7 +517,7 @@ class ZendeskSupportConnector:
         entity: Literal["triggers"],
         action: Literal["get"],
         params: "TriggersGetParams"
-    ) -> "TriggersGetResult": ...
+    ) -> "Trigger": ...
 
     @overload
     async def execute(
@@ -527,7 +533,7 @@ class ZendeskSupportConnector:
         entity: Literal["automations"],
         action: Literal["get"],
         params: "AutomationsGetParams"
-    ) -> "AutomationsGetResult": ...
+    ) -> "Automation": ...
 
     @overload
     async def execute(
@@ -551,7 +557,7 @@ class ZendeskSupportConnector:
         entity: Literal["satisfaction_ratings"],
         action: Literal["get"],
         params: "SatisfactionRatingsGetParams"
-    ) -> "SatisfactionRatingsGetResult": ...
+    ) -> "SatisfactionRating": ...
 
     @overload
     async def execute(
@@ -583,7 +589,7 @@ class ZendeskSupportConnector:
         entity: Literal["sla_policies"],
         action: Literal["get"],
         params: "SlaPoliciesGetParams"
-    ) -> "SlaPoliciesGetResult": ...
+    ) -> "SLAPolicy": ...
 
     @overload
     async def execute(
@@ -599,7 +605,7 @@ class ZendeskSupportConnector:
         entity: Literal["ticket_forms"],
         action: Literal["get"],
         params: "TicketFormsGetParams"
-    ) -> "TicketFormsGetResult": ...
+    ) -> "TicketForm": ...
 
     @overload
     async def execute(
@@ -615,7 +621,7 @@ class ZendeskSupportConnector:
         entity: Literal["articles"],
         action: Literal["get"],
         params: "ArticlesGetParams"
-    ) -> "ArticlesGetResult": ...
+    ) -> "Article": ...
 
     @overload
     async def execute(
@@ -631,7 +637,7 @@ class ZendeskSupportConnector:
         entity: Literal["article_attachments"],
         action: Literal["get"],
         params: "ArticleAttachmentsGetParams"
-    ) -> "ArticleAttachmentsGetResult": ...
+    ) -> "ArticleAttachment": ...
 
     @overload
     async def execute(
@@ -700,7 +706,7 @@ class ZendeskSupportConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -838,7 +844,8 @@ class TicketsQuery:
         # Cast generic envelope to concrete typed result
         return TicketsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -846,7 +853,7 @@ class TicketsQuery:
         self,
         ticket_id: str,
         **kwargs
-    ) -> TicketsGetResult:
+    ) -> Ticket:
         """
         Returns a ticket by its ID
 
@@ -855,7 +862,7 @@ class TicketsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TicketsGetResult
+            Ticket
         """
         params = {k: v for k, v in {
             "ticket_id": ticket_id,
@@ -863,9 +870,7 @@ class TicketsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tickets", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TicketsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -908,7 +913,8 @@ class UsersQuery:
         # Cast generic envelope to concrete typed result
         return UsersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -916,7 +922,7 @@ class UsersQuery:
         self,
         user_id: str,
         **kwargs
-    ) -> UsersGetResult:
+    ) -> User:
         """
         Returns a user by their ID
 
@@ -925,7 +931,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            UsersGetResult
+            User
         """
         params = {k: v for k, v in {
             "user_id": user_id,
@@ -933,9 +939,7 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
-        # Cast generic envelope to concrete typed result
-        return UsersGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -972,7 +976,8 @@ class OrganizationsQuery:
         # Cast generic envelope to concrete typed result
         return OrganizationsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -980,7 +985,7 @@ class OrganizationsQuery:
         self,
         organization_id: str,
         **kwargs
-    ) -> OrganizationsGetResult:
+    ) -> Organization:
         """
         Returns an organization by its ID
 
@@ -989,7 +994,7 @@ class OrganizationsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            OrganizationsGetResult
+            Organization
         """
         params = {k: v for k, v in {
             "organization_id": organization_id,
@@ -997,9 +1002,7 @@ class OrganizationsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("organizations", "get", params)
-        # Cast generic envelope to concrete typed result
-        return OrganizationsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1039,7 +1042,8 @@ class GroupsQuery:
         # Cast generic envelope to concrete typed result
         return GroupsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1047,7 +1051,7 @@ class GroupsQuery:
         self,
         group_id: str,
         **kwargs
-    ) -> GroupsGetResult:
+    ) -> Group:
         """
         Returns a group by its ID
 
@@ -1056,7 +1060,7 @@ class GroupsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            GroupsGetResult
+            Group
         """
         params = {k: v for k, v in {
             "group_id": group_id,
@@ -1064,9 +1068,7 @@ class GroupsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("groups", "get", params)
-        # Cast generic envelope to concrete typed result
-        return GroupsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1112,7 +1114,8 @@ class TicketCommentsQuery:
         # Cast generic envelope to concrete typed result
         return TicketCommentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1129,7 +1132,7 @@ class AttachmentsQuery:
         self,
         attachment_id: str,
         **kwargs
-    ) -> AttachmentsGetResult:
+    ) -> Attachment:
         """
         Returns an attachment by its ID
 
@@ -1138,7 +1141,7 @@ class AttachmentsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            AttachmentsGetResult
+            Attachment
         """
         params = {k: v for k, v in {
             "attachment_id": attachment_id,
@@ -1146,9 +1149,7 @@ class AttachmentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("attachments", "get", params)
-        # Cast generic envelope to concrete typed result
-        return AttachmentsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1243,7 +1244,8 @@ class TicketAuditsQuery:
         # Cast generic envelope to concrete typed result
         return TicketAuditsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1274,7 +1276,8 @@ class TicketAuditsQuery:
         # Cast generic envelope to concrete typed result
         return TicketAuditsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1311,7 +1314,8 @@ class TicketMetricsQuery:
         # Cast generic envelope to concrete typed result
         return TicketMetricsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1351,7 +1355,8 @@ class TicketFieldsQuery:
         # Cast generic envelope to concrete typed result
         return TicketFieldsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1359,7 +1364,7 @@ class TicketFieldsQuery:
         self,
         ticket_field_id: str,
         **kwargs
-    ) -> TicketFieldsGetResult:
+    ) -> TicketField:
         """
         Returns a ticket field by its ID
 
@@ -1368,7 +1373,7 @@ class TicketFieldsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TicketFieldsGetResult
+            TicketField
         """
         params = {k: v for k, v in {
             "ticket_field_id": ticket_field_id,
@@ -1376,9 +1381,7 @@ class TicketFieldsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("ticket_fields", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TicketFieldsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1415,7 +1418,8 @@ class BrandsQuery:
         # Cast generic envelope to concrete typed result
         return BrandsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1423,7 +1427,7 @@ class BrandsQuery:
         self,
         brand_id: str,
         **kwargs
-    ) -> BrandsGetResult:
+    ) -> Brand:
         """
         Returns a brand by its ID
 
@@ -1432,7 +1436,7 @@ class BrandsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            BrandsGetResult
+            Brand
         """
         params = {k: v for k, v in {
             "brand_id": brand_id,
@@ -1440,9 +1444,7 @@ class BrandsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("brands", "get", params)
-        # Cast generic envelope to concrete typed result
-        return BrandsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1494,7 +1496,8 @@ class ViewsQuery:
         # Cast generic envelope to concrete typed result
         return ViewsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1502,7 +1505,7 @@ class ViewsQuery:
         self,
         view_id: str,
         **kwargs
-    ) -> ViewsGetResult:
+    ) -> View:
         """
         Returns a view by its ID
 
@@ -1511,7 +1514,7 @@ class ViewsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ViewsGetResult
+            View
         """
         params = {k: v for k, v in {
             "view_id": view_id,
@@ -1519,9 +1522,7 @@ class ViewsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("views", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ViewsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1579,7 +1580,8 @@ class MacrosQuery:
         # Cast generic envelope to concrete typed result
         return MacrosListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1587,7 +1589,7 @@ class MacrosQuery:
         self,
         macro_id: str,
         **kwargs
-    ) -> MacrosGetResult:
+    ) -> Macro:
         """
         Returns a macro by its ID
 
@@ -1596,7 +1598,7 @@ class MacrosQuery:
             **kwargs: Additional parameters
 
         Returns:
-            MacrosGetResult
+            Macro
         """
         params = {k: v for k, v in {
             "macro_id": macro_id,
@@ -1604,9 +1606,7 @@ class MacrosQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("macros", "get", params)
-        # Cast generic envelope to concrete typed result
-        return MacrosGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1652,7 +1652,8 @@ class TriggersQuery:
         # Cast generic envelope to concrete typed result
         return TriggersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1660,7 +1661,7 @@ class TriggersQuery:
         self,
         trigger_id: str,
         **kwargs
-    ) -> TriggersGetResult:
+    ) -> Trigger:
         """
         Returns a trigger by its ID
 
@@ -1669,7 +1670,7 @@ class TriggersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TriggersGetResult
+            Trigger
         """
         params = {k: v for k, v in {
             "trigger_id": trigger_id,
@@ -1677,9 +1678,7 @@ class TriggersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("triggers", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TriggersGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1722,7 +1721,8 @@ class AutomationsQuery:
         # Cast generic envelope to concrete typed result
         return AutomationsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1730,7 +1730,7 @@ class AutomationsQuery:
         self,
         automation_id: str,
         **kwargs
-    ) -> AutomationsGetResult:
+    ) -> Automation:
         """
         Returns an automation by its ID
 
@@ -1739,7 +1739,7 @@ class AutomationsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            AutomationsGetResult
+            Automation
         """
         params = {k: v for k, v in {
             "automation_id": automation_id,
@@ -1747,9 +1747,7 @@ class AutomationsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("automations", "get", params)
-        # Cast generic envelope to concrete typed result
-        return AutomationsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1786,7 +1784,8 @@ class TagsQuery:
         # Cast generic envelope to concrete typed result
         return TagsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1832,7 +1831,8 @@ class SatisfactionRatingsQuery:
         # Cast generic envelope to concrete typed result
         return SatisfactionRatingsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1840,7 +1840,7 @@ class SatisfactionRatingsQuery:
         self,
         satisfaction_rating_id: str,
         **kwargs
-    ) -> SatisfactionRatingsGetResult:
+    ) -> SatisfactionRating:
         """
         Returns a satisfaction rating by its ID
 
@@ -1849,7 +1849,7 @@ class SatisfactionRatingsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            SatisfactionRatingsGetResult
+            SatisfactionRating
         """
         params = {k: v for k, v in {
             "satisfaction_rating_id": satisfaction_rating_id,
@@ -1857,9 +1857,7 @@ class SatisfactionRatingsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("satisfaction_ratings", "get", params)
-        # Cast generic envelope to concrete typed result
-        return SatisfactionRatingsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1896,7 +1894,8 @@ class GroupMembershipsQuery:
         # Cast generic envelope to concrete typed result
         return GroupMembershipsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1933,7 +1932,8 @@ class OrganizationMembershipsQuery:
         # Cast generic envelope to concrete typed result
         return OrganizationMembershipsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1970,7 +1970,8 @@ class SlaPoliciesQuery:
         # Cast generic envelope to concrete typed result
         return SlaPoliciesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1978,7 +1979,7 @@ class SlaPoliciesQuery:
         self,
         sla_policy_id: str,
         **kwargs
-    ) -> SlaPoliciesGetResult:
+    ) -> SLAPolicy:
         """
         Returns an SLA policy by its ID
 
@@ -1987,7 +1988,7 @@ class SlaPoliciesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            SlaPoliciesGetResult
+            SLAPolicy
         """
         params = {k: v for k, v in {
             "sla_policy_id": sla_policy_id,
@@ -1995,9 +1996,7 @@ class SlaPoliciesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("sla_policies", "get", params)
-        # Cast generic envelope to concrete typed result
-        return SlaPoliciesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2040,7 +2039,8 @@ class TicketFormsQuery:
         # Cast generic envelope to concrete typed result
         return TicketFormsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -2048,7 +2048,7 @@ class TicketFormsQuery:
         self,
         ticket_form_id: str,
         **kwargs
-    ) -> TicketFormsGetResult:
+    ) -> TicketForm:
         """
         Returns a ticket form by its ID
 
@@ -2057,7 +2057,7 @@ class TicketFormsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TicketFormsGetResult
+            TicketForm
         """
         params = {k: v for k, v in {
             "ticket_form_id": ticket_form_id,
@@ -2065,9 +2065,7 @@ class TicketFormsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("ticket_forms", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TicketFormsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2110,7 +2108,8 @@ class ArticlesQuery:
         # Cast generic envelope to concrete typed result
         return ArticlesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -2118,7 +2117,7 @@ class ArticlesQuery:
         self,
         id: str | None = None,
         **kwargs
-    ) -> ArticlesGetResult:
+    ) -> Article:
         """
         Retrieves the details of a specific article
 
@@ -2127,7 +2126,7 @@ class ArticlesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ArticlesGetResult
+            Article
         """
         params = {k: v for k, v in {
             "id": id,
@@ -2135,9 +2134,7 @@ class ArticlesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("articles", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ArticlesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2177,7 +2174,8 @@ class ArticleAttachmentsQuery:
         # Cast generic envelope to concrete typed result
         return ArticleAttachmentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -2186,7 +2184,7 @@ class ArticleAttachmentsQuery:
         article_id: str,
         attachment_id: str,
         **kwargs
-    ) -> ArticleAttachmentsGetResult:
+    ) -> ArticleAttachment:
         """
         Retrieves the metadata of a specific attachment for a specific article
 
@@ -2196,7 +2194,7 @@ class ArticleAttachmentsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ArticleAttachmentsGetResult
+            ArticleAttachment
         """
         params = {k: v for k, v in {
             "article_id": article_id,
@@ -2205,9 +2203,7 @@ class ArticleAttachmentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("article_attachments", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ArticleAttachmentsGetResult(
-            data=result.data        )
+        return result
 
 
 
