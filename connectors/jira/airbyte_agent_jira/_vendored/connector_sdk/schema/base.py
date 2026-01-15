@@ -152,6 +152,7 @@ class Server(BaseModel):
     url: str
     description: str | None = None
     variables: Dict[str, ServerVariable] = Field(default_factory=dict)
+    x_airbyte_replication_user_config_mapping: Dict[str, str] | None = Field(default=None, alias="x-airbyte-replication-user-config-mapping")
 
     @field_validator("url")
     @classmethod
