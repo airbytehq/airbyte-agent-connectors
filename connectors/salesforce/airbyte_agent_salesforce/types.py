@@ -164,3 +164,4 @@ class AttachmentsDownloadParams(TypedDict):
 class QueryListParams(TypedDict):
     """Parameters for query.list operation"""
     q: str
+

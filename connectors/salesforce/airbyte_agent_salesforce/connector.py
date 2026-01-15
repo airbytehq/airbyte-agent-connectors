@@ -106,6 +106,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class SalesforceConnector:
     """
     Type-safe Salesforce API connector.
