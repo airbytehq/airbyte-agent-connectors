@@ -99,6 +99,31 @@ class ProjectOwner(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+
 class ProjectCurrentStatusAuthor(BaseModel):
     """Nested schema for ProjectCurrentStatus.author"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -137,14 +162,6 @@ class ProjectMembersItem(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
 class ProjectWorkspace(BaseModel):
     """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -152,23 +169,6 @@ class ProjectWorkspace(BaseModel):
     gid: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
 
 class Project(BaseModel):
     """Full project object"""
@@ -516,115 +516,115 @@ class SectionsList(BaseModel):
 # Meta types for operations that extract metadata (e.g., pagination info)
 
 class TasksListResultMeta(BaseModel):
-    """Metadata for tasks.list operation"""
+    """Metadata for tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class ProjectTasksListResultMeta(BaseModel):
-    """Metadata for project_tasks.list operation"""
+    """Metadata for project_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspaceTaskSearchListResultMeta(BaseModel):
-    """Metadata for workspace_task_search.list operation"""
+    """Metadata for workspace_task_search.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class ProjectsListResultMeta(BaseModel):
-    """Metadata for projects.list operation"""
+    """Metadata for projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TaskProjectsListResultMeta(BaseModel):
-    """Metadata for task_projects.list operation"""
+    """Metadata for task_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TeamProjectsListResultMeta(BaseModel):
-    """Metadata for team_projects.list operation"""
+    """Metadata for team_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspaceProjectsListResultMeta(BaseModel):
-    """Metadata for workspace_projects.list operation"""
+    """Metadata for workspace_projects.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspacesListResultMeta(BaseModel):
-    """Metadata for workspaces.list operation"""
+    """Metadata for workspaces.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class UsersListResultMeta(BaseModel):
-    """Metadata for users.list operation"""
+    """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspaceUsersListResultMeta(BaseModel):
-    """Metadata for workspace_users.list operation"""
+    """Metadata for workspace_users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TeamUsersListResultMeta(BaseModel):
-    """Metadata for team_users.list operation"""
+    """Metadata for team_users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspaceTeamsListResultMeta(BaseModel):
-    """Metadata for workspace_teams.list operation"""
+    """Metadata for workspace_teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class UserTeamsListResultMeta(BaseModel):
-    """Metadata for user_teams.list operation"""
+    """Metadata for user_teams.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class AttachmentsListResultMeta(BaseModel):
-    """Metadata for attachments.list operation"""
+    """Metadata for attachments.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class WorkspaceTagsListResultMeta(BaseModel):
-    """Metadata for workspace_tags.list operation"""
+    """Metadata for workspace_tags.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class ProjectSectionsListResultMeta(BaseModel):
-    """Metadata for project_sections.list operation"""
+    """Metadata for project_sections.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TaskSubtasksListResultMeta(BaseModel):
-    """Metadata for task_subtasks.list operation"""
+    """Metadata for task_subtasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TaskDependenciesListResultMeta(BaseModel):
-    """Metadata for task_dependencies.list operation"""
+    """Metadata for task_dependencies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
 class TaskDependentsListResultMeta(BaseModel):
-    """Metadata for task_dependents.list operation"""
+    """Metadata for task_dependents.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
@@ -667,17 +667,11 @@ TasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TasksListResultM
 ProjectTasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], ProjectTasksListResultMeta]
 """Result type for project_tasks.list operation with data and metadata."""
 
-TasksGetResult = AsanaExecuteResult[Task]
-"""Result type for tasks.get operation."""
-
 WorkspaceTaskSearchListResult = AsanaExecuteResultWithMeta[list[TaskCompact], WorkspaceTaskSearchListResultMeta]
 """Result type for workspace_task_search.list operation with data and metadata."""
 
 ProjectsListResult = AsanaExecuteResultWithMeta[list[ProjectCompact], ProjectsListResultMeta]
 """Result type for projects.list operation with data and metadata."""
-
-ProjectsGetResult = AsanaExecuteResult[Project]
-"""Result type for projects.get operation."""
 
 TaskProjectsListResult = AsanaExecuteResultWithMeta[list[ProjectCompact], TaskProjectsListResultMeta]
 """Result type for task_projects.list operation with data and metadata."""
@@ -691,23 +685,14 @@ WorkspaceProjectsListResult = AsanaExecuteResultWithMeta[list[ProjectCompact], W
 WorkspacesListResult = AsanaExecuteResultWithMeta[list[WorkspaceCompact], WorkspacesListResultMeta]
 """Result type for workspaces.list operation with data and metadata."""
 
-WorkspacesGetResult = AsanaExecuteResult[Workspace]
-"""Result type for workspaces.get operation."""
-
 UsersListResult = AsanaExecuteResultWithMeta[list[UserCompact], UsersListResultMeta]
 """Result type for users.list operation with data and metadata."""
-
-UsersGetResult = AsanaExecuteResult[User]
-"""Result type for users.get operation."""
 
 WorkspaceUsersListResult = AsanaExecuteResultWithMeta[list[UserCompact], WorkspaceUsersListResultMeta]
 """Result type for workspace_users.list operation with data and metadata."""
 
 TeamUsersListResult = AsanaExecuteResultWithMeta[list[UserCompact], TeamUsersListResultMeta]
 """Result type for team_users.list operation with data and metadata."""
-
-TeamsGetResult = AsanaExecuteResult[Team]
-"""Result type for teams.get operation."""
 
 WorkspaceTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], WorkspaceTeamsListResultMeta]
 """Result type for workspace_teams.list operation with data and metadata."""
@@ -718,20 +703,11 @@ UserTeamsListResult = AsanaExecuteResultWithMeta[list[TeamCompact], UserTeamsLis
 AttachmentsListResult = AsanaExecuteResultWithMeta[list[AttachmentCompact], AttachmentsListResultMeta]
 """Result type for attachments.list operation with data and metadata."""
 
-AttachmentsGetResult = AsanaExecuteResult[Attachment]
-"""Result type for attachments.get operation."""
-
 WorkspaceTagsListResult = AsanaExecuteResultWithMeta[list[TagCompact], WorkspaceTagsListResultMeta]
 """Result type for workspace_tags.list operation with data and metadata."""
 
-TagsGetResult = AsanaExecuteResult[Tag]
-"""Result type for tags.get operation."""
-
 ProjectSectionsListResult = AsanaExecuteResultWithMeta[list[SectionCompact], ProjectSectionsListResultMeta]
 """Result type for project_sections.list operation with data and metadata."""
-
-SectionsGetResult = AsanaExecuteResult[Section]
-"""Result type for sections.get operation."""
 
 TaskSubtasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TaskSubtasksListResultMeta]
 """Result type for task_subtasks.list operation with data and metadata."""

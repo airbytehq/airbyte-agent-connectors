@@ -1,5 +1,5 @@
 """
-asana connector.
+Asana connector.
 """
 
 from __future__ import annotations
@@ -53,31 +53,39 @@ from .models import (
     AsanaExecuteResultWithMeta,
     TasksListResult,
     ProjectTasksListResult,
-    TasksGetResult,
     WorkspaceTaskSearchListResult,
     ProjectsListResult,
-    ProjectsGetResult,
     TaskProjectsListResult,
     TeamProjectsListResult,
     WorkspaceProjectsListResult,
     WorkspacesListResult,
-    WorkspacesGetResult,
     UsersListResult,
-    UsersGetResult,
     WorkspaceUsersListResult,
     TeamUsersListResult,
-    TeamsGetResult,
     WorkspaceTeamsListResult,
     UserTeamsListResult,
     AttachmentsListResult,
-    AttachmentsGetResult,
     WorkspaceTagsListResult,
-    TagsGetResult,
     ProjectSectionsListResult,
-    SectionsGetResult,
     TaskSubtasksListResult,
     TaskDependenciesListResult,
     TaskDependentsListResult,
+    Attachment,
+    AttachmentCompact,
+    Project,
+    ProjectCompact,
+    Section,
+    SectionCompact,
+    Tag,
+    TagCompact,
+    Task,
+    TaskCompact,
+    Team,
+    TeamCompact,
+    User,
+    UserCompact,
+    Workspace,
+    WorkspaceCompact,
 )
 
 # TypeVar for decorator type preservation
@@ -95,33 +103,33 @@ class AsanaConnector:
     connector_version = "0.1.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("tasks", "list"): True,
         ("project_tasks", "list"): True,
-        ("tasks", "get"): True,
+        ("tasks", "get"): None,
         ("workspace_task_search", "list"): True,
         ("projects", "list"): True,
-        ("projects", "get"): True,
+        ("projects", "get"): None,
         ("task_projects", "list"): True,
         ("team_projects", "list"): True,
         ("workspace_projects", "list"): True,
         ("workspaces", "list"): True,
-        ("workspaces", "get"): True,
+        ("workspaces", "get"): None,
         ("users", "list"): True,
-        ("users", "get"): True,
+        ("users", "get"): None,
         ("workspace_users", "list"): True,
         ("team_users", "list"): True,
-        ("teams", "get"): True,
+        ("teams", "get"): None,
         ("workspace_teams", "list"): True,
         ("user_teams", "list"): True,
         ("attachments", "list"): True,
-        ("attachments", "get"): True,
-        ("attachments", "download"): False,
+        ("attachments", "get"): None,
+        ("attachments", "download"): None,
         ("workspace_tags", "list"): True,
-        ("tags", "get"): True,
+        ("tags", "get"): None,
         ("project_sections", "list"): True,
-        ("sections", "get"): True,
+        ("sections", "get"): None,
         ("task_subtasks", "list"): True,
         ("task_dependencies", "list"): True,
         ("task_dependents", "list"): True,
@@ -291,7 +299,7 @@ class AsanaConnector:
         entity: Literal["tasks"],
         action: Literal["get"],
         params: "TasksGetParams"
-    ) -> "TasksGetResult": ...
+    ) -> "Task": ...
 
     @overload
     async def execute(
@@ -315,7 +323,7 @@ class AsanaConnector:
         entity: Literal["projects"],
         action: Literal["get"],
         params: "ProjectsGetParams"
-    ) -> "ProjectsGetResult": ...
+    ) -> "Project": ...
 
     @overload
     async def execute(
@@ -355,7 +363,7 @@ class AsanaConnector:
         entity: Literal["workspaces"],
         action: Literal["get"],
         params: "WorkspacesGetParams"
-    ) -> "WorkspacesGetResult": ...
+    ) -> "Workspace": ...
 
     @overload
     async def execute(
@@ -371,7 +379,7 @@ class AsanaConnector:
         entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
-    ) -> "UsersGetResult": ...
+    ) -> "User": ...
 
     @overload
     async def execute(
@@ -395,7 +403,7 @@ class AsanaConnector:
         entity: Literal["teams"],
         action: Literal["get"],
         params: "TeamsGetParams"
-    ) -> "TeamsGetResult": ...
+    ) -> "Team": ...
 
     @overload
     async def execute(
@@ -427,7 +435,7 @@ class AsanaConnector:
         entity: Literal["attachments"],
         action: Literal["get"],
         params: "AttachmentsGetParams"
-    ) -> "AttachmentsGetResult": ...
+    ) -> "Attachment": ...
 
     @overload
     async def execute(
@@ -451,7 +459,7 @@ class AsanaConnector:
         entity: Literal["tags"],
         action: Literal["get"],
         params: "TagsGetParams"
-    ) -> "TagsGetResult": ...
+    ) -> "Tag": ...
 
     @overload
     async def execute(
@@ -467,7 +475,7 @@ class AsanaConnector:
         entity: Literal["sections"],
         action: Literal["get"],
         params: "SectionsGetParams"
-    ) -> "SectionsGetResult": ...
+    ) -> "Section": ...
 
     @overload
     async def execute(
@@ -552,7 +560,7 @@ class AsanaConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -705,7 +713,8 @@ class TasksQuery:
         # Cast generic envelope to concrete typed result
         return TasksListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -713,7 +722,7 @@ class TasksQuery:
         self,
         task_gid: str,
         **kwargs
-    ) -> TasksGetResult:
+    ) -> Task:
         """
         Get a single task by its ID
 
@@ -722,7 +731,7 @@ class TasksQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TasksGetResult
+            Task
         """
         params = {k: v for k, v in {
             "task_gid": task_gid,
@@ -730,9 +739,7 @@ class TasksQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tasks", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TasksGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -778,7 +785,8 @@ class ProjectTasksQuery:
         # Cast generic envelope to concrete typed result
         return ProjectTasksListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -869,7 +877,8 @@ class WorkspaceTaskSearchQuery:
         # Cast generic envelope to concrete typed result
         return WorkspaceTaskSearchListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -918,7 +927,8 @@ class ProjectsQuery:
         # Cast generic envelope to concrete typed result
         return ProjectsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -926,7 +936,7 @@ class ProjectsQuery:
         self,
         project_gid: str,
         **kwargs
-    ) -> ProjectsGetResult:
+    ) -> Project:
         """
         Get a single project by its ID
 
@@ -935,7 +945,7 @@ class ProjectsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ProjectsGetResult
+            Project
         """
         params = {k: v for k, v in {
             "project_gid": project_gid,
@@ -943,9 +953,7 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("projects", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ProjectsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -988,7 +996,8 @@ class TaskProjectsQuery:
         # Cast generic envelope to concrete typed result
         return TaskProjectsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1034,7 +1043,8 @@ class TeamProjectsQuery:
         # Cast generic envelope to concrete typed result
         return TeamProjectsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1080,7 +1090,8 @@ class WorkspaceProjectsQuery:
         # Cast generic envelope to concrete typed result
         return WorkspaceProjectsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1120,7 +1131,8 @@ class WorkspacesQuery:
         # Cast generic envelope to concrete typed result
         return WorkspacesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1128,7 +1140,7 @@ class WorkspacesQuery:
         self,
         workspace_gid: str,
         **kwargs
-    ) -> WorkspacesGetResult:
+    ) -> Workspace:
         """
         Get a single workspace by its ID
 
@@ -1137,7 +1149,7 @@ class WorkspacesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            WorkspacesGetResult
+            Workspace
         """
         params = {k: v for k, v in {
             "workspace_gid": workspace_gid,
@@ -1145,9 +1157,7 @@ class WorkspacesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("workspaces", "get", params)
-        # Cast generic envelope to concrete typed result
-        return WorkspacesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1193,7 +1203,8 @@ class UsersQuery:
         # Cast generic envelope to concrete typed result
         return UsersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1201,7 +1212,7 @@ class UsersQuery:
         self,
         user_gid: str,
         **kwargs
-    ) -> UsersGetResult:
+    ) -> User:
         """
         Get a single user by their ID
 
@@ -1210,7 +1221,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            UsersGetResult
+            User
         """
         params = {k: v for k, v in {
             "user_gid": user_gid,
@@ -1218,9 +1229,7 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
-        # Cast generic envelope to concrete typed result
-        return UsersGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1263,7 +1272,8 @@ class WorkspaceUsersQuery:
         # Cast generic envelope to concrete typed result
         return WorkspaceUsersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1306,7 +1316,8 @@ class TeamUsersQuery:
         # Cast generic envelope to concrete typed result
         return TeamUsersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1323,7 +1334,7 @@ class TeamsQuery:
         self,
         team_gid: str,
         **kwargs
-    ) -> TeamsGetResult:
+    ) -> Team:
         """
         Get a single team by its ID
 
@@ -1332,7 +1343,7 @@ class TeamsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TeamsGetResult
+            Team
         """
         params = {k: v for k, v in {
             "team_gid": team_gid,
@@ -1340,9 +1351,7 @@ class TeamsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("teams", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TeamsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1385,7 +1394,8 @@ class WorkspaceTeamsQuery:
         # Cast generic envelope to concrete typed result
         return WorkspaceTeamsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1431,7 +1441,8 @@ class UserTeamsQuery:
         # Cast generic envelope to concrete typed result
         return UserTeamsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1474,7 +1485,8 @@ class AttachmentsQuery:
         # Cast generic envelope to concrete typed result
         return AttachmentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1482,7 +1494,7 @@ class AttachmentsQuery:
         self,
         attachment_gid: str,
         **kwargs
-    ) -> AttachmentsGetResult:
+    ) -> Attachment:
         """
         Get details for a single attachment by its GID
 
@@ -1491,7 +1503,7 @@ class AttachmentsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            AttachmentsGetResult
+            Attachment
         """
         params = {k: v for k, v in {
             "attachment_gid": attachment_gid,
@@ -1499,9 +1511,7 @@ class AttachmentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("attachments", "get", params)
-        # Cast generic envelope to concrete typed result
-        return AttachmentsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1606,7 +1616,8 @@ class WorkspaceTagsQuery:
         # Cast generic envelope to concrete typed result
         return WorkspaceTagsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1623,7 +1634,7 @@ class TagsQuery:
         self,
         tag_gid: str,
         **kwargs
-    ) -> TagsGetResult:
+    ) -> Tag:
         """
         Get a single tag by its ID
 
@@ -1632,7 +1643,7 @@ class TagsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TagsGetResult
+            Tag
         """
         params = {k: v for k, v in {
             "tag_gid": tag_gid,
@@ -1640,9 +1651,7 @@ class TagsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tags", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TagsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1685,7 +1694,8 @@ class ProjectSectionsQuery:
         # Cast generic envelope to concrete typed result
         return ProjectSectionsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1702,7 +1712,7 @@ class SectionsQuery:
         self,
         section_gid: str,
         **kwargs
-    ) -> SectionsGetResult:
+    ) -> Section:
         """
         Get a single section by its ID
 
@@ -1711,7 +1721,7 @@ class SectionsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            SectionsGetResult
+            Section
         """
         params = {k: v for k, v in {
             "section_gid": section_gid,
@@ -1719,9 +1729,7 @@ class SectionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("sections", "get", params)
-        # Cast generic envelope to concrete typed result
-        return SectionsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1764,7 +1772,8 @@ class TaskSubtasksQuery:
         # Cast generic envelope to concrete typed result
         return TaskSubtasksListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1807,7 +1816,8 @@ class TaskDependenciesQuery:
         # Cast generic envelope to concrete typed result
         return TaskDependenciesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1850,6 +1860,7 @@ class TaskDependentsQuery:
         # Cast generic envelope to concrete typed result
         return TaskDependentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
