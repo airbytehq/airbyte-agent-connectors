@@ -248,3 +248,33 @@ class GreenhouseExecuteResultWithMeta(GreenhouseExecuteResult[T], Generic[T, S])
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
+CandidatesListResult = GreenhouseExecuteResult[list[Candidate]]
+"""Result type for candidates.list operation."""
+
+ApplicationsListResult = GreenhouseExecuteResult[list[Application]]
+"""Result type for applications.list operation."""
+
+JobsListResult = GreenhouseExecuteResult[list[Job]]
+"""Result type for jobs.list operation."""
+
+OffersListResult = GreenhouseExecuteResult[list[Offer]]
+"""Result type for offers.list operation."""
+
+UsersListResult = GreenhouseExecuteResult[list[User]]
+"""Result type for users.list operation."""
+
+DepartmentsListResult = GreenhouseExecuteResult[list[Department]]
+"""Result type for departments.list operation."""
+
+OfficesListResult = GreenhouseExecuteResult[list[Office]]
+"""Result type for offices.list operation."""
+
+JobPostsListResult = GreenhouseExecuteResult[list[JobPost]]
+"""Result type for job_posts.list operation."""
+
+SourcesListResult = GreenhouseExecuteResult[list[Source]]
+"""Result type for sources.list operation."""
+
+ScheduledInterviewsListResult = GreenhouseExecuteResult[list[ScheduledInterview]]
+"""Result type for scheduled_interviews.list operation."""
+
