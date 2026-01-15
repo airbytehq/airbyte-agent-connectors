@@ -37,6 +37,8 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
             'header': 'Authorization',
             'prefix': 'Bearer',
             'refresh_url': 'https://login.salesforce.com/services/oauth2/token',
+            'auth_style': 'body',
+            'body_format': 'form',
             'token_extract': ['instance_url'],
         },
         user_config_spec=AirbyteAuthConfig(
