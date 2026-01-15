@@ -94,7 +94,7 @@ class GongConnector:
     """
 
     connector_name = "gong"
-    connector_version = "0.1.7"
+    connector_version = "0.1.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -165,7 +165,7 @@ class GongConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = GongConnector(auth_config=GongAuthConfig(access_token="..."))
+            connector = GongConnector(auth_config=GongAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = GongConnector(
                 external_user_id="user-123",
