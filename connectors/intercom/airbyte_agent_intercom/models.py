@@ -572,19 +572,19 @@ class SegmentsList(BaseModel):
 # Meta types for operations that extract metadata (e.g., pagination info)
 
 class ContactsListResultMeta(BaseModel):
-    """Metadata for contacts.list operation"""
+    """Metadata for contacts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
 
 class ConversationsListResultMeta(BaseModel):
-    """Metadata for conversations.list operation"""
+    """Metadata for conversations.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
 
 class CompaniesListResultMeta(BaseModel):
-    """Metadata for companies.list operation"""
+    """Metadata for companies.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)

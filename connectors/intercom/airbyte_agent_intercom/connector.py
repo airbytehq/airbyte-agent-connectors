@@ -1,5 +1,5 @@
 """
-intercom connector.
+Intercom connector.
 """
 
 from __future__ import annotations
@@ -66,22 +66,22 @@ class IntercomConnector:
     connector_version = "0.1.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("contacts", "list"): True,
-        ("contacts", "get"): False,
+        ("contacts", "get"): None,
         ("conversations", "list"): True,
-        ("conversations", "get"): False,
+        ("conversations", "get"): None,
         ("companies", "list"): True,
-        ("companies", "get"): False,
+        ("companies", "get"): None,
         ("teams", "list"): True,
-        ("teams", "get"): False,
+        ("teams", "get"): None,
         ("admins", "list"): True,
-        ("admins", "get"): False,
+        ("admins", "get"): None,
         ("tags", "list"): True,
-        ("tags", "get"): False,
+        ("tags", "get"): None,
         ("segments", "list"): True,
-        ("segments", "get"): False,
+        ("segments", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -356,7 +356,7 @@ class IntercomConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -491,7 +491,8 @@ class ContactsQuery:
         # Cast generic envelope to concrete typed result
         return ContactsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -556,7 +557,8 @@ class ConversationsQuery:
         # Cast generic envelope to concrete typed result
         return ConversationsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -621,7 +623,8 @@ class CompaniesQuery:
         # Cast generic envelope to concrete typed result
         return CompaniesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -676,7 +679,8 @@ class TeamsQuery:
         result = await self._connector.execute("teams", "list", params)
         # Cast generic envelope to concrete typed result
         return TeamsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -731,7 +735,8 @@ class AdminsQuery:
         result = await self._connector.execute("admins", "list", params)
         # Cast generic envelope to concrete typed result
         return AdminsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -786,7 +791,8 @@ class TagsQuery:
         result = await self._connector.execute("tags", "list", params)
         # Cast generic envelope to concrete typed result
         return TagsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -847,7 +853,8 @@ class SegmentsQuery:
         result = await self._connector.execute("segments", "list", params)
         # Cast generic envelope to concrete typed result
         return SegmentsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
