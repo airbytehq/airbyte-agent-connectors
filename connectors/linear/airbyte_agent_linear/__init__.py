@@ -29,7 +29,10 @@ from .models import (
     TeamResponseData,
     TeamResponse,
     LinearExecuteResult,
-    LinearExecuteResultWithMeta
+    LinearExecuteResultWithMeta,
+    IssuesListResult,
+    ProjectsListResult,
+    TeamsListResult
 )
 from .types import (
     IssuesListParams,
@@ -66,6 +69,9 @@ __all__ = [
     "TeamResponse",
     "LinearExecuteResult",
     "LinearExecuteResultWithMeta",
+    "IssuesListResult",
+    "ProjectsListResult",
+    "TeamsListResult",
     "IssuesListParams",
     "IssuesGetParams",
     "ProjectsListParams",
