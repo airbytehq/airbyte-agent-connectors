@@ -1,5 +1,5 @@
 """
-greenhouse connector.
+Greenhouse connector.
 """
 
 from __future__ import annotations
@@ -42,6 +42,16 @@ if TYPE_CHECKING:
 from .models import (
     GreenhouseExecuteResult,
     GreenhouseExecuteResultWithMeta,
+    CandidatesListResult,
+    ApplicationsListResult,
+    JobsListResult,
+    OffersListResult,
+    UsersListResult,
+    DepartmentsListResult,
+    OfficesListResult,
+    JobPostsListResult,
+    SourcesListResult,
+    ScheduledInterviewsListResult,
     Application,
     Candidate,
     Department,
@@ -50,6 +60,7 @@ from .models import (
     Offer,
     Office,
     ScheduledInterview,
+    Source,
     User,
 )
 
@@ -68,29 +79,29 @@ class GreenhouseConnector:
     connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
-        ("candidates", "list"): False,
-        ("candidates", "get"): False,
-        ("applications", "list"): False,
-        ("applications", "get"): False,
-        ("jobs", "list"): False,
-        ("jobs", "get"): False,
-        ("offers", "list"): False,
-        ("offers", "get"): False,
-        ("users", "list"): False,
-        ("users", "get"): False,
-        ("departments", "list"): False,
-        ("departments", "get"): False,
-        ("offices", "list"): False,
-        ("offices", "get"): False,
-        ("job_posts", "list"): False,
-        ("job_posts", "get"): False,
-        ("sources", "list"): False,
-        ("scheduled_interviews", "list"): False,
-        ("scheduled_interviews", "get"): False,
-        ("application_attachment", "download"): False,
-        ("candidate_attachment", "download"): False,
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("candidates", "list"): True,
+        ("candidates", "get"): None,
+        ("applications", "list"): True,
+        ("applications", "get"): None,
+        ("jobs", "list"): True,
+        ("jobs", "get"): None,
+        ("offers", "list"): True,
+        ("offers", "get"): None,
+        ("users", "list"): True,
+        ("users", "get"): None,
+        ("departments", "list"): True,
+        ("departments", "get"): None,
+        ("offices", "list"): True,
+        ("offices", "get"): None,
+        ("job_posts", "list"): True,
+        ("job_posts", "get"): None,
+        ("sources", "list"): True,
+        ("scheduled_interviews", "list"): True,
+        ("scheduled_interviews", "get"): None,
+        ("application_attachment", "download"): None,
+        ("candidate_attachment", "download"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -215,7 +226,7 @@ class GreenhouseConnector:
         entity: Literal["candidates"],
         action: Literal["list"],
         params: "CandidatesListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "CandidatesListResult": ...
 
     @overload
     async def execute(
@@ -231,7 +242,7 @@ class GreenhouseConnector:
         entity: Literal["applications"],
         action: Literal["list"],
         params: "ApplicationsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "ApplicationsListResult": ...
 
     @overload
     async def execute(
@@ -247,7 +258,7 @@ class GreenhouseConnector:
         entity: Literal["jobs"],
         action: Literal["list"],
         params: "JobsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "JobsListResult": ...
 
     @overload
     async def execute(
@@ -263,7 +274,7 @@ class GreenhouseConnector:
         entity: Literal["offers"],
         action: Literal["list"],
         params: "OffersListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "OffersListResult": ...
 
     @overload
     async def execute(
@@ -279,7 +290,7 @@ class GreenhouseConnector:
         entity: Literal["users"],
         action: Literal["list"],
         params: "UsersListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "UsersListResult": ...
 
     @overload
     async def execute(
@@ -295,7 +306,7 @@ class GreenhouseConnector:
         entity: Literal["departments"],
         action: Literal["list"],
         params: "DepartmentsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "DepartmentsListResult": ...
 
     @overload
     async def execute(
@@ -311,7 +322,7 @@ class GreenhouseConnector:
         entity: Literal["offices"],
         action: Literal["list"],
         params: "OfficesListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "OfficesListResult": ...
 
     @overload
     async def execute(
@@ -327,7 +338,7 @@ class GreenhouseConnector:
         entity: Literal["job_posts"],
         action: Literal["list"],
         params: "JobPostsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "JobPostsListResult": ...
 
     @overload
     async def execute(
@@ -343,7 +354,7 @@ class GreenhouseConnector:
         entity: Literal["sources"],
         action: Literal["list"],
         params: "SourcesListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "SourcesListResult": ...
 
     @overload
     async def execute(
@@ -351,7 +362,7 @@ class GreenhouseConnector:
         entity: Literal["scheduled_interviews"],
         action: Literal["list"],
         params: "ScheduledInterviewsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "ScheduledInterviewsListResult": ...
 
     @overload
     async def execute(
@@ -436,7 +447,7 @@ class GreenhouseConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -549,7 +560,7 @@ class CandidatesQuery:
         per_page: int | None = None,
         page: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> CandidatesListResult:
         """
         Returns a paginated list of all candidates in the organization
 
@@ -559,7 +570,7 @@ class CandidatesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            CandidatesListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -568,7 +579,10 @@ class CandidatesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("candidates", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CandidatesListResult(
+            data=result.data
+        )
 
 
 
@@ -616,7 +630,7 @@ class ApplicationsQuery:
         job_id: int | None = None,
         status: str | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> ApplicationsListResult:
         """
         Returns a paginated list of all applications
 
@@ -631,7 +645,7 @@ class ApplicationsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            ApplicationsListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -645,7 +659,10 @@ class ApplicationsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("applications", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ApplicationsListResult(
+            data=result.data
+        )
 
 
 
@@ -688,7 +705,7 @@ class JobsQuery:
         per_page: int | None = None,
         page: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> JobsListResult:
         """
         Returns a paginated list of all jobs in the organization
 
@@ -698,7 +715,7 @@ class JobsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            JobsListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -707,7 +724,10 @@ class JobsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("jobs", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return JobsListResult(
+            data=result.data
+        )
 
 
 
@@ -753,7 +773,7 @@ class OffersQuery:
         created_after: str | None = None,
         resolved_after: str | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> OffersListResult:
         """
         Returns a paginated list of all offers
 
@@ -766,7 +786,7 @@ class OffersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            OffersListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -778,7 +798,10 @@ class OffersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("offers", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return OffersListResult(
+            data=result.data
+        )
 
 
 
@@ -825,7 +848,7 @@ class UsersQuery:
         updated_before: str | None = None,
         updated_after: str | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> UsersListResult:
         """
         Returns a paginated list of all users
 
@@ -839,7 +862,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            UsersListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -852,7 +875,10 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return UsersListResult(
+            data=result.data
+        )
 
 
 
@@ -895,7 +921,7 @@ class DepartmentsQuery:
         per_page: int | None = None,
         page: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> DepartmentsListResult:
         """
         Returns a paginated list of all departments
 
@@ -905,7 +931,7 @@ class DepartmentsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            DepartmentsListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -914,7 +940,10 @@ class DepartmentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("departments", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return DepartmentsListResult(
+            data=result.data
+        )
 
 
 
@@ -957,7 +986,7 @@ class OfficesQuery:
         per_page: int | None = None,
         page: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> OfficesListResult:
         """
         Returns a paginated list of all offices
 
@@ -967,7 +996,7 @@ class OfficesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            OfficesListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -976,7 +1005,10 @@ class OfficesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("offices", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return OfficesListResult(
+            data=result.data
+        )
 
 
 
@@ -1021,7 +1053,7 @@ class JobPostsQuery:
         live: bool | None = None,
         active: bool | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> JobPostsListResult:
         """
         Returns a paginated list of all job posts
 
@@ -1033,7 +1065,7 @@ class JobPostsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            JobPostsListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -1044,7 +1076,10 @@ class JobPostsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("job_posts", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return JobPostsListResult(
+            data=result.data
+        )
 
 
 
@@ -1087,7 +1122,7 @@ class SourcesQuery:
         per_page: int | None = None,
         page: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> SourcesListResult:
         """
         Returns a paginated list of all sources
 
@@ -1097,7 +1132,7 @@ class SourcesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            SourcesListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -1106,7 +1141,10 @@ class SourcesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("sources", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return SourcesListResult(
+            data=result.data
+        )
 
 
 
@@ -1130,7 +1168,7 @@ class ScheduledInterviewsQuery:
         starts_after: str | None = None,
         ends_before: str | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> ScheduledInterviewsListResult:
         """
         Returns a paginated list of all scheduled interviews
 
@@ -1146,7 +1184,7 @@ class ScheduledInterviewsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            ScheduledInterviewsListResult
         """
         params = {k: v for k, v in {
             "per_page": per_page,
@@ -1161,7 +1199,10 @@ class ScheduledInterviewsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("scheduled_interviews", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ScheduledInterviewsListResult(
+            data=result.data
+        )
 
 
 
