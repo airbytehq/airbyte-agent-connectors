@@ -219,3 +219,12 @@ class LinearExecuteResultWithMeta(LinearExecuteResult[T], Generic[T, S]):
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
+IssuesListResult = LinearExecuteResult[IssuesListResponse]
+"""Result type for issues.list operation."""
+
+ProjectsListResult = LinearExecuteResult[ProjectsListResponse]
+"""Result type for projects.list operation."""
+
+TeamsListResult = LinearExecuteResult[TeamsListResponse]
+"""Result type for teams.list operation."""
+

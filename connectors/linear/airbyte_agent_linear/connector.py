@@ -1,5 +1,5 @@
 """
-linear connector.
+Linear connector.
 """
 
 from __future__ import annotations
@@ -27,6 +27,9 @@ if TYPE_CHECKING:
 from .models import (
     LinearExecuteResult,
     LinearExecuteResultWithMeta,
+    IssuesListResult,
+    ProjectsListResult,
+    TeamsListResult,
     IssueResponse,
     IssuesListResponse,
     ProjectResponse,
@@ -50,14 +53,14 @@ class LinearConnector:
     connector_version = "0.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
-        ("issues", "list"): False,
-        ("issues", "get"): False,
-        ("projects", "list"): False,
-        ("projects", "get"): False,
-        ("teams", "list"): False,
-        ("teams", "get"): False,
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("issues", "list"): True,
+        ("issues", "get"): None,
+        ("projects", "list"): True,
+        ("projects", "get"): None,
+        ("teams", "list"): True,
+        ("teams", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -158,7 +161,7 @@ class LinearConnector:
         entity: Literal["issues"],
         action: Literal["list"],
         params: "IssuesListParams"
-    ) -> "IssuesListResponse": ...
+    ) -> "IssuesListResult": ...
 
     @overload
     async def execute(
@@ -174,7 +177,7 @@ class LinearConnector:
         entity: Literal["projects"],
         action: Literal["list"],
         params: "ProjectsListParams"
-    ) -> "ProjectsListResponse": ...
+    ) -> "ProjectsListResult": ...
 
     @overload
     async def execute(
@@ -190,7 +193,7 @@ class LinearConnector:
         entity: Literal["teams"],
         action: Literal["list"],
         params: "TeamsListParams"
-    ) -> "TeamsListResponse": ...
+    ) -> "TeamsListResult": ...
 
     @overload
     async def execute(
@@ -259,7 +262,7 @@ class LinearConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -372,7 +375,7 @@ class IssuesQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> IssuesListResponse:
+    ) -> IssuesListResult:
         """
         Returns a paginated list of issues via GraphQL with pagination support
 
@@ -382,7 +385,7 @@ class IssuesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            IssuesListResponse
+            IssuesListResult
         """
         params = {k: v for k, v in {
             "first": first,
@@ -391,7 +394,10 @@ class IssuesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issues", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return IssuesListResult(
+            data=result.data
+        )
 
 
 
@@ -434,7 +440,7 @@ class ProjectsQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> ProjectsListResponse:
+    ) -> ProjectsListResult:
         """
         Returns a paginated list of projects via GraphQL with pagination support
 
@@ -444,7 +450,7 @@ class ProjectsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ProjectsListResponse
+            ProjectsListResult
         """
         params = {k: v for k, v in {
             "first": first,
@@ -453,7 +459,10 @@ class ProjectsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("projects", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ProjectsListResult(
+            data=result.data
+        )
 
 
 
@@ -496,7 +505,7 @@ class TeamsQuery:
         first: int | None = None,
         after: str | None = None,
         **kwargs
-    ) -> TeamsListResponse:
+    ) -> TeamsListResult:
         """
         Returns a list of teams via GraphQL with pagination support
 
@@ -506,7 +515,7 @@ class TeamsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TeamsListResponse
+            TeamsListResult
         """
         params = {k: v for k, v in {
             "first": first,
@@ -515,7 +524,10 @@ class TeamsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("teams", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return TeamsListResult(
+            data=result.data
+        )
 
 
 
