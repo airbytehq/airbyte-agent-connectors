@@ -363,3 +363,66 @@ class SalesforceExecuteResultWithMeta(SalesforceExecuteResult[T], Generic[T, S])
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
+AccountsListResult = SalesforceExecuteResult[AccountQueryResult]
+"""Result type for accounts.list operation."""
+
+AccountsApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for accounts.api_search operation."""
+
+ContactsListResult = SalesforceExecuteResult[ContactQueryResult]
+"""Result type for contacts.list operation."""
+
+ContactsApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for contacts.api_search operation."""
+
+LeadsListResult = SalesforceExecuteResult[LeadQueryResult]
+"""Result type for leads.list operation."""
+
+LeadsApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for leads.api_search operation."""
+
+OpportunitiesListResult = SalesforceExecuteResult[OpportunityQueryResult]
+"""Result type for opportunities.list operation."""
+
+OpportunitiesApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for opportunities.api_search operation."""
+
+TasksListResult = SalesforceExecuteResult[TaskQueryResult]
+"""Result type for tasks.list operation."""
+
+TasksApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for tasks.api_search operation."""
+
+EventsListResult = SalesforceExecuteResult[EventQueryResult]
+"""Result type for events.list operation."""
+
+EventsApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for events.api_search operation."""
+
+CampaignsListResult = SalesforceExecuteResult[CampaignQueryResult]
+"""Result type for campaigns.list operation."""
+
+CampaignsApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for campaigns.api_search operation."""
+
+CasesListResult = SalesforceExecuteResult[CaseQueryResult]
+"""Result type for cases.list operation."""
+
+CasesApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for cases.api_search operation."""
+
+NotesListResult = SalesforceExecuteResult[NoteQueryResult]
+"""Result type for notes.list operation."""
+
+NotesApiSearchResult = SalesforceExecuteResult[SearchResult]
+"""Result type for notes.api_search operation."""
+
+ContentVersionsListResult = SalesforceExecuteResult[ContentVersionQueryResult]
+"""Result type for content_versions.list operation."""
+
+AttachmentsListResult = SalesforceExecuteResult[AttachmentQueryResult]
+"""Result type for attachments.list operation."""
+
+QueryListResult = SalesforceExecuteResult[QueryResult]
+"""Result type for query.list operation."""
+
