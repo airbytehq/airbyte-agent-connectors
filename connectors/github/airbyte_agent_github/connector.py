@@ -1,5 +1,5 @@
 """
-github connector.
+Github connector.
 """
 
 from __future__ import annotations
@@ -63,45 +63,29 @@ from .models import GithubOauth2AuthConfig, GithubPersonalAccessTokenAuthConfig
 from .models import (
     GithubExecuteResult,
     GithubExecuteResultWithMeta,
-    RepositoriesGetResult,
     RepositoriesListResult,
     RepositoriesApiSearchResult,
     OrgRepositoriesListResult,
     BranchesListResult,
-    BranchesGetResult,
     CommitsListResult,
-    CommitsGetResult,
     ReleasesListResult,
-    ReleasesGetResult,
     IssuesListResult,
-    IssuesGetResult,
     IssuesApiSearchResult,
     PullRequestsListResult,
-    PullRequestsGetResult,
     PullRequestsApiSearchResult,
     ReviewsListResult,
     CommentsListResult,
-    CommentsGetResult,
     PrCommentsListResult,
-    PrCommentsGetResult,
     LabelsListResult,
-    LabelsGetResult,
     MilestonesListResult,
-    MilestonesGetResult,
-    OrganizationsGetResult,
     OrganizationsListResult,
-    UsersGetResult,
     UsersListResult,
     UsersApiSearchResult,
     TeamsListResult,
-    TeamsGetResult,
     TagsListResult,
-    TagsGetResult,
     StargazersListResult,
-    ViewerGetResult,
     ViewerRepositoriesListResult,
     ProjectsListResult,
-    ProjectsGetResult,
     ProjectItemsListResult,
 )
 
@@ -120,47 +104,47 @@ class GithubConnector:
     connector_version = "0.1.7"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
-        ("repositories", "get"): True,
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("repositories", "get"): None,
         ("repositories", "list"): True,
         ("repositories", "api_search"): True,
         ("org_repositories", "list"): True,
         ("branches", "list"): True,
-        ("branches", "get"): True,
+        ("branches", "get"): None,
         ("commits", "list"): True,
-        ("commits", "get"): True,
+        ("commits", "get"): None,
         ("releases", "list"): True,
-        ("releases", "get"): True,
+        ("releases", "get"): None,
         ("issues", "list"): True,
-        ("issues", "get"): True,
+        ("issues", "get"): None,
         ("issues", "api_search"): True,
         ("pull_requests", "list"): True,
-        ("pull_requests", "get"): True,
+        ("pull_requests", "get"): None,
         ("pull_requests", "api_search"): True,
         ("reviews", "list"): True,
         ("comments", "list"): True,
-        ("comments", "get"): True,
+        ("comments", "get"): None,
         ("pr_comments", "list"): True,
-        ("pr_comments", "get"): True,
+        ("pr_comments", "get"): None,
         ("labels", "list"): True,
-        ("labels", "get"): True,
+        ("labels", "get"): None,
         ("milestones", "list"): True,
-        ("milestones", "get"): True,
-        ("organizations", "get"): True,
+        ("milestones", "get"): None,
+        ("organizations", "get"): None,
         ("organizations", "list"): True,
-        ("users", "get"): True,
+        ("users", "get"): None,
         ("users", "list"): True,
         ("users", "api_search"): True,
         ("teams", "list"): True,
-        ("teams", "get"): True,
+        ("teams", "get"): None,
         ("tags", "list"): True,
-        ("tags", "get"): True,
+        ("tags", "get"): None,
         ("stargazers", "list"): True,
-        ("viewer", "get"): True,
+        ("viewer", "get"): None,
         ("viewer_repositories", "list"): True,
         ("projects", "list"): True,
-        ("projects", "get"): True,
+        ("projects", "get"): None,
         ("project_items", "list"): True,
     }
 
@@ -323,7 +307,7 @@ class GithubConnector:
         entity: Literal["repositories"],
         action: Literal["get"],
         params: "RepositoriesGetParams"
-    ) -> "RepositoriesGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -363,7 +347,7 @@ class GithubConnector:
         entity: Literal["branches"],
         action: Literal["get"],
         params: "BranchesGetParams"
-    ) -> "BranchesGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -379,7 +363,7 @@ class GithubConnector:
         entity: Literal["commits"],
         action: Literal["get"],
         params: "CommitsGetParams"
-    ) -> "CommitsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -395,7 +379,7 @@ class GithubConnector:
         entity: Literal["releases"],
         action: Literal["get"],
         params: "ReleasesGetParams"
-    ) -> "ReleasesGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -411,7 +395,7 @@ class GithubConnector:
         entity: Literal["issues"],
         action: Literal["get"],
         params: "IssuesGetParams"
-    ) -> "IssuesGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -435,7 +419,7 @@ class GithubConnector:
         entity: Literal["pull_requests"],
         action: Literal["get"],
         params: "PullRequestsGetParams"
-    ) -> "PullRequestsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -467,7 +451,7 @@ class GithubConnector:
         entity: Literal["comments"],
         action: Literal["get"],
         params: "CommentsGetParams"
-    ) -> "CommentsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -483,7 +467,7 @@ class GithubConnector:
         entity: Literal["pr_comments"],
         action: Literal["get"],
         params: "PrCommentsGetParams"
-    ) -> "PrCommentsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -499,7 +483,7 @@ class GithubConnector:
         entity: Literal["labels"],
         action: Literal["get"],
         params: "LabelsGetParams"
-    ) -> "LabelsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -515,7 +499,7 @@ class GithubConnector:
         entity: Literal["milestones"],
         action: Literal["get"],
         params: "MilestonesGetParams"
-    ) -> "MilestonesGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -523,7 +507,7 @@ class GithubConnector:
         entity: Literal["organizations"],
         action: Literal["get"],
         params: "OrganizationsGetParams"
-    ) -> "OrganizationsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -539,7 +523,7 @@ class GithubConnector:
         entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
-    ) -> "UsersGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -571,7 +555,7 @@ class GithubConnector:
         entity: Literal["teams"],
         action: Literal["get"],
         params: "TeamsGetParams"
-    ) -> "TeamsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -587,7 +571,7 @@ class GithubConnector:
         entity: Literal["tags"],
         action: Literal["get"],
         params: "TagsGetParams"
-    ) -> "TagsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -603,7 +587,7 @@ class GithubConnector:
         entity: Literal["viewer"],
         action: Literal["get"],
         params: "ViewerGetParams"
-    ) -> "ViewerGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -627,7 +611,7 @@ class GithubConnector:
         entity: Literal["projects"],
         action: Literal["get"],
         params: "ProjectsGetParams"
-    ) -> "ProjectsGetResult": ...
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -696,7 +680,7 @@ class GithubConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -810,7 +794,7 @@ class RepositoriesQuery:
         repo: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> RepositoriesGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific GitHub repository using GraphQL
 
@@ -823,7 +807,7 @@ If not provided, uses default fields.
             **kwargs: Additional parameters
 
         Returns:
-            RepositoriesGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -833,9 +817,7 @@ If not provided, uses default fields.
         }.items() if v is not None}
 
         result = await self._connector.execute("repositories", "get", params)
-        # Cast generic envelope to concrete typed result
-        return RepositoriesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -873,7 +855,8 @@ If not provided, uses default fields.
         result = await self._connector.execute("repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return RepositoriesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -913,7 +896,8 @@ If not provided, uses default fields.
         result = await self._connector.execute("repositories", "api_search", params)
         # Cast generic envelope to concrete typed result
         return RepositoriesApiSearchResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -958,7 +942,8 @@ class OrgRepositoriesQuery:
         result = await self._connector.execute("org_repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return OrgRepositoriesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1006,7 +991,8 @@ class BranchesQuery:
         result = await self._connector.execute("branches", "list", params)
         # Cast generic envelope to concrete typed result
         return BranchesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1017,7 +1003,7 @@ class BranchesQuery:
         branch: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> BranchesGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific branch using GraphQL
 
@@ -1029,7 +1015,7 @@ class BranchesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            BranchesGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1040,9 +1026,7 @@ class BranchesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("branches", "get", params)
-        # Cast generic envelope to concrete typed result
-        return BranchesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1090,7 +1074,8 @@ class CommitsQuery:
         result = await self._connector.execute("commits", "list", params)
         # Cast generic envelope to concrete typed result
         return CommitsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1101,7 +1086,7 @@ class CommitsQuery:
         sha: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> CommitsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific commit by SHA using GraphQL
 
@@ -1113,7 +1098,7 @@ class CommitsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            CommitsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1124,9 +1109,7 @@ class CommitsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("commits", "get", params)
-        # Cast generic envelope to concrete typed result
-        return CommitsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1174,7 +1157,8 @@ class ReleasesQuery:
         result = await self._connector.execute("releases", "list", params)
         # Cast generic envelope to concrete typed result
         return ReleasesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1185,7 +1169,7 @@ class ReleasesQuery:
         tag: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> ReleasesGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific release by tag name using GraphQL
 
@@ -1197,7 +1181,7 @@ class ReleasesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ReleasesGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1208,9 +1192,7 @@ class ReleasesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("releases", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ReleasesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1261,7 +1243,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "list", params)
         # Cast generic envelope to concrete typed result
         return IssuesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1272,7 +1255,7 @@ class IssuesQuery:
         number: int,
         fields: list[str] | None = None,
         **kwargs
-    ) -> IssuesGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific issue using GraphQL
 
@@ -1284,7 +1267,7 @@ class IssuesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            IssuesGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1295,9 +1278,7 @@ class IssuesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issues", "get", params)
-        # Cast generic envelope to concrete typed result
-        return IssuesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1333,7 +1314,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "api_search", params)
         # Cast generic envelope to concrete typed result
         return IssuesApiSearchResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1384,7 +1366,8 @@ class PullRequestsQuery:
         result = await self._connector.execute("pull_requests", "list", params)
         # Cast generic envelope to concrete typed result
         return PullRequestsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1395,7 +1378,7 @@ class PullRequestsQuery:
         number: int,
         fields: list[str] | None = None,
         **kwargs
-    ) -> PullRequestsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific pull request using GraphQL
 
@@ -1407,7 +1390,7 @@ class PullRequestsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            PullRequestsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1418,9 +1401,7 @@ class PullRequestsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("pull_requests", "get", params)
-        # Cast generic envelope to concrete typed result
-        return PullRequestsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1456,7 +1437,8 @@ class PullRequestsQuery:
         result = await self._connector.execute("pull_requests", "api_search", params)
         # Cast generic envelope to concrete typed result
         return PullRequestsApiSearchResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1507,7 +1489,8 @@ class ReviewsQuery:
         result = await self._connector.execute("reviews", "list", params)
         # Cast generic envelope to concrete typed result
         return ReviewsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1558,7 +1541,8 @@ class CommentsQuery:
         result = await self._connector.execute("comments", "list", params)
         # Cast generic envelope to concrete typed result
         return CommentsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1567,7 +1551,7 @@ class CommentsQuery:
         id: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> CommentsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific issue comment by its GraphQL node ID.
 
@@ -1582,7 +1566,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
             **kwargs: Additional parameters
 
         Returns:
-            CommentsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "id": id,
@@ -1591,9 +1575,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
         }.items() if v is not None}
 
         result = await self._connector.execute("comments", "get", params)
-        # Cast generic envelope to concrete typed result
-        return CommentsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1644,7 +1626,8 @@ class PrCommentsQuery:
         result = await self._connector.execute("pr_comments", "list", params)
         # Cast generic envelope to concrete typed result
         return PrCommentsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1653,7 +1636,7 @@ class PrCommentsQuery:
         id: str | None = None,
         fields: list[str] | None = None,
         **kwargs
-    ) -> PrCommentsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific pull request comment by its GraphQL node ID.
 
@@ -1668,7 +1651,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
             **kwargs: Additional parameters
 
         Returns:
-            PrCommentsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "id": id,
@@ -1677,9 +1660,7 @@ where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
         }.items() if v is not None}
 
         result = await self._connector.execute("pr_comments", "get", params)
-        # Cast generic envelope to concrete typed result
-        return PrCommentsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1727,7 +1708,8 @@ class LabelsQuery:
         result = await self._connector.execute("labels", "list", params)
         # Cast generic envelope to concrete typed result
         return LabelsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1738,7 +1720,7 @@ class LabelsQuery:
         name: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> LabelsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific label by name using GraphQL
 
@@ -1750,7 +1732,7 @@ class LabelsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            LabelsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1761,9 +1743,7 @@ class LabelsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("labels", "get", params)
-        # Cast generic envelope to concrete typed result
-        return LabelsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1814,7 +1794,8 @@ class MilestonesQuery:
         result = await self._connector.execute("milestones", "list", params)
         # Cast generic envelope to concrete typed result
         return MilestonesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1825,7 +1806,7 @@ class MilestonesQuery:
         number: int,
         fields: list[str] | None = None,
         **kwargs
-    ) -> MilestonesGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific milestone by number using GraphQL
 
@@ -1837,7 +1818,7 @@ class MilestonesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            MilestonesGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -1848,9 +1829,7 @@ class MilestonesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("milestones", "get", params)
-        # Cast generic envelope to concrete typed result
-        return MilestonesGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1868,7 +1847,7 @@ class OrganizationsQuery:
         org: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> OrganizationsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific organization using GraphQL
 
@@ -1878,7 +1857,7 @@ class OrganizationsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            OrganizationsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "org": org,
@@ -1887,9 +1866,7 @@ class OrganizationsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("organizations", "get", params)
-        # Cast generic envelope to concrete typed result
-        return OrganizationsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1925,7 +1902,8 @@ class OrganizationsQuery:
         result = await self._connector.execute("organizations", "list", params)
         # Cast generic envelope to concrete typed result
         return OrganizationsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1943,7 +1921,7 @@ class UsersQuery:
         username: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> UsersGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific user using GraphQL
 
@@ -1953,7 +1931,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            UsersGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "username": username,
@@ -1962,9 +1940,7 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
-        # Cast generic envelope to concrete typed result
-        return UsersGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2000,7 +1976,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "list", params)
         # Cast generic envelope to concrete typed result
         return UsersListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2036,7 +2013,8 @@ class UsersQuery:
         result = await self._connector.execute("users", "api_search", params)
         # Cast generic envelope to concrete typed result
         return UsersApiSearchResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2081,7 +2059,8 @@ class TeamsQuery:
         result = await self._connector.execute("teams", "list", params)
         # Cast generic envelope to concrete typed result
         return TeamsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2091,7 +2070,7 @@ class TeamsQuery:
         team_slug: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> TeamsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific team using GraphQL
 
@@ -2102,7 +2081,7 @@ class TeamsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TeamsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "org": org,
@@ -2112,9 +2091,7 @@ class TeamsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("teams", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TeamsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2162,7 +2139,8 @@ class TagsQuery:
         result = await self._connector.execute("tags", "list", params)
         # Cast generic envelope to concrete typed result
         return TagsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2173,7 +2151,7 @@ class TagsQuery:
         tag: str,
         fields: list[str] | None = None,
         **kwargs
-    ) -> TagsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific tag by name using GraphQL
 
@@ -2185,7 +2163,7 @@ class TagsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            TagsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "owner": owner,
@@ -2196,9 +2174,7 @@ class TagsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tags", "get", params)
-        # Cast generic envelope to concrete typed result
-        return TagsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2246,7 +2222,8 @@ class StargazersQuery:
         result = await self._connector.execute("stargazers", "list", params)
         # Cast generic envelope to concrete typed result
         return StargazersListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2263,7 +2240,7 @@ class ViewerQuery:
         self,
         fields: list[str] | None = None,
         **kwargs
-    ) -> ViewerGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about the currently authenticated user.
 This is useful when you don't know the username but need to access
@@ -2275,7 +2252,7 @@ the current user's profile, permissions, or associated resources.
             **kwargs: Additional parameters
 
         Returns:
-            ViewerGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "fields": fields,
@@ -2283,9 +2260,7 @@ the current user's profile, permissions, or associated resources.
         }.items() if v is not None}
 
         result = await self._connector.execute("viewer", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ViewerGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2330,7 +2305,8 @@ automatically lists repositories for the current authenticated user.
         result = await self._connector.execute("viewer_repositories", "list", params)
         # Cast generic envelope to concrete typed result
         return ViewerRepositoriesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2377,7 +2353,8 @@ Projects V2 are the new project boards that replaced classic projects.
         result = await self._connector.execute("projects", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -2387,7 +2364,7 @@ Projects V2 are the new project boards that replaced classic projects.
         project_number: int,
         fields: list[str] | None = None,
         **kwargs
-    ) -> ProjectsGetResult:
+    ) -> dict[str, Any]:
         """
         Gets information about a specific GitHub Project V2 by number
 
@@ -2398,7 +2375,7 @@ Projects V2 are the new project boards that replaced classic projects.
             **kwargs: Additional parameters
 
         Returns:
-            ProjectsGetResult
+            dict[str, Any]
         """
         params = {k: v for k, v in {
             "org": org,
@@ -2408,9 +2385,7 @@ Projects V2 are the new project boards that replaced classic projects.
         }.items() if v is not None}
 
         result = await self._connector.execute("projects", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ProjectsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -2460,6 +2435,7 @@ Each item includes its field values like Status, Priority, etc.
         result = await self._connector.execute("project_items", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectItemsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
