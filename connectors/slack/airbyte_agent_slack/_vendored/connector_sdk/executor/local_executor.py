@@ -495,6 +495,14 @@ class LocalExecutor:
                 print(result.data)
         """
         try:
+            # Check for hosted-only actions before converting to Action enum
+            if config.action == "search":
+                raise NotImplementedError(
+                    "search is only available in hosted execution mode. "
+                    "Initialize the connector with external_user_id, airbyte_client_id, "
+                    "and airbyte_client_secret to use this feature."
+                )
+
             # Convert config to internal format
             action = Action(config.action) if isinstance(config.action, str) else config.action
             params = config.params or {}

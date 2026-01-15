@@ -176,14 +176,6 @@ class ChannelResponse(BaseModel):
     ok: Union[bool, Any] = Field(default=None)
     channel: Union[Channel, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
-
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -204,6 +196,14 @@ class Attachment(BaseModel):
     footer: Union[str | None, Any] = Field(default=None)
     footer_icon: Union[str | None, Any] = Field(default=None)
     ts: Union[Any, Any] = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class File(BaseModel):
     """File object"""
@@ -373,6 +373,7 @@ class SlackExecuteResultWithMeta(SlackExecuteResult[T], Generic[T, S]):
     """
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
