@@ -90,6 +90,6 @@ For the service's official API docs, see the [Slack API reference](https://api.s
 
 ## Version information
 
-- **Package version:** 0.1.0
+- **Package version:** 0.1.1
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 8b64ece519289f4e06c6df90ed5a254b81df1ddd
+- **Generated with Connector SDK commit SHA:** 3521119342fc2a44fcae909505ffb1e7b75557eb
