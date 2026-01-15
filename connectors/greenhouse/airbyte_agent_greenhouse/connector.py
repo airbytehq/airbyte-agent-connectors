@@ -68,6 +68,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class GreenhouseConnector:
     """
     Type-safe Greenhouse API connector.
