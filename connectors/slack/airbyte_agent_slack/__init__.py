@@ -1,0 +1,87 @@
+"""
+Blessed Slack connector for Airbyte SDK.
+
+Auto-generated from OpenAPI specification.
+"""
+
+from .connector import SlackConnector
+from .models import (
+    SlackAuthConfig,
+    User,
+    UserProfile,
+    ResponseMetadata,
+    UsersListResponse,
+    UserResponse,
+    Channel,
+    ChannelTopic,
+    ChannelPurpose,
+    ChannelsListResponse,
+    ChannelResponse,
+    File,
+    Attachment,
+    Reaction,
+    Message,
+    Thread,
+    EditedInfo,
+    BotProfile,
+    MessagesListResponse,
+    ThreadRepliesResponse,
+    UsersListResultMeta,
+    ChannelsListResultMeta,
+    ChannelMessagesListResultMeta,
+    ThreadsListResultMeta,
+    SlackExecuteResult,
+    SlackExecuteResultWithMeta,
+    UsersListResult,
+    ChannelsListResult,
+    ChannelMessagesListResult,
+    ThreadsListResult
+)
+from .types import (
+    UsersListParams,
+    UsersGetParams,
+    ChannelsListParams,
+    ChannelsGetParams,
+    ChannelMessagesListParams,
+    ThreadsListParams
+)
+
+__all__ = [
+    "SlackConnector",
+    "SlackAuthConfig",
+    "User",
+    "UserProfile",
+    "ResponseMetadata",
+    "UsersListResponse",
+    "UserResponse",
+    "Channel",
+    "ChannelTopic",
+    "ChannelPurpose",
+    "ChannelsListResponse",
+    "ChannelResponse",
+    "File",
+    "Attachment",
+    "Reaction",
+    "Message",
+    "Thread",
+    "EditedInfo",
+    "BotProfile",
+    "MessagesListResponse",
+    "ThreadRepliesResponse",
+    "UsersListResultMeta",
+    "ChannelsListResultMeta",
+    "ChannelMessagesListResultMeta",
+    "ThreadsListResultMeta",
+    "SlackExecuteResult",
+    "SlackExecuteResultWithMeta",
+    "UsersListResult",
+    "ChannelsListResult",
+    "ChannelMessagesListResult",
+    "ThreadsListResult",
+    "UsersListParams",
+    "UsersGetParams",
+    "ChannelsListParams",
+    "ChannelsGetParams",
+    "ChannelMessagesListParams",
+    "ThreadsListParams",
+]
