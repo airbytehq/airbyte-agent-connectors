@@ -30,7 +30,7 @@ from uuid import (
 GongConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('32382e40-3b49-4b99-9c5c-4076501914e7'),
     name='gong',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.gong.io',
     auth=AuthConfig(
         options=[
@@ -41,20 +41,47 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     'header': 'Authorization',
                     'prefix': 'Bearer',
                     'refresh_url': 'https://app.gong.io/oauth2/generate-customer-token',
+                    'auth_style': 'basic',
+                    'body_format': 'form',
                 },
                 user_config_spec=AirbyteAuthConfig(
                     title='OAuth 2.0 Authentication',
                     type='object',
-                    required=['access_token'],
+                    required=['refresh_token', 'client_id', 'client_secret'],
                     properties={
                         'access_token': AuthConfigFieldSpec(
                             title='Access Token',
-                            description='Your Gong OAuth2 Access Token. Token refresh is managed externally.',
+                            description='Your Gong OAuth2 Access Token.',
+                            airbyte_secret=True,
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='Your Gong OAuth2 Refresh Token. Note: Gong uses single-use refresh tokens.',
+                            airbyte_secret=True,
+                        ),
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Your Gong OAuth App Client ID.',
+                            airbyte_secret=True,
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Your Gong OAuth App Client Secret.',
                             airbyte_secret=True,
                         ),
                     },
-                    auth_mapping={'access_token': '${access_token}'},
-                    replication_auth_key_mapping={'access_token': 'access_token'},
+                    auth_mapping={
+                        'access_token': '${access_token}',
+                        'refresh_token': '${refresh_token}',
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.access_token': 'access_token',
+                        'credentials.refresh_token': 'refresh_token',
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                    },
                 ),
             ),
             AuthOption(
@@ -77,7 +104,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'username': '${access_key}', 'password': '${access_key_secret}'},
-                    replication_auth_key_mapping={'access_key': 'access_key', 'access_key_secret': 'access_key_secret'},
+                    replication_auth_key_mapping={'credentials.access_key': 'access_key', 'credentials.access_key_secret': 'access_key_secret'},
                 ),
             ),
         ],

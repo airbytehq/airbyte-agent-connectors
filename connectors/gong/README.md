@@ -48,7 +48,10 @@ from airbyte_agent_gong.models import GongOauth20AuthenticationAuthConfig
 
 connector = GongConnector(
   auth_config=GongOauth20AuthenticationAuthConfig(
-    access_token="..."
+    access_token="...",
+    refresh_token="...",
+    client_id="...",
+    client_secret="..."
   )
 )
 result = await connector.users.list()
@@ -100,6 +103,6 @@ For the service's official API docs, see the [Gong API reference](https://gong.a
 
 ## Version information
 
-- **Package version:** 0.19.46
-- **Connector version:** 0.1.7
-- **Generated with Connector SDK commit SHA:** 3521119342fc2a44fcae909505ffb1e7b75557eb
+- **Package version:** 0.19.47
+- **Connector version:** 0.1.8
+- **Generated with Connector SDK commit SHA:** 69b2cf0abf2d467ba139ff8a5910d0b3d79976d2
