@@ -105,6 +105,6 @@ For the service's official API docs, see the [Github API reference](https://docs
 
 ## Version information
 
-- **Package version:** 0.18.42
+- **Package version:** 0.18.43
 - **Connector version:** 0.1.7
-- **Generated with Connector SDK commit SHA:** 7ef098166194d1a23714e586f61ebefe7b4e85dd
+- **Generated with Connector SDK commit SHA:** a23d9e7ac2d9d416258f7a9a3b9a731782cd6bd8
