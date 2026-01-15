@@ -74,3 +74,4 @@ class SegmentsListParams(TypedDict):
 class SegmentsGetParams(TypedDict):
     """Parameters for segments.get operation"""
     id: str
+
