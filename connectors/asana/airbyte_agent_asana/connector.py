@@ -92,6 +92,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class AsanaConnector:
     """
     Type-safe Asana API connector.
