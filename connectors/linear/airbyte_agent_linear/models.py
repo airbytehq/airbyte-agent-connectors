@@ -214,6 +214,7 @@ class LinearExecuteResultWithMeta(LinearExecuteResult[T], Generic[T, S]):
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
 
+
 # ===== OPERATION RESULT TYPE ALIASES =====
 
 # Concrete type aliases for each operation result.
