@@ -55,6 +55,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class JiraConnector:
     """
     Type-safe Jira API connector.
