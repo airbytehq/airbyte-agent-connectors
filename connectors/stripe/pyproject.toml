@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-stripe"
-version = "0.5.40"
+version = "0.5.41"
 description = "Airbyte Stripe Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -8,14 +8,17 @@ license = {text = "Elastic-2.0"}
 authors = [
     {name = "Airbyte", email = "contact@airbyte.io"}
 ]
-keywords = ["airbyte", "stripe", "connector", "api"]
+keywords = ["airbyte", "stripe", "connector", "api", "ai", "agent", "llm", "mcp", "data-integration"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: Other/Proprietary License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
     "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
 ]
 dependencies = [
     "httpx>=0.24.0",
@@ -31,10 +34,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/airbytehq/airbyte-embedded"
-Documentation = "https://github.com/airbytehq/airbyte-embedded/tree/main/integrations"
-Repository = "https://github.com/airbytehq/airbyte-embedded"
-Issues = "https://github.com/airbytehq/airbyte-embedded/issues"
+Homepage = "https://github.com/airbytehq/airbyte-agent-connectors"
+Documentation = "https://docs.airbyte.com/ai-agents/"
+Repository = "https://github.com/airbytehq/airbyte-agent-connectors"
+Issues = "https://github.com/airbytehq/airbyte-agent-connectors/issues"
 
 [build-system]
 requires = ["hatchling"]
