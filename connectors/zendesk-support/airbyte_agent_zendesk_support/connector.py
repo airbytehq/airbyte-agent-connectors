@@ -112,6 +112,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class ZendeskSupportConnector:
     """
     Type-safe Zendesk-Support API connector.
