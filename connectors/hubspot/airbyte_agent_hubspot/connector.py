@@ -1,5 +1,5 @@
 """
-hubspot connector.
+Hubspot connector.
 """
 
 from __future__ import annotations
@@ -78,24 +78,24 @@ class HubspotConnector:
     connector_version = "0.1.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("contacts", "list"): True,
-        ("contacts", "get"): False,
+        ("contacts", "get"): None,
         ("contacts", "api_search"): True,
         ("companies", "list"): True,
-        ("companies", "get"): False,
+        ("companies", "get"): None,
         ("companies", "api_search"): True,
         ("deals", "list"): True,
-        ("deals", "get"): False,
+        ("deals", "get"): None,
         ("deals", "api_search"): True,
         ("tickets", "list"): True,
-        ("tickets", "get"): False,
+        ("tickets", "get"): None,
         ("tickets", "api_search"): True,
         ("schemas", "list"): True,
-        ("schemas", "get"): False,
+        ("schemas", "get"): None,
         ("objects", "list"): True,
-        ("objects", "get"): False,
+        ("objects", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -390,7 +390,7 @@ class HubspotConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -537,7 +537,8 @@ class ContactsQuery:
         # Cast generic envelope to concrete typed result
         return ContactsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -620,7 +621,8 @@ class ContactsQuery:
         # Cast generic envelope to concrete typed result
         return ContactsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -672,7 +674,8 @@ class CompaniesQuery:
         # Cast generic envelope to concrete typed result
         return CompaniesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -755,7 +758,8 @@ class CompaniesQuery:
         # Cast generic envelope to concrete typed result
         return CompaniesApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -807,7 +811,8 @@ class DealsQuery:
         # Cast generic envelope to concrete typed result
         return DealsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -890,7 +895,8 @@ class DealsQuery:
         # Cast generic envelope to concrete typed result
         return DealsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -942,7 +948,8 @@ class TicketsQuery:
         # Cast generic envelope to concrete typed result
         return TicketsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1025,7 +1032,8 @@ class TicketsQuery:
         # Cast generic envelope to concrete typed result
         return TicketsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1061,7 +1069,8 @@ class SchemasQuery:
         result = await self._connector.execute("schemas", "list", params)
         # Cast generic envelope to concrete typed result
         return SchemasListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1141,7 +1150,8 @@ class ObjectsQuery:
         # Cast generic envelope to concrete typed result
         return ObjectsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
