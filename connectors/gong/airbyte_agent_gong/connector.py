@@ -1,5 +1,5 @@
 """
-gong connector.
+Gong connector.
 """
 
 from __future__ import annotations
@@ -53,9 +53,7 @@ from .models import (
     GongExecuteResult,
     GongExecuteResultWithMeta,
     UsersListResult,
-    UsersGetResult,
     CallsListResult,
-    CallsGetResult,
     CallsExtensiveListResult,
     WorkspacesListResult,
     CallTranscriptsListResult,
@@ -68,6 +66,20 @@ from .models import (
     LibraryFolderContentListResult,
     CoachingListResult,
     StatsActivityScorecardsListResult,
+    AnsweredScorecard,
+    Call,
+    CallTranscript,
+    CoachingData,
+    ExtensiveCall,
+    FolderCall,
+    LibraryFolder,
+    Scorecard,
+    Tracker,
+    User,
+    UserAggregateActivity,
+    UserDetailedActivity,
+    UserInteractionStats,
+    Workspace,
 )
 
 # TypeVar for decorator type preservation
@@ -85,15 +97,15 @@ class GongConnector:
     connector_version = "0.1.7"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("users", "list"): True,
-        ("users", "get"): True,
+        ("users", "get"): None,
         ("calls", "list"): True,
-        ("calls", "get"): True,
+        ("calls", "get"): None,
         ("calls_extensive", "list"): True,
-        ("call_audio", "download"): False,
-        ("call_video", "download"): False,
+        ("call_audio", "download"): None,
+        ("call_video", "download"): None,
         ("workspaces", "list"): True,
         ("call_transcripts", "list"): True,
         ("stats_activity_aggregate", "list"): True,
@@ -246,7 +258,7 @@ class GongConnector:
         entity: Literal["users"],
         action: Literal["get"],
         params: "UsersGetParams"
-    ) -> "UsersGetResult": ...
+    ) -> "User": ...
 
     @overload
     async def execute(
@@ -262,7 +274,7 @@ class GongConnector:
         entity: Literal["calls"],
         action: Literal["get"],
         params: "CallsGetParams"
-    ) -> "CallsGetResult": ...
+    ) -> "Call": ...
 
     @overload
     async def execute(
@@ -435,7 +447,7 @@ class GongConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -567,7 +579,8 @@ class UsersQuery:
         # Cast generic envelope to concrete typed result
         return UsersListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -575,7 +588,7 @@ class UsersQuery:
         self,
         id: str | None = None,
         **kwargs
-    ) -> UsersGetResult:
+    ) -> User:
         """
         Get a single user by ID
 
@@ -584,7 +597,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            UsersGetResult
+            User
         """
         params = {k: v for k, v in {
             "id": id,
@@ -592,9 +605,7 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "get", params)
-        # Cast generic envelope to concrete typed result
-        return UsersGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -637,7 +648,8 @@ class CallsQuery:
         # Cast generic envelope to concrete typed result
         return CallsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -645,7 +657,7 @@ class CallsQuery:
         self,
         id: str | None = None,
         **kwargs
-    ) -> CallsGetResult:
+    ) -> Call:
         """
         Get specific call data by ID
 
@@ -654,7 +666,7 @@ class CallsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            CallsGetResult
+            Call
         """
         params = {k: v for k, v in {
             "id": id,
@@ -662,9 +674,7 @@ class CallsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("calls", "get", params)
-        # Cast generic envelope to concrete typed result
-        return CallsGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -707,7 +717,8 @@ class CallsExtensiveQuery:
         # Cast generic envelope to concrete typed result
         return CallsExtensiveListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -891,7 +902,8 @@ class WorkspacesQuery:
         result = await self._connector.execute("workspaces", "list", params)
         # Cast generic envelope to concrete typed result
         return WorkspacesListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -931,7 +943,8 @@ class CallTranscriptsQuery:
         # Cast generic envelope to concrete typed result
         return CallTranscriptsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -968,7 +981,8 @@ class StatsActivityAggregateQuery:
         # Cast generic envelope to concrete typed result
         return StatsActivityAggregateListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1005,7 +1019,8 @@ class StatsActivityDayByDayQuery:
         # Cast generic envelope to concrete typed result
         return StatsActivityDayByDayListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1042,7 +1057,8 @@ class StatsInteractionQuery:
         # Cast generic envelope to concrete typed result
         return StatsInteractionListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1078,7 +1094,8 @@ class SettingsScorecardsQuery:
         result = await self._connector.execute("settings_scorecards", "list", params)
         # Cast generic envelope to concrete typed result
         return SettingsScorecardsListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1114,7 +1131,8 @@ class SettingsTrackersQuery:
         result = await self._connector.execute("settings_trackers", "list", params)
         # Cast generic envelope to concrete typed result
         return SettingsTrackersListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1150,7 +1168,8 @@ class LibraryFoldersQuery:
         result = await self._connector.execute("library_folders", "list", params)
         # Cast generic envelope to concrete typed result
         return LibraryFoldersListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1190,7 +1209,8 @@ class LibraryFolderContentQuery:
         # Cast generic envelope to concrete typed result
         return LibraryFolderContentListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1235,7 +1255,8 @@ class CoachingQuery:
         result = await self._connector.execute("coaching", "list", params)
         # Cast generic envelope to concrete typed result
         return CoachingListResult(
-            data=result.data        )
+            data=result.data
+        )
 
 
 
@@ -1275,6 +1296,7 @@ class StatsActivityScorecardsQuery:
         # Cast generic envelope to concrete typed result
         return StatsActivityScorecardsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 

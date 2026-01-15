@@ -43,13 +43,6 @@ class PaginationRecords(BaseModel):
     current_page_number: Union[int, Any] = Field(default=None, alias="currentPageNumber")
     cursor: Union[str, Any] = Field(default=None)
 
-class UserSpokenlanguagesItem(BaseModel):
-    """Nested schema for User.spokenLanguages_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    language: Union[str, Any] = Field(default=None)
-    primary: Union[bool, Any] = Field(default=None)
-
 class UserSettings(BaseModel):
     """User settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -61,6 +54,13 @@ class UserSettings(BaseModel):
     prevent_email_import: Union[bool, Any] = Field(default=None, alias="preventEmailImport")
     non_recorded_meetings_imported: Union[bool, Any] = Field(default=None, alias="nonRecordedMeetingsImported")
     gong_connect_enabled: Union[bool, Any] = Field(default=None, alias="gongConnectEnabled")
+
+class UserSpokenlanguagesItem(BaseModel):
+    """Nested schema for User.spokenLanguages_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    language: Union[str, Any] = Field(default=None)
+    primary: Union[bool, Any] = Field(default=None)
 
 class User(BaseModel):
     """User object"""
@@ -190,28 +190,82 @@ class TranscriptsResponse(BaseModel):
     records: Union[PaginationRecords, Any] = Field(default=None)
     request_id: Union[str, Any] = Field(default=None, alias="requestId")
 
-class ExtensiveCallInteractionQuestions(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.questions"""
+class ExtensiveCallMetadata(BaseModel):
+    """Call metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
-    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
+    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
+    """Unique call identifier"""
+    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
+    """URL to call in Gong"""
+    title: Union[str, Any] = Field(default=None, description="Call title")
+    """Call title"""
+    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
+    """Scheduled time"""
+    started: Union[str, Any] = Field(default=None, description="Call start time")
+    """Call start time"""
+    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
+    """Call duration in seconds"""
+    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
+    """Primary user ID"""
+    direction: Union[str, Any] = Field(default=None, description="Call direction")
+    """Call direction"""
+    system: Union[str, Any] = Field(default=None, description="System type")
+    """System type"""
+    scope: Union[str, Any] = Field(default=None, description="Call scope")
+    """Call scope"""
+    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
+    """Media type (Audio/Video)"""
+    language: Union[str, Any] = Field(default=None, description="Call language")
+    """Call language"""
+    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
+    """Workspace ID"""
+    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
+    """SDR disposition"""
+    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
+    """Client unique identifier"""
+    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
+    """Custom data"""
+    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
+    """Call purpose"""
+    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
+    """Whether call is private"""
+    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
+    """Meeting URL"""
+    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
+    """Calendar event ID"""
 
-class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Stat name")
-    """Stat name"""
-    value: Union[float, Any] = Field(default=None, description="Stat value")
-    """Stat value"""
+    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
+    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
 
-class ExtensiveCallInteraction(BaseModel):
-    """Interaction statistics"""
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
-    questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    duration: Union[float, Any] = Field(default=None)
+
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    count: Union[int, Any] = Field(default=None)
+    type: Union[str, Any] = Field(default=None)
+    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
+
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
+    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
+    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
 
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
@@ -267,82 +321,28 @@ class ExtensiveCallPartiesItem(BaseModel):
     context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
     """CRM context data linked to this participant"""
 
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
+class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
-    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None, description="Stat name")
+    """Stat name"""
+    value: Union[float, Any] = Field(default=None, description="Stat value")
+    """Stat value"""
 
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
+class ExtensiveCallInteractionQuestions(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.questions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    duration: Union[float, Any] = Field(default=None)
+    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
+    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
 
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
+class ExtensiveCallInteraction(BaseModel):
+    """Interaction statistics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
-    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
-    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
-
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
-    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
-
-class ExtensiveCallMetadata(BaseModel):
-    """Call metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
-    """Unique call identifier"""
-    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
-    """URL to call in Gong"""
-    title: Union[str, Any] = Field(default=None, description="Call title")
-    """Call title"""
-    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
-    """Scheduled time"""
-    started: Union[str, Any] = Field(default=None, description="Call start time")
-    """Call start time"""
-    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
-    """Call duration in seconds"""
-    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
-    """Primary user ID"""
-    direction: Union[str, Any] = Field(default=None, description="Call direction")
-    """Call direction"""
-    system: Union[str, Any] = Field(default=None, description="System type")
-    """System type"""
-    scope: Union[str, Any] = Field(default=None, description="Call scope")
-    """Call scope"""
-    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
-    """Media type (Audio/Video)"""
-    language: Union[str, Any] = Field(default=None, description="Call language")
-    """Call language"""
-    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
-    """Workspace ID"""
-    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
-    """SDR disposition"""
-    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
-    """Client unique identifier"""
-    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
-    """Custom data"""
-    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
-    """Call purpose"""
-    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
-    """Whether call is private"""
-    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
-    """Meeting URL"""
-    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
-    """Calendar event ID"""
+    interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
+    questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
 
 class ExtensiveCallCollaboration(BaseModel):
     """Collaboration data"""
@@ -671,55 +671,55 @@ class AnsweredScorecardsResponse(BaseModel):
 # Meta types for operations that extract metadata (e.g., pagination info)
 
 class UsersListResultMeta(BaseModel):
-    """Metadata for users.list operation"""
+    """Metadata for users.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class CallsListResultMeta(BaseModel):
-    """Metadata for calls.list operation"""
+    """Metadata for calls.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class CallsExtensiveListResultMeta(BaseModel):
-    """Metadata for calls_extensive.list operation"""
+    """Metadata for calls_extensive.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class CallTranscriptsListResultMeta(BaseModel):
-    """Metadata for call_transcripts.list operation"""
+    """Metadata for call_transcripts.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class StatsActivityAggregateListResultMeta(BaseModel):
-    """Metadata for stats_activity_aggregate.list operation"""
+    """Metadata for stats_activity_aggregate.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class StatsActivityDayByDayListResultMeta(BaseModel):
-    """Metadata for stats_activity_day_by_day.list operation"""
+    """Metadata for stats_activity_day_by_day.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class StatsInteractionListResultMeta(BaseModel):
-    """Metadata for stats_interaction.list operation"""
+    """Metadata for stats_interaction.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class LibraryFolderContentListResultMeta(BaseModel):
-    """Metadata for library_folder_content.list operation"""
+    """Metadata for library_folder_content.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
 class StatsActivityScorecardsListResultMeta(BaseModel):
-    """Metadata for stats_activity_scorecards.list operation"""
+    """Metadata for stats_activity_scorecards.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
@@ -759,14 +759,8 @@ class GongExecuteResultWithMeta(GongExecuteResult[T], Generic[T, S]):
 UsersListResult = GongExecuteResultWithMeta[list[User], UsersListResultMeta]
 """Result type for users.list operation with data and metadata."""
 
-UsersGetResult = GongExecuteResult[User]
-"""Result type for users.get operation."""
-
 CallsListResult = GongExecuteResultWithMeta[list[Call], CallsListResultMeta]
 """Result type for calls.list operation with data and metadata."""
-
-CallsGetResult = GongExecuteResult[Call]
-"""Result type for calls.get operation."""
 
 CallsExtensiveListResult = GongExecuteResultWithMeta[list[ExtensiveCall], CallsExtensiveListResultMeta]
 """Result type for calls_extensive.list operation with data and metadata."""
