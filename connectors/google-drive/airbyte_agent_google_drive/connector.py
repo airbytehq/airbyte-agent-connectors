@@ -1,5 +1,5 @@
 """
-google-drive connector.
+Google-Drive connector.
 """
 
 from __future__ import annotations
@@ -45,14 +45,15 @@ from .models import (
     RepliesListResult,
     RevisionsListResult,
     ChangesListResult,
-    ChangesStartPageTokenGetResult,
-    AboutGetResult,
+    About,
+    Change,
     Comment,
     Drive,
     File,
     Permission,
     Reply,
     Revision,
+    StartPageToken,
 )
 
 # TypeVar for decorator type preservation
@@ -70,25 +71,25 @@ class GoogleDriveConnector:
     connector_version = "0.1.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("files", "list"): True,
-        ("files", "get"): False,
-        ("files", "download"): False,
-        ("files_export", "download"): False,
+        ("files", "get"): None,
+        ("files", "download"): None,
+        ("files_export", "download"): None,
         ("drives", "list"): True,
-        ("drives", "get"): False,
+        ("drives", "get"): None,
         ("permissions", "list"): True,
-        ("permissions", "get"): False,
+        ("permissions", "get"): None,
         ("comments", "list"): True,
-        ("comments", "get"): False,
+        ("comments", "get"): None,
         ("replies", "list"): True,
-        ("replies", "get"): False,
+        ("replies", "get"): None,
         ("revisions", "list"): True,
-        ("revisions", "get"): False,
+        ("revisions", "get"): None,
         ("changes", "list"): True,
-        ("changes_start_page_token", "get"): True,
-        ("about", "get"): True,
+        ("changes_start_page_token", "get"): None,
+        ("about", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -327,7 +328,7 @@ class GoogleDriveConnector:
         entity: Literal["changes_start_page_token"],
         action: Literal["get"],
         params: "ChangesStartPageTokenGetParams"
-    ) -> "ChangesStartPageTokenGetResult": ...
+    ) -> "StartPageToken": ...
 
     @overload
     async def execute(
@@ -335,7 +336,7 @@ class GoogleDriveConnector:
         entity: Literal["about"],
         action: Literal["get"],
         params: "AboutGetParams"
-    ) -> "AboutGetResult": ...
+    ) -> "About": ...
 
 
     @overload
@@ -396,7 +397,7 @@ class GoogleDriveConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -555,7 +556,8 @@ class FilesQuery:
         # Cast generic envelope to concrete typed result
         return FilesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -819,7 +821,8 @@ class DrivesQuery:
         # Cast generic envelope to concrete typed result
         return DrivesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -896,7 +899,8 @@ class PermissionsQuery:
         # Cast generic envelope to concrete typed result
         return PermissionsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -982,7 +986,8 @@ class CommentsQuery:
         # Cast generic envelope to concrete typed result
         return CommentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1068,7 +1073,8 @@ class RepliesQuery:
         # Cast generic envelope to concrete typed result
         return RepliesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1148,7 +1154,8 @@ class RevisionsQuery:
         # Cast generic envelope to concrete typed result
         return RevisionsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1234,7 +1241,8 @@ class ChangesQuery:
         # Cast generic envelope to concrete typed result
         return ChangesListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -1252,7 +1260,7 @@ class ChangesStartPageTokenQuery:
         drive_id: str | None = None,
         supports_all_drives: bool | None = None,
         **kwargs
-    ) -> ChangesStartPageTokenGetResult:
+    ) -> StartPageToken:
         """
         Gets the starting pageToken for listing future changes
 
@@ -1262,7 +1270,7 @@ class ChangesStartPageTokenQuery:
             **kwargs: Additional parameters
 
         Returns:
-            ChangesStartPageTokenGetResult
+            StartPageToken
         """
         params = {k: v for k, v in {
             "driveId": drive_id,
@@ -1271,9 +1279,7 @@ class ChangesStartPageTokenQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("changes_start_page_token", "get", params)
-        # Cast generic envelope to concrete typed result
-        return ChangesStartPageTokenGetResult(
-            data=result.data        )
+        return result
 
 
 
@@ -1290,7 +1296,7 @@ class AboutQuery:
         self,
         fields: str | None = None,
         **kwargs
-    ) -> AboutGetResult:
+    ) -> About:
         """
         Gets information about the user, the user's Drive, and system capabilities
 
@@ -1299,7 +1305,7 @@ class AboutQuery:
             **kwargs: Additional parameters
 
         Returns:
-            AboutGetResult
+            About
         """
         params = {k: v for k, v in {
             "fields": fields,
@@ -1307,8 +1313,6 @@ class AboutQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("about", "get", params)
-        # Cast generic envelope to concrete typed result
-        return AboutGetResult(
-            data=result.data        )
+        return result
 
 
