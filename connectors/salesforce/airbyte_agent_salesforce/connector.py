@@ -1,5 +1,5 @@
 """
-salesforce connector.
+Salesforce connector.
 """
 
 from __future__ import annotations
@@ -55,6 +55,27 @@ if TYPE_CHECKING:
 from .models import (
     SalesforceExecuteResult,
     SalesforceExecuteResultWithMeta,
+    AccountsListResult,
+    AccountsApiSearchResult,
+    ContactsListResult,
+    ContactsApiSearchResult,
+    LeadsListResult,
+    LeadsApiSearchResult,
+    OpportunitiesListResult,
+    OpportunitiesApiSearchResult,
+    TasksListResult,
+    TasksApiSearchResult,
+    EventsListResult,
+    EventsApiSearchResult,
+    CampaignsListResult,
+    CampaignsApiSearchResult,
+    CasesListResult,
+    CasesApiSearchResult,
+    NotesListResult,
+    NotesApiSearchResult,
+    ContentVersionsListResult,
+    AttachmentsListResult,
+    QueryListResult,
     Account,
     AccountQueryResult,
     Attachment,
@@ -96,42 +117,42 @@ class SalesforceConnector:
     connector_version = "1.0.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
-        ("accounts", "list"): False,
-        ("accounts", "get"): False,
-        ("accounts", "api_search"): False,
-        ("contacts", "list"): False,
-        ("contacts", "get"): False,
-        ("contacts", "api_search"): False,
-        ("leads", "list"): False,
-        ("leads", "get"): False,
-        ("leads", "api_search"): False,
-        ("opportunities", "list"): False,
-        ("opportunities", "get"): False,
-        ("opportunities", "api_search"): False,
-        ("tasks", "list"): False,
-        ("tasks", "get"): False,
-        ("tasks", "api_search"): False,
-        ("events", "list"): False,
-        ("events", "get"): False,
-        ("events", "api_search"): False,
-        ("campaigns", "list"): False,
-        ("campaigns", "get"): False,
-        ("campaigns", "api_search"): False,
-        ("cases", "list"): False,
-        ("cases", "get"): False,
-        ("cases", "api_search"): False,
-        ("notes", "list"): False,
-        ("notes", "get"): False,
-        ("notes", "api_search"): False,
-        ("content_versions", "list"): False,
-        ("content_versions", "get"): False,
-        ("content_versions", "download"): False,
-        ("attachments", "list"): False,
-        ("attachments", "get"): False,
-        ("attachments", "download"): False,
-        ("query", "list"): False,
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("accounts", "list"): True,
+        ("accounts", "get"): None,
+        ("accounts", "api_search"): True,
+        ("contacts", "list"): True,
+        ("contacts", "get"): None,
+        ("contacts", "api_search"): True,
+        ("leads", "list"): True,
+        ("leads", "get"): None,
+        ("leads", "api_search"): True,
+        ("opportunities", "list"): True,
+        ("opportunities", "get"): None,
+        ("opportunities", "api_search"): True,
+        ("tasks", "list"): True,
+        ("tasks", "get"): None,
+        ("tasks", "api_search"): True,
+        ("events", "list"): True,
+        ("events", "get"): None,
+        ("events", "api_search"): True,
+        ("campaigns", "list"): True,
+        ("campaigns", "get"): None,
+        ("campaigns", "api_search"): True,
+        ("cases", "list"): True,
+        ("cases", "get"): None,
+        ("cases", "api_search"): True,
+        ("notes", "list"): True,
+        ("notes", "get"): None,
+        ("notes", "api_search"): True,
+        ("content_versions", "list"): True,
+        ("content_versions", "get"): None,
+        ("content_versions", "download"): None,
+        ("attachments", "list"): True,
+        ("attachments", "get"): None,
+        ("attachments", "download"): None,
+        ("query", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -276,7 +297,7 @@ class SalesforceConnector:
         entity: Literal["accounts"],
         action: Literal["list"],
         params: "AccountsListParams"
-    ) -> "AccountQueryResult": ...
+    ) -> "AccountsListResult": ...
 
     @overload
     async def execute(
@@ -292,7 +313,7 @@ class SalesforceConnector:
         entity: Literal["accounts"],
         action: Literal["api_search"],
         params: "AccountsApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "AccountsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -300,7 +321,7 @@ class SalesforceConnector:
         entity: Literal["contacts"],
         action: Literal["list"],
         params: "ContactsListParams"
-    ) -> "ContactQueryResult": ...
+    ) -> "ContactsListResult": ...
 
     @overload
     async def execute(
@@ -316,7 +337,7 @@ class SalesforceConnector:
         entity: Literal["contacts"],
         action: Literal["api_search"],
         params: "ContactsApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "ContactsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -324,7 +345,7 @@ class SalesforceConnector:
         entity: Literal["leads"],
         action: Literal["list"],
         params: "LeadsListParams"
-    ) -> "LeadQueryResult": ...
+    ) -> "LeadsListResult": ...
 
     @overload
     async def execute(
@@ -340,7 +361,7 @@ class SalesforceConnector:
         entity: Literal["leads"],
         action: Literal["api_search"],
         params: "LeadsApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "LeadsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -348,7 +369,7 @@ class SalesforceConnector:
         entity: Literal["opportunities"],
         action: Literal["list"],
         params: "OpportunitiesListParams"
-    ) -> "OpportunityQueryResult": ...
+    ) -> "OpportunitiesListResult": ...
 
     @overload
     async def execute(
@@ -364,7 +385,7 @@ class SalesforceConnector:
         entity: Literal["opportunities"],
         action: Literal["api_search"],
         params: "OpportunitiesApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "OpportunitiesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -372,7 +393,7 @@ class SalesforceConnector:
         entity: Literal["tasks"],
         action: Literal["list"],
         params: "TasksListParams"
-    ) -> "TaskQueryResult": ...
+    ) -> "TasksListResult": ...
 
     @overload
     async def execute(
@@ -388,7 +409,7 @@ class SalesforceConnector:
         entity: Literal["tasks"],
         action: Literal["api_search"],
         params: "TasksApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "TasksApiSearchResult": ...
 
     @overload
     async def execute(
@@ -396,7 +417,7 @@ class SalesforceConnector:
         entity: Literal["events"],
         action: Literal["list"],
         params: "EventsListParams"
-    ) -> "EventQueryResult": ...
+    ) -> "EventsListResult": ...
 
     @overload
     async def execute(
@@ -412,7 +433,7 @@ class SalesforceConnector:
         entity: Literal["events"],
         action: Literal["api_search"],
         params: "EventsApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "EventsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -420,7 +441,7 @@ class SalesforceConnector:
         entity: Literal["campaigns"],
         action: Literal["list"],
         params: "CampaignsListParams"
-    ) -> "CampaignQueryResult": ...
+    ) -> "CampaignsListResult": ...
 
     @overload
     async def execute(
@@ -436,7 +457,7 @@ class SalesforceConnector:
         entity: Literal["campaigns"],
         action: Literal["api_search"],
         params: "CampaignsApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "CampaignsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -444,7 +465,7 @@ class SalesforceConnector:
         entity: Literal["cases"],
         action: Literal["list"],
         params: "CasesListParams"
-    ) -> "CaseQueryResult": ...
+    ) -> "CasesListResult": ...
 
     @overload
     async def execute(
@@ -460,7 +481,7 @@ class SalesforceConnector:
         entity: Literal["cases"],
         action: Literal["api_search"],
         params: "CasesApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "CasesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -468,7 +489,7 @@ class SalesforceConnector:
         entity: Literal["notes"],
         action: Literal["list"],
         params: "NotesListParams"
-    ) -> "NoteQueryResult": ...
+    ) -> "NotesListResult": ...
 
     @overload
     async def execute(
@@ -484,7 +505,7 @@ class SalesforceConnector:
         entity: Literal["notes"],
         action: Literal["api_search"],
         params: "NotesApiSearchParams"
-    ) -> "SearchResult": ...
+    ) -> "NotesApiSearchResult": ...
 
     @overload
     async def execute(
@@ -492,7 +513,7 @@ class SalesforceConnector:
         entity: Literal["content_versions"],
         action: Literal["list"],
         params: "ContentVersionsListParams"
-    ) -> "ContentVersionQueryResult": ...
+    ) -> "ContentVersionsListResult": ...
 
     @overload
     async def execute(
@@ -516,7 +537,7 @@ class SalesforceConnector:
         entity: Literal["attachments"],
         action: Literal["list"],
         params: "AttachmentsListParams"
-    ) -> "AttachmentQueryResult": ...
+    ) -> "AttachmentsListResult": ...
 
     @overload
     async def execute(
@@ -540,7 +561,7 @@ class SalesforceConnector:
         entity: Literal["query"],
         action: Literal["list"],
         params: "QueryListParams"
-    ) -> "QueryResult": ...
+    ) -> "QueryListResult": ...
 
 
     @overload
@@ -601,7 +622,7 @@ class SalesforceConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -713,7 +734,7 @@ class AccountsQuery:
         self,
         q: str,
         **kwargs
-    ) -> AccountQueryResult:
+    ) -> AccountsListResult:
         """
         Returns a list of accounts via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -727,7 +748,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LI
             **kwargs: Additional parameters
 
         Returns:
-            AccountQueryResult
+            AccountsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -735,7 +756,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LI
         }.items() if v is not None}
 
         result = await self._connector.execute("accounts", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return AccountsListResult(
+            data=result.data
+        )
 
 
 
@@ -775,7 +799,7 @@ Example: "Id,Name,Industry,AnnualRevenue,Website"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> AccountsApiSearchResult:
         """
         Search for accounts using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields and objects.
@@ -792,7 +816,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            AccountsApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -800,7 +824,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("accounts", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return AccountsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -817,7 +844,7 @@ class ContactsQuery:
         self,
         q: str,
         **kwargs
-    ) -> ContactQueryResult:
+    ) -> ContactsListResult:
         """
         Returns a list of contacts via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -831,7 +858,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMI
             **kwargs: Additional parameters
 
         Returns:
-            ContactQueryResult
+            ContactsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -839,7 +866,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMI
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ContactsListResult(
+            data=result.data
+        )
 
 
 
@@ -879,7 +909,7 @@ Example: "Id,FirstName,LastName,Email,Phone,AccountId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> ContactsApiSearchResult:
         """
         Search for contacts using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -894,7 +924,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            ContactsApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -902,7 +932,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ContactsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -919,7 +952,7 @@ class LeadsQuery:
         self,
         q: str,
         **kwargs
-    ) -> LeadQueryResult:
+    ) -> LeadsListResult:
         """
         Returns a list of leads via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -933,7 +966,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Lead WHERE Status = 'Open' LIMIT 100"
             **kwargs: Additional parameters
 
         Returns:
-            LeadQueryResult
+            LeadsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -941,7 +974,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Lead WHERE Status = 'Open' LIMIT 100"
         }.items() if v is not None}
 
         result = await self._connector.execute("leads", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return LeadsListResult(
+            data=result.data
+        )
 
 
 
@@ -981,7 +1017,7 @@ Example: "Id,FirstName,LastName,Email,Company,Status,LeadSource"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> LeadsApiSearchResult:
         """
         Search for leads using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -996,7 +1032,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            LeadsApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1004,7 +1040,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("leads", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return LeadsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1021,7 +1060,7 @@ class OpportunitiesQuery:
         self,
         q: str,
         **kwargs
-    ) -> OpportunityQueryResult:
+    ) -> OpportunitiesListResult:
         """
         Returns a list of opportunities via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1035,7 +1074,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won
             **kwargs: Additional parameters
 
         Returns:
-            OpportunityQueryResult
+            OpportunitiesListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1043,7 +1082,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won
         }.items() if v is not None}
 
         result = await self._connector.execute("opportunities", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return OpportunitiesListResult(
+            data=result.data
+        )
 
 
 
@@ -1083,7 +1125,7 @@ Example: "Id,Name,Amount,StageName,CloseDate,AccountId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> OpportunitiesApiSearchResult:
         """
         Search for opportunities using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1098,7 +1140,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            OpportunitiesApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1106,7 +1148,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("opportunities", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return OpportunitiesApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1123,7 +1168,7 @@ class TasksQuery:
         self,
         q: str,
         **kwargs
-    ) -> TaskQueryResult:
+    ) -> TasksListResult:
         """
         Returns a list of tasks via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1137,7 +1182,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Task WHERE Status = 'Not Started' LIMIT 1
             **kwargs: Additional parameters
 
         Returns:
-            TaskQueryResult
+            TasksListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1145,7 +1190,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Task WHERE Status = 'Not Started' LIMIT 1
         }.items() if v is not None}
 
         result = await self._connector.execute("tasks", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return TasksListResult(
+            data=result.data
+        )
 
 
 
@@ -1185,7 +1233,7 @@ Example: "Id,Subject,Status,Priority,ActivityDate,WhoId,WhatId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> TasksApiSearchResult:
         """
         Search for tasks using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1200,7 +1248,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            TasksApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1208,7 +1256,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("tasks", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return TasksApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1225,7 +1276,7 @@ class EventsQuery:
         self,
         q: str,
         **kwargs
-    ) -> EventQueryResult:
+    ) -> EventsListResult:
         """
         Returns a list of events via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1239,7 +1290,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Event WHERE StartDateTime > TODAY LIMIT 5
             **kwargs: Additional parameters
 
         Returns:
-            EventQueryResult
+            EventsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1247,7 +1298,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Event WHERE StartDateTime > TODAY LIMIT 5
         }.items() if v is not None}
 
         result = await self._connector.execute("events", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return EventsListResult(
+            data=result.data
+        )
 
 
 
@@ -1287,7 +1341,7 @@ Example: "Id,Subject,StartDateTime,EndDateTime,Location,WhoId,WhatId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> EventsApiSearchResult:
         """
         Search for events using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1302,7 +1356,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            EventsApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1310,7 +1364,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("events", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return EventsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1327,7 +1384,7 @@ class CampaignsQuery:
         self,
         q: str,
         **kwargs
-    ) -> CampaignQueryResult:
+    ) -> CampaignsListResult:
         """
         Returns a list of campaigns via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1341,7 +1398,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Campaign WHERE IsActive = true LIMIT 50"
             **kwargs: Additional parameters
 
         Returns:
-            CampaignQueryResult
+            CampaignsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1349,7 +1406,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Campaign WHERE IsActive = true LIMIT 50"
         }.items() if v is not None}
 
         result = await self._connector.execute("campaigns", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CampaignsListResult(
+            data=result.data
+        )
 
 
 
@@ -1389,7 +1449,7 @@ Example: "Id,Name,Type,Status,StartDate,EndDate,IsActive"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> CampaignsApiSearchResult:
         """
         Search for campaigns using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1404,7 +1464,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            CampaignsApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1412,7 +1472,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("campaigns", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CampaignsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1429,7 +1492,7 @@ class CasesQuery:
         self,
         q: str,
         **kwargs
-    ) -> CaseQueryResult:
+    ) -> CasesListResult:
         """
         Returns a list of cases via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1443,7 +1506,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Case WHERE Status = 'New' LIMIT 100"
             **kwargs: Additional parameters
 
         Returns:
-            CaseQueryResult
+            CasesListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1451,7 +1514,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Case WHERE Status = 'New' LIMIT 100"
         }.items() if v is not None}
 
         result = await self._connector.execute("cases", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CasesListResult(
+            data=result.data
+        )
 
 
 
@@ -1491,7 +1557,7 @@ Example: "Id,CaseNumber,Subject,Status,Priority,ContactId,AccountId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> CasesApiSearchResult:
         """
         Search for cases using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1506,7 +1572,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            CasesApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1514,7 +1580,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("cases", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return CasesApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1531,7 +1600,7 @@ class NotesQuery:
         self,
         q: str,
         **kwargs
-    ) -> NoteQueryResult:
+    ) -> NotesListResult:
         """
         Returns a list of notes via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1545,7 +1614,7 @@ Example: "SELECT FIELDS(STANDARD) FROM Note WHERE ParentId = '001xx...' LIMIT 50
             **kwargs: Additional parameters
 
         Returns:
-            NoteQueryResult
+            NotesListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1553,7 +1622,10 @@ Example: "SELECT FIELDS(STANDARD) FROM Note WHERE ParentId = '001xx...' LIMIT 50
         }.items() if v is not None}
 
         result = await self._connector.execute("notes", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return NotesListResult(
+            data=result.data
+        )
 
 
 
@@ -1593,7 +1665,7 @@ Example: "Id,Title,Body,ParentId,OwnerId"
         self,
         q: str,
         **kwargs
-    ) -> SearchResult:
+    ) -> NotesApiSearchResult:
         """
         Search for notes using SOSL (Salesforce Object Search Language).
 SOSL is optimized for text-based searches across multiple fields.
@@ -1608,7 +1680,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            SearchResult
+            NotesApiSearchResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1616,7 +1688,10 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("notes", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return NotesApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -1633,7 +1708,7 @@ class ContentVersionsQuery:
         self,
         q: str,
         **kwargs
-    ) -> ContentVersionQueryResult:
+    ) -> ContentVersionsListResult:
         """
         Returns a list of content versions (file metadata) via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1648,7 +1723,7 @@ Example: "SELECT Id, Title, FileExtension, ContentSize FROM ContentVersion WHERE
             **kwargs: Additional parameters
 
         Returns:
-            ContentVersionQueryResult
+            ContentVersionsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1656,7 +1731,10 @@ Example: "SELECT Id, Title, FileExtension, ContentSize FROM ContentVersion WHERE
         }.items() if v is not None}
 
         result = await self._connector.execute("content_versions", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return ContentVersionsListResult(
+            data=result.data
+        )
 
 
 
@@ -1775,7 +1853,7 @@ class AttachmentsQuery:
         self,
         q: str,
         **kwargs
-    ) -> AttachmentQueryResult:
+    ) -> AttachmentsListResult:
         """
         Returns a list of attachments (legacy) via SOQL query. Default returns up to 200 records.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1790,7 +1868,7 @@ Example: "SELECT Id, Name, ContentType, BodyLength, ParentId FROM Attachment WHE
             **kwargs: Additional parameters
 
         Returns:
-            AttachmentQueryResult
+            AttachmentsListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1798,7 +1876,10 @@ Example: "SELECT Id, Name, ContentType, BodyLength, ParentId FROM Attachment WHE
         }.items() if v is not None}
 
         result = await self._connector.execute("attachments", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return AttachmentsListResult(
+            data=result.data
+        )
 
 
 
@@ -1918,7 +1999,7 @@ class QueryQuery:
         self,
         q: str,
         **kwargs
-    ) -> QueryResult:
+    ) -> QueryListResult:
         """
         Execute a custom SOQL query and return results. Use this for querying any Salesforce object.
 For pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.
@@ -1934,7 +2015,7 @@ Examples:
             **kwargs: Additional parameters
 
         Returns:
-            QueryResult
+            QueryListResult
         """
         params = {k: v for k, v in {
             "q": q,
@@ -1942,6 +2023,9 @@ Examples:
         }.items() if v is not None}
 
         result = await self._connector.execute("query", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return QueryListResult(
+            data=result.data
+        )
 
 
