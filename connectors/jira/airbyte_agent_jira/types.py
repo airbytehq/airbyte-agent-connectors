@@ -115,3 +115,4 @@ class IssueWorklogsGetParams(TypedDict):
     issue_id_or_key: str
     worklog_id: str
     expand: NotRequired[str]
+
