@@ -12,8 +12,41 @@ from airbyte_agent_mcp.secret_manager import DotEnvSecretsBackend, SecretsManage
 
 logger = logging.getLogger(__name__)
 
+# =============================================================================
+# Server Instructions
+# =============================================================================
+# This text is provided to AI agents via the MCP protocol's "instructions" field.
+# It helps agents understand when to use this server's tools, especially when
+# tool search is enabled. For more context, see:
+# - FastMCP docs: https://gofastmcp.com/servers/overview
+# - Claude tool search: https://www.anthropic.com/news/tool-use-improvements
+# =============================================================================
+
+MCP_SERVER_INSTRUCTIONS = """
+Airbyte agent connector execution server, enabling CRUD operations on
+pre-configured data connectors.
+
+Use this server for:
+- Executing operations on configured connectors (execute tool): perform CRUD
+  actions like list, get, create, update, delete on connector entities
+- Discovering available connectors (discover_connectors tool): list all
+  connectors defined in configured_connectors.yaml
+- Describing connector capabilities (describe_connector tool): get available
+  entities and supported actions for a specific connector
+
+Configuration:
+- Connectors are defined in configured_connectors.yaml
+- Secrets are loaded from .env file via the secrets manager
+- Supports both local connector packages and remote registry connectors
+
+Typical workflow:
+1. Call discover_connectors to see available connectors
+2. Call describe_connector to understand a connector's entities and actions
+3. Call execute to perform operations on connector entities
+""".strip()
+
 # Initialize FastMCP server
-mcp = FastMCP("airbyte-agent-mcp")
+mcp = FastMCP("airbyte-agent-mcp", instructions=MCP_SERVER_INSTRUCTIONS)
 
 
 def _serialize_exception(e: Exception) -> dict:
