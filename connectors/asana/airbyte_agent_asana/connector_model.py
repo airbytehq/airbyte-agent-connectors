@@ -41,6 +41,8 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     'header': 'Authorization',
                     'prefix': 'Bearer',
                     'refresh_url': 'https://app.asana.com/-/oauth_token',
+                    'auth_style': 'body',
+                    'body_format': 'form',
                 },
                 user_config_spec=AirbyteAuthConfig(
                     title='OAuth 2',
