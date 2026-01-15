@@ -12,7 +12,7 @@ to Operation, Schema, or other models when their respective features
 are implemented.
 """
 
-from typing import Literal, Optional
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -122,7 +122,7 @@ class CacheFieldConfig(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     name: str
-    x_airbyte_name: Optional[str] = Field(default=None, alias="x-airbyte-name")
+    x_airbyte_name: str | None = Field(default=None, alias="x-airbyte-name")
     type: str | list[str]
     description: str
 
@@ -145,7 +145,7 @@ class CacheEntityConfig(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     entity: str
-    x_airbyte_name: Optional[str] = Field(default=None, alias="x-airbyte-name")
+    x_airbyte_name: str | None = Field(default=None, alias="x-airbyte-name")
     fields: list[CacheFieldConfig]
 
     @property
@@ -186,7 +186,7 @@ class CacheConfig(BaseModel):
 
     entities: list[CacheEntityConfig]
 
-    def get_entity_mapping(self, user_entity: str) -> Optional[CacheEntityConfig]:
+    def get_entity_mapping(self, user_entity: str) -> CacheEntityConfig | None:
         """
         Get entity config by user-facing name.
 
