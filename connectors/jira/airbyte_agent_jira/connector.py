@@ -1,5 +1,5 @@
 """
-jira connector.
+Jira connector.
 """
 
 from __future__ import annotations
@@ -36,10 +36,15 @@ from .models import (
     JiraExecuteResultWithMeta,
     IssuesApiSearchResult,
     ProjectsApiSearchResult,
+    UsersListResult,
+    UsersApiSearchResult,
+    IssueFieldsListResult,
+    IssueFieldsApiSearchResult,
     IssueCommentsListResult,
     IssueWorklogsListResult,
     Issue,
     IssueComment,
+    IssueField,
     IssueFieldSearchResults,
     Project,
     User,
@@ -61,21 +66,21 @@ class JiraConnector:
     connector_version = "1.0.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
-    # Map of (entity, action) -> has_extractors for envelope wrapping decision
-    _EXTRACTOR_MAP = {
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
         ("issues", "api_search"): True,
-        ("issues", "get"): False,
+        ("issues", "get"): None,
         ("projects", "api_search"): True,
-        ("projects", "get"): False,
-        ("users", "get"): False,
-        ("users", "list"): False,
-        ("users", "api_search"): False,
-        ("issue_fields", "list"): False,
-        ("issue_fields", "api_search"): False,
+        ("projects", "get"): None,
+        ("users", "get"): None,
+        ("users", "list"): True,
+        ("users", "api_search"): True,
+        ("issue_fields", "list"): True,
+        ("issue_fields", "api_search"): True,
         ("issue_comments", "list"): True,
-        ("issue_comments", "get"): False,
+        ("issue_comments", "get"): None,
         ("issue_worklogs", "list"): True,
-        ("issue_worklogs", "get"): False,
+        ("issue_worklogs", "get"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -232,7 +237,7 @@ class JiraConnector:
         entity: Literal["users"],
         action: Literal["list"],
         params: "UsersListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "UsersListResult": ...
 
     @overload
     async def execute(
@@ -240,7 +245,7 @@ class JiraConnector:
         entity: Literal["users"],
         action: Literal["api_search"],
         params: "UsersApiSearchParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "UsersApiSearchResult": ...
 
     @overload
     async def execute(
@@ -248,7 +253,7 @@ class JiraConnector:
         entity: Literal["issue_fields"],
         action: Literal["list"],
         params: "IssueFieldsListParams"
-    ) -> "dict[str, Any]": ...
+    ) -> "IssueFieldsListResult": ...
 
     @overload
     async def execute(
@@ -256,7 +261,7 @@ class JiraConnector:
         entity: Literal["issue_fields"],
         action: Literal["api_search"],
         params: "IssueFieldsApiSearchParams"
-    ) -> "IssueFieldSearchResults": ...
+    ) -> "IssueFieldsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -349,7 +354,7 @@ class JiraConnector:
             raise RuntimeError(f"Execution failed: {result.error}")
 
         # Check if this operation has extractors configured
-        has_extractors = self._EXTRACTOR_MAP.get((entity, action), False)
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
 
         if has_extractors:
             # With extractors - return Pydantic envelope with data and meta
@@ -502,7 +507,8 @@ class IssuesQuery:
         # Cast generic envelope to concrete typed result
         return IssuesApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -612,7 +618,8 @@ class ProjectsQuery:
         # Cast generic envelope to concrete typed result
         return ProjectsApiSearchResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -689,7 +696,7 @@ class UsersQuery:
         start_at: int | None = None,
         max_results: int | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> UsersListResult:
         """
         Returns a paginated list of users
 
@@ -699,7 +706,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            UsersListResult
         """
         params = {k: v for k, v in {
             "startAt": start_at,
@@ -708,7 +715,10 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return UsersListResult(
+            data=result.data
+        )
 
 
 
@@ -720,7 +730,7 @@ class UsersQuery:
         account_id: str | None = None,
         property: str | None = None,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> UsersApiSearchResult:
         """
         Search for users using a query string
 
@@ -733,7 +743,7 @@ class UsersQuery:
             **kwargs: Additional parameters
 
         Returns:
-            dict[str, Any]
+            UsersApiSearchResult
         """
         params = {k: v for k, v in {
             "query": query,
@@ -745,7 +755,10 @@ class UsersQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("users", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return UsersApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -761,19 +774,22 @@ class IssueFieldsQuery:
     async def list(
         self,
         **kwargs
-    ) -> dict[str, Any]:
+    ) -> IssueFieldsListResult:
         """
         Returns a list of all custom and system fields
 
         Returns:
-            dict[str, Any]
+            IssueFieldsListResult
         """
         params = {k: v for k, v in {
             **kwargs
         }.items() if v is not None}
 
         result = await self._connector.execute("issue_fields", "list", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return IssueFieldsListResult(
+            data=result.data
+        )
 
 
 
@@ -787,7 +803,7 @@ class IssueFieldsQuery:
         order_by: str | None = None,
         expand: str | None = None,
         **kwargs
-    ) -> IssueFieldSearchResults:
+    ) -> IssueFieldsApiSearchResult:
         """
         Search and filter issue fields with query parameters
 
@@ -802,7 +818,7 @@ class IssueFieldsQuery:
             **kwargs: Additional parameters
 
         Returns:
-            IssueFieldSearchResults
+            IssueFieldsApiSearchResult
         """
         params = {k: v for k, v in {
             "startAt": start_at,
@@ -816,7 +832,10 @@ class IssueFieldsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issue_fields", "api_search", params)
-        return result
+        # Cast generic envelope to concrete typed result
+        return IssueFieldsApiSearchResult(
+            data=result.data
+        )
 
 
 
@@ -865,7 +884,8 @@ class IssueCommentsQuery:
         # Cast generic envelope to concrete typed result
         return IssueCommentsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
@@ -942,7 +962,8 @@ class IssueWorklogsQuery:
         # Cast generic envelope to concrete typed result
         return IssueWorklogsListResult(
             data=result.data,
-            meta=result.meta        )
+            meta=result.meta
+        )
 
 
 
