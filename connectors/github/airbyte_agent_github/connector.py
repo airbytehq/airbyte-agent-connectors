@@ -93,6 +93,7 @@ from .models import (
 _F = TypeVar("_F", bound=Callable[..., Any])
 
 
+
 class GithubConnector:
     """
     Type-safe Github API connector.
