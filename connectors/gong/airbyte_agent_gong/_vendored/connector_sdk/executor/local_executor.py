@@ -1222,15 +1222,22 @@ class LocalExecutor:
     def _extract_metadata(
         self,
         response_data: dict[str, Any],
+        response_headers: dict[str, str],
         endpoint: EndpointDefinition,
     ) -> dict[str, Any] | None:
         """Extract metadata from response using meta extractor.
 
-        Each field in meta_extractor dict is independently extracted using JSONPath.
+        Each field in meta_extractor dict is independently extracted using JSONPath
+        for body extraction, or special prefixes for header extraction:
+        - @link.{rel}: Extract URL from RFC 5988 Link header by rel type
+        - @header.{name}: Extract raw header value by header name
+        - Otherwise: JSONPath expression for body extraction
+
         Missing or invalid paths result in None for that field (no crash).
 
         Args:
             response_data: Full API response (before record extraction)
+            response_headers: HTTP response headers
             endpoint: Endpoint with optional meta extractor configuration
 
         Returns:
@@ -1241,11 +1248,15 @@ class LocalExecutor:
         Example:
             meta_extractor = {
                 "pagination": "$.records",
-                "request_id": "$.requestId"
+                "request_id": "$.requestId",
+                "next_page_url": "@link.next",
+                "rate_limit": "@header.X-RateLimit-Remaining"
             }
             Returns: {
                 "pagination": {"cursor": "abc", "total": 100},
-                "request_id": "xyz123"
+                "request_id": "xyz123",
+                "next_page_url": "https://api.example.com/data?cursor=abc",
+                "rate_limit": "99"
             }
         """
         # Check if endpoint has meta extractor
@@ -1255,25 +1266,95 @@ class LocalExecutor:
         extracted_meta: dict[str, Any] = {}
 
         # Extract each field independently
-        for field_name, jsonpath_expr_str in endpoint.meta_extractor.items():
+        for field_name, extractor_expr in endpoint.meta_extractor.items():
             try:
-                # Parse and apply JSONPath expression
-                jsonpath_expr = parse_jsonpath(jsonpath_expr_str)
-                matches = [match.value for match in jsonpath_expr.find(response_data)]
-
-                if matches:
-                    # Return first match (most common case)
-                    extracted_meta[field_name] = matches[0]
+                if extractor_expr.startswith("@link."):
+                    # RFC 5988 Link header extraction
+                    rel = extractor_expr[6:]
+                    extracted_meta[field_name] = self._extract_link_url(response_headers, rel)
+                elif extractor_expr.startswith("@header."):
+                    # Raw header value extraction (case-insensitive lookup)
+                    header_name = extractor_expr[8:]
+                    extracted_meta[field_name] = self._get_header_value(response_headers, header_name)
                 else:
-                    # Path not found - set to None
-                    extracted_meta[field_name] = None
+                    # JSONPath body extraction
+                    jsonpath_expr = parse_jsonpath(extractor_expr)
+                    matches = [match.value for match in jsonpath_expr.find(response_data)]
+
+                    if matches:
+                        # Return first match (most common case)
+                        extracted_meta[field_name] = matches[0]
+                    else:
+                        # Path not found - set to None
+                        extracted_meta[field_name] = None
 
             except Exception as e:
                 # Log error but continue with other fields
-                logging.warning(f"Failed to apply meta extractor for field '{field_name}' with path '{jsonpath_expr_str}': {e}. Setting to None.")
+                logging.warning(f"Failed to apply meta extractor for field '{field_name}' with expression '{extractor_expr}': {e}. Setting to None.")
                 extracted_meta[field_name] = None
 
         return extracted_meta
+
+    @staticmethod
+    def _extract_link_url(headers: dict[str, str], rel: str) -> str | None:
+        """Extract URL from RFC 5988 Link header by rel type.
+
+        Parses Link header format: <url>; param1="value1"; rel="next"; param2="value2"
+
+        Supports:
+        - Multiple parameters per link in any order
+        - Both quoted and unquoted rel values
+        - Multiple links separated by commas
+
+        Args:
+            headers: Response headers dict
+            rel: The rel type to extract (e.g., "next", "prev", "first", "last")
+
+        Returns:
+            The URL for the specified rel type, or None if not found
+        """
+        link_header = headers.get("Link") or headers.get("link", "")
+        if not link_header:
+            return None
+
+        for link_segment in re.split(r",(?=\s*<)", link_header):
+            link_segment = link_segment.strip()
+
+            url_match = re.match(r"<([^>]+)>", link_segment)
+            if not url_match:
+                continue
+
+            url = url_match.group(1)
+            params_str = link_segment[url_match.end() :]
+
+            rel_match = re.search(r';\s*rel="?([^";,]+)"?', params_str, re.IGNORECASE)
+            if rel_match and rel_match.group(1).strip() == rel:
+                return url
+
+        return None
+
+    @staticmethod
+    def _get_header_value(headers: dict[str, str], header_name: str) -> str | None:
+        """Get header value with case-insensitive lookup.
+
+        Args:
+            headers: Response headers dict
+            header_name: Header name to look up
+
+        Returns:
+            Header value or None if not found
+        """
+        # Try exact match first
+        if header_name in headers:
+            return headers[header_name]
+
+        # Case-insensitive lookup
+        header_name_lower = header_name.lower()
+        for key, value in headers.items():
+            if key.lower() == header_name_lower:
+                return value
+
+        return None
 
     def _validate_required_body_fields(self, endpoint: Any, params: dict[str, Any], action: Action, entity: str) -> None:
         """Validate that required body fields are present for CREATE/UPDATE operations.
@@ -1402,7 +1483,7 @@ class _StandardOperationHandler:
                 request_kwargs = self.ctx.determine_request_format(endpoint, body)
 
                 # Execute async HTTP request
-                response = await self.ctx.http_client.request(
+                response_data, response_headers = await self.ctx.http_client.request(
                     method=endpoint.method,
                     path=path,
                     params=query_params if query_params else None,
@@ -1411,10 +1492,10 @@ class _StandardOperationHandler:
                 )
 
                 # Extract metadata from original response (before record extraction)
-                metadata = self.ctx.executor._extract_metadata(response, endpoint)
+                metadata = self.ctx.executor._extract_metadata(response_data, response_headers, endpoint)
 
                 # Extract records if extractor configured
-                response = self.ctx.extract_records(response, endpoint)
+                response = self.ctx.extract_records(response_data, endpoint)
 
                 # Assume success with 200 status code if no exception raised
                 status_code = 200
@@ -1540,7 +1621,7 @@ class _DownloadOperationHandler:
                     request_format = self.ctx.determine_request_format(operation, request_body)
                     self.ctx.validate_required_body_fields(operation, params, action, entity)
 
-                    metadata_response = await self.ctx.http_client.request(
+                    metadata_response, _ = await self.ctx.http_client.request(
                         method=operation.method,
                         path=path,
                         params=query_params,
@@ -1555,7 +1636,7 @@ class _DownloadOperationHandler:
                     )
 
                     # Step 3: Stream file from extracted URL
-                    file_response = await self.ctx.http_client.request(
+                    file_response, _ = await self.ctx.http_client.request(
                         method="GET",
                         path=file_url,
                         headers=headers,
@@ -1563,7 +1644,7 @@ class _DownloadOperationHandler:
                     )
                 else:
                     # One-step direct download: stream file directly from endpoint
-                    file_response = await self.ctx.http_client.request(
+                    file_response, _ = await self.ctx.http_client.request(
                         method=operation.method,
                         path=path,
                         params=query_params,
