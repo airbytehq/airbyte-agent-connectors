@@ -219,7 +219,7 @@ class ArticleAttachmentsDownloadParams(TypedDict):
 # ===== SEARCH TYPES =====
 
 # Sort specification
-SortOrder = Literal["asc", "desc"]
+AirbyteSortOrder = Literal["asc", "desc"]
 
 # ===== BRANDS SEARCH TYPES =====
 
@@ -369,37 +369,37 @@ class BrandsStringFilter(TypedDict, total=False):
 
 class BrandsSortFilter(TypedDict, total=False):
     """Available fields for sorting brands search results."""
-    active: SortOrder
+    active: AirbyteSortOrder
     """Indicates whether the brand is set as active"""
-    brand_url: SortOrder
+    brand_url: AirbyteSortOrder
     """The public URL of the brand"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the brand was created"""
-    default: SortOrder
+    default: AirbyteSortOrder
     """Indicates whether the brand is the default brand for tickets generated from non-branded channels"""
-    has_help_center: SortOrder
+    has_help_center: AirbyteSortOrder
     """Indicates whether the brand has a Help Center enabled"""
-    help_center_state: SortOrder
+    help_center_state: AirbyteSortOrder
     """The state of the Help Center, with allowed values of enabled, disabled, or restricted"""
-    host_mapping: SortOrder
+    host_mapping: AirbyteSortOrder
     """The host mapping configuration for the brand, visible only to administrators"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier automatically assigned when the brand is created"""
-    is_deleted: SortOrder
+    is_deleted: AirbyteSortOrder
     """Indicates whether the brand has been deleted"""
-    logo: SortOrder
+    logo: AirbyteSortOrder
     """Brand logo image file represented as an Attachment object"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """The name of the brand"""
-    signature_template: SortOrder
+    signature_template: AirbyteSortOrder
     """The signature template used for the brand"""
-    subdomain: SortOrder
+    subdomain: AirbyteSortOrder
     """The subdomain associated with the brand"""
-    ticket_form_ids: SortOrder
+    ticket_form_ids: AirbyteSortOrder
     """Array of ticket form IDs that are available for use by this brand"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp when the brand was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API URL for accessing this brand resource"""
 
 
@@ -588,23 +588,23 @@ class GroupsStringFilter(TypedDict, total=False):
 
 class GroupsSortFilter(TypedDict, total=False):
     """Available fields for sorting groups search results."""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the group was created"""
-    default: SortOrder
+    default: AirbyteSortOrder
     """Indicates if the group is the default one for the account"""
-    deleted: SortOrder
+    deleted: AirbyteSortOrder
     """Indicates whether the group has been deleted"""
-    description: SortOrder
+    description: AirbyteSortOrder
     """The description of the group"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier automatically assigned when creating groups"""
-    is_public: SortOrder
+    is_public: AirbyteSortOrder
     """Indicates if the group is public (true) or private (false)"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """The name of the group"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp indicating when the group was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API URL of the group"""
 
 
@@ -841,35 +841,35 @@ class OrganizationsStringFilter(TypedDict, total=False):
 
 class OrganizationsSortFilter(TypedDict, total=False):
     """Available fields for sorting organizations search results."""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the organization was created"""
-    deleted_at: SortOrder
+    deleted_at: AirbyteSortOrder
     """Timestamp when the organization was deleted"""
-    details: SortOrder
+    details: AirbyteSortOrder
     """Details about the organization, such as the address"""
-    domain_names: SortOrder
+    domain_names: AirbyteSortOrder
     """Array of domain names associated with this organization for automatic user assignment"""
-    external_id: SortOrder
+    external_id: AirbyteSortOrder
     """Unique external identifier to associate the organization to an external record (case-insensitive)"""
-    group_id: SortOrder
+    group_id: AirbyteSortOrder
     """ID of the group where new tickets from users in this organization are automatically assigned"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier automatically assigned when the organization is created"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """Unique name for the organization (mandatory field)"""
-    notes: SortOrder
+    notes: AirbyteSortOrder
     """Notes about the organization"""
-    organization_fields: SortOrder
+    organization_fields: AirbyteSortOrder
     """Key-value object for custom organization fields"""
-    shared_comments: SortOrder
+    shared_comments: AirbyteSortOrder
     """Boolean indicating whether end users in this organization can comment on each other's tickets"""
-    shared_tickets: SortOrder
+    shared_tickets: AirbyteSortOrder
     """Boolean indicating whether end users in this organization can see each other's tickets"""
-    tags: SortOrder
+    tags: AirbyteSortOrder
     """Array of tags associated with the organization"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp of the last update to the organization"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API URL of this organization"""
 
 
@@ -1082,29 +1082,29 @@ class SatisfactionRatingsStringFilter(TypedDict, total=False):
 
 class SatisfactionRatingsSortFilter(TypedDict, total=False):
     """Available fields for sorting satisfaction_ratings search results."""
-    assignee_id: SortOrder
+    assignee_id: AirbyteSortOrder
     """The identifier of the agent assigned to the ticket at the time the rating was submitted"""
-    comment: SortOrder
+    comment: AirbyteSortOrder
     """Optional comment provided by the requester with the rating"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the satisfaction rating was created"""
-    group_id: SortOrder
+    group_id: AirbyteSortOrder
     """The identifier of the group assigned to the ticket at the time the rating was submitted"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the satisfaction rating, automatically assigned upon creation"""
-    reason: SortOrder
+    reason: AirbyteSortOrder
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
-    reason_id: SortOrder
+    reason_id: AirbyteSortOrder
     """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
-    requester_id: SortOrder
+    requester_id: AirbyteSortOrder
     """The identifier of the ticket requester who submitted the satisfaction rating"""
-    score: SortOrder
+    score: AirbyteSortOrder
     """The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'"""
-    ticket_id: SortOrder
+    ticket_id: AirbyteSortOrder
     """The identifier of the ticket being rated"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp indicating when the satisfaction rating was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API URL of this satisfaction rating resource"""
 
 
@@ -1237,9 +1237,9 @@ class TagsStringFilter(TypedDict, total=False):
 
 class TagsSortFilter(TypedDict, total=False):
     """Available fields for sorting tags search results."""
-    count: SortOrder
+    count: AirbyteSortOrder
     """The number of times this tag has been used across resources"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """The tag name string used to label and categorize resources"""
 
 
@@ -1420,21 +1420,21 @@ class TicketAuditsStringFilter(TypedDict, total=False):
 
 class TicketAuditsSortFilter(TypedDict, total=False):
     """Available fields for sorting ticket_audits search results."""
-    attachments: SortOrder
+    attachments: AirbyteSortOrder
     """Files or documents attached to the audit"""
-    author_id: SortOrder
+    author_id: AirbyteSortOrder
     """The unique identifier of the user who created the audit"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the audit was created"""
-    events: SortOrder
+    events: AirbyteSortOrder
     """Array of events that occurred in this audit, such as field changes, comments, or tag updates"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the audit record, automatically assigned when the audit is created"""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Custom and system data associated with the audit"""
-    ticket_id: SortOrder
+    ticket_id: AirbyteSortOrder
     """The unique identifier of the ticket associated with this audit"""
-    via: SortOrder
+    via: AirbyteSortOrder
     """Describes how the audit was created, providing context about the creation source"""
 
 
@@ -1687,39 +1687,39 @@ class TicketCommentsStringFilter(TypedDict, total=False):
 
 class TicketCommentsSortFilter(TypedDict, total=False):
     """Available fields for sorting ticket_comments search results."""
-    attachments: SortOrder
+    attachments: AirbyteSortOrder
     """List of files or media attached to the comment"""
-    audit_id: SortOrder
+    audit_id: AirbyteSortOrder
     """Identifier of the audit record associated with this comment event"""
-    author_id: SortOrder
+    author_id: AirbyteSortOrder
     """Identifier of the user who created the comment"""
-    body: SortOrder
+    body: AirbyteSortOrder
     """Content of the comment in its original format"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the comment was created"""
-    event_type: SortOrder
+    event_type: AirbyteSortOrder
     """Specific classification of the event within the ticket event stream"""
-    html_body: SortOrder
+    html_body: AirbyteSortOrder
     """HTML-formatted content of the comment"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the comment event"""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Additional structured information about the comment not covered by standard fields"""
-    plain_body: SortOrder
+    plain_body: AirbyteSortOrder
     """Plain text content of the comment without formatting"""
-    public: SortOrder
+    public: AirbyteSortOrder
     """Boolean indicating whether the comment is visible to end users or is an internal note"""
-    ticket_id: SortOrder
+    ticket_id: AirbyteSortOrder
     """Identifier of the ticket to which this comment belongs"""
-    timestamp: SortOrder
+    timestamp: AirbyteSortOrder
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: SortOrder
+    type: AirbyteSortOrder
     """Type of event, typically indicating this is a comment event"""
-    uploads: SortOrder
+    uploads: AirbyteSortOrder
     """Array of upload tokens or identifiers for files being attached to the comment"""
-    via: SortOrder
+    via: AirbyteSortOrder
     """Channel or method through which the comment was submitted"""
-    via_reference_id: SortOrder
+    via_reference_id: AirbyteSortOrder
     """Reference identifier for the channel through which the comment was created"""
 
 
@@ -2052,59 +2052,59 @@ class TicketFieldsStringFilter(TypedDict, total=False):
 
 class TicketFieldsSortFilter(TypedDict, total=False):
     """Available fields for sorting ticket_fields search results."""
-    active: SortOrder
+    active: AirbyteSortOrder
     """Whether this field is currently available for use"""
-    agent_description: SortOrder
+    agent_description: AirbyteSortOrder
     """A description of the ticket field that only agents can see"""
-    collapsed_for_agents: SortOrder
+    collapsed_for_agents: AirbyteSortOrder
     """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the custom ticket field was created"""
-    custom_field_options: SortOrder
+    custom_field_options: AirbyteSortOrder
     """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
-    custom_statuses: SortOrder
+    custom_statuses: AirbyteSortOrder
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
-    description: SortOrder
+    description: AirbyteSortOrder
     """Text describing the purpose of the ticket field to users"""
-    editable_in_portal: SortOrder
+    editable_in_portal: AirbyteSortOrder
     """Whether this field is editable by end users in Help Center"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the ticket field, automatically assigned when created"""
-    key: SortOrder
+    key: AirbyteSortOrder
     """Internal identifier or reference key for the field"""
-    position: SortOrder
+    position: AirbyteSortOrder
     """The relative position of the ticket field on a ticket, controlling display order"""
-    raw_description: SortOrder
+    raw_description: AirbyteSortOrder
     """The dynamic content placeholder if present, or the description value if not"""
-    raw_title: SortOrder
+    raw_title: AirbyteSortOrder
     """The dynamic content placeholder if present, or the title value if not"""
-    raw_title_in_portal: SortOrder
+    raw_title_in_portal: AirbyteSortOrder
     """The dynamic content placeholder if present, or the title_in_portal value if not"""
-    regexp_for_validation: SortOrder
+    regexp_for_validation: AirbyteSortOrder
     """For regexp fields only, the validation pattern for a field value to be deemed valid"""
-    removable: SortOrder
+    removable: AirbyteSortOrder
     """If false, this field is a system field that must be present on all tickets"""
-    required: SortOrder
+    required: AirbyteSortOrder
     """If true, agents must enter a value in the field to change the ticket status to solved"""
-    required_in_portal: SortOrder
+    required_in_portal: AirbyteSortOrder
     """If true, end users must enter a value in the field to create a request"""
-    sub_type_id: SortOrder
+    sub_type_id: AirbyteSortOrder
     """For system ticket fields of type priority and status, controlling available options"""
-    system_field_options: SortOrder
+    system_field_options: AirbyteSortOrder
     """Array of options for system ticket fields of type tickettype, priority, or status"""
-    tag: SortOrder
+    tag: AirbyteSortOrder
     """For checkbox fields only, a tag added to tickets when the checkbox field is selected"""
-    title: SortOrder
+    title: AirbyteSortOrder
     """The title of the ticket field displayed to agents"""
-    title_in_portal: SortOrder
+    title_in_portal: AirbyteSortOrder
     """The title of the ticket field displayed to end users in Help Center"""
-    type: SortOrder
+    type: AirbyteSortOrder
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp when the custom ticket field was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API URL for this ticket field resource"""
-    visible_in_portal: SortOrder
+    visible_in_portal: AirbyteSortOrder
     """Whether this field is visible to end users in Help Center"""
 
 
@@ -2357,39 +2357,39 @@ class TicketFormsStringFilter(TypedDict, total=False):
 
 class TicketFormsSortFilter(TypedDict, total=False):
     """Available fields for sorting ticket_forms search results."""
-    active: SortOrder
+    active: AirbyteSortOrder
     """Indicates if the form is set as active"""
-    agent_conditions: SortOrder
+    agent_conditions: AirbyteSortOrder
     """Array of condition sets for agent workspaces"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the ticket form was created"""
-    default: SortOrder
+    default: AirbyteSortOrder
     """Indicates if the form is the default form for this account"""
-    display_name: SortOrder
+    display_name: AirbyteSortOrder
     """The name of the form that is displayed to an end user"""
-    end_user_conditions: SortOrder
+    end_user_conditions: AirbyteSortOrder
     """Array of condition sets for end user products"""
-    end_user_visible: SortOrder
+    end_user_visible: AirbyteSortOrder
     """Indicates if the form is visible to the end user"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the ticket form, automatically assigned when creating the form"""
-    in_all_brands: SortOrder
+    in_all_brands: AirbyteSortOrder
     """Indicates if the form is available for use in all brands on this account"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """The name of the ticket form"""
-    position: SortOrder
+    position: AirbyteSortOrder
     """The position of this form among other forms in the account, such as in a dropdown"""
-    raw_display_name: SortOrder
+    raw_display_name: AirbyteSortOrder
     """The dynamic content placeholder if present, or the display_name value if not"""
-    raw_name: SortOrder
+    raw_name: AirbyteSortOrder
     """The dynamic content placeholder if present, or the name value if not"""
-    restricted_brand_ids: SortOrder
+    restricted_brand_ids: AirbyteSortOrder
     """IDs of all brands that this ticket form is restricted to"""
-    ticket_field_ids: SortOrder
+    ticket_field_ids: AirbyteSortOrder
     """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp of the last update to the ticket form"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """URL of the ticket form"""
 
 
@@ -2746,65 +2746,65 @@ class TicketMetricsStringFilter(TypedDict, total=False):
 
 class TicketMetricsSortFilter(TypedDict, total=False):
     """Available fields for sorting ticket_metrics search results."""
-    agent_wait_time_in_minutes: SortOrder
+    agent_wait_time_in_minutes: AirbyteSortOrder
     """Number of minutes the agent spent waiting during calendar and business hours"""
-    assigned_at: SortOrder
+    assigned_at: AirbyteSortOrder
     """Timestamp when the ticket was assigned"""
-    assignee_stations: SortOrder
+    assignee_stations: AirbyteSortOrder
     """Number of assignees the ticket had"""
-    assignee_updated_at: SortOrder
+    assignee_updated_at: AirbyteSortOrder
     """Timestamp when the assignee last updated the ticket"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the metric record was created"""
-    custom_status_updated_at: SortOrder
+    custom_status_updated_at: AirbyteSortOrder
     """Timestamp when the ticket's custom status was last updated"""
-    first_resolution_time_in_minutes: SortOrder
+    first_resolution_time_in_minutes: AirbyteSortOrder
     """Number of minutes to the first resolution time during calendar and business hours"""
-    full_resolution_time_in_minutes: SortOrder
+    full_resolution_time_in_minutes: AirbyteSortOrder
     """Number of minutes to the full resolution during calendar and business hours"""
-    generated_timestamp: SortOrder
+    generated_timestamp: AirbyteSortOrder
     """Timestamp of when record was last updated"""
-    group_stations: SortOrder
+    group_stations: AirbyteSortOrder
     """Number of groups the ticket passed through"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the ticket metric record"""
-    initially_assigned_at: SortOrder
+    initially_assigned_at: AirbyteSortOrder
     """Timestamp when the ticket was initially assigned"""
-    instance_id: SortOrder
+    instance_id: AirbyteSortOrder
     """ID of the Zendesk instance associated with the ticket"""
-    latest_comment_added_at: SortOrder
+    latest_comment_added_at: AirbyteSortOrder
     """Timestamp when the latest comment was added"""
-    metric: SortOrder
+    metric: AirbyteSortOrder
     """Ticket metrics data"""
-    on_hold_time_in_minutes: SortOrder
+    on_hold_time_in_minutes: AirbyteSortOrder
     """Number of minutes on hold"""
-    reopens: SortOrder
+    reopens: AirbyteSortOrder
     """Total number of times the ticket was reopened"""
-    replies: SortOrder
+    replies: AirbyteSortOrder
     """The number of public replies added to a ticket by an agent"""
-    reply_time_in_minutes: SortOrder
+    reply_time_in_minutes: AirbyteSortOrder
     """Number of minutes to the first reply during calendar and business hours"""
-    reply_time_in_seconds: SortOrder
+    reply_time_in_seconds: AirbyteSortOrder
     """Number of seconds to the first reply during calendar hours, only available for Messaging tickets"""
-    requester_updated_at: SortOrder
+    requester_updated_at: AirbyteSortOrder
     """Timestamp when the requester last updated the ticket"""
-    requester_wait_time_in_minutes: SortOrder
+    requester_wait_time_in_minutes: AirbyteSortOrder
     """Number of minutes the requester spent waiting during calendar and business hours"""
-    solved_at: SortOrder
+    solved_at: AirbyteSortOrder
     """Timestamp when the ticket was solved"""
-    status: SortOrder
+    status: AirbyteSortOrder
     """The current status of the ticket (open, pending, solved, etc.)."""
-    status_updated_at: SortOrder
+    status_updated_at: AirbyteSortOrder
     """Timestamp when the status of the ticket was last updated"""
-    ticket_id: SortOrder
+    ticket_id: AirbyteSortOrder
     """Identifier of the associated ticket"""
-    time: SortOrder
+    time: AirbyteSortOrder
     """Time related to the ticket"""
-    type: SortOrder
+    type: AirbyteSortOrder
     """Type of ticket"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp when the metric record was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """The API url of the ticket metric"""
 
 
@@ -3241,85 +3241,85 @@ class TicketsStringFilter(TypedDict, total=False):
 
 class TicketsSortFilter(TypedDict, total=False):
     """Available fields for sorting tickets search results."""
-    allow_attachments: SortOrder
+    allow_attachments: AirbyteSortOrder
     """Boolean indicating whether attachments are allowed on the ticket"""
-    allow_channelback: SortOrder
+    allow_channelback: AirbyteSortOrder
     """Boolean indicating whether agents can reply to the ticket through the original channel"""
-    assignee_id: SortOrder
+    assignee_id: AirbyteSortOrder
     """Unique identifier of the agent currently assigned to the ticket"""
-    brand_id: SortOrder
+    brand_id: AirbyteSortOrder
     """Unique identifier of the brand associated with the ticket in multi-brand accounts"""
-    collaborator_ids: SortOrder
+    collaborator_ids: AirbyteSortOrder
     """Array of user identifiers who are collaborating on the ticket"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the ticket was created"""
-    custom_fields: SortOrder
+    custom_fields: AirbyteSortOrder
     """Array of custom field values specific to the account's ticket configuration"""
-    custom_status_id: SortOrder
+    custom_status_id: AirbyteSortOrder
     """Unique identifier of the custom status applied to the ticket"""
-    deleted_ticket_form_id: SortOrder
+    deleted_ticket_form_id: AirbyteSortOrder
     """Unique identifier of the ticket form if it was deleted after the ticket was created"""
-    description: SortOrder
+    description: AirbyteSortOrder
     """Initial description or content of the ticket when it was created"""
-    due_at: SortOrder
+    due_at: AirbyteSortOrder
     """Timestamp indicating when the ticket is due for completion or resolution"""
-    email_cc_ids: SortOrder
+    email_cc_ids: AirbyteSortOrder
     """Array of user identifiers who are CC'd on ticket email notifications"""
-    external_id: SortOrder
+    external_id: AirbyteSortOrder
     """External identifier for the ticket, used for integrations with other systems"""
-    fields: SortOrder
+    fields: AirbyteSortOrder
     """Array of ticket field values including both system and custom fields"""
-    follower_ids: SortOrder
+    follower_ids: AirbyteSortOrder
     """Array of user identifiers who are following the ticket for updates"""
-    followup_ids: SortOrder
+    followup_ids: AirbyteSortOrder
     """Array of identifiers for follow-up tickets related to this ticket"""
-    forum_topic_id: SortOrder
+    forum_topic_id: AirbyteSortOrder
     """Unique identifier linking the ticket to a forum topic if applicable"""
-    from_messaging_channel: SortOrder
+    from_messaging_channel: AirbyteSortOrder
     """Boolean indicating whether the ticket originated from a messaging channel"""
-    generated_timestamp: SortOrder
+    generated_timestamp: AirbyteSortOrder
     """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
-    group_id: SortOrder
+    group_id: AirbyteSortOrder
     """Unique identifier of the agent group assigned to handle the ticket"""
-    has_incidents: SortOrder
+    has_incidents: AirbyteSortOrder
     """Boolean indicating whether this problem ticket has related incident tickets"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the ticket"""
-    is_public: SortOrder
+    is_public: AirbyteSortOrder
     """Boolean indicating whether the ticket is publicly visible"""
-    organization_id: SortOrder
+    organization_id: AirbyteSortOrder
     """Unique identifier of the organization associated with the ticket"""
-    priority: SortOrder
+    priority: AirbyteSortOrder
     """Priority level assigned to the ticket (e.g., urgent, high, normal, low)"""
-    problem_id: SortOrder
+    problem_id: AirbyteSortOrder
     """Unique identifier of the problem ticket if this is an incident ticket"""
-    raw_subject: SortOrder
+    raw_subject: AirbyteSortOrder
     """Original unprocessed subject line before any system modifications"""
-    recipient: SortOrder
+    recipient: AirbyteSortOrder
     """Email address or identifier of the ticket recipient"""
-    requester_id: SortOrder
+    requester_id: AirbyteSortOrder
     """Unique identifier of the user who requested or created the ticket"""
-    satisfaction_rating: SortOrder
+    satisfaction_rating: AirbyteSortOrder
     """Object containing customer satisfaction rating data for the ticket"""
-    sharing_agreement_ids: SortOrder
+    sharing_agreement_ids: AirbyteSortOrder
     """Array of sharing agreement identifiers if the ticket is shared across Zendesk instances"""
-    status: SortOrder
+    status: AirbyteSortOrder
     """Current status of the ticket (e.g., new, open, pending, solved, closed)"""
-    subject: SortOrder
+    subject: AirbyteSortOrder
     """Subject line of the ticket describing the issue or request"""
-    submitter_id: SortOrder
+    submitter_id: AirbyteSortOrder
     """Unique identifier of the user who submitted the ticket on behalf of the requester"""
-    tags: SortOrder
+    tags: AirbyteSortOrder
     """Array of tags applied to the ticket for categorization and filtering"""
-    ticket_form_id: SortOrder
+    ticket_form_id: AirbyteSortOrder
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: SortOrder
+    type: AirbyteSortOrder
     """Type of ticket (e.g., problem, incident, question, task)"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp indicating when the ticket was last updated with a ticket event"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """API URL to access the full ticket resource"""
-    via: SortOrder
+    via: AirbyteSortOrder
     """Object describing the channel and method through which the ticket was created"""
 
 
@@ -3748,83 +3748,83 @@ class UsersStringFilter(TypedDict, total=False):
 
 class UsersSortFilter(TypedDict, total=False):
     """Available fields for sorting users search results."""
-    active: SortOrder
+    active: AirbyteSortOrder
     """Indicates if the user account is currently active"""
-    alias: SortOrder
+    alias: AirbyteSortOrder
     """Alternative name or nickname for the user"""
-    chat_only: SortOrder
+    chat_only: AirbyteSortOrder
     """Indicates if the user can only interact via chat"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the user was created"""
-    custom_role_id: SortOrder
+    custom_role_id: AirbyteSortOrder
     """Identifier for a custom role assigned to the user"""
-    default_group_id: SortOrder
+    default_group_id: AirbyteSortOrder
     """Identifier of the default group assigned to the user"""
-    details: SortOrder
+    details: AirbyteSortOrder
     """Additional descriptive information about the user"""
-    email: SortOrder
+    email: AirbyteSortOrder
     """Email address of the user"""
-    external_id: SortOrder
+    external_id: AirbyteSortOrder
     """External system identifier for the user, used for integrations"""
-    iana_time_zone: SortOrder
+    iana_time_zone: AirbyteSortOrder
     """IANA standard time zone identifier for the user"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the user"""
-    last_login_at: SortOrder
+    last_login_at: AirbyteSortOrder
     """Timestamp of the user's most recent login"""
-    locale: SortOrder
+    locale: AirbyteSortOrder
     """Locale setting determining language and regional format preferences"""
-    locale_id: SortOrder
+    locale_id: AirbyteSortOrder
     """Identifier for the user's locale preference"""
-    moderator: SortOrder
+    moderator: AirbyteSortOrder
     """Indicates if the user has moderator privileges"""
-    name: SortOrder
+    name: AirbyteSortOrder
     """Display name of the user"""
-    notes: SortOrder
+    notes: AirbyteSortOrder
     """Internal notes about the user, visible only to agents"""
-    only_private_comments: SortOrder
+    only_private_comments: AirbyteSortOrder
     """Indicates if the user can only make private comments on tickets"""
-    organization_id: SortOrder
+    organization_id: AirbyteSortOrder
     """Identifier of the organization the user belongs to"""
-    permanently_deleted: SortOrder
+    permanently_deleted: AirbyteSortOrder
     """Indicates if the user has been permanently deleted from the system"""
-    phone: SortOrder
+    phone: AirbyteSortOrder
     """Phone number of the user"""
-    photo: SortOrder
+    photo: AirbyteSortOrder
     """Profile photo or avatar of the user"""
-    report_csv: SortOrder
+    report_csv: AirbyteSortOrder
     """Indicates if the user receives reports in CSV format"""
-    restricted_agent: SortOrder
+    restricted_agent: AirbyteSortOrder
     """Indicates if the agent has restricted access permissions"""
-    role: SortOrder
+    role: AirbyteSortOrder
     """Role assigned to the user defining their permissions level"""
-    role_type: SortOrder
+    role_type: AirbyteSortOrder
     """Type classification of the user's role"""
-    shared: SortOrder
+    shared: AirbyteSortOrder
     """Indicates if the user is shared across multiple accounts"""
-    shared_agent: SortOrder
+    shared_agent: AirbyteSortOrder
     """Indicates if the user is a shared agent across multiple brands or accounts"""
-    shared_phone_number: SortOrder
+    shared_phone_number: AirbyteSortOrder
     """Indicates if the phone number is shared with other users"""
-    signature: SortOrder
+    signature: AirbyteSortOrder
     """Email signature text for the user"""
-    suspended: SortOrder
+    suspended: AirbyteSortOrder
     """Indicates if the user account is suspended"""
-    tags: SortOrder
+    tags: AirbyteSortOrder
     """Labels or tags associated with the user for categorization"""
-    ticket_restriction: SortOrder
+    ticket_restriction: AirbyteSortOrder
     """Defines which tickets the user can access based on restrictions"""
-    time_zone: SortOrder
+    time_zone: AirbyteSortOrder
     """Time zone setting for the user"""
-    two_factor_auth_enabled: SortOrder
+    two_factor_auth_enabled: AirbyteSortOrder
     """Indicates if two-factor authentication is enabled for the user"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp indicating when the user was last updated"""
-    url: SortOrder
+    url: AirbyteSortOrder
     """API endpoint URL for accessing the user's detailed information"""
-    user_fields: SortOrder
+    user_fields: AirbyteSortOrder
     """Custom field values specific to the user, stored as key-value pairs"""
-    verified: SortOrder
+    verified: AirbyteSortOrder
     """Indicates if the user's identity has been verified"""
 
 
@@ -3924,8 +3924,8 @@ class UsersSearchQuery(TypedDict, total=False):
 
 # ===== SEARCH PARAMS =====
 
-class SearchParams(TypedDict, total=False):
-    """Parameters for search operations (generic, use entity-specific query types for better type hints)."""
+class AirbyteSearchParams(TypedDict, total=False):
+    """Parameters for Airbyte cache search operations (generic, use entity-specific query types for better type hints)."""
     query: dict[str, Any]
     limit: int
     cursor: str

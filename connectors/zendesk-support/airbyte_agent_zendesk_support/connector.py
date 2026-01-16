@@ -53,7 +53,7 @@ from .types import (
     UsersListParams,
     ViewsGetParams,
     ViewsListParams,
-    SearchParams,
+    AirbyteSearchParams,
     BrandsSearchFilter,
     BrandsSearchQuery,
     GroupsSearchFilter,
@@ -131,8 +131,8 @@ from .models import (
     Trigger,
     User,
     View,
-    SearchHit,
-    SearchResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
     BrandsSearchData,
     BrandsSearchResult,
     GroupsSearchData,
@@ -990,7 +990,7 @@ class TicketsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketsSearchResult with hits (list of SearchHit[TicketsSearchData]) and pagination info
+            TicketsSearchResult with hits (list of AirbyteSearchHit[TicketsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1008,7 +1008,7 @@ class TicketsQuery:
         # Parse response into typed result
         return TicketsSearchResult(
             hits=[
-                SearchHit[TicketsSearchData](
+                AirbyteSearchHit[TicketsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketsSearchData(**hit.get("data", {}))
@@ -1151,7 +1151,7 @@ class UsersQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            UsersSearchResult with hits (list of SearchHit[UsersSearchData]) and pagination info
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1169,7 +1169,7 @@ class UsersQuery:
         # Parse response into typed result
         return UsersSearchResult(
             hits=[
-                SearchHit[UsersSearchData](
+                AirbyteSearchHit[UsersSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=UsersSearchData(**hit.get("data", {}))
@@ -1282,7 +1282,7 @@ class OrganizationsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            OrganizationsSearchResult with hits (list of SearchHit[OrganizationsSearchData]) and pagination info
+            OrganizationsSearchResult with hits (list of AirbyteSearchHit[OrganizationsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1300,7 +1300,7 @@ class OrganizationsQuery:
         # Parse response into typed result
         return OrganizationsSearchResult(
             hits=[
-                SearchHit[OrganizationsSearchData](
+                AirbyteSearchHit[OrganizationsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=OrganizationsSearchData(**hit.get("data", {}))
@@ -1410,7 +1410,7 @@ class GroupsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            GroupsSearchResult with hits (list of SearchHit[GroupsSearchData]) and pagination info
+            GroupsSearchResult with hits (list of AirbyteSearchHit[GroupsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1428,7 +1428,7 @@ class GroupsQuery:
         # Parse response into typed result
         return GroupsSearchResult(
             hits=[
-                SearchHit[GroupsSearchData](
+                AirbyteSearchHit[GroupsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=GroupsSearchData(**hit.get("data", {}))
@@ -1527,7 +1527,7 @@ class TicketCommentsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketCommentsSearchResult with hits (list of SearchHit[TicketCommentsSearchData]) and pagination info
+            TicketCommentsSearchResult with hits (list of AirbyteSearchHit[TicketCommentsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1545,7 +1545,7 @@ class TicketCommentsQuery:
         # Parse response into typed result
         return TicketCommentsSearchResult(
             hits=[
-                SearchHit[TicketCommentsSearchData](
+                AirbyteSearchHit[TicketCommentsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketCommentsSearchData(**hit.get("data", {}))
@@ -1750,7 +1750,7 @@ class TicketAuditsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketAuditsSearchResult with hits (list of SearchHit[TicketAuditsSearchData]) and pagination info
+            TicketAuditsSearchResult with hits (list of AirbyteSearchHit[TicketAuditsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1768,7 +1768,7 @@ class TicketAuditsQuery:
         # Parse response into typed result
         return TicketAuditsSearchResult(
             hits=[
-                SearchHit[TicketAuditsSearchData](
+                AirbyteSearchHit[TicketAuditsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketAuditsSearchData(**hit.get("data", {}))
@@ -1871,7 +1871,7 @@ class TicketMetricsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketMetricsSearchResult with hits (list of SearchHit[TicketMetricsSearchData]) and pagination info
+            TicketMetricsSearchResult with hits (list of AirbyteSearchHit[TicketMetricsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1889,7 +1889,7 @@ class TicketMetricsQuery:
         # Parse response into typed result
         return TicketMetricsSearchResult(
             hits=[
-                SearchHit[TicketMetricsSearchData](
+                AirbyteSearchHit[TicketMetricsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketMetricsSearchData(**hit.get("data", {}))
@@ -2017,7 +2017,7 @@ class TicketFieldsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketFieldsSearchResult with hits (list of SearchHit[TicketFieldsSearchData]) and pagination info
+            TicketFieldsSearchResult with hits (list of AirbyteSearchHit[TicketFieldsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2035,7 +2035,7 @@ class TicketFieldsQuery:
         # Parse response into typed result
         return TicketFieldsSearchResult(
             hits=[
-                SearchHit[TicketFieldsSearchData](
+                AirbyteSearchHit[TicketFieldsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketFieldsSearchData(**hit.get("data", {}))
@@ -2149,7 +2149,7 @@ class BrandsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            BrandsSearchResult with hits (list of SearchHit[BrandsSearchData]) and pagination info
+            BrandsSearchResult with hits (list of AirbyteSearchHit[BrandsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2167,7 +2167,7 @@ class BrandsQuery:
         # Parse response into typed result
         return BrandsSearchResult(
             hits=[
-                SearchHit[BrandsSearchData](
+                AirbyteSearchHit[BrandsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=BrandsSearchData(**hit.get("data", {}))
@@ -2545,7 +2545,7 @@ class TagsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TagsSearchResult with hits (list of SearchHit[TagsSearchData]) and pagination info
+            TagsSearchResult with hits (list of AirbyteSearchHit[TagsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2563,7 +2563,7 @@ class TagsQuery:
         # Parse response into typed result
         return TagsSearchResult(
             hits=[
-                SearchHit[TagsSearchData](
+                AirbyteSearchHit[TagsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TagsSearchData(**hit.get("data", {}))
@@ -2682,7 +2682,7 @@ class SatisfactionRatingsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            SatisfactionRatingsSearchResult with hits (list of SearchHit[SatisfactionRatingsSearchData]) and pagination info
+            SatisfactionRatingsSearchResult with hits (list of AirbyteSearchHit[SatisfactionRatingsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2700,7 +2700,7 @@ class SatisfactionRatingsQuery:
         # Parse response into typed result
         return SatisfactionRatingsSearchResult(
             hits=[
-                SearchHit[SatisfactionRatingsSearchData](
+                AirbyteSearchHit[SatisfactionRatingsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=SatisfactionRatingsSearchData(**hit.get("data", {}))
@@ -2960,7 +2960,7 @@ class TicketFormsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketFormsSearchResult with hits (list of SearchHit[TicketFormsSearchData]) and pagination info
+            TicketFormsSearchResult with hits (list of AirbyteSearchHit[TicketFormsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2978,7 +2978,7 @@ class TicketFormsQuery:
         # Parse response into typed result
         return TicketFormsSearchResult(
             hits=[
-                SearchHit[TicketFormsSearchData](
+                AirbyteSearchHit[TicketFormsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=TicketFormsSearchData(**hit.get("data", {}))
