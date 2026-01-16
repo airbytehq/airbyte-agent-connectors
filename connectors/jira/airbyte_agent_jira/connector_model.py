@@ -26,7 +26,7 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.0.4',
+    version='1.0.5',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -48,7 +48,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'username': '${username}', 'password': '${password}'},
-            replication_auth_key_mapping={'username': 'username', 'password': 'password'},
+            replication_auth_key_mapping={'email': 'username', 'api_token': 'password'},
         ),
     ),
     entities=[

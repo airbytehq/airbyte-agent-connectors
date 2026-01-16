@@ -27,6 +27,19 @@ from .types import (
     UsersApiSearchParams,
     UsersGetParams,
     UsersListParams,
+    AirbyteSearchParams,
+    IssuesSearchFilter,
+    IssuesSearchQuery,
+    ProjectsSearchFilter,
+    ProjectsSearchQuery,
+    UsersSearchFilter,
+    UsersSearchQuery,
+    IssueCommentsSearchFilter,
+    IssueCommentsSearchQuery,
+    IssueFieldsSearchFilter,
+    IssueFieldsSearchQuery,
+    IssueWorklogsSearchFilter,
+    IssueWorklogsSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import JiraAuthConfig
@@ -49,6 +62,20 @@ from .models import (
     Project,
     User,
     Worklog,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    IssuesSearchData,
+    IssuesSearchResult,
+    ProjectsSearchData,
+    ProjectsSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
+    IssueCommentsSearchData,
+    IssueCommentsSearchResult,
+    IssueFieldsSearchData,
+    IssueFieldsSearchResult,
+    IssueWorklogsSearchData,
+    IssueWorklogsSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -64,7 +91,7 @@ class JiraConnector:
     """
 
     connector_name = "jira"
-    connector_version = "1.0.4"
+    connector_version = "1.0.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -556,6 +583,78 @@ class IssuesQuery:
 
 
 
+    async def search(
+        self,
+        query: IssuesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> IssuesSearchResult:
+        """
+        Search issues records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (IssuesSearchFilter):
+        - changelog: Details of changelogs associated with the issue
+        - created: The timestamp when the issue was created
+        - editmeta: The metadata for the fields on the issue that can be amended
+        - expand: Expand options that include additional issue details in the response
+        - fields: Details of various fields associated with the issue
+        - fields_to_include: Specify the fields to include in the fetched issues data
+        - id: The unique ID of the issue
+        - key: The unique key of the issue
+        - names: The ID and name of each field present on the issue
+        - operations: The operations that can be performed on the issue
+        - project_id: The ID of the project containing the issue
+        - project_key: The key of the project containing the issue
+        - properties: Details of the issue properties identified in the request
+        - rendered_fields: The rendered value of each field present on the issue
+        - schema_: The schema describing each field present on the issue
+        - self: The URL of the issue details
+        - transitions: The transitions that can be performed on the issue
+        - updated: The timestamp when the issue was last updated
+        - versioned_representations: The versions of each field on the issue
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            IssuesSearchResult with hits (list of AirbyteSearchHit[IssuesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("issues", "search", params)
+
+        # Parse response into typed result
+        return IssuesSearchResult(
+            hits=[
+                AirbyteSearchHit[IssuesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=IssuesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ProjectsQuery:
     """
     Query class for Projects entity operations.
@@ -654,6 +753,93 @@ class ProjectsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: ProjectsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ProjectsSearchResult:
+        """
+        Search projects records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ProjectsSearchFilter):
+        - archived: Whether the project is archived
+        - archived_by: The user who archived the project
+        - archived_date: The date when the project was archived
+        - assignee_type: The default assignee when creating issues for this project
+        - avatar_urls: The URLs of the project's avatars
+        - components: List of the components contained in the project
+        - deleted: Whether the project is marked as deleted
+        - deleted_by: The user who marked the project as deleted
+        - deleted_date: The date when the project was marked as deleted
+        - description: A brief description of the project
+        - email: An email address associated with the project
+        - entity_id: The unique identifier of the project entity
+        - expand: Expand options that include additional project details in the response
+        - favourite: Whether the project is selected as a favorite
+        - id: The ID of the project
+        - insight: Insights about the project
+        - is_private: Whether the project is private
+        - issue_type_hierarchy: The issue type hierarchy for the project
+        - issue_types: List of the issue types available in the project
+        - key: The key of the project
+        - lead: The username of the project lead
+        - name: The name of the project
+        - permissions: User permissions on the project
+        - project_category: The category the project belongs to
+        - project_type_key: The project type of the project
+        - properties: Map of project properties
+        - retention_till_date: The date when the project is deleted permanently
+        - roles: The name and self URL for each role defined in the project
+        - self: The URL of the project details
+        - simplified: Whether the project is simplified
+        - style: The type of the project
+        - url: A link to information about this project
+        - uuid: Unique ID for next-gen projects
+        - versions: The versions defined in the project
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ProjectsSearchResult with hits (list of AirbyteSearchHit[ProjectsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("projects", "search", params)
+
+        # Parse response into typed result
+        return ProjectsSearchResult(
+            hits=[
+                AirbyteSearchHit[ProjectsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ProjectsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class UsersQuery:
     """
@@ -763,6 +949,73 @@ class UsersQuery:
 
 
 
+    async def search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - account_id: The account ID of the user, uniquely identifying the user across all Atlassian products
+        - account_type: The user account type (atlassian, app, or customer)
+        - active: Indicates whether the user is active
+        - application_roles: The application roles assigned to the user
+        - avatar_urls: The avatars of the user
+        - display_name: The display name of the user
+        - email_address: The email address of the user
+        - expand: Options to include additional user details in the response
+        - groups: The groups to which the user belongs
+        - key: Deprecated property
+        - locale: The locale of the user
+        - name: Deprecated property
+        - self: The URL of the user
+        - time_zone: The time zone specified in the user's profile
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "search", params)
+
+        # Parse response into typed result
+        return UsersSearchResult(
+            hits=[
+                AirbyteSearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class IssueFieldsQuery:
     """
     Query class for IssueFields entity operations.
@@ -839,6 +1092,70 @@ class IssueFieldsQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: IssueFieldsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> IssueFieldsSearchResult:
+        """
+        Search issue_fields records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (IssueFieldsSearchFilter):
+        - clause_names: The names that can be used to reference the field in an advanced search
+        - custom: Whether the field is a custom field
+        - id: The ID of the field
+        - key: The key of the field
+        - name: The name of the field
+        - navigable: Whether the field can be used as a column on the issue navigator
+        - orderable: Whether the content of the field can be used to order lists
+        - schema_: The data schema for the field
+        - scope: The scope of the field
+        - searchable: Whether the content of the field can be searched
+        - untranslated_name: The untranslated name of the field
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            IssueFieldsSearchResult with hits (list of AirbyteSearchHit[IssueFieldsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("issue_fields", "search", params)
+
+        # Parse response into typed result
+        return IssueFieldsSearchResult(
+            hits=[
+                AirbyteSearchHit[IssueFieldsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=IssueFieldsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class IssueCommentsQuery:
     """
@@ -921,6 +1238,71 @@ class IssueCommentsQuery:
 
 
 
+    async def search(
+        self,
+        query: IssueCommentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> IssueCommentsSearchResult:
+        """
+        Search issue_comments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (IssueCommentsSearchFilter):
+        - author: The ID of the user who created the comment
+        - body: The comment text in Atlassian Document Format
+        - created: The date and time at which the comment was created
+        - id: The ID of the comment
+        - issue_id: Id of the related issue
+        - jsd_public: Whether the comment is visible in Jira Service Desk
+        - properties: A list of comment properties
+        - rendered_body: The rendered version of the comment
+        - self: The URL of the comment
+        - update_author: The ID of the user who updated the comment last
+        - updated: The date and time at which the comment was updated last
+        - visibility: The group or role to which this item is visible
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            IssueCommentsSearchResult with hits (list of AirbyteSearchHit[IssueCommentsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("issue_comments", "search", params)
+
+        # Parse response into typed result
+        return IssueCommentsSearchResult(
+            hits=[
+                AirbyteSearchHit[IssueCommentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=IssueCommentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class IssueWorklogsQuery:
     """
     Query class for IssueWorklogs entity operations.
@@ -998,3 +1380,69 @@ class IssueWorklogsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: IssueWorklogsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> IssueWorklogsSearchResult:
+        """
+        Search issue_worklogs records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (IssueWorklogsSearchFilter):
+        - author: Details of the user who created the worklog
+        - comment: A comment about the worklog in Atlassian Document Format
+        - created: The datetime on which the worklog was created
+        - id: The ID of the worklog record
+        - issue_id: The ID of the issue this worklog is for
+        - properties: Details of properties for the worklog
+        - self: The URL of the worklog item
+        - started: The datetime on which the worklog effort was started
+        - time_spent: The time spent working on the issue as days, hours, or minutes
+        - time_spent_seconds: The time in seconds spent working on the issue
+        - update_author: Details of the user who last updated the worklog
+        - updated: The datetime on which the worklog was last updated
+        - visibility: Details about any restrictions in the visibility of the worklog
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            IssueWorklogsSearchResult with hits (list of AirbyteSearchHit[IssueWorklogsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("issue_worklogs", "search", params)
+
+        # Parse response into typed result
+        return IssueWorklogsSearchResult(
+            hits=[
+                AirbyteSearchHit[IssueWorklogsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=IssueWorklogsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
