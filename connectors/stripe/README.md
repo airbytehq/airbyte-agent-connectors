@@ -75,6 +75,6 @@ For the service's official API docs, see the [Stripe API reference](https://docs
 
 ## Version information
 
-- **Package version:** 0.5.48
+- **Package version:** 0.5.49
 - **Connector version:** 0.1.5
-- **Generated with Connector SDK commit SHA:** ca5acdda8030d8292c059c82f498a95b2227c106
+- **Generated with Connector SDK commit SHA:** 49673b7bd7003c15994897987408c7722319c739
