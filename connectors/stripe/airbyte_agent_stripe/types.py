@@ -326,7 +326,7 @@ class PayoutsGetParams(TypedDict):
 # ===== SEARCH TYPES =====
 
 # Sort specification
-SortOrder = Literal["asc", "desc"]
+AirbyteSortOrder = Literal["asc", "desc"]
 
 # ===== CHARGES SEARCH TYPES =====
 
@@ -756,107 +756,107 @@ class ChargesStringFilter(TypedDict, total=False):
 
 class ChargesSortFilter(TypedDict, total=False):
     """Available fields for sorting charges search results."""
-    amount: SortOrder
+    amount: AirbyteSortOrder
     """Amount intended to be collected by this payment in the smallest currency unit (e.g., 100 cents for $1.00), supporting up to eight digits."""
-    amount_captured: SortOrder
+    amount_captured: AirbyteSortOrder
     """Amount that was actually captured from this charge."""
-    amount_refunded: SortOrder
+    amount_refunded: AirbyteSortOrder
     """Amount that has been refunded back to the customer."""
-    amount_updates: SortOrder
+    amount_updates: AirbyteSortOrder
     """Updates to the amount that have been made during the charge lifecycle."""
-    application: SortOrder
+    application: AirbyteSortOrder
     """ID of the application that created this charge (Connect only)."""
-    application_fee: SortOrder
+    application_fee: AirbyteSortOrder
     """ID of the application fee associated with this charge (Connect only)."""
-    application_fee_amount: SortOrder
+    application_fee_amount: AirbyteSortOrder
     """The amount of the application fee deducted from this charge (Connect only)."""
-    balance_transaction: SortOrder
+    balance_transaction: AirbyteSortOrder
     """ID of the balance transaction that describes the impact of this charge on your account balance (excluding refunds or disputes)."""
-    billing_details: SortOrder
+    billing_details: AirbyteSortOrder
     """Billing information associated with the payment method at the time of the transaction, including name, email, phone, and address."""
-    calculated_statement_descriptor: SortOrder
+    calculated_statement_descriptor: AirbyteSortOrder
     """The full statement descriptor that appears on the customer's credit card statement, combining prefix and suffix."""
-    captured: SortOrder
+    captured: AirbyteSortOrder
     """Whether the charge has been captured and funds transferred to your account."""
-    card: SortOrder
+    card: AirbyteSortOrder
     """Deprecated card object containing payment card details if a card was used."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """Timestamp indicating when the charge was created."""
-    currency: SortOrder
+    currency: AirbyteSortOrder
     """Three-letter ISO currency code in lowercase (e.g., 'usd', 'eur') for the charge amount."""
-    customer: SortOrder
+    customer: AirbyteSortOrder
     """ID of the customer this charge is for, if one exists."""
-    description: SortOrder
+    description: AirbyteSortOrder
     """An arbitrary string attached to the charge, often useful for displaying to users or internal reference."""
-    destination: SortOrder
+    destination: AirbyteSortOrder
     """ID of the destination account where funds are transferred (Connect only)."""
-    dispute: SortOrder
+    dispute: AirbyteSortOrder
     """ID of the dispute object if the charge has been disputed."""
-    disputed: SortOrder
+    disputed: AirbyteSortOrder
     """Whether the charge has been disputed by the customer with their card issuer."""
-    failure_balance_transaction: SortOrder
+    failure_balance_transaction: AirbyteSortOrder
     """ID of the balance transaction that describes the reversal of funds if the charge failed."""
-    failure_code: SortOrder
+    failure_code: AirbyteSortOrder
     """Error code explaining the reason for charge failure, if applicable."""
-    failure_message: SortOrder
+    failure_message: AirbyteSortOrder
     """Human-readable message providing more details about why the charge failed."""
-    fraud_details: SortOrder
+    fraud_details: AirbyteSortOrder
     """Information about fraud assessments and user reports related to this charge."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the charge, used to link transactions across other records."""
-    invoice: SortOrder
+    invoice: AirbyteSortOrder
     """ID of the invoice this charge is for, if the charge was created by invoicing."""
-    livemode: SortOrder
+    livemode: AirbyteSortOrder
     """Whether the charge occurred in live mode (true) or test mode (false)."""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: SortOrder
+    object: AirbyteSortOrder
     """String representing the object type, always 'charge' for charge objects."""
-    on_behalf_of: SortOrder
+    on_behalf_of: AirbyteSortOrder
     """ID of the account on whose behalf the charge was made (Connect only)."""
-    order: SortOrder
+    order: AirbyteSortOrder
     """Deprecated field for order information associated with this charge."""
-    outcome: SortOrder
+    outcome: AirbyteSortOrder
     """Details about the outcome of the charge, including network status, risk assessment, and reason codes."""
-    paid: SortOrder
+    paid: AirbyteSortOrder
     """Whether the charge succeeded and funds were successfully collected."""
-    payment_intent: SortOrder
+    payment_intent: AirbyteSortOrder
     """ID of the PaymentIntent associated with this charge, if one exists."""
-    payment_method: SortOrder
+    payment_method: AirbyteSortOrder
     """ID of the payment method used for this charge."""
-    payment_method_details: SortOrder
+    payment_method_details: AirbyteSortOrder
     """Details about the payment method at the time of the transaction, including card brand, network, and authentication results."""
-    receipt_email: SortOrder
+    receipt_email: AirbyteSortOrder
     """Email address to which the receipt for this charge was sent."""
-    receipt_number: SortOrder
+    receipt_number: AirbyteSortOrder
     """Receipt number that appears on email receipts sent for this charge."""
-    receipt_url: SortOrder
+    receipt_url: AirbyteSortOrder
     """URL to a hosted receipt page for this charge, viewable by the customer."""
-    refunded: SortOrder
+    refunded: AirbyteSortOrder
     """Whether the charge has been fully refunded (partial refunds will still show as false)."""
-    refunds: SortOrder
+    refunds: AirbyteSortOrder
     """List of refunds that have been applied to this charge."""
-    review: SortOrder
+    review: AirbyteSortOrder
     """ID of the review object associated with this charge, if it was flagged for manual review."""
-    shipping: SortOrder
+    shipping: AirbyteSortOrder
     """Shipping information for the charge, including recipient name, address, and tracking details."""
-    source: SortOrder
+    source: AirbyteSortOrder
     """Deprecated payment source object used to create this charge."""
-    source_transfer: SortOrder
+    source_transfer: AirbyteSortOrder
     """ID of the transfer from a source account if funds came from another Stripe account (Connect only)."""
-    statement_description: SortOrder
+    statement_description: AirbyteSortOrder
     """Deprecated alias for statement_descriptor."""
-    statement_descriptor: SortOrder
+    statement_descriptor: AirbyteSortOrder
     """Statement descriptor that overrides the account default for card charges, appearing on the customer's statement."""
-    statement_descriptor_suffix: SortOrder
+    statement_descriptor_suffix: AirbyteSortOrder
     """Suffix concatenated to the account's statement descriptor prefix to form the complete descriptor on customer statements."""
-    status: SortOrder
+    status: AirbyteSortOrder
     """Current status of the payment: 'succeeded' (completed), 'pending' (processing), or 'failed' (unsuccessful)."""
-    transfer_data: SortOrder
+    transfer_data: AirbyteSortOrder
     """Object containing destination and amount for transfers to connected accounts (Connect only)."""
-    transfer_group: SortOrder
+    transfer_group: AirbyteSortOrder
     """String identifier for grouping related charges and transfers together (Connect only)."""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """Timestamp of the last update to this charge object."""
 
 
@@ -1221,67 +1221,67 @@ class CustomersStringFilter(TypedDict, total=False):
 
 class CustomersSortFilter(TypedDict, total=False):
     """Available fields for sorting customers search results."""
-    account_balance: SortOrder
+    account_balance: AirbyteSortOrder
     """Current balance value representing funds owed by or to the customer."""
-    address: SortOrder
+    address: AirbyteSortOrder
     """The customer's address information including line1, line2, city, state, postal code, and country."""
-    balance: SortOrder
+    balance: AirbyteSortOrder
     """Current balance (positive or negative) that is automatically applied to the customer's next invoice."""
-    cards: SortOrder
+    cards: AirbyteSortOrder
     """Card payment methods associated with the customer account."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """Timestamp indicating when the customer object was created."""
-    currency: SortOrder
+    currency: AirbyteSortOrder
     """Three-letter ISO currency code representing the customer's default currency."""
-    default_card: SortOrder
+    default_card: AirbyteSortOrder
     """The default card to be used for charges when no specific payment method is provided."""
-    default_source: SortOrder
+    default_source: AirbyteSortOrder
     """The default payment source (card or bank account) for the customer."""
-    delinquent: SortOrder
+    delinquent: AirbyteSortOrder
     """Boolean indicating whether the customer is currently delinquent on payments."""
-    description: SortOrder
+    description: AirbyteSortOrder
     """An arbitrary string attached to the customer, often useful for displaying to users."""
-    discount: SortOrder
+    discount: AirbyteSortOrder
     """Discount object describing any active discount applied to the customer."""
-    email: SortOrder
+    email: AirbyteSortOrder
     """The customer's email address for communication and tracking purposes."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the customer object."""
-    invoice_prefix: SortOrder
+    invoice_prefix: AirbyteSortOrder
     """The prefix for invoice numbers generated for this customer."""
-    invoice_settings: SortOrder
+    invoice_settings: AirbyteSortOrder
     """Customer's invoice-related settings including default payment method and custom fields."""
-    is_deleted: SortOrder
+    is_deleted: AirbyteSortOrder
     """Boolean indicating whether the customer has been deleted."""
-    livemode: SortOrder
+    livemode: AirbyteSortOrder
     """Boolean indicating whether the object exists in live mode or test mode."""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Set of key-value pairs for storing additional structured information about the customer."""
-    name: SortOrder
+    name: AirbyteSortOrder
     """The customer's full name or business name."""
-    next_invoice_sequence: SortOrder
+    next_invoice_sequence: AirbyteSortOrder
     """The sequence number for the next invoice generated for this customer."""
-    object: SortOrder
+    object: AirbyteSortOrder
     """String representing the object type, always 'customer'."""
-    phone: SortOrder
+    phone: AirbyteSortOrder
     """The customer's phone number."""
-    preferred_locales: SortOrder
+    preferred_locales: AirbyteSortOrder
     """Array of preferred locales for the customer, used for invoice and receipt localization."""
-    shipping: SortOrder
+    shipping: AirbyteSortOrder
     """Mailing and shipping address for the customer, appears on invoices emailed to the customer."""
-    sources: SortOrder
+    sources: AirbyteSortOrder
     """Payment sources (cards, bank accounts) attached to the customer for making payments."""
-    subscriptions: SortOrder
+    subscriptions: AirbyteSortOrder
     """List of active subscriptions associated with the customer."""
-    tax_exempt: SortOrder
+    tax_exempt: AirbyteSortOrder
     """Describes the customer's tax exemption status (none, exempt, or reverse)."""
-    tax_info: SortOrder
+    tax_info: AirbyteSortOrder
     """Tax identification information for the customer."""
-    tax_info_verification: SortOrder
+    tax_info_verification: AirbyteSortOrder
     """Verification status of the customer's tax information."""
-    test_clock: SortOrder
+    test_clock: AirbyteSortOrder
     """ID of the test clock associated with this customer for testing time-dependent scenarios."""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """Timestamp indicating when the customer object was last updated."""
 
 
@@ -2118,185 +2118,185 @@ class InvoicesStringFilter(TypedDict, total=False):
 
 class InvoicesSortFilter(TypedDict, total=False):
     """Available fields for sorting invoices search results."""
-    account_country: SortOrder
+    account_country: AirbyteSortOrder
     """The country of the business associated with this invoice, commonly used to display localized content."""
-    account_name: SortOrder
+    account_name: AirbyteSortOrder
     """The public name of the business associated with this invoice."""
-    account_tax_ids: SortOrder
+    account_tax_ids: AirbyteSortOrder
     """Tax IDs of the account associated with this invoice."""
-    amount_due: SortOrder
+    amount_due: AirbyteSortOrder
     """Total amount, in smallest currency unit, that is due and owed by the customer."""
-    amount_paid: SortOrder
+    amount_paid: AirbyteSortOrder
     """Total amount, in smallest currency unit, that has been paid by the customer."""
-    amount_remaining: SortOrder
+    amount_remaining: AirbyteSortOrder
     """The difference between amount_due and amount_paid, representing the outstanding balance."""
-    amount_shipping: SortOrder
+    amount_shipping: AirbyteSortOrder
     """Total amount of shipping costs on the invoice."""
-    application: SortOrder
+    application: AirbyteSortOrder
     """ID of the Connect application that created this invoice."""
-    application_fee: SortOrder
+    application_fee: AirbyteSortOrder
     """Amount of application fee charged for this invoice in a Connect scenario."""
-    application_fee_amount: SortOrder
+    application_fee_amount: AirbyteSortOrder
     """The fee in smallest currency unit that is collected by the application in a Connect scenario."""
-    attempt_count: SortOrder
+    attempt_count: AirbyteSortOrder
     """Number of payment attempts made for this invoice."""
-    attempted: SortOrder
+    attempted: AirbyteSortOrder
     """Whether an attempt has been made to pay the invoice."""
-    auto_advance: SortOrder
+    auto_advance: AirbyteSortOrder
     """Controls whether Stripe performs automatic collection of the invoice."""
-    automatic_tax: SortOrder
+    automatic_tax: AirbyteSortOrder
     """Settings and status for automatic tax calculation on this invoice."""
-    billing: SortOrder
+    billing: AirbyteSortOrder
     """Billing method used for the invoice (charge_automatically or send_invoice)."""
-    billing_reason: SortOrder
+    billing_reason: AirbyteSortOrder
     """Indicates the reason why the invoice was created (subscription_cycle, manual, etc.)."""
-    charge: SortOrder
+    charge: AirbyteSortOrder
     """ID of the latest charge generated for this invoice, if any."""
-    closed: SortOrder
+    closed: AirbyteSortOrder
     """Whether the invoice has been marked as closed and no longer open for collection."""
-    collection_method: SortOrder
+    collection_method: AirbyteSortOrder
     """Method by which the invoice is collected: charge_automatically or send_invoice."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """Timestamp indicating when the invoice was created."""
-    currency: SortOrder
+    currency: AirbyteSortOrder
     """Three-letter ISO currency code in which the invoice is denominated."""
-    custom_fields: SortOrder
+    custom_fields: AirbyteSortOrder
     """Custom fields displayed on the invoice as specified by the account."""
-    customer: SortOrder
+    customer: AirbyteSortOrder
     """The customer object or ID associated with this invoice."""
-    customer_address: SortOrder
+    customer_address: AirbyteSortOrder
     """The customer's address at the time the invoice was finalized."""
-    customer_email: SortOrder
+    customer_email: AirbyteSortOrder
     """The customer's email address at the time the invoice was finalized."""
-    customer_name: SortOrder
+    customer_name: AirbyteSortOrder
     """The customer's name at the time the invoice was finalized."""
-    customer_phone: SortOrder
+    customer_phone: AirbyteSortOrder
     """The customer's phone number at the time the invoice was finalized."""
-    customer_shipping: SortOrder
+    customer_shipping: AirbyteSortOrder
     """The customer's shipping information at the time the invoice was finalized."""
-    customer_tax_exempt: SortOrder
+    customer_tax_exempt: AirbyteSortOrder
     """The customer's tax exempt status at the time the invoice was finalized."""
-    customer_tax_ids: SortOrder
+    customer_tax_ids: AirbyteSortOrder
     """The customer's tax IDs at the time the invoice was finalized."""
-    default_payment_method: SortOrder
+    default_payment_method: AirbyteSortOrder
     """Default payment method for the invoice, used if no other method is specified."""
-    default_source: SortOrder
+    default_source: AirbyteSortOrder
     """Default payment source for the invoice if no payment method is set."""
-    default_tax_rates: SortOrder
+    default_tax_rates: AirbyteSortOrder
     """The tax rates applied to the invoice by default."""
-    description: SortOrder
+    description: AirbyteSortOrder
     """An arbitrary string attached to the invoice, often displayed to customers."""
-    discount: SortOrder
+    discount: AirbyteSortOrder
     """The discount object applied to the invoice, if any."""
-    discounts: SortOrder
+    discounts: AirbyteSortOrder
     """Array of discount IDs or objects currently applied to this invoice."""
-    due_date: SortOrder
+    due_date: AirbyteSortOrder
     """The date by which payment on this invoice is due, if the invoice is not auto-collected."""
-    effective_at: SortOrder
+    effective_at: AirbyteSortOrder
     """Timestamp when the invoice becomes effective and finalized for payment."""
-    ending_balance: SortOrder
+    ending_balance: AirbyteSortOrder
     """The customer's ending account balance after this invoice is finalized."""
-    footer: SortOrder
+    footer: AirbyteSortOrder
     """Footer text displayed on the invoice."""
-    forgiven: SortOrder
+    forgiven: AirbyteSortOrder
     """Whether the invoice has been forgiven and is considered paid without actual payment."""
-    from_invoice: SortOrder
+    from_invoice: AirbyteSortOrder
     """Details about the invoice this invoice was created from, if applicable."""
-    hosted_invoice_url: SortOrder
+    hosted_invoice_url: AirbyteSortOrder
     """URL for the hosted invoice page where customers can view and pay the invoice."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the invoice object."""
-    invoice_pdf: SortOrder
+    invoice_pdf: AirbyteSortOrder
     """URL for the PDF version of the invoice."""
-    is_deleted: SortOrder
+    is_deleted: AirbyteSortOrder
     """Indicates whether this invoice has been deleted."""
-    issuer: SortOrder
+    issuer: AirbyteSortOrder
     """Details about the entity issuing the invoice."""
-    last_finalization_error: SortOrder
+    last_finalization_error: AirbyteSortOrder
     """The error encountered during the last finalization attempt, if any."""
-    latest_revision: SortOrder
+    latest_revision: AirbyteSortOrder
     """The latest revision of the invoice, if revisions are enabled."""
-    lines: SortOrder
+    lines: AirbyteSortOrder
     """The individual line items that make up the invoice, representing products, services, or fees."""
-    livemode: SortOrder
+    livemode: AirbyteSortOrder
     """Indicates whether the invoice exists in live mode (true) or test mode (false)."""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Key-value pairs for storing additional structured information about the invoice."""
-    next_payment_attempt: SortOrder
+    next_payment_attempt: AirbyteSortOrder
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
-    number: SortOrder
+    number: AirbyteSortOrder
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: SortOrder
+    object: AirbyteSortOrder
     """String representing the object type, always 'invoice'."""
-    on_behalf_of: SortOrder
+    on_behalf_of: AirbyteSortOrder
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
-    paid: SortOrder
+    paid: AirbyteSortOrder
     """Whether the invoice has been paid in full."""
-    paid_out_of_band: SortOrder
+    paid_out_of_band: AirbyteSortOrder
     """Whether payment was made outside of Stripe and manually marked as paid."""
-    payment: SortOrder
+    payment: AirbyteSortOrder
     """ID of the payment associated with this invoice, if any."""
-    payment_intent: SortOrder
+    payment_intent: AirbyteSortOrder
     """The PaymentIntent associated with this invoice for processing payment."""
-    payment_settings: SortOrder
+    payment_settings: AirbyteSortOrder
     """Configuration settings for how payment should be collected on this invoice."""
-    period_end: SortOrder
+    period_end: AirbyteSortOrder
     """End date of the billing period covered by this invoice."""
-    period_start: SortOrder
+    period_start: AirbyteSortOrder
     """Start date of the billing period covered by this invoice."""
-    post_payment_credit_notes_amount: SortOrder
+    post_payment_credit_notes_amount: AirbyteSortOrder
     """Total amount of credit notes issued after the invoice was paid."""
-    pre_payment_credit_notes_amount: SortOrder
+    pre_payment_credit_notes_amount: AirbyteSortOrder
     """Total amount of credit notes applied before payment was attempted."""
-    quote: SortOrder
+    quote: AirbyteSortOrder
     """The quote from which this invoice was generated, if applicable."""
-    receipt_number: SortOrder
+    receipt_number: AirbyteSortOrder
     """The receipt number displayed on the invoice, if available."""
-    rendering: SortOrder
+    rendering: AirbyteSortOrder
     """Settings that control how the invoice is rendered for display."""
-    rendering_options: SortOrder
+    rendering_options: AirbyteSortOrder
     """Options for customizing the visual rendering of the invoice."""
-    shipping_cost: SortOrder
+    shipping_cost: AirbyteSortOrder
     """Total cost of shipping charges included in the invoice."""
-    shipping_details: SortOrder
+    shipping_details: AirbyteSortOrder
     """Detailed shipping information for the invoice, including address and carrier."""
-    starting_balance: SortOrder
+    starting_balance: AirbyteSortOrder
     """The customer's starting account balance at the beginning of the billing period."""
-    statement_description: SortOrder
+    statement_description: AirbyteSortOrder
     """Extra information about the invoice that appears on the customer's credit card statement."""
-    statement_descriptor: SortOrder
+    statement_descriptor: AirbyteSortOrder
     """A dynamic descriptor that appears on the customer's credit card statement for this invoice."""
-    status: SortOrder
+    status: AirbyteSortOrder
     """The status of the invoice: draft, open, paid, void, or uncollectible."""
-    status_transitions: SortOrder
+    status_transitions: AirbyteSortOrder
     """Timestamps tracking when the invoice transitioned between different statuses."""
-    subscription: SortOrder
+    subscription: AirbyteSortOrder
     """The subscription this invoice was generated for, if applicable."""
-    subscription_details: SortOrder
+    subscription_details: AirbyteSortOrder
     """Additional details about the subscription associated with this invoice."""
-    subtotal: SortOrder
+    subtotal: AirbyteSortOrder
     """Total of all line items before discounts or tax are applied."""
-    subtotal_excluding_tax: SortOrder
+    subtotal_excluding_tax: AirbyteSortOrder
     """The subtotal amount excluding any tax calculations."""
-    tax: SortOrder
+    tax: AirbyteSortOrder
     """Total tax amount applied to the invoice."""
-    tax_percent: SortOrder
+    tax_percent: AirbyteSortOrder
     """The percentage of tax applied to the invoice (deprecated, use total_tax_amounts instead)."""
-    test_clock: SortOrder
+    test_clock: AirbyteSortOrder
     """ID of the test clock this invoice belongs to, used for testing time-dependent billing."""
-    total: SortOrder
+    total: AirbyteSortOrder
     """Total amount of the invoice after all line items, discounts, and taxes are calculated."""
-    total_discount_amounts: SortOrder
+    total_discount_amounts: AirbyteSortOrder
     """Array of the total discount amounts applied, broken down by discount."""
-    total_excluding_tax: SortOrder
+    total_excluding_tax: AirbyteSortOrder
     """Total amount of the invoice excluding all tax calculations."""
-    total_tax_amounts: SortOrder
+    total_tax_amounts: AirbyteSortOrder
     """Array of tax amounts applied to the invoice, broken down by tax rate."""
-    transfer_data: SortOrder
+    transfer_data: AirbyteSortOrder
     """Information about the transfer of funds associated with this invoice in Connect scenarios."""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """Timestamp indicating when the invoice was last updated."""
-    webhooks_delivered_at: SortOrder
+    webhooks_delivered_at: AirbyteSortOrder
     """Timestamp indicating when webhooks for this invoice were successfully delivered."""
 
 
@@ -2541,37 +2541,37 @@ class RefundsStringFilter(TypedDict, total=False):
 
 class RefundsSortFilter(TypedDict, total=False):
     """Available fields for sorting refunds search results."""
-    amount: SortOrder
+    amount: AirbyteSortOrder
     """Amount refunded, in cents (the smallest currency unit)."""
-    balance_transaction: SortOrder
+    balance_transaction: AirbyteSortOrder
     """ID of the balance transaction that describes the impact of this refund on your account balance."""
-    charge: SortOrder
+    charge: AirbyteSortOrder
     """ID of the charge that was refunded."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """Timestamp indicating when the refund was created."""
-    currency: SortOrder
+    currency: AirbyteSortOrder
     """Three-letter ISO currency code in lowercase representing the currency of the refund."""
-    destination_details: SortOrder
+    destination_details: AirbyteSortOrder
     """Details about the destination where the refunded funds should be sent."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the refund object."""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: SortOrder
+    object: AirbyteSortOrder
     """String representing the object type, always 'refund'."""
-    payment_intent: SortOrder
+    payment_intent: AirbyteSortOrder
     """ID of the PaymentIntent that was refunded."""
-    reason: SortOrder
+    reason: AirbyteSortOrder
     """Reason for the refund, either user-provided (duplicate, fraudulent, or requested_by_customer) or generated by Stripe internally (expired_uncaptured_charge)."""
-    receipt_number: SortOrder
+    receipt_number: AirbyteSortOrder
     """The transaction number that appears on email receipts sent for this refund."""
-    source_transfer_reversal: SortOrder
+    source_transfer_reversal: AirbyteSortOrder
     """ID of the transfer reversal that was created as a result of refunding a transfer (Connect only)."""
-    status: SortOrder
+    status: AirbyteSortOrder
     """Status of the refund (pending, requires_action, succeeded, failed, or canceled)."""
-    transfer_reversal: SortOrder
+    transfer_reversal: AirbyteSortOrder
     """ID of the reversal of the transfer that funded the charge being refunded (Connect only)."""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """Timestamp indicating when the refund was last updated."""
 
 
@@ -3096,107 +3096,107 @@ class SubscriptionsStringFilter(TypedDict, total=False):
 
 class SubscriptionsSortFilter(TypedDict, total=False):
     """Available fields for sorting subscriptions search results."""
-    application: SortOrder
+    application: AirbyteSortOrder
     """For Connect platforms, the application associated with the subscription."""
-    application_fee_percent: SortOrder
+    application_fee_percent: AirbyteSortOrder
     """For Connect platforms, the percentage of the subscription amount taken as an application fee."""
-    automatic_tax: SortOrder
+    automatic_tax: AirbyteSortOrder
     """Automatic tax calculation settings for the subscription."""
-    billing: SortOrder
+    billing: AirbyteSortOrder
     """Billing mode configuration for the subscription."""
-    billing_cycle_anchor: SortOrder
+    billing_cycle_anchor: AirbyteSortOrder
     """Timestamp determining when the billing cycle for the subscription starts."""
-    billing_cycle_anchor_config: SortOrder
+    billing_cycle_anchor_config: AirbyteSortOrder
     """Configuration for the subscription's billing cycle anchor behavior."""
-    billing_thresholds: SortOrder
+    billing_thresholds: AirbyteSortOrder
     """Defines thresholds at which an invoice will be sent, controlling billing timing based on usage."""
-    cancel_at: SortOrder
+    cancel_at: AirbyteSortOrder
     """Timestamp indicating when the subscription is scheduled to be canceled."""
-    cancel_at_period_end: SortOrder
+    cancel_at_period_end: AirbyteSortOrder
     """Boolean indicating whether the subscription will be canceled at the end of the current billing period."""
-    canceled_at: SortOrder
+    canceled_at: AirbyteSortOrder
     """Timestamp indicating when the subscription was canceled, if applicable."""
-    cancellation_details: SortOrder
+    cancellation_details: AirbyteSortOrder
     """Details about why and how the subscription was canceled."""
-    collection_method: SortOrder
+    collection_method: AirbyteSortOrder
     """How invoices are collected (charge_automatically or send_invoice)."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """Timestamp indicating when the subscription was created."""
-    currency: SortOrder
+    currency: AirbyteSortOrder
     """Three-letter ISO currency code in lowercase indicating the currency for the subscription."""
-    current_period_end: SortOrder
+    current_period_end: AirbyteSortOrder
     """Timestamp marking the end of the current billing period."""
-    current_period_start: SortOrder
+    current_period_start: AirbyteSortOrder
     """Timestamp marking the start of the current billing period."""
-    customer: SortOrder
+    customer: AirbyteSortOrder
     """ID of the customer who owns the subscription, expandable to full customer object."""
-    days_until_due: SortOrder
+    days_until_due: AirbyteSortOrder
     """Number of days until the invoice is due for subscriptions using send_invoice collection method."""
-    default_payment_method: SortOrder
+    default_payment_method: AirbyteSortOrder
     """ID of the default payment method for the subscription, taking precedence over default_source."""
-    default_source: SortOrder
+    default_source: AirbyteSortOrder
     """ID of the default payment source for the subscription."""
-    default_tax_rates: SortOrder
+    default_tax_rates: AirbyteSortOrder
     """Tax rates that apply to the subscription by default."""
-    description: SortOrder
+    description: AirbyteSortOrder
     """Human-readable description of the subscription, displayable to the customer."""
-    discount: SortOrder
+    discount: AirbyteSortOrder
     """Describes any discount currently applied to the subscription."""
-    ended_at: SortOrder
+    ended_at: AirbyteSortOrder
     """Timestamp indicating when the subscription ended, if applicable."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the subscription object."""
-    invoice_settings: SortOrder
+    invoice_settings: AirbyteSortOrder
     """Settings for invoices generated by this subscription, such as custom fields and footer."""
-    is_deleted: SortOrder
+    is_deleted: AirbyteSortOrder
     """Indicates whether the subscription has been deleted."""
-    items: SortOrder
+    items: AirbyteSortOrder
     """List of subscription items, each with an attached price defining what the customer is subscribed to."""
-    latest_invoice: SortOrder
+    latest_invoice: AirbyteSortOrder
     """The most recent invoice this subscription has generated, expandable to full invoice object."""
-    livemode: SortOrder
+    livemode: AirbyteSortOrder
     """Indicates whether the subscription exists in live mode (true) or test mode (false)."""
-    metadata: SortOrder
+    metadata: AirbyteSortOrder
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
-    next_pending_invoice_item_invoice: SortOrder
+    next_pending_invoice_item_invoice: AirbyteSortOrder
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: SortOrder
+    object: AirbyteSortOrder
     """String representing the object type, always 'subscription'."""
-    on_behalf_of: SortOrder
+    on_behalf_of: AirbyteSortOrder
     """For Connect platforms, the account for which the subscription is being created or managed."""
-    pause_collection: SortOrder
+    pause_collection: AirbyteSortOrder
     """Configuration for pausing collection on the subscription while retaining the subscription structure."""
-    payment_settings: SortOrder
+    payment_settings: AirbyteSortOrder
     """Payment settings for invoices generated by this subscription."""
-    pending_invoice_item_interval: SortOrder
+    pending_invoice_item_interval: AirbyteSortOrder
     """Specifies an interval for aggregating usage records into pending invoice items."""
-    pending_setup_intent: SortOrder
+    pending_setup_intent: AirbyteSortOrder
     """SetupIntent used for collecting user authentication when updating payment methods without immediate payment."""
-    pending_update: SortOrder
+    pending_update: AirbyteSortOrder
     """If specified, pending updates that will be applied to the subscription once the latest_invoice has been paid."""
-    plan: SortOrder
+    plan: AirbyteSortOrder
     """The plan associated with the subscription (deprecated, use items instead)."""
-    quantity: SortOrder
+    quantity: AirbyteSortOrder
     """Quantity of the plan subscribed to (deprecated, use items instead)."""
-    schedule: SortOrder
+    schedule: AirbyteSortOrder
     """ID of the subscription schedule managing this subscription's lifecycle, if applicable."""
-    start_date: SortOrder
+    start_date: AirbyteSortOrder
     """Timestamp indicating when the subscription started."""
-    status: SortOrder
+    status: AirbyteSortOrder
     """Current status of the subscription (incomplete, incomplete_expired, trialing, active, past_due, canceled, unpaid, or paused)."""
-    tax_percent: SortOrder
+    tax_percent: AirbyteSortOrder
     """The percentage of tax applied to the subscription (deprecated, use default_tax_rates instead)."""
-    test_clock: SortOrder
+    test_clock: AirbyteSortOrder
     """ID of the test clock associated with this subscription for simulating time-based scenarios."""
-    transfer_data: SortOrder
+    transfer_data: AirbyteSortOrder
     """For Connect platforms, the account receiving funds from the subscription and optional percentage transferred."""
-    trial_end: SortOrder
+    trial_end: AirbyteSortOrder
     """Timestamp indicating when the trial period ends, if applicable."""
-    trial_settings: SortOrder
+    trial_settings: AirbyteSortOrder
     """Settings related to trial periods, including conditions for ending trials."""
-    trial_start: SortOrder
+    trial_start: AirbyteSortOrder
     """Timestamp indicating when the trial period began, if applicable."""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """Timestamp indicating when the subscription was last updated."""
 
 
@@ -3296,8 +3296,8 @@ class SubscriptionsSearchQuery(TypedDict, total=False):
 
 # ===== SEARCH PARAMS =====
 
-class SearchParams(TypedDict, total=False):
-    """Parameters for search operations (generic, use entity-specific query types for better type hints)."""
+class AirbyteSearchParams(TypedDict, total=False):
+    """Parameters for Airbyte cache search operations (generic, use entity-specific query types for better type hints)."""
     query: dict[str, Any]
     limit: int
     cursor: str

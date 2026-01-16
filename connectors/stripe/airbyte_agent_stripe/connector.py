@@ -62,7 +62,7 @@ from .types import (
     SubscriptionsListParamsCreated,
     SubscriptionsListParamsCurrentPeriodEnd,
     SubscriptionsListParamsCurrentPeriodStart,
-    SearchParams,
+    AirbyteSearchParams,
     ChargesSearchFilter,
     ChargesSearchQuery,
     CustomersSearchFilter,
@@ -112,8 +112,8 @@ from .models import (
     Refund,
     Subscription,
     SubscriptionSearchResult,
-    SearchHit,
-    SearchResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
     ChargesSearchData,
     ChargesSearchResult,
     CustomersSearchData,
@@ -968,7 +968,7 @@ class CustomersQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            CustomersSearchResult with hits (list of SearchHit[CustomersSearchData]) and pagination info
+            CustomersSearchResult with hits (list of AirbyteSearchHit[CustomersSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -986,7 +986,7 @@ class CustomersQuery:
         # Parse response into typed result
         return CustomersSearchResult(
             hits=[
-                SearchHit[CustomersSearchData](
+                AirbyteSearchHit[CustomersSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=CustomersSearchData(**hit.get("data", {}))
@@ -1232,7 +1232,7 @@ class InvoicesQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            InvoicesSearchResult with hits (list of SearchHit[InvoicesSearchData]) and pagination info
+            InvoicesSearchResult with hits (list of AirbyteSearchHit[InvoicesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1250,7 +1250,7 @@ class InvoicesQuery:
         # Parse response into typed result
         return InvoicesSearchResult(
             hits=[
-                SearchHit[InvoicesSearchData](
+                AirbyteSearchHit[InvoicesSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=InvoicesSearchData(**hit.get("data", {}))
@@ -1448,7 +1448,7 @@ class ChargesQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            ChargesSearchResult with hits (list of SearchHit[ChargesSearchData]) and pagination info
+            ChargesSearchResult with hits (list of AirbyteSearchHit[ChargesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1466,7 +1466,7 @@ class ChargesQuery:
         # Parse response into typed result
         return ChargesSearchResult(
             hits=[
-                SearchHit[ChargesSearchData](
+                AirbyteSearchHit[ChargesSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=ChargesSearchData(**hit.get("data", {}))
@@ -1682,7 +1682,7 @@ class SubscriptionsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            SubscriptionsSearchResult with hits (list of SearchHit[SubscriptionsSearchData]) and pagination info
+            SubscriptionsSearchResult with hits (list of AirbyteSearchHit[SubscriptionsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1700,7 +1700,7 @@ class SubscriptionsQuery:
         # Parse response into typed result
         return SubscriptionsSearchResult(
             hits=[
-                SearchHit[SubscriptionsSearchData](
+                AirbyteSearchHit[SubscriptionsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=SubscriptionsSearchData(**hit.get("data", {}))
@@ -1848,7 +1848,7 @@ class RefundsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            RefundsSearchResult with hits (list of SearchHit[RefundsSearchData]) and pagination info
+            RefundsSearchResult with hits (list of AirbyteSearchHit[RefundsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1866,7 +1866,7 @@ class RefundsQuery:
         # Parse response into typed result
         return RefundsSearchResult(
             hits=[
-                SearchHit[RefundsSearchData](
+                AirbyteSearchHit[RefundsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=RefundsSearchData(**hit.get("data", {}))
