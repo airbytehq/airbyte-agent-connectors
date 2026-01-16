@@ -421,10 +421,14 @@ class HTTPClient:
         headers: dict[str, str] | None = None,
         *,
         stream: bool = False,
-    ):
+    ) -> tuple[dict[str, Any], dict[str, str]]:
         """Execute a single HTTP request attempt (no retries).
 
         This is the core request logic, separated from retry handling.
+
+        Returns:
+            Tuple of (response_data, response_headers) for non-streaming requests.
+            For streaming requests, returns (response_object, response_headers).
         """
         # Ensure auth credentials are initialized (proactive refresh if needed)
         await self._ensure_auth_initialized()
@@ -475,7 +479,7 @@ class HTTPClient:
                     status_code=status_code,
                     response_body=f"<binary content, {response.headers.get('content-length', 'unknown')} bytes>",
                 )
-                return response
+                return response, dict(response.headers)
 
             # Parse response - handle non-JSON responses gracefully
             content_type = response.headers.get("content-type", "")
@@ -501,7 +505,7 @@ class HTTPClient:
                 status_code=status_code,
                 response_body=response_data,
             )
-            return response_data
+            return response_data, dict(response.headers)
 
         except AuthenticationError as e:
             # Auth error (401, 403) - handle token refresh
@@ -631,7 +635,7 @@ class HTTPClient:
         *,
         stream: bool = False,
         _auth_retry_attempted: bool = False,
-    ):
+    ) -> tuple[dict[str, Any], dict[str, str]]:
         """Make an async HTTP request with optional streaming and automatic retries.
 
         Args:
@@ -644,8 +648,9 @@ class HTTPClient:
             stream: If True, do not eagerly read the body (useful for downloads)
 
         Returns:
-            - If stream=False: Parsed JSON (dict) or empty dict
-            - If stream=True: Response object suitable for streaming
+            Tuple of (response_data, response_headers):
+            - If stream=False: (parsed JSON dict or empty dict, response headers dict)
+            - If stream=True: (response object suitable for streaming, response headers dict)
 
         Raises:
             HTTPStatusError: If request fails with 4xx/5xx status after all retries
