@@ -103,6 +103,6 @@ For the service's official API docs, see the [Gong API reference](https://gong.a
 
 ## Version information
 
-- **Package version:** 0.19.53
-- **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** a50c8f71ed01cb9fd029c6c72d7523dbe2d5cec7
+- **Package version:** 0.19.54
+- **Connector version:** 0.1.10
+- **Generated with Connector SDK commit SHA:** c82e34395cbc4a4632188580bd977e2595c0543b
