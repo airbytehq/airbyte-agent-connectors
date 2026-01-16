@@ -184,6 +184,30 @@ class TicketsList(BaseModel):
     paging: Union[Paging, Any] = Field(default=None)
     total: Union[int, Any] = Field(default=None)
 
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
+
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
+    name: Union[str, Any] = Field(default=None)
+    cardinality: Union[str, Any] = Field(default=None)
+    id: Union[str, Any] = Field(default=None)
+    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
+    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
+
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -219,30 +243,6 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: Union[str, Any] = Field(default=None, alias="updatedUserId")
     show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
-
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
-    name: Union[str, Any] = Field(default=None)
-    cardinality: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
-    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
-
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
@@ -467,7 +467,7 @@ class DealsSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class SearchHit(BaseModel, Generic[D]):
+class AirbyteSearchHit(BaseModel, Generic[D]):
     """A single search result with typed data."""
     model_config = ConfigDict(extra="allow")
 
@@ -479,11 +479,11 @@ class SearchHit(BaseModel, Generic[D]):
     """The matched record data."""
 
 
-class SearchResult(BaseModel, Generic[D]):
-    """Result from search operations with typed hits."""
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
     model_config = ConfigDict(extra="allow")
 
-    hits: list[SearchHit[D]] = Field(default_factory=list)
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
     """List of matching records."""
     next_cursor: str | None = None
     """Cursor for fetching the next page of results."""
@@ -493,13 +493,13 @@ class SearchResult(BaseModel, Generic[D]):
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
 
-CompaniesSearchResult = SearchResult[CompaniesSearchData]
+CompaniesSearchResult = AirbyteSearchResult[CompaniesSearchData]
 """Search result type for companies entity."""
 
-ContactsSearchResult = SearchResult[ContactsSearchData]
+ContactsSearchResult = AirbyteSearchResult[ContactsSearchData]
 """Search result type for contacts entity."""
 
-DealsSearchResult = SearchResult[DealsSearchData]
+DealsSearchResult = AirbyteSearchResult[DealsSearchData]
 """Search result type for deals entity."""
 
 

@@ -38,7 +38,7 @@ from .types import (
     TicketsApiSearchParamsSortsItem,
     TicketsGetParams,
     TicketsListParams,
-    SearchParams,
+    AirbyteSearchParams,
     CompaniesSearchFilter,
     CompaniesSearchQuery,
     ContactsSearchFilter,
@@ -68,8 +68,8 @@ from .models import (
     Deal,
     Schema,
     Ticket,
-    SearchHit,
-    SearchResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
     CompaniesSearchData,
     CompaniesSearchResult,
     ContactsSearchData,
@@ -672,7 +672,7 @@ class ContactsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            ContactsSearchResult with hits (list of SearchHit[ContactsSearchData]) and pagination info
+            ContactsSearchResult with hits (list of AirbyteSearchHit[ContactsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -690,7 +690,7 @@ class ContactsQuery:
         # Parse response into typed result
         return ContactsSearchResult(
             hits=[
-                SearchHit[ContactsSearchData](
+                AirbyteSearchHit[ContactsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=ContactsSearchData(**hit.get("data", {}))
@@ -868,7 +868,7 @@ class CompaniesQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            CompaniesSearchResult with hits (list of SearchHit[CompaniesSearchData]) and pagination info
+            CompaniesSearchResult with hits (list of AirbyteSearchHit[CompaniesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -886,7 +886,7 @@ class CompaniesQuery:
         # Parse response into typed result
         return CompaniesSearchResult(
             hits=[
-                SearchHit[CompaniesSearchData](
+                AirbyteSearchHit[CompaniesSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=CompaniesSearchData(**hit.get("data", {}))
@@ -1066,7 +1066,7 @@ class DealsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            DealsSearchResult with hits (list of SearchHit[DealsSearchData]) and pagination info
+            DealsSearchResult with hits (list of AirbyteSearchHit[DealsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1084,7 +1084,7 @@ class DealsQuery:
         # Parse response into typed result
         return DealsSearchResult(
             hits=[
-                SearchHit[DealsSearchData](
+                AirbyteSearchHit[DealsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=DealsSearchData(**hit.get("data", {}))
