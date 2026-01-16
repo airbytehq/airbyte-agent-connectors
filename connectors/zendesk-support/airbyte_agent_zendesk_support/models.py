@@ -668,6 +668,612 @@ class ZendeskSupportExecuteResultWithMeta(ZendeskSupportExecuteResult[T], Generi
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class BrandsSearchData(BaseModel):
+    """Search result data for brands entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """Indicates whether the brand is set as active"""
+    brand_url: str | None = None
+    """The public URL of the brand"""
+    created_at: str | None = None
+    """Timestamp when the brand was created"""
+    default: bool | None = None
+    """Indicates whether the brand is the default brand for tickets generated from non-branded channels"""
+    has_help_center: bool | None = None
+    """Indicates whether the brand has a Help Center enabled"""
+    help_center_state: str | None = None
+    """The state of the Help Center, with allowed values of enabled, disabled, or restricted"""
+    host_mapping: str | None = None
+    """The host mapping configuration for the brand, visible only to administrators"""
+    id: int | None = None
+    """Unique identifier automatically assigned when the brand is created"""
+    is_deleted: bool | None = None
+    """Indicates whether the brand has been deleted"""
+    logo: str | None = None
+    """Brand logo image file represented as an Attachment object"""
+    name: str | None = None
+    """The name of the brand"""
+    signature_template: str | None = None
+    """The signature template used for the brand"""
+    subdomain: str | None = None
+    """The subdomain associated with the brand"""
+    ticket_form_ids: list[Any] | None = None
+    """Array of ticket form IDs that are available for use by this brand"""
+    updated_at: str | None = None
+    """Timestamp when the brand was last updated"""
+    url: str | None = None
+    """The API URL for accessing this brand resource"""
+
+
+class GroupsSearchData(BaseModel):
+    """Search result data for groups entity."""
+    model_config = ConfigDict(extra="allow")
+
+    created_at: str | None = None
+    """Timestamp indicating when the group was created"""
+    default: bool | None = None
+    """Indicates if the group is the default one for the account"""
+    deleted: bool | None = None
+    """Indicates whether the group has been deleted"""
+    description: str | None = None
+    """The description of the group"""
+    id: int | None = None
+    """Unique identifier automatically assigned when creating groups"""
+    is_public: bool | None = None
+    """Indicates if the group is public (true) or private (false)"""
+    name: str | None = None
+    """The name of the group"""
+    updated_at: str | None = None
+    """Timestamp indicating when the group was last updated"""
+    url: str | None = None
+    """The API URL of the group"""
+
+
+class OrganizationsSearchData(BaseModel):
+    """Search result data for organizations entity."""
+    model_config = ConfigDict(extra="allow")
+
+    created_at: str | None = None
+    """Timestamp when the organization was created"""
+    deleted_at: str | None = None
+    """Timestamp when the organization was deleted"""
+    details: str | None = None
+    """Details about the organization, such as the address"""
+    domain_names: list[Any] | None = None
+    """Array of domain names associated with this organization for automatic user assignment"""
+    external_id: str | None = None
+    """Unique external identifier to associate the organization to an external record (case-insensitive)"""
+    group_id: int | None = None
+    """ID of the group where new tickets from users in this organization are automatically assigned"""
+    id: int | None = None
+    """Unique identifier automatically assigned when the organization is created"""
+    name: str | None = None
+    """Unique name for the organization (mandatory field)"""
+    notes: str | None = None
+    """Notes about the organization"""
+    organization_fields: dict[str, Any] | None = None
+    """Key-value object for custom organization fields"""
+    shared_comments: bool | None = None
+    """Boolean indicating whether end users in this organization can comment on each other's tickets"""
+    shared_tickets: bool | None = None
+    """Boolean indicating whether end users in this organization can see each other's tickets"""
+    tags: list[Any] | None = None
+    """Array of tags associated with the organization"""
+    updated_at: str | None = None
+    """Timestamp of the last update to the organization"""
+    url: str | None = None
+    """The API URL of this organization"""
+
+
+class SatisfactionRatingsSearchData(BaseModel):
+    """Search result data for satisfaction_ratings entity."""
+    model_config = ConfigDict(extra="allow")
+
+    assignee_id: int | None = None
+    """The identifier of the agent assigned to the ticket at the time the rating was submitted"""
+    comment: str | None = None
+    """Optional comment provided by the requester with the rating"""
+    created_at: str | None = None
+    """Timestamp indicating when the satisfaction rating was created"""
+    group_id: int | None = None
+    """The identifier of the group assigned to the ticket at the time the rating was submitted"""
+    id: int | None = None
+    """Unique identifier for the satisfaction rating, automatically assigned upon creation"""
+    reason: str | None = None
+    """Free-text reason for a bad rating provided by the requester in a follow-up question"""
+    reason_id: int | None = None
+    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    requester_id: int | None = None
+    """The identifier of the ticket requester who submitted the satisfaction rating"""
+    score: str | None = None
+    """The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'"""
+    ticket_id: int | None = None
+    """The identifier of the ticket being rated"""
+    updated_at: str | None = None
+    """Timestamp indicating when the satisfaction rating was last updated"""
+    url: str | None = None
+    """The API URL of this satisfaction rating resource"""
+
+
+class TagsSearchData(BaseModel):
+    """Search result data for tags entity."""
+    model_config = ConfigDict(extra="allow")
+
+    count: int | None = None
+    """The number of times this tag has been used across resources"""
+    name: str | None = None
+    """The tag name string used to label and categorize resources"""
+
+
+class TicketAuditsSearchData(BaseModel):
+    """Search result data for ticket_audits entity."""
+    model_config = ConfigDict(extra="allow")
+
+    attachments: list[Any] | None = None
+    """Files or documents attached to the audit"""
+    author_id: int | None = None
+    """The unique identifier of the user who created the audit"""
+    created_at: str | None = None
+    """Timestamp indicating when the audit was created"""
+    events: list[Any] | None = None
+    """Array of events that occurred in this audit, such as field changes, comments, or tag updates"""
+    id: int | None = None
+    """Unique identifier for the audit record, automatically assigned when the audit is created"""
+    metadata: dict[str, Any] | None = None
+    """Custom and system data associated with the audit"""
+    ticket_id: int | None = None
+    """The unique identifier of the ticket associated with this audit"""
+    via: dict[str, Any] | None = None
+    """Describes how the audit was created, providing context about the creation source"""
+
+
+class TicketCommentsSearchData(BaseModel):
+    """Search result data for ticket_comments entity."""
+    model_config = ConfigDict(extra="allow")
+
+    attachments: list[Any] | None = None
+    """List of files or media attached to the comment"""
+    audit_id: int | None = None
+    """Identifier of the audit record associated with this comment event"""
+    author_id: int | None = None
+    """Identifier of the user who created the comment"""
+    body: str | None = None
+    """Content of the comment in its original format"""
+    created_at: str | None = None
+    """Timestamp when the comment was created"""
+    event_type: str | None = None
+    """Specific classification of the event within the ticket event stream"""
+    html_body: str | None = None
+    """HTML-formatted content of the comment"""
+    id: int | None = None
+    """Unique identifier for the comment event"""
+    metadata: dict[str, Any] | None = None
+    """Additional structured information about the comment not covered by standard fields"""
+    plain_body: str | None = None
+    """Plain text content of the comment without formatting"""
+    public: bool | None = None
+    """Boolean indicating whether the comment is visible to end users or is an internal note"""
+    ticket_id: int | None = None
+    """Identifier of the ticket to which this comment belongs"""
+    timestamp: int | None = None
+    """Timestamp of when the event occurred in the incremental export stream"""
+    type: str | None = None
+    """Type of event, typically indicating this is a comment event"""
+    uploads: list[Any] | None = None
+    """Array of upload tokens or identifiers for files being attached to the comment"""
+    via: dict[str, Any] | None = None
+    """Channel or method through which the comment was submitted"""
+    via_reference_id: int | None = None
+    """Reference identifier for the channel through which the comment was created"""
+
+
+class TicketFieldsSearchData(BaseModel):
+    """Search result data for ticket_fields entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """Whether this field is currently available for use"""
+    agent_description: str | None = None
+    """A description of the ticket field that only agents can see"""
+    collapsed_for_agents: bool | None = None
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    created_at: str | None = None
+    """Timestamp when the custom ticket field was created"""
+    custom_field_options: list[Any] | None = None
+    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    custom_statuses: list[Any] | None = None
+    """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
+    description: str | None = None
+    """Text describing the purpose of the ticket field to users"""
+    editable_in_portal: bool | None = None
+    """Whether this field is editable by end users in Help Center"""
+    id: int | None = None
+    """Unique identifier for the ticket field, automatically assigned when created"""
+    key: str | None = None
+    """Internal identifier or reference key for the field"""
+    position: int | None = None
+    """The relative position of the ticket field on a ticket, controlling display order"""
+    raw_description: str | None = None
+    """The dynamic content placeholder if present, or the description value if not"""
+    raw_title: str | None = None
+    """The dynamic content placeholder if present, or the title value if not"""
+    raw_title_in_portal: str | None = None
+    """The dynamic content placeholder if present, or the title_in_portal value if not"""
+    regexp_for_validation: str | None = None
+    """For regexp fields only, the validation pattern for a field value to be deemed valid"""
+    removable: bool | None = None
+    """If false, this field is a system field that must be present on all tickets"""
+    required: bool | None = None
+    """If true, agents must enter a value in the field to change the ticket status to solved"""
+    required_in_portal: bool | None = None
+    """If true, end users must enter a value in the field to create a request"""
+    sub_type_id: int | None = None
+    """For system ticket fields of type priority and status, controlling available options"""
+    system_field_options: list[Any] | None = None
+    """Array of options for system ticket fields of type tickettype, priority, or status"""
+    tag: str | None = None
+    """For checkbox fields only, a tag added to tickets when the checkbox field is selected"""
+    title: str | None = None
+    """The title of the ticket field displayed to agents"""
+    title_in_portal: str | None = None
+    """The title of the ticket field displayed to end users in Help Center"""
+    type: str | None = None
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    updated_at: str | None = None
+    """Timestamp when the custom ticket field was last updated"""
+    url: str | None = None
+    """The API URL for this ticket field resource"""
+    visible_in_portal: bool | None = None
+    """Whether this field is visible to end users in Help Center"""
+
+
+class TicketFormsSearchData(BaseModel):
+    """Search result data for ticket_forms entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """Indicates if the form is set as active"""
+    agent_conditions: list[Any] | None = None
+    """Array of condition sets for agent workspaces"""
+    created_at: str | None = None
+    """Timestamp when the ticket form was created"""
+    default: bool | None = None
+    """Indicates if the form is the default form for this account"""
+    display_name: str | None = None
+    """The name of the form that is displayed to an end user"""
+    end_user_conditions: list[Any] | None = None
+    """Array of condition sets for end user products"""
+    end_user_visible: bool | None = None
+    """Indicates if the form is visible to the end user"""
+    id: int | None = None
+    """Unique identifier for the ticket form, automatically assigned when creating the form"""
+    in_all_brands: bool | None = None
+    """Indicates if the form is available for use in all brands on this account"""
+    name: str | None = None
+    """The name of the ticket form"""
+    position: int | None = None
+    """The position of this form among other forms in the account, such as in a dropdown"""
+    raw_display_name: str | None = None
+    """The dynamic content placeholder if present, or the display_name value if not"""
+    raw_name: str | None = None
+    """The dynamic content placeholder if present, or the name value if not"""
+    restricted_brand_ids: list[Any] | None = None
+    """IDs of all brands that this ticket form is restricted to"""
+    ticket_field_ids: list[Any] | None = None
+    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    updated_at: str | None = None
+    """Timestamp of the last update to the ticket form"""
+    url: str | None = None
+    """URL of the ticket form"""
+
+
+class TicketMetricsSearchData(BaseModel):
+    """Search result data for ticket_metrics entity."""
+    model_config = ConfigDict(extra="allow")
+
+    agent_wait_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes the agent spent waiting during calendar and business hours"""
+    assigned_at: str | None = None
+    """Timestamp when the ticket was assigned"""
+    assignee_stations: int | None = None
+    """Number of assignees the ticket had"""
+    assignee_updated_at: str | None = None
+    """Timestamp when the assignee last updated the ticket"""
+    created_at: str | None = None
+    """Timestamp when the metric record was created"""
+    custom_status_updated_at: str | None = None
+    """Timestamp when the ticket's custom status was last updated"""
+    first_resolution_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes to the first resolution time during calendar and business hours"""
+    full_resolution_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes to the full resolution during calendar and business hours"""
+    generated_timestamp: int | None = None
+    """Timestamp of when record was last updated"""
+    group_stations: int | None = None
+    """Number of groups the ticket passed through"""
+    id: int | None = None
+    """Unique identifier for the ticket metric record"""
+    initially_assigned_at: str | None = None
+    """Timestamp when the ticket was initially assigned"""
+    instance_id: int | None = None
+    """ID of the Zendesk instance associated with the ticket"""
+    latest_comment_added_at: str | None = None
+    """Timestamp when the latest comment was added"""
+    metric: str | None = None
+    """Ticket metrics data"""
+    on_hold_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes on hold"""
+    reopens: int | None = None
+    """Total number of times the ticket was reopened"""
+    replies: int | None = None
+    """The number of public replies added to a ticket by an agent"""
+    reply_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes to the first reply during calendar and business hours"""
+    reply_time_in_seconds: dict[str, Any] | None = None
+    """Number of seconds to the first reply during calendar hours, only available for Messaging tickets"""
+    requester_updated_at: str | None = None
+    """Timestamp when the requester last updated the ticket"""
+    requester_wait_time_in_minutes: dict[str, Any] | None = None
+    """Number of minutes the requester spent waiting during calendar and business hours"""
+    solved_at: str | None = None
+    """Timestamp when the ticket was solved"""
+    status: dict[str, Any] | None = None
+    """The current status of the ticket (open, pending, solved, etc.)."""
+    status_updated_at: str | None = None
+    """Timestamp when the status of the ticket was last updated"""
+    ticket_id: int | None = None
+    """Identifier of the associated ticket"""
+    time: str | None = None
+    """Time related to the ticket"""
+    type: str | None = None
+    """Type of ticket"""
+    updated_at: str | None = None
+    """Timestamp when the metric record was last updated"""
+    url: str | None = None
+    """The API url of the ticket metric"""
+
+
+class TicketsSearchData(BaseModel):
+    """Search result data for tickets entity."""
+    model_config = ConfigDict(extra="allow")
+
+    allow_attachments: bool | None = None
+    """Boolean indicating whether attachments are allowed on the ticket"""
+    allow_channelback: bool | None = None
+    """Boolean indicating whether agents can reply to the ticket through the original channel"""
+    assignee_id: int | None = None
+    """Unique identifier of the agent currently assigned to the ticket"""
+    brand_id: int | None = None
+    """Unique identifier of the brand associated with the ticket in multi-brand accounts"""
+    collaborator_ids: list[Any] | None = None
+    """Array of user identifiers who are collaborating on the ticket"""
+    created_at: str | None = None
+    """Timestamp indicating when the ticket was created"""
+    custom_fields: list[Any] | None = None
+    """Array of custom field values specific to the account's ticket configuration"""
+    custom_status_id: int | None = None
+    """Unique identifier of the custom status applied to the ticket"""
+    deleted_ticket_form_id: int | None = None
+    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    description: str | None = None
+    """Initial description or content of the ticket when it was created"""
+    due_at: str | None = None
+    """Timestamp indicating when the ticket is due for completion or resolution"""
+    email_cc_ids: list[Any] | None = None
+    """Array of user identifiers who are CC'd on ticket email notifications"""
+    external_id: str | None = None
+    """External identifier for the ticket, used for integrations with other systems"""
+    fields: list[Any] | None = None
+    """Array of ticket field values including both system and custom fields"""
+    follower_ids: list[Any] | None = None
+    """Array of user identifiers who are following the ticket for updates"""
+    followup_ids: list[Any] | None = None
+    """Array of identifiers for follow-up tickets related to this ticket"""
+    forum_topic_id: int | None = None
+    """Unique identifier linking the ticket to a forum topic if applicable"""
+    from_messaging_channel: bool | None = None
+    """Boolean indicating whether the ticket originated from a messaging channel"""
+    generated_timestamp: int | None = None
+    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    group_id: int | None = None
+    """Unique identifier of the agent group assigned to handle the ticket"""
+    has_incidents: bool | None = None
+    """Boolean indicating whether this problem ticket has related incident tickets"""
+    id: int | None = None
+    """Unique identifier for the ticket"""
+    is_public: bool | None = None
+    """Boolean indicating whether the ticket is publicly visible"""
+    organization_id: int | None = None
+    """Unique identifier of the organization associated with the ticket"""
+    priority: str | None = None
+    """Priority level assigned to the ticket (e.g., urgent, high, normal, low)"""
+    problem_id: int | None = None
+    """Unique identifier of the problem ticket if this is an incident ticket"""
+    raw_subject: str | None = None
+    """Original unprocessed subject line before any system modifications"""
+    recipient: str | None = None
+    """Email address or identifier of the ticket recipient"""
+    requester_id: int | None = None
+    """Unique identifier of the user who requested or created the ticket"""
+    satisfaction_rating: Any = None
+    """Object containing customer satisfaction rating data for the ticket"""
+    sharing_agreement_ids: list[Any] | None = None
+    """Array of sharing agreement identifiers if the ticket is shared across Zendesk instances"""
+    status: str | None = None
+    """Current status of the ticket (e.g., new, open, pending, solved, closed)"""
+    subject: str | None = None
+    """Subject line of the ticket describing the issue or request"""
+    submitter_id: int | None = None
+    """Unique identifier of the user who submitted the ticket on behalf of the requester"""
+    tags: list[Any] | None = None
+    """Array of tags applied to the ticket for categorization and filtering"""
+    ticket_form_id: int | None = None
+    """Unique identifier of the ticket form used when creating the ticket"""
+    type: str | None = None
+    """Type of ticket (e.g., problem, incident, question, task)"""
+    updated_at: str | None = None
+    """Timestamp indicating when the ticket was last updated with a ticket event"""
+    url: str | None = None
+    """API URL to access the full ticket resource"""
+    via: dict[str, Any] | None = None
+    """Object describing the channel and method through which the ticket was created"""
+
+
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """Indicates if the user account is currently active"""
+    alias: str | None = None
+    """Alternative name or nickname for the user"""
+    chat_only: bool | None = None
+    """Indicates if the user can only interact via chat"""
+    created_at: str | None = None
+    """Timestamp indicating when the user was created"""
+    custom_role_id: int | None = None
+    """Identifier for a custom role assigned to the user"""
+    default_group_id: int | None = None
+    """Identifier of the default group assigned to the user"""
+    details: str | None = None
+    """Additional descriptive information about the user"""
+    email: str | None = None
+    """Email address of the user"""
+    external_id: str | None = None
+    """External system identifier for the user, used for integrations"""
+    iana_time_zone: str | None = None
+    """IANA standard time zone identifier for the user"""
+    id: int | None = None
+    """Unique identifier for the user"""
+    last_login_at: str | None = None
+    """Timestamp of the user's most recent login"""
+    locale: str | None = None
+    """Locale setting determining language and regional format preferences"""
+    locale_id: int | None = None
+    """Identifier for the user's locale preference"""
+    moderator: bool | None = None
+    """Indicates if the user has moderator privileges"""
+    name: str | None = None
+    """Display name of the user"""
+    notes: str | None = None
+    """Internal notes about the user, visible only to agents"""
+    only_private_comments: bool | None = None
+    """Indicates if the user can only make private comments on tickets"""
+    organization_id: int | None = None
+    """Identifier of the organization the user belongs to"""
+    permanently_deleted: bool | None = None
+    """Indicates if the user has been permanently deleted from the system"""
+    phone: str | None = None
+    """Phone number of the user"""
+    photo: dict[str, Any] | None = None
+    """Profile photo or avatar of the user"""
+    report_csv: bool | None = None
+    """Indicates if the user receives reports in CSV format"""
+    restricted_agent: bool | None = None
+    """Indicates if the agent has restricted access permissions"""
+    role: str | None = None
+    """Role assigned to the user defining their permissions level"""
+    role_type: int | None = None
+    """Type classification of the user's role"""
+    shared: bool | None = None
+    """Indicates if the user is shared across multiple accounts"""
+    shared_agent: bool | None = None
+    """Indicates if the user is a shared agent across multiple brands or accounts"""
+    shared_phone_number: bool | None = None
+    """Indicates if the phone number is shared with other users"""
+    signature: str | None = None
+    """Email signature text for the user"""
+    suspended: bool | None = None
+    """Indicates if the user account is suspended"""
+    tags: list[Any] | None = None
+    """Labels or tags associated with the user for categorization"""
+    ticket_restriction: str | None = None
+    """Defines which tickets the user can access based on restrictions"""
+    time_zone: str | None = None
+    """Time zone setting for the user"""
+    two_factor_auth_enabled: bool | None = None
+    """Indicates if two-factor authentication is enabled for the user"""
+    updated_at: str | None = None
+    """Timestamp indicating when the user was last updated"""
+    url: str | None = None
+    """API endpoint URL for accessing the user's detailed information"""
+    user_fields: dict[str, Any] | None = None
+    """Custom field values specific to the user, stored as key-value pairs"""
+    verified: bool | None = None
+    """Indicates if the user's identity has been verified"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class SearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class SearchResult(BaseModel, Generic[D]):
+    """Result from search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[SearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+BrandsSearchResult = SearchResult[BrandsSearchData]
+"""Search result type for brands entity."""
+
+GroupsSearchResult = SearchResult[GroupsSearchData]
+"""Search result type for groups entity."""
+
+OrganizationsSearchResult = SearchResult[OrganizationsSearchData]
+"""Search result type for organizations entity."""
+
+SatisfactionRatingsSearchResult = SearchResult[SatisfactionRatingsSearchData]
+"""Search result type for satisfaction_ratings entity."""
+
+TagsSearchResult = SearchResult[TagsSearchData]
+"""Search result type for tags entity."""
+
+TicketAuditsSearchResult = SearchResult[TicketAuditsSearchData]
+"""Search result type for ticket_audits entity."""
+
+TicketCommentsSearchResult = SearchResult[TicketCommentsSearchData]
+"""Search result type for ticket_comments entity."""
+
+TicketFieldsSearchResult = SearchResult[TicketFieldsSearchData]
+"""Search result type for ticket_fields entity."""
+
+TicketFormsSearchResult = SearchResult[TicketFormsSearchData]
+"""Search result type for ticket_forms entity."""
+
+TicketMetricsSearchResult = SearchResult[TicketMetricsSearchData]
+"""Search result type for ticket_metrics entity."""
+
+TicketsSearchResult = SearchResult[TicketsSearchData]
+"""Search result type for tickets entity."""
+
+UsersSearchResult = SearchResult[UsersSearchData]
+"""Search result type for users entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====

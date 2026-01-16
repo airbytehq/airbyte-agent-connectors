@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.5',
+    version='0.1.6',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
