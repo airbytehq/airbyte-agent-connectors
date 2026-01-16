@@ -50,7 +50,15 @@ from .models import (
     TicketsListResult,
     TicketsApiSearchResult,
     SchemasListResult,
-    ObjectsListResult
+    ObjectsListResult,
+    SearchHit,
+    SearchResult,
+    CompaniesSearchData,
+    CompaniesSearchResult,
+    ContactsSearchData,
+    ContactsSearchResult,
+    DealsSearchData,
+    DealsSearchResult
 )
 from .types import (
     ContactsApiSearchParamsFiltergroupsItemFiltersItem,
@@ -80,7 +88,18 @@ from .types import (
     SchemasListParams,
     SchemasGetParams,
     ObjectsListParams,
-    ObjectsGetParams
+    ObjectsGetParams,
+    SearchParams,
+    SortOrder,
+    CompaniesSearchFilter,
+    CompaniesSearchQuery,
+    CompaniesCondition,
+    ContactsSearchFilter,
+    ContactsSearchQuery,
+    ContactsCondition,
+    DealsSearchFilter,
+    DealsSearchQuery,
+    DealsCondition
 )
 
 __all__ = [
@@ -130,6 +149,14 @@ __all__ = [
     "TicketsApiSearchResult",
     "SchemasListResult",
     "ObjectsListResult",
+    "SearchHit",
+    "SearchResult",
+    "CompaniesSearchData",
+    "CompaniesSearchResult",
+    "ContactsSearchData",
+    "ContactsSearchResult",
+    "DealsSearchData",
+    "DealsSearchResult",
     "ContactsApiSearchParamsFiltergroupsItemFiltersItem",
     "ContactsApiSearchParamsFiltergroupsItem",
     "ContactsApiSearchParamsSortsItem",
@@ -158,4 +185,15 @@ __all__ = [
     "SchemasGetParams",
     "ObjectsListParams",
     "ObjectsGetParams",
+    "SearchParams",
+    "SortOrder",
+    "CompaniesSearchFilter",
+    "CompaniesSearchQuery",
+    "CompaniesCondition",
+    "ContactsSearchFilter",
+    "ContactsSearchQuery",
+    "ContactsCondition",
+    "DealsSearchFilter",
+    "DealsSearchQuery",
+    "DealsCondition",
 ]
