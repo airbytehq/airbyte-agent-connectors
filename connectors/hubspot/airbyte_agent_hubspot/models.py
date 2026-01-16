@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
 # Authentication configuration
 
@@ -23,7 +24,7 @@ class HubspotAuthConfig(BaseModel):
     """Your HubSpot OAuth2 Client Secret"""
     refresh_token: str
     """Your HubSpot OAuth2 Refresh Token"""
-    access_token: str
+    access_token: Optional[str] = None
     """Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
@@ -183,13 +184,6 @@ class TicketsList(BaseModel):
     paging: Union[Paging, Any] = Field(default=None)
     total: Union[int, Any] = Field(default=None)
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -242,6 +236,13 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
     created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
     updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""

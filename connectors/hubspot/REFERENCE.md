@@ -1292,7 +1292,7 @@ The Hubspot connector supports the following authentication methods.
 | `client_id` | `str` | Yes | Your HubSpot OAuth2 Client ID |
 | `client_secret` | `str` | Yes | Your HubSpot OAuth2 Client Secret |
 | `refresh_token` | `str` | Yes | Your HubSpot OAuth2 Refresh Token |
-| `access_token` | `str` | Yes | Your HubSpot OAuth2 Access Token (optional if refresh_token is provided) |
+| `access_token` | `str` | No | Your HubSpot OAuth2 Access Token (optional if refresh_token is provided) |
 
 #### Example
 
