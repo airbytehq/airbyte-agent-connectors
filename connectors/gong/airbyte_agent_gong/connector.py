@@ -43,7 +43,7 @@ from .types import (
     UsersGetParams,
     UsersListParams,
     WorkspacesListParams,
-    SearchParams,
+    AirbyteSearchParams,
     UsersSearchFilter,
     UsersSearchQuery,
     CallsSearchFilter,
@@ -91,8 +91,8 @@ from .models import (
     UserDetailedActivity,
     UserInteractionStats,
     Workspace,
-    SearchHit,
-    SearchResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
     UsersSearchData,
     UsersSearchResult,
     CallsSearchData,
@@ -673,7 +673,7 @@ class UsersQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            UsersSearchResult with hits (list of SearchHit[UsersSearchData]) and pagination info
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -691,7 +691,7 @@ class UsersQuery:
         # Parse response into typed result
         return UsersSearchResult(
             hits=[
-                SearchHit[UsersSearchData](
+                AirbyteSearchHit[UsersSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=UsersSearchData(**hit.get("data", {}))
@@ -815,7 +815,7 @@ class CallsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            CallsSearchResult with hits (list of SearchHit[CallsSearchData]) and pagination info
+            CallsSearchResult with hits (list of AirbyteSearchHit[CallsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -833,7 +833,7 @@ class CallsQuery:
         # Parse response into typed result
         return CallsSearchResult(
             hits=[
-                SearchHit[CallsSearchData](
+                AirbyteSearchHit[CallsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=CallsSearchData(**hit.get("data", {}))
@@ -921,7 +921,7 @@ class CallsExtensiveQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            CallsExtensiveSearchResult with hits (list of SearchHit[CallsExtensiveSearchData]) and pagination info
+            CallsExtensiveSearchResult with hits (list of AirbyteSearchHit[CallsExtensiveSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -939,7 +939,7 @@ class CallsExtensiveQuery:
         # Parse response into typed result
         return CallsExtensiveSearchResult(
             hits=[
-                SearchHit[CallsExtensiveSearchData](
+                AirbyteSearchHit[CallsExtensiveSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=CallsExtensiveSearchData(**hit.get("data", {}))
@@ -1359,7 +1359,7 @@ class SettingsScorecardsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            SettingsScorecardsSearchResult with hits (list of SearchHit[SettingsScorecardsSearchData]) and pagination info
+            SettingsScorecardsSearchResult with hits (list of AirbyteSearchHit[SettingsScorecardsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1377,7 +1377,7 @@ class SettingsScorecardsQuery:
         # Parse response into typed result
         return SettingsScorecardsSearchResult(
             hits=[
-                SearchHit[SettingsScorecardsSearchData](
+                AirbyteSearchHit[SettingsScorecardsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=SettingsScorecardsSearchData(**hit.get("data", {}))
@@ -1624,7 +1624,7 @@ class StatsActivityScorecardsQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            StatsActivityScorecardsSearchResult with hits (list of SearchHit[StatsActivityScorecardsSearchData]) and pagination info
+            StatsActivityScorecardsSearchResult with hits (list of AirbyteSearchHit[StatsActivityScorecardsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1642,7 +1642,7 @@ class StatsActivityScorecardsQuery:
         # Parse response into typed result
         return StatsActivityScorecardsSearchResult(
             hits=[
-                SearchHit[StatsActivityScorecardsSearchData](
+                AirbyteSearchHit[StatsActivityScorecardsSearchData](
                     id=hit.get("id"),
                     score=hit.get("score"),
                     data=StatsActivityScorecardsSearchData(**hit.get("data", {}))
