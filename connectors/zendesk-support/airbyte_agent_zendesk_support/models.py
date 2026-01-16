@@ -1212,7 +1212,7 @@ class UsersSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class SearchHit(BaseModel, Generic[D]):
+class AirbyteSearchHit(BaseModel, Generic[D]):
     """A single search result with typed data."""
     model_config = ConfigDict(extra="allow")
 
@@ -1224,11 +1224,11 @@ class SearchHit(BaseModel, Generic[D]):
     """The matched record data."""
 
 
-class SearchResult(BaseModel, Generic[D]):
-    """Result from search operations with typed hits."""
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
     model_config = ConfigDict(extra="allow")
 
-    hits: list[SearchHit[D]] = Field(default_factory=list)
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
     """List of matching records."""
     next_cursor: str | None = None
     """Cursor for fetching the next page of results."""
@@ -1238,40 +1238,40 @@ class SearchResult(BaseModel, Generic[D]):
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
 
-BrandsSearchResult = SearchResult[BrandsSearchData]
+BrandsSearchResult = AirbyteSearchResult[BrandsSearchData]
 """Search result type for brands entity."""
 
-GroupsSearchResult = SearchResult[GroupsSearchData]
+GroupsSearchResult = AirbyteSearchResult[GroupsSearchData]
 """Search result type for groups entity."""
 
-OrganizationsSearchResult = SearchResult[OrganizationsSearchData]
+OrganizationsSearchResult = AirbyteSearchResult[OrganizationsSearchData]
 """Search result type for organizations entity."""
 
-SatisfactionRatingsSearchResult = SearchResult[SatisfactionRatingsSearchData]
+SatisfactionRatingsSearchResult = AirbyteSearchResult[SatisfactionRatingsSearchData]
 """Search result type for satisfaction_ratings entity."""
 
-TagsSearchResult = SearchResult[TagsSearchData]
+TagsSearchResult = AirbyteSearchResult[TagsSearchData]
 """Search result type for tags entity."""
 
-TicketAuditsSearchResult = SearchResult[TicketAuditsSearchData]
+TicketAuditsSearchResult = AirbyteSearchResult[TicketAuditsSearchData]
 """Search result type for ticket_audits entity."""
 
-TicketCommentsSearchResult = SearchResult[TicketCommentsSearchData]
+TicketCommentsSearchResult = AirbyteSearchResult[TicketCommentsSearchData]
 """Search result type for ticket_comments entity."""
 
-TicketFieldsSearchResult = SearchResult[TicketFieldsSearchData]
+TicketFieldsSearchResult = AirbyteSearchResult[TicketFieldsSearchData]
 """Search result type for ticket_fields entity."""
 
-TicketFormsSearchResult = SearchResult[TicketFormsSearchData]
+TicketFormsSearchResult = AirbyteSearchResult[TicketFormsSearchData]
 """Search result type for ticket_forms entity."""
 
-TicketMetricsSearchResult = SearchResult[TicketMetricsSearchData]
+TicketMetricsSearchResult = AirbyteSearchResult[TicketMetricsSearchData]
 """Search result type for ticket_metrics entity."""
 
-TicketsSearchResult = SearchResult[TicketsSearchData]
+TicketsSearchResult = AirbyteSearchResult[TicketsSearchData]
 """Search result type for tickets entity."""
 
-UsersSearchResult = SearchResult[UsersSearchData]
+UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 """Search result type for users entity."""
 
 
