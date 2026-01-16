@@ -48,6 +48,17 @@ from .types import (
     TasksApiSearchParams,
     TasksGetParams,
     TasksListParams,
+    AirbyteSearchParams,
+    AccountsSearchFilter,
+    AccountsSearchQuery,
+    ContactsSearchFilter,
+    ContactsSearchQuery,
+    LeadsSearchFilter,
+    LeadsSearchQuery,
+    OpportunitiesSearchFilter,
+    OpportunitiesSearchQuery,
+    TasksSearchFilter,
+    TasksSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import SalesforceAuthConfig
@@ -100,6 +111,18 @@ from .models import (
     SearchResult,
     Task,
     TaskQueryResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    AccountsSearchData,
+    AccountsSearchResult,
+    ContactsSearchData,
+    ContactsSearchResult,
+    LeadsSearchData,
+    LeadsSearchResult,
+    OpportunitiesSearchData,
+    OpportunitiesSearchResult,
+    TasksSearchData,
+    TasksSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -115,7 +138,7 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.0.4"
+    connector_version = "1.0.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -832,6 +855,89 @@ Examples:
 
 
 
+    async def search(
+        self,
+        query: AccountsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AccountsSearchResult:
+        """
+        Search accounts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AccountsSearchFilter):
+        - id: Unique identifier for the account record
+        - name: Name of the account or company
+        - account_source: Source of the account record (e.g., Web, Referral)
+        - billing_address: Complete billing address as a compound field
+        - billing_city: City portion of the billing address
+        - billing_country: Country portion of the billing address
+        - billing_postal_code: Postal code portion of the billing address
+        - billing_state: State or province portion of the billing address
+        - billing_street: Street address portion of the billing address
+        - created_by_id: ID of the user who created this account
+        - created_date: Date and time when the account was created
+        - description: Text description of the account
+        - industry: Primary business industry of the account
+        - is_deleted: Whether the account has been moved to the Recycle Bin
+        - last_activity_date: Date of the last activity associated with this account
+        - last_modified_by_id: ID of the user who last modified this account
+        - last_modified_date: Date and time when the account was last modified
+        - number_of_employees: Number of employees at the account
+        - owner_id: ID of the user who owns this account
+        - parent_id: ID of the parent account, if this is a subsidiary
+        - phone: Primary phone number for the account
+        - shipping_address: Complete shipping address as a compound field
+        - shipping_city: City portion of the shipping address
+        - shipping_country: Country portion of the shipping address
+        - shipping_postal_code: Postal code portion of the shipping address
+        - shipping_state: State or province portion of the shipping address
+        - shipping_street: Street address portion of the shipping address
+        - type: Type of account (e.g., Customer, Partner, Competitor)
+        - website: Website URL for the account
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AccountsSearchResult with hits (list of AirbyteSearchHit[AccountsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("accounts", "search", params)
+
+        # Parse response into typed result
+        return AccountsSearchResult(
+            hits=[
+                AirbyteSearchHit[AccountsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=AccountsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ContactsQuery:
     """
     Query class for Contacts entity operations.
@@ -939,6 +1045,85 @@ Examples:
         )
 
 
+
+    async def search(
+        self,
+        query: ContactsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ContactsSearchResult:
+        """
+        Search contacts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ContactsSearchFilter):
+        - id: Unique identifier for the contact record
+        - account_id: ID of the account this contact is associated with
+        - created_by_id: ID of the user who created this contact
+        - created_date: Date and time when the contact was created
+        - department: Department within the account where the contact works
+        - email: Email address of the contact
+        - first_name: First name of the contact
+        - is_deleted: Whether the contact has been moved to the Recycle Bin
+        - last_activity_date: Date of the last activity associated with this contact
+        - last_modified_by_id: ID of the user who last modified this contact
+        - last_modified_date: Date and time when the contact was last modified
+        - last_name: Last name of the contact
+        - lead_source: Source from which this contact originated
+        - mailing_address: Complete mailing address as a compound field
+        - mailing_city: City portion of the mailing address
+        - mailing_country: Country portion of the mailing address
+        - mailing_postal_code: Postal code portion of the mailing address
+        - mailing_state: State or province portion of the mailing address
+        - mailing_street: Street address portion of the mailing address
+        - mobile_phone: Mobile phone number of the contact
+        - name: Full name of the contact (read-only, concatenation of first and last name)
+        - owner_id: ID of the user who owns this contact
+        - phone: Business phone number of the contact
+        - reports_to_id: ID of the contact this contact reports to
+        - title: Job title of the contact
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ContactsSearchResult with hits (list of AirbyteSearchHit[ContactsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("contacts", "search", params)
+
+        # Parse response into typed result
+        return ContactsSearchResult(
+            hits=[
+                AirbyteSearchHit[ContactsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ContactsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class LeadsQuery:
     """
@@ -1048,6 +1233,93 @@ Examples:
 
 
 
+    async def search(
+        self,
+        query: LeadsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> LeadsSearchResult:
+        """
+        Search leads records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (LeadsSearchFilter):
+        - id: Unique identifier for the lead record
+        - address: Complete address as a compound field
+        - city: City portion of the address
+        - company: Company or organization the lead works for
+        - converted_account_id: ID of the account created when lead was converted
+        - converted_contact_id: ID of the contact created when lead was converted
+        - converted_date: Date when the lead was converted
+        - converted_opportunity_id: ID of the opportunity created when lead was converted
+        - country: Country portion of the address
+        - created_by_id: ID of the user who created this lead
+        - created_date: Date and time when the lead was created
+        - email: Email address of the lead
+        - first_name: First name of the lead
+        - industry: Industry the lead's company operates in
+        - is_converted: Whether the lead has been converted to an account, contact, and opportunity
+        - is_deleted: Whether the lead has been moved to the Recycle Bin
+        - last_activity_date: Date of the last activity associated with this lead
+        - last_modified_by_id: ID of the user who last modified this lead
+        - last_modified_date: Date and time when the lead was last modified
+        - last_name: Last name of the lead
+        - lead_source: Source from which this lead originated
+        - mobile_phone: Mobile phone number of the lead
+        - name: Full name of the lead (read-only, concatenation of first and last name)
+        - number_of_employees: Number of employees at the lead's company
+        - owner_id: ID of the user who owns this lead
+        - phone: Phone number of the lead
+        - postal_code: Postal code portion of the address
+        - rating: Rating of the lead (e.g., Hot, Warm, Cold)
+        - state: State or province portion of the address
+        - status: Current status of the lead in the sales process
+        - street: Street address portion of the address
+        - title: Job title of the lead
+        - website: Website URL for the lead's company
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            LeadsSearchResult with hits (list of AirbyteSearchHit[LeadsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("leads", "search", params)
+
+        # Parse response into typed result
+        return LeadsSearchResult(
+            hits=[
+                AirbyteSearchHit[LeadsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=LeadsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class OpportunitiesQuery:
     """
     Query class for Opportunities entity operations.
@@ -1156,6 +1428,85 @@ Examples:
 
 
 
+    async def search(
+        self,
+        query: OpportunitiesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> OpportunitiesSearchResult:
+        """
+        Search opportunities records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (OpportunitiesSearchFilter):
+        - id: Unique identifier for the opportunity record
+        - account_id: ID of the account associated with this opportunity
+        - amount: Estimated total sale amount
+        - campaign_id: ID of the campaign that generated this opportunity
+        - close_date: Expected close date for the opportunity
+        - contact_id: ID of the primary contact for this opportunity
+        - created_by_id: ID of the user who created this opportunity
+        - created_date: Date and time when the opportunity was created
+        - description: Text description of the opportunity
+        - expected_revenue: Expected revenue based on amount and probability
+        - forecast_category: Forecast category for this opportunity
+        - forecast_category_name: Name of the forecast category
+        - is_closed: Whether the opportunity is closed
+        - is_deleted: Whether the opportunity has been moved to the Recycle Bin
+        - is_won: Whether the opportunity was won
+        - last_activity_date: Date of the last activity associated with this opportunity
+        - last_modified_by_id: ID of the user who last modified this opportunity
+        - last_modified_date: Date and time when the opportunity was last modified
+        - lead_source: Source from which this opportunity originated
+        - name: Name of the opportunity
+        - next_step: Description of the next step in closing the opportunity
+        - owner_id: ID of the user who owns this opportunity
+        - probability: Likelihood of closing the opportunity (percentage)
+        - stage_name: Current stage of the opportunity in the sales process
+        - type: Type of opportunity (e.g., New Business, Existing Business)
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            OpportunitiesSearchResult with hits (list of AirbyteSearchHit[OpportunitiesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("opportunities", "search", params)
+
+        # Parse response into typed result
+        return OpportunitiesSearchResult(
+            hits=[
+                AirbyteSearchHit[OpportunitiesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=OpportunitiesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class TasksQuery:
     """
     Query class for Tasks entity operations.
@@ -1263,6 +1614,83 @@ Examples:
         )
 
 
+
+    async def search(
+        self,
+        query: TasksSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TasksSearchResult:
+        """
+        Search tasks records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TasksSearchFilter):
+        - id: Unique identifier for the task record
+        - account_id: ID of the account associated with this task
+        - activity_date: Due date for the task
+        - call_disposition: Result of the call, if this task represents a call
+        - call_duration_in_seconds: Duration of the call in seconds
+        - call_type: Type of call (Inbound, Outbound, Internal)
+        - completed_date_time: Date and time when the task was completed
+        - created_by_id: ID of the user who created this task
+        - created_date: Date and time when the task was created
+        - description: Text description or notes about the task
+        - is_closed: Whether the task has been completed
+        - is_deleted: Whether the task has been moved to the Recycle Bin
+        - is_high_priority: Whether the task is marked as high priority
+        - last_modified_by_id: ID of the user who last modified this task
+        - last_modified_date: Date and time when the task was last modified
+        - owner_id: ID of the user who owns this task
+        - priority: Priority level of the task (High, Normal, Low)
+        - status: Current status of the task
+        - subject: Subject or title of the task
+        - task_subtype: Subtype of the task (e.g., Call, Email, Task)
+        - type: Type of task
+        - what_id: ID of the related object (Account, Opportunity, etc.)
+        - who_id: ID of the related person (Contact or Lead)
+        - system_modstamp: System timestamp when the record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TasksSearchResult with hits (list of AirbyteSearchHit[TasksSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tasks", "search", params)
+
+        # Parse response into typed result
+        return TasksSearchResult(
+            hits=[
+                AirbyteSearchHit[TasksSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TasksSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class EventsQuery:
     """

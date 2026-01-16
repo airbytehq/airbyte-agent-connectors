@@ -357,6 +357,365 @@ class SalesforceExecuteResultWithMeta(SalesforceExecuteResult[T], Generic[T, S])
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class AccountsSearchData(BaseModel):
+    """Search result data for accounts entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the account record"""
+    name: str | None = None
+    """Name of the account or company"""
+    account_source: str | None = None
+    """Source of the account record (e.g., Web, Referral)"""
+    billing_address: dict[str, Any] | None = None
+    """Complete billing address as a compound field"""
+    billing_city: str | None = None
+    """City portion of the billing address"""
+    billing_country: str | None = None
+    """Country portion of the billing address"""
+    billing_postal_code: str | None = None
+    """Postal code portion of the billing address"""
+    billing_state: str | None = None
+    """State or province portion of the billing address"""
+    billing_street: str | None = None
+    """Street address portion of the billing address"""
+    created_by_id: str | None = None
+    """ID of the user who created this account"""
+    created_date: str | None = None
+    """Date and time when the account was created"""
+    description: str | None = None
+    """Text description of the account"""
+    industry: str | None = None
+    """Primary business industry of the account"""
+    is_deleted: bool | None = None
+    """Whether the account has been moved to the Recycle Bin"""
+    last_activity_date: str | None = None
+    """Date of the last activity associated with this account"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this account"""
+    last_modified_date: str | None = None
+    """Date and time when the account was last modified"""
+    number_of_employees: int | None = None
+    """Number of employees at the account"""
+    owner_id: str | None = None
+    """ID of the user who owns this account"""
+    parent_id: str | None = None
+    """ID of the parent account, if this is a subsidiary"""
+    phone: str | None = None
+    """Primary phone number for the account"""
+    shipping_address: dict[str, Any] | None = None
+    """Complete shipping address as a compound field"""
+    shipping_city: str | None = None
+    """City portion of the shipping address"""
+    shipping_country: str | None = None
+    """Country portion of the shipping address"""
+    shipping_postal_code: str | None = None
+    """Postal code portion of the shipping address"""
+    shipping_state: str | None = None
+    """State or province portion of the shipping address"""
+    shipping_street: str | None = None
+    """Street address portion of the shipping address"""
+    type: str | None = None
+    """Type of account (e.g., Customer, Partner, Competitor)"""
+    website: str | None = None
+    """Website URL for the account"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+class ContactsSearchData(BaseModel):
+    """Search result data for contacts entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the contact record"""
+    account_id: str | None = None
+    """ID of the account this contact is associated with"""
+    created_by_id: str | None = None
+    """ID of the user who created this contact"""
+    created_date: str | None = None
+    """Date and time when the contact was created"""
+    department: str | None = None
+    """Department within the account where the contact works"""
+    email: str | None = None
+    """Email address of the contact"""
+    first_name: str | None = None
+    """First name of the contact"""
+    is_deleted: bool | None = None
+    """Whether the contact has been moved to the Recycle Bin"""
+    last_activity_date: str | None = None
+    """Date of the last activity associated with this contact"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this contact"""
+    last_modified_date: str | None = None
+    """Date and time when the contact was last modified"""
+    last_name: str | None = None
+    """Last name of the contact"""
+    lead_source: str | None = None
+    """Source from which this contact originated"""
+    mailing_address: dict[str, Any] | None = None
+    """Complete mailing address as a compound field"""
+    mailing_city: str | None = None
+    """City portion of the mailing address"""
+    mailing_country: str | None = None
+    """Country portion of the mailing address"""
+    mailing_postal_code: str | None = None
+    """Postal code portion of the mailing address"""
+    mailing_state: str | None = None
+    """State or province portion of the mailing address"""
+    mailing_street: str | None = None
+    """Street address portion of the mailing address"""
+    mobile_phone: str | None = None
+    """Mobile phone number of the contact"""
+    name: str | None = None
+    """Full name of the contact (read-only, concatenation of first and last name)"""
+    owner_id: str | None = None
+    """ID of the user who owns this contact"""
+    phone: str | None = None
+    """Business phone number of the contact"""
+    reports_to_id: str | None = None
+    """ID of the contact this contact reports to"""
+    title: str | None = None
+    """Job title of the contact"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+class LeadsSearchData(BaseModel):
+    """Search result data for leads entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the lead record"""
+    address: dict[str, Any] | None = None
+    """Complete address as a compound field"""
+    city: str | None = None
+    """City portion of the address"""
+    company: str | None = None
+    """Company or organization the lead works for"""
+    converted_account_id: str | None = None
+    """ID of the account created when lead was converted"""
+    converted_contact_id: str | None = None
+    """ID of the contact created when lead was converted"""
+    converted_date: str | None = None
+    """Date when the lead was converted"""
+    converted_opportunity_id: str | None = None
+    """ID of the opportunity created when lead was converted"""
+    country: str | None = None
+    """Country portion of the address"""
+    created_by_id: str | None = None
+    """ID of the user who created this lead"""
+    created_date: str | None = None
+    """Date and time when the lead was created"""
+    email: str | None = None
+    """Email address of the lead"""
+    first_name: str | None = None
+    """First name of the lead"""
+    industry: str | None = None
+    """Industry the lead's company operates in"""
+    is_converted: bool | None = None
+    """Whether the lead has been converted to an account, contact, and opportunity"""
+    is_deleted: bool | None = None
+    """Whether the lead has been moved to the Recycle Bin"""
+    last_activity_date: str | None = None
+    """Date of the last activity associated with this lead"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this lead"""
+    last_modified_date: str | None = None
+    """Date and time when the lead was last modified"""
+    last_name: str | None = None
+    """Last name of the lead"""
+    lead_source: str | None = None
+    """Source from which this lead originated"""
+    mobile_phone: str | None = None
+    """Mobile phone number of the lead"""
+    name: str | None = None
+    """Full name of the lead (read-only, concatenation of first and last name)"""
+    number_of_employees: int | None = None
+    """Number of employees at the lead's company"""
+    owner_id: str | None = None
+    """ID of the user who owns this lead"""
+    phone: str | None = None
+    """Phone number of the lead"""
+    postal_code: str | None = None
+    """Postal code portion of the address"""
+    rating: str | None = None
+    """Rating of the lead (e.g., Hot, Warm, Cold)"""
+    state: str | None = None
+    """State or province portion of the address"""
+    status: str | None = None
+    """Current status of the lead in the sales process"""
+    street: str | None = None
+    """Street address portion of the address"""
+    title: str | None = None
+    """Job title of the lead"""
+    website: str | None = None
+    """Website URL for the lead's company"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+class OpportunitiesSearchData(BaseModel):
+    """Search result data for opportunities entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the opportunity record"""
+    account_id: str | None = None
+    """ID of the account associated with this opportunity"""
+    amount: float | None = None
+    """Estimated total sale amount"""
+    campaign_id: str | None = None
+    """ID of the campaign that generated this opportunity"""
+    close_date: str | None = None
+    """Expected close date for the opportunity"""
+    contact_id: str | None = None
+    """ID of the primary contact for this opportunity"""
+    created_by_id: str | None = None
+    """ID of the user who created this opportunity"""
+    created_date: str | None = None
+    """Date and time when the opportunity was created"""
+    description: str | None = None
+    """Text description of the opportunity"""
+    expected_revenue: float | None = None
+    """Expected revenue based on amount and probability"""
+    forecast_category: str | None = None
+    """Forecast category for this opportunity"""
+    forecast_category_name: str | None = None
+    """Name of the forecast category"""
+    is_closed: bool | None = None
+    """Whether the opportunity is closed"""
+    is_deleted: bool | None = None
+    """Whether the opportunity has been moved to the Recycle Bin"""
+    is_won: bool | None = None
+    """Whether the opportunity was won"""
+    last_activity_date: str | None = None
+    """Date of the last activity associated with this opportunity"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this opportunity"""
+    last_modified_date: str | None = None
+    """Date and time when the opportunity was last modified"""
+    lead_source: str | None = None
+    """Source from which this opportunity originated"""
+    name: str | None = None
+    """Name of the opportunity"""
+    next_step: str | None = None
+    """Description of the next step in closing the opportunity"""
+    owner_id: str | None = None
+    """ID of the user who owns this opportunity"""
+    probability: float | None = None
+    """Likelihood of closing the opportunity (percentage)"""
+    stage_name: str | None = None
+    """Current stage of the opportunity in the sales process"""
+    type: str | None = None
+    """Type of opportunity (e.g., New Business, Existing Business)"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+class TasksSearchData(BaseModel):
+    """Search result data for tasks entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str = None
+    """Unique identifier for the task record"""
+    account_id: str | None = None
+    """ID of the account associated with this task"""
+    activity_date: str | None = None
+    """Due date for the task"""
+    call_disposition: str | None = None
+    """Result of the call, if this task represents a call"""
+    call_duration_in_seconds: int | None = None
+    """Duration of the call in seconds"""
+    call_type: str | None = None
+    """Type of call (Inbound, Outbound, Internal)"""
+    completed_date_time: str | None = None
+    """Date and time when the task was completed"""
+    created_by_id: str | None = None
+    """ID of the user who created this task"""
+    created_date: str | None = None
+    """Date and time when the task was created"""
+    description: str | None = None
+    """Text description or notes about the task"""
+    is_closed: bool | None = None
+    """Whether the task has been completed"""
+    is_deleted: bool | None = None
+    """Whether the task has been moved to the Recycle Bin"""
+    is_high_priority: bool | None = None
+    """Whether the task is marked as high priority"""
+    last_modified_by_id: str | None = None
+    """ID of the user who last modified this task"""
+    last_modified_date: str | None = None
+    """Date and time when the task was last modified"""
+    owner_id: str | None = None
+    """ID of the user who owns this task"""
+    priority: str | None = None
+    """Priority level of the task (High, Normal, Low)"""
+    status: str | None = None
+    """Current status of the task"""
+    subject: str | None = None
+    """Subject or title of the task"""
+    task_subtype: str | None = None
+    """Subtype of the task (e.g., Call, Email, Task)"""
+    type: str | None = None
+    """Type of task"""
+    what_id: str | None = None
+    """ID of the related object (Account, Opportunity, etc.)"""
+    who_id: str | None = None
+    """ID of the related person (Contact or Lead)"""
+    system_modstamp: str | None = None
+    """System timestamp when the record was last modified"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+AccountsSearchResult = AirbyteSearchResult[AccountsSearchData]
+"""Search result type for accounts entity."""
+
+ContactsSearchResult = AirbyteSearchResult[ContactsSearchData]
+"""Search result type for contacts entity."""
+
+LeadsSearchResult = AirbyteSearchResult[LeadsSearchData]
+"""Search result type for leads entity."""
+
+OpportunitiesSearchResult = AirbyteSearchResult[OpportunitiesSearchData]
+"""Search result type for opportunities entity."""
+
+TasksSearchResult = AirbyteSearchResult[TasksSearchData]
+"""Search result type for tasks entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
