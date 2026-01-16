@@ -53,6 +53,31 @@ from .types import (
     UsersListParams,
     ViewsGetParams,
     ViewsListParams,
+    SearchParams,
+    BrandsSearchFilter,
+    BrandsSearchQuery,
+    GroupsSearchFilter,
+    GroupsSearchQuery,
+    OrganizationsSearchFilter,
+    OrganizationsSearchQuery,
+    SatisfactionRatingsSearchFilter,
+    SatisfactionRatingsSearchQuery,
+    TagsSearchFilter,
+    TagsSearchQuery,
+    TicketAuditsSearchFilter,
+    TicketAuditsSearchQuery,
+    TicketCommentsSearchFilter,
+    TicketCommentsSearchQuery,
+    TicketFieldsSearchFilter,
+    TicketFieldsSearchQuery,
+    TicketFormsSearchFilter,
+    TicketFormsSearchQuery,
+    TicketMetricsSearchFilter,
+    TicketMetricsSearchQuery,
+    TicketsSearchFilter,
+    TicketsSearchQuery,
+    UsersSearchFilter,
+    UsersSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import ZendeskSupportAuthConfig
@@ -106,6 +131,32 @@ from .models import (
     Trigger,
     User,
     View,
+    SearchHit,
+    SearchResult,
+    BrandsSearchData,
+    BrandsSearchResult,
+    GroupsSearchData,
+    GroupsSearchResult,
+    OrganizationsSearchData,
+    OrganizationsSearchResult,
+    SatisfactionRatingsSearchData,
+    SatisfactionRatingsSearchResult,
+    TagsSearchData,
+    TagsSearchResult,
+    TicketAuditsSearchData,
+    TicketAuditsSearchResult,
+    TicketCommentsSearchData,
+    TicketCommentsSearchResult,
+    TicketFieldsSearchData,
+    TicketFieldsSearchResult,
+    TicketFormsSearchData,
+    TicketFormsSearchResult,
+    TicketMetricsSearchData,
+    TicketMetricsSearchResult,
+    TicketsSearchData,
+    TicketsSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -121,7 +172,7 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "0.1.5"
+    connector_version = "0.1.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -875,6 +926,99 @@ class TicketsQuery:
 
 
 
+    async def search(
+        self,
+        query: TicketsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketsSearchResult:
+        """
+        Search tickets records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketsSearchFilter):
+        - allow_attachments: Boolean indicating whether attachments are allowed on the ticket
+        - allow_channelback: Boolean indicating whether agents can reply to the ticket through the original channel
+        - assignee_id: Unique identifier of the agent currently assigned to the ticket
+        - brand_id: Unique identifier of the brand associated with the ticket in multi-brand accounts
+        - collaborator_ids: Array of user identifiers who are collaborating on the ticket
+        - created_at: Timestamp indicating when the ticket was created
+        - custom_fields: Array of custom field values specific to the account's ticket configuration
+        - custom_status_id: Unique identifier of the custom status applied to the ticket
+        - deleted_ticket_form_id: Unique identifier of the ticket form if it was deleted after the ticket was created
+        - description: Initial description or content of the ticket when it was created
+        - due_at: Timestamp indicating when the ticket is due for completion or resolution
+        - email_cc_ids: Array of user identifiers who are CC'd on ticket email notifications
+        - external_id: External identifier for the ticket, used for integrations with other systems
+        - fields: Array of ticket field values including both system and custom fields
+        - follower_ids: Array of user identifiers who are following the ticket for updates
+        - followup_ids: Array of identifiers for follow-up tickets related to this ticket
+        - forum_topic_id: Unique identifier linking the ticket to a forum topic if applicable
+        - from_messaging_channel: Boolean indicating whether the ticket originated from a messaging channel
+        - generated_timestamp: Timestamp updated for all ticket updates including system changes, used for incremental export co...
+        - group_id: Unique identifier of the agent group assigned to handle the ticket
+        - has_incidents: Boolean indicating whether this problem ticket has related incident tickets
+        - id: Unique identifier for the ticket
+        - is_public: Boolean indicating whether the ticket is publicly visible
+        - organization_id: Unique identifier of the organization associated with the ticket
+        - priority: Priority level assigned to the ticket (e.g., urgent, high, normal, low)
+        - problem_id: Unique identifier of the problem ticket if this is an incident ticket
+        - raw_subject: Original unprocessed subject line before any system modifications
+        - recipient: Email address or identifier of the ticket recipient
+        - requester_id: Unique identifier of the user who requested or created the ticket
+        - satisfaction_rating: Object containing customer satisfaction rating data for the ticket
+        - sharing_agreement_ids: Array of sharing agreement identifiers if the ticket is shared across Zendesk instances
+        - status: Current status of the ticket (e.g., new, open, pending, solved, closed)
+        - subject: Subject line of the ticket describing the issue or request
+        - submitter_id: Unique identifier of the user who submitted the ticket on behalf of the requester
+        - tags: Array of tags applied to the ticket for categorization and filtering
+        - ticket_form_id: Unique identifier of the ticket form used when creating the ticket
+        - type: Type of ticket (e.g., problem, incident, question, task)
+        - updated_at: Timestamp indicating when the ticket was last updated with a ticket event
+        - url: API URL to access the full ticket resource
+        - via: Object describing the channel and method through which the ticket was created
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketsSearchResult with hits (list of SearchHit[TicketsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tickets", "search", params)
+
+        # Parse response into typed result
+        return TicketsSearchResult(
+            hits=[
+                SearchHit[TicketsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class UsersQuery:
     """
     Query class for Users entity operations.
@@ -944,6 +1088,98 @@ class UsersQuery:
 
 
 
+    async def search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - active: Indicates if the user account is currently active
+        - alias: Alternative name or nickname for the user
+        - chat_only: Indicates if the user can only interact via chat
+        - created_at: Timestamp indicating when the user was created
+        - custom_role_id: Identifier for a custom role assigned to the user
+        - default_group_id: Identifier of the default group assigned to the user
+        - details: Additional descriptive information about the user
+        - email: Email address of the user
+        - external_id: External system identifier for the user, used for integrations
+        - iana_time_zone: IANA standard time zone identifier for the user
+        - id: Unique identifier for the user
+        - last_login_at: Timestamp of the user's most recent login
+        - locale: Locale setting determining language and regional format preferences
+        - locale_id: Identifier for the user's locale preference
+        - moderator: Indicates if the user has moderator privileges
+        - name: Display name of the user
+        - notes: Internal notes about the user, visible only to agents
+        - only_private_comments: Indicates if the user can only make private comments on tickets
+        - organization_id: Identifier of the organization the user belongs to
+        - permanently_deleted: Indicates if the user has been permanently deleted from the system
+        - phone: Phone number of the user
+        - photo: Profile photo or avatar of the user
+        - report_csv: Indicates if the user receives reports in CSV format
+        - restricted_agent: Indicates if the agent has restricted access permissions
+        - role: Role assigned to the user defining their permissions level
+        - role_type: Type classification of the user's role
+        - shared: Indicates if the user is shared across multiple accounts
+        - shared_agent: Indicates if the user is a shared agent across multiple brands or accounts
+        - shared_phone_number: Indicates if the phone number is shared with other users
+        - signature: Email signature text for the user
+        - suspended: Indicates if the user account is suspended
+        - tags: Labels or tags associated with the user for categorization
+        - ticket_restriction: Defines which tickets the user can access based on restrictions
+        - time_zone: Time zone setting for the user
+        - two_factor_auth_enabled: Indicates if two-factor authentication is enabled for the user
+        - updated_at: Timestamp indicating when the user was last updated
+        - url: API endpoint URL for accessing the user's detailed information
+        - user_fields: Custom field values specific to the user, stored as key-value pairs
+        - verified: Indicates if the user's identity has been verified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with hits (list of SearchHit[UsersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "search", params)
+
+        # Parse response into typed result
+        return UsersSearchResult(
+            hits=[
+                SearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class OrganizationsQuery:
     """
     Query class for Organizations entity operations.
@@ -1006,6 +1242,74 @@ class OrganizationsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: OrganizationsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> OrganizationsSearchResult:
+        """
+        Search organizations records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (OrganizationsSearchFilter):
+        - created_at: Timestamp when the organization was created
+        - deleted_at: Timestamp when the organization was deleted
+        - details: Details about the organization, such as the address
+        - domain_names: Array of domain names associated with this organization for automatic user assignment
+        - external_id: Unique external identifier to associate the organization to an external record (case-insensitive)
+        - group_id: ID of the group where new tickets from users in this organization are automatically assigned
+        - id: Unique identifier automatically assigned when the organization is created
+        - name: Unique name for the organization (mandatory field)
+        - notes: Notes about the organization
+        - organization_fields: Key-value object for custom organization fields
+        - shared_comments: Boolean indicating whether end users in this organization can comment on each other's tickets
+        - shared_tickets: Boolean indicating whether end users in this organization can see each other's tickets
+        - tags: Array of tags associated with the organization
+        - updated_at: Timestamp of the last update to the organization
+        - url: The API URL of this organization
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            OrganizationsSearchResult with hits (list of SearchHit[OrganizationsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("organizations", "search", params)
+
+        # Parse response into typed result
+        return OrganizationsSearchResult(
+            hits=[
+                SearchHit[OrganizationsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=OrganizationsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class GroupsQuery:
     """
@@ -1073,6 +1377,68 @@ class GroupsQuery:
 
 
 
+    async def search(
+        self,
+        query: GroupsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> GroupsSearchResult:
+        """
+        Search groups records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (GroupsSearchFilter):
+        - created_at: Timestamp indicating when the group was created
+        - default: Indicates if the group is the default one for the account
+        - deleted: Indicates whether the group has been deleted
+        - description: The description of the group
+        - id: Unique identifier automatically assigned when creating groups
+        - is_public: Indicates if the group is public (true) or private (false)
+        - name: The name of the group
+        - updated_at: Timestamp indicating when the group was last updated
+        - url: The API URL of the group
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            GroupsSearchResult with hits (list of SearchHit[GroupsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("groups", "search", params)
+
+        # Parse response into typed result
+        return GroupsSearchResult(
+            hits=[
+                SearchHit[GroupsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=GroupsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class TicketCommentsQuery:
     """
     Query class for TicketComments entity operations.
@@ -1119,6 +1485,76 @@ class TicketCommentsQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: TicketCommentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketCommentsSearchResult:
+        """
+        Search ticket_comments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketCommentsSearchFilter):
+        - attachments: List of files or media attached to the comment
+        - audit_id: Identifier of the audit record associated with this comment event
+        - author_id: Identifier of the user who created the comment
+        - body: Content of the comment in its original format
+        - created_at: Timestamp when the comment was created
+        - event_type: Specific classification of the event within the ticket event stream
+        - html_body: HTML-formatted content of the comment
+        - id: Unique identifier for the comment event
+        - metadata: Additional structured information about the comment not covered by standard fields
+        - plain_body: Plain text content of the comment without formatting
+        - public: Boolean indicating whether the comment is visible to end users or is an internal note
+        - ticket_id: Identifier of the ticket to which this comment belongs
+        - timestamp: Timestamp of when the event occurred in the incremental export stream
+        - type: Type of event, typically indicating this is a comment event
+        - uploads: Array of upload tokens or identifiers for files being attached to the comment
+        - via: Channel or method through which the comment was submitted
+        - via_reference_id: Reference identifier for the channel through which the comment was created
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketCommentsSearchResult with hits (list of SearchHit[TicketCommentsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_comments", "search", params)
+
+        # Parse response into typed result
+        return TicketCommentsSearchResult(
+            hits=[
+                SearchHit[TicketCommentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketCommentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class AttachmentsQuery:
     """
@@ -1282,6 +1718,67 @@ class TicketAuditsQuery:
 
 
 
+    async def search(
+        self,
+        query: TicketAuditsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketAuditsSearchResult:
+        """
+        Search ticket_audits records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketAuditsSearchFilter):
+        - attachments: Files or documents attached to the audit
+        - author_id: The unique identifier of the user who created the audit
+        - created_at: Timestamp indicating when the audit was created
+        - events: Array of events that occurred in this audit, such as field changes, comments, or tag updates
+        - id: Unique identifier for the audit record, automatically assigned when the audit is created
+        - metadata: Custom and system data associated with the audit
+        - ticket_id: The unique identifier of the ticket associated with this audit
+        - via: Describes how the audit was created, providing context about the creation source
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketAuditsSearchResult with hits (list of SearchHit[TicketAuditsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_audits", "search", params)
+
+        # Parse response into typed result
+        return TicketAuditsSearchResult(
+            hits=[
+                SearchHit[TicketAuditsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketAuditsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class TicketMetricsQuery:
     """
     Query class for TicketMetrics entity operations.
@@ -1319,6 +1816,89 @@ class TicketMetricsQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: TicketMetricsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketMetricsSearchResult:
+        """
+        Search ticket_metrics records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketMetricsSearchFilter):
+        - agent_wait_time_in_minutes: Number of minutes the agent spent waiting during calendar and business hours
+        - assigned_at: Timestamp when the ticket was assigned
+        - assignee_stations: Number of assignees the ticket had
+        - assignee_updated_at: Timestamp when the assignee last updated the ticket
+        - created_at: Timestamp when the metric record was created
+        - custom_status_updated_at: Timestamp when the ticket's custom status was last updated
+        - first_resolution_time_in_minutes: Number of minutes to the first resolution time during calendar and business hours
+        - full_resolution_time_in_minutes: Number of minutes to the full resolution during calendar and business hours
+        - generated_timestamp: Timestamp of when record was last updated
+        - group_stations: Number of groups the ticket passed through
+        - id: Unique identifier for the ticket metric record
+        - initially_assigned_at: Timestamp when the ticket was initially assigned
+        - instance_id: ID of the Zendesk instance associated with the ticket
+        - latest_comment_added_at: Timestamp when the latest comment was added
+        - metric: Ticket metrics data
+        - on_hold_time_in_minutes: Number of minutes on hold
+        - reopens: Total number of times the ticket was reopened
+        - replies: The number of public replies added to a ticket by an agent
+        - reply_time_in_minutes: Number of minutes to the first reply during calendar and business hours
+        - reply_time_in_seconds: Number of seconds to the first reply during calendar hours, only available for Messaging tickets
+        - requester_updated_at: Timestamp when the requester last updated the ticket
+        - requester_wait_time_in_minutes: Number of minutes the requester spent waiting during calendar and business hours
+        - solved_at: Timestamp when the ticket was solved
+        - status: The current status of the ticket (open, pending, solved, etc.).
+        - status_updated_at: Timestamp when the status of the ticket was last updated
+        - ticket_id: Identifier of the associated ticket
+        - time: Time related to the ticket
+        - type: Type of ticket
+        - updated_at: Timestamp when the metric record was last updated
+        - url: The API url of the ticket metric
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketMetricsSearchResult with hits (list of SearchHit[TicketMetricsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_metrics", "search", params)
+
+        # Parse response into typed result
+        return TicketMetricsSearchResult(
+            hits=[
+                SearchHit[TicketMetricsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketMetricsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class TicketFieldsQuery:
     """
@@ -1386,6 +1966,86 @@ class TicketFieldsQuery:
 
 
 
+    async def search(
+        self,
+        query: TicketFieldsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketFieldsSearchResult:
+        """
+        Search ticket_fields records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketFieldsSearchFilter):
+        - active: Whether this field is currently available for use
+        - agent_description: A description of the ticket field that only agents can see
+        - collapsed_for_agents: If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u...
+        - created_at: Timestamp when the custom ticket field was created
+        - custom_field_options: Array of option objects for custom ticket fields of type multiselect or tagger, containing name a...
+        - custom_statuses: List of customized ticket statuses, only present for system ticket fields of type custom_status
+        - description: Text describing the purpose of the ticket field to users
+        - editable_in_portal: Whether this field is editable by end users in Help Center
+        - id: Unique identifier for the ticket field, automatically assigned when created
+        - key: Internal identifier or reference key for the field
+        - position: The relative position of the ticket field on a ticket, controlling display order
+        - raw_description: The dynamic content placeholder if present, or the description value if not
+        - raw_title: The dynamic content placeholder if present, or the title value if not
+        - raw_title_in_portal: The dynamic content placeholder if present, or the title_in_portal value if not
+        - regexp_for_validation: For regexp fields only, the validation pattern for a field value to be deemed valid
+        - removable: If false, this field is a system field that must be present on all tickets
+        - required: If true, agents must enter a value in the field to change the ticket status to solved
+        - required_in_portal: If true, end users must enter a value in the field to create a request
+        - sub_type_id: For system ticket fields of type priority and status, controlling available options
+        - system_field_options: Array of options for system ticket fields of type tickettype, priority, or status
+        - tag: For checkbox fields only, a tag added to tickets when the checkbox field is selected
+        - title: The title of the ticket field displayed to agents
+        - title_in_portal: The title of the ticket field displayed to end users in Help Center
+        - type: Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,...
+        - updated_at: Timestamp when the custom ticket field was last updated
+        - url: The API URL for this ticket field resource
+        - visible_in_portal: Whether this field is visible to end users in Help Center
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketFieldsSearchResult with hits (list of SearchHit[TicketFieldsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_fields", "search", params)
+
+        # Parse response into typed result
+        return TicketFieldsSearchResult(
+            hits=[
+                SearchHit[TicketFieldsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketFieldsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class BrandsQuery:
     """
     Query class for Brands entity operations.
@@ -1448,6 +2108,75 @@ class BrandsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: BrandsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> BrandsSearchResult:
+        """
+        Search brands records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (BrandsSearchFilter):
+        - active: Indicates whether the brand is set as active
+        - brand_url: The public URL of the brand
+        - created_at: Timestamp when the brand was created
+        - default: Indicates whether the brand is the default brand for tickets generated from non-branded channels
+        - has_help_center: Indicates whether the brand has a Help Center enabled
+        - help_center_state: The state of the Help Center, with allowed values of enabled, disabled, or restricted
+        - host_mapping: The host mapping configuration for the brand, visible only to administrators
+        - id: Unique identifier automatically assigned when the brand is created
+        - is_deleted: Indicates whether the brand has been deleted
+        - logo: Brand logo image file represented as an Attachment object
+        - name: The name of the brand
+        - signature_template: The signature template used for the brand
+        - subdomain: The subdomain associated with the brand
+        - ticket_form_ids: Array of ticket form IDs that are available for use by this brand
+        - updated_at: Timestamp when the brand was last updated
+        - url: The API URL for accessing this brand resource
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            BrandsSearchResult with hits (list of SearchHit[BrandsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("brands", "search", params)
+
+        # Parse response into typed result
+        return BrandsSearchResult(
+            hits=[
+                SearchHit[BrandsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=BrandsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class ViewsQuery:
     """
@@ -1790,6 +2519,61 @@ class TagsQuery:
 
 
 
+    async def search(
+        self,
+        query: TagsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TagsSearchResult:
+        """
+        Search tags records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TagsSearchFilter):
+        - count: The number of times this tag has been used across resources
+        - name: The tag name string used to label and categorize resources
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TagsSearchResult with hits (list of SearchHit[TagsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tags", "search", params)
+
+        # Parse response into typed result
+        return TagsSearchResult(
+            hits=[
+                SearchHit[TagsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TagsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class SatisfactionRatingsQuery:
     """
     Query class for SatisfactionRatings entity operations.
@@ -1861,6 +2645,71 @@ class SatisfactionRatingsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: SatisfactionRatingsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> SatisfactionRatingsSearchResult:
+        """
+        Search satisfaction_ratings records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (SatisfactionRatingsSearchFilter):
+        - assignee_id: The identifier of the agent assigned to the ticket at the time the rating was submitted
+        - comment: Optional comment provided by the requester with the rating
+        - created_at: Timestamp indicating when the satisfaction rating was created
+        - group_id: The identifier of the group assigned to the ticket at the time the rating was submitted
+        - id: Unique identifier for the satisfaction rating, automatically assigned upon creation
+        - reason: Free-text reason for a bad rating provided by the requester in a follow-up question
+        - reason_id: Identifier for the predefined reason given for a negative rating, only applicable when score is '...
+        - requester_id: The identifier of the ticket requester who submitted the satisfaction rating
+        - score: The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'
+        - ticket_id: The identifier of the ticket being rated
+        - updated_at: Timestamp indicating when the satisfaction rating was last updated
+        - url: The API URL of this satisfaction rating resource
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            SatisfactionRatingsSearchResult with hits (list of SearchHit[SatisfactionRatingsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("satisfaction_ratings", "search", params)
+
+        # Parse response into typed result
+        return SatisfactionRatingsSearchResult(
+            hits=[
+                SearchHit[SatisfactionRatingsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=SatisfactionRatingsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class GroupMembershipsQuery:
     """
@@ -2069,6 +2918,76 @@ class TicketFormsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: TicketFormsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TicketFormsSearchResult:
+        """
+        Search ticket_forms records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TicketFormsSearchFilter):
+        - active: Indicates if the form is set as active
+        - agent_conditions: Array of condition sets for agent workspaces
+        - created_at: Timestamp when the ticket form was created
+        - default: Indicates if the form is the default form for this account
+        - display_name: The name of the form that is displayed to an end user
+        - end_user_conditions: Array of condition sets for end user products
+        - end_user_visible: Indicates if the form is visible to the end user
+        - id: Unique identifier for the ticket form, automatically assigned when creating the form
+        - in_all_brands: Indicates if the form is available for use in all brands on this account
+        - name: The name of the ticket form
+        - position: The position of this form among other forms in the account, such as in a dropdown
+        - raw_display_name: The dynamic content placeholder if present, or the display_name value if not
+        - raw_name: The dynamic content placeholder if present, or the name value if not
+        - restricted_brand_ids: IDs of all brands that this ticket form is restricted to
+        - ticket_field_ids: IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc...
+        - updated_at: Timestamp of the last update to the ticket form
+        - url: URL of the ticket form
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TicketFormsSearchResult with hits (list of SearchHit[TicketFormsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ticket_forms", "search", params)
+
+        # Parse response into typed result
+        return TicketFormsSearchResult(
+            hits=[
+                SearchHit[TicketFormsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketFormsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class ArticlesQuery:
     """
