@@ -38,6 +38,13 @@ from .types import (
     TicketsApiSearchParamsSortsItem,
     TicketsGetParams,
     TicketsListParams,
+    SearchParams,
+    CompaniesSearchFilter,
+    CompaniesSearchQuery,
+    ContactsSearchFilter,
+    ContactsSearchQuery,
+    DealsSearchFilter,
+    DealsSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import HubspotAuthConfig
@@ -61,6 +68,14 @@ from .models import (
     Deal,
     Schema,
     Ticket,
+    SearchHit,
+    SearchResult,
+    CompaniesSearchData,
+    CompaniesSearchResult,
+    ContactsSearchData,
+    ContactsSearchResult,
+    DealsSearchData,
+    DealsSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -76,7 +91,7 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "0.1.4"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -627,6 +642,65 @@ class ContactsQuery:
 
 
 
+    async def search(
+        self,
+        query: ContactsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ContactsSearchResult:
+        """
+        Search contacts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ContactsSearchFilter):
+        - archived: Boolean flag indicating whether the contact has been archived or deleted.
+        - companies: Associated company records linked to this contact.
+        - created_at: Timestamp indicating when the contact was first created in the system.
+        - id: Unique identifier for the contact record.
+        - properties: Key-value object storing all contact properties and their values.
+        - updated_at: Timestamp indicating when the contact record was last modified.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ContactsSearchResult with hits (list of SearchHit[ContactsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("contacts", "search", params)
+
+        # Parse response into typed result
+        return ContactsSearchResult(
+            hits=[
+                SearchHit[ContactsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ContactsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class CompaniesQuery:
     """
     Query class for Companies entity operations.
@@ -764,6 +838,65 @@ class CompaniesQuery:
 
 
 
+    async def search(
+        self,
+        query: CompaniesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CompaniesSearchResult:
+        """
+        Search companies records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CompaniesSearchFilter):
+        - archived: Indicates whether the company has been deleted and moved to the recycling bin
+        - contacts: Associated contact records linked to this company
+        - created_at: Timestamp when the company record was created
+        - id: Unique identifier for the company record
+        - properties: Object containing all property values for the company
+        - updated_at: Timestamp when the company record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CompaniesSearchResult with hits (list of SearchHit[CompaniesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("companies", "search", params)
+
+        # Parse response into typed result
+        return CompaniesSearchResult(
+            hits=[
+                SearchHit[CompaniesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CompaniesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class DealsQuery:
     """
     Query class for Deals entity operations.
@@ -900,6 +1033,67 @@ class DealsQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: DealsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> DealsSearchResult:
+        """
+        Search deals records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (DealsSearchFilter):
+        - archived: Indicates whether the deal has been deleted and moved to the recycling bin
+        - companies: Collection of company records associated with the deal
+        - contacts: Collection of contact records associated with the deal
+        - created_at: Timestamp when the deal record was originally created
+        - id: Unique identifier for the deal record
+        - line_items: Collection of product line items associated with the deal
+        - properties: Key-value object containing all deal properties and custom fields
+        - updated_at: Timestamp when the deal record was last modified
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            DealsSearchResult with hits (list of SearchHit[DealsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("deals", "search", params)
+
+        # Parse response into typed result
+        return DealsSearchResult(
+            hits=[
+                SearchHit[DealsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=DealsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class TicketsQuery:
     """

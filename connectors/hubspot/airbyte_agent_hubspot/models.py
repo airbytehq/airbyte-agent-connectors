@@ -400,6 +400,107 @@ class HubspotExecuteResultWithMeta(HubspotExecuteResult[T], Generic[T, S]):
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class CompaniesSearchData(BaseModel):
+    """Search result data for companies entity."""
+    model_config = ConfigDict(extra="allow")
+
+    archived: bool | None = None
+    """Indicates whether the company has been deleted and moved to the recycling bin"""
+    contacts: list[Any] | None = None
+    """Associated contact records linked to this company"""
+    created_at: str | None = None
+    """Timestamp when the company record was created"""
+    id: str | None = None
+    """Unique identifier for the company record"""
+    properties: dict[str, Any] = None
+    """Object containing all property values for the company"""
+    updated_at: str | None = None
+    """Timestamp when the company record was last modified"""
+
+
+class ContactsSearchData(BaseModel):
+    """Search result data for contacts entity."""
+    model_config = ConfigDict(extra="allow")
+
+    archived: bool | None = None
+    """Boolean flag indicating whether the contact has been archived or deleted."""
+    companies: list[Any] | None = None
+    """Associated company records linked to this contact."""
+    created_at: str | None = None
+    """Timestamp indicating when the contact was first created in the system."""
+    id: str | None = None
+    """Unique identifier for the contact record."""
+    properties: dict[str, Any] = None
+    """Key-value object storing all contact properties and their values."""
+    updated_at: str | None = None
+    """Timestamp indicating when the contact record was last modified."""
+
+
+class DealsSearchData(BaseModel):
+    """Search result data for deals entity."""
+    model_config = ConfigDict(extra="allow")
+
+    archived: bool | None = None
+    """Indicates whether the deal has been deleted and moved to the recycling bin"""
+    companies: list[Any] | None = None
+    """Collection of company records associated with the deal"""
+    contacts: list[Any] | None = None
+    """Collection of contact records associated with the deal"""
+    created_at: str | None = None
+    """Timestamp when the deal record was originally created"""
+    id: str | None = None
+    """Unique identifier for the deal record"""
+    line_items: list[Any] | None = None
+    """Collection of product line items associated with the deal"""
+    properties: dict[str, Any] = None
+    """Key-value object containing all deal properties and custom fields"""
+    updated_at: str | None = None
+    """Timestamp when the deal record was last modified"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class SearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class SearchResult(BaseModel, Generic[D]):
+    """Result from search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[SearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+CompaniesSearchResult = SearchResult[CompaniesSearchData]
+"""Search result type for companies entity."""
+
+ContactsSearchResult = SearchResult[ContactsSearchData]
+"""Search result type for contacts entity."""
+
+DealsSearchResult = SearchResult[DealsSearchData]
+"""Search result type for deals entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
