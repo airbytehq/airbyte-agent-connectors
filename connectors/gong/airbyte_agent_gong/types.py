@@ -208,7 +208,7 @@ class StatsActivityScorecardsListParams(TypedDict):
 # ===== SEARCH TYPES =====
 
 # Sort specification
-SortOrder = Literal["asc", "desc"]
+AirbyteSortOrder = Literal["asc", "desc"]
 
 # ===== USERS SEARCH TYPES =====
 
@@ -358,37 +358,37 @@ class UsersStringFilter(TypedDict, total=False):
 
 class UsersSortFilter(TypedDict, total=False):
     """Available fields for sorting users search results."""
-    active: SortOrder
+    active: AirbyteSortOrder
     """Indicates if the user is currently active or not"""
-    created: SortOrder
+    created: AirbyteSortOrder
     """The timestamp denoting when the user account was created"""
-    email_address: SortOrder
+    email_address: AirbyteSortOrder
     """The primary email address associated with the user"""
-    email_aliases: SortOrder
+    email_aliases: AirbyteSortOrder
     """Additional email addresses that can be used to reach the user"""
-    extension: SortOrder
+    extension: AirbyteSortOrder
     """The phone extension number for the user"""
-    first_name: SortOrder
+    first_name: AirbyteSortOrder
     """The first name of the user"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the user"""
-    last_name: SortOrder
+    last_name: AirbyteSortOrder
     """The last name of the user"""
-    manager_id: SortOrder
+    manager_id: AirbyteSortOrder
     """The ID of the user's manager"""
-    meeting_consent_page_url: SortOrder
+    meeting_consent_page_url: AirbyteSortOrder
     """URL for the consent page related to meetings"""
-    personal_meeting_urls: SortOrder
+    personal_meeting_urls: AirbyteSortOrder
     """URLs for personal meeting rooms assigned to the user"""
-    phone_number: SortOrder
+    phone_number: AirbyteSortOrder
     """The phone number associated with the user"""
-    settings: SortOrder
+    settings: AirbyteSortOrder
     """User-specific settings and configurations"""
-    spoken_languages: SortOrder
+    spoken_languages: AirbyteSortOrder
     """Languages spoken by the user"""
-    title: SortOrder
+    title: AirbyteSortOrder
     """The job title or position of the user"""
-    trusted_email_address: SortOrder
+    trusted_email_address: AirbyteSortOrder
     """An email address that is considered trusted for the user"""
 
 
@@ -665,45 +665,45 @@ class CallsStringFilter(TypedDict, total=False):
 
 class CallsSortFilter(TypedDict, total=False):
     """Available fields for sorting calls search results."""
-    calendar_event_id: SortOrder
+    calendar_event_id: AirbyteSortOrder
     """Unique identifier for the calendar event associated with the call."""
-    client_unique_id: SortOrder
+    client_unique_id: AirbyteSortOrder
     """Unique identifier for the client related to the call."""
-    custom_data: SortOrder
+    custom_data: AirbyteSortOrder
     """Custom data associated with the call."""
-    direction: SortOrder
+    direction: AirbyteSortOrder
     """Direction of the call (inbound/outbound)."""
-    duration: SortOrder
+    duration: AirbyteSortOrder
     """Duration of the call in seconds."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the call."""
-    is_private: SortOrder
+    is_private: AirbyteSortOrder
     """Indicates if the call is private or not."""
-    language: SortOrder
+    language: AirbyteSortOrder
     """Language used in the call."""
-    media: SortOrder
+    media: AirbyteSortOrder
     """Media type used for communication (voice, video, etc.)."""
-    meeting_url: SortOrder
+    meeting_url: AirbyteSortOrder
     """URL for accessing the meeting associated with the call."""
-    primary_user_id: SortOrder
+    primary_user_id: AirbyteSortOrder
     """Unique identifier for the primary user involved in the call."""
-    purpose: SortOrder
+    purpose: AirbyteSortOrder
     """Purpose or topic of the call."""
-    scheduled: SortOrder
+    scheduled: AirbyteSortOrder
     """Scheduled date and time of the call."""
-    scope: SortOrder
+    scope: AirbyteSortOrder
     """Scope or extent of the call."""
-    sdr_disposition: SortOrder
+    sdr_disposition: AirbyteSortOrder
     """Disposition set by the sales development representative."""
-    started: SortOrder
+    started: AirbyteSortOrder
     """Start date and time of the call."""
-    system: SortOrder
+    system: AirbyteSortOrder
     """System information related to the call."""
-    title: SortOrder
+    title: AirbyteSortOrder
     """Title or headline of the call."""
-    url: SortOrder
+    url: AirbyteSortOrder
     """URL associated with the call."""
-    workspace_id: SortOrder
+    workspace_id: AirbyteSortOrder
     """Identifier for the workspace to which the call belongs."""
 
 
@@ -892,23 +892,23 @@ class CallsExtensiveStringFilter(TypedDict, total=False):
 
 class CallsExtensiveSortFilter(TypedDict, total=False):
     """Available fields for sorting calls_extensive search results."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the call (from metaData.id)."""
-    startdatetime: SortOrder
+    startdatetime: AirbyteSortOrder
     """Datetime for extensive calls."""
-    collaboration: SortOrder
+    collaboration: AirbyteSortOrder
     """Collaboration information added to the call"""
-    content: SortOrder
+    content: AirbyteSortOrder
     """Analysis of the interaction content."""
-    context: SortOrder
+    context: AirbyteSortOrder
     """A list of the agenda of each part of the call."""
-    interaction: SortOrder
+    interaction: AirbyteSortOrder
     """Metrics collected around the interaction during the call."""
-    media: SortOrder
+    media: AirbyteSortOrder
     """The media urls of the call."""
-    meta_data: SortOrder
+    meta_data: AirbyteSortOrder
     """call's metadata."""
-    parties: SortOrder
+    parties: AirbyteSortOrder
     """A list of the call's participants"""
 
 
@@ -1089,21 +1089,21 @@ class SettingsScorecardsStringFilter(TypedDict, total=False):
 
 class SettingsScorecardsSortFilter(TypedDict, total=False):
     """Available fields for sorting settings_scorecards search results."""
-    created: SortOrder
+    created: AirbyteSortOrder
     """The timestamp when the scorecard was created"""
-    enabled: SortOrder
+    enabled: AirbyteSortOrder
     """Indicates if the scorecard is enabled or disabled"""
-    questions: SortOrder
+    questions: AirbyteSortOrder
     """An array of questions related to the scorecard"""
-    scorecard_id: SortOrder
+    scorecard_id: AirbyteSortOrder
     """The unique identifier of the scorecard"""
-    scorecard_name: SortOrder
+    scorecard_name: AirbyteSortOrder
     """The name of the scorecard"""
-    updated: SortOrder
+    updated: AirbyteSortOrder
     """The timestamp when the scorecard was last updated"""
-    updater_user_id: SortOrder
+    updater_user_id: AirbyteSortOrder
     """The user ID of the person who last updated the scorecard"""
-    workspace_id: SortOrder
+    workspace_id: AirbyteSortOrder
     """The unique identifier of the workspace associated with the scorecard"""
 
 
@@ -1300,25 +1300,25 @@ class StatsActivityScorecardsStringFilter(TypedDict, total=False):
 
 class StatsActivityScorecardsSortFilter(TypedDict, total=False):
     """Available fields for sorting stats_activity_scorecards search results."""
-    answered_scorecard_id: SortOrder
+    answered_scorecard_id: AirbyteSortOrder
     """Unique identifier for the answered scorecard instance."""
-    answers: SortOrder
+    answers: AirbyteSortOrder
     """Contains the answered questions in the scorecards"""
-    call_id: SortOrder
+    call_id: AirbyteSortOrder
     """Unique identifier for the call associated with the answered scorecard."""
-    call_start_time: SortOrder
+    call_start_time: AirbyteSortOrder
     """Timestamp indicating the start time of the call."""
-    review_time: SortOrder
+    review_time: AirbyteSortOrder
     """Timestamp indicating when the review of the answered scorecard was completed."""
-    reviewed_user_id: SortOrder
+    reviewed_user_id: AirbyteSortOrder
     """Unique identifier for the user whose performance was reviewed."""
-    reviewer_user_id: SortOrder
+    reviewer_user_id: AirbyteSortOrder
     """Unique identifier for the user who performed the review."""
-    scorecard_id: SortOrder
+    scorecard_id: AirbyteSortOrder
     """Unique identifier for the scorecard template used."""
-    scorecard_name: SortOrder
+    scorecard_name: AirbyteSortOrder
     """Name or title of the scorecard template used."""
-    visibility_type: SortOrder
+    visibility_type: AirbyteSortOrder
     """Type indicating the visibility permissions for the answered scorecard."""
 
 
@@ -1418,8 +1418,8 @@ class StatsActivityScorecardsSearchQuery(TypedDict, total=False):
 
 # ===== SEARCH PARAMS =====
 
-class SearchParams(TypedDict, total=False):
-    """Parameters for search operations (generic, use entity-specific query types for better type hints)."""
+class AirbyteSearchParams(TypedDict, total=False):
+    """Parameters for Airbyte cache search operations (generic, use entity-specific query types for better type hints)."""
     query: dict[str, Any]
     limit: int
     cursor: str
