@@ -220,7 +220,7 @@ class ObjectsGetParams(TypedDict):
 # ===== SEARCH TYPES =====
 
 # Sort specification
-SortOrder = Literal["asc", "desc"]
+AirbyteSortOrder = Literal["asc", "desc"]
 
 # ===== COMPANIES SEARCH TYPES =====
 
@@ -290,17 +290,17 @@ class CompaniesStringFilter(TypedDict, total=False):
 
 class CompaniesSortFilter(TypedDict, total=False):
     """Available fields for sorting companies search results."""
-    archived: SortOrder
+    archived: AirbyteSortOrder
     """Indicates whether the company has been deleted and moved to the recycling bin"""
-    contacts: SortOrder
+    contacts: AirbyteSortOrder
     """Associated contact records linked to this company"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the company record was created"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the company record"""
-    properties: SortOrder
+    properties: AirbyteSortOrder
     """Object containing all property values for the company"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp when the company record was last modified"""
 
 
@@ -465,17 +465,17 @@ class ContactsStringFilter(TypedDict, total=False):
 
 class ContactsSortFilter(TypedDict, total=False):
     """Available fields for sorting contacts search results."""
-    archived: SortOrder
+    archived: AirbyteSortOrder
     """Boolean flag indicating whether the contact has been archived or deleted."""
-    companies: SortOrder
+    companies: AirbyteSortOrder
     """Associated company records linked to this contact."""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp indicating when the contact was first created in the system."""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the contact record."""
-    properties: SortOrder
+    properties: AirbyteSortOrder
     """Key-value object storing all contact properties and their values."""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp indicating when the contact record was last modified."""
 
 
@@ -656,21 +656,21 @@ class DealsStringFilter(TypedDict, total=False):
 
 class DealsSortFilter(TypedDict, total=False):
     """Available fields for sorting deals search results."""
-    archived: SortOrder
+    archived: AirbyteSortOrder
     """Indicates whether the deal has been deleted and moved to the recycling bin"""
-    companies: SortOrder
+    companies: AirbyteSortOrder
     """Collection of company records associated with the deal"""
-    contacts: SortOrder
+    contacts: AirbyteSortOrder
     """Collection of contact records associated with the deal"""
-    created_at: SortOrder
+    created_at: AirbyteSortOrder
     """Timestamp when the deal record was originally created"""
-    id: SortOrder
+    id: AirbyteSortOrder
     """Unique identifier for the deal record"""
-    line_items: SortOrder
+    line_items: AirbyteSortOrder
     """Collection of product line items associated with the deal"""
-    properties: SortOrder
+    properties: AirbyteSortOrder
     """Key-value object containing all deal properties and custom fields"""
-    updated_at: SortOrder
+    updated_at: AirbyteSortOrder
     """Timestamp when the deal record was last modified"""
 
 
@@ -770,8 +770,8 @@ class DealsSearchQuery(TypedDict, total=False):
 
 # ===== SEARCH PARAMS =====
 
-class SearchParams(TypedDict, total=False):
-    """Parameters for search operations (generic, use entity-specific query types for better type hints)."""
+class AirbyteSearchParams(TypedDict, total=False):
+    """Parameters for Airbyte cache search operations (generic, use entity-specific query types for better type hints)."""
     query: dict[str, Any]
     limit: int
     cursor: str
