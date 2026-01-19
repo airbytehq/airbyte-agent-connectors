@@ -1,0 +1,1465 @@
+"""
+Zendesk-Chat connector.
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING, Any, Callable, TypeVar, overload
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
+from .connector_model import ZendeskChatConnectorModel
+from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
+from .types import (
+    AccountsGetParams,
+    AgentTimelineListParams,
+    AgentsGetParams,
+    AgentsListParams,
+    BansGetParams,
+    BansListParams,
+    ChatsGetParams,
+    ChatsListParams,
+    DepartmentsGetParams,
+    DepartmentsListParams,
+    GoalsGetParams,
+    GoalsListParams,
+    RolesGetParams,
+    RolesListParams,
+    RoutingSettingsGetParams,
+    ShortcutsGetParams,
+    ShortcutsListParams,
+    SkillsGetParams,
+    SkillsListParams,
+    TriggersListParams,
+    AirbyteSearchParams,
+    AgentsSearchFilter,
+    AgentsSearchQuery,
+    ChatsSearchFilter,
+    ChatsSearchQuery,
+    DepartmentsSearchFilter,
+    DepartmentsSearchQuery,
+    ShortcutsSearchFilter,
+    ShortcutsSearchQuery,
+    TriggersSearchFilter,
+    TriggersSearchQuery,
+)
+if TYPE_CHECKING:
+    from .models import ZendeskChatAuthConfig
+# Import response models and envelope models at runtime
+from .models import (
+    ZendeskChatExecuteResult,
+    ZendeskChatExecuteResultWithMeta,
+    AgentsListResult,
+    AgentTimelineListResult,
+    BansListResult,
+    ChatsListResult,
+    DepartmentsListResult,
+    GoalsListResult,
+    RolesListResult,
+    ShortcutsListResult,
+    SkillsListResult,
+    TriggersListResult,
+    Account,
+    Agent,
+    AgentTimeline,
+    Ban,
+    Chat,
+    Department,
+    Goal,
+    Role,
+    RoutingSettings,
+    Shortcut,
+    Skill,
+    Trigger,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    AgentsSearchData,
+    AgentsSearchResult,
+    ChatsSearchData,
+    ChatsSearchResult,
+    DepartmentsSearchData,
+    DepartmentsSearchResult,
+    ShortcutsSearchData,
+    ShortcutsSearchResult,
+    TriggersSearchData,
+    TriggersSearchResult,
+)
+
+# TypeVar for decorator type preservation
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+
+
+class ZendeskChatConnector:
+    """
+    Type-safe Zendesk-Chat API connector.
+
+    Auto-generated from OpenAPI specification with full type safety.
+    """
+
+    connector_name = "zendesk-chat"
+    connector_version = "0.1.1"
+    vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
+
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("accounts", "get"): None,
+        ("agents", "list"): True,
+        ("agents", "get"): None,
+        ("agent_timeline", "list"): True,
+        ("bans", "list"): True,
+        ("bans", "get"): None,
+        ("chats", "list"): True,
+        ("chats", "get"): None,
+        ("departments", "list"): True,
+        ("departments", "get"): None,
+        ("goals", "list"): True,
+        ("goals", "get"): None,
+        ("roles", "list"): True,
+        ("roles", "get"): None,
+        ("routing_settings", "get"): None,
+        ("shortcuts", "list"): True,
+        ("shortcuts", "get"): None,
+        ("skills", "list"): True,
+        ("skills", "get"): None,
+        ("triggers", "list"): True,
+    }
+
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('agents', 'list'): {'limit': 'limit', 'since_id': 'since_id'},
+        ('agents', 'get'): {'agent_id': 'agent_id'},
+        ('agent_timeline', 'list'): {'start_time': 'start_time', 'limit': 'limit', 'fields': 'fields'},
+        ('bans', 'list'): {'limit': 'limit', 'since_id': 'since_id'},
+        ('bans', 'get'): {'ban_id': 'ban_id'},
+        ('chats', 'list'): {'start_time': 'start_time', 'limit': 'limit', 'fields': 'fields'},
+        ('chats', 'get'): {'chat_id': 'chat_id'},
+        ('departments', 'get'): {'department_id': 'department_id'},
+        ('goals', 'get'): {'goal_id': 'goal_id'},
+        ('roles', 'get'): {'role_id': 'role_id'},
+        ('shortcuts', 'get'): {'shortcut_id': 'shortcut_id'},
+        ('skills', 'get'): {'skill_id': 'skill_id'},
+    }
+
+    def __init__(
+        self,
+        auth_config: ZendeskChatAuthConfig | None = None,
+        external_user_id: str | None = None,
+        airbyte_client_id: str | None = None,
+        airbyte_client_secret: str | None = None,
+        on_token_refresh: Any | None = None,
+        subdomain: str | None = None    ):
+        """
+        Initialize a new zendesk-chat connector instance.
+
+        Supports both local and hosted execution modes:
+        - Local mode: Provide `auth_config` for direct API calls
+        - Hosted mode: Provide `external_user_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
+
+        Args:
+            auth_config: Typed authentication configuration (required for local mode)
+            external_user_id: External user ID (required for hosted mode)
+            airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
+            airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            on_token_refresh: Optional callback for OAuth2 token refresh persistence.
+                Called with new_tokens dict when tokens are refreshed. Can be sync or async.
+                Example: lambda tokens: save_to_database(tokens)            subdomain: Your Zendesk subdomain (the part before .zendesk.com in your Zendesk URL)
+        Examples:
+            # Local mode (direct API calls)
+            connector = ZendeskChatConnector(auth_config=ZendeskChatAuthConfig(access_token="..."))
+            # Hosted mode (executed on Airbyte cloud)
+            connector = ZendeskChatConnector(
+                external_user_id="user-123",
+                airbyte_client_id="client_abc123",
+                airbyte_client_secret="secret_xyz789"
+            )
+
+            # Local mode with OAuth2 token refresh callback
+            def save_tokens(new_tokens: dict) -> None:
+                # Persist updated tokens to your storage (file, database, etc.)
+                with open("tokens.json", "w") as f:
+                    json.dump(new_tokens, f)
+
+            connector = ZendeskChatConnector(
+                auth_config=ZendeskChatAuthConfig(access_token="...", refresh_token="..."),
+                on_token_refresh=save_tokens
+            )
+        """
+        # Hosted mode: external_user_id, airbyte_client_id, and airbyte_client_secret provided
+        if external_user_id and airbyte_client_id and airbyte_client_secret:
+            from ._vendored.connector_sdk.executor import HostedExecutor
+            self._executor = HostedExecutor(
+                external_user_id=external_user_id,
+                airbyte_client_id=airbyte_client_id,
+                airbyte_client_secret=airbyte_client_secret,
+                connector_definition_id=str(ZendeskChatConnectorModel.id),
+            )
+        else:
+            # Local mode: auth_config required
+            if not auth_config:
+                raise ValueError(
+                    "Either provide (external_user_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
+                    "or auth_config for local mode"
+                )
+
+            from ._vendored.connector_sdk.executor import LocalExecutor
+
+            # Build config_values dict from server variables
+            config_values: dict[str, str] = {}
+            if subdomain:
+                config_values["subdomain"] = subdomain
+
+            self._executor = LocalExecutor(
+                model=ZendeskChatConnectorModel,
+                auth_config=auth_config.model_dump() if auth_config else None,
+                config_values=config_values,
+                on_token_refresh=on_token_refresh
+            )
+
+            # Update base_url with server variables if provided
+            base_url = self._executor.http_client.base_url
+            if subdomain:
+                base_url = base_url.replace("{subdomain}", subdomain)
+            self._executor.http_client.base_url = base_url
+
+        # Initialize entity query objects
+        self.accounts = AccountsQuery(self)
+        self.agents = AgentsQuery(self)
+        self.agent_timeline = AgentTimelineQuery(self)
+        self.bans = BansQuery(self)
+        self.chats = ChatsQuery(self)
+        self.departments = DepartmentsQuery(self)
+        self.goals = GoalsQuery(self)
+        self.roles = RolesQuery(self)
+        self.routing_settings = RoutingSettingsQuery(self)
+        self.shortcuts = ShortcutsQuery(self)
+        self.skills = SkillsQuery(self)
+        self.triggers = TriggersQuery(self)
+
+    # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["accounts"],
+        action: Literal["get"],
+        params: "AccountsGetParams"
+    ) -> "Account": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["agents"],
+        action: Literal["list"],
+        params: "AgentsListParams"
+    ) -> "AgentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["agents"],
+        action: Literal["get"],
+        params: "AgentsGetParams"
+    ) -> "Agent": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["agent_timeline"],
+        action: Literal["list"],
+        params: "AgentTimelineListParams"
+    ) -> "AgentTimelineListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["bans"],
+        action: Literal["list"],
+        params: "BansListParams"
+    ) -> "BansListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["bans"],
+        action: Literal["get"],
+        params: "BansGetParams"
+    ) -> "Ban": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["chats"],
+        action: Literal["list"],
+        params: "ChatsListParams"
+    ) -> "ChatsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["chats"],
+        action: Literal["get"],
+        params: "ChatsGetParams"
+    ) -> "Chat": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["departments"],
+        action: Literal["list"],
+        params: "DepartmentsListParams"
+    ) -> "DepartmentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["departments"],
+        action: Literal["get"],
+        params: "DepartmentsGetParams"
+    ) -> "Department": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["goals"],
+        action: Literal["list"],
+        params: "GoalsListParams"
+    ) -> "GoalsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["goals"],
+        action: Literal["get"],
+        params: "GoalsGetParams"
+    ) -> "Goal": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["roles"],
+        action: Literal["list"],
+        params: "RolesListParams"
+    ) -> "RolesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["roles"],
+        action: Literal["get"],
+        params: "RolesGetParams"
+    ) -> "Role": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["routing_settings"],
+        action: Literal["get"],
+        params: "RoutingSettingsGetParams"
+    ) -> "RoutingSettings": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["shortcuts"],
+        action: Literal["list"],
+        params: "ShortcutsListParams"
+    ) -> "ShortcutsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["shortcuts"],
+        action: Literal["get"],
+        params: "ShortcutsGetParams"
+    ) -> "Shortcut": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["skills"],
+        action: Literal["list"],
+        params: "SkillsListParams"
+    ) -> "SkillsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["skills"],
+        action: Literal["get"],
+        params: "SkillsGetParams"
+    ) -> "Skill": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["triggers"],
+        action: Literal["list"],
+        params: "TriggersListParams"
+    ) -> "TriggersListResult": ...
+
+
+    @overload
+    async def execute(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any]
+    ) -> ZendeskChatExecuteResult[Any] | ZendeskChatExecuteResultWithMeta[Any, Any] | Any: ...
+
+    async def execute(
+        self,
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None
+    ) -> Any:
+        """
+        Execute an entity operation with full type safety.
+
+        This is the recommended interface for blessed connectors as it:
+        - Uses the same signature as non-blessed connectors
+        - Provides full IDE autocomplete for entity/action/params
+        - Makes migration from generic to blessed connectors seamless
+
+        Args:
+            entity: Entity name (e.g., "customers")
+            action: Operation action (e.g., "create", "get", "list")
+            params: Operation parameters (typed based on entity+action)
+
+        Returns:
+            Typed response based on the operation
+
+        Example:
+            customer = await connector.execute(
+                entity="customers",
+                action="get",
+                params={"id": "cus_123"}
+            )
+        """
+        from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        if params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                params = {param_map.get(k, k): v for k, v in params.items()}
+
+        # Use ExecutionConfig for both local and hosted executors
+        config = ExecutionConfig(
+            entity=entity,
+            action=action,
+            params=params
+        )
+
+        result = await self._executor.execute(config)
+
+        if not result.success:
+            raise RuntimeError(f"Execution failed: {result.error}")
+
+        # Check if this operation has extractors configured
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
+
+        if has_extractors:
+            # With extractors - return Pydantic envelope with data and meta
+            if result.meta is not None:
+                return ZendeskChatExecuteResultWithMeta[Any, Any](
+                    data=result.data,
+                    meta=result.meta
+                )
+            else:
+                return ZendeskChatExecuteResult[Any](data=result.data)
+        else:
+            # No extractors - return raw response data
+            return result.data
+
+    # ===== INTROSPECTION METHODS =====
+
+    @classmethod
+    def describe(cls, func: _F) -> _F:
+        """
+        Decorator that populates a function's docstring with connector capabilities.
+
+        This class method can be used as a decorator to automatically generate
+        comprehensive documentation for AI tool functions.
+
+        Usage:
+            @mcp.tool()
+            @ZendeskChatConnector.describe
+            async def execute(entity: str, action: str, params: dict):
+                '''Execute operations.'''
+                ...
+
+        The decorated function's __doc__ will be updated with:
+        - Available entities and their actions
+        - Parameter signatures with required (*) and optional (?) markers
+        - Response structure documentation
+        - Example questions (if available in OpenAPI spec)
+
+        Args:
+            func: The function to decorate
+
+        Returns:
+            The same function with updated __doc__
+        """
+        description = generate_tool_description(ZendeskChatConnectorModel)
+
+        original_doc = func.__doc__ or ""
+        if original_doc.strip():
+            func.__doc__ = f"{original_doc.strip()}\n{description}"
+        else:
+            func.__doc__ = description
+
+        return func
+
+    def list_entities(self) -> list[dict[str, Any]]:
+        """
+        Get structured data about available entities, actions, and parameters.
+
+        Returns a list of entity descriptions with:
+        - entity_name: Name of the entity (e.g., "contacts", "deals")
+        - description: Entity description from the first endpoint
+        - available_actions: List of actions (e.g., ["list", "get", "create"])
+        - parameters: Dict mapping action -> list of parameter dicts
+
+        Example:
+            entities = connector.list_entities()
+            for entity in entities:
+                print(f"{entity['entity_name']}: {entity['available_actions']}")
+        """
+        return describe_entities(ZendeskChatConnectorModel)
+
+    def entity_schema(self, entity: str) -> dict[str, Any] | None:
+        """
+        Get the JSON schema for an entity.
+
+        Args:
+            entity: Entity name (e.g., "contacts", "companies")
+
+        Returns:
+            JSON schema dict describing the entity structure, or None if not found.
+
+        Example:
+            schema = connector.entity_schema("contacts")
+            if schema:
+                print(f"Contact properties: {list(schema.get('properties', {}).keys())}")
+        """
+        entity_def = next(
+            (e for e in ZendeskChatConnectorModel.entities if e.name == entity),
+            None
+        )
+        if entity_def is None:
+            logging.getLogger(__name__).warning(
+                f"Entity '{entity}' not found. Available entities: "
+                f"{[e.name for e in ZendeskChatConnectorModel.entities]}"
+            )
+        return entity_def.entity_schema if entity_def else None
+
+
+
+class AccountsQuery:
+    """
+    Query class for Accounts entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        **kwargs
+    ) -> Account:
+        """
+        Returns the account information for the authenticated user
+
+        Returns:
+            Account
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("accounts", "get", params)
+        return result
+
+
+
+class AgentsQuery:
+    """
+    Query class for Agents entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        **kwargs
+    ) -> AgentsListResult:
+        """
+        List all agents
+
+        Args:
+            limit: Parameter limit
+            since_id: Parameter since_id
+            **kwargs: Additional parameters
+
+        Returns:
+            AgentsListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("agents", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AgentsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        agent_id: str,
+        **kwargs
+    ) -> Agent:
+        """
+        Get an agent
+
+        Args:
+            agent_id: Parameter agent_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Agent
+        """
+        params = {k: v for k, v in {
+            "agent_id": agent_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("agents", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: AgentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AgentsSearchResult:
+        """
+        Search agents records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AgentsSearchFilter):
+        - id: Unique agent identifier
+        - email: Agent email address
+        - display_name: Agent display name
+        - first_name: Agent first name
+        - last_name: Agent last name
+        - enabled: Whether agent is enabled
+        - role_id: Agent role ID
+        - departments: Department IDs agent belongs to
+        - create_date: When agent was created
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AgentsSearchResult with hits (list of AirbyteSearchHit[AgentsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("agents", "search", params)
+
+        # Parse response into typed result
+        return AgentsSearchResult(
+            hits=[
+                AirbyteSearchHit[AgentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=AgentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
+class AgentTimelineQuery:
+    """
+    Query class for AgentTimeline entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        start_time: int | None = None,
+        limit: int | None = None,
+        fields: str | None = None,
+        **kwargs
+    ) -> AgentTimelineListResult:
+        """
+        List agent timeline (incremental export)
+
+        Args:
+            start_time: Parameter start_time
+            limit: Parameter limit
+            fields: Parameter fields
+            **kwargs: Additional parameters
+
+        Returns:
+            AgentTimelineListResult
+        """
+        params = {k: v for k, v in {
+            "start_time": start_time,
+            "limit": limit,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("agent_timeline", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AgentTimelineListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+class BansQuery:
+    """
+    Query class for Bans entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        limit: int | None = None,
+        since_id: int | None = None,
+        **kwargs
+    ) -> BansListResult:
+        """
+        List all bans
+
+        Args:
+            limit: Parameter limit
+            since_id: Parameter since_id
+            **kwargs: Additional parameters
+
+        Returns:
+            BansListResult
+        """
+        params = {k: v for k, v in {
+            "limit": limit,
+            "since_id": since_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("bans", "list", params)
+        # Cast generic envelope to concrete typed result
+        return BansListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        ban_id: str,
+        **kwargs
+    ) -> Ban:
+        """
+        Get a ban
+
+        Args:
+            ban_id: Parameter ban_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Ban
+        """
+        params = {k: v for k, v in {
+            "ban_id": ban_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("bans", "get", params)
+        return result
+
+
+
+class ChatsQuery:
+    """
+    Query class for Chats entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        start_time: int | None = None,
+        limit: int | None = None,
+        fields: str | None = None,
+        **kwargs
+    ) -> ChatsListResult:
+        """
+        List chats (incremental export)
+
+        Args:
+            start_time: Parameter start_time
+            limit: Parameter limit
+            fields: Parameter fields
+            **kwargs: Additional parameters
+
+        Returns:
+            ChatsListResult
+        """
+        params = {k: v for k, v in {
+            "start_time": start_time,
+            "limit": limit,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("chats", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ChatsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def get(
+        self,
+        chat_id: str,
+        **kwargs
+    ) -> Chat:
+        """
+        Get a chat
+
+        Args:
+            chat_id: Parameter chat_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Chat
+        """
+        params = {k: v for k, v in {
+            "chat_id": chat_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("chats", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: ChatsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ChatsSearchResult:
+        """
+        Search chats records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ChatsSearchFilter):
+        - id: Unique chat identifier
+        - timestamp: Chat start timestamp
+        - update_timestamp: Last update timestamp
+        - department_id: Department ID
+        - department_name: Department name
+        - duration: Chat duration in seconds
+        - rating: Satisfaction rating
+        - missed: Whether chat was missed
+        - agent_ids: IDs of agents in chat
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ChatsSearchResult with hits (list of AirbyteSearchHit[ChatsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("chats", "search", params)
+
+        # Parse response into typed result
+        return ChatsSearchResult(
+            hits=[
+                AirbyteSearchHit[ChatsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ChatsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
+class DepartmentsQuery:
+    """
+    Query class for Departments entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> DepartmentsListResult:
+        """
+        List all departments
+
+        Returns:
+            DepartmentsListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("departments", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DepartmentsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        department_id: str,
+        **kwargs
+    ) -> Department:
+        """
+        Get a department
+
+        Args:
+            department_id: Parameter department_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Department
+        """
+        params = {k: v for k, v in {
+            "department_id": department_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("departments", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: DepartmentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> DepartmentsSearchResult:
+        """
+        Search departments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (DepartmentsSearchFilter):
+        - id: Department ID
+        - name: Department name
+        - enabled: Whether department is enabled
+        - members: Agent IDs in department
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            DepartmentsSearchResult with hits (list of AirbyteSearchHit[DepartmentsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("departments", "search", params)
+
+        # Parse response into typed result
+        return DepartmentsSearchResult(
+            hits=[
+                AirbyteSearchHit[DepartmentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=DepartmentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
+class GoalsQuery:
+    """
+    Query class for Goals entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> GoalsListResult:
+        """
+        List all goals
+
+        Returns:
+            GoalsListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("goals", "list", params)
+        # Cast generic envelope to concrete typed result
+        return GoalsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        goal_id: str,
+        **kwargs
+    ) -> Goal:
+        """
+        Get a goal
+
+        Args:
+            goal_id: Parameter goal_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Goal
+        """
+        params = {k: v for k, v in {
+            "goal_id": goal_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("goals", "get", params)
+        return result
+
+
+
+class RolesQuery:
+    """
+    Query class for Roles entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> RolesListResult:
+        """
+        List all roles
+
+        Returns:
+            RolesListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("roles", "list", params)
+        # Cast generic envelope to concrete typed result
+        return RolesListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        role_id: str,
+        **kwargs
+    ) -> Role:
+        """
+        Get a role
+
+        Args:
+            role_id: Parameter role_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Role
+        """
+        params = {k: v for k, v in {
+            "role_id": role_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("roles", "get", params)
+        return result
+
+
+
+class RoutingSettingsQuery:
+    """
+    Query class for RoutingSettings entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        **kwargs
+    ) -> RoutingSettings:
+        """
+        Get routing settings
+
+        Returns:
+            RoutingSettings
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("routing_settings", "get", params)
+        return result
+
+
+
+class ShortcutsQuery:
+    """
+    Query class for Shortcuts entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> ShortcutsListResult:
+        """
+        List all shortcuts
+
+        Returns:
+            ShortcutsListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("shortcuts", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ShortcutsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        shortcut_id: str,
+        **kwargs
+    ) -> Shortcut:
+        """
+        Get a shortcut
+
+        Args:
+            shortcut_id: Parameter shortcut_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Shortcut
+        """
+        params = {k: v for k, v in {
+            "shortcut_id": shortcut_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("shortcuts", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: ShortcutsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ShortcutsSearchResult:
+        """
+        Search shortcuts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ShortcutsSearchFilter):
+        - id: Shortcut ID
+        - name: Shortcut name/trigger
+        - message: Shortcut message content
+        - tags: Tags applied when shortcut is used
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ShortcutsSearchResult with hits (list of AirbyteSearchHit[ShortcutsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("shortcuts", "search", params)
+
+        # Parse response into typed result
+        return ShortcutsSearchResult(
+            hits=[
+                AirbyteSearchHit[ShortcutsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ShortcutsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
+class SkillsQuery:
+    """
+    Query class for Skills entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> SkillsListResult:
+        """
+        List all skills
+
+        Returns:
+            SkillsListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("skills", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SkillsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        skill_id: str,
+        **kwargs
+    ) -> Skill:
+        """
+        Get a skill
+
+        Args:
+            skill_id: Parameter skill_id
+            **kwargs: Additional parameters
+
+        Returns:
+            Skill
+        """
+        params = {k: v for k, v in {
+            "skill_id": skill_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("skills", "get", params)
+        return result
+
+
+
+class TriggersQuery:
+    """
+    Query class for Triggers entity operations.
+    """
+
+    def __init__(self, connector: ZendeskChatConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> TriggersListResult:
+        """
+        List all triggers
+
+        Returns:
+            TriggersListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("triggers", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TriggersListResult(
+            data=result.data
+        )
+
+
+
+    async def search(
+        self,
+        query: TriggersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TriggersSearchResult:
+        """
+        Search triggers records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TriggersSearchFilter):
+        - id: Trigger ID
+        - name: Trigger name
+        - enabled: Whether trigger is enabled
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TriggersSearchResult with hits (list of AirbyteSearchHit[TriggersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("triggers", "search", params)
+
+        # Parse response into typed result
+        return TriggersSearchResult(
+            hits=[
+                AirbyteSearchHit[TriggersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TriggersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
