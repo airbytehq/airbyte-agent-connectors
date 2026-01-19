@@ -486,30 +486,36 @@ def validate_meta_extractor_fields(
         response_body = spec.captured_response.body
 
         # Validate each meta extractor field
-        for field_name, jsonpath_expr in endpoint.meta_extractor.items():
+        for field_name, extractor_expr in endpoint.meta_extractor.items():
+            # Skip header-based extractors - they extract from headers, not response body
+            # @link.next extracts from RFC 5988 Link header
+            # @header.X-Name extracts raw header value
+            if extractor_expr.startswith("@link.") or extractor_expr.startswith("@header."):
+                continue
+
             # Check 1: Does the JSONPath find data in the actual response?
             try:
-                parsed_expr = parse_jsonpath(jsonpath_expr)
+                parsed_expr = parse_jsonpath(extractor_expr)
                 matches = [match.value for match in parsed_expr.find(response_body)]
 
                 if not matches:
                     warnings.append(
                         f"{entity_name}.{action}: x-airbyte-meta-extractor field '{field_name}' "
-                        f"with JSONPath '{jsonpath_expr}' found no matches in cassette response"
+                        f"with JSONPath '{extractor_expr}' found no matches in cassette response"
                     )
             except Exception as e:
                 warnings.append(
-                    f"{entity_name}.{action}: x-airbyte-meta-extractor field '{field_name}' has invalid JSONPath '{jsonpath_expr}': {str(e)}"
+                    f"{entity_name}.{action}: x-airbyte-meta-extractor field '{field_name}' has invalid JSONPath '{extractor_expr}': {str(e)}"
                 )
 
             # Check 2: Is this field path declared in the response schema?
             if endpoint.response_schema:
-                field_in_schema = _check_field_in_schema(jsonpath_expr, endpoint.response_schema)
+                field_in_schema = _check_field_in_schema(extractor_expr, endpoint.response_schema)
 
                 if not field_in_schema:
                     warnings.append(
                         f"{entity_name}.{action}: x-airbyte-meta-extractor field '{field_name}' "
-                        f"extracts from '{jsonpath_expr}' but this path is not declared in response schema"
+                        f"extracts from '{extractor_expr}' but this path is not declared in response schema"
                     )
 
     except Exception as e:

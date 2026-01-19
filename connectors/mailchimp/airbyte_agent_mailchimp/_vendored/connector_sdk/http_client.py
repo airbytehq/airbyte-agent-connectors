@@ -478,6 +478,7 @@ class HTTPClient:
                     request_id=request_id,
                     status_code=status_code,
                     response_body=f"<binary content, {response.headers.get('content-length', 'unknown')} bytes>",
+                    response_headers=dict(response.headers),
                 )
                 return response, dict(response.headers)
 
@@ -504,6 +505,7 @@ class HTTPClient:
                 request_id=request_id,
                 status_code=status_code,
                 response_body=response_data,
+                response_headers=dict(response.headers),
             )
             return response_data, dict(response.headers)
 
