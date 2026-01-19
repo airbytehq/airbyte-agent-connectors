@@ -134,6 +134,7 @@ class RequestLogger:
         request_id: str,
         status_code: int,
         response_body: Any | None = None,
+        response_headers: Dict[str, str] | None = None,
     ) -> None:
         """
         Log a successful HTTP response.
@@ -142,6 +143,7 @@ class RequestLogger:
             request_id: ID returned from log_request
             status_code: HTTP status code
             response_body: Response body
+            response_headers: Response headers
         """
         if request_id not in self._active_requests:
             return
@@ -166,6 +168,7 @@ class RequestLogger:
             body=request_data["body"],
             response_status=status_code,
             response_body=serializable_body,
+            response_headers=response_headers or {},
             timing_ms=timing_ms,
         )
 
@@ -243,7 +246,13 @@ class NullLogger:
         """No-op log_request."""
         return ""
 
-    def log_response(self, *args, **kwargs) -> None:
+    def log_response(
+        self,
+        request_id: str,
+        status_code: int,
+        response_body: Any | None = None,
+        response_headers: Dict[str, str] | None = None,
+    ) -> None:
         """No-op log_response."""
         pass
 
