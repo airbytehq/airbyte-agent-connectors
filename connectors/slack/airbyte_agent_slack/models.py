@@ -197,14 +197,6 @@ class Attachment(BaseModel):
     footer_icon: Union[str | None, Any] = Field(default=None)
     ts: Union[Any, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
-
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -228,6 +220,14 @@ class File(BaseModel):
     permalink_public: Union[str | None, Any] = Field(default=None)
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
