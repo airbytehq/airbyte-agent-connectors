@@ -987,7 +987,9 @@ class LocalExecutor:
 
         # Substitute variables from params
         if "variables" in graphql_config and graphql_config["variables"]:
-            body["variables"] = self._interpolate_variables(graphql_config["variables"], params, param_defaults)
+            variables = self._interpolate_variables(graphql_config["variables"], params, param_defaults)
+            # Filter out None values (optional fields not provided) - matches REST _extract_body() behavior
+            body["variables"] = {k: v for k, v in variables.items() if v is not None}
 
         # Add operation name if specified
         if "operationName" in graphql_config:
