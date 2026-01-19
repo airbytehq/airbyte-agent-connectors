@@ -31,6 +31,7 @@ class RequestLog(BaseModel):
     body: Any | None = None
     response_status: int | None = None
     response_body: Any | None = None
+    response_headers: Dict[str, str] = Field(default_factory=dict)
     timing_ms: float | None = None
     error: str | None = None
 
