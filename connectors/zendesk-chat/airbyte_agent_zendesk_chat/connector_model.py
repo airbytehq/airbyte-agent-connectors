@@ -24,9 +24,9 @@ from uuid import (
 )
 
 ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
-    id=UUID('8f7a9b2c-3d4e-5f6a-7b8c-9d0e1f2a3b4c'),
+    id=UUID('40d24d0f-b8f9-4fe0-9e6c-b06c0f3f45e4'),
     name='zendesk-chat',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://{subdomain}.zendesk.com/api/v2/chat',
     auth=AuthConfig(
         type=AuthType.BEARER,
