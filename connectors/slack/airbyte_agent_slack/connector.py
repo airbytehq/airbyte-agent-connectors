@@ -15,8 +15,15 @@ from .connector_model import SlackConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
     ChannelMessagesListParams,
+    ChannelPurposesCreateParams,
+    ChannelTopicsCreateParams,
+    ChannelsCreateParams,
     ChannelsGetParams,
     ChannelsListParams,
+    ChannelsUpdateParams,
+    MessagesCreateParams,
+    MessagesUpdateParams,
+    ReactionsCreateParams,
     ThreadsListParams,
     UsersGetParams,
     UsersListParams,
@@ -34,7 +41,9 @@ from .models import (
     ChannelMessagesListResult,
     ThreadsListResult,
     Channel,
+    CreatedMessage,
     Message,
+    ReactionAddResponse,
     Thread,
     User,
 )
@@ -52,7 +61,7 @@ class SlackConnector:
     """
 
     connector_name = "slack"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -63,6 +72,13 @@ class SlackConnector:
         ("channels", "get"): None,
         ("channel_messages", "list"): True,
         ("threads", "list"): True,
+        ("messages", "create"): None,
+        ("messages", "update"): None,
+        ("channels", "create"): None,
+        ("channels", "update"): None,
+        ("channel_topics", "create"): None,
+        ("channel_purposes", "create"): None,
+        ("reactions", "create"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -74,6 +90,13 @@ class SlackConnector:
         ('channels', 'get'): {'channel': 'channel'},
         ('channel_messages', 'list'): {'channel': 'channel', 'cursor': 'cursor', 'limit': 'limit', 'oldest': 'oldest', 'latest': 'latest', 'inclusive': 'inclusive'},
         ('threads', 'list'): {'channel': 'channel', 'ts': 'ts', 'cursor': 'cursor', 'limit': 'limit', 'oldest': 'oldest', 'latest': 'latest', 'inclusive': 'inclusive'},
+        ('messages', 'create'): {'channel': 'channel', 'text': 'text', 'thread_ts': 'thread_ts', 'reply_broadcast': 'reply_broadcast', 'unfurl_links': 'unfurl_links', 'unfurl_media': 'unfurl_media'},
+        ('messages', 'update'): {'channel': 'channel', 'ts': 'ts', 'text': 'text'},
+        ('channels', 'create'): {'name': 'name', 'is_private': 'is_private'},
+        ('channels', 'update'): {'channel': 'channel', 'name': 'name'},
+        ('channel_topics', 'create'): {'channel': 'channel', 'topic': 'topic'},
+        ('channel_purposes', 'create'): {'channel': 'channel', 'purpose': 'purpose'},
+        ('reactions', 'create'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
     }
 
     def __init__(
@@ -164,6 +187,10 @@ class SlackConnector:
         self.channels = ChannelsQuery(self)
         self.channel_messages = ChannelMessagesQuery(self)
         self.threads = ThreadsQuery(self)
+        self.messages = MessagesQuery(self)
+        self.channel_topics = ChannelTopicsQuery(self)
+        self.channel_purposes = ChannelPurposesQuery(self)
+        self.reactions = ReactionsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -214,6 +241,62 @@ class SlackConnector:
         action: Literal["list"],
         params: "ThreadsListParams"
     ) -> "ThreadsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["messages"],
+        action: Literal["create"],
+        params: "MessagesCreateParams"
+    ) -> "CreatedMessage": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["messages"],
+        action: Literal["update"],
+        params: "MessagesUpdateParams"
+    ) -> "CreatedMessage": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channels"],
+        action: Literal["create"],
+        params: "ChannelsCreateParams"
+    ) -> "Channel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channels"],
+        action: Literal["update"],
+        params: "ChannelsUpdateParams"
+    ) -> "Channel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_topics"],
+        action: Literal["create"],
+        params: "ChannelTopicsCreateParams"
+    ) -> "Channel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_purposes"],
+        action: Literal["create"],
+        params: "ChannelPurposesCreateParams"
+    ) -> "Channel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["reactions"],
+        action: Literal["create"],
+        params: "ReactionsCreateParams"
+    ) -> "ReactionAddResponse": ...
 
 
     @overload
@@ -511,6 +594,62 @@ class ChannelsQuery:
 
 
 
+    async def create(
+        self,
+        name: str,
+        is_private: bool | None = None,
+        **kwargs
+    ) -> Channel:
+        """
+        Creates a new public or private channel
+
+        Args:
+            name: Channel name (lowercase, no spaces, max 80 chars)
+            is_private: Create a private channel instead of public
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            "is_private": is_private,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channels", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        channel: str,
+        name: str,
+        **kwargs
+    ) -> Channel:
+        """
+        Renames an existing channel
+
+        Args:
+            channel: Channel ID to rename
+            name: New channel name (lowercase, no spaces, max 80 chars)
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "name": name,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channels", "update", params)
+        return result
+
+
+
 class ChannelMessagesQuery:
     """
     Query class for ChannelMessages entity operations.
@@ -617,5 +756,199 @@ class ThreadsQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+class MessagesQuery:
+    """
+    Query class for Messages entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        text: str,
+        thread_ts: str | None = None,
+        reply_broadcast: bool | None = None,
+        unfurl_links: bool | None = None,
+        unfurl_media: bool | None = None,
+        **kwargs
+    ) -> CreatedMessage:
+        """
+        Posts a message to a public channel, private channel, or direct message conversation
+
+        Args:
+            channel: Channel ID, private group ID, or user ID to send message to
+            text: Message text content (supports mrkdwn formatting)
+            thread_ts: Thread timestamp to reply to (for threaded messages)
+            reply_broadcast: Also post reply to channel when replying to a thread
+            unfurl_links: Enable unfurling of primarily text-based content
+            unfurl_media: Enable unfurling of media content
+            **kwargs: Additional parameters
+
+        Returns:
+            CreatedMessage
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "text": text,
+            "thread_ts": thread_ts,
+            "reply_broadcast": reply_broadcast,
+            "unfurl_links": unfurl_links,
+            "unfurl_media": unfurl_media,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("messages", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        channel: str,
+        ts: str,
+        text: str,
+        **kwargs
+    ) -> CreatedMessage:
+        """
+        Updates an existing message in a channel
+
+        Args:
+            channel: Channel ID containing the message
+            ts: Timestamp of the message to update
+            text: New message text content
+            **kwargs: Additional parameters
+
+        Returns:
+            CreatedMessage
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "ts": ts,
+            "text": text,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("messages", "update", params)
+        return result
+
+
+
+class ChannelTopicsQuery:
+    """
+    Query class for ChannelTopics entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        topic: str,
+        **kwargs
+    ) -> Channel:
+        """
+        Sets the topic for a channel
+
+        Args:
+            channel: Channel ID to set topic for
+            topic: New topic text (max 250 characters)
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "topic": topic,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_topics", "create", params)
+        return result
+
+
+
+class ChannelPurposesQuery:
+    """
+    Query class for ChannelPurposes entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        purpose: str,
+        **kwargs
+    ) -> Channel:
+        """
+        Sets the purpose for a channel
+
+        Args:
+            channel: Channel ID to set purpose for
+            purpose: New purpose text (max 250 characters)
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "purpose": purpose,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_purposes", "create", params)
+        return result
+
+
+
+class ReactionsQuery:
+    """
+    Query class for Reactions entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        timestamp: str,
+        name: str,
+        **kwargs
+    ) -> ReactionAddResponse:
+        """
+        Adds a reaction (emoji) to a message
+
+        Args:
+            channel: Channel ID containing the message
+            timestamp: Timestamp of the message to react to
+            name: Reaction emoji name (without colons, e.g., "thumbsup")
+            **kwargs: Additional parameters
+
+        Returns:
+            ReactionAddResponse
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "timestamp": timestamp,
+            "name": name,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("reactions", "create", params)
+        return result
 
 

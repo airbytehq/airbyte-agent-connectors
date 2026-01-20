@@ -27,7 +27,7 @@ from uuid import (
 SlackConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c2281cee-86f9-4a86-bb48-d23286b4c7bd'),
     name='slack',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://slack.com/api',
     auth=AuthConfig(
         options=[
@@ -599,7 +599,12 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='channels',
             stream_name='channels',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -838,6 +843,400 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                     response_schema={
                         'type': 'object',
                         'description': 'Response containing single channel',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': 'object',
+                                'description': 'Slack channel object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'Unique channel identifier'},
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Channel name',
+                                    },
+                                    'is_channel': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a channel',
+                                    },
+                                    'is_group': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a group',
+                                    },
+                                    'is_im': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a direct message',
+                                    },
+                                    'is_mpim': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a multi-party direct message',
+                                    },
+                                    'is_private': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is private',
+                                    },
+                                    'created': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of channel creation',
+                                    },
+                                    'is_archived': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is archived',
+                                    },
+                                    'is_general': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is the general channel',
+                                    },
+                                    'unlinked': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unlinked timestamp',
+                                    },
+                                    'name_normalized': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Normalized channel name',
+                                    },
+                                    'is_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared',
+                                    },
+                                    'is_org_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared across the organization',
+                                    },
+                                    'is_pending_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether external sharing is pending',
+                                    },
+                                    'pending_shared': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Pending shared teams',
+                                    },
+                                    'context_team_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Context team ID',
+                                    },
+                                    'updated': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of last update',
+                                    },
+                                    'creator': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID of the channel creator',
+                                    },
+                                    'is_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is externally shared',
+                                    },
+                                    'shared_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams the channel is shared with',
+                                    },
+                                    'pending_connected_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams with pending connection',
+                                    },
+                                    'is_member': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the authenticated user is a member',
+                                    },
+                                    'topic': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel topic information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Topic text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the topic',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when topic was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel topic',
+                                    },
+                                    'purpose': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel purpose information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Purpose text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the purpose',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when purpose was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel purpose',
+                                    },
+                                    'previous_names': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Previous channel names',
+                                    },
+                                    'num_members': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Number of members in the channel',
+                                    },
+                                    'parent_conversation': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Parent conversation ID if this is a thread',
+                                    },
+                                    'properties': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Additional channel properties',
+                                    },
+                                    'is_thread_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is thread-only',
+                                    },
+                                    'is_read_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is read-only',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'channels',
+                                'x-airbyte-stream-name': 'channels',
+                            },
+                        },
+                    },
+                    record_extractor='$.channel',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.create',
+                    action=Action.CREATE,
+                    description='Creates a new public or private channel',
+                    body_fields=['name', 'is_private'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a channel',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'Channel name (lowercase, no spaces, max 80 chars)'},
+                            'is_private': {'type': 'boolean', 'description': 'Create a private channel instead of public'},
+                        },
+                        'required': ['name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating a channel',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': 'object',
+                                'description': 'Slack channel object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'Unique channel identifier'},
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Channel name',
+                                    },
+                                    'is_channel': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a channel',
+                                    },
+                                    'is_group': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a group',
+                                    },
+                                    'is_im': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a direct message',
+                                    },
+                                    'is_mpim': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a multi-party direct message',
+                                    },
+                                    'is_private': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is private',
+                                    },
+                                    'created': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of channel creation',
+                                    },
+                                    'is_archived': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is archived',
+                                    },
+                                    'is_general': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is the general channel',
+                                    },
+                                    'unlinked': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unlinked timestamp',
+                                    },
+                                    'name_normalized': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Normalized channel name',
+                                    },
+                                    'is_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared',
+                                    },
+                                    'is_org_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared across the organization',
+                                    },
+                                    'is_pending_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether external sharing is pending',
+                                    },
+                                    'pending_shared': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Pending shared teams',
+                                    },
+                                    'context_team_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Context team ID',
+                                    },
+                                    'updated': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of last update',
+                                    },
+                                    'creator': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID of the channel creator',
+                                    },
+                                    'is_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is externally shared',
+                                    },
+                                    'shared_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams the channel is shared with',
+                                    },
+                                    'pending_connected_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams with pending connection',
+                                    },
+                                    'is_member': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the authenticated user is a member',
+                                    },
+                                    'topic': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel topic information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Topic text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the topic',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when topic was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel topic',
+                                    },
+                                    'purpose': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel purpose information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Purpose text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the purpose',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when purpose was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel purpose',
+                                    },
+                                    'previous_names': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Previous channel names',
+                                    },
+                                    'num_members': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Number of members in the channel',
+                                    },
+                                    'parent_conversation': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Parent conversation ID if this is a thread',
+                                    },
+                                    'properties': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Additional channel properties',
+                                    },
+                                    'is_thread_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is thread-only',
+                                    },
+                                    'is_read_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is read-only',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'channels',
+                                'x-airbyte-stream-name': 'channels',
+                            },
+                        },
+                    },
+                    record_extractor='$.channel',
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.rename',
+                    action=Action.UPDATE,
+                    description='Renames an existing channel',
+                    body_fields=['channel', 'name'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for renaming a channel',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID to rename'},
+                            'name': {'type': 'string', 'description': 'New channel name (lowercase, no spaces, max 80 chars)'},
+                        },
+                        'required': ['channel', 'name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from renaming a channel',
                         'properties': {
                             'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
                             'channel': {
@@ -2118,6 +2517,671 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'threads',
                 'x-airbyte-stream-name': 'threads',
+            },
+        ),
+        EntityDefinition(
+            name='messages',
+            actions=[Action.CREATE, Action.UPDATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/chat.postMessage',
+                    action=Action.CREATE,
+                    description='Posts a message to a public channel, private channel, or direct message conversation',
+                    body_fields=[
+                        'channel',
+                        'text',
+                        'thread_ts',
+                        'reply_broadcast',
+                        'unfurl_links',
+                        'unfurl_media',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a message',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID, private group ID, or user ID to send message to'},
+                            'text': {'type': 'string', 'description': 'Message text content (supports mrkdwn formatting)'},
+                            'thread_ts': {'type': 'string', 'description': 'Thread timestamp to reply to (for threaded messages)'},
+                            'reply_broadcast': {'type': 'boolean', 'description': 'Also post reply to channel when replying to a thread'},
+                            'unfurl_links': {'type': 'boolean', 'description': 'Enable unfurling of primarily text-based content'},
+                            'unfurl_media': {'type': 'boolean', 'description': 'Enable unfurling of media content'},
+                        },
+                        'required': ['channel', 'text'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating a message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': ['string', 'null'],
+                                'description': 'Channel ID where message was posted',
+                            },
+                            'ts': {
+                                'type': ['string', 'null'],
+                                'description': 'Message timestamp (unique identifier)',
+                            },
+                            'message': {
+                                'type': 'object',
+                                'description': 'A message object returned from create/update operations',
+                                'properties': {
+                                    'type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message type',
+                                    },
+                                    'subtype': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message subtype',
+                                    },
+                                    'text': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message text content',
+                                    },
+                                    'ts': {'type': 'string', 'description': 'Message timestamp (unique identifier)'},
+                                    'user': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID who sent the message',
+                                    },
+                                    'bot_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bot ID if message was sent by a bot',
+                                    },
+                                    'app_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'App ID if message was sent by an app',
+                                    },
+                                    'team': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Team ID',
+                                    },
+                                    'bot_profile': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Bot profile information',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Bot ID',
+                                                    },
+                                                    'deleted': {
+                                                        'type': ['boolean', 'null'],
+                                                        'description': 'Whether the bot is deleted',
+                                                    },
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Bot name',
+                                                    },
+                                                    'updated': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp of last update',
+                                                    },
+                                                    'app_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'App ID',
+                                                    },
+                                                    'team_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Team ID',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Bot profile information',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.message',
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/chat.update',
+                    action=Action.UPDATE,
+                    description='Updates an existing message in a channel',
+                    body_fields=['channel', 'ts', 'text'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a message',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID containing the message'},
+                            'ts': {'type': 'string', 'description': 'Timestamp of the message to update'},
+                            'text': {'type': 'string', 'description': 'New message text content'},
+                        },
+                        'required': ['channel', 'ts', 'text'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from updating a message',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': ['string', 'null'],
+                                'description': 'Channel ID where message was updated',
+                            },
+                            'ts': {
+                                'type': ['string', 'null'],
+                                'description': 'Message timestamp',
+                            },
+                            'text': {
+                                'type': ['string', 'null'],
+                                'description': 'Updated message text',
+                            },
+                            'message': {
+                                'type': 'object',
+                                'description': 'A message object returned from create/update operations',
+                                'properties': {
+                                    'type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message type',
+                                    },
+                                    'subtype': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message subtype',
+                                    },
+                                    'text': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Message text content',
+                                    },
+                                    'ts': {'type': 'string', 'description': 'Message timestamp (unique identifier)'},
+                                    'user': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID who sent the message',
+                                    },
+                                    'bot_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Bot ID if message was sent by a bot',
+                                    },
+                                    'app_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'App ID if message was sent by an app',
+                                    },
+                                    'team': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Team ID',
+                                    },
+                                    'bot_profile': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Bot profile information',
+                                                'properties': {
+                                                    'id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Bot ID',
+                                                    },
+                                                    'deleted': {
+                                                        'type': ['boolean', 'null'],
+                                                        'description': 'Whether the bot is deleted',
+                                                    },
+                                                    'name': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Bot name',
+                                                    },
+                                                    'updated': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp of last update',
+                                                    },
+                                                    'app_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'App ID',
+                                                    },
+                                                    'team_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Team ID',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Bot profile information',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.message',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='channel_topics',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.setTopic',
+                    action=Action.CREATE,
+                    description='Sets the topic for a channel',
+                    body_fields=['channel', 'topic'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for setting channel topic',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID to set topic for'},
+                            'topic': {'type': 'string', 'description': 'New topic text (max 250 characters)'},
+                        },
+                        'required': ['channel', 'topic'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from setting channel topic',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': 'object',
+                                'description': 'Slack channel object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'Unique channel identifier'},
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Channel name',
+                                    },
+                                    'is_channel': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a channel',
+                                    },
+                                    'is_group': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a group',
+                                    },
+                                    'is_im': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a direct message',
+                                    },
+                                    'is_mpim': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a multi-party direct message',
+                                    },
+                                    'is_private': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is private',
+                                    },
+                                    'created': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of channel creation',
+                                    },
+                                    'is_archived': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is archived',
+                                    },
+                                    'is_general': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is the general channel',
+                                    },
+                                    'unlinked': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unlinked timestamp',
+                                    },
+                                    'name_normalized': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Normalized channel name',
+                                    },
+                                    'is_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared',
+                                    },
+                                    'is_org_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared across the organization',
+                                    },
+                                    'is_pending_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether external sharing is pending',
+                                    },
+                                    'pending_shared': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Pending shared teams',
+                                    },
+                                    'context_team_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Context team ID',
+                                    },
+                                    'updated': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of last update',
+                                    },
+                                    'creator': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID of the channel creator',
+                                    },
+                                    'is_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is externally shared',
+                                    },
+                                    'shared_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams the channel is shared with',
+                                    },
+                                    'pending_connected_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams with pending connection',
+                                    },
+                                    'is_member': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the authenticated user is a member',
+                                    },
+                                    'topic': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel topic information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Topic text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the topic',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when topic was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel topic',
+                                    },
+                                    'purpose': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel purpose information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Purpose text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the purpose',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when purpose was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel purpose',
+                                    },
+                                    'previous_names': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Previous channel names',
+                                    },
+                                    'num_members': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Number of members in the channel',
+                                    },
+                                    'parent_conversation': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Parent conversation ID if this is a thread',
+                                    },
+                                    'properties': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Additional channel properties',
+                                    },
+                                    'is_thread_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is thread-only',
+                                    },
+                                    'is_read_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is read-only',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'channels',
+                                'x-airbyte-stream-name': 'channels',
+                            },
+                        },
+                    },
+                    record_extractor='$.channel',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='channel_purposes',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/conversations.setPurpose',
+                    action=Action.CREATE,
+                    description='Sets the purpose for a channel',
+                    body_fields=['channel', 'purpose'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for setting channel purpose',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID to set purpose for'},
+                            'purpose': {'type': 'string', 'description': 'New purpose text (max 250 characters)'},
+                        },
+                        'required': ['channel', 'purpose'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from setting channel purpose',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                            'channel': {
+                                'type': 'object',
+                                'description': 'Slack channel object',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'Unique channel identifier'},
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Channel name',
+                                    },
+                                    'is_channel': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a channel',
+                                    },
+                                    'is_group': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a group',
+                                    },
+                                    'is_im': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a direct message',
+                                    },
+                                    'is_mpim': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is a multi-party direct message',
+                                    },
+                                    'is_private': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is private',
+                                    },
+                                    'created': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of channel creation',
+                                    },
+                                    'is_archived': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is archived',
+                                    },
+                                    'is_general': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether this is the general channel',
+                                    },
+                                    'unlinked': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unlinked timestamp',
+                                    },
+                                    'name_normalized': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Normalized channel name',
+                                    },
+                                    'is_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared',
+                                    },
+                                    'is_org_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is shared across the organization',
+                                    },
+                                    'is_pending_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether external sharing is pending',
+                                    },
+                                    'pending_shared': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Pending shared teams',
+                                    },
+                                    'context_team_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Context team ID',
+                                    },
+                                    'updated': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Unix timestamp of last update',
+                                    },
+                                    'creator': {
+                                        'type': ['string', 'null'],
+                                        'description': 'User ID of the channel creator',
+                                    },
+                                    'is_ext_shared': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is externally shared',
+                                    },
+                                    'shared_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams the channel is shared with',
+                                    },
+                                    'pending_connected_team_ids': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'IDs of teams with pending connection',
+                                    },
+                                    'is_member': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the authenticated user is a member',
+                                    },
+                                    'topic': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel topic information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Topic text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the topic',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when topic was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel topic',
+                                    },
+                                    'purpose': {
+                                        'oneOf': [
+                                            {
+                                                'type': 'object',
+                                                'description': 'Channel purpose information',
+                                                'properties': {
+                                                    'value': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Purpose text',
+                                                    },
+                                                    'creator': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'User ID who set the purpose',
+                                                    },
+                                                    'last_set': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Unix timestamp when purpose was last set',
+                                                    },
+                                                },
+                                            },
+                                            {'type': 'null'},
+                                        ],
+                                        'description': 'Channel purpose',
+                                    },
+                                    'previous_names': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'string'},
+                                        'description': 'Previous channel names',
+                                    },
+                                    'num_members': {
+                                        'type': ['integer', 'null'],
+                                        'description': 'Number of members in the channel',
+                                    },
+                                    'parent_conversation': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Parent conversation ID if this is a thread',
+                                    },
+                                    'properties': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Additional channel properties',
+                                    },
+                                    'is_thread_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is thread-only',
+                                    },
+                                    'is_read_only': {
+                                        'type': ['boolean', 'null'],
+                                        'description': 'Whether the channel is read-only',
+                                    },
+                                },
+                                'x-airbyte-entity-name': 'channels',
+                                'x-airbyte-stream-name': 'channels',
+                            },
+                        },
+                    },
+                    record_extractor='$.channel',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='reactions',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/reactions.add',
+                    action=Action.CREATE,
+                    description='Adds a reaction (emoji) to a message',
+                    body_fields=['channel', 'timestamp', 'name'],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for adding a reaction',
+                        'properties': {
+                            'channel': {'type': 'string', 'description': 'Channel ID containing the message'},
+                            'timestamp': {'type': 'string', 'description': 'Timestamp of the message to react to'},
+                            'name': {'type': 'string', 'description': 'Reaction emoji name (without colons, e.g., "thumbsup")'},
+                        },
+                        'required': ['channel', 'timestamp', 'name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from adding a reaction',
+                        'properties': {
+                            'ok': {'type': 'boolean', 'description': 'Whether the request was successful'},
+                        },
+                    },
+                    record_extractor='$',
+                ),
             },
         ),
     ],
