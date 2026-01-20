@@ -55,3 +55,44 @@ class ThreadsListParams(TypedDict):
     latest: NotRequired[str]
     inclusive: NotRequired[bool]
 
+class MessagesCreateParams(TypedDict):
+    """Parameters for messages.create operation"""
+    channel: str
+    text: str
+    thread_ts: NotRequired[str]
+    reply_broadcast: NotRequired[bool]
+    unfurl_links: NotRequired[bool]
+    unfurl_media: NotRequired[bool]
+
+class MessagesUpdateParams(TypedDict):
+    """Parameters for messages.update operation"""
+    channel: str
+    ts: str
+    text: str
+
+class ChannelsCreateParams(TypedDict):
+    """Parameters for channels.create operation"""
+    name: str
+    is_private: NotRequired[bool]
+
+class ChannelsUpdateParams(TypedDict):
+    """Parameters for channels.update operation"""
+    channel: str
+    name: str
+
+class ChannelTopicsCreateParams(TypedDict):
+    """Parameters for channel_topics.create operation"""
+    channel: str
+    topic: str
+
+class ChannelPurposesCreateParams(TypedDict):
+    """Parameters for channel_purposes.create operation"""
+    channel: str
+    purpose: str
+
+class ReactionsCreateParams(TypedDict):
+    """Parameters for reactions.create operation"""
+    channel: str
+    timestamp: str
+    name: str
+
