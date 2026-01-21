@@ -109,6 +109,12 @@ class AirbyteAuthConfig(BaseModel):
         description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
     )
 
+    # Replication connector auth constants
+    replication_auth_key_constants: Dict[str, Any] | None = Field(
+        None,
+        description="Constant values to always inject at source config paths (e.g., 'credentials.auth_type': 'OAuth2.0')",
+    )
+
     # Multiple options (oneOf)
     one_of: List[AuthConfigOption] | None = Field(None, alias="oneOf")
 
