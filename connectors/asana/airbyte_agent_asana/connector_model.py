@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.6',
+    version='0.1.7',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -76,9 +76,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'client_secret': '${client_secret}',
                     },
                     replication_auth_key_mapping={
-                        'client_id': 'client_id',
-                        'client_secret': 'client_secret',
-                        'refresh_token': 'refresh_token',
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
                     },
                 ),
             ),
@@ -98,7 +98,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'token': '${token}'},
-                    replication_auth_key_mapping={'personal_access_token': 'token'},
+                    replication_auth_key_mapping={'credentials.personal_access_token': 'token'},
                 ),
             ),
         ],
