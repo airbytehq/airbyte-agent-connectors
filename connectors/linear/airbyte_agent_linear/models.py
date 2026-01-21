@@ -184,6 +184,173 @@ class TeamResponse(BaseModel):
 
     data: Union[TeamResponseData, Any] = Field(default=None)
 
+class IssueCreateParams(BaseModel):
+    """Parameters for creating an issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    team_id: Union[str, Any] = Field(default=None, alias="teamId")
+    title: Union[str, Any] = Field(default=None)
+    description: Union[str, Any] = Field(default=None)
+    state_id: Union[str, Any] = Field(default=None, alias="stateId")
+    priority: Union[int, Any] = Field(default=None)
+
+class IssueUpdateParams(BaseModel):
+    """Parameters for updating an issue. All fields except id are optional for partial updates."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+    description: Union[str, Any] = Field(default=None)
+    state_id: Union[str, Any] = Field(default=None, alias="stateId")
+    priority: Union[int, Any] = Field(default=None)
+
+class IssueWithState(BaseModel):
+    """Issue object with state ID included"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+    description: Union[Any, Any] = Field(default=None)
+    state: Union[Any, Any] = Field(default=None)
+    priority: Union[Any, Any] = Field(default=None)
+    assignee: Union[Any, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+
+class IssueMutationPayload(BaseModel):
+    """Issue mutation result"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    success: Union[bool, Any] = Field(default=None)
+    issue: Union[IssueWithState, Any] = Field(default=None)
+
+class IssueCreateResponseData(BaseModel):
+    """Nested schema for IssueCreateResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    issue_create: Union[IssueMutationPayload, Any] = Field(default=None, alias="issueCreate")
+
+class IssueCreateResponse(BaseModel):
+    """GraphQL response for issue creation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[IssueCreateResponseData, Any] = Field(default=None)
+
+class IssueUpdateResponseData(BaseModel):
+    """Nested schema for IssueUpdateResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    issue_update: Union[IssueMutationPayload, Any] = Field(default=None, alias="issueUpdate")
+
+class IssueUpdateResponse(BaseModel):
+    """GraphQL response for issue update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[IssueUpdateResponseData, Any] = Field(default=None)
+
+class Comment(BaseModel):
+    """Linear comment object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    body: Union[str, Any] = Field(default=None)
+    user: Union[Any, Any] = Field(default=None)
+    issue: Union[Any, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+
+class CommentsListResponseDataIssueCommentsPageinfo(BaseModel):
+    """Pagination information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    """Whether there are more items available"""
+    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    """Cursor to fetch next page"""
+
+class CommentsListResponseDataIssueComments(BaseModel):
+    """Nested schema for CommentsListResponseDataIssue.comments"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    nodes: Union[list[Comment], Any] = Field(default=None)
+    page_info: Union[CommentsListResponseDataIssueCommentsPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    """Pagination information"""
+
+class CommentsListResponseDataIssue(BaseModel):
+    """Nested schema for CommentsListResponseData.issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comments: Union[CommentsListResponseDataIssueComments, Any] = Field(default=None)
+
+class CommentsListResponseData(BaseModel):
+    """Nested schema for CommentsListResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    issue: Union[CommentsListResponseDataIssue, Any] = Field(default=None)
+
+class CommentsListResponse(BaseModel):
+    """GraphQL response for comments list"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[CommentsListResponseData, Any] = Field(default=None)
+
+class CommentResponseData(BaseModel):
+    """Nested schema for CommentResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comment: Union[Comment, Any] = Field(default=None)
+
+class CommentResponse(BaseModel):
+    """GraphQL response for single comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[CommentResponseData, Any] = Field(default=None)
+
+class CommentCreateParams(BaseModel):
+    """Parameters for creating a comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    issue_id: Union[str, Any] = Field(default=None, alias="issueId")
+    body: Union[str, Any] = Field(default=None)
+
+class CommentUpdateParams(BaseModel):
+    """Parameters for updating a comment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    body: Union[str, Any] = Field(default=None)
+
+class CommentMutationPayload(BaseModel):
+    """Comment mutation result"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    success: Union[bool, Any] = Field(default=None)
+    comment: Union[Comment, Any] = Field(default=None)
+
+class CommentCreateResponseData(BaseModel):
+    """Nested schema for CommentCreateResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comment_create: Union[CommentMutationPayload, Any] = Field(default=None, alias="commentCreate")
+
+class CommentCreateResponse(BaseModel):
+    """GraphQL response for comment creation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[CommentCreateResponseData, Any] = Field(default=None)
+
+class CommentUpdateResponseData(BaseModel):
+    """Nested schema for CommentUpdateResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    comment_update: Union[CommentMutationPayload, Any] = Field(default=None, alias="commentUpdate")
+
+class CommentUpdateResponse(BaseModel):
+    """GraphQL response for comment update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[CommentUpdateResponseData, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
@@ -228,4 +395,7 @@ ProjectsListResult = LinearExecuteResult[ProjectsListResponse]
 
 TeamsListResult = LinearExecuteResult[TeamsListResponse]
 """Result type for teams.list operation."""
+
+CommentsListResult = LinearExecuteResult[CommentsListResponse]
+"""Result type for comments.list operation."""
 

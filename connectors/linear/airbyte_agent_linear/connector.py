@@ -14,8 +14,14 @@ except ImportError:
 from .connector_model import LinearConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
+    CommentsCreateParams,
+    CommentsGetParams,
+    CommentsListParams,
+    CommentsUpdateParams,
+    IssuesCreateParams,
     IssuesGetParams,
     IssuesListParams,
+    IssuesUpdateParams,
     ProjectsGetParams,
     ProjectsListParams,
     TeamsGetParams,
@@ -30,7 +36,14 @@ from .models import (
     IssuesListResult,
     ProjectsListResult,
     TeamsListResult,
+    CommentsListResult,
+    CommentCreateResponse,
+    CommentResponse,
+    CommentUpdateResponse,
+    CommentsListResponse,
+    IssueCreateResponse,
     IssueResponse,
+    IssueUpdateResponse,
     IssuesListResponse,
     ProjectResponse,
     ProjectsListResponse,
@@ -58,10 +71,16 @@ class LinearConnector:
     _ENVELOPE_MAP = {
         ("issues", "list"): True,
         ("issues", "get"): None,
+        ("issues", "create"): None,
+        ("issues", "update"): None,
         ("projects", "list"): True,
         ("projects", "get"): None,
         ("teams", "list"): True,
         ("teams", "get"): None,
+        ("comments", "list"): True,
+        ("comments", "get"): None,
+        ("comments", "create"): None,
+        ("comments", "update"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -69,10 +88,16 @@ class LinearConnector:
     _PARAM_MAP = {
         ('issues', 'list'): {'first': 'first', 'after': 'after'},
         ('issues', 'get'): {'id': 'id'},
+        ('issues', 'create'): {'team_id': 'teamId', 'title': 'title', 'description': 'description', 'state_id': 'stateId', 'priority': 'priority'},
+        ('issues', 'update'): {'id': 'id', 'title': 'title', 'description': 'description', 'state_id': 'stateId', 'priority': 'priority'},
         ('projects', 'list'): {'first': 'first', 'after': 'after'},
         ('projects', 'get'): {'id': 'id'},
         ('teams', 'list'): {'first': 'first', 'after': 'after'},
         ('teams', 'get'): {'id': 'id'},
+        ('comments', 'list'): {'issue_id': 'issueId', 'first': 'first', 'after': 'after'},
+        ('comments', 'get'): {'id': 'id'},
+        ('comments', 'create'): {'issue_id': 'issueId', 'body': 'body'},
+        ('comments', 'update'): {'id': 'id', 'body': 'body'},
     }
 
     def __init__(
@@ -153,6 +178,7 @@ class LinearConnector:
         self.issues = IssuesQuery(self)
         self.projects = ProjectsQuery(self)
         self.teams = TeamsQuery(self)
+        self.comments = CommentsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -171,6 +197,22 @@ class LinearConnector:
         action: Literal["get"],
         params: "IssuesGetParams"
     ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["create"],
+        params: "IssuesCreateParams"
+    ) -> "IssueCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["update"],
+        params: "IssuesUpdateParams"
+    ) -> "IssueUpdateResponse": ...
 
     @overload
     async def execute(
@@ -203,6 +245,38 @@ class LinearConnector:
         action: Literal["get"],
         params: "TeamsGetParams"
     ) -> "TeamResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["list"],
+        params: "CommentsListParams"
+    ) -> "CommentsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["get"],
+        params: "CommentsGetParams"
+    ) -> "CommentResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["create"],
+        params: "CommentsCreateParams"
+    ) -> "CommentCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["update"],
+        params: "CommentsUpdateParams"
+    ) -> "CommentUpdateResponse": ...
 
 
     @overload
@@ -427,6 +501,80 @@ class IssuesQuery:
 
 
 
+    async def create(
+        self,
+        team_id: str,
+        title: str,
+        description: str | None = None,
+        state_id: str | None = None,
+        priority: int | None = None,
+        **kwargs
+    ) -> IssueCreateResponse:
+        """
+        Create a new issue via GraphQL mutation
+
+        Args:
+            team_id: The ID of the team to create the issue in
+            title: The title of the issue
+            description: The description of the issue (supports markdown)
+            state_id: The ID of the workflow state for the issue
+            priority: The priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueCreateResponse
+        """
+        params = {k: v for k, v in {
+            "teamId": team_id,
+            "title": title,
+            "description": description,
+            "stateId": state_id,
+            "priority": priority,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        id: str | None = None,
+        title: str | None = None,
+        description: str | None = None,
+        state_id: str | None = None,
+        priority: int | None = None,
+        **kwargs
+    ) -> IssueUpdateResponse:
+        """
+        Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.
+
+        Args:
+            id: The ID of the issue to update
+            title: The new title of the issue
+            description: The new description of the issue (supports markdown)
+            state_id: The ID of the new workflow state for the issue
+            priority: The new priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueUpdateResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "title": title,
+            "description": description,
+            "stateId": state_id,
+            "priority": priority,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "update", params)
+        return result
+
+
+
 class ProjectsQuery:
     """
     Query class for Projects entity operations.
@@ -553,6 +701,130 @@ class TeamsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("teams", "get", params)
+        return result
+
+
+
+class CommentsQuery:
+    """
+    Query class for Comments entity operations.
+    """
+
+    def __init__(self, connector: LinearConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        issue_id: str,
+        first: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> CommentsListResult:
+        """
+        Returns a paginated list of comments for an issue via GraphQL
+
+        Args:
+            issue_id: Issue ID to get comments for
+            first: Number of items to return (max 250)
+            after: Cursor to start after (for pagination)
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentsListResult
+        """
+        params = {k: v for k, v in {
+            "issueId": issue_id,
+            "first": first,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CommentsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> CommentResponse:
+        """
+        Get a single comment by ID via GraphQL
+
+        Args:
+            id: Comment ID
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "get", params)
+        return result
+
+
+
+    async def create(
+        self,
+        issue_id: str,
+        body: str,
+        **kwargs
+    ) -> CommentCreateResponse:
+        """
+        Create a new comment on an issue via GraphQL mutation
+
+        Args:
+            issue_id: The ID of the issue to add the comment to
+            body: The comment content in markdown
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentCreateResponse
+        """
+        params = {k: v for k, v in {
+            "issueId": issue_id,
+            "body": body,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        body: str,
+        id: str | None = None,
+        **kwargs
+    ) -> CommentUpdateResponse:
+        """
+        Update an existing comment via GraphQL mutation
+
+        Args:
+            id: The ID of the comment to update
+            body: The new comment content in markdown
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentUpdateResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "body": body,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "update", params)
         return result
 
 

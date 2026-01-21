@@ -53,7 +53,12 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='issues',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -253,6 +258,198 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         'type': 'graphql',
                         'query': 'query($id: String!) { issue(id: $id) { id title description state { name } priority assignee { name email } createdAt updatedAt } }',
                         'variables': {'id': '{{ id }}'},
+                    },
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:createIssue',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.CREATE,
+                    description='Create a new issue via GraphQL mutation',
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for issue creation',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'issueCreate': {
+                                        'type': 'object',
+                                        'description': 'Issue mutation result',
+                                        'properties': {
+                                            'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
+                                            'issue': {
+                                                'type': 'object',
+                                                'description': 'Issue object with state ID included',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'Unique issue identifier'},
+                                                    'title': {'type': 'string', 'description': 'Issue title'},
+                                                    'description': {
+                                                        'oneOf': [
+                                                            {'type': 'string'},
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue description',
+                                                    },
+                                                    'state': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'name': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue state with ID',
+                                                    },
+                                                    'priority': {
+                                                        'oneOf': [
+                                                            {'type': 'number'},
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue priority (0-4)',
+                                                    },
+                                                    'assignee': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'name': {'type': 'string'},
+                                                                    'email': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Assigned user',
+                                                    },
+                                                    'createdAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Creation timestamp',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Last update timestamp',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation($teamId: String!, $title: String!, $description: String, $stateId: String, $priority: Int) { issueCreate(input: { teamId: $teamId, title: $title, description: $description, stateId: $stateId, priority: $priority }) { success issue { id title description state { id name } priority assignee { name email } createdAt updatedAt } } }',
+                        'variables': {
+                            'teamId': '{{ teamId }}',
+                            'title': '{{ title }}',
+                            'description': '{{ description }}',
+                            'stateId': '{{ stateId }}',
+                            'priority': '{{ priority }}',
+                        },
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:updateIssue',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.UPDATE,
+                    description='Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.',
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for issue update',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'issueUpdate': {
+                                        'type': 'object',
+                                        'description': 'Issue mutation result',
+                                        'properties': {
+                                            'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
+                                            'issue': {
+                                                'type': 'object',
+                                                'description': 'Issue object with state ID included',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'Unique issue identifier'},
+                                                    'title': {'type': 'string', 'description': 'Issue title'},
+                                                    'description': {
+                                                        'oneOf': [
+                                                            {'type': 'string'},
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue description',
+                                                    },
+                                                    'state': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'name': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue state with ID',
+                                                    },
+                                                    'priority': {
+                                                        'oneOf': [
+                                                            {'type': 'number'},
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue priority (0-4)',
+                                                    },
+                                                    'assignee': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'name': {'type': 'string'},
+                                                                    'email': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Assigned user',
+                                                    },
+                                                    'createdAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Creation timestamp',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Last update timestamp',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation($id: String!, $title: String, $description: String, $stateId: String, $priority: Int) { issueUpdate(id: $id, input: { title: $title, description: $description, stateId: $stateId, priority: $priority }) { success issue { id title description state { id name } priority assignee { name email } createdAt updatedAt } } }',
+                        'variables': {
+                            'id': '{{ id }}',
+                            'title': '{{ title }}',
+                            'description': '{{ description }}',
+                            'stateId': '{{ stateId }}',
+                            'priority': '{{ priority }}',
+                        },
                     },
                 ),
             },
@@ -778,6 +975,408 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id', 'name', 'key'],
                 'x-airbyte-entity-name': 'teams',
+            },
+        ),
+        EntityDefinition(
+            name='comments',
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+            ],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:listComments',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a paginated list of comments for an issue via GraphQL',
+                    query_params=['issueId', 'first', 'after'],
+                    query_params_schema={
+                        'issueId': {'type': 'string', 'required': True},
+                        'first': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for comments list',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'issue': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'comments': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'nodes': {
+                                                        'type': 'array',
+                                                        'items': {
+                                                            'type': 'object',
+                                                            'description': 'Linear comment object',
+                                                            'properties': {
+                                                                'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                                                                'body': {'type': 'string', 'description': 'Comment content in markdown'},
+                                                                'user': {
+                                                                    'oneOf': [
+                                                                        {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'id': {'type': 'string'},
+                                                                                'name': {'type': 'string'},
+                                                                                'email': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                        {'type': 'null'},
+                                                                    ],
+                                                                    'description': 'User who created the comment',
+                                                                },
+                                                                'issue': {
+                                                                    'oneOf': [
+                                                                        {
+                                                                            'type': 'object',
+                                                                            'properties': {
+                                                                                'id': {'type': 'string'},
+                                                                                'title': {'type': 'string'},
+                                                                            },
+                                                                        },
+                                                                        {'type': 'null'},
+                                                                    ],
+                                                                    'description': 'Issue the comment belongs to',
+                                                                },
+                                                                'createdAt': {
+                                                                    'type': 'string',
+                                                                    'format': 'date-time',
+                                                                    'description': 'Creation timestamp',
+                                                                },
+                                                                'updatedAt': {
+                                                                    'type': 'string',
+                                                                    'format': 'date-time',
+                                                                    'description': 'Last update timestamp',
+                                                                },
+                                                            },
+                                                            'required': ['id', 'body'],
+                                                            'x-airbyte-entity-name': 'comments',
+                                                        },
+                                                    },
+                                                    'pageInfo': {
+                                                        'type': 'object',
+                                                        'description': 'Pagination information',
+                                                        'properties': {
+                                                            'hasNextPage': {'type': 'boolean', 'description': 'Whether there are more items available'},
+                                                            'endCursor': {
+                                                                'type': ['string', 'null'],
+                                                                'description': 'Cursor to fetch next page',
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query($issueId: String!, $first: Int, $after: String) { issue(id: $issueId) { comments(first: $first, after: $after) { nodes { id body user { id name email } createdAt updatedAt } pageInfo { hasNextPage endCursor } } } }',
+                        'variables': {
+                            'issueId': '{{ issueId }}',
+                            'first': '{{ first }}',
+                            'after': '{{ after }}',
+                        },
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:getComment',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description='Get a single comment by ID via GraphQL',
+                    query_params=['id'],
+                    query_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for single comment',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'comment': {
+                                        'type': 'object',
+                                        'description': 'Linear comment object',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                                            'body': {'type': 'string', 'description': 'Comment content in markdown'},
+                                            'user': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'name': {'type': 'string'},
+                                                            'email': {'type': 'string'},
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                                'description': 'User who created the comment',
+                                            },
+                                            'issue': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'title': {'type': 'string'},
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                                'description': 'Issue the comment belongs to',
+                                            },
+                                            'createdAt': {
+                                                'type': 'string',
+                                                'format': 'date-time',
+                                                'description': 'Creation timestamp',
+                                            },
+                                            'updatedAt': {
+                                                'type': 'string',
+                                                'format': 'date-time',
+                                                'description': 'Last update timestamp',
+                                            },
+                                        },
+                                        'required': ['id', 'body'],
+                                        'x-airbyte-entity-name': 'comments',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query($id: String!) { comment(id: $id) { id body user { id name email } issue { id title } createdAt updatedAt } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:createComment',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.CREATE,
+                    description='Create a new comment on an issue via GraphQL mutation',
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for comment creation',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'commentCreate': {
+                                        'type': 'object',
+                                        'description': 'Comment mutation result',
+                                        'properties': {
+                                            'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
+                                            'comment': {
+                                                'type': 'object',
+                                                'description': 'Linear comment object',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                                                    'body': {'type': 'string', 'description': 'Comment content in markdown'},
+                                                    'user': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'name': {'type': 'string'},
+                                                                    'email': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'User who created the comment',
+                                                    },
+                                                    'issue': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'title': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue the comment belongs to',
+                                                    },
+                                                    'createdAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Creation timestamp',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Last update timestamp',
+                                                    },
+                                                },
+                                                'required': ['id', 'body'],
+                                                'x-airbyte-entity-name': 'comments',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId, body: $body }) { success comment { id body user { id name email } createdAt updatedAt } } }',
+                        'variables': {'issueId': '{{ issueId }}', 'body': '{{ body }}'},
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:updateComment',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.UPDATE,
+                    description='Update an existing comment via GraphQL mutation',
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for comment update',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'commentUpdate': {
+                                        'type': 'object',
+                                        'description': 'Comment mutation result',
+                                        'properties': {
+                                            'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
+                                            'comment': {
+                                                'type': 'object',
+                                                'description': 'Linear comment object',
+                                                'properties': {
+                                                    'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                                                    'body': {'type': 'string', 'description': 'Comment content in markdown'},
+                                                    'user': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'name': {'type': 'string'},
+                                                                    'email': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'User who created the comment',
+                                                    },
+                                                    'issue': {
+                                                        'oneOf': [
+                                                            {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'id': {'type': 'string'},
+                                                                    'title': {'type': 'string'},
+                                                                },
+                                                            },
+                                                            {'type': 'null'},
+                                                        ],
+                                                        'description': 'Issue the comment belongs to',
+                                                    },
+                                                    'createdAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Creation timestamp',
+                                                    },
+                                                    'updatedAt': {
+                                                        'type': 'string',
+                                                        'format': 'date-time',
+                                                        'description': 'Last update timestamp',
+                                                    },
+                                                },
+                                                'required': ['id', 'body'],
+                                                'x-airbyte-entity-name': 'comments',
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'mutation($id: String!, $body: String!) { commentUpdate(id: $id, input: { body: $body }) { success comment { id body user { id name email } createdAt updatedAt } } }',
+                        'variables': {'id': '{{ id }}', 'body': '{{ body }}'},
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Linear comment object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                    'body': {'type': 'string', 'description': 'Comment content in markdown'},
+                    'user': {
+                        'oneOf': [
+                            {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                    'email': {'type': 'string'},
+                                },
+                            },
+                            {'type': 'null'},
+                        ],
+                        'description': 'User who created the comment',
+                    },
+                    'issue': {
+                        'oneOf': [
+                            {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string'},
+                                    'title': {'type': 'string'},
+                                },
+                            },
+                            {'type': 'null'},
+                        ],
+                        'description': 'Issue the comment belongs to',
+                    },
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                },
+                'required': ['id', 'body'],
+                'x-airbyte-entity-name': 'comments',
             },
         ),
     ],

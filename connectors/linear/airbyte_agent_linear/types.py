@@ -25,6 +25,22 @@ class IssuesGetParams(TypedDict):
     """Parameters for issues.get operation"""
     id: str
 
+class IssuesCreateParams(TypedDict):
+    """Parameters for issues.create operation"""
+    team_id: str
+    title: str
+    description: NotRequired[str]
+    state_id: NotRequired[str]
+    priority: NotRequired[int]
+
+class IssuesUpdateParams(TypedDict):
+    """Parameters for issues.update operation"""
+    id: str
+    title: NotRequired[str]
+    description: NotRequired[str]
+    state_id: NotRequired[str]
+    priority: NotRequired[int]
+
 class ProjectsListParams(TypedDict):
     """Parameters for projects.list operation"""
     first: NotRequired[int]
@@ -42,4 +58,24 @@ class TeamsListParams(TypedDict):
 class TeamsGetParams(TypedDict):
     """Parameters for teams.get operation"""
     id: str
+
+class CommentsListParams(TypedDict):
+    """Parameters for comments.list operation"""
+    issue_id: str
+    first: NotRequired[int]
+    after: NotRequired[str]
+
+class CommentsGetParams(TypedDict):
+    """Parameters for comments.get operation"""
+    id: str
+
+class CommentsCreateParams(TypedDict):
+    """Parameters for comments.create operation"""
+    issue_id: str
+    body: str
+
+class CommentsUpdateParams(TypedDict):
+    """Parameters for comments.update operation"""
+    id: str
+    body: str
 
