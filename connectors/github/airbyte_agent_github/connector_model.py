@@ -30,7 +30,7 @@ from uuid import (
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('ef69ef6e-aa7f-4af1-a01d-ef775033524e'),
     name='github',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
@@ -50,7 +50,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'access_token': '${access_token}'},
-                    replication_auth_key_mapping={'access_token': 'access_token'},
+                    replication_auth_key_mapping={'credentials.access_token': 'access_token'},
                 ),
             ),
             AuthOption(
@@ -69,7 +69,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         ),
                     },
                     auth_mapping={'token': '${token}'},
-                    replication_auth_key_mapping={'personal_access_token': 'token'},
+                    replication_auth_key_mapping={'credentials.personal_access_token': 'token'},
                 ),
             ),
         ],
