@@ -64,6 +64,7 @@ class _OperationContext:
         self.build_path = executor._build_path
         self.extract_query_params = executor._extract_query_params
         self.extract_body = executor._extract_body
+        self.extract_header_params = executor._extract_header_params
         self.build_request_body = executor._build_request_body
         self.determine_request_format = executor._determine_request_format
         self.validate_required_body_fields = executor._validate_required_body_fields
@@ -693,6 +694,42 @@ class LocalExecutor:
         """
         return {key: value for key, value in params.items() if key in allowed_fields and value is not None}
 
+    def _extract_header_params(
+        self, endpoint: EndpointDefinition, params: dict[str, Any], body: dict[str, Any] | None = None
+    ) -> dict[str, str]:
+        """Extract header parameters from params and schema defaults.
+
+        Also adds Content-Type header when there's a request body (unless already specified
+        as a header parameter in the OpenAPI spec).
+
+        Args:
+            endpoint: Endpoint definition with header_params and header_params_schema
+            params: All parameters
+            body: Request body (if any) - used to determine if Content-Type should be added
+
+        Returns:
+            Dictionary of header name -> value
+        """
+        headers: dict[str, str] = {}
+
+        for header_name in endpoint.header_params:
+            # Check if value is provided in params
+            if header_name in params and params[header_name] is not None:
+                headers[header_name] = str(params[header_name])
+            # Otherwise, use default from schema if available
+            elif header_name in endpoint.header_params_schema:
+                default_value = endpoint.header_params_schema[header_name].get("default")
+                if default_value is not None:
+                    headers[header_name] = str(default_value)
+
+        # Add Content-Type header when there's a request body, but only if not already
+        # specified as a header parameter (which allows custom content types like
+        # application/vnd.spCampaign.v3+json)
+        if body is not None and endpoint.content_type and "Content-Type" not in headers:
+            headers["Content-Type"] = endpoint.content_type.value
+
+        return headers
+
     def _serialize_deep_object_params(self, params: dict[str, Any], deep_object_param_names: list[str]) -> dict[str, Any]:
         """Serialize deepObject parameters to bracket notation format.
 
@@ -848,7 +885,15 @@ class LocalExecutor:
             param_defaults = {name: schema.get("default") for name, schema in endpoint.query_params_schema.items() if "default" in schema}
             return self._build_graphql_body(endpoint.graphql_body, params, param_defaults)
         elif endpoint.body_fields:
-            return self._extract_body(endpoint.body_fields, params)
+            # Start with defaults from request body schema
+            body = dict(endpoint.request_body_defaults)
+            # Override with user-provided params (filtering out None values)
+            user_body = self._extract_body(endpoint.body_fields, params)
+            body.update(user_body)
+            return body if body else None
+        elif endpoint.request_body_defaults:
+            # If no body_fields but we have defaults, return the defaults
+            return dict(endpoint.request_body_defaults)
         return None
 
     def _flatten_form_data(self, data: dict[str, Any], parent_key: str = "") -> dict[str, Any]:
@@ -1484,6 +1529,9 @@ class _StandardOperationHandler:
                 # Determine request format (json/data parameters)
                 request_kwargs = self.ctx.determine_request_format(endpoint, body)
 
+                # Extract header parameters from OpenAPI operation (pass body to add Content-Type)
+                header_params = self.ctx.extract_header_params(endpoint, params, body)
+
                 # Execute async HTTP request
                 response_data, response_headers = await self.ctx.http_client.request(
                     method=endpoint.method,
@@ -1491,6 +1539,7 @@ class _StandardOperationHandler:
                     params=query_params if query_params else None,
                     json=request_kwargs.get("json"),
                     data=request_kwargs.get("data"),
+                    headers=header_params if header_params else None,
                 )
 
                 # Extract metadata from original response (before record extraction)
