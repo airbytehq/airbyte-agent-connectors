@@ -77,6 +77,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'after': {'type': 'string', 'required': False},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'listIssues',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for issues list',
@@ -184,6 +192,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'getIssue',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for single issue',
@@ -268,6 +284,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.CREATE,
                     description='Create a new issue via GraphQL mutation',
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'createIssue',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for issue creation',
@@ -364,6 +388,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.UPDATE,
                     description='Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.',
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'updateIssue',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for issue update',
@@ -534,6 +566,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'after': {'type': 'string', 'required': False},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'listProjects',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for projects list',
@@ -642,6 +682,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['id'],
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'getProject',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -805,6 +853,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'after': {'type': 'string', 'required': False},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'listTeams',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for teams list',
@@ -887,6 +943,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     query_params=['id'],
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'getTeam',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1004,6 +1068,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'after': {'type': 'string', 'required': False},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'listComments',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for comments list',
@@ -1108,6 +1180,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     query_params_schema={
                         'id': {'type': 'string', 'required': True},
                     },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'getComment',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for single comment',
@@ -1180,6 +1260,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.CREATE,
                     description='Create a new comment on an issue via GraphQL mutation',
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'createComment',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for comment creation',
@@ -1259,6 +1347,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     ),
                     action=Action.UPDATE,
                     description='Update an existing comment via GraphQL mutation',
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'updateComment',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'GraphQL response for comment update',
