@@ -109,6 +109,20 @@ class AirbyteAuthConfig(BaseModel):
         description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
     )
 
+    # Additional headers to inject alongside OAuth2 Bearer token
+    additional_headers: Dict[str, str] | None = Field(
+        None,
+        description=(
+            "Extra headers to inject with auth. Values support Jinja2 {{ variable }} template syntax "
+            "to reference secrets. Example: {'Amazon-Advertising-API-ClientId': '{{ client_id }}'}"
+        ),
+    )
+
+    # Replication connector auth constants
+    replication_auth_key_constants: Dict[str, Any] | None = Field(
+        None,
+        description="Constant values to always inject at source config paths (e.g., 'credentials.auth_type': 'OAuth2.0')",
+    )
     # Multiple options (oneOf)
     one_of: List[AuthConfigOption] | None = Field(None, alias="oneOf")
 
