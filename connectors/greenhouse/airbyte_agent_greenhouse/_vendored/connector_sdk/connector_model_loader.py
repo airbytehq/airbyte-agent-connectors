@@ -188,7 +188,7 @@ def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
 
 def _extract_request_body_config(
     request_body: RequestBody | None, spec_dict: dict[str, Any]
-) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None]:
+) -> tuple[list[str], dict[str, Any] | None, dict[str, Any] | None, dict[str, Any]]:
     """Extract request body configuration (GraphQL or standard).
 
     Args:
@@ -196,17 +196,19 @@ def _extract_request_body_config(
         spec_dict: Full OpenAPI spec dict for $ref resolution
 
     Returns:
-        Tuple of (body_fields, request_schema, graphql_body)
+        Tuple of (body_fields, request_schema, graphql_body, request_body_defaults)
         - body_fields: List of field names for standard JSON/form bodies
         - request_schema: Resolved request schema dict (for standard bodies)
         - graphql_body: GraphQL body configuration dict (for GraphQL bodies)
+        - request_body_defaults: Default values for request body fields
     """
     body_fields: list[str] = []
     request_schema: dict[str, Any] | None = None
     graphql_body: dict[str, Any] | None = None
+    request_body_defaults: dict[str, Any] = {}
 
     if not request_body:
-        return body_fields, request_schema, graphql_body
+        return body_fields, request_schema, graphql_body, request_body_defaults
 
     # Check for GraphQL extension and extract GraphQL body configuration
     if request_body.x_airbyte_body_type:
@@ -216,7 +218,7 @@ def _extract_request_body_config(
         if isinstance(body_type_config, GraphQLBodyConfig):
             # Convert Pydantic model to dict, excluding None values
             graphql_body = body_type_config.model_dump(exclude_none=True, by_alias=False)
-            return body_fields, request_schema, graphql_body
+            return body_fields, request_schema, graphql_body, request_body_defaults
 
     # Parse standard request body
     for content_type_key, media_type in request_body.content.items():
@@ -226,11 +228,15 @@ def _extract_request_body_config(
         # Resolve all $refs in the schema using jsonref
         request_schema = resolve_schema_refs(schema, spec_dict)
 
-        # Extract body field names from resolved schema
+        # Extract body field names and defaults from resolved schema
         if isinstance(request_schema, dict) and "properties" in request_schema:
             body_fields = list(request_schema["properties"].keys())
+            # Extract default values for each property
+            for field_name, field_schema in request_schema["properties"].items():
+                if isinstance(field_schema, dict) and "default" in field_schema:
+                    request_body_defaults[field_name] = field_schema["default"]
 
-    return body_fields, request_schema, graphql_body
+    return body_fields, request_schema, graphql_body, request_body_defaults
 
 
 def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel:
@@ -315,6 +321,8 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             query_params: list[str] = []
             query_params_schema: dict[str, dict[str, Any]] = {}
             deep_object_params: list[str] = []
+            header_params: list[str] = []
+            header_params_schema: dict[str, dict[str, Any]] = {}
 
             if operation.parameters:
                 for param in operation.parameters:
@@ -336,9 +344,12 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                         # Check if this is a deepObject style parameter
                         if hasattr(param, "style") and param.style == "deepObject":
                             deep_object_params.append(param.name)
+                    elif param.in_ == "header":
+                        header_params.append(param.name)
+                        header_params_schema[param.name] = schema_info
 
-            # Extract body fields from request schema
-            body_fields, request_schema, graphql_body = _extract_request_body_config(operation.request_body, spec_dict)
+            # Extract body fields and defaults from request schema
+            body_fields, request_schema, graphql_body, request_body_defaults = _extract_request_body_config(operation.request_body, spec_dict)
 
             # Extract response schema
             response_schema = None
@@ -372,6 +383,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 deep_object_params=deep_object_params,
                 path_params=path_params,
                 path_params_schema=path_params_schema,
+                header_params=header_params,
+                header_params_schema=header_params_schema,
+                request_body_defaults=request_body_defaults,
                 content_type=content_type,
                 request_schema=request_schema,
                 response_schema=response_schema,
@@ -534,6 +548,13 @@ def _parse_oauth2_config(scheme: Any) -> dict[str, str]:
     x_token_extract = getattr(scheme, "x_airbyte_token_extract", None)
     if x_token_extract:
         config["token_extract"] = x_token_extract
+
+    # Extract additional_headers from x-airbyte-auth-config extension
+    x_auth_config = getattr(scheme, "x_airbyte_auth_config", None)
+    if x_auth_config:
+        additional_headers = getattr(x_auth_config, "additional_headers", None)
+        if additional_headers:
+            config["additional_headers"] = additional_headers
 
     return config
 
