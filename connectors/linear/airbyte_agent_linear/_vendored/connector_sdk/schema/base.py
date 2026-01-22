@@ -7,7 +7,7 @@ References:
 """
 
 from enum import StrEnum
-from typing import Dict
+from typing import Any, Dict
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -152,7 +152,12 @@ class Server(BaseModel):
     url: str
     description: str | None = None
     variables: Dict[str, ServerVariable] = Field(default_factory=dict)
-    x_airbyte_replication_user_config_mapping: Dict[str, str] | None = Field(default=None, alias="x-airbyte-replication-user-config-mapping")
+    x_airbyte_replication_environment_mapping: Dict[str, str] | None = Field(default=None, alias="x-airbyte-replication-environment-mapping")
+    x_airbyte_replication_environment_constants: Dict[str, Any] | None = Field(
+        default=None,
+        alias="x-airbyte-replication-environment-constants",
+        description="Constant values to always inject at environment config paths (e.g., 'region': 'us-east-1')",
+    )
 
     @field_validator("url")
     @classmethod
