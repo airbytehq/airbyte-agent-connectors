@@ -65,6 +65,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'starting_after': {'type': 'string', 'required': False},
                     },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'Paginated list of contacts',
@@ -469,6 +477,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1021,6 +1037,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                             'default': 20,
                         },
                         'starting_after': {'type': 'string', 'required': False},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -1710,6 +1734,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -2471,6 +2503,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'starting_after': {'type': 'string', 'required': False},
                     },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'Paginated list of companies',
@@ -2730,6 +2770,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3021,6 +3069,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path='/teams',
                     action=Action.LIST,
                     description='Returns a list of all teams in the workspace',
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'List of teams',
@@ -3086,6 +3142,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3168,6 +3232,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path='/admins',
                     action=Action.LIST,
                     description='Returns a list of all admins in the workspace',
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'List of admins',
@@ -3255,6 +3327,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3383,6 +3463,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tags',
                     action=Action.LIST,
                     description='Returns a list of all tags in the workspace',
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'List of tags',
@@ -3445,6 +3533,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
@@ -3531,6 +3627,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                             'default': False,
                         },
                     },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
                     response_schema={
                         'type': 'object',
                         'description': 'List of segments',
@@ -3586,6 +3690,14 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     path_params=['id'],
                     path_params_schema={
                         'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
                     },
                     response_schema={
                         'type': 'object',
