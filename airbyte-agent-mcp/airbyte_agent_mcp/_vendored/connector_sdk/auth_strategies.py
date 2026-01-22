@@ -634,9 +634,7 @@ class OAuth2AuthStrategy(AuthStrategy):
             Headers dict with additional headers added
         """
         # Build template context with extracted secret values
-        template_context = {
-            key: extract_secret_value(value) for key, value in secrets.items()
-        }
+        template_context = {key: extract_secret_value(value) for key, value in secrets.items()}
 
         for header_name, value_template in additional_headers.items():
             # Use Jinja2 templating for variable substitution
