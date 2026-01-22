@@ -180,6 +180,15 @@ class EndpointDefinition(BaseModel):
         default_factory=dict,
         description="Schema for path params including defaults: {name: {type, default, required}}",
     )
+    header_params: list[str] = Field(default_factory=list)  # Header parameters from OpenAPI
+    header_params_schema: dict[str, dict[str, Any]] = Field(
+        default_factory=dict,
+        description="Schema for header params including defaults: {name: {type, default, required}}",
+    )
+    request_body_defaults: dict[str, Any] = Field(
+        default_factory=dict,
+        description="Default values for request body fields from OpenAPI schema",
+    )
     content_type: ContentType = ContentType.JSON
     request_schema: dict[str, Any] | None = None
     response_schema: dict[str, Any] | None = None
