@@ -68,7 +68,7 @@ async def linear_execute(entity: str, action: str, params: dict | None = None):
 
 In hosted mode, API credentials are stored securely in Airbyte Cloud. You provide your Airbyte credentials instead. 
 
-This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/hosted-execution).
+This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
 from airbyte_agent_linear import LinearConnector
@@ -105,6 +105,6 @@ For the service's official API docs, see the [Linear API reference](https://line
 
 ## Version information
 
-- **Package version:** 0.19.52
+- **Package version:** 0.19.53
 - **Connector version:** 0.1.4
-- **Generated with Connector SDK commit SHA:** 1da193dd2b3d4b2e2147ba74bd9a4062a62c4186
+- **Generated with Connector SDK commit SHA:** b27328e2162813ea6315b9f890a6784b0fb9caba
