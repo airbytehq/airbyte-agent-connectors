@@ -303,6 +303,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'sorts',
                         'query',
                     ],
+                    request_body_defaults={'limit': 25},
                     request_schema={
                         'type': 'object',
                         'properties': {
@@ -774,6 +775,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'sorts',
                         'query',
                     ],
+                    request_body_defaults={'limit': 25},
                     request_schema={
                         'type': 'object',
                         'properties': {
@@ -1257,6 +1259,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'sorts',
                         'query',
                     ],
+                    request_body_defaults={'limit': 25},
                     request_schema={
                         'type': 'object',
                         'properties': {
@@ -1764,6 +1767,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                         'sorts',
                         'query',
                     ],
+                    request_body_defaults={'limit': 25},
                     request_schema={
                         'type': 'object',
                         'properties': {
