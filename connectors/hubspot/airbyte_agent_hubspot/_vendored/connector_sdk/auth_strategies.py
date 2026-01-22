@@ -152,6 +152,11 @@ class OAuth2AuthConfig(TypedDict, total=False):
             Note: Any config key can be used as a template variable in refresh_url.
             Common patterns: subdomain (Zendesk), shop (Shopify), region (AWS-style APIs).
 
+        additional_headers: Extra headers to inject alongside the OAuth2 Bearer token.
+            Useful for APIs that require both OAuth and an API key/client ID header.
+            Values support Jinja2 {{ variable }} template syntax to reference secrets.
+            Example: {"Amazon-Advertising-API-ClientId": "{{ client_id }}"}
+
     Examples:
         GitHub (simple):
             {"header": "Authorization", "prefix": "Bearer"}
@@ -169,6 +174,14 @@ class OAuth2AuthConfig(TypedDict, total=False):
                 "auth_style": "basic",
                 "body_format": "json"
             }
+
+        Amazon Ads (OAuth + additional client ID header):
+            {
+                "refresh_url": "https://api.amazon.com/auth/o2/token",
+                "additional_headers": {
+                    "Amazon-Advertising-API-ClientId": "{{ client_id }}"
+                }
+            }
     """
 
     header: str
@@ -177,6 +190,7 @@ class OAuth2AuthConfig(TypedDict, total=False):
     auth_style: AuthStyle
     body_format: BodyFormat
     subdomain: str
+    additional_headers: dict[str, str]
 
 
 class OAuth2AuthSecrets(TypedDict):
@@ -552,9 +566,10 @@ class OAuth2AuthStrategy(AuthStrategy):
         config: OAuth2AuthConfig,
         secrets: OAuth2AuthSecrets,
     ) -> dict[str, str]:
-        """Inject OAuth2 access token into headers.
+        """Inject OAuth2 access token and additional headers.
 
-        Creates a copy of the headers dict with the OAuth2 token added.
+        Creates a copy of the headers dict with the OAuth2 token added,
+        plus any additional headers configured via additional_headers.
         The original headers dict is not modified.
 
         Args:
@@ -563,7 +578,7 @@ class OAuth2AuthStrategy(AuthStrategy):
             secrets: OAuth2 credentials including access_token
 
         Returns:
-            New headers dict with OAuth2 token authentication injected
+            New headers dict with OAuth2 token and additional headers injected
 
         Raises:
             AuthenticationError: If access_token is missing
@@ -589,8 +604,46 @@ class OAuth2AuthStrategy(AuthStrategy):
         # Extract secret value (handle both SecretStr and plain str)
         token_value = extract_secret_value(access_token)
 
-        # Inject into headers
+        # Inject OAuth2 Bearer token
         headers[header_name] = f"{prefix} {token_value}"
+
+        # Inject additional headers if configured
+        additional_headers = config.get("additional_headers")
+        if additional_headers:
+            headers = self._inject_additional_headers(headers, additional_headers, secrets)
+
+        return headers
+
+    def _inject_additional_headers(
+        self,
+        headers: dict[str, str],
+        additional_headers: dict[str, str],
+        secrets: dict[str, Any],
+    ) -> dict[str, str]:
+        """Inject additional headers with Jinja2 template variable substitution.
+
+        Processes additional_headers config, substituting {{ variable }} patterns
+        with values from secrets using Jinja2 templating.
+
+        Args:
+            headers: Headers dict to add to (modified in place)
+            additional_headers: Header name -> value template mapping
+            secrets: Secrets dict for variable substitution
+
+        Returns:
+            Headers dict with additional headers added
+        """
+        # Build template context with extracted secret values
+        template_context = {
+            key: extract_secret_value(value) for key, value in secrets.items()
+        }
+
+        for header_name, value_template in additional_headers.items():
+            # Use Jinja2 templating for variable substitution
+            template = Template(value_template)
+            header_value = template.render(**template_context)
+            headers[header_name] = header_value
+
         return headers
 
     def validate_credentials(self, secrets: OAuth2AuthSecrets) -> None:  # type: ignore[override]
