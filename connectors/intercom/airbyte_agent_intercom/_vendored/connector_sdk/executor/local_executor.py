@@ -694,9 +694,7 @@ class LocalExecutor:
         """
         return {key: value for key, value in params.items() if key in allowed_fields and value is not None}
 
-    def _extract_header_params(
-        self, endpoint: EndpointDefinition, params: dict[str, Any], body: dict[str, Any] | None = None
-    ) -> dict[str, str]:
+    def _extract_header_params(self, endpoint: EndpointDefinition, params: dict[str, Any], body: dict[str, Any] | None = None) -> dict[str, str]:
         """Extract header parameters from params and schema defaults.
 
         Also adds Content-Type header when there's a request body (unless already specified
