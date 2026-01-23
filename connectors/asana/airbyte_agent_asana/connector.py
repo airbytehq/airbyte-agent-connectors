@@ -42,6 +42,23 @@ from .types import (
     WorkspaceUsersListParams,
     WorkspacesGetParams,
     WorkspacesListParams,
+    AirbyteSearchParams,
+    AttachmentsSearchFilter,
+    AttachmentsSearchQuery,
+    ProjectsSearchFilter,
+    ProjectsSearchQuery,
+    SectionsSearchFilter,
+    SectionsSearchQuery,
+    TagsSearchFilter,
+    TagsSearchQuery,
+    TasksSearchFilter,
+    TasksSearchQuery,
+    TeamsSearchFilter,
+    TeamsSearchQuery,
+    UsersSearchFilter,
+    UsersSearchQuery,
+    WorkspacesSearchFilter,
+    WorkspacesSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import AsanaAuthConfig
@@ -86,6 +103,24 @@ from .models import (
     UserCompact,
     Workspace,
     WorkspaceCompact,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    AttachmentsSearchData,
+    AttachmentsSearchResult,
+    ProjectsSearchData,
+    ProjectsSearchResult,
+    SectionsSearchData,
+    SectionsSearchResult,
+    TagsSearchData,
+    TagsSearchResult,
+    TasksSearchData,
+    TasksSearchResult,
+    TeamsSearchData,
+    TeamsSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
+    WorkspacesSearchData,
+    WorkspacesSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -101,7 +136,7 @@ class AsanaConnector:
     """
 
     connector_name = "asana"
-    connector_version = "0.1.7"
+    connector_version = "0.1.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -744,6 +779,95 @@ class TasksQuery:
 
 
 
+    async def search(
+        self,
+        query: TasksSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TasksSearchResult:
+        """
+        Search tasks records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TasksSearchFilter):
+        - actual_time_minutes: The actual time spent on the task in minutes
+        - approval_status: 
+        - assignee: 
+        - completed: 
+        - completed_at: 
+        - completed_by: 
+        - created_at: 
+        - custom_fields: 
+        - dependencies: 
+        - dependents: 
+        - due_at: 
+        - due_on: 
+        - external: 
+        - followers: 
+        - gid: 
+        - hearted: 
+        - hearts: 
+        - html_notes: 
+        - is_rendered_as_separator: 
+        - liked: 
+        - likes: 
+        - memberships: 
+        - modified_at: 
+        - name: 
+        - notes: 
+        - num_hearts: 
+        - num_likes: 
+        - num_subtasks: 
+        - parent: 
+        - permalink_url: 
+        - projects: 
+        - resource_subtype: 
+        - resource_type: 
+        - start_on: 
+        - tags: 
+        - workspace: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TasksSearchResult with hits (list of AirbyteSearchHit[TasksSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tasks", "search", params)
+
+        # Parse response into typed result
+        return TasksSearchResult(
+            hits=[
+                AirbyteSearchHit[TasksSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TasksSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ProjectTasksQuery:
     """
     Query class for ProjectTasks entity operations.
@@ -958,6 +1082,84 @@ class ProjectsQuery:
 
 
 
+    async def search(
+        self,
+        query: ProjectsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ProjectsSearchResult:
+        """
+        Search projects records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ProjectsSearchFilter):
+        - archived: 
+        - color: 
+        - created_at: 
+        - current_status: 
+        - custom_field_settings: 
+        - custom_fields: 
+        - default_view: 
+        - due_date: 
+        - due_on: 
+        - followers: 
+        - gid: 
+        - html_notes: 
+        - icon: 
+        - is_template: 
+        - members: 
+        - modified_at: 
+        - name: 
+        - notes: 
+        - owner: 
+        - permalink_url: 
+        - public: 
+        - resource_type: 
+        - start_on: 
+        - team: 
+        - workspace: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ProjectsSearchResult with hits (list of AirbyteSearchHit[ProjectsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("projects", "search", params)
+
+        # Parse response into typed result
+        return ProjectsSearchResult(
+            hits=[
+                AirbyteSearchHit[ProjectsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ProjectsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class TaskProjectsQuery:
     """
     Query class for TaskProjects entity operations.
@@ -1162,6 +1364,64 @@ class WorkspacesQuery:
 
 
 
+    async def search(
+        self,
+        query: WorkspacesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> WorkspacesSearchResult:
+        """
+        Search workspaces records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (WorkspacesSearchFilter):
+        - email_domains: 
+        - gid: 
+        - is_organization: 
+        - name: 
+        - resource_type: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            WorkspacesSearchResult with hits (list of AirbyteSearchHit[WorkspacesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("workspaces", "search", params)
+
+        # Parse response into typed result
+        return WorkspacesSearchResult(
+            hits=[
+                AirbyteSearchHit[WorkspacesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=WorkspacesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class UsersQuery:
     """
     Query class for Users entity operations.
@@ -1233,6 +1493,65 @@ class UsersQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - email: 
+        - gid: 
+        - name: 
+        - photo: 
+        - resource_type: 
+        - workspaces: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "search", params)
+
+        # Parse response into typed result
+        return UsersSearchResult(
+            hits=[
+                AirbyteSearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class WorkspaceUsersQuery:
     """
@@ -1355,6 +1674,66 @@ class TeamsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: TeamsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TeamsSearchResult:
+        """
+        Search teams records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TeamsSearchFilter):
+        - description: 
+        - gid: 
+        - html_description: 
+        - name: 
+        - organization: 
+        - permalink_url: 
+        - resource_type: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TeamsSearchResult with hits (list of AirbyteSearchHit[TeamsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("teams", "search", params)
+
+        # Parse response into typed result
+        return TeamsSearchResult(
+            hits=[
+                AirbyteSearchHit[TeamsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TeamsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class WorkspaceTeamsQuery:
     """
@@ -1578,6 +1957,71 @@ metadata to get the download_url, then downloads the file from that URL.
         return await save_download(content_iterator, path)
 
 
+    async def search(
+        self,
+        query: AttachmentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AttachmentsSearchResult:
+        """
+        Search attachments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AttachmentsSearchFilter):
+        - connected_to_app: 
+        - created_at: 
+        - download_url: 
+        - gid: 
+        - host: 
+        - name: 
+        - parent: 
+        - permanent_url: 
+        - resource_subtype: 
+        - resource_type: 
+        - size: 
+        - view_url: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AttachmentsSearchResult with hits (list of AirbyteSearchHit[AttachmentsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("attachments", "search", params)
+
+        # Parse response into typed result
+        return AttachmentsSearchResult(
+            hits=[
+                AirbyteSearchHit[AttachmentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=AttachmentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class WorkspaceTagsQuery:
     """
     Query class for WorkspaceTags entity operations.
@@ -1656,6 +2100,66 @@ class TagsQuery:
 
 
 
+    async def search(
+        self,
+        query: TagsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TagsSearchResult:
+        """
+        Search tags records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TagsSearchFilter):
+        - color: 
+        - followers: 
+        - gid: 
+        - name: 
+        - permalink_url: 
+        - resource_type: 
+        - workspace: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TagsSearchResult with hits (list of AirbyteSearchHit[TagsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("tags", "search", params)
+
+        # Parse response into typed result
+        return TagsSearchResult(
+            hits=[
+                AirbyteSearchHit[TagsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TagsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ProjectSectionsQuery:
     """
     Query class for ProjectSections entity operations.
@@ -1733,6 +2237,64 @@ class SectionsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: SectionsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> SectionsSearchResult:
+        """
+        Search sections records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (SectionsSearchFilter):
+        - created_at: 
+        - gid: 
+        - name: 
+        - project: 
+        - resource_type: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            SectionsSearchResult with hits (list of AirbyteSearchHit[SectionsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("sections", "search", params)
+
+        # Parse response into typed result
+        return SectionsSearchResult(
+            hits=[
+                AirbyteSearchHit[SectionsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=SectionsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class TaskSubtasksQuery:
     """
