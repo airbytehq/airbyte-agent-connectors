@@ -28,6 +28,7 @@ from .types import (
     IssueWorklogsGetParams,
     IssueWorklogsListParams,
     IssuesApiSearchParams,
+    IssuesAssigneeUpdateParams,
     IssuesCreateParams,
     IssuesCreateParamsFields,
     IssuesDeleteParams,
@@ -105,7 +106,7 @@ class JiraConnector:
     """
 
     connector_name = "jira"
-    connector_version = "1.1.1"
+    connector_version = "1.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -129,6 +130,7 @@ class JiraConnector:
         ("issue_comments", "delete"): None,
         ("issue_worklogs", "list"): True,
         ("issue_worklogs", "get"): None,
+        ("issues_assignee", "update"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -152,6 +154,7 @@ class JiraConnector:
         ('issue_comments', 'delete'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId'},
         ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
         ('issue_worklogs', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'worklog_id': 'worklogId', 'expand': 'expand'},
+        ('issues_assignee', 'update'): {'account_id': 'accountId', 'issue_id_or_key': 'issueIdOrKey'},
     }
 
     def __init__(
@@ -242,6 +245,7 @@ class JiraConnector:
         self.issue_fields = IssueFieldsQuery(self)
         self.issue_comments = IssueCommentsQuery(self)
         self.issue_worklogs = IssueWorklogsQuery(self)
+        self.issues_assignee = IssuesAssigneeQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -396,6 +400,14 @@ class JiraConnector:
         action: Literal["get"],
         params: "IssueWorklogsGetParams"
     ) -> "Worklog": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues_assignee"],
+        action: Literal["update"],
+        params: "IssuesAssigneeUpdateParams"
+    ) -> "dict[str, Any]": ...
 
 
     @overload
@@ -1733,3 +1745,40 @@ class IssueWorklogsQuery:
             next_cursor=result.get("next_cursor"),
             took_ms=result.get("took_ms")
         )
+
+class IssuesAssigneeQuery:
+    """
+    Query class for IssuesAssignee entity operations.
+    """
+
+    def __init__(self, connector: JiraConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def update(
+        self,
+        issue_id_or_key: str,
+        account_id: str | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Assigns an issue to a user. Use accountId to specify the assignee. Use null to unassign the issue. Use "-1" to set to automatic (project default).
+
+        Args:
+            account_id: The account ID of the user to assign the issue to. Use null to unassign the issue. Use "-1" to set to automatic (project default assignee).
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "accountId": account_id,
+            "issueIdOrKey": issue_id_or_key,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues_assignee", "update", params)
+        return result
+
+

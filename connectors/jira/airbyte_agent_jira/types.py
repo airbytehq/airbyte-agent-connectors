@@ -293,6 +293,11 @@ class IssueWorklogsGetParams(TypedDict):
     worklog_id: str
     expand: NotRequired[str]
 
+class IssuesAssigneeUpdateParams(TypedDict):
+    """Parameters for issues_assignee.update operation"""
+    account_id: NotRequired[str]
+    issue_id_or_key: str
+
 # ===== SEARCH TYPES =====
 
 # Sort specification
