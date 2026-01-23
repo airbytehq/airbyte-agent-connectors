@@ -17,7 +17,7 @@ class SlackTokenAuthenticationAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: str
+    api_token: str
     """Your Slack Bot Token (xoxb-) or User Token (xoxp-)"""
 
 class SlackOauth20AuthenticationAuthConfig(BaseModel):
@@ -176,14 +176,6 @@ class ChannelResponse(BaseModel):
     ok: Union[bool, Any] = Field(default=None)
     channel: Union[Channel, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
-
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -207,6 +199,14 @@ class File(BaseModel):
     permalink_public: Union[str | None, Any] = Field(default=None)
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class Attachment(BaseModel):
     """Message attachment"""

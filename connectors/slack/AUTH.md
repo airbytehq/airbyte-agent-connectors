@@ -33,7 +33,7 @@ connector = SlackConnector(
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `access_token` | `str` | Yes | Your Slack Bot Token (xoxb-) or User Token (xoxp-) |
+| `api_token` | `str` | Yes | Your Slack Bot Token (xoxb-) or User Token (xoxp-) |
 
 ```python
 from airbyte_agent_slack import SlackConnector
@@ -41,7 +41,7 @@ from airbyte_agent_slack.models import SlackTokenAuthenticationAuthConfig
 
 connector = SlackConnector(
     auth_config=SlackTokenAuthenticationAuthConfig(
-        access_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+        api_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
     )
 )
 ```
@@ -82,7 +82,7 @@ curl -X POST 'https://api.airbyte.ai/v1/integrations/connectors' \
     "external_user_id": "<EXTERNAL_USER_ID>",
     "connector_type": "Slack",
     "credentials": {
-      "access_token": "<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+      "api_token": "<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
     }
   }'
 ```
