@@ -789,7 +789,7 @@ class SatisfactionRatingsSearchData(BaseModel):
     reason: str | None = None
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: int | None = None
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: int | None = None
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: str | None = None
@@ -883,11 +883,11 @@ class TicketFieldsSearchData(BaseModel):
     agent_description: str | None = None
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: bool | None = None
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: str | None = None
     """Timestamp when the custom ticket field was created"""
     custom_field_options: list[Any] | None = None
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: list[Any] | None = None
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: str | None = None
@@ -925,7 +925,7 @@ class TicketFieldsSearchData(BaseModel):
     title_in_portal: str | None = None
     """The title of the ticket field displayed to end users in Help Center"""
     type: str | None = None
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str | None = None
     """Timestamp when the custom ticket field was last updated"""
     url: str | None = None
@@ -967,7 +967,7 @@ class TicketFormsSearchData(BaseModel):
     restricted_brand_ids: list[Any] | None = None
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: list[Any] | None = None
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: str | None = None
     """Timestamp of the last update to the ticket form"""
     url: str | None = None
@@ -1061,7 +1061,7 @@ class TicketsSearchData(BaseModel):
     custom_status_id: int | None = None
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: int | None = None
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: str | None = None
     """Initial description or content of the ticket when it was created"""
     due_at: str | None = None
@@ -1081,7 +1081,7 @@ class TicketsSearchData(BaseModel):
     from_messaging_channel: bool | None = None
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: int | None = None
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: int | None = None
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: bool | None = None
