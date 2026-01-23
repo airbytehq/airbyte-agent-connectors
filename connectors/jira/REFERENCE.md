@@ -8,11 +8,11 @@ The Jira connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Issues | [API Search](#issues-api-search), [Get](#issues-get), [Search](#issues-search) |
+| Issues | [API Search](#issues-api-search), [Create](#issues-create), [Get](#issues-get), [Update](#issues-update), [Delete](#issues-delete), [Search](#issues-search) |
 | Projects | [API Search](#projects-api-search), [Get](#projects-get), [Search](#projects-search) |
 | Users | [Get](#users-get), [List](#users-list), [API Search](#users-api-search), [Search](#users-search) |
 | Issue Fields | [List](#issue-fields-list), [API Search](#issue-fields-api-search), [Search](#issue-fields-search) |
-| Issue Comments | [List](#issue-comments-list), [Get](#issue-comments-get), [Search](#issue-comments-search) |
+| Issue Comments | [List](#issue-comments-list), [Create](#issue-comments-create), [Get](#issue-comments-get), [Update](#issue-comments-update), [Delete](#issue-comments-delete), [Search](#issue-comments-search) |
 | Issue Worklogs | [List](#issue-worklogs-list), [Get](#issue-worklogs-get), [Search](#issue-worklogs-search) |
 
 ## Issues
@@ -78,6 +78,92 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
+### Issues Create
+
+Creates an issue or a sub-task from a JSON representation
+
+#### Python SDK
+
+```python
+await jira.issues.create(
+    fields={
+        "project": {},
+        "issuetype": {},
+        "summary": "<str>"
+    },
+    update={},
+    update_history=True
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issues",
+    "action": "create",
+    "params": {
+        "fields": {
+            "project": {},
+            "issuetype": {},
+            "summary": "<str>"
+        },
+        "update": {},
+        "updateHistory": True
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `fields` | `object` | Yes | The issue fields to set |
+| `fields.project` | `object` | Yes | The project to create the issue in |
+| `fields.project.id` | `string` | No | Project ID |
+| `fields.project.key` | `string` | No | Project key (e.g., 'PROJ') |
+| `fields.issuetype` | `object` | Yes | The type of issue (e.g., Bug, Task, Story) |
+| `fields.issuetype.id` | `string` | No | Issue type ID |
+| `fields.issuetype.name` | `string` | No | Issue type name (e.g., 'Bug', 'Task', 'Story') |
+| `fields.summary` | `string` | Yes | A brief summary of the issue (title) |
+| `fields.description` | `object` | No | Issue description in Atlassian Document Format (ADF) |
+| `fields.description.type` | `string` | No | Document type (always 'doc') |
+| `fields.description.version` | `integer` | No | ADF version |
+| `fields.description.content` | `array<object>` | No | Array of content blocks |
+| `fields.description.content.type` | `string` | No | Block type (e.g., 'paragraph') |
+| `fields.description.content.content` | `array<object>` | No |  |
+| `fields.description.content.content.type` | `string` | No | Content type (e.g., 'text') |
+| `fields.description.content.content.text` | `string` | No | Text content |
+| `fields.priority` | `object` | No | Issue priority |
+| `fields.priority.id` | `string` | No | Priority ID |
+| `fields.priority.name` | `string` | No | Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest') |
+| `fields.assignee` | `object` | No | The user to assign the issue to |
+| `fields.assignee.accountId` | `string` | No | The account ID of the user |
+| `fields.labels` | `array<string>` | No | Labels to add to the issue |
+| `fields.parent` | `object` | No | Parent issue for subtasks |
+| `fields.parent.key` | `string` | No | Parent issue key |
+| `update` | `object` | No | Additional update operations to perform |
+| `updateHistory` | `boolean` | No | Whether the action taken is added to the user's Recent history |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `string` |  |
+| `key` | `string` |  |
+| `self` | `string` |  |
+
+
+</details>
+
 ### Issues Get
 
 Retrieve a single issue by its ID or key
@@ -134,6 +220,133 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 
 </details>
+
+### Issues Update
+
+Edits an issue. Issue properties may be updated as part of the edit. Only fields included in the request body are updated.
+
+#### Python SDK
+
+```python
+await jira.issues.update(
+    fields={},
+    update={},
+    transition={},
+    issue_id_or_key="<str>",
+    notify_users=True,
+    override_screen_security=True,
+    override_editable_flag=True,
+    return_issue=True,
+    expand="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issues",
+    "action": "update",
+    "params": {
+        "fields": {},
+        "update": {},
+        "transition": {},
+        "issueIdOrKey": "<str>",
+        "notifyUsers": True,
+        "overrideScreenSecurity": True,
+        "overrideEditableFlag": True,
+        "returnIssue": True,
+        "expand": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `fields` | `object` | No | The issue fields to update |
+| `fields.summary` | `string` | No | A brief summary of the issue (title) |
+| `fields.description` | `object` | No | Issue description in Atlassian Document Format (ADF) |
+| `fields.description.type` | `string` | No | Document type (always 'doc') |
+| `fields.description.version` | `integer` | No | ADF version |
+| `fields.description.content` | `array<object>` | No | Array of content blocks |
+| `fields.description.content.type` | `string` | No | Block type (e.g., 'paragraph') |
+| `fields.description.content.content` | `array<object>` | No |  |
+| `fields.description.content.content.type` | `string` | No | Content type (e.g., 'text') |
+| `fields.description.content.content.text` | `string` | No | Text content |
+| `fields.priority` | `object` | No | Issue priority |
+| `fields.priority.id` | `string` | No | Priority ID |
+| `fields.priority.name` | `string` | No | Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest') |
+| `fields.assignee` | `object` | No | The user to assign the issue to |
+| `fields.assignee.accountId` | `string` | No | The account ID of the user (use null to unassign) |
+| `fields.labels` | `array<string>` | No | Labels for the issue |
+| `update` | `object` | No | Additional update operations to perform |
+| `transition` | `object` | No | Transition the issue to a new status |
+| `transition.id` | `string` | No | The ID of the transition to perform |
+| `issueIdOrKey` | `string` | Yes | The issue ID or key (e.g., "PROJ-123" or "10000") |
+| `notifyUsers` | `boolean` | No | Whether a notification email about the issue update is sent to all watchers. Default is true. |
+| `overrideScreenSecurity` | `boolean` | No | Whether screen security is overridden to enable hidden fields to be edited. |
+| `overrideEditableFlag` | `boolean` | No | Whether the issue's edit metadata is overridden. |
+| `returnIssue` | `boolean` | No | Whether the updated issue is returned. |
+| `expand` | `string` | No | Expand options when returning the updated issue. |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `string` |  |
+| `key` | `string` |  |
+| `self` | `string` |  |
+| `expand` | `string \| null` |  |
+| `fields` | `object` |  |
+
+
+</details>
+
+### Issues Delete
+
+Deletes an issue. An issue cannot be deleted if it has one or more subtasks unless deleteSubtasks is true.
+
+#### Python SDK
+
+```python
+await jira.issues.delete(
+    issue_id_or_key="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issues",
+    "action": "delete",
+    "params": {
+        "issueIdOrKey": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `issueIdOrKey` | `string` | Yes | The issue ID or key (e.g., "PROJ-123" or "10000") |
+| `deleteSubtasks` | `boolean` | No | Whether to delete the issue's subtasks. Default is false. |
+
 
 ### Issues Search
 
@@ -1037,6 +1250,93 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
+### Issue Comments Create
+
+Adds a comment to an issue
+
+#### Python SDK
+
+```python
+await jira.issue_comments.create(
+    body={
+        "type": "<str>",
+        "version": 0,
+        "content": []
+    },
+    visibility={},
+    properties=[],
+    issue_id_or_key="<str>",
+    expand="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_comments",
+    "action": "create",
+    "params": {
+        "body": {
+            "type": "<str>",
+            "version": 0,
+            "content": []
+        },
+        "visibility": {},
+        "properties": [],
+        "issueIdOrKey": "<str>",
+        "expand": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `body` | `object` | Yes | Comment content in Atlassian Document Format (ADF) |
+| `body.type` | `string` | Yes | Document type (always 'doc') |
+| `body.version` | `integer` | Yes | ADF version |
+| `body.content` | `array<object>` | Yes | Array of content blocks |
+| `body.content.type` | `string` | No | Block type (e.g., 'paragraph') |
+| `body.content.content` | `array<object>` | No |  |
+| `body.content.content.type` | `string` | No | Content type (e.g., 'text') |
+| `body.content.content.text` | `string` | No | Text content |
+| `visibility` | `object` | No | Restrict comment visibility to a group or role |
+| `visibility.type` | `"group" \| "role"` | No | The type of visibility restriction |
+| `visibility.value` | `string` | No | The name of the group or role |
+| `visibility.identifier` | `string` | No | The ID of the group or role |
+| `properties` | `array<object>` | No | Custom properties for the comment |
+| `issueIdOrKey` | `string` | Yes | The issue ID or key (e.g., "PROJ-123" or "10000") |
+| `expand` | `string` | No | Expand options for the returned comment |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `string` |  |
+| `self` | `string` |  |
+| `body` | `object` |  |
+| `author` | `object` |  |
+| `updateAuthor` | `object` |  |
+| `created` | `string` |  |
+| `updated` | `string` |  |
+| `jsdPublic` | `boolean` |  |
+| `visibility` | `object \| null` |  |
+| `renderedBody` | `string \| null` |  |
+| `properties` | `array \| null` |  |
+
+
+</details>
+
 ### Issue Comments Get
 
 Retrieve a single comment by its ID
@@ -1097,6 +1397,134 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 
 </details>
+
+### Issue Comments Update
+
+Updates a comment on an issue
+
+#### Python SDK
+
+```python
+await jira.issue_comments.update(
+    body={
+        "type": "<str>",
+        "version": 0,
+        "content": []
+    },
+    visibility={},
+    issue_id_or_key="<str>",
+    comment_id="<str>",
+    notify_users=True,
+    expand="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_comments",
+    "action": "update",
+    "params": {
+        "body": {
+            "type": "<str>",
+            "version": 0,
+            "content": []
+        },
+        "visibility": {},
+        "issueIdOrKey": "<str>",
+        "commentId": "<str>",
+        "notifyUsers": True,
+        "expand": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `body` | `object` | Yes | Updated comment content in Atlassian Document Format (ADF) |
+| `body.type` | `string` | Yes | Document type (always 'doc') |
+| `body.version` | `integer` | Yes | ADF version |
+| `body.content` | `array<object>` | Yes | Array of content blocks |
+| `body.content.type` | `string` | No | Block type (e.g., 'paragraph') |
+| `body.content.content` | `array<object>` | No |  |
+| `body.content.content.type` | `string` | No | Content type (e.g., 'text') |
+| `body.content.content.text` | `string` | No | Text content |
+| `visibility` | `object` | No | Restrict comment visibility to a group or role |
+| `visibility.type` | `"group" \| "role"` | No | The type of visibility restriction |
+| `visibility.value` | `string` | No | The name of the group or role |
+| `visibility.identifier` | `string` | No | The ID of the group or role |
+| `issueIdOrKey` | `string` | Yes | The issue ID or key (e.g., "PROJ-123" or "10000") |
+| `commentId` | `string` | Yes | The comment ID |
+| `notifyUsers` | `boolean` | No | Whether a notification email about the comment update is sent. Default is true. |
+| `expand` | `string` | No | Expand options for the returned comment |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `string` |  |
+| `self` | `string` |  |
+| `body` | `object` |  |
+| `author` | `object` |  |
+| `updateAuthor` | `object` |  |
+| `created` | `string` |  |
+| `updated` | `string` |  |
+| `jsdPublic` | `boolean` |  |
+| `visibility` | `object \| null` |  |
+| `renderedBody` | `string \| null` |  |
+| `properties` | `array \| null` |  |
+
+
+</details>
+
+### Issue Comments Delete
+
+Deletes a comment from an issue
+
+#### Python SDK
+
+```python
+await jira.issue_comments.delete(
+    issue_id_or_key="<str>",
+    comment_id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "issue_comments",
+    "action": "delete",
+    "params": {
+        "issueIdOrKey": "<str>",
+        "commentId": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `issueIdOrKey` | `string` | Yes | The issue ID or key (e.g., "PROJ-123" or "10000") |
+| `commentId` | `string` | Yes | The comment ID |
+
 
 ### Issue Comments Search
 

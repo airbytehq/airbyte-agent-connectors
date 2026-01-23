@@ -26,7 +26,7 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.0.6',
+    version='1.1.1',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -54,7 +54,13 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='issues',
-            actions=[Action.API_SEARCH, Action.GET],
+            actions=[
+                Action.API_SEARCH,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.API_SEARCH: EndpointDefinition(
                     method='GET',
@@ -276,6 +282,120 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         'total': '$.total',
                     },
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/rest/api/3/issue',
+                    action=Action.CREATE,
+                    description='Creates an issue or a sub-task from a JSON representation',
+                    body_fields=['fields', 'update'],
+                    query_params=['updateHistory'],
+                    query_params_schema={
+                        'updateHistory': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new issue',
+                        'properties': {
+                            'fields': {
+                                'type': 'object',
+                                'description': 'The issue fields to set',
+                                'required': ['project', 'issuetype', 'summary'],
+                                'properties': {
+                                    'project': {
+                                        'type': 'object',
+                                        'description': 'The project to create the issue in',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Project ID'},
+                                            'key': {'type': 'string', 'description': "Project key (e.g., 'PROJ')"},
+                                        },
+                                    },
+                                    'issuetype': {
+                                        'type': 'object',
+                                        'description': 'The type of issue (e.g., Bug, Task, Story)',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Issue type ID'},
+                                            'name': {'type': 'string', 'description': "Issue type name (e.g., 'Bug', 'Task', 'Story')"},
+                                        },
+                                    },
+                                    'summary': {'type': 'string', 'description': 'A brief summary of the issue (title)'},
+                                    'description': {
+                                        'type': 'object',
+                                        'description': 'Issue description in Atlassian Document Format (ADF)',
+                                        'properties': {
+                                            'type': {
+                                                'type': 'string',
+                                                'default': 'doc',
+                                                'description': "Document type (always 'doc')",
+                                            },
+                                            'version': {
+                                                'type': 'integer',
+                                                'default': 1,
+                                                'description': 'ADF version',
+                                            },
+                                            'content': {
+                                                'type': 'array',
+                                                'description': 'Array of content blocks',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                        'content': {
+                                                            'type': 'array',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                                    'text': {'type': 'string', 'description': 'Text content'},
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'priority': {
+                                        'type': 'object',
+                                        'description': 'Issue priority',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Priority ID'},
+                                            'name': {'type': 'string', 'description': "Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"},
+                                        },
+                                    },
+                                    'assignee': {
+                                        'type': 'object',
+                                        'description': 'The user to assign the issue to',
+                                        'properties': {
+                                            'accountId': {'type': 'string', 'description': 'The account ID of the user'},
+                                        },
+                                    },
+                                    'labels': {
+                                        'type': 'array',
+                                        'description': 'Labels to add to the issue',
+                                        'items': {'type': 'string'},
+                                    },
+                                    'parent': {
+                                        'type': 'object',
+                                        'description': 'Parent issue for subtasks',
+                                        'properties': {
+                                            'key': {'type': 'string', 'description': 'Parent issue key'},
+                                        },
+                                    },
+                                },
+                            },
+                            'update': {
+                                'type': 'object',
+                                'description': 'Additional update operations to perform',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['fields'],
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/issue/{issueIdOrKey}',
@@ -461,6 +581,307 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'x-airbyte-entity-name': 'issues',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/rest/api/3/issue/{issueIdOrKey}',
+                    action=Action.UPDATE,
+                    description='Edits an issue. Issue properties may be updated as part of the edit. Only fields included in the request body are updated.',
+                    body_fields=['fields', 'update', 'transition'],
+                    query_params=[
+                        'notifyUsers',
+                        'overrideScreenSecurity',
+                        'overrideEditableFlag',
+                        'returnIssue',
+                        'expand',
+                    ],
+                    query_params_schema={
+                        'notifyUsers': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': True,
+                        },
+                        'overrideScreenSecurity': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'overrideEditableFlag': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'returnIssue': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'expand': {'type': 'string', 'required': False},
+                    },
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an issue. Only fields included are updated.',
+                        'properties': {
+                            'fields': {
+                                'type': 'object',
+                                'description': 'The issue fields to update',
+                                'properties': {
+                                    'summary': {'type': 'string', 'description': 'A brief summary of the issue (title)'},
+                                    'description': {
+                                        'type': 'object',
+                                        'description': 'Issue description in Atlassian Document Format (ADF)',
+                                        'properties': {
+                                            'type': {
+                                                'type': 'string',
+                                                'default': 'doc',
+                                                'description': "Document type (always 'doc')",
+                                            },
+                                            'version': {
+                                                'type': 'integer',
+                                                'default': 1,
+                                                'description': 'ADF version',
+                                            },
+                                            'content': {
+                                                'type': 'array',
+                                                'description': 'Array of content blocks',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'properties': {
+                                                        'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                        'content': {
+                                                            'type': 'array',
+                                                            'items': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                                    'text': {'type': 'string', 'description': 'Text content'},
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'priority': {
+                                        'type': 'object',
+                                        'description': 'Issue priority',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Priority ID'},
+                                            'name': {'type': 'string', 'description': "Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"},
+                                        },
+                                    },
+                                    'assignee': {
+                                        'type': 'object',
+                                        'description': 'The user to assign the issue to',
+                                        'properties': {
+                                            'accountId': {'type': 'string', 'description': 'The account ID of the user (use null to unassign)'},
+                                        },
+                                    },
+                                    'labels': {
+                                        'type': 'array',
+                                        'description': 'Labels for the issue',
+                                        'items': {'type': 'string'},
+                                    },
+                                },
+                            },
+                            'update': {
+                                'type': 'object',
+                                'description': 'Additional update operations to perform',
+                                'additionalProperties': True,
+                            },
+                            'transition': {
+                                'type': 'object',
+                                'description': 'Transition the issue to a new status',
+                                'properties': {
+                                    'id': {'type': 'string', 'description': 'The ID of the transition to perform'},
+                                },
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Jira issue object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique issue identifier'},
+                            'key': {'type': 'string', 'description': 'Issue key (e.g., PROJ-123)'},
+                            'self': {
+                                'type': 'string',
+                                'format': 'uri',
+                                'description': 'URL of the issue',
+                            },
+                            'expand': {
+                                'type': ['string', 'null'],
+                                'description': 'Expand options that include additional issue details',
+                            },
+                            'fields': {
+                                'type': 'object',
+                                'description': "Issue fields (actual fields depend on 'fields' parameter in request)",
+                                'properties': {
+                                    'summary': {'type': 'string', 'description': 'Issue summary/title'},
+                                    'issuetype': {
+                                        'type': 'object',
+                                        'description': 'Issue type information',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'id': {'type': 'string'},
+                                            'description': {'type': 'string'},
+                                            'iconUrl': {'type': 'string', 'format': 'uri'},
+                                            'name': {'type': 'string'},
+                                            'subtask': {'type': 'boolean'},
+                                            'avatarId': {
+                                                'type': ['integer', 'null'],
+                                            },
+                                            'hierarchyLevel': {
+                                                'type': ['integer', 'null'],
+                                            },
+                                        },
+                                    },
+                                    'created': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'Issue creation timestamp',
+                                    },
+                                    'updated': {
+                                        'type': 'string',
+                                        'format': 'date-time',
+                                        'description': 'Issue last update timestamp',
+                                    },
+                                    'project': {
+                                        'type': 'object',
+                                        'description': 'Project information',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'id': {'type': 'string'},
+                                            'key': {'type': 'string'},
+                                            'name': {'type': 'string'},
+                                            'projectTypeKey': {'type': 'string'},
+                                            'simplified': {'type': 'boolean'},
+                                            'avatarUrls': {
+                                                'type': 'object',
+                                                'description': 'URLs for user avatars in different sizes',
+                                                'properties': {
+                                                    '16x16': {'type': 'string', 'format': 'uri'},
+                                                    '24x24': {'type': 'string', 'format': 'uri'},
+                                                    '32x32': {'type': 'string', 'format': 'uri'},
+                                                    '48x48': {'type': 'string', 'format': 'uri'},
+                                                },
+                                            },
+                                            'projectCategory': {
+                                                'type': ['object', 'null'],
+                                                'properties': {
+                                                    'self': {'type': 'string', 'format': 'uri'},
+                                                    'id': {'type': 'string'},
+                                                    'name': {'type': 'string'},
+                                                    'description': {'type': 'string'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'reporter': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Issue reporter user information',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'accountId': {'type': 'string'},
+                                            'emailAddress': {'type': 'string', 'format': 'email'},
+                                            'avatarUrls': {
+                                                'type': 'object',
+                                                'description': 'URLs for user avatars in different sizes',
+                                                'properties': {
+                                                    '16x16': {'type': 'string', 'format': 'uri'},
+                                                    '24x24': {'type': 'string', 'format': 'uri'},
+                                                    '32x32': {'type': 'string', 'format': 'uri'},
+                                                    '48x48': {'type': 'string', 'format': 'uri'},
+                                                },
+                                            },
+                                            'displayName': {'type': 'string'},
+                                            'active': {'type': 'boolean'},
+                                            'timeZone': {'type': 'string'},
+                                            'accountType': {'type': 'string'},
+                                        },
+                                    },
+                                    'assignee': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Issue assignee user information (null if unassigned)',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'accountId': {'type': 'string'},
+                                            'emailAddress': {'type': 'string', 'format': 'email'},
+                                            'avatarUrls': {
+                                                'type': 'object',
+                                                'description': 'URLs for user avatars in different sizes',
+                                                'properties': {
+                                                    '16x16': {'type': 'string', 'format': 'uri'},
+                                                    '24x24': {'type': 'string', 'format': 'uri'},
+                                                    '32x32': {'type': 'string', 'format': 'uri'},
+                                                    '48x48': {'type': 'string', 'format': 'uri'},
+                                                },
+                                            },
+                                            'displayName': {'type': 'string'},
+                                            'active': {'type': 'boolean'},
+                                            'timeZone': {'type': 'string'},
+                                            'accountType': {'type': 'string'},
+                                        },
+                                    },
+                                    'priority': {
+                                        'type': ['object', 'null'],
+                                        'description': 'Issue priority information',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'iconUrl': {'type': 'string', 'format': 'uri'},
+                                            'name': {'type': 'string'},
+                                            'id': {'type': 'string'},
+                                        },
+                                    },
+                                    'status': {
+                                        'type': 'object',
+                                        'description': 'Issue status information',
+                                        'properties': {
+                                            'self': {'type': 'string', 'format': 'uri'},
+                                            'description': {'type': 'string'},
+                                            'iconUrl': {'type': 'string', 'format': 'uri'},
+                                            'name': {'type': 'string'},
+                                            'id': {'type': 'string'},
+                                            'statusCategory': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'self': {'type': 'string', 'format': 'uri'},
+                                                    'id': {'type': 'integer'},
+                                                    'key': {'type': 'string'},
+                                                    'colorName': {'type': 'string'},
+                                                    'name': {'type': 'string'},
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'issues',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/rest/api/3/issue/{issueIdOrKey}',
+                    action=Action.DELETE,
+                    description='Deletes an issue. An issue cannot be deleted if it has one or more subtasks unless deleteSubtasks is true.',
+                    query_params=['deleteSubtasks'],
+                    query_params_schema={
+                        'deleteSubtasks': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                    },
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
                     },
                 ),
             },
@@ -2090,7 +2511,13 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='issue_comments',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+                Action.DELETE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2261,6 +2688,83 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         'total': '$.total',
                     },
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/rest/api/3/issue/{issueIdOrKey}/comment',
+                    action=Action.CREATE,
+                    description='Adds a comment to an issue',
+                    body_fields=['body', 'visibility', 'properties'],
+                    query_params=['expand'],
+                    query_params_schema={
+                        'expand': {'type': 'string', 'required': False},
+                    },
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a comment on an issue',
+                        'properties': {
+                            'body': {
+                                'type': 'object',
+                                'description': 'Comment content in Atlassian Document Format (ADF)',
+                                'required': ['type', 'version', 'content'],
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'default': 'doc',
+                                        'description': "Document type (always 'doc')",
+                                    },
+                                    'version': {
+                                        'type': 'integer',
+                                        'default': 1,
+                                        'description': 'ADF version',
+                                    },
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'visibility': {
+                                'type': 'object',
+                                'description': 'Restrict comment visibility to a group or role',
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'enum': ['group', 'role'],
+                                        'description': 'The type of visibility restriction',
+                                    },
+                                    'value': {'type': 'string', 'description': 'The name of the group or role'},
+                                    'identifier': {'type': 'string', 'description': 'The ID of the group or role'},
+                                },
+                            },
+                            'properties': {
+                                'type': 'array',
+                                'description': 'Custom properties for the comment',
+                                'items': {'type': 'object', 'additionalProperties': True},
+                            },
+                        },
+                        'required': ['body'],
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}',
@@ -2394,6 +2898,215 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'x-airbyte-entity-name': 'issue_comments',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}',
+                    action=Action.UPDATE,
+                    description='Updates a comment on an issue',
+                    body_fields=['body', 'visibility'],
+                    query_params=['notifyUsers', 'expand'],
+                    query_params_schema={
+                        'notifyUsers': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': True,
+                        },
+                        'expand': {'type': 'string', 'required': False},
+                    },
+                    path_params=['issueIdOrKey', 'commentId'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                        'commentId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a comment. Only fields included are updated.',
+                        'properties': {
+                            'body': {
+                                'type': 'object',
+                                'description': 'Updated comment content in Atlassian Document Format (ADF)',
+                                'required': ['type', 'version', 'content'],
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'default': 'doc',
+                                        'description': "Document type (always 'doc')",
+                                    },
+                                    'version': {
+                                        'type': 'integer',
+                                        'default': 1,
+                                        'description': 'ADF version',
+                                    },
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'visibility': {
+                                'type': 'object',
+                                'description': 'Restrict comment visibility to a group or role',
+                                'properties': {
+                                    'type': {
+                                        'type': 'string',
+                                        'enum': ['group', 'role'],
+                                        'description': 'The type of visibility restriction',
+                                    },
+                                    'value': {'type': 'string', 'description': 'The name of the group or role'},
+                                    'identifier': {'type': 'string', 'description': 'The ID of the group or role'},
+                                },
+                            },
+                        },
+                        'required': ['body'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Jira issue comment object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                            'self': {
+                                'type': 'string',
+                                'format': 'uri',
+                                'description': 'URL of the comment',
+                            },
+                            'body': {
+                                'type': 'object',
+                                'description': 'Comment content in ADF (Atlassian Document Format)',
+                                'properties': {
+                                    'type': {'type': 'string', 'description': "Document type (always 'doc')"},
+                                    'version': {'type': 'integer', 'description': 'ADF version'},
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'description': 'Nested content items',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'additionalProperties': False,
+                            },
+                            'author': {
+                                'type': 'object',
+                                'description': 'Comment author user information',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'updateAuthor': {
+                                'type': 'object',
+                                'description': 'User who last updated the comment',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'created': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Comment creation timestamp',
+                            },
+                            'updated': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Comment last update timestamp',
+                            },
+                            'jsdPublic': {'type': 'boolean', 'description': 'Whether the comment is public in Jira Service Desk'},
+                            'visibility': {
+                                'type': ['object', 'null'],
+                                'description': 'Visibility restrictions for the comment',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'value': {'type': 'string'},
+                                    'identifier': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'renderedBody': {
+                                'type': ['string', 'null'],
+                                'description': 'Rendered comment body as HTML (available with expand=renderedBody)',
+                            },
+                            'properties': {
+                                'type': ['array', 'null'],
+                                'description': 'Comment properties (available with expand=properties)',
+                                'items': {'type': 'object', 'additionalProperties': True},
+                            },
+                        },
+                        'x-airbyte-entity-name': 'issue_comments',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}',
+                    action=Action.DELETE,
+                    description='Deletes a comment from an issue',
+                    path_params=['issueIdOrKey', 'commentId'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                        'commentId': {'type': 'string', 'required': True},
                     },
                 ),
             },

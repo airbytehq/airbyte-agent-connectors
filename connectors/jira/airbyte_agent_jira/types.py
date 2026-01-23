@@ -15,6 +15,137 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class IssuesCreateParamsFieldsProject(TypedDict):
+    """The project to create the issue in"""
+    id: NotRequired[str]
+    key: NotRequired[str]
+
+class IssuesCreateParamsFieldsIssuetype(TypedDict):
+    """The type of issue (e.g., Bug, Task, Story)"""
+    id: NotRequired[str]
+    name: NotRequired[str]
+
+class IssuesCreateParamsFieldsDescriptionContentItemContentItem(TypedDict):
+    """Nested schema for IssuesCreateParamsFieldsDescriptionContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssuesCreateParamsFieldsDescriptionContentItem(TypedDict):
+    """Nested schema for IssuesCreateParamsFieldsDescription.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssuesCreateParamsFieldsDescriptionContentItemContentItem]]
+
+class IssuesCreateParamsFieldsDescription(TypedDict):
+    """Issue description in Atlassian Document Format (ADF)"""
+    type: NotRequired[str]
+    version: NotRequired[int]
+    content: NotRequired[list[IssuesCreateParamsFieldsDescriptionContentItem]]
+
+class IssuesCreateParamsFieldsPriority(TypedDict):
+    """Issue priority"""
+    id: NotRequired[str]
+    name: NotRequired[str]
+
+class IssuesCreateParamsFieldsAssignee(TypedDict):
+    """The user to assign the issue to"""
+    accountId: NotRequired[str]
+
+class IssuesCreateParamsFieldsParent(TypedDict):
+    """Parent issue for subtasks"""
+    key: NotRequired[str]
+
+class IssuesCreateParamsFields(TypedDict):
+    """The issue fields to set"""
+    project: IssuesCreateParamsFieldsProject
+    issuetype: IssuesCreateParamsFieldsIssuetype
+    summary: str
+    description: NotRequired[IssuesCreateParamsFieldsDescription]
+    priority: NotRequired[IssuesCreateParamsFieldsPriority]
+    assignee: NotRequired[IssuesCreateParamsFieldsAssignee]
+    labels: NotRequired[list[str]]
+    parent: NotRequired[IssuesCreateParamsFieldsParent]
+
+class IssuesUpdateParamsFieldsDescriptionContentItemContentItem(TypedDict):
+    """Nested schema for IssuesUpdateParamsFieldsDescriptionContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssuesUpdateParamsFieldsDescriptionContentItem(TypedDict):
+    """Nested schema for IssuesUpdateParamsFieldsDescription.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssuesUpdateParamsFieldsDescriptionContentItemContentItem]]
+
+class IssuesUpdateParamsFieldsDescription(TypedDict):
+    """Issue description in Atlassian Document Format (ADF)"""
+    type: NotRequired[str]
+    version: NotRequired[int]
+    content: NotRequired[list[IssuesUpdateParamsFieldsDescriptionContentItem]]
+
+class IssuesUpdateParamsFieldsPriority(TypedDict):
+    """Issue priority"""
+    id: NotRequired[str]
+    name: NotRequired[str]
+
+class IssuesUpdateParamsFieldsAssignee(TypedDict):
+    """The user to assign the issue to"""
+    accountId: NotRequired[str]
+
+class IssuesUpdateParamsFields(TypedDict):
+    """The issue fields to update"""
+    summary: NotRequired[str]
+    description: NotRequired[IssuesUpdateParamsFieldsDescription]
+    priority: NotRequired[IssuesUpdateParamsFieldsPriority]
+    assignee: NotRequired[IssuesUpdateParamsFieldsAssignee]
+    labels: NotRequired[list[str]]
+
+class IssuesUpdateParamsTransition(TypedDict):
+    """Transition the issue to a new status"""
+    id: NotRequired[str]
+
+class IssueCommentsCreateParamsBodyContentItemContentItem(TypedDict):
+    """Nested schema for IssueCommentsCreateParamsBodyContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssueCommentsCreateParamsBodyContentItem(TypedDict):
+    """Nested schema for IssueCommentsCreateParamsBody.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssueCommentsCreateParamsBodyContentItemContentItem]]
+
+class IssueCommentsCreateParamsBody(TypedDict):
+    """Comment content in Atlassian Document Format (ADF)"""
+    type: str
+    version: int
+    content: list[IssueCommentsCreateParamsBodyContentItem]
+
+class IssueCommentsCreateParamsVisibility(TypedDict):
+    """Restrict comment visibility to a group or role"""
+    type: NotRequired[str]
+    value: NotRequired[str]
+    identifier: NotRequired[str]
+
+class IssueCommentsUpdateParamsBodyContentItemContentItem(TypedDict):
+    """Nested schema for IssueCommentsUpdateParamsBodyContentItem.content_item"""
+    type: NotRequired[str]
+    text: NotRequired[str]
+
+class IssueCommentsUpdateParamsBodyContentItem(TypedDict):
+    """Nested schema for IssueCommentsUpdateParamsBody.content_item"""
+    type: NotRequired[str]
+    content: NotRequired[list[IssueCommentsUpdateParamsBodyContentItemContentItem]]
+
+class IssueCommentsUpdateParamsBody(TypedDict):
+    """Updated comment content in Atlassian Document Format (ADF)"""
+    type: str
+    version: int
+    content: list[IssueCommentsUpdateParamsBodyContentItem]
+
+class IssueCommentsUpdateParamsVisibility(TypedDict):
+    """Restrict comment visibility to a group or role"""
+    type: NotRequired[str]
+    value: NotRequired[str]
+    identifier: NotRequired[str]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class IssuesApiSearchParams(TypedDict):
@@ -28,6 +159,12 @@ class IssuesApiSearchParams(TypedDict):
     fields_by_keys: NotRequired[bool]
     fail_fast: NotRequired[bool]
 
+class IssuesCreateParams(TypedDict):
+    """Parameters for issues.create operation"""
+    fields: IssuesCreateParamsFields
+    update: NotRequired[dict[str, Any]]
+    update_history: NotRequired[bool]
+
 class IssuesGetParams(TypedDict):
     """Parameters for issues.get operation"""
     issue_id_or_key: str
@@ -37,6 +174,23 @@ class IssuesGetParams(TypedDict):
     fields_by_keys: NotRequired[bool]
     update_history: NotRequired[bool]
     fail_fast: NotRequired[bool]
+
+class IssuesUpdateParams(TypedDict):
+    """Parameters for issues.update operation"""
+    fields: NotRequired[IssuesUpdateParamsFields]
+    update: NotRequired[dict[str, Any]]
+    transition: NotRequired[IssuesUpdateParamsTransition]
+    issue_id_or_key: str
+    notify_users: NotRequired[bool]
+    override_screen_security: NotRequired[bool]
+    override_editable_flag: NotRequired[bool]
+    return_issue: NotRequired[bool]
+    expand: NotRequired[str]
+
+class IssuesDeleteParams(TypedDict):
+    """Parameters for issues.delete operation"""
+    issue_id_or_key: str
+    delete_subtasks: NotRequired[bool]
 
 class ProjectsApiSearchParams(TypedDict):
     """Parameters for projects.api_search operation"""
@@ -98,11 +252,33 @@ class IssueCommentsListParams(TypedDict):
     order_by: NotRequired[str]
     expand: NotRequired[str]
 
+class IssueCommentsCreateParams(TypedDict):
+    """Parameters for issue_comments.create operation"""
+    body: IssueCommentsCreateParamsBody
+    visibility: NotRequired[IssueCommentsCreateParamsVisibility]
+    properties: NotRequired[list[dict[str, Any]]]
+    issue_id_or_key: str
+    expand: NotRequired[str]
+
 class IssueCommentsGetParams(TypedDict):
     """Parameters for issue_comments.get operation"""
     issue_id_or_key: str
     comment_id: str
     expand: NotRequired[str]
+
+class IssueCommentsUpdateParams(TypedDict):
+    """Parameters for issue_comments.update operation"""
+    body: IssueCommentsUpdateParamsBody
+    visibility: NotRequired[IssueCommentsUpdateParamsVisibility]
+    issue_id_or_key: str
+    comment_id: str
+    notify_users: NotRequired[bool]
+    expand: NotRequired[str]
+
+class IssueCommentsDeleteParams(TypedDict):
+    """Parameters for issue_comments.delete operation"""
+    issue_id_or_key: str
+    comment_id: str
 
 class IssueWorklogsListParams(TypedDict):
     """Parameters for issue_worklogs.list operation"""
