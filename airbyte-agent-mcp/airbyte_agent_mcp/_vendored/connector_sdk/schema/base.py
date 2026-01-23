@@ -140,6 +140,33 @@ class ServerVariable(BaseModel):
     description: str | None = None
 
 
+class EnvironmentMappingTransform(BaseModel):
+    """
+    Structured transform for environment mapping values.
+
+    Allows transforming environment values before storing in source_config.
+
+    Example:
+        source: subdomain
+        format: "{value}.atlassian.net"
+
+    The format string uses {value} as a placeholder for the source value.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    source: str = Field(description="The environment config key to read the value from")
+    format: str | None = Field(
+        default=None,
+        description="Optional format string to transform the value. Use {value} as placeholder.",
+    )
+
+
+# Type alias for environment mapping values: either a simple string (config key)
+# or a structured transform with source and optional transform template
+EnvironmentMappingValue = str | EnvironmentMappingTransform
+
+
 class Server(BaseModel):
     """
     Server URL and variable definitions.
@@ -152,7 +179,10 @@ class Server(BaseModel):
     url: str
     description: str | None = None
     variables: Dict[str, ServerVariable] = Field(default_factory=dict)
-    x_airbyte_replication_environment_mapping: Dict[str, str] | None = Field(default=None, alias="x-airbyte-replication-environment-mapping")
+    x_airbyte_replication_environment_mapping: Dict[str, EnvironmentMappingValue] | None = Field(
+        default=None,
+        alias="x-airbyte-replication-environment-mapping",
+    )
     x_airbyte_replication_environment_constants: Dict[str, Any] | None = Field(
         default=None,
         alias="x-airbyte-replication-environment-constants",
