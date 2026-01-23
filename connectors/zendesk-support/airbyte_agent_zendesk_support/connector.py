@@ -172,7 +172,7 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "0.1.7"
+    connector_version = "0.1.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -948,7 +948,7 @@ class TicketsQuery:
         - created_at: Timestamp indicating when the ticket was created
         - custom_fields: Array of custom field values specific to the account's ticket configuration
         - custom_status_id: Unique identifier of the custom status applied to the ticket
-        - deleted_ticket_form_id: Unique identifier of the ticket form if it was deleted after the ticket was created
+        - deleted_ticket_form_id: The ID of the ticket form that was previously associated with this ticket but has since been deleted
         - description: Initial description or content of the ticket when it was created
         - due_at: Timestamp indicating when the ticket is due for completion or resolution
         - email_cc_ids: Array of user identifiers who are CC'd on ticket email notifications
@@ -958,7 +958,7 @@ class TicketsQuery:
         - followup_ids: Array of identifiers for follow-up tickets related to this ticket
         - forum_topic_id: Unique identifier linking the ticket to a forum topic if applicable
         - from_messaging_channel: Boolean indicating whether the ticket originated from a messaging channel
-        - generated_timestamp: Timestamp updated for all ticket updates including system changes, used for incremental export co...
+        - generated_timestamp: Timestamp updated for all ticket updates including system changes, used for incremental export
         - group_id: Unique identifier of the agent group assigned to handle the ticket
         - has_incidents: Boolean indicating whether this problem ticket has related incident tickets
         - id: Unique identifier for the ticket
@@ -1982,9 +1982,9 @@ class TicketFieldsQuery:
         Available filter fields (TicketFieldsSearchFilter):
         - active: Whether this field is currently available for use
         - agent_description: A description of the ticket field that only agents can see
-        - collapsed_for_agents: If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u...
+        - collapsed_for_agents: If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields
         - created_at: Timestamp when the custom ticket field was created
-        - custom_field_options: Array of option objects for custom ticket fields of type multiselect or tagger, containing name a...
+        - custom_field_options: Array of option objects for custom ticket fields of type multiselect or tagger
         - custom_statuses: List of customized ticket statuses, only present for system ticket fields of type custom_status
         - description: Text describing the purpose of the ticket field to users
         - editable_in_portal: Whether this field is editable by end users in Help Center
@@ -2003,7 +2003,7 @@ class TicketFieldsQuery:
         - tag: For checkbox fields only, a tag added to tickets when the checkbox field is selected
         - title: The title of the ticket field displayed to agents
         - title_in_portal: The title of the ticket field displayed to end users in Help Center
-        - type: Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,...
+        - type: Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger
         - updated_at: Timestamp when the custom ticket field was last updated
         - url: The API URL for this ticket field resource
         - visible_in_portal: Whether this field is visible to end users in Help Center
@@ -2666,7 +2666,7 @@ class SatisfactionRatingsQuery:
         - group_id: The identifier of the group assigned to the ticket at the time the rating was submitted
         - id: Unique identifier for the satisfaction rating, automatically assigned upon creation
         - reason: Free-text reason for a bad rating provided by the requester in a follow-up question
-        - reason_id: Identifier for the predefined reason given for a negative rating, only applicable when score is '...
+        - reason_id: Identifier for the predefined reason given for a negative rating
         - requester_id: The identifier of the ticket requester who submitted the satisfaction rating
         - score: The satisfaction rating value: 'offered', 'unoffered', 'good', or 'bad'
         - ticket_id: The identifier of the ticket being rated
@@ -2947,7 +2947,7 @@ class TicketFormsQuery:
         - raw_display_name: The dynamic content placeholder if present, or the display_name value if not
         - raw_name: The dynamic content placeholder if present, or the name value if not
         - restricted_brand_ids: IDs of all brands that this ticket form is restricted to
-        - ticket_field_ids: IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc...
+        - ticket_field_ids: IDs of all ticket fields included in this ticket form
         - updated_at: Timestamp of the last update to the ticket form
         - url: URL of the ticket form
 

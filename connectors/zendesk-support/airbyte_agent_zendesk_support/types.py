@@ -983,7 +983,7 @@ class SatisfactionRatingsSearchFilter(TypedDict, total=False):
     reason: str | None
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: int | None
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: int | None
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: str | None
@@ -1011,7 +1011,7 @@ class SatisfactionRatingsInFilter(TypedDict, total=False):
     reason: list[str]
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: list[int]
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: list[int]
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: list[str]
@@ -1039,7 +1039,7 @@ class SatisfactionRatingsAnyValueFilter(TypedDict, total=False):
     reason: Any
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: Any
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: Any
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: Any
@@ -1067,7 +1067,7 @@ class SatisfactionRatingsStringFilter(TypedDict, total=False):
     reason: str
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: str
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: str
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: str
@@ -1095,7 +1095,7 @@ class SatisfactionRatingsSortFilter(TypedDict, total=False):
     reason: AirbyteSortOrder
     """Free-text reason for a bad rating provided by the requester in a follow-up question"""
     reason_id: AirbyteSortOrder
-    """Identifier for the predefined reason given for a negative rating, only applicable when score is '..."""
+    """Identifier for the predefined reason given for a negative rating"""
     requester_id: AirbyteSortOrder
     """The identifier of the ticket requester who submitted the satisfaction rating"""
     score: AirbyteSortOrder
@@ -1825,11 +1825,11 @@ class TicketFieldsSearchFilter(TypedDict, total=False):
     agent_description: str | None
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: bool | None
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: str | None
     """Timestamp when the custom ticket field was created"""
     custom_field_options: list[Any] | None
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: list[Any] | None
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: str | None
@@ -1867,7 +1867,7 @@ class TicketFieldsSearchFilter(TypedDict, total=False):
     title_in_portal: str | None
     """The title of the ticket field displayed to end users in Help Center"""
     type: str | None
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str | None
     """Timestamp when the custom ticket field was last updated"""
     url: str | None
@@ -1883,11 +1883,11 @@ class TicketFieldsInFilter(TypedDict, total=False):
     agent_description: list[str]
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: list[bool]
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: list[str]
     """Timestamp when the custom ticket field was created"""
     custom_field_options: list[list[Any]]
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: list[list[Any]]
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: list[str]
@@ -1925,7 +1925,7 @@ class TicketFieldsInFilter(TypedDict, total=False):
     title_in_portal: list[str]
     """The title of the ticket field displayed to end users in Help Center"""
     type: list[str]
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: list[str]
     """Timestamp when the custom ticket field was last updated"""
     url: list[str]
@@ -1941,11 +1941,11 @@ class TicketFieldsAnyValueFilter(TypedDict, total=False):
     agent_description: Any
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: Any
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: Any
     """Timestamp when the custom ticket field was created"""
     custom_field_options: Any
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: Any
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: Any
@@ -1983,7 +1983,7 @@ class TicketFieldsAnyValueFilter(TypedDict, total=False):
     title_in_portal: Any
     """The title of the ticket field displayed to end users in Help Center"""
     type: Any
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: Any
     """Timestamp when the custom ticket field was last updated"""
     url: Any
@@ -1999,11 +1999,11 @@ class TicketFieldsStringFilter(TypedDict, total=False):
     agent_description: str
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: str
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: str
     """Timestamp when the custom ticket field was created"""
     custom_field_options: str
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: str
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: str
@@ -2041,7 +2041,7 @@ class TicketFieldsStringFilter(TypedDict, total=False):
     title_in_portal: str
     """The title of the ticket field displayed to end users in Help Center"""
     type: str
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str
     """Timestamp when the custom ticket field was last updated"""
     url: str
@@ -2057,11 +2057,11 @@ class TicketFieldsSortFilter(TypedDict, total=False):
     agent_description: AirbyteSortOrder
     """A description of the ticket field that only agents can see"""
     collapsed_for_agents: AirbyteSortOrder
-    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently u..."""
+    """If true, the field is shown to agents by default; if false, it is hidden alongside infrequently used fields"""
     created_at: AirbyteSortOrder
     """Timestamp when the custom ticket field was created"""
     custom_field_options: AirbyteSortOrder
-    """Array of option objects for custom ticket fields of type multiselect or tagger, containing name a..."""
+    """Array of option objects for custom ticket fields of type multiselect or tagger"""
     custom_statuses: AirbyteSortOrder
     """List of customized ticket statuses, only present for system ticket fields of type custom_status"""
     description: AirbyteSortOrder
@@ -2099,7 +2099,7 @@ class TicketFieldsSortFilter(TypedDict, total=False):
     title_in_portal: AirbyteSortOrder
     """The title of the ticket field displayed to end users in Help Center"""
     type: AirbyteSortOrder
-    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, tagger,..."""
+    """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: AirbyteSortOrder
     """Timestamp when the custom ticket field was last updated"""
     url: AirbyteSortOrder
@@ -2234,7 +2234,7 @@ class TicketFormsSearchFilter(TypedDict, total=False):
     restricted_brand_ids: list[Any] | None
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: list[Any] | None
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: str | None
     """Timestamp of the last update to the ticket form"""
     url: str | None
@@ -2272,7 +2272,7 @@ class TicketFormsInFilter(TypedDict, total=False):
     restricted_brand_ids: list[list[Any]]
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: list[list[Any]]
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: list[str]
     """Timestamp of the last update to the ticket form"""
     url: list[str]
@@ -2310,7 +2310,7 @@ class TicketFormsAnyValueFilter(TypedDict, total=False):
     restricted_brand_ids: Any
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: Any
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: Any
     """Timestamp of the last update to the ticket form"""
     url: Any
@@ -2348,7 +2348,7 @@ class TicketFormsStringFilter(TypedDict, total=False):
     restricted_brand_ids: str
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: str
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: str
     """Timestamp of the last update to the ticket form"""
     url: str
@@ -2386,7 +2386,7 @@ class TicketFormsSortFilter(TypedDict, total=False):
     restricted_brand_ids: AirbyteSortOrder
     """IDs of all brands that this ticket form is restricted to"""
     ticket_field_ids: AirbyteSortOrder
-    """IDs of all ticket fields included in this ticket form, ordered to determine field display sequenc..."""
+    """IDs of all ticket fields included in this ticket form"""
     updated_at: AirbyteSortOrder
     """Timestamp of the last update to the ticket form"""
     url: AirbyteSortOrder
@@ -2922,7 +2922,7 @@ class TicketsSearchFilter(TypedDict, total=False):
     custom_status_id: int | None
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: int | None
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: str | None
     """Initial description or content of the ticket when it was created"""
     due_at: str | None
@@ -2942,7 +2942,7 @@ class TicketsSearchFilter(TypedDict, total=False):
     from_messaging_channel: bool | None
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: int | None
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: int | None
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: bool | None
@@ -3006,7 +3006,7 @@ class TicketsInFilter(TypedDict, total=False):
     custom_status_id: list[int]
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: list[int]
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: list[str]
     """Initial description or content of the ticket when it was created"""
     due_at: list[str]
@@ -3026,7 +3026,7 @@ class TicketsInFilter(TypedDict, total=False):
     from_messaging_channel: list[bool]
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: list[int]
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: list[int]
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: list[bool]
@@ -3090,7 +3090,7 @@ class TicketsAnyValueFilter(TypedDict, total=False):
     custom_status_id: Any
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: Any
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: Any
     """Initial description or content of the ticket when it was created"""
     due_at: Any
@@ -3110,7 +3110,7 @@ class TicketsAnyValueFilter(TypedDict, total=False):
     from_messaging_channel: Any
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: Any
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: Any
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: Any
@@ -3174,7 +3174,7 @@ class TicketsStringFilter(TypedDict, total=False):
     custom_status_id: str
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: str
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: str
     """Initial description or content of the ticket when it was created"""
     due_at: str
@@ -3194,7 +3194,7 @@ class TicketsStringFilter(TypedDict, total=False):
     from_messaging_channel: str
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: str
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: str
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: str
@@ -3258,7 +3258,7 @@ class TicketsSortFilter(TypedDict, total=False):
     custom_status_id: AirbyteSortOrder
     """Unique identifier of the custom status applied to the ticket"""
     deleted_ticket_form_id: AirbyteSortOrder
-    """Unique identifier of the ticket form if it was deleted after the ticket was created"""
+    """The ID of the ticket form that was previously associated with this ticket but has since been deleted"""
     description: AirbyteSortOrder
     """Initial description or content of the ticket when it was created"""
     due_at: AirbyteSortOrder
@@ -3278,7 +3278,7 @@ class TicketsSortFilter(TypedDict, total=False):
     from_messaging_channel: AirbyteSortOrder
     """Boolean indicating whether the ticket originated from a messaging channel"""
     generated_timestamp: AirbyteSortOrder
-    """Timestamp updated for all ticket updates including system changes, used for incremental export co..."""
+    """Timestamp updated for all ticket updates including system changes, used for incremental export"""
     group_id: AirbyteSortOrder
     """Unique identifier of the agent group assigned to handle the ticket"""
     has_incidents: AirbyteSortOrder
