@@ -26,7 +26,7 @@ from uuid import (
 MailchimpConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b03a9f3e-22a5-11eb-adc1-0242ac120002'),
     name='mailchimp',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://{data_center}.api.mailchimp.com/3.0',
     auth=AuthConfig(
         type=AuthType.BASIC,

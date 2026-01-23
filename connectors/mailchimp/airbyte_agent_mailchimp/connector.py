@@ -33,6 +33,15 @@ from .types import (
     SegmentsListParams,
     TagsListParams,
     UnsubscribesListParams,
+    AirbyteSearchParams,
+    CampaignsSearchFilter,
+    CampaignsSearchQuery,
+    EmailActivitySearchFilter,
+    EmailActivitySearchQuery,
+    ListsSearchFilter,
+    ListsSearchQuery,
+    ReportsSearchFilter,
+    ReportsSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import MailchimpAuthConfig
@@ -64,6 +73,16 @@ from .models import (
     SegmentMember,
     Tag,
     Unsubscribe,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    CampaignsSearchData,
+    CampaignsSearchResult,
+    EmailActivitySearchData,
+    EmailActivitySearchResult,
+    ListsSearchData,
+    ListsSearchResult,
+    ReportsSearchData,
+    ReportsSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -79,7 +98,7 @@ class MailchimpConnector:
     """
 
     connector_name = "mailchimp"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -632,6 +651,81 @@ class CampaignsQuery:
 
 
 
+    async def search(
+        self,
+        query: CampaignsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CampaignsSearchResult:
+        """
+        Search campaigns records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CampaignsSearchFilter):
+        - ab_split_opts: [A/B Testing](https://mailchimp.com/help/about-ab-testing-campaigns/) options for a campaign.
+        - archive_url: The link to the campaign's archive version in ISO 8601 format.
+        - content_type: How the campaign's content is put together.
+        - create_time: The date and time the campaign was created in ISO 8601 format.
+        - delivery_status: Updates on campaigns in the process of sending.
+        - emails_sent: The total number of emails sent for this campaign.
+        - id: A string that uniquely identifies this campaign.
+        - long_archive_url: The original link to the campaign's archive version.
+        - needs_block_refresh: Determines if the campaign needs its blocks refreshed by opening the web-based campaign editor. D...
+        - parent_campaign_id: If this campaign is the child of another campaign, this identifies the parent campaign. For Examp...
+        - recipients: List settings for the campaign.
+        - report_summary: For sent campaigns, a summary of opens, clicks, and e-commerce data.
+        - resendable: Determines if the campaign qualifies to be resent to non-openers.
+        - rss_opts: [RSS](https://mailchimp.com/help/share-your-blog-posts-with-mailchimp/) options for a campaign.
+        - send_time: The date and time a campaign was sent.
+        - settings: The settings for your campaign, including subject, from name, reply-to address, and more.
+        - social_card: The preview for the campaign, rendered by social networks like Facebook and Twitter. [Learn more]...
+        - status: The current status of the campaign.
+        - tracking: The tracking options for a campaign.
+        - type: There are four types of [campaigns](https://mailchimp.com/help/getting-started-with-campaigns/) y...
+        - variate_settings: The settings specific to A/B test campaigns.
+        - web_id: The ID used in the Mailchimp web application. View this campaign in your Mailchimp account at `ht...
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CampaignsSearchResult with hits (list of AirbyteSearchHit[CampaignsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("campaigns", "search", params)
+
+        # Parse response into typed result
+        return CampaignsSearchResult(
+            hits=[
+                AirbyteSearchHit[CampaignsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CampaignsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ListsQuery:
     """
     Query class for Lists entity operations.
@@ -718,6 +812,80 @@ class ListsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: ListsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ListsSearchResult:
+        """
+        Search lists records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ListsSearchFilter):
+        - beamer_address: The list's Email Beamer address.
+        - campaign_defaults: Default values for campaigns created for this list.
+        - contact: Contact information displayed in campaign footers to comply with international spam laws.
+        - date_created: The date and time that this list was created in ISO 8601 format.
+        - double_optin: Whether or not to require the subscriber to confirm subscription via email.
+        - email_type_option: Whether the list supports multiple formats for emails. When set to `true`, subscribers can choose...
+        - has_welcome: Whether or not this list has a welcome automation connected.
+        - id: A string that uniquely identifies this list.
+        - list_rating: An auto-generated activity score for the list (0-5).
+        - marketing_permissions: Whether or not the list has marketing permissions (eg. GDPR) enabled.
+        - modules: Any list-specific modules installed for this list.
+        - name: The name of the list.
+        - notify_on_subscribe: The email address to send subscribe notifications to.
+        - notify_on_unsubscribe: The email address to send unsubscribe notifications to.
+        - permission_reminder: The permission reminder for the list.
+        - stats: Stats for the list. Many of these are cached for at least five minutes.
+        - subscribe_url_long: The full version of this list's subscribe form (host will vary).
+        - subscribe_url_short: Our EepURL shortened version of this list's subscribe form.
+        - use_archive_bar: Whether campaigns for this list use the Archive Bar in archives by default.
+        - visibility: Whether this list is public or private.
+        - web_id: The ID used in the Mailchimp web application. View this list in your Mailchimp account at `https:...
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ListsSearchResult with hits (list of AirbyteSearchHit[ListsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("lists", "search", params)
+
+        # Parse response into typed result
+        return ListsSearchResult(
+            hits=[
+                AirbyteSearchHit[ListsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ListsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class ListMembersQuery:
     """
@@ -905,6 +1073,85 @@ class ReportsQuery:
 
 
 
+    async def search(
+        self,
+        query: ReportsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ReportsSearchResult:
+        """
+        Search reports records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ReportsSearchFilter):
+        - ab_split: General stats about different groups of an A/B Split campaign. Does not return information about ...
+        - abuse_reports: The number of abuse reports generated for this campaign.
+        - bounces: An object describing the bounce summary for the campaign.
+        - campaign_title: The title of the campaign.
+        - clicks: An object describing the click activity for the campaign.
+        - delivery_status: Updates on campaigns in the process of sending.
+        - ecommerce: E-Commerce stats for a campaign.
+        - emails_sent: The total number of emails sent for this campaign.
+        - facebook_likes: An object describing campaign engagement on Facebook.
+        - forwards: An object describing the forwards and forward activity for the campaign.
+        - id: A string that uniquely identifies this campaign.
+        - industry_stats: The average campaign statistics for your industry.
+        - list_id: The unique list id.
+        - list_is_active: The status of the list used, namely if it's deleted or disabled.
+        - list_name: The name of the list.
+        - list_stats: The average campaign statistics for your list. This won't be present if we haven't calculated i...
+        - opens: An object describing the open activity for the campaign.
+        - preview_text: The preview text for the campaign.
+        - rss_last_send: For RSS campaigns, the date and time of the last send in ISO 8601 format.
+        - send_time: The date and time a campaign was sent in ISO 8601 format.
+        - share_report: The url and password for the VIP report.
+        - subject_line: The subject line for the campaign.
+        - timeseries: An hourly breakdown of the performance of the campaign over the first 24 hours.
+        - timewarp: An hourly breakdown of sends, opens, and clicks if a campaign is sent using timewarp.
+        - type: The type of campaign (regular, plain-text, ab_split, rss, automation, variate, or auto).
+        - unsubscribed: The total number of unsubscribed members for this campaign.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ReportsSearchResult with hits (list of AirbyteSearchHit[ReportsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("reports", "search", params)
+
+        # Parse response into typed result
+        return ReportsSearchResult(
+            hits=[
+                AirbyteSearchHit[ReportsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ReportsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class EmailActivityQuery:
     """
     Query class for EmailActivity entity operations.
@@ -951,6 +1198,69 @@ class EmailActivityQuery:
         )
 
 
+
+    async def search(
+        self,
+        query: EmailActivitySearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> EmailActivitySearchResult:
+        """
+        Search email_activity records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (EmailActivitySearchFilter):
+        - action: One of the following actions: 'open', 'click', or 'bounce'
+        - campaign_id: The unique id for the campaign.
+        - email_address: Email address for a subscriber.
+        - email_id: The MD5 hash of the lowercase version of the list member's email address.
+        - ip: The IP address recorded for the action.
+        - list_id: The unique id for the list.
+        - list_is_active: The status of the list used, namely if it's deleted or disabled.
+        - timestamp: The date and time recorded for the action in ISO 8601 format.
+        - type: If the action is a 'bounce', the type of bounce received: 'hard', 'soft'.
+        - url: If the action is a 'click', the URL on which the member clicked.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            EmailActivitySearchResult with hits (list of AirbyteSearchHit[EmailActivitySearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("email_activity", "search", params)
+
+        # Parse response into typed result
+        return EmailActivitySearchResult(
+            hits=[
+                AirbyteSearchHit[EmailActivitySearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=EmailActivitySearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class AutomationsQuery:
     """
