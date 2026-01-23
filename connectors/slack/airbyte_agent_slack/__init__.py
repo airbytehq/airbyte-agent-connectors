@@ -18,8 +18,8 @@ from .models import (
     ChannelsListResponse,
     ChannelResponse,
     Reaction,
-    Attachment,
     File,
+    Attachment,
     Message,
     Thread,
     EditedInfo,
@@ -50,7 +50,13 @@ from .models import (
     UsersListResult,
     ChannelsListResult,
     ChannelMessagesListResult,
-    ThreadsListResult
+    ThreadsListResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    ChannelsSearchData,
+    ChannelsSearchResult,
+    UsersSearchData,
+    UsersSearchResult
 )
 from .types import (
     UsersListParams,
@@ -65,7 +71,15 @@ from .types import (
     ChannelsUpdateParams,
     ChannelTopicsCreateParams,
     ChannelPurposesCreateParams,
-    ReactionsCreateParams
+    ReactionsCreateParams,
+    AirbyteSearchParams,
+    AirbyteSortOrder,
+    ChannelsSearchFilter,
+    ChannelsSearchQuery,
+    ChannelsCondition,
+    UsersSearchFilter,
+    UsersSearchQuery,
+    UsersCondition
 )
 
 __all__ = [
@@ -82,8 +96,8 @@ __all__ = [
     "ChannelsListResponse",
     "ChannelResponse",
     "Reaction",
-    "Attachment",
     "File",
+    "Attachment",
     "Message",
     "Thread",
     "EditedInfo",
@@ -115,6 +129,12 @@ __all__ = [
     "ChannelsListResult",
     "ChannelMessagesListResult",
     "ThreadsListResult",
+    "AirbyteSearchHit",
+    "AirbyteSearchResult",
+    "ChannelsSearchData",
+    "ChannelsSearchResult",
+    "UsersSearchData",
+    "UsersSearchResult",
     "UsersListParams",
     "UsersGetParams",
     "ChannelsListParams",
@@ -128,4 +148,12 @@ __all__ = [
     "ChannelTopicsCreateParams",
     "ChannelPurposesCreateParams",
     "ReactionsCreateParams",
+    "AirbyteSearchParams",
+    "AirbyteSortOrder",
+    "ChannelsSearchFilter",
+    "ChannelsSearchQuery",
+    "ChannelsCondition",
+    "UsersSearchFilter",
+    "UsersSearchQuery",
+    "UsersCondition",
 ]
