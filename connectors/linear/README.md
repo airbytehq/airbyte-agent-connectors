@@ -24,6 +24,11 @@ The Linear connector is optimized to handle prompts like these.
 - Add a comment to issue DEF-789 saying 'This is ready for review'
 - Update my comment on issue to say 'Revised feedback after testing'
 - Create a high priority issue for the backend team about the API performance
+- List all users in my Linear workspace
+- Assign John to issue ABC-123
+- Unassign the current assignee from issue XYZ-456
+- Who is assigned to issue DEF-789?
+- Reassign issue ABC-123 from John to Jane
 
 ## Unsupported questions
 
@@ -85,6 +90,7 @@ async def linear_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
+
 ## Full documentation
 
 This connector supports the following entities and actions.
@@ -94,6 +100,7 @@ This connector supports the following entities and actions.
 | Issues | [List](./REFERENCE.md#issues-list), [Get](./REFERENCE.md#issues-get), [Create](./REFERENCE.md#issues-create), [Update](./REFERENCE.md#issues-update) |
 | Projects | [List](./REFERENCE.md#projects-list), [Get](./REFERENCE.md#projects-get) |
 | Teams | [List](./REFERENCE.md#teams-list), [Get](./REFERENCE.md#teams-get) |
+| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get) |
 | Comments | [List](./REFERENCE.md#comments-list), [Get](./REFERENCE.md#comments-get), [Create](./REFERENCE.md#comments-create), [Update](./REFERENCE.md#comments-update) |
 
 
@@ -105,6 +112,6 @@ For the service's official API docs, see the [Linear API reference](https://line
 
 ## Version information
 
-- **Package version:** 0.19.56
-- **Connector version:** 0.1.4
-- **Generated with Connector SDK commit SHA:** 416466da4970ae5fd6c7f2c658a68e047e51efd9
+- **Package version:** 0.19.57
+- **Connector version:** 0.1.5
+- **Generated with Connector SDK commit SHA:** 681016d2502082cac629b2e4de5242719ca72a89

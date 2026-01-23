@@ -195,7 +195,11 @@ class IssueCreateParams(BaseModel):
     priority: Union[int, Any] = Field(default=None)
 
 class IssueUpdateParams(BaseModel):
-    """Parameters for updating an issue. All fields except id are optional for partial updates."""
+    """Parameters for updating an issue. All fields except id are optional for partial updates.
+To assign a user, provide assigneeId with the user's ID (get user IDs from the users list).
+To unassign the current user, set assigneeId to null.
+Omit assigneeId to leave the current assignee unchanged.
+"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str, Any] = Field(default=None)
@@ -203,9 +207,10 @@ class IssueUpdateParams(BaseModel):
     description: Union[str, Any] = Field(default=None)
     state_id: Union[str, Any] = Field(default=None, alias="stateId")
     priority: Union[int, Any] = Field(default=None)
+    assignee_id: Union[str, Any] = Field(default=None, alias="assigneeId")
 
 class IssueWithState(BaseModel):
-    """Issue object with state ID included"""
+    """Issue object with state ID and assignee ID included"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str, Any] = Field(default=None)
@@ -247,6 +252,60 @@ class IssueUpdateResponse(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: Union[IssueUpdateResponseData, Any] = Field(default=None)
+
+class User(BaseModel):
+    """Linear user object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    email: Union[str, Any] = Field(default=None)
+    display_name: Union[Any, Any] = Field(default=None, alias="displayName")
+    active: Union[bool, Any] = Field(default=None)
+    admin: Union[bool, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
+
+class UsersListResponseDataUsersPageinfo(BaseModel):
+    """Pagination information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage", description="Whether there are more items available")
+    """Whether there are more items available"""
+    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor", description="Cursor to fetch next page")
+    """Cursor to fetch next page"""
+
+class UsersListResponseDataUsers(BaseModel):
+    """Nested schema for UsersListResponseData.users"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    nodes: Union[list[User], Any] = Field(default=None)
+    page_info: Union[UsersListResponseDataUsersPageinfo, Any] = Field(default=None, alias="pageInfo", description="Pagination information")
+    """Pagination information"""
+
+class UsersListResponseData(BaseModel):
+    """Nested schema for UsersListResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    users: Union[UsersListResponseDataUsers, Any] = Field(default=None)
+
+class UsersListResponse(BaseModel):
+    """GraphQL response for users list"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[UsersListResponseData, Any] = Field(default=None)
+
+class UserResponseData(BaseModel):
+    """Nested schema for UserResponse.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    user: Union[User, Any] = Field(default=None)
+
+class UserResponse(BaseModel):
+    """GraphQL response for single user"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[UserResponseData, Any] = Field(default=None)
 
 class Comment(BaseModel):
     """Linear comment object"""
@@ -395,6 +454,9 @@ ProjectsListResult = LinearExecuteResult[ProjectsListResponse]
 
 TeamsListResult = LinearExecuteResult[TeamsListResponse]
 """Result type for teams.list operation."""
+
+UsersListResult = LinearExecuteResult[UsersListResponse]
+"""Result type for users.list operation."""
 
 CommentsListResult = LinearExecuteResult[CommentsListResponse]
 """Result type for comments.list operation."""
