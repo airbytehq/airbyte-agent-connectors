@@ -26,7 +26,7 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.1.1',
+    version='1.1.2',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -3537,6 +3537,34 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'x-airbyte-entity-name': 'worklogs',
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='issues_assignee',
+            actions=[Action.UPDATE],
+            endpoints={
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/rest/api/3/issue/{issueIdOrKey}/assignee',
+                    action=Action.UPDATE,
+                    description='Assigns an issue to a user. Use accountId to specify the assignee. Use null to unassign the issue. Use "-1" to set to automatic (project default).',
+                    body_fields=['accountId'],
+                    path_params=['issueIdOrKey'],
+                    path_params_schema={
+                        'issueIdOrKey': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for assigning an issue to a user',
+                        'properties': {
+                            'accountId': {
+                                'type': 'string',
+                                'nullable': True,
+                                'description': 'The account ID of the user to assign the issue to. Use null to unassign the issue. Use "-1" to set to automatic (project default assignee).',
+                            },
+                        },
                     },
                 ),
             },
