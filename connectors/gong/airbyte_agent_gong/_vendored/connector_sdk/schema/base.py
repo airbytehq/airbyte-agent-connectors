@@ -13,7 +13,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from pydantic_core import Url
 
-from .extensions import CacheConfig, RetryConfig
+from .extensions import CacheConfig, ReplicationConfig, RetryConfig
 
 
 class ExampleQuestions(BaseModel):
@@ -106,6 +106,7 @@ class Info(BaseModel):
     - x-airbyte-retry-config: Retry configuration for transient errors (Airbyte extension)
     - x-airbyte-example-questions: Example questions for AI connector README (Airbyte extension)
     - x-airbyte-cache: Cache configuration for field mapping between API and cache schemas (Airbyte extension)
+    - x-airbyte-replication-config: Replication configuration for MULTI mode connectors (Airbyte extension)
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -124,6 +125,7 @@ class Info(BaseModel):
     x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
     x_airbyte_cache: CacheConfig | None = Field(None, alias="x-airbyte-cache")
+    x_airbyte_replication_config: ReplicationConfig | None = Field(None, alias="x-airbyte-replication-config")
 
 
 class ServerVariable(BaseModel):
