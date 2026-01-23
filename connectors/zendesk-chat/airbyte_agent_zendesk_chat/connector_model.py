@@ -26,7 +26,7 @@ from uuid import (
 ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('40d24d0f-b8f9-4fe0-9e6c-b06c0f3f45e4'),
     name='zendesk-chat',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://{subdomain}.zendesk.com/api/v2/chat',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -45,6 +45,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
             },
             auth_mapping={'token': '${access_token}'},
             replication_auth_key_mapping={'credentials.access_token': 'access_token'},
+            replication_auth_key_constants={'credentials.credentials': 'access_token'},
         ),
     ),
     entities=[
