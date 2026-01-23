@@ -91,29 +91,22 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
 
 class ProjectCurrentStatusAuthor(BaseModel):
     """Nested schema for ProjectCurrentStatus.author"""
@@ -145,14 +138,13 @@ class ProjectCurrentStatus(BaseModel):
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
 
 class ProjectTeam(BaseModel):
     """Nested schema for Project.team"""
@@ -162,8 +154,16 @@ class ProjectTeam(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -654,6 +654,318 @@ class AsanaExecuteResultWithMeta(AsanaExecuteResult[T], Generic[T, S]):
     """
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
+
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class AttachmentsSearchData(BaseModel):
+    """Search result data for attachments entity."""
+    model_config = ConfigDict(extra="allow")
+
+    connected_to_app: bool | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    download_url: str | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    host: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    parent: dict[str, Any] | None = None
+    """"""
+    permanent_url: str | None = None
+    """"""
+    resource_subtype: str | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+    size: int | None = None
+    """"""
+    view_url: str | None = None
+    """"""
+
+
+class ProjectsSearchData(BaseModel):
+    """Search result data for projects entity."""
+    model_config = ConfigDict(extra="allow")
+
+    archived: bool | None = None
+    """"""
+    color: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    current_status: dict[str, Any] | None = None
+    """"""
+    custom_field_settings: list[Any] | None = None
+    """"""
+    custom_fields: list[Any] | None = None
+    """"""
+    default_view: str | None = None
+    """"""
+    due_date: str | None = None
+    """"""
+    due_on: str | None = None
+    """"""
+    followers: list[Any] | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    html_notes: str | None = None
+    """"""
+    icon: str | None = None
+    """"""
+    is_template: bool | None = None
+    """"""
+    members: list[Any] | None = None
+    """"""
+    modified_at: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    notes: str | None = None
+    """"""
+    owner: dict[str, Any] | None = None
+    """"""
+    permalink_url: str | None = None
+    """"""
+    public: bool | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+    start_on: str | None = None
+    """"""
+    team: dict[str, Any] | None = None
+    """"""
+    workspace: dict[str, Any] | None = None
+    """"""
+
+
+class SectionsSearchData(BaseModel):
+    """Search result data for sections entity."""
+    model_config = ConfigDict(extra="allow")
+
+    created_at: str | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    project: dict[str, Any] | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+
+
+class TagsSearchData(BaseModel):
+    """Search result data for tags entity."""
+    model_config = ConfigDict(extra="allow")
+
+    color: str | None = None
+    """"""
+    followers: list[Any] | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    permalink_url: str | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+    workspace: dict[str, Any] | None = None
+    """"""
+
+
+class TasksSearchData(BaseModel):
+    """Search result data for tasks entity."""
+    model_config = ConfigDict(extra="allow")
+
+    actual_time_minutes: int | None = None
+    """The actual time spent on the task in minutes"""
+    approval_status: str | None = None
+    """"""
+    assignee: dict[str, Any] | None = None
+    """"""
+    completed: bool | None = None
+    """"""
+    completed_at: str | None = None
+    """"""
+    completed_by: dict[str, Any] | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    custom_fields: list[Any] | None = None
+    """"""
+    dependencies: list[Any] | None = None
+    """"""
+    dependents: list[Any] | None = None
+    """"""
+    due_at: str | None = None
+    """"""
+    due_on: str | None = None
+    """"""
+    external: dict[str, Any] | None = None
+    """"""
+    followers: list[Any] | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    hearted: bool | None = None
+    """"""
+    hearts: list[Any] | None = None
+    """"""
+    html_notes: str | None = None
+    """"""
+    is_rendered_as_separator: bool | None = None
+    """"""
+    liked: bool | None = None
+    """"""
+    likes: list[Any] | None = None
+    """"""
+    memberships: list[Any] | None = None
+    """"""
+    modified_at: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    notes: str | None = None
+    """"""
+    num_hearts: int | None = None
+    """"""
+    num_likes: int | None = None
+    """"""
+    num_subtasks: int | None = None
+    """"""
+    parent: dict[str, Any] | None = None
+    """"""
+    permalink_url: str | None = None
+    """"""
+    projects: list[Any] | None = None
+    """"""
+    resource_subtype: str | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+    start_on: str | None = None
+    """"""
+    tags: list[Any] | None = None
+    """"""
+    workspace: dict[str, Any] | None = None
+    """"""
+
+
+class TeamsSearchData(BaseModel):
+    """Search result data for teams entity."""
+    model_config = ConfigDict(extra="allow")
+
+    description: str | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    html_description: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    organization: dict[str, Any] | None = None
+    """"""
+    permalink_url: str | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+
+
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    email: str | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    photo: dict[str, Any] | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+    workspaces: list[Any] | None = None
+    """"""
+
+
+class WorkspacesSearchData(BaseModel):
+    """Search result data for workspaces entity."""
+    model_config = ConfigDict(extra="allow")
+
+    email_domains: list[Any] | None = None
+    """"""
+    gid: str | None = None
+    """"""
+    is_organization: bool | None = None
+    """"""
+    name: str | None = None
+    """"""
+    resource_type: str | None = None
+    """"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+AttachmentsSearchResult = AirbyteSearchResult[AttachmentsSearchData]
+"""Search result type for attachments entity."""
+
+ProjectsSearchResult = AirbyteSearchResult[ProjectsSearchData]
+"""Search result type for projects entity."""
+
+SectionsSearchResult = AirbyteSearchResult[SectionsSearchData]
+"""Search result type for sections entity."""
+
+TagsSearchResult = AirbyteSearchResult[TagsSearchData]
+"""Search result type for tags entity."""
+
+TasksSearchResult = AirbyteSearchResult[TasksSearchData]
+"""Search result type for tasks entity."""
+
+TeamsSearchResult = AirbyteSearchResult[TeamsSearchData]
+"""Search result type for teams entity."""
+
+UsersSearchResult = AirbyteSearchResult[UsersSearchData]
+"""Search result type for users entity."""
+
+WorkspacesSearchResult = AirbyteSearchResult[WorkspacesSearchData]
+"""Search result type for workspaces entity."""
 
 
 

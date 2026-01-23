@@ -82,6 +82,7 @@ async def asana_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
+
 ## Full documentation
 
 This connector supports the following entities and actions.
@@ -120,6 +121,6 @@ For the service's official API docs, see the [Asana API reference](https://devel
 
 ## Version information
 
-- **Package version:** 0.19.59
-- **Connector version:** 0.1.7
-- **Generated with Connector SDK commit SHA:** 416466da4970ae5fd6c7f2c658a68e047e51efd9
+- **Package version:** 0.19.60
+- **Connector version:** 0.1.8
+- **Generated with Connector SDK commit SHA:** 32c5ef4692be2243558faa20132b3ece7d573aed

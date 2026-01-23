@@ -1032,7 +1032,9 @@ class LocalExecutor:
         if "variables" in graphql_config and graphql_config["variables"]:
             variables = self._interpolate_variables(graphql_config["variables"], params, param_defaults)
             # Filter out None values (optional fields not provided) - matches REST _extract_body() behavior
-            body["variables"] = {k: v for k, v in variables.items() if v is not None}
+            # But preserve None for variables explicitly marked as nullable (e.g., to unassign a user)
+            nullable_vars = set(graphql_config.get("x-airbyte-nullable-variables") or [])
+            body["variables"] = {k: v for k, v in variables.items() if v is not None or k in nullable_vars}
 
         # Add operation name if specified
         if "operationName" in graphql_config:
