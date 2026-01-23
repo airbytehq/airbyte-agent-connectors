@@ -176,26 +176,13 @@ class ChannelResponse(BaseModel):
     ok: Union[bool, Any] = Field(default=None)
     channel: Union[Channel, Any] = Field(default=None)
 
-class Attachment(BaseModel):
-    """Message attachment"""
+class Reaction(BaseModel):
+    """Message reaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[int | None, Any] = Field(default=None)
-    fallback: Union[str | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    pretext: Union[str | None, Any] = Field(default=None)
-    author_name: Union[str | None, Any] = Field(default=None)
-    author_link: Union[str | None, Any] = Field(default=None)
-    author_icon: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    title_link: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    fields: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    image_url: Union[str | None, Any] = Field(default=None)
-    thumb_url: Union[str | None, Any] = Field(default=None)
-    footer: Union[str | None, Any] = Field(default=None)
-    footer_icon: Union[str | None, Any] = Field(default=None)
-    ts: Union[Any, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class File(BaseModel):
     """File object"""
@@ -221,13 +208,26 @@ class File(BaseModel):
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
+class Attachment(BaseModel):
+    """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
+    id: Union[int | None, Any] = Field(default=None)
+    fallback: Union[str | None, Any] = Field(default=None)
+    color: Union[str | None, Any] = Field(default=None)
+    pretext: Union[str | None, Any] = Field(default=None)
+    author_name: Union[str | None, Any] = Field(default=None)
+    author_link: Union[str | None, Any] = Field(default=None)
+    author_icon: Union[str | None, Any] = Field(default=None)
+    title: Union[str | None, Any] = Field(default=None)
+    title_link: Union[str | None, Any] = Field(default=None)
+    text: Union[str | None, Any] = Field(default=None)
+    fields: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    image_url: Union[str | None, Any] = Field(default=None)
+    thumb_url: Union[str | None, Any] = Field(default=None)
+    footer: Union[str | None, Any] = Field(default=None)
+    footer_icon: Union[str | None, Any] = Field(default=None)
+    ts: Union[Any, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
