@@ -182,6 +182,77 @@ class CacheEntityConfig(BaseModel):
         return self.x_airbyte_name or self.entity
 
 
+class ReplicationConfigProperty(BaseModel):
+    """
+    Property definition for replication configuration fields.
+
+    Defines a single field in the replication configuration with its type,
+    description, and optional default value.
+
+    Example YAML usage:
+        x-airbyte-replication-config:
+          properties:
+            start_date:
+              type: string
+              title: Start Date
+              description: UTC date and time from which to replicate data
+              format: date-time
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    type: str
+    title: str | None = None
+    description: str | None = None
+    format: str | None = None
+    default: str | int | float | bool | None = None
+    enum: list[str] | None = None
+
+
+class ReplicationConfig(BaseModel):
+    """
+    Replication configuration extension (x-airbyte-replication-config).
+
+    Defines replication-specific settings for MULTI mode connectors that need
+    to configure the underlying replication connector. This allows users who
+    use the direct-style API (credentials + environment) to also specify
+    replication settings like start_date, lookback_window, etc.
+
+    This extension is added to the Info model and provides field definitions
+    for replication configuration that gets merged into the source config
+    when creating sources.
+
+    Example YAML usage:
+        info:
+          title: HubSpot API
+          x-airbyte-replication-config:
+            title: Replication Configuration
+            description: Settings for data replication
+            properties:
+              start_date:
+                type: string
+                title: Start Date
+                description: UTC date and time from which to replicate data
+                format: date-time
+            required:
+              - start_date
+            replication_config_key_mapping:
+              start_date: start_date
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    title: str | None = None
+    description: str | None = None
+    properties: dict[str, ReplicationConfigProperty] = Field(default_factory=dict)
+    required: list[str] = Field(default_factory=list)
+    replication_config_key_mapping: dict[str, str] = Field(
+        default_factory=dict,
+        alias="replication_config_key_mapping",
+        description="Mapping from replication_config field names to source_config field names",
+    )
+
+
 class CacheConfig(BaseModel):
     """
     Cache configuration extension (x-airbyte-cache).

@@ -152,6 +152,61 @@ class AmazonAdsExecuteResultWithMeta(AmazonAdsExecuteResult[T], Generic[T, S]):
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class ProfilesSearchData(BaseModel):
+    """Search result data for profiles entity."""
+    model_config = ConfigDict(extra="allow")
+
+    account_info: dict[str, Any] | None = None
+    """"""
+    country_code: str | None = None
+    """"""
+    currency_code: str | None = None
+    """"""
+    daily_budget: float | None = None
+    """"""
+    profile_id: int | None = None
+    """"""
+    timezone: str | None = None
+    """"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+ProfilesSearchResult = AirbyteSearchResult[ProfilesSearchData]
+"""Search result type for profiles entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====

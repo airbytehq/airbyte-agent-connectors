@@ -19,7 +19,11 @@ from .models import (
     AmazonAdsExecuteResultWithMeta,
     ProfilesListResult,
     PortfoliosListResult,
-    SponsoredProductCampaignsListResult
+    SponsoredProductCampaignsListResult,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    ProfilesSearchData,
+    ProfilesSearchResult
 )
 from .types import (
     SponsoredProductCampaignsListParamsStatefilter,
@@ -28,7 +32,12 @@ from .types import (
     PortfoliosListParams,
     PortfoliosGetParams,
     SponsoredProductCampaignsListParams,
-    SponsoredProductCampaignsGetParams
+    SponsoredProductCampaignsGetParams,
+    AirbyteSearchParams,
+    AirbyteSortOrder,
+    ProfilesSearchFilter,
+    ProfilesSearchQuery,
+    ProfilesCondition
 )
 
 __all__ = [
@@ -47,6 +56,10 @@ __all__ = [
     "ProfilesListResult",
     "PortfoliosListResult",
     "SponsoredProductCampaignsListResult",
+    "AirbyteSearchHit",
+    "AirbyteSearchResult",
+    "ProfilesSearchData",
+    "ProfilesSearchResult",
     "SponsoredProductCampaignsListParamsStatefilter",
     "ProfilesListParams",
     "ProfilesGetParams",
@@ -54,4 +67,9 @@ __all__ = [
     "PortfoliosGetParams",
     "SponsoredProductCampaignsListParams",
     "SponsoredProductCampaignsGetParams",
+    "AirbyteSearchParams",
+    "AirbyteSortOrder",
+    "ProfilesSearchFilter",
+    "ProfilesSearchQuery",
+    "ProfilesCondition",
 ]

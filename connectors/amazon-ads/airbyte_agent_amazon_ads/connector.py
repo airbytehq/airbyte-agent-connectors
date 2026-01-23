@@ -21,6 +21,9 @@ from .types import (
     SponsoredProductCampaignsGetParams,
     SponsoredProductCampaignsListParams,
     SponsoredProductCampaignsListParamsStatefilter,
+    AirbyteSearchParams,
+    ProfilesSearchFilter,
+    ProfilesSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import AmazonAdsAuthConfig
@@ -34,6 +37,10 @@ from .models import (
     Portfolio,
     Profile,
     SponsoredProductCampaign,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    ProfilesSearchData,
+    ProfilesSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -49,7 +56,7 @@ class AmazonAdsConnector:
     """
 
     connector_name = "amazon-ads"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -440,6 +447,65 @@ information about the advertiser's account in a specific marketplace.
         return result
 
 
+
+    async def search(
+        self,
+        query: ProfilesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ProfilesSearchResult:
+        """
+        Search profiles records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ProfilesSearchFilter):
+        - account_info: 
+        - country_code: 
+        - currency_code: 
+        - daily_budget: 
+        - profile_id: 
+        - timezone: 
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ProfilesSearchResult with hits (list of AirbyteSearchHit[ProfilesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("profiles", "search", params)
+
+        # Parse response into typed result
+        return ProfilesSearchResult(
+            hits=[
+                AirbyteSearchHit[ProfilesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ProfilesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class PortfoliosQuery:
     """
