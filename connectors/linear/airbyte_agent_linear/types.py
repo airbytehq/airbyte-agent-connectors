@@ -40,6 +40,7 @@ class IssuesUpdateParams(TypedDict):
     description: NotRequired[str]
     state_id: NotRequired[str]
     priority: NotRequired[int]
+    assignee_id: NotRequired[str]
 
 class ProjectsListParams(TypedDict):
     """Parameters for projects.list operation"""
@@ -57,6 +58,15 @@ class TeamsListParams(TypedDict):
 
 class TeamsGetParams(TypedDict):
     """Parameters for teams.get operation"""
+    id: str
+
+class UsersListParams(TypedDict):
+    """Parameters for users.list operation"""
+    first: NotRequired[int]
+    after: NotRequired[str]
+
+class UsersGetParams(TypedDict):
+    """Parameters for users.get operation"""
     id: str
 
 class CommentsListParams(TypedDict):

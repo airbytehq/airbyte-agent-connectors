@@ -26,6 +26,8 @@ from .types import (
     ProjectsListParams,
     TeamsGetParams,
     TeamsListParams,
+    UsersGetParams,
+    UsersListParams,
 )
 if TYPE_CHECKING:
     from .models import LinearAuthConfig
@@ -36,6 +38,7 @@ from .models import (
     IssuesListResult,
     ProjectsListResult,
     TeamsListResult,
+    UsersListResult,
     CommentsListResult,
     CommentCreateResponse,
     CommentResponse,
@@ -49,6 +52,8 @@ from .models import (
     ProjectsListResponse,
     TeamResponse,
     TeamsListResponse,
+    UserResponse,
+    UsersListResponse,
 )
 
 # TypeVar for decorator type preservation
@@ -64,7 +69,7 @@ class LinearConnector:
     """
 
     connector_name = "linear"
-    connector_version = "0.1.4"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -77,6 +82,8 @@ class LinearConnector:
         ("projects", "get"): None,
         ("teams", "list"): True,
         ("teams", "get"): None,
+        ("users", "list"): True,
+        ("users", "get"): None,
         ("comments", "list"): True,
         ("comments", "get"): None,
         ("comments", "create"): None,
@@ -89,11 +96,13 @@ class LinearConnector:
         ('issues', 'list'): {'first': 'first', 'after': 'after'},
         ('issues', 'get'): {'id': 'id'},
         ('issues', 'create'): {'team_id': 'teamId', 'title': 'title', 'description': 'description', 'state_id': 'stateId', 'priority': 'priority'},
-        ('issues', 'update'): {'id': 'id', 'title': 'title', 'description': 'description', 'state_id': 'stateId', 'priority': 'priority'},
+        ('issues', 'update'): {'id': 'id', 'title': 'title', 'description': 'description', 'state_id': 'stateId', 'priority': 'priority', 'assignee_id': 'assigneeId'},
         ('projects', 'list'): {'first': 'first', 'after': 'after'},
         ('projects', 'get'): {'id': 'id'},
         ('teams', 'list'): {'first': 'first', 'after': 'after'},
         ('teams', 'get'): {'id': 'id'},
+        ('users', 'list'): {'first': 'first', 'after': 'after'},
+        ('users', 'get'): {'id': 'id'},
         ('comments', 'list'): {'issue_id': 'issueId', 'first': 'first', 'after': 'after'},
         ('comments', 'get'): {'id': 'id'},
         ('comments', 'create'): {'issue_id': 'issueId', 'body': 'body'},
@@ -178,6 +187,7 @@ class LinearConnector:
         self.issues = IssuesQuery(self)
         self.projects = ProjectsQuery(self)
         self.teams = TeamsQuery(self)
+        self.users = UsersQuery(self)
         self.comments = CommentsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
@@ -245,6 +255,22 @@ class LinearConnector:
         action: Literal["get"],
         params: "TeamsGetParams"
     ) -> "TeamResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["list"],
+        params: "UsersListParams"
+    ) -> "UsersListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["users"],
+        action: Literal["get"],
+        params: "UsersGetParams"
+    ) -> "UserResponse": ...
 
     @overload
     async def execute(
@@ -545,10 +571,14 @@ class IssuesQuery:
         description: str | None = None,
         state_id: str | None = None,
         priority: int | None = None,
+        assignee_id: str | None = None,
         **kwargs
     ) -> IssueUpdateResponse:
         """
         Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.
+To assign a user, provide assigneeId with the user's ID (get user IDs from the users list).
+Omit assigneeId to leave the current assignee unchanged.
+
 
         Args:
             id: The ID of the issue to update
@@ -556,6 +586,7 @@ class IssuesQuery:
             description: The new description of the issue (supports markdown)
             state_id: The ID of the new workflow state for the issue
             priority: The new priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)
+            assignee_id: The ID of the user to assign to this issue. Get user IDs from the users list.
             **kwargs: Additional parameters
 
         Returns:
@@ -567,6 +598,7 @@ class IssuesQuery:
             "description": description,
             "stateId": state_id,
             "priority": priority,
+            "assigneeId": assignee_id,
             **kwargs
         }.items() if v is not None}
 
@@ -701,6 +733,71 @@ class TeamsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("teams", "get", params)
+        return result
+
+
+
+class UsersQuery:
+    """
+    Query class for Users entity operations.
+    """
+
+    def __init__(self, connector: LinearConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        first: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> UsersListResult:
+        """
+        Returns a paginated list of users in the organization via GraphQL
+
+        Args:
+            first: Number of items to return (max 250)
+            after: Cursor to start after (for pagination)
+            **kwargs: Additional parameters
+
+        Returns:
+            UsersListResult
+        """
+        params = {k: v for k, v in {
+            "first": first,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "list", params)
+        # Cast generic envelope to concrete typed result
+        return UsersListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        **kwargs
+    ) -> UserResponse:
+        """
+        Get a single user by ID via GraphQL
+
+        Args:
+            id: User ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UserResponse
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("users", "get", params)
         return result
 
 

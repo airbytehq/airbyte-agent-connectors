@@ -11,6 +11,7 @@ The Linear connector supports the following entities and actions.
 | Issues | [List](#issues-list), [Get](#issues-get), [Create](#issues-create), [Update](#issues-update) |
 | Projects | [List](#projects-list), [Get](#projects-get) |
 | Teams | [List](#teams-list), [Get](#teams-get) |
+| Users | [List](#users-list), [Get](#users-get) |
 | Comments | [List](#comments-list), [Get](#comments-get), [Create](#comments-create), [Update](#comments-update) |
 
 ## Issues
@@ -167,6 +168,9 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ### Issues Update
 
 Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.
+To assign a user, provide assigneeId with the user's ID (get user IDs from the users list).
+Omit assigneeId to leave the current assignee unchanged.
+
 
 #### Python SDK
 
@@ -176,7 +180,8 @@ await linear.issues.update(
     title="<str>",
     description="<str>",
     state_id="<str>",
-    priority=0
+    priority=0,
+    assignee_id="<str>"
 )
 ```
 
@@ -194,7 +199,8 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
         "title": "<str>",
         "description": "<str>",
         "stateId": "<str>",
-        "priority": 0
+        "priority": 0,
+        "assigneeId": "<str>"
     }
 }'
 ```
@@ -209,6 +215,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `description` | `string` | No | The new description of the issue (supports markdown) |
 | `stateId` | `string` | No | The ID of the new workflow state for the issue |
 | `priority` | `integer` | No | The new priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low) |
+| `assigneeId` | `string` | No | The ID of the user to assign to this issue. Get user IDs from the users list. |
 
 
 <details>
@@ -393,6 +400,98 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
 | `id` | `string` | Yes | Team ID |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `object` |  |
+
+
+</details>
+
+## Users
+
+### Users List
+
+Returns a paginated list of users in the organization via GraphQL
+
+#### Python SDK
+
+```python
+await linear.users.list()
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "users",
+    "action": "list"
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `first` | `integer` | No | Number of items to return (max 250) |
+| `after` | `string` | No | Cursor to start after (for pagination) |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `data` | `object` |  |
+
+
+</details>
+
+### Users Get
+
+Get a single user by ID via GraphQL
+
+#### Python SDK
+
+```python
+await linear.users.get(
+    id="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "users",
+    "action": "get",
+    "params": {
+        "id": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `id` | `string` | Yes | User ID |
 
 
 <details>
@@ -604,4 +703,5 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 
 </details>
+
 

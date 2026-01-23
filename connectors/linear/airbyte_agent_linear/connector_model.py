@@ -29,7 +29,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.4',
+    version='0.1.5',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -306,7 +306,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                             'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
                                             'issue': {
                                                 'type': 'object',
-                                                'description': 'Issue object with state ID included',
+                                                'description': 'Issue object with state ID and assignee ID included',
                                                 'properties': {
                                                     'id': {'type': 'string', 'description': 'Unique issue identifier'},
                                                     'title': {'type': 'string', 'description': 'Issue title'},
@@ -342,13 +342,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                                             {
                                                                 'type': 'object',
                                                                 'properties': {
+                                                                    'id': {'type': 'string'},
                                                                     'name': {'type': 'string'},
                                                                     'email': {'type': 'string'},
                                                                 },
                                                             },
                                                             {'type': 'null'},
                                                         ],
-                                                        'description': 'Assigned user',
+                                                        'description': 'Assigned user with ID',
                                                     },
                                                     'createdAt': {
                                                         'type': 'string',
@@ -387,7 +388,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         path='/graphql',
                     ),
                     action=Action.UPDATE,
-                    description='Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.',
+                    description="Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.\nTo assign a user, provide assigneeId with the user's ID (get user IDs from the users list).\nOmit assigneeId to leave the current assignee unchanged.\n",
                     header_params=['x-apollo-operation-name'],
                     header_params_schema={
                         'x-apollo-operation-name': {
@@ -410,7 +411,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                             'success': {'type': 'boolean', 'description': 'Whether the mutation was successful'},
                                             'issue': {
                                                 'type': 'object',
-                                                'description': 'Issue object with state ID included',
+                                                'description': 'Issue object with state ID and assignee ID included',
                                                 'properties': {
                                                     'id': {'type': 'string', 'description': 'Unique issue identifier'},
                                                     'title': {'type': 'string', 'description': 'Issue title'},
@@ -446,13 +447,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                                             {
                                                                 'type': 'object',
                                                                 'properties': {
+                                                                    'id': {'type': 'string'},
                                                                     'name': {'type': 'string'},
                                                                     'email': {'type': 'string'},
                                                                 },
                                                             },
                                                             {'type': 'null'},
                                                         ],
-                                                        'description': 'Assigned user',
+                                                        'description': 'Assigned user with ID',
                                                     },
                                                     'createdAt': {
                                                         'type': 'string',
@@ -474,14 +476,16 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={
                         'type': 'graphql',
-                        'query': 'mutation($id: String!, $title: String, $description: String, $stateId: String, $priority: Int) { issueUpdate(id: $id, input: { title: $title, description: $description, stateId: $stateId, priority: $priority }) { success issue { id title description state { id name } priority assignee { name email } createdAt updatedAt } } }',
+                        'query': 'mutation($id: String!, $title: String, $description: String, $stateId: String, $priority: Int, $assigneeId: String) { issueUpdate(id: $id, input: { title: $title, description: $description, stateId: $stateId, priority: $priority, assigneeId: $assigneeId }) { success issue { id title description state { id name } priority assignee { id name email } createdAt updatedAt } } }',
                         'variables': {
                             'id': '{{ id }}',
                             'title': '{{ title }}',
                             'description': '{{ description }}',
                             'stateId': '{{ stateId }}',
                             'priority': '{{ priority }}',
+                            'assigneeId': '{{ assigneeId }}',
                         },
+                        'nullable_variables': ['assigneeId'],
                     },
                 ),
             },
@@ -1039,6 +1043,200 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id', 'name', 'key'],
                 'x-airbyte-entity-name': 'teams',
+            },
+        ),
+        EntityDefinition(
+            name='users',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:listUsers',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a paginated list of users in the organization via GraphQL',
+                    query_params=['first', 'after'],
+                    query_params_schema={
+                        'first': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 50,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'listUsers',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for users list',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'users': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'nodes': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Linear user object',
+                                                    'properties': {
+                                                        'id': {'type': 'string', 'description': 'Unique user identifier'},
+                                                        'name': {'type': 'string', 'description': "User's full name"},
+                                                        'email': {'type': 'string', 'description': "User's email address"},
+                                                        'displayName': {
+                                                            'oneOf': [
+                                                                {'type': 'string'},
+                                                                {'type': 'null'},
+                                                            ],
+                                                            'description': "User's display name",
+                                                        },
+                                                        'active': {'type': 'boolean', 'description': 'Whether the user is active'},
+                                                        'admin': {'type': 'boolean', 'description': 'Whether the user is an admin'},
+                                                        'createdAt': {
+                                                            'type': 'string',
+                                                            'format': 'date-time',
+                                                            'description': 'Creation timestamp',
+                                                        },
+                                                        'updatedAt': {
+                                                            'type': 'string',
+                                                            'format': 'date-time',
+                                                            'description': 'Last update timestamp',
+                                                        },
+                                                    },
+                                                    'required': ['id', 'name', 'email'],
+                                                    'x-airbyte-entity-name': 'users',
+                                                },
+                                            },
+                                            'pageInfo': {
+                                                'type': 'object',
+                                                'description': 'Pagination information',
+                                                'properties': {
+                                                    'hasNextPage': {'type': 'boolean', 'description': 'Whether there are more items available'},
+                                                    'endCursor': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Cursor to fetch next page',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query($first: Int, $after: String) { users(first: $first, after: $after) { nodes { id name email displayName active admin createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
+                        'variables': {'first': '{{ first }}', 'after': '{{ after }}'},
+                    },
+                ),
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:getUser',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description='Get a single user by ID via GraphQL',
+                    query_params=['id'],
+                    query_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['x-apollo-operation-name'],
+                    header_params_schema={
+                        'x-apollo-operation-name': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'getUser',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'GraphQL response for single user',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'user': {
+                                        'type': 'object',
+                                        'description': 'Linear user object',
+                                        'properties': {
+                                            'id': {'type': 'string', 'description': 'Unique user identifier'},
+                                            'name': {'type': 'string', 'description': "User's full name"},
+                                            'email': {'type': 'string', 'description': "User's email address"},
+                                            'displayName': {
+                                                'oneOf': [
+                                                    {'type': 'string'},
+                                                    {'type': 'null'},
+                                                ],
+                                                'description': "User's display name",
+                                            },
+                                            'active': {'type': 'boolean', 'description': 'Whether the user is active'},
+                                            'admin': {'type': 'boolean', 'description': 'Whether the user is an admin'},
+                                            'createdAt': {
+                                                'type': 'string',
+                                                'format': 'date-time',
+                                                'description': 'Creation timestamp',
+                                            },
+                                            'updatedAt': {
+                                                'type': 'string',
+                                                'format': 'date-time',
+                                                'description': 'Last update timestamp',
+                                            },
+                                        },
+                                        'required': ['id', 'name', 'email'],
+                                        'x-airbyte-entity-name': 'users',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query($id: String!) { user(id: $id) { id name email displayName active admin createdAt updatedAt } }',
+                        'variables': {'id': '{{ id }}'},
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Linear user object',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Unique user identifier'},
+                    'name': {'type': 'string', 'description': "User's full name"},
+                    'email': {'type': 'string', 'description': "User's email address"},
+                    'displayName': {
+                        'oneOf': [
+                            {'type': 'string'},
+                            {'type': 'null'},
+                        ],
+                        'description': "User's display name",
+                    },
+                    'active': {'type': 'boolean', 'description': 'Whether the user is active'},
+                    'admin': {'type': 'boolean', 'description': 'Whether the user is an admin'},
+                    'createdAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Creation timestamp',
+                    },
+                    'updatedAt': {
+                        'type': 'string',
+                        'format': 'date-time',
+                        'description': 'Last update timestamp',
+                    },
+                },
+                'required': ['id', 'name', 'email'],
+                'x-airbyte-entity-name': 'users',
             },
         ),
         EntityDefinition(
