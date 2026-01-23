@@ -28,6 +28,15 @@ from .types import (
     TagsListParams,
     TeamsGetParams,
     TeamsListParams,
+    AirbyteSearchParams,
+    CompaniesSearchFilter,
+    CompaniesSearchQuery,
+    ContactsSearchFilter,
+    ContactsSearchQuery,
+    ConversationsSearchFilter,
+    ConversationsSearchQuery,
+    TeamsSearchFilter,
+    TeamsSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import IntercomAuthConfig
@@ -49,6 +58,16 @@ from .models import (
     Segment,
     Tag,
     Team,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    CompaniesSearchData,
+    CompaniesSearchResult,
+    ContactsSearchData,
+    ContactsSearchResult,
+    ConversationsSearchData,
+    ConversationsSearchResult,
+    TeamsSearchData,
+    TeamsSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -64,7 +83,7 @@ class IntercomConnector:
     """
 
     connector_name = "intercom"
-    connector_version = "0.1.2"
+    connector_version = "0.1.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -522,6 +541,113 @@ class ContactsQuery:
 
 
 
+    async def search(
+        self,
+        query: ContactsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ContactsSearchResult:
+        """
+        Search contacts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ContactsSearchFilter):
+        - android_app_name: The name of the Android app associated with the contact.
+        - android_app_version: The version of the Android app associated with the contact.
+        - android_device: The device used by the contact for Android.
+        - android_last_seen_at: The date and time when the contact was last seen on Android.
+        - android_os_version: The operating system version of the Android device.
+        - android_sdk_version: The SDK version of the Android device.
+        - avatar: URL pointing to the contact's avatar image.
+        - browser: The browser used by the contact.
+        - browser_language: The language preference set in the contact's browser.
+        - browser_version: The version of the browser used by the contact.
+        - companies: Companies associated with the contact.
+        - created_at: The date and time when the contact was created.
+        - custom_attributes: Custom attributes defined for the contact.
+        - email: The email address of the contact.
+        - external_id: External identifier for the contact.
+        - has_hard_bounced: Flag indicating if the contact has hard bounced.
+        - id: The unique identifier of the contact.
+        - ios_app_name: The name of the iOS app associated with the contact.
+        - ios_app_version: The version of the iOS app associated with the contact.
+        - ios_device: The device used by the contact for iOS.
+        - ios_last_seen_at: The date and time when the contact was last seen on iOS.
+        - ios_os_version: The operating system version of the iOS device.
+        - ios_sdk_version: The SDK version of the iOS device.
+        - language_override: Language override set for the contact.
+        - last_contacted_at: The date and time when the contact was last contacted.
+        - last_email_clicked_at: The date and time when the contact last clicked an email.
+        - last_email_opened_at: The date and time when the contact last opened an email.
+        - last_replied_at: The date and time when the contact last replied.
+        - last_seen_at: The date and time when the contact was last seen overall.
+        - location: Location details of the contact.
+        - marked_email_as_spam: Flag indicating if the contact's email was marked as spam.
+        - name: The name of the contact.
+        - notes: Notes associated with the contact.
+        - opted_in_subscription_types: Subscription types the contact opted into.
+        - opted_out_subscription_types: Subscription types the contact opted out from.
+        - os: Operating system of the contact's device.
+        - owner_id: The unique identifier of the contact's owner.
+        - phone: The phone number of the contact.
+        - referrer: Referrer information related to the contact.
+        - role: Role or position of the contact.
+        - signed_up_at: The date and time when the contact signed up.
+        - sms_consent: Consent status for SMS communication.
+        - social_profiles: Social profiles associated with the contact.
+        - tags: Tags associated with the contact.
+        - type: Type of contact.
+        - unsubscribed_from_emails: Flag indicating if the contact unsubscribed from emails.
+        - unsubscribed_from_sms: Flag indicating if the contact unsubscribed from SMS.
+        - updated_at: The date and time when the contact was last updated.
+        - utm_campaign: Campaign data from UTM parameters.
+        - utm_content: Content data from UTM parameters.
+        - utm_medium: Medium data from UTM parameters.
+        - utm_source: Source data from UTM parameters.
+        - utm_term: Term data from UTM parameters.
+        - workspace_id: The unique identifier of the workspace associated with the contact.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ContactsSearchResult with hits (list of AirbyteSearchHit[ContactsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("contacts", "search", params)
+
+        # Parse response into typed result
+        return ContactsSearchResult(
+            hits=[
+                AirbyteSearchHit[ContactsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ContactsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ConversationsQuery:
     """
     Query class for Conversations entity operations.
@@ -587,6 +713,92 @@ class ConversationsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: ConversationsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ConversationsSearchResult:
+        """
+        Search conversations records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ConversationsSearchFilter):
+        - admin_assignee_id: The ID of the administrator assigned to the conversation
+        - ai_agent: Data related to AI Agent involvement in the conversation
+        - ai_agent_participated: Indicates whether AI Agent participated in the conversation
+        - assignee: The assigned user responsible for the conversation.
+        - contacts: List of contacts involved in the conversation.
+        - conversation_message: The main message content of the conversation.
+        - conversation_rating: Ratings given to the conversation by the customer and teammate.
+        - created_at: The timestamp when the conversation was created
+        - custom_attributes: Custom attributes associated with the conversation
+        - customer_first_reply: Timestamp indicating when the customer first replied.
+        - customers: List of customers involved in the conversation
+        - first_contact_reply: Timestamp indicating when the first contact replied.
+        - id: The unique ID of the conversation
+        - linked_objects: Linked objects associated with the conversation
+        - open: Indicates if the conversation is open or closed
+        - priority: The priority level of the conversation
+        - read: Indicates if the conversation has been read
+        - redacted: Indicates if the conversation is redacted
+        - sent_at: The timestamp when the conversation was sent
+        - sla_applied: Service Level Agreement details applied to the conversation.
+        - snoozed_until: Timestamp until the conversation is snoozed
+        - source: Source details of the conversation.
+        - state: The state of the conversation (e.g., new, in progress)
+        - statistics: Statistics related to the conversation.
+        - tags: Tags applied to the conversation.
+        - team_assignee_id: The ID of the team assigned to the conversation
+        - teammates: List of teammates involved in the conversation.
+        - title: The title of the conversation
+        - topics: Topics associated with the conversation.
+        - type: The type of the conversation
+        - updated_at: The timestamp when the conversation was last updated
+        - user: The user related to the conversation.
+        - waiting_since: Timestamp since waiting for a response
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ConversationsSearchResult with hits (list of AirbyteSearchHit[ConversationsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("conversations", "search", params)
+
+        # Parse response into typed result
+        return ConversationsSearchResult(
+            hits=[
+                AirbyteSearchHit[ConversationsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ConversationsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class CompaniesQuery:
     """
@@ -654,6 +866,77 @@ class CompaniesQuery:
 
 
 
+    async def search(
+        self,
+        query: CompaniesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CompaniesSearchResult:
+        """
+        Search companies records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CompaniesSearchFilter):
+        - app_id: The ID of the application associated with the company
+        - company_id: The unique identifier of the company
+        - created_at: The date and time when the company was created
+        - custom_attributes: Custom attributes specific to the company
+        - id: The ID of the company
+        - industry: The industry in which the company operates
+        - monthly_spend: The monthly spend of the company
+        - name: The name of the company
+        - plan: Details of the company's subscription plan
+        - remote_created_at: The remote date and time when the company was created
+        - segments: Segments associated with the company
+        - session_count: The number of sessions related to the company
+        - size: The size of the company
+        - tags: Tags associated with the company
+        - type: The type of the company
+        - updated_at: The date and time when the company was last updated
+        - user_count: The number of users associated with the company
+        - website: The website of the company
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CompaniesSearchResult with hits (list of AirbyteSearchHit[CompaniesSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("companies", "search", params)
+
+        # Parse response into typed result
+        return CompaniesSearchResult(
+            hits=[
+                AirbyteSearchHit[CompaniesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CompaniesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class TeamsQuery:
     """
     Query class for Teams entity operations.
@@ -709,6 +992,63 @@ class TeamsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: TeamsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> TeamsSearchResult:
+        """
+        Search teams records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (TeamsSearchFilter):
+        - admin_ids: Array of user IDs representing the admins of the team.
+        - id: Unique identifier for the team.
+        - name: Name of the team.
+        - type: Type of team (e.g., 'internal', 'external').
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            TeamsSearchResult with hits (list of AirbyteSearchHit[TeamsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("teams", "search", params)
+
+        # Parse response into typed result
+        return TeamsSearchResult(
+            hits=[
+                AirbyteSearchHit[TeamsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TeamsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class AdminsQuery:
     """
