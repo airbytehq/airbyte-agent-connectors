@@ -439,6 +439,421 @@ class LinearExecuteResultWithMeta(LinearExecuteResult[T], Generic[T, S]):
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class CommentsSearchData(BaseModel):
+    """Search result data for comments entity."""
+    model_config = ConfigDict(extra="allow")
+
+    body: str | None = None
+    """"""
+    body_data: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    edited_at: str | None = None
+    """"""
+    id: str | None = None
+    """"""
+    issue: dict[str, Any] | None = None
+    """"""
+    issue_id: str | None = None
+    """"""
+    parent: dict[str, Any] | None = None
+    """"""
+    parent_comment_id: str | None = None
+    """"""
+    resolving_comment_id: str | None = None
+    """"""
+    resolving_user_id: str | None = None
+    """"""
+    updated_at: str | None = None
+    """"""
+    url: str | None = None
+    """"""
+    user: dict[str, Any] | None = None
+    """"""
+    user_id: str | None = None
+    """"""
+
+
+class IssuesSearchData(BaseModel):
+    """Search result data for issues entity."""
+    model_config = ConfigDict(extra="allow")
+
+    added_to_cycle_at: str | None = None
+    """"""
+    added_to_project_at: str | None = None
+    """"""
+    added_to_team_at: str | None = None
+    """"""
+    assignee: dict[str, Any] | None = None
+    """"""
+    assignee_id: str | None = None
+    """"""
+    attachment_ids: list[Any] | None = None
+    """"""
+    attachments: dict[str, Any] | None = None
+    """"""
+    branch_name: str | None = None
+    """"""
+    canceled_at: str | None = None
+    """"""
+    completed_at: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    creator: dict[str, Any] | None = None
+    """"""
+    creator_id: str | None = None
+    """"""
+    customer_ticket_count: float | None = None
+    """"""
+    cycle: dict[str, Any] | None = None
+    """"""
+    cycle_id: str | None = None
+    """"""
+    description: str | None = None
+    """"""
+    description_state: str | None = None
+    """"""
+    due_date: str | None = None
+    """"""
+    estimate: float | None = None
+    """"""
+    id: str | None = None
+    """"""
+    identifier: str | None = None
+    """"""
+    integration_source_type: str | None = None
+    """"""
+    label_ids: list[Any] | None = None
+    """"""
+    labels: dict[str, Any] | None = None
+    """"""
+    milestone_id: str | None = None
+    """"""
+    number: float | None = None
+    """"""
+    parent: dict[str, Any] | None = None
+    """"""
+    parent_id: str | None = None
+    """"""
+    previous_identifiers: list[Any] | None = None
+    """"""
+    priority: float | None = None
+    """"""
+    priority_label: str | None = None
+    """"""
+    priority_sort_order: float | None = None
+    """"""
+    project: dict[str, Any] | None = None
+    """"""
+    project_id: str | None = None
+    """"""
+    project_milestone: dict[str, Any] | None = None
+    """"""
+    reaction_data: list[Any] | None = None
+    """"""
+    relation_ids: list[Any] | None = None
+    """"""
+    relations: dict[str, Any] | None = None
+    """"""
+    sla_type: str | None = None
+    """"""
+    sort_order: float | None = None
+    """"""
+    source_comment_id: str | None = None
+    """"""
+    started_at: str | None = None
+    """"""
+    state: dict[str, Any] | None = None
+    """"""
+    state_id: str | None = None
+    """"""
+    sub_issue_sort_order: float | None = None
+    """"""
+    subscriber_ids: list[Any] | None = None
+    """"""
+    subscribers: dict[str, Any] | None = None
+    """"""
+    team: dict[str, Any] | None = None
+    """"""
+    team_id: str | None = None
+    """"""
+    title: str | None = None
+    """"""
+    updated_at: str | None = None
+    """"""
+    url: str | None = None
+    """"""
+
+
+class ProjectsSearchData(BaseModel):
+    """Search result data for projects entity."""
+    model_config = ConfigDict(extra="allow")
+
+    canceled_at: str | None = None
+    """"""
+    color: str | None = None
+    """"""
+    completed_at: str | None = None
+    """"""
+    completed_issue_count_history: list[Any] | None = None
+    """"""
+    completed_scope_history: list[Any] | None = None
+    """"""
+    content: str | None = None
+    """"""
+    content_state: str | None = None
+    """"""
+    converted_from_issue: dict[str, Any] | None = None
+    """"""
+    converted_from_issue_id: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    creator: dict[str, Any] | None = None
+    """"""
+    creator_id: str | None = None
+    """"""
+    description: str | None = None
+    """"""
+    health: str | None = None
+    """"""
+    health_updated_at: str | None = None
+    """"""
+    icon: str | None = None
+    """"""
+    id: str | None = None
+    """"""
+    in_progress_scope_history: list[Any] | None = None
+    """"""
+    issue_count_history: list[Any] | None = None
+    """"""
+    lead: dict[str, Any] | None = None
+    """"""
+    lead_id: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    priority: float | None = None
+    """"""
+    priority_sort_order: float | None = None
+    """"""
+    progress: float | None = None
+    """"""
+    scope: float | None = None
+    """"""
+    scope_history: list[Any] | None = None
+    """"""
+    slug_id: str | None = None
+    """"""
+    sort_order: float | None = None
+    """"""
+    start_date: str | None = None
+    """"""
+    started_at: str | None = None
+    """"""
+    status: dict[str, Any] | None = None
+    """"""
+    status_id: str | None = None
+    """"""
+    target_date: str | None = None
+    """"""
+    team_ids: list[Any] | None = None
+    """"""
+    teams: dict[str, Any] | None = None
+    """"""
+    update_reminders_day: str | None = None
+    """"""
+    update_reminders_hour: float | None = None
+    """"""
+    updated_at: str | None = None
+    """"""
+    url: str | None = None
+    """"""
+
+
+class TeamsSearchData(BaseModel):
+    """Search result data for teams entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active_cycle: dict[str, Any] | None = None
+    """"""
+    active_cycle_id: str | None = None
+    """"""
+    auto_archive_period: float | None = None
+    """"""
+    auto_close_period: float | None = None
+    """"""
+    auto_close_state_id: str | None = None
+    """"""
+    color: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    cycle_calender_url: str | None = None
+    """"""
+    cycle_cooldown_time: float | None = None
+    """"""
+    cycle_duration: float | None = None
+    """"""
+    cycle_issue_auto_assign_completed: bool | None = None
+    """"""
+    cycle_issue_auto_assign_started: bool | None = None
+    """"""
+    cycle_lock_to_active: bool | None = None
+    """"""
+    cycle_start_day: float | None = None
+    """"""
+    cycles_enabled: bool | None = None
+    """"""
+    default_issue_estimate: float | None = None
+    """"""
+    default_issue_state: dict[str, Any] | None = None
+    """"""
+    default_issue_state_id: str | None = None
+    """"""
+    group_issue_history: bool | None = None
+    """"""
+    icon: str | None = None
+    """"""
+    id: str | None = None
+    """"""
+    invite_hash: str | None = None
+    """"""
+    issue_count: float | None = None
+    """"""
+    issue_estimation_allow_zero: bool | None = None
+    """"""
+    issue_estimation_extended: bool | None = None
+    """"""
+    issue_estimation_type: str | None = None
+    """"""
+    key: str | None = None
+    """"""
+    marked_as_duplicate_workflow_state: dict[str, Any] | None = None
+    """"""
+    marked_as_duplicate_workflow_state_id: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    parent_team_id: str | None = None
+    """"""
+    private: bool | None = None
+    """"""
+    require_priority_to_leave_triage: bool | None = None
+    """"""
+    scim_managed: bool | None = None
+    """"""
+    set_issue_sort_order_on_state_change: str | None = None
+    """"""
+    timezone: str | None = None
+    """"""
+    triage_enabled: bool | None = None
+    """"""
+    triage_issue_state_id: str | None = None
+    """"""
+    upcoming_cycle_count: float | None = None
+    """"""
+    updated_at: str | None = None
+    """"""
+
+
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    active: bool | None = None
+    """"""
+    admin: bool | None = None
+    """"""
+    avatar_background_color: str | None = None
+    """"""
+    avatar_url: str | None = None
+    """"""
+    created_at: str | None = None
+    """"""
+    created_issue_count: float | None = None
+    """"""
+    display_name: str | None = None
+    """"""
+    email: str | None = None
+    """"""
+    guest: bool | None = None
+    """"""
+    id: str | None = None
+    """"""
+    initials: str | None = None
+    """"""
+    invite_hash: str | None = None
+    """"""
+    is_me: bool | None = None
+    """"""
+    last_seen: str | None = None
+    """"""
+    name: str | None = None
+    """"""
+    team_ids: list[Any] | None = None
+    """"""
+    teams: dict[str, Any] | None = None
+    """"""
+    timezone: str | None = None
+    """"""
+    updated_at: str | None = None
+    """"""
+    url: str | None = None
+    """"""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+CommentsSearchResult = AirbyteSearchResult[CommentsSearchData]
+"""Search result type for comments entity."""
+
+IssuesSearchResult = AirbyteSearchResult[IssuesSearchData]
+"""Search result type for issues entity."""
+
+ProjectsSearchResult = AirbyteSearchResult[ProjectsSearchData]
+"""Search result type for projects entity."""
+
+TeamsSearchResult = AirbyteSearchResult[TeamsSearchData]
+"""Search result type for teams entity."""
+
+UsersSearchResult = AirbyteSearchResult[UsersSearchData]
+"""Search result type for users entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
