@@ -85,6 +85,10 @@ async def intercom_execute(entity: str, action: str, params: dict | None = None)
     return await connector.execute(entity, action, params or {})
 ```
 
+## Replication Configuration
+
+This connector supports replication configuration for MULTI mode sources. See the [full reference documentation](./REFERENCE.md#replication-configuration) for details on available options like `start_date`.
+
 ## Full documentation
 
 This connector supports the following entities and actions.
@@ -108,6 +112,6 @@ For the service's official API docs, see the [Intercom API reference](https://de
 
 ## Version information
 
-- **Package version:** 0.1.27
-- **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 416466da4970ae5fd6c7f2c658a68e047e51efd9
+- **Package version:** 0.1.28
+- **Connector version:** 0.1.2
+- **Generated with Connector SDK commit SHA:** 049f6ad546186bde8303b77e0e1001a831a58654
