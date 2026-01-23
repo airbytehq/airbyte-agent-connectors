@@ -184,27 +184,6 @@ class Reaction(BaseModel):
     users: Union[list[str] | None, Any] = Field(default=None)
     count: Union[int | None, Any] = Field(default=None)
 
-class Attachment(BaseModel):
-    """Message attachment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int | None, Any] = Field(default=None)
-    fallback: Union[str | None, Any] = Field(default=None)
-    color: Union[str | None, Any] = Field(default=None)
-    pretext: Union[str | None, Any] = Field(default=None)
-    author_name: Union[str | None, Any] = Field(default=None)
-    author_link: Union[str | None, Any] = Field(default=None)
-    author_icon: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    title_link: Union[str | None, Any] = Field(default=None)
-    text: Union[str | None, Any] = Field(default=None)
-    fields: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    image_url: Union[str | None, Any] = Field(default=None)
-    thumb_url: Union[str | None, Any] = Field(default=None)
-    footer: Union[str | None, Any] = Field(default=None)
-    footer_icon: Union[str | None, Any] = Field(default=None)
-    ts: Union[Any, Any] = Field(default=None)
-
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -228,6 +207,27 @@ class File(BaseModel):
     permalink_public: Union[str | None, Any] = Field(default=None)
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
+
+class Attachment(BaseModel):
+    """Message attachment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int | None, Any] = Field(default=None)
+    fallback: Union[str | None, Any] = Field(default=None)
+    color: Union[str | None, Any] = Field(default=None)
+    pretext: Union[str | None, Any] = Field(default=None)
+    author_name: Union[str | None, Any] = Field(default=None)
+    author_link: Union[str | None, Any] = Field(default=None)
+    author_icon: Union[str | None, Any] = Field(default=None)
+    title: Union[str | None, Any] = Field(default=None)
+    title_link: Union[str | None, Any] = Field(default=None)
+    text: Union[str | None, Any] = Field(default=None)
+    fields: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    image_url: Union[str | None, Any] = Field(default=None)
+    thumb_url: Union[str | None, Any] = Field(default=None)
+    footer: Union[str | None, Any] = Field(default=None)
+    footer_icon: Union[str | None, Any] = Field(default=None)
+    ts: Union[Any, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
@@ -495,6 +495,166 @@ class SlackExecuteResultWithMeta(SlackExecuteResult[T], Generic[T, S]):
     """
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
+
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class ChannelsSearchData(BaseModel):
+    """Search result data for channels entity."""
+    model_config = ConfigDict(extra="allow")
+
+    context_team_id: str | None = None
+    """The unique identifier of the team context in which the channel exists."""
+    created: int | None = None
+    """The timestamp when the channel was created."""
+    creator: str | None = None
+    """The ID of the user who created the channel."""
+    id: str | None = None
+    """The unique identifier of the channel."""
+    is_archived: bool | None = None
+    """Indicates if the channel is archived."""
+    is_channel: bool | None = None
+    """Indicates if the entity is a channel."""
+    is_ext_shared: bool | None = None
+    """Indicates if the channel is externally shared."""
+    is_general: bool | None = None
+    """Indicates if the channel is a general channel in the workspace."""
+    is_group: bool | None = None
+    """Indicates if the channel is a group (private channel) rather than a regular channel."""
+    is_im: bool | None = None
+    """Indicates if the entity is a direct message (IM) channel."""
+    is_member: bool | None = None
+    """Indicates if the calling user is a member of the channel."""
+    is_mpim: bool | None = None
+    """Indicates if the entity is a multiple person direct message (MPIM) channel."""
+    is_org_shared: bool | None = None
+    """Indicates if the channel is organization-wide shared."""
+    is_pending_ext_shared: bool | None = None
+    """Indicates if the channel is pending external shared."""
+    is_private: bool | None = None
+    """Indicates if the channel is a private channel."""
+    is_read_only: bool | None = None
+    """Indicates if the channel is read-only."""
+    is_shared: bool | None = None
+    """Indicates if the channel is shared."""
+    last_read: str | None = None
+    """The timestamp of the user's last read message in the channel."""
+    locale: str | None = None
+    """The locale of the channel."""
+    name: str | None = None
+    """The name of the channel."""
+    name_normalized: str | None = None
+    """The normalized name of the channel."""
+    num_members: int | None = None
+    """The number of members in the channel."""
+    parent_conversation: str | None = None
+    """The parent conversation of the channel."""
+    pending_connected_team_ids: list[Any] | None = None
+    """The IDs of teams that are pending to be connected to the channel."""
+    pending_shared: list[Any] | None = None
+    """The list of pending shared items of the channel."""
+    previous_names: list[Any] | None = None
+    """The previous names of the channel."""
+    purpose: dict[str, Any] | None = None
+    """The purpose of the channel."""
+    shared_team_ids: list[Any] | None = None
+    """The IDs of teams with which the channel is shared."""
+    topic: dict[str, Any] | None = None
+    """The topic of the channel."""
+    unlinked: int | None = None
+    """Indicates if the channel is unlinked."""
+    updated: int | None = None
+    """The timestamp when the channel was last updated."""
+
+
+class UsersSearchData(BaseModel):
+    """Search result data for users entity."""
+    model_config = ConfigDict(extra="allow")
+
+    color: str | None = None
+    """The color assigned to the user for visual purposes."""
+    deleted: bool | None = None
+    """Indicates if the user is deleted or not."""
+    has_2fa: bool | None = None
+    """Flag indicating if the user has two-factor authentication enabled."""
+    id: str | None = None
+    """Unique identifier for the user."""
+    is_admin: bool | None = None
+    """Flag specifying if the user is an admin or not."""
+    is_app_user: bool | None = None
+    """Specifies if the user is an app user."""
+    is_bot: bool | None = None
+    """Indicates if the user is a bot account."""
+    is_email_confirmed: bool | None = None
+    """Flag indicating if the user's email is confirmed."""
+    is_forgotten: bool | None = None
+    """Specifies if the user is marked as forgotten."""
+    is_invited_user: bool | None = None
+    """Indicates if the user is invited or not."""
+    is_owner: bool | None = None
+    """Flag indicating if the user is an owner."""
+    is_primary_owner: bool | None = None
+    """Specifies if the user is the primary owner."""
+    is_restricted: bool | None = None
+    """Flag specifying if the user is restricted."""
+    is_ultra_restricted: bool | None = None
+    """Indicates if the user has ultra-restricted access."""
+    name: str | None = None
+    """The username of the user."""
+    profile: dict[str, Any] | None = None
+    """User's profile information containing detailed details."""
+    real_name: str | None = None
+    """The real name of the user."""
+    team_id: str | None = None
+    """Unique identifier for the team the user belongs to."""
+    tz: str | None = None
+    """Timezone of the user."""
+    tz_label: str | None = None
+    """Label representing the timezone of the user."""
+    tz_offset: int | None = None
+    """Offset of the user's timezone."""
+    updated: int | None = None
+    """Timestamp of when the user's information was last updated."""
+    who_can_share_contact_card: str | None = None
+    """Specifies who can share the user's contact card."""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+ChannelsSearchResult = AirbyteSearchResult[ChannelsSearchData]
+"""Search result type for channels entity."""
+
+UsersSearchResult = AirbyteSearchResult[UsersSearchData]
+"""Search result type for users entity."""
 
 
 

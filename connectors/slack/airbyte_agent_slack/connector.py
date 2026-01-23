@@ -27,6 +27,11 @@ from .types import (
     ThreadsListParams,
     UsersGetParams,
     UsersListParams,
+    AirbyteSearchParams,
+    ChannelsSearchFilter,
+    ChannelsSearchQuery,
+    UsersSearchFilter,
+    UsersSearchQuery,
 )
 if TYPE_CHECKING:
     from .models import SlackAuthConfig
@@ -46,6 +51,12 @@ from .models import (
     ReactionAddResponse,
     Thread,
     User,
+    AirbyteSearchHit,
+    AirbyteSearchResult,
+    ChannelsSearchData,
+    ChannelsSearchResult,
+    UsersSearchData,
+    UsersSearchResult,
 )
 
 # TypeVar for decorator type preservation
@@ -61,7 +72,7 @@ class SlackConnector:
     """
 
     connector_name = "slack"
-    connector_version = "0.1.7"
+    connector_version = "0.1.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -522,6 +533,82 @@ class UsersQuery:
 
 
 
+    async def search(
+        self,
+        query: UsersSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> UsersSearchResult:
+        """
+        Search users records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (UsersSearchFilter):
+        - color: The color assigned to the user for visual purposes.
+        - deleted: Indicates if the user is deleted or not.
+        - has_2fa: Flag indicating if the user has two-factor authentication enabled.
+        - id: Unique identifier for the user.
+        - is_admin: Flag specifying if the user is an admin or not.
+        - is_app_user: Specifies if the user is an app user.
+        - is_bot: Indicates if the user is a bot account.
+        - is_email_confirmed: Flag indicating if the user's email is confirmed.
+        - is_forgotten: Specifies if the user is marked as forgotten.
+        - is_invited_user: Indicates if the user is invited or not.
+        - is_owner: Flag indicating if the user is an owner.
+        - is_primary_owner: Specifies if the user is the primary owner.
+        - is_restricted: Flag specifying if the user is restricted.
+        - is_ultra_restricted: Indicates if the user has ultra-restricted access.
+        - name: The username of the user.
+        - profile: User's profile information containing detailed details.
+        - real_name: The real name of the user.
+        - team_id: Unique identifier for the team the user belongs to.
+        - tz: Timezone of the user.
+        - tz_label: Label representing the timezone of the user.
+        - tz_offset: Offset of the user's timezone.
+        - updated: Timestamp of when the user's information was last updated.
+        - who_can_share_contact_card: Specifies who can share the user's contact card.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("users", "search", params)
+
+        # Parse response into typed result
+        return UsersSearchResult(
+            hits=[
+                AirbyteSearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
+
 class ChannelsQuery:
     """
     Query class for Channels entity operations.
@@ -649,6 +736,90 @@ class ChannelsQuery:
         return result
 
 
+
+    async def search(
+        self,
+        query: ChannelsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ChannelsSearchResult:
+        """
+        Search channels records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ChannelsSearchFilter):
+        - context_team_id: The unique identifier of the team context in which the channel exists.
+        - created: The timestamp when the channel was created.
+        - creator: The ID of the user who created the channel.
+        - id: The unique identifier of the channel.
+        - is_archived: Indicates if the channel is archived.
+        - is_channel: Indicates if the entity is a channel.
+        - is_ext_shared: Indicates if the channel is externally shared.
+        - is_general: Indicates if the channel is a general channel in the workspace.
+        - is_group: Indicates if the channel is a group (private channel) rather than a regular channel.
+        - is_im: Indicates if the entity is a direct message (IM) channel.
+        - is_member: Indicates if the calling user is a member of the channel.
+        - is_mpim: Indicates if the entity is a multiple person direct message (MPIM) channel.
+        - is_org_shared: Indicates if the channel is organization-wide shared.
+        - is_pending_ext_shared: Indicates if the channel is pending external shared.
+        - is_private: Indicates if the channel is a private channel.
+        - is_read_only: Indicates if the channel is read-only.
+        - is_shared: Indicates if the channel is shared.
+        - last_read: The timestamp of the user's last read message in the channel.
+        - locale: The locale of the channel.
+        - name: The name of the channel.
+        - name_normalized: The normalized name of the channel.
+        - num_members: The number of members in the channel.
+        - parent_conversation: The parent conversation of the channel.
+        - pending_connected_team_ids: The IDs of teams that are pending to be connected to the channel.
+        - pending_shared: The list of pending shared items of the channel.
+        - previous_names: The previous names of the channel.
+        - purpose: The purpose of the channel.
+        - shared_team_ids: The IDs of teams with which the channel is shared.
+        - topic: The topic of the channel.
+        - unlinked: Indicates if the channel is unlinked.
+        - updated: The timestamp when the channel was last updated.
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's next_cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ChannelsSearchResult with hits (list of AirbyteSearchHit[ChannelsSearchData]) and pagination info
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("channels", "search", params)
+
+        # Parse response into typed result
+        return ChannelsSearchResult(
+            hits=[
+                AirbyteSearchHit[ChannelsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ChannelsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
+            ],
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
+        )
 
 class ChannelMessagesQuery:
     """
