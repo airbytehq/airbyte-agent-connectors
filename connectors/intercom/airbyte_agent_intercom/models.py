@@ -615,6 +615,294 @@ class IntercomExecuteResultWithMeta(IntercomExecuteResult[T], Generic[T, S]):
     meta: S
     """Metadata about the response (e.g., pagination cursors, record counts)."""
 
+# ===== SEARCH DATA MODELS =====
+# Entity-specific Pydantic models for search result data
+
+# Type variable for search data generic
+D = TypeVar('D')
+
+class CompaniesSearchData(BaseModel):
+    """Search result data for companies entity."""
+    model_config = ConfigDict(extra="allow")
+
+    app_id: str | None = None
+    """The ID of the application associated with the company"""
+    company_id: str | None = None
+    """The unique identifier of the company"""
+    created_at: int | None = None
+    """The date and time when the company was created"""
+    custom_attributes: dict[str, Any] | None = None
+    """Custom attributes specific to the company"""
+    id: str | None = None
+    """The ID of the company"""
+    industry: str | None = None
+    """The industry in which the company operates"""
+    monthly_spend: float | None = None
+    """The monthly spend of the company"""
+    name: str | None = None
+    """The name of the company"""
+    plan: dict[str, Any] | None = None
+    """Details of the company's subscription plan"""
+    remote_created_at: int | None = None
+    """The remote date and time when the company was created"""
+    segments: dict[str, Any] | None = None
+    """Segments associated with the company"""
+    session_count: int | None = None
+    """The number of sessions related to the company"""
+    size: int | None = None
+    """The size of the company"""
+    tags: dict[str, Any] | None = None
+    """Tags associated with the company"""
+    type: str | None = None
+    """The type of the company"""
+    updated_at: int | None = None
+    """The date and time when the company was last updated"""
+    user_count: int | None = None
+    """The number of users associated with the company"""
+    website: str | None = None
+    """The website of the company"""
+
+
+class ContactsSearchData(BaseModel):
+    """Search result data for contacts entity."""
+    model_config = ConfigDict(extra="allow")
+
+    android_app_name: str | None = None
+    """The name of the Android app associated with the contact."""
+    android_app_version: str | None = None
+    """The version of the Android app associated with the contact."""
+    android_device: str | None = None
+    """The device used by the contact for Android."""
+    android_last_seen_at: str | None = None
+    """The date and time when the contact was last seen on Android."""
+    android_os_version: str | None = None
+    """The operating system version of the Android device."""
+    android_sdk_version: str | None = None
+    """The SDK version of the Android device."""
+    avatar: str | None = None
+    """URL pointing to the contact's avatar image."""
+    browser: str | None = None
+    """The browser used by the contact."""
+    browser_language: str | None = None
+    """The language preference set in the contact's browser."""
+    browser_version: str | None = None
+    """The version of the browser used by the contact."""
+    companies: dict[str, Any] | None = None
+    """Companies associated with the contact."""
+    created_at: int | None = None
+    """The date and time when the contact was created."""
+    custom_attributes: dict[str, Any] | None = None
+    """Custom attributes defined for the contact."""
+    email: str | None = None
+    """The email address of the contact."""
+    external_id: str | None = None
+    """External identifier for the contact."""
+    has_hard_bounced: bool | None = None
+    """Flag indicating if the contact has hard bounced."""
+    id: str | None = None
+    """The unique identifier of the contact."""
+    ios_app_name: str | None = None
+    """The name of the iOS app associated with the contact."""
+    ios_app_version: str | None = None
+    """The version of the iOS app associated with the contact."""
+    ios_device: str | None = None
+    """The device used by the contact for iOS."""
+    ios_last_seen_at: int | None = None
+    """The date and time when the contact was last seen on iOS."""
+    ios_os_version: str | None = None
+    """The operating system version of the iOS device."""
+    ios_sdk_version: str | None = None
+    """The SDK version of the iOS device."""
+    language_override: str | None = None
+    """Language override set for the contact."""
+    last_contacted_at: int | None = None
+    """The date and time when the contact was last contacted."""
+    last_email_clicked_at: int | None = None
+    """The date and time when the contact last clicked an email."""
+    last_email_opened_at: int | None = None
+    """The date and time when the contact last opened an email."""
+    last_replied_at: int | None = None
+    """The date and time when the contact last replied."""
+    last_seen_at: int | None = None
+    """The date and time when the contact was last seen overall."""
+    location: dict[str, Any] | None = None
+    """Location details of the contact."""
+    marked_email_as_spam: bool | None = None
+    """Flag indicating if the contact's email was marked as spam."""
+    name: str | None = None
+    """The name of the contact."""
+    notes: dict[str, Any] | None = None
+    """Notes associated with the contact."""
+    opted_in_subscription_types: dict[str, Any] | None = None
+    """Subscription types the contact opted into."""
+    opted_out_subscription_types: dict[str, Any] | None = None
+    """Subscription types the contact opted out from."""
+    os: str | None = None
+    """Operating system of the contact's device."""
+    owner_id: int | None = None
+    """The unique identifier of the contact's owner."""
+    phone: str | None = None
+    """The phone number of the contact."""
+    referrer: str | None = None
+    """Referrer information related to the contact."""
+    role: str | None = None
+    """Role or position of the contact."""
+    signed_up_at: int | None = None
+    """The date and time when the contact signed up."""
+    sms_consent: bool | None = None
+    """Consent status for SMS communication."""
+    social_profiles: dict[str, Any] | None = None
+    """Social profiles associated with the contact."""
+    tags: dict[str, Any] | None = None
+    """Tags associated with the contact."""
+    type: str | None = None
+    """Type of contact."""
+    unsubscribed_from_emails: bool | None = None
+    """Flag indicating if the contact unsubscribed from emails."""
+    unsubscribed_from_sms: bool | None = None
+    """Flag indicating if the contact unsubscribed from SMS."""
+    updated_at: int | None = None
+    """The date and time when the contact was last updated."""
+    utm_campaign: str | None = None
+    """Campaign data from UTM parameters."""
+    utm_content: str | None = None
+    """Content data from UTM parameters."""
+    utm_medium: str | None = None
+    """Medium data from UTM parameters."""
+    utm_source: str | None = None
+    """Source data from UTM parameters."""
+    utm_term: str | None = None
+    """Term data from UTM parameters."""
+    workspace_id: str | None = None
+    """The unique identifier of the workspace associated with the contact."""
+
+
+class ConversationsSearchData(BaseModel):
+    """Search result data for conversations entity."""
+    model_config = ConfigDict(extra="allow")
+
+    admin_assignee_id: int | None = None
+    """The ID of the administrator assigned to the conversation"""
+    ai_agent: dict[str, Any] | None = None
+    """Data related to AI Agent involvement in the conversation"""
+    ai_agent_participated: bool | None = None
+    """Indicates whether AI Agent participated in the conversation"""
+    assignee: dict[str, Any] | None = None
+    """The assigned user responsible for the conversation."""
+    contacts: dict[str, Any] | None = None
+    """List of contacts involved in the conversation."""
+    conversation_message: dict[str, Any] | None = None
+    """The main message content of the conversation."""
+    conversation_rating: dict[str, Any] | None = None
+    """Ratings given to the conversation by the customer and teammate."""
+    created_at: int | None = None
+    """The timestamp when the conversation was created"""
+    custom_attributes: dict[str, Any] | None = None
+    """Custom attributes associated with the conversation"""
+    customer_first_reply: dict[str, Any] | None = None
+    """Timestamp indicating when the customer first replied."""
+    customers: list[Any] | None = None
+    """List of customers involved in the conversation"""
+    first_contact_reply: dict[str, Any] | None = None
+    """Timestamp indicating when the first contact replied."""
+    id: str | None = None
+    """The unique ID of the conversation"""
+    linked_objects: dict[str, Any] | None = None
+    """Linked objects associated with the conversation"""
+    open: bool | None = None
+    """Indicates if the conversation is open or closed"""
+    priority: str | None = None
+    """The priority level of the conversation"""
+    read: bool | None = None
+    """Indicates if the conversation has been read"""
+    redacted: bool | None = None
+    """Indicates if the conversation is redacted"""
+    sent_at: int | None = None
+    """The timestamp when the conversation was sent"""
+    sla_applied: dict[str, Any] | None = None
+    """Service Level Agreement details applied to the conversation."""
+    snoozed_until: int | None = None
+    """Timestamp until the conversation is snoozed"""
+    source: dict[str, Any] | None = None
+    """Source details of the conversation."""
+    state: str | None = None
+    """The state of the conversation (e.g., new, in progress)"""
+    statistics: dict[str, Any] | None = None
+    """Statistics related to the conversation."""
+    tags: dict[str, Any] | None = None
+    """Tags applied to the conversation."""
+    team_assignee_id: int | None = None
+    """The ID of the team assigned to the conversation"""
+    teammates: dict[str, Any] | None = None
+    """List of teammates involved in the conversation."""
+    title: str | None = None
+    """The title of the conversation"""
+    topics: dict[str, Any] | None = None
+    """Topics associated with the conversation."""
+    type: str | None = None
+    """The type of the conversation"""
+    updated_at: int | None = None
+    """The timestamp when the conversation was last updated"""
+    user: dict[str, Any] | None = None
+    """The user related to the conversation."""
+    waiting_since: int | None = None
+    """Timestamp since waiting for a response"""
+
+
+class TeamsSearchData(BaseModel):
+    """Search result data for teams entity."""
+    model_config = ConfigDict(extra="allow")
+
+    admin_ids: list[Any] | None = None
+    """Array of user IDs representing the admins of the team."""
+    id: str | None = None
+    """Unique identifier for the team."""
+    name: str | None = None
+    """Name of the team."""
+    type: str | None = None
+    """Type of team (e.g., 'internal', 'external')."""
+
+
+# ===== GENERIC SEARCH RESULT TYPES =====
+
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed hits."""
+    model_config = ConfigDict(extra="allow")
+
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
+    """List of matching records."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
+
+
+# ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
+
+CompaniesSearchResult = AirbyteSearchResult[CompaniesSearchData]
+"""Search result type for companies entity."""
+
+ContactsSearchResult = AirbyteSearchResult[ContactsSearchData]
+"""Search result type for contacts entity."""
+
+ConversationsSearchResult = AirbyteSearchResult[ConversationsSearchData]
+"""Search result type for conversations entity."""
+
+TeamsSearchResult = AirbyteSearchResult[TeamsSearchData]
+"""Search result type for teams entity."""
+
 
 
 # ===== OPERATION RESULT TYPE ALIASES =====
