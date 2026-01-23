@@ -83,6 +83,7 @@ async def greenhouse_execute(entity: str, action: str, params: dict | None = Non
     return await connector.execute(entity, action, params or {})
 ```
 
+
 ## Full documentation
 
 This connector supports the following entities and actions.
@@ -111,6 +112,6 @@ For the service's official API docs, see the [Greenhouse API reference](https://
 
 ## Version information
 
-- **Package version:** 0.17.55
-- **Connector version:** 0.1.2
-- **Generated with Connector SDK commit SHA:** 416466da4970ae5fd6c7f2c658a68e047e51efd9
+- **Package version:** 0.17.56
+- **Connector version:** 0.1.3
+- **Generated with Connector SDK commit SHA:** 32c5ef4692be2243558faa20132b3ece7d573aed
