@@ -56,7 +56,7 @@ class AmazonAdsConnector:
     """
 
     connector_name = "amazon-ads"
-    connector_version = "1.0.2"
+    connector_version = "1.0.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -87,7 +87,7 @@ class AmazonAdsConnector:
         airbyte_client_id: str | None = None,
         airbyte_client_secret: str | None = None,
         on_token_refresh: Any | None = None,
-        region_url: str | None = None    ):
+        region: str | None = None    ):
         """
         Initialize a new amazon-ads connector instance.
 
@@ -102,7 +102,7 @@ class AmazonAdsConnector:
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
-                Example: lambda tokens: save_to_database(tokens)            region_url: The Amazon Ads API endpoint URL based on region:
+                Example: lambda tokens: save_to_database(tokens)            region: The Amazon Ads API endpoint URL based on region:
 - NA (North America): https://advertising-api.amazon.com
 - EU (Europe): https://advertising-api-eu.amazon.com
 - FE (Far East): https://advertising-api-fe.amazon.com
@@ -149,8 +149,8 @@ class AmazonAdsConnector:
 
             # Build config_values dict from server variables
             config_values: dict[str, str] = {}
-            if region_url:
-                config_values["region_url"] = region_url
+            if region:
+                config_values["region"] = region
 
             self._executor = LocalExecutor(
                 model=AmazonAdsConnectorModel,
@@ -161,8 +161,8 @@ class AmazonAdsConnector:
 
             # Update base_url with server variables if provided
             base_url = self._executor.http_client.base_url
-            if region_url:
-                base_url = base_url.replace("{region_url}", region_url)
+            if region:
+                base_url = base_url.replace("{region}", region)
             self._executor.http_client.base_url = base_url
 
         # Initialize entity query objects
