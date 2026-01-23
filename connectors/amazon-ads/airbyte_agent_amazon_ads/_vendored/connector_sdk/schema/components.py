@@ -134,6 +134,11 @@ class GraphQLBodyConfig(BaseModel):
         None,
         description="Default fields to select if not provided in request parameters. Can be a string or array of field names.",
     )
+    nullable_variables: List[str] | None = Field(
+        default=None,
+        alias="x-airbyte-nullable-variables",
+        description="Variable names that can be explicitly set to null (e.g., to unassign a user)",
+    )
 
 
 # Union type for all body type configs (extensible for future types like XML, SOAP, etc.)
