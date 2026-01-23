@@ -61,7 +61,7 @@ class SlackConnector:
     """
 
     connector_name = "slack"
-    connector_version = "0.1.5"
+    connector_version = "0.1.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -123,7 +123,7 @@ class SlackConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = SlackConnector(auth_config=SlackAuthConfig(access_token="..."))
+            connector = SlackConnector(auth_config=SlackAuthConfig(api_token="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = SlackConnector(
                 external_user_id="user-123",

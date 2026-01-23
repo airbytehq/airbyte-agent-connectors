@@ -66,7 +66,7 @@ from airbyte_agent_slack.models import SlackTokenAuthenticationAuthConfig
 
 connector = SlackConnector(
     auth_config=SlackTokenAuthenticationAuthConfig(
-        access_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+        api_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
     )
 )
 
@@ -121,6 +121,6 @@ For the service's official API docs, see the [Slack API reference](https://api.s
 
 ## Version information
 
-- **Package version:** 0.1.18
-- **Connector version:** 0.1.5
-- **Generated with Connector SDK commit SHA:** 416466da4970ae5fd6c7f2c658a68e047e51efd9
+- **Package version:** 0.1.19
+- **Connector version:** 0.1.6
+- **Generated with Connector SDK commit SHA:** a035ad482faa8ceae3c296a0651e914e1dae140e
