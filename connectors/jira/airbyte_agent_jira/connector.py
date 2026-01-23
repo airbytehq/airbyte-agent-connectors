@@ -14,14 +14,27 @@ except ImportError:
 from .connector_model import JiraConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from .types import (
+    IssueCommentsCreateParams,
+    IssueCommentsCreateParamsBody,
+    IssueCommentsCreateParamsVisibility,
+    IssueCommentsDeleteParams,
     IssueCommentsGetParams,
     IssueCommentsListParams,
+    IssueCommentsUpdateParams,
+    IssueCommentsUpdateParamsBody,
+    IssueCommentsUpdateParamsVisibility,
     IssueFieldsApiSearchParams,
     IssueFieldsListParams,
     IssueWorklogsGetParams,
     IssueWorklogsListParams,
     IssuesApiSearchParams,
+    IssuesCreateParams,
+    IssuesCreateParamsFields,
+    IssuesDeleteParams,
     IssuesGetParams,
+    IssuesUpdateParams,
+    IssuesUpdateParamsFields,
+    IssuesUpdateParamsTransition,
     ProjectsApiSearchParams,
     ProjectsGetParams,
     UsersApiSearchParams,
@@ -57,6 +70,7 @@ from .models import (
     IssueWorklogsListResult,
     Issue,
     IssueComment,
+    IssueCreateResponse,
     IssueField,
     IssueFieldSearchResults,
     Project,
@@ -91,13 +105,16 @@ class JiraConnector:
     """
 
     connector_name = "jira"
-    connector_version = "1.0.6"
+    connector_version = "1.1.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("issues", "api_search"): True,
+        ("issues", "create"): None,
         ("issues", "get"): None,
+        ("issues", "update"): None,
+        ("issues", "delete"): None,
         ("projects", "api_search"): True,
         ("projects", "get"): None,
         ("users", "get"): None,
@@ -106,7 +123,10 @@ class JiraConnector:
         ("issue_fields", "list"): True,
         ("issue_fields", "api_search"): True,
         ("issue_comments", "list"): True,
+        ("issue_comments", "create"): None,
         ("issue_comments", "get"): None,
+        ("issue_comments", "update"): None,
+        ("issue_comments", "delete"): None,
         ("issue_worklogs", "list"): True,
         ("issue_worklogs", "get"): None,
     }
@@ -115,7 +135,10 @@ class JiraConnector:
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
         ('issues', 'api_search'): {'jql': 'jql', 'next_page_token': 'nextPageToken', 'max_results': 'maxResults', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'fail_fast': 'failFast'},
+        ('issues', 'create'): {'fields': 'fields', 'update': 'update', 'update_history': 'updateHistory'},
         ('issues', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'fields': 'fields', 'expand': 'expand', 'properties': 'properties', 'fields_by_keys': 'fieldsByKeys', 'update_history': 'updateHistory', 'fail_fast': 'failFast'},
+        ('issues', 'update'): {'fields': 'fields', 'update': 'update', 'transition': 'transition', 'issue_id_or_key': 'issueIdOrKey', 'notify_users': 'notifyUsers', 'override_screen_security': 'overrideScreenSecurity', 'override_editable_flag': 'overrideEditableFlag', 'return_issue': 'returnIssue', 'expand': 'expand'},
+        ('issues', 'delete'): {'issue_id_or_key': 'issueIdOrKey', 'delete_subtasks': 'deleteSubtasks'},
         ('projects', 'api_search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'id': 'id', 'keys': 'keys', 'query': 'query', 'type_key': 'typeKey', 'category_id': 'categoryId', 'action': 'action', 'expand': 'expand', 'status': 'status'},
         ('projects', 'get'): {'project_id_or_key': 'projectIdOrKey', 'expand': 'expand', 'properties': 'properties'},
         ('users', 'get'): {'account_id': 'accountId', 'expand': 'expand'},
@@ -123,7 +146,10 @@ class JiraConnector:
         ('users', 'api_search'): {'query': 'query', 'start_at': 'startAt', 'max_results': 'maxResults', 'account_id': 'accountId', 'property': 'property'},
         ('issue_fields', 'api_search'): {'start_at': 'startAt', 'max_results': 'maxResults', 'type': 'type', 'id': 'id', 'query': 'query', 'order_by': 'orderBy', 'expand': 'expand'},
         ('issue_comments', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'order_by': 'orderBy', 'expand': 'expand'},
+        ('issue_comments', 'create'): {'body': 'body', 'visibility': 'visibility', 'properties': 'properties', 'issue_id_or_key': 'issueIdOrKey', 'expand': 'expand'},
         ('issue_comments', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'expand': 'expand'},
+        ('issue_comments', 'update'): {'body': 'body', 'visibility': 'visibility', 'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId', 'notify_users': 'notifyUsers', 'expand': 'expand'},
+        ('issue_comments', 'delete'): {'issue_id_or_key': 'issueIdOrKey', 'comment_id': 'commentId'},
         ('issue_worklogs', 'list'): {'issue_id_or_key': 'issueIdOrKey', 'start_at': 'startAt', 'max_results': 'maxResults', 'expand': 'expand'},
         ('issue_worklogs', 'get'): {'issue_id_or_key': 'issueIdOrKey', 'worklog_id': 'worklogId', 'expand': 'expand'},
     }
@@ -231,9 +257,33 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["issues"],
+        action: Literal["create"],
+        params: "IssuesCreateParams"
+    ) -> "IssueCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
         action: Literal["get"],
         params: "IssuesGetParams"
     ) -> "Issue": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["update"],
+        params: "IssuesUpdateParams"
+    ) -> "Issue": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["delete"],
+        params: "IssuesDeleteParams"
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -303,9 +353,33 @@ class JiraConnector:
     async def execute(
         self,
         entity: Literal["issue_comments"],
+        action: Literal["create"],
+        params: "IssueCommentsCreateParams"
+    ) -> "IssueComment": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_comments"],
         action: Literal["get"],
         params: "IssueCommentsGetParams"
     ) -> "IssueComment": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_comments"],
+        action: Literal["update"],
+        params: "IssueCommentsUpdateParams"
+    ) -> "IssueComment": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issue_comments"],
+        action: Literal["delete"],
+        params: "IssueCommentsDeleteParams"
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -540,6 +614,37 @@ class IssuesQuery:
 
 
 
+    async def create(
+        self,
+        fields: IssuesCreateParamsFields,
+        update: dict[str, Any] | None = None,
+        update_history: bool | None = None,
+        **kwargs
+    ) -> IssueCreateResponse:
+        """
+        Creates an issue or a sub-task from a JSON representation
+
+        Args:
+            fields: The issue fields to set
+            update: Additional update operations to perform
+            update_history: Whether the action taken is added to the user's Recent history
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueCreateResponse
+        """
+        params = {k: v for k, v in {
+            "fields": fields,
+            "update": update,
+            "updateHistory": update_history,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "create", params)
+        return result
+
+
+
     async def get(
         self,
         issue_id_or_key: str,
@@ -579,6 +684,83 @@ class IssuesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issues", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        issue_id_or_key: str,
+        fields: IssuesUpdateParamsFields | None = None,
+        update: dict[str, Any] | None = None,
+        transition: IssuesUpdateParamsTransition | None = None,
+        notify_users: bool | None = None,
+        override_screen_security: bool | None = None,
+        override_editable_flag: bool | None = None,
+        return_issue: bool | None = None,
+        expand: str | None = None,
+        **kwargs
+    ) -> Issue:
+        """
+        Edits an issue. Issue properties may be updated as part of the edit. Only fields included in the request body are updated.
+
+        Args:
+            fields: The issue fields to update
+            update: Additional update operations to perform
+            transition: Transition the issue to a new status
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            notify_users: Whether a notification email about the issue update is sent to all watchers. Default is true.
+            override_screen_security: Whether screen security is overridden to enable hidden fields to be edited.
+            override_editable_flag: Whether the issue's edit metadata is overridden.
+            return_issue: Whether the updated issue is returned.
+            expand: Expand options when returning the updated issue.
+            **kwargs: Additional parameters
+
+        Returns:
+            Issue
+        """
+        params = {k: v for k, v in {
+            "fields": fields,
+            "update": update,
+            "transition": transition,
+            "issueIdOrKey": issue_id_or_key,
+            "notifyUsers": notify_users,
+            "overrideScreenSecurity": override_screen_security,
+            "overrideEditableFlag": override_editable_flag,
+            "returnIssue": return_issue,
+            "expand": expand,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        issue_id_or_key: str,
+        delete_subtasks: bool | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Deletes an issue. An issue cannot be deleted if it has one or more subtasks unless deleteSubtasks is true.
+
+        Args:
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            delete_subtasks: Whether to delete the issue's subtasks. Default is false.
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "issueIdOrKey": issue_id_or_key,
+            "deleteSubtasks": delete_subtasks,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "delete", params)
         return result
 
 
@@ -1207,6 +1389,43 @@ class IssueCommentsQuery:
 
 
 
+    async def create(
+        self,
+        body: IssueCommentsCreateParamsBody,
+        issue_id_or_key: str,
+        visibility: IssueCommentsCreateParamsVisibility | None = None,
+        properties: list[dict[str, Any]] | None = None,
+        expand: str | None = None,
+        **kwargs
+    ) -> IssueComment:
+        """
+        Adds a comment to an issue
+
+        Args:
+            body: Comment content in Atlassian Document Format (ADF)
+            visibility: Restrict comment visibility to a group or role
+            properties: Custom properties for the comment
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            expand: Expand options for the returned comment
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueComment
+        """
+        params = {k: v for k, v in {
+            "body": body,
+            "visibility": visibility,
+            "properties": properties,
+            "issueIdOrKey": issue_id_or_key,
+            "expand": expand,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_comments", "create", params)
+        return result
+
+
+
     async def get(
         self,
         issue_id_or_key: str,
@@ -1234,6 +1453,74 @@ class IssueCommentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("issue_comments", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        body: IssueCommentsUpdateParamsBody,
+        issue_id_or_key: str,
+        comment_id: str,
+        visibility: IssueCommentsUpdateParamsVisibility | None = None,
+        notify_users: bool | None = None,
+        expand: str | None = None,
+        **kwargs
+    ) -> IssueComment:
+        """
+        Updates a comment on an issue
+
+        Args:
+            body: Updated comment content in Atlassian Document Format (ADF)
+            visibility: Restrict comment visibility to a group or role
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            comment_id: The comment ID
+            notify_users: Whether a notification email about the comment update is sent. Default is true.
+            expand: Expand options for the returned comment
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueComment
+        """
+        params = {k: v for k, v in {
+            "body": body,
+            "visibility": visibility,
+            "issueIdOrKey": issue_id_or_key,
+            "commentId": comment_id,
+            "notifyUsers": notify_users,
+            "expand": expand,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_comments", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        issue_id_or_key: str,
+        comment_id: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Deletes a comment from an issue
+
+        Args:
+            issue_id_or_key: The issue ID or key (e.g., "PROJ-123" or "10000")
+            comment_id: The comment ID
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "issueIdOrKey": issue_id_or_key,
+            "commentId": comment_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issue_comments", "delete", params)
         return result
 
 
