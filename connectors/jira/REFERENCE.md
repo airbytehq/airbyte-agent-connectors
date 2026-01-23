@@ -15,19 +15,19 @@ The Jira connector supports the following entities and actions.
 | Issue Comments | [List](#issue-comments-list), [Get](#issue-comments-get), [Search](#issue-comments-search) |
 | Issue Worklogs | [List](#issue-worklogs-list), [Get](#issue-worklogs-get), [Search](#issue-worklogs-search) |
 
-### Issues
+## Issues
 
-#### Issues API Search
+### Issues API Search
 
 Retrieve issues based on JQL query with pagination support
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issues.api_search()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -40,7 +40,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -57,7 +57,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -68,7 +68,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `fields` | `object` |  |
 
 
-**Meta**
+#### Meta
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -78,11 +78,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issues Get
+### Issues Get
 
 Retrieve a single issue by its ID or key
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issues.get(
@@ -90,7 +90,7 @@ await jira.issues.get(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -106,7 +106,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -122,7 +122,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -135,11 +135,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issues Search
+### Issues Search
 
 Search and filter issues records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issues.search(
@@ -147,7 +147,7 @@ await jira.issues.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -162,7 +162,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -173,7 +173,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -230,19 +230,19 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-### Projects
+## Projects
 
-#### Projects API Search
+### Projects API Search
 
 Search and filter projects with advanced query parameters
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.projects.api_search()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -255,7 +255,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -275,7 +275,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -303,7 +303,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `roles` | `object \| null` |  |
 
 
-**Meta**
+#### Meta
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -312,11 +312,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Projects Get
+### Projects Get
 
 Retrieve a single project by its ID or key
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.projects.get(
@@ -324,7 +324,7 @@ await jira.projects.get(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -340,7 +340,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -352,7 +352,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -382,11 +382,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Projects Search
+### Projects Search
 
 Search and filter projects records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.projects.search(
@@ -394,7 +394,7 @@ await jira.projects.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -409,7 +409,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -420,7 +420,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -507,13 +507,13 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-### Users
+## Users
 
-#### Users Get
+### Users Get
 
 Retrieve a single user by their account ID
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.users.get(
@@ -521,7 +521,7 @@ await jira.users.get(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -537,7 +537,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -548,7 +548,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -568,17 +568,17 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Users List
+### Users List
 
 Returns a paginated list of users
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.users.list()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -591,7 +591,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -602,7 +602,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -622,17 +622,17 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Users API Search
+### Users API Search
 
 Search for users using a query string
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.users.api_search()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -645,7 +645,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -659,7 +659,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -679,11 +679,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Users Search
+### Users Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.users.search(
@@ -691,7 +691,7 @@ await jira.users.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -706,7 +706,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -717,7 +717,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -764,19 +764,19 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-### Issue Fields
+## Issue Fields
 
-#### Issue Fields List
+### Issue Fields List
 
 Returns a list of all custom and system fields
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_fields.list()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -793,7 +793,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -818,17 +818,17 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Fields API Search
+### Issue Fields API Search
 
 Search and filter issue fields with query parameters
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_fields.api_search()
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -841,7 +841,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -857,7 +857,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -887,11 +887,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Fields Search
+### Issue Fields Search
 
 Search and filter issue fields records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_fields.search(
@@ -899,7 +899,7 @@ await jira.issue_fields.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -914,7 +914,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -925,7 +925,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -966,13 +966,13 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-### Issue Comments
+## Issue Comments
 
-#### Issue Comments List
+### Issue Comments List
 
 Retrieve all comments for a specific issue
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_comments.list(
@@ -980,7 +980,7 @@ await jira.issue_comments.list(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -996,7 +996,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1010,7 +1010,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1027,7 +1027,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `properties` | `array \| null` |  |
 
 
-**Meta**
+#### Meta
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1037,11 +1037,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Comments Get
+### Issue Comments Get
 
 Retrieve a single comment by its ID
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_comments.get(
@@ -1050,7 +1050,7 @@ await jira.issue_comments.get(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -1067,7 +1067,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1079,7 +1079,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1098,11 +1098,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Comments Search
+### Issue Comments Search
 
 Search and filter issue comments records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_comments.search(
@@ -1110,7 +1110,7 @@ await jira.issue_comments.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -1125,7 +1125,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1136,7 +1136,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1179,13 +1179,13 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-### Issue Worklogs
+## Issue Worklogs
 
-#### Issue Worklogs List
+### Issue Worklogs List
 
 Retrieve all worklogs for a specific issue
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_worklogs.list(
@@ -1193,7 +1193,7 @@ await jira.issue_worklogs.list(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -1209,7 +1209,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1222,7 +1222,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1241,7 +1241,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `properties` | `array \| null` |  |
 
 
-**Meta**
+#### Meta
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1251,11 +1251,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Worklogs Get
+### Issue Worklogs Get
 
 Retrieve a single worklog by its ID
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_worklogs.get(
@@ -1264,7 +1264,7 @@ await jira.issue_worklogs.get(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -1281,7 +1281,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 ```
 
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1293,7 +1293,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 <details>
 <summary><b>Response Schema</b></summary>
 
-**Records**
+#### Records
 
 | Field Name | Type | Description |
 |------------|------|-------------|
@@ -1314,11 +1314,11 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 
 </details>
 
-#### Issue Worklogs Search
+### Issue Worklogs Search
 
 Search and filter issue worklogs records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
-**Python SDK**
+#### Python SDK
 
 ```python
 await jira.issue_worklogs.search(
@@ -1326,7 +1326,7 @@ await jira.issue_worklogs.search(
 )
 ```
 
-**API**
+#### API
 
 ```bash
 curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
@@ -1341,7 +1341,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 }'
 ```
 
-**Parameters**
+#### Parameters
 
 | Parameter Name | Type | Required | Description |
 |----------------|------|----------|-------------|
@@ -1352,7 +1352,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 | `cursor` | `string` | No | Pagination cursor from previous response's next_cursor |
 | `fields` | `array` | No | Field paths to include in results |
 
-**Searchable Fields**
+#### Searchable Fields
 
 | Field Name | Type | Description |
 |------------|------|-------------|
