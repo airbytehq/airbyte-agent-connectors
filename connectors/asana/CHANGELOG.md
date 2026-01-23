@@ -1,5 +1,10 @@
 # Asana changelog
 
+## [0.19.59] - 2026-01-23
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 416466da
+- SDK version: 0.1.0
+
 ## [0.19.58] - 2026-01-23
 - Updated connector definition (YAML version 0.1.7)
 - Source commit: f17cdd8c
