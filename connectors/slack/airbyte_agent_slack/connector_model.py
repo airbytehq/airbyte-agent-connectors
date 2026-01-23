@@ -27,7 +27,7 @@ from uuid import (
 SlackConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c2281cee-86f9-4a86-bb48-d23286b4c7bd'),
     name='slack',
-    version='0.1.6',
+    version='0.1.7',
     base_url='https://slack.com/api',
     auth=AuthConfig(
         options=[
