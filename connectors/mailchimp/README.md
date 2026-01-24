@@ -60,7 +60,7 @@ connector = MailchimpConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@MailchimpConnector.describe
+@MailchimpConnector.tool_utils
 async def mailchimp_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -81,7 +81,7 @@ connector = MailchimpConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@MailchimpConnector.describe
+@MailchimpConnector.tool_utils
 async def mailchimp_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -115,6 +115,6 @@ For the service's official API docs, see the [Mailchimp API reference](https://m
 
 ## Version information
 
-- **Package version:** 0.1.15
+- **Package version:** 0.1.16
 - **Connector version:** 1.0.2
-- **Generated with Connector SDK commit SHA:** 32c5ef4692be2243558faa20132b3ece7d573aed
+- **Generated with Connector SDK commit SHA:** 609c1d86c76b36ff699b57123a5a8c2050d958c3
