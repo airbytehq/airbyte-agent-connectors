@@ -252,3 +252,4 @@ class ConnectorModel(BaseModel):
     entities: list[EntityDefinition]
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
+    search_field_paths: dict[str, list[str]] | None = None
