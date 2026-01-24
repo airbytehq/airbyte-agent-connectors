@@ -18,6 +18,185 @@ from typing import Any, Protocol
 MAX_EXAMPLE_QUESTIONS = 5  # Maximum number of example questions to include in description
 
 
+def _type_includes(type_value: Any, target: str) -> bool:
+    if isinstance(type_value, list):
+        return target in type_value
+    return type_value == target
+
+
+def _is_object_schema(schema: dict[str, Any]) -> bool:
+    if "properties" in schema:
+        return True
+    return _type_includes(schema.get("type"), "object")
+
+
+def _is_array_schema(schema: dict[str, Any]) -> bool:
+    if "items" in schema:
+        return True
+    return _type_includes(schema.get("type"), "array")
+
+
+def _dedupe_param_entries(entries: list[tuple[str, bool]]) -> list[tuple[str, bool]]:
+    seen: dict[str, bool] = {}
+    ordered: list[str] = []
+    for name, required in entries:
+        if name not in seen:
+            seen[name] = required
+            ordered.append(name)
+        else:
+            seen[name] = seen[name] or required
+    return [(name, seen[name]) for name in ordered]
+
+
+def _flatten_schema_params(
+    schema: dict[str, Any],
+    prefix: str = "",
+    parent_required: bool = True,
+    seen_stack: set[int] | None = None,
+) -> list[tuple[str, bool]]:
+    if not isinstance(schema, dict):
+        return []
+
+    if seen_stack is None:
+        seen_stack = set()
+
+    schema_id = id(schema)
+    if schema_id in seen_stack:
+        return []
+
+    seen_stack.add(schema_id)
+    try:
+        entries: list[tuple[str, bool]] = []
+
+        for subschema in schema.get("allOf", []) or []:
+            if isinstance(subschema, dict):
+                entries.extend(_flatten_schema_params(subschema, prefix, parent_required, seen_stack))
+
+        for keyword in ("anyOf", "oneOf"):
+            for subschema in schema.get(keyword, []) or []:
+                if isinstance(subschema, dict):
+                    entries.extend(_flatten_schema_params(subschema, prefix, False, seen_stack))
+
+        properties = schema.get("properties")
+        if isinstance(properties, dict):
+            required_fields = set(schema.get("required", [])) if isinstance(schema.get("required"), list) else set()
+            for prop_name, prop_schema in properties.items():
+                path = f"{prefix}{prop_name}" if prefix else prop_name
+                is_required = parent_required and prop_name in required_fields
+                entries.append((path, is_required))
+
+                if isinstance(prop_schema, dict):
+                    if _is_array_schema(prop_schema):
+                        array_path = f"{path}[]"
+                        entries.append((array_path, is_required))
+                        items = prop_schema.get("items")
+                        if isinstance(items, dict):
+                            entries.extend(_flatten_schema_params(items, prefix=f"{array_path}.", parent_required=is_required, seen_stack=seen_stack))
+                    if _is_object_schema(prop_schema):
+                        entries.extend(_flatten_schema_params(prop_schema, prefix=f"{path}.", parent_required=is_required, seen_stack=seen_stack))
+
+        return _dedupe_param_entries(entries)
+    finally:
+        seen_stack.remove(schema_id)
+
+
+def _cache_field_value(field: Any, key: str) -> Any:
+    if isinstance(field, dict):
+        return field.get(key)
+    return getattr(field, key, None)
+
+
+def _flatten_cache_properties(properties: dict[str, Any], prefix: str) -> list[str]:
+    entries: list[str] = []
+    for prop_name, prop in properties.items():
+        path = f"{prefix}{prop_name}" if prefix else prop_name
+        entries.append(path)
+
+        prop_type = _cache_field_value(prop, "type")
+        prop_properties = _cache_field_value(prop, "properties")
+
+        if _type_includes(prop_type, "array"):
+            array_path = f"{path}[]"
+            entries.append(array_path)
+            if isinstance(prop_properties, dict):
+                entries.extend(_flatten_cache_properties(prop_properties, prefix=f"{array_path}."))
+        elif isinstance(prop_properties, dict):
+            entries.extend(_flatten_cache_properties(prop_properties, prefix=f"{path}."))
+
+    return entries
+
+
+def _flatten_cache_field_paths(field: Any) -> list[str]:
+    field_name = _cache_field_value(field, "name")
+    if not isinstance(field_name, str) or not field_name:
+        return []
+
+    field_type = _cache_field_value(field, "type")
+    field_properties = _cache_field_value(field, "properties")
+
+    entries = [field_name]
+    if _type_includes(field_type, "array"):
+        array_path = f"{field_name}[]"
+        entries.append(array_path)
+        if isinstance(field_properties, dict):
+            entries.extend(_flatten_cache_properties(field_properties, prefix=f"{array_path}."))
+    elif isinstance(field_properties, dict):
+        entries.extend(_flatten_cache_properties(field_properties, prefix=f"{field_name}."))
+
+    return entries
+
+
+def _dedupe_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            ordered.append(value)
+    return ordered
+
+
+def _collect_search_field_paths(model: ConnectorModelProtocol) -> dict[str, list[str]]:
+    search_field_paths = getattr(model, "search_field_paths", None)
+    if isinstance(search_field_paths, dict) and search_field_paths:
+        normalized: dict[str, list[str]] = {}
+        for entity, fields in search_field_paths.items():
+            if not isinstance(entity, str) or not entity:
+                continue
+            if isinstance(fields, list):
+                normalized[entity] = _dedupe_strings([field for field in fields if isinstance(field, str) and field])
+        return normalized
+
+    openapi_spec = getattr(model, "openapi_spec", None)
+    info = getattr(openapi_spec, "info", None)
+    cache_config = getattr(info, "x_airbyte_cache", None)
+    entities = getattr(cache_config, "entities", None)
+    if not isinstance(entities, list):
+        return {}
+
+    search_fields: dict[str, list[str]] = {}
+    for entity in entities:
+        entity_name = _cache_field_value(entity, "entity")
+        if not isinstance(entity_name, str) or not entity_name:
+            continue
+
+        fields = _cache_field_value(entity, "fields") or []
+        if not isinstance(fields, list):
+            continue
+        field_paths: list[str] = []
+        for field in fields:
+            field_paths.extend(_flatten_cache_field_paths(field))
+
+        search_fields[entity_name] = _dedupe_strings(field_paths)
+
+    return search_fields
+
+
+def _format_search_param_signature() -> str:
+    params = ["query*", "limit?", "cursor?", "fields?"]
+    return f"({', '.join(params)})"
+
+
 class EndpointProtocol(Protocol):
     """Protocol defining the expected interface for endpoint parameters.
 
@@ -54,6 +233,9 @@ class ConnectorModelProtocol(Protocol):
     @property
     def openapi_spec(self) -> Any: ...
 
+    @property
+    def search_field_paths(self) -> dict[str, list[str]] | None: ...
+
 
 def format_param_signature(endpoint: EndpointProtocol) -> str:
     """Format parameter signature for an endpoint action.
@@ -86,9 +268,12 @@ def format_param_signature(endpoint: EndpointProtocol) -> str:
         required = schema.get("required", False)
         params.append(f"{name}{'*' if required else '?'}")
 
-    # Body fields
-    if request_schema:
-        required_fields = set(request_schema.get("required", []))
+    # Body fields (include nested params from schema when available)
+    if isinstance(request_schema, dict):
+        for name, required in _flatten_schema_params(request_schema):
+            params.append(f"{name}{'*' if required else '?'}")
+    elif request_schema:
+        required_fields = set(request_schema.get("required", [])) if isinstance(request_schema, dict) else set()
         for name in body_fields:
             params.append(f"{name}{'*' if name in required_fields else '?'}")
 
@@ -99,7 +284,7 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
     """Generate entity descriptions from ConnectorModel.
 
     Returns a list of entity descriptions with detailed parameter information
-    for each action. This is used by generated connectors' describe() method.
+    for each action. This is used by generated connectors' list_entities() method.
 
     Args:
         model: Object conforming to ConnectorModelProtocol (e.g., ConnectorModel)
@@ -203,8 +388,8 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
     - Response structure documentation with pagination hints
     - Example questions if available in the OpenAPI spec
 
-    This is used by the Connector.describe class method decorator to populate
-    function docstrings for AI framework integration.
+    This is used by the Connector.tool_utils decorator to populate function
+    docstrings for AI framework integration.
 
     Args:
         model: Object conforming to ConnectorModelProtocol (e.g., ConnectorModel)
@@ -213,8 +398,11 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
         Formatted description string suitable for AI tool documentation
     """
     lines = []
+    # NOTE: Do not insert blank lines in the docstring; pydantic-ai parsing truncates
+    # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
+    search_field_paths = _collect_search_field_paths(model)
     lines.append("ENTITIES AND PARAMETERS:")
     for entity in model.entities:
         lines.append(f"  {entity.name}:")
@@ -228,13 +416,40 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
                 lines.append(f"    - {action_str}{param_sig}")
             else:
                 lines.append(f"    - {action_str}()")
+        if entity.name in search_field_paths:
+            search_sig = _format_search_param_signature()
+            lines.append(f"    - search{search_sig}")
 
     # Response structure (brief, includes pagination hint)
-    lines.append("")
     lines.append("RESPONSE STRUCTURE:")
     lines.append("  - list/api_search: {data: [...], meta: {has_more: bool}}")
     lines.append("  - get: Returns entity directly (no envelope)")
     lines.append("  To paginate: pass starting_after=<last_id> while has_more is true")
+
+    lines.append("GUIDELINES:")
+    lines.append('  - Prefer cached search over direct API calls when using execute(): action="search" whenever possible.')
+    lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
+    lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
+    lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
+
+    if search_field_paths:
+        lines.append("SEARCH (PREFERRED):")
+        lines.append('  execute(entity, action="search", params={')
+        lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
+        lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')
+        lines.append("  })")
+        lines.append('  Example: {"query": {"filter": {"eq": {"title": "Intro to Airbyte | Miinto"}}}, "limit": 1,')
+        lines.append('            "fields": ["id", "title", "started", "primaryUserId"]}')
+        lines.append("  Conditions are composable:")
+        lines.append("    - eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any")
+        lines.append('    - and/or/not to combine conditions (e.g., {"and": [cond1, cond2]})')
+
+        lines.append("SEARCHABLE FIELDS:")
+        for entity_name, field_paths in search_field_paths.items():
+            if field_paths:
+                lines.append(f"  {entity_name}: {', '.join(field_paths)}")
+            else:
+                lines.append(f"  {entity_name}: (no fields listed)")
 
     # Add example questions if available in openapi_spec
     openapi_spec = getattr(model, "openapi_spec", None)
@@ -245,18 +460,15 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
             if example_questions:
                 supported = getattr(example_questions, "supported", None)
                 if supported:
-                    lines.append("")
                     lines.append("EXAMPLE QUESTIONS:")
                     for q in supported[:MAX_EXAMPLE_QUESTIONS]:
                         lines.append(f"  - {q}")
 
     # Generic parameter description for function signature
-    lines.append("")
     lines.append("FUNCTION PARAMETERS:")
     lines.append("  - entity: Entity name (string)")
     lines.append("  - action: Operation to perform (string)")
     lines.append("  - params: Operation parameters (dict) - see entity details above")
-    lines.append("")
     lines.append("Parameter markers: * = required, ? = optional")
 
     return "\n".join(lines)
