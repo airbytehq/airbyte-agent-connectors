@@ -145,6 +145,87 @@ def _deproxy_schema(obj: Any) -> Any:
         return obj
 
 
+def _type_includes(type_value: Any, target: str) -> bool:
+    if isinstance(type_value, list):
+        return target in type_value
+    return type_value == target
+
+
+def _flatten_cache_properties(properties: dict[str, Any], prefix: str) -> list[str]:
+    entries: list[str] = []
+    for prop_name, prop in properties.items():
+        path = f"{prefix}{prop_name}" if prefix else prop_name
+        entries.append(path)
+
+        prop_type = getattr(prop, "type", None) if not isinstance(prop, dict) else prop.get("type")
+        prop_properties = getattr(prop, "properties", None) if not isinstance(prop, dict) else prop.get("properties")
+
+        if _type_includes(prop_type, "array"):
+            array_path = f"{path}[]"
+            entries.append(array_path)
+            if isinstance(prop_properties, dict):
+                entries.extend(_flatten_cache_properties(prop_properties, prefix=f"{array_path}."))
+        elif isinstance(prop_properties, dict):
+            entries.extend(_flatten_cache_properties(prop_properties, prefix=f"{path}."))
+
+    return entries
+
+
+def _flatten_cache_field_paths(field: Any) -> list[str]:
+    field_name = getattr(field, "name", None) if not isinstance(field, dict) else field.get("name")
+    if not isinstance(field_name, str) or not field_name:
+        return []
+
+    field_type = getattr(field, "type", None) if not isinstance(field, dict) else field.get("type")
+    field_properties = getattr(field, "properties", None) if not isinstance(field, dict) else field.get("properties")
+
+    entries = [field_name]
+    if _type_includes(field_type, "array"):
+        array_path = f"{field_name}[]"
+        entries.append(array_path)
+        if isinstance(field_properties, dict):
+            entries.extend(_flatten_cache_properties(field_properties, prefix=f"{array_path}."))
+    elif isinstance(field_properties, dict):
+        entries.extend(_flatten_cache_properties(field_properties, prefix=f"{field_name}."))
+
+    return entries
+
+
+def _dedupe_strings(values: list[str]) -> list[str]:
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for value in values:
+        if value not in seen:
+            seen.add(value)
+            ordered.append(value)
+    return ordered
+
+
+def _extract_search_field_paths(spec: OpenAPIConnector) -> dict[str, list[str]]:
+    cache_config = getattr(spec.info, "x_airbyte_cache", None)
+    entities = getattr(cache_config, "entities", None)
+    if not isinstance(entities, list):
+        return {}
+
+    search_fields: dict[str, list[str]] = {}
+    for entity in entities:
+        entity_name = getattr(entity, "entity", None) if not isinstance(entity, dict) else entity.get("entity")
+        if not isinstance(entity_name, str) or not entity_name:
+            continue
+
+        fields = getattr(entity, "fields", None) if not isinstance(entity, dict) else entity.get("fields")
+        if not isinstance(fields, list):
+            continue
+
+        field_paths: list[str] = []
+        for field in fields:
+            field_paths.extend(_flatten_cache_field_paths(field))
+
+        search_fields[entity_name] = _dedupe_strings(field_paths)
+
+    return search_fields
+
+
 def parse_openapi_spec(raw_config: dict) -> OpenAPIConnector:
     """Parse OpenAPI specification from YAML.
 
@@ -434,6 +515,8 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     if not connector_id:
         raise InvalidOpenAPIError("Missing required x-airbyte-connector-id field")
 
+    search_field_paths = _extract_search_field_paths(spec)
+
     # Create ConnectorModel
     model = ConnectorModel(
         id=connector_id,
@@ -444,6 +527,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         entities=entities,
         openapi_spec=spec,
         retry_config=retry_config,
+        search_field_paths=search_field_paths,
     )
 
     return model
