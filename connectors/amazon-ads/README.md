@@ -53,7 +53,7 @@ connector = AmazonAdsConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@AmazonAdsConnector.describe
+@AmazonAdsConnector.tool_utils
 async def amazon-ads_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -74,7 +74,7 @@ connector = AmazonAdsConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@AmazonAdsConnector.describe
+@AmazonAdsConnector.tool_utils
 async def amazon-ads_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -99,6 +99,6 @@ For the service's official API docs, see the [Amazon-Ads API reference](https://
 
 ## Version information
 
-- **Package version:** 0.1.8
+- **Package version:** 0.1.9
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 6b458f8da225d916000a168b778c0a70c3b636d6
+- **Generated with Connector SDK commit SHA:** 609c1d86c76b36ff699b57123a5a8c2050d958c3
