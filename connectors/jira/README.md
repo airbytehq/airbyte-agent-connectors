@@ -65,7 +65,7 @@ connector = JiraConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@JiraConnector.describe
+@JiraConnector.tool_utils
 async def jira_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -86,7 +86,7 @@ connector = JiraConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@JiraConnector.describe
+@JiraConnector.tool_utils
 async def jira_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -115,6 +115,6 @@ For the service's official API docs, see the [Jira API reference](https://develo
 
 ## Version information
 
-- **Package version:** 0.1.51
+- **Package version:** 0.1.52
 - **Connector version:** 1.1.2
-- **Generated with Connector SDK commit SHA:** 37fe9e80a07aec5854b28cefb7f3ad0103dcc300
+- **Generated with Connector SDK commit SHA:** 609c1d86c76b36ff699b57123a5a8c2050d958c3
