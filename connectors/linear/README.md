@@ -64,7 +64,7 @@ connector = LinearConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@LinearConnector.describe
+@LinearConnector.tool_utils
 async def linear_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -85,7 +85,7 @@ connector = LinearConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@LinearConnector.describe
+@LinearConnector.tool_utils
 async def linear_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -112,6 +112,6 @@ For the service's official API docs, see the [Linear API reference](https://line
 
 ## Version information
 
-- **Package version:** 0.19.58
+- **Package version:** 0.19.59
 - **Connector version:** 0.1.6
-- **Generated with Connector SDK commit SHA:** 32c5ef4692be2243558faa20132b3ece7d573aed
+- **Generated with Connector SDK commit SHA:** 609c1d86c76b36ff699b57123a5a8c2050d958c3
