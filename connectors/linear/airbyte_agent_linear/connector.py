@@ -4,8 +4,11 @@ Linear connector.
 
 from __future__ import annotations
 
+import inspect
+import json
 import logging
-from typing import TYPE_CHECKING, Any, Callable, TypeVar, overload
+from functools import wraps
+from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
 try:
     from typing import Literal
 except ImportError:
@@ -81,6 +84,38 @@ from .models import (
 
 # TypeVar for decorator type preservation
 _F = TypeVar("_F", bound=Callable[..., Any])
+
+DEFAULT_MAX_OUTPUT_CHARS = 50_000  # ~50KB default, configurable per-tool
+
+
+def _raise_output_too_large(message: str) -> None:
+    try:
+        from pydantic_ai import ModelRetry  # type: ignore[import-not-found]
+    except Exception as exc:
+        raise RuntimeError(message) from exc
+    raise ModelRetry(message)
+
+
+def _check_output_size(result: Any, max_chars: int | None, tool_name: str) -> Any:
+    if max_chars is None or max_chars <= 0:
+        return result
+
+    try:
+        serialized = json.dumps(result, default=str)
+    except (TypeError, ValueError):
+        return result
+
+    if len(serialized) > max_chars:
+        truncated_preview = serialized[:500] + "..." if len(serialized) > 500 else serialized
+        _raise_output_too_large(
+            f"Tool '{tool_name}' output too large ({len(serialized):,} chars, limit {max_chars:,}). "
+            "Please narrow your query by: using the 'fields' parameter to select only needed fields, "
+            "adding filters, or reducing the 'limit'. "
+            f"Preview: {truncated_preview}"
+        )
+
+    return result
+
 
 
 
@@ -332,15 +367,15 @@ class LinearConnector:
     async def execute(
         self,
         entity: str,
-        action: str,
-        params: dict[str, Any]
+        action: Literal["list", "get", "create", "update", "search"],
+        params: Mapping[str, Any]
     ) -> LinearExecuteResult[Any] | LinearExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: str,
-        params: dict[str, Any] | None = None
+        action: Literal["list", "get", "create", "update", "search"],
+        params: Mapping[str, Any] | None = None
     ) -> Any:
         """
         Execute an entity operation with full type safety.
@@ -368,16 +403,17 @@ class LinearConnector:
         from ._vendored.connector_sdk.executor import ExecutionConfig
 
         # Remap parameter names from snake_case (TypedDict keys) to API parameter names
-        if params:
+        resolved_params = dict(params) if params is not None else None
+        if resolved_params:
             param_map = self._PARAM_MAP.get((entity, action), {})
             if param_map:
-                params = {param_map.get(k, k): v for k, v in params.items()}
+                resolved_params = {param_map.get(k, k): v for k, v in resolved_params.items()}
 
         # Use ExecutionConfig for both local and hosted executors
         config = ExecutionConfig(
             entity=entity,
             action=action,
-            params=params
+            params=resolved_params
         )
 
         result = await self._executor.execute(config)
@@ -404,41 +440,67 @@ class LinearConnector:
     # ===== INTROSPECTION METHODS =====
 
     @classmethod
-    def describe(cls, func: _F) -> _F:
+    def tool_utils(
+        cls,
+        func: _F | None = None,
+        *,
+        update_docstring: bool = True,
+        max_output_chars: int | None = DEFAULT_MAX_OUTPUT_CHARS,
+    ) -> _F | Callable[[_F], _F]:
         """
-        Decorator that populates a function's docstring with connector capabilities.
-
-        This class method can be used as a decorator to automatically generate
-        comprehensive documentation for AI tool functions.
+        Decorator that adds tool utilities like docstring augmentation and output limits.
 
         Usage:
             @mcp.tool()
-            @LinearConnector.describe
+            @LinearConnector.tool_utils
             async def execute(entity: str, action: str, params: dict):
-                '''Execute operations.'''
                 ...
 
-        The decorated function's __doc__ will be updated with:
-        - Available entities and their actions
-        - Parameter signatures with required (*) and optional (?) markers
-        - Response structure documentation
-        - Example questions (if available in OpenAPI spec)
+            @mcp.tool()
+            @LinearConnector.tool_utils(update_docstring=False, max_output_chars=None)
+            async def execute(entity: str, action: str, params: dict):
+                ...
 
         Args:
-            func: The function to decorate
-
-        Returns:
-            The same function with updated __doc__
+            update_docstring: When True, append connector capabilities to __doc__.
+            max_output_chars: Max serialized output size before raising. Use None to disable.
         """
-        description = generate_tool_description(LinearConnectorModel)
 
-        original_doc = func.__doc__ or ""
-        if original_doc.strip():
-            func.__doc__ = f"{original_doc.strip()}\n{description}"
-        else:
-            func.__doc__ = description
+        def decorate(inner: _F) -> _F:
+            if update_docstring:
+                description = generate_tool_description(LinearConnectorModel)
+                original_doc = inner.__doc__ or ""
+                if original_doc.strip():
+                    full_doc = f"{original_doc.strip()}\n{description}"
+                else:
+                    full_doc = description
+            else:
+                full_doc = ""
 
-        return func
+            if inspect.iscoroutinefunction(inner):
+
+                @wraps(inner)
+                async def aw(*args: Any, **kwargs: Any) -> Any:
+                    result = await inner(*args, **kwargs)
+                    return _check_output_size(result, max_output_chars, inner.__name__)
+
+                wrapped = aw
+            else:
+
+                @wraps(inner)
+                def sw(*args: Any, **kwargs: Any) -> Any:
+                    result = inner(*args, **kwargs)
+                    return _check_output_size(result, max_output_chars, inner.__name__)
+
+                wrapped = sw
+
+            if update_docstring:
+                wrapped.__doc__ = full_doc
+            return wrapped  # type: ignore[return-value]
+
+        if func is not None:
+            return decorate(func)
+        return decorate
 
     def list_entities(self) -> list[dict[str, Any]]:
         """
