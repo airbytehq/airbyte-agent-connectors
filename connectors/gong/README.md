@@ -71,7 +71,7 @@ This example assumes you've already authenticated your connector with Airbyte. S
 from airbyte_agent_gong import GongConnector
 
 connector = GongConnector(
-    external_user_id="<your-scoped-token>",
+    external_user_id="<your_external_user_id>",
     airbyte_client_id="<your-client-id>",
     airbyte_client_secret="<your-client-secret>"
 )
@@ -115,6 +115,6 @@ For the service's official API docs, see the [Gong API reference](https://gong.a
 
 ## Version information
 
-- **Package version:** 0.19.66
+- **Package version:** 0.19.67
 - **Connector version:** 0.1.12
-- **Generated with Connector SDK commit SHA:** b73c71e077aea8d316f7161dbd5014d4fb9f3098
+- **Generated with Connector SDK commit SHA:** 74809153299f81ed3e220538146012ee2abd2e0d
