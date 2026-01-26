@@ -132,6 +132,25 @@ class Ban(BaseModel):
     reason: Union[str | None, Any] = Field(default=None)
     created_at: Union[str | None, Any] = Field(default=None)
 
+class ChatHistoryItem(BaseModel):
+    """ChatHistoryItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type: Union[str | None, Any] = Field(default=None)
+    timestamp: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    nick: Union[str | None, Any] = Field(default=None)
+    msg: Union[str | None, Any] = Field(default=None)
+    msg_id: Union[str | None, Any] = Field(default=None)
+    channel: Union[str | None, Any] = Field(default=None)
+    department_id: Union[int | None, Any] = Field(default=None)
+    department_name: Union[str | None, Any] = Field(default=None)
+    rating: Union[str | None, Any] = Field(default=None)
+    new_rating: Union[str | None, Any] = Field(default=None)
+    tags: Union[list[str] | None, Any] = Field(default=None)
+    new_tags: Union[list[str] | None, Any] = Field(default=None)
+    options: Union[str | None, Any] = Field(default=None)
+
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -169,25 +188,6 @@ class WebpathItem(BaseModel):
 
     from_: Union[str | None, Any] = Field(default=None, alias="from")
     timestamp: Union[str | None, Any] = Field(default=None)
-
-class ChatHistoryItem(BaseModel):
-    """ChatHistoryItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type: Union[str | None, Any] = Field(default=None)
-    timestamp: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    nick: Union[str | None, Any] = Field(default=None)
-    msg: Union[str | None, Any] = Field(default=None)
-    msg_id: Union[str | None, Any] = Field(default=None)
-    channel: Union[str | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
-    department_name: Union[str | None, Any] = Field(default=None)
-    rating: Union[str | None, Any] = Field(default=None)
-    new_rating: Union[str | None, Any] = Field(default=None)
-    tags: Union[list[str] | None, Any] = Field(default=None)
-    new_tags: Union[list[str] | None, Any] = Field(default=None)
-    options: Union[str | None, Any] = Field(default=None)
 
 class Chat(BaseModel):
     """Chat conversation transcript"""
