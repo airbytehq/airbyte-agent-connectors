@@ -29,7 +29,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.6',
+    version='0.1.7',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -179,6 +179,8 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($first: Int, $after: String) { issues(first: $first, after: $after) { nodes { id title description state { name } priority assignee { name email } createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
                         'variables': {'first': '{{ first }}', 'after': '{{ after }}'},
                     },
+                    record_extractor='$.data.issues.nodes',
+                    meta_extractor={'hasNextPage': '$.data.issues.pageInfo.hasNextPage', 'endCursor': '$.data.issues.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -674,6 +676,8 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($first: Int, $after: String) { projects(first: $first, after: $after) { nodes { id name description state startDate targetDate lead { name email } createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
                         'variables': {'first': '{{ first }}', 'after': '{{ after }}'},
                     },
+                    record_extractor='$.data.projects.nodes',
+                    meta_extractor={'hasNextPage': '$.data.projects.pageInfo.hasNextPage', 'endCursor': '$.data.projects.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -935,6 +939,8 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                         'query': 'query($first: Int, $after: String) { teams(first: $first, after: $after) { nodes { id name key description timezone createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
                         'variables': {'first': '{{ first }}', 'after': '{{ after }}'},
                     },
+                    record_extractor='$.data.teams.nodes',
+                    meta_extractor={'hasNextPage': '$.data.teams.pageInfo.hasNextPage', 'endCursor': '$.data.teams.pageInfo.endCursor'},
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',

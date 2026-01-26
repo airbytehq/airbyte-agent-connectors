@@ -413,6 +413,27 @@ class CommentUpdateResponse(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class IssuesListResultMeta(BaseModel):
+    """Metadata for issues.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
+    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+
+class ProjectsListResultMeta(BaseModel):
+    """Metadata for projects.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
+    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+
+class TeamsListResultMeta(BaseModel):
+    """Metadata for teams.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    has_next_page: Union[bool, Any] = Field(default=None, alias="hasNextPage")
+    end_cursor: Union[str | None, Any] = Field(default=None, alias="endCursor")
+
 # ===== RESPONSE ENVELOPE MODELS =====
 
 # Type variables for generic envelope models
@@ -861,14 +882,14 @@ UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-IssuesListResult = LinearExecuteResult[IssuesListResponse]
-"""Result type for issues.list operation."""
+IssuesListResult = LinearExecuteResultWithMeta[list[Issue], IssuesListResultMeta]
+"""Result type for issues.list operation with data and metadata."""
 
-ProjectsListResult = LinearExecuteResult[ProjectsListResponse]
-"""Result type for projects.list operation."""
+ProjectsListResult = LinearExecuteResultWithMeta[list[Project], ProjectsListResultMeta]
+"""Result type for projects.list operation with data and metadata."""
 
-TeamsListResult = LinearExecuteResult[TeamsListResponse]
-"""Result type for teams.list operation."""
+TeamsListResult = LinearExecuteResultWithMeta[list[Team], TeamsListResultMeta]
+"""Result type for teams.list operation with data and metadata."""
 
 UsersListResult = LinearExecuteResult[UsersListResponse]
 """Result type for users.list operation."""
