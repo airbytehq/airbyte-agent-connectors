@@ -331,6 +331,90 @@ class SearchResult(BaseModel):
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
+class AccountsListResultMeta(BaseModel):
+    """Metadata for accounts.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class ContactsListResultMeta(BaseModel):
+    """Metadata for contacts.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class LeadsListResultMeta(BaseModel):
+    """Metadata for leads.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class OpportunitiesListResultMeta(BaseModel):
+    """Metadata for opportunities.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class TasksListResultMeta(BaseModel):
+    """Metadata for tasks.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class EventsListResultMeta(BaseModel):
+    """Metadata for events.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class CampaignsListResultMeta(BaseModel):
+    """Metadata for campaigns.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class CasesListResultMeta(BaseModel):
+    """Metadata for cases.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class NotesListResultMeta(BaseModel):
+    """Metadata for notes.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class ContentVersionsListResultMeta(BaseModel):
+    """Metadata for content_versions.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class AttachmentsListResultMeta(BaseModel):
+    """Metadata for attachments.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
+class QueryListResultMeta(BaseModel):
+    """Metadata for query.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    done: Union[bool, Any] = Field(default=None)
+    next_records_url: Union[str, Any] = Field(default=None, alias="nextRecordsUrl")
+
 # ===== RESPONSE ENVELOPE MODELS =====
 
 # Type variables for generic envelope models
@@ -723,66 +807,66 @@ TasksSearchResult = AirbyteSearchResult[TasksSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-AccountsListResult = SalesforceExecuteResult[AccountQueryResult]
-"""Result type for accounts.list operation."""
+AccountsListResult = SalesforceExecuteResultWithMeta[list[Account], AccountsListResultMeta]
+"""Result type for accounts.list operation with data and metadata."""
 
 AccountsApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for accounts.api_search operation."""
 
-ContactsListResult = SalesforceExecuteResult[ContactQueryResult]
-"""Result type for contacts.list operation."""
+ContactsListResult = SalesforceExecuteResultWithMeta[list[Contact], ContactsListResultMeta]
+"""Result type for contacts.list operation with data and metadata."""
 
 ContactsApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for contacts.api_search operation."""
 
-LeadsListResult = SalesforceExecuteResult[LeadQueryResult]
-"""Result type for leads.list operation."""
+LeadsListResult = SalesforceExecuteResultWithMeta[list[Lead], LeadsListResultMeta]
+"""Result type for leads.list operation with data and metadata."""
 
 LeadsApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for leads.api_search operation."""
 
-OpportunitiesListResult = SalesforceExecuteResult[OpportunityQueryResult]
-"""Result type for opportunities.list operation."""
+OpportunitiesListResult = SalesforceExecuteResultWithMeta[list[Opportunity], OpportunitiesListResultMeta]
+"""Result type for opportunities.list operation with data and metadata."""
 
 OpportunitiesApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for opportunities.api_search operation."""
 
-TasksListResult = SalesforceExecuteResult[TaskQueryResult]
-"""Result type for tasks.list operation."""
+TasksListResult = SalesforceExecuteResultWithMeta[list[Task], TasksListResultMeta]
+"""Result type for tasks.list operation with data and metadata."""
 
 TasksApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for tasks.api_search operation."""
 
-EventsListResult = SalesforceExecuteResult[EventQueryResult]
-"""Result type for events.list operation."""
+EventsListResult = SalesforceExecuteResultWithMeta[list[Event], EventsListResultMeta]
+"""Result type for events.list operation with data and metadata."""
 
 EventsApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for events.api_search operation."""
 
-CampaignsListResult = SalesforceExecuteResult[CampaignQueryResult]
-"""Result type for campaigns.list operation."""
+CampaignsListResult = SalesforceExecuteResultWithMeta[list[Campaign], CampaignsListResultMeta]
+"""Result type for campaigns.list operation with data and metadata."""
 
 CampaignsApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for campaigns.api_search operation."""
 
-CasesListResult = SalesforceExecuteResult[CaseQueryResult]
-"""Result type for cases.list operation."""
+CasesListResult = SalesforceExecuteResultWithMeta[list[Case], CasesListResultMeta]
+"""Result type for cases.list operation with data and metadata."""
 
 CasesApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for cases.api_search operation."""
 
-NotesListResult = SalesforceExecuteResult[NoteQueryResult]
-"""Result type for notes.list operation."""
+NotesListResult = SalesforceExecuteResultWithMeta[list[Note], NotesListResultMeta]
+"""Result type for notes.list operation with data and metadata."""
 
 NotesApiSearchResult = SalesforceExecuteResult[SearchResult]
 """Result type for notes.api_search operation."""
 
-ContentVersionsListResult = SalesforceExecuteResult[ContentVersionQueryResult]
-"""Result type for content_versions.list operation."""
+ContentVersionsListResult = SalesforceExecuteResultWithMeta[list[ContentVersion], ContentVersionsListResultMeta]
+"""Result type for content_versions.list operation with data and metadata."""
 
-AttachmentsListResult = SalesforceExecuteResult[AttachmentQueryResult]
-"""Result type for attachments.list operation."""
+AttachmentsListResult = SalesforceExecuteResultWithMeta[list[Attachment], AttachmentsListResultMeta]
+"""Result type for attachments.list operation with data and metadata."""
 
-QueryListResult = SalesforceExecuteResult[QueryResult]
-"""Result type for query.list operation."""
+QueryListResult = SalesforceExecuteResultWithMeta[list[dict[str, Any]], QueryListResultMeta]
+"""Result type for query.list operation with data and metadata."""
 

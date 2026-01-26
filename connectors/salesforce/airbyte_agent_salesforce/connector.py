@@ -91,29 +91,17 @@ from .models import (
     AttachmentsListResult,
     QueryListResult,
     Account,
-    AccountQueryResult,
     Attachment,
-    AttachmentQueryResult,
     Campaign,
-    CampaignQueryResult,
     Case,
-    CaseQueryResult,
     Contact,
-    ContactQueryResult,
     ContentVersion,
-    ContentVersionQueryResult,
     Event,
-    EventQueryResult,
     Lead,
-    LeadQueryResult,
     Note,
-    NoteQueryResult,
     Opportunity,
-    OpportunityQueryResult,
-    QueryResult,
     SearchResult,
     Task,
-    TaskQueryResult,
     AirbyteSearchHit,
     AirbyteSearchResult,
     AccountsSearchData,
@@ -173,7 +161,7 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.0.5"
+    connector_version = "1.0.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -844,7 +832,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LI
         result = await self._connector.execute("accounts", "list", params)
         # Cast generic envelope to concrete typed result
         return AccountsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1037,7 +1026,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMI
         result = await self._connector.execute("contacts", "list", params)
         # Cast generic envelope to concrete typed result
         return ContactsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1224,7 +1214,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Lead WHERE Status = 'Open' LIMIT 100"
         result = await self._connector.execute("leads", "list", params)
         # Cast generic envelope to concrete typed result
         return LeadsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1419,7 +1410,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won
         result = await self._connector.execute("opportunities", "list", params)
         # Cast generic envelope to concrete typed result
         return OpportunitiesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1606,7 +1598,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Task WHERE Status = 'Not Started' LIMIT 1
         result = await self._connector.execute("tasks", "list", params)
         # Cast generic envelope to concrete typed result
         return TasksListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1791,7 +1784,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Event WHERE StartDateTime > TODAY LIMIT 5
         result = await self._connector.execute("events", "list", params)
         # Cast generic envelope to concrete typed result
         return EventsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -1899,7 +1893,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Campaign WHERE IsActive = true LIMIT 50"
         result = await self._connector.execute("campaigns", "list", params)
         # Cast generic envelope to concrete typed result
         return CampaignsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2007,7 +2002,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Case WHERE Status = 'New' LIMIT 100"
         result = await self._connector.execute("cases", "list", params)
         # Cast generic envelope to concrete typed result
         return CasesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2115,7 +2111,8 @@ Example: "SELECT FIELDS(STANDARD) FROM Note WHERE ParentId = '001xx...' LIMIT 50
         result = await self._connector.execute("notes", "list", params)
         # Cast generic envelope to concrete typed result
         return NotesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2224,7 +2221,8 @@ Example: "SELECT Id, Title, FileExtension, ContentSize FROM ContentVersion WHERE
         result = await self._connector.execute("content_versions", "list", params)
         # Cast generic envelope to concrete typed result
         return ContentVersionsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2369,7 +2367,8 @@ Example: "SELECT Id, Name, ContentType, BodyLength, ParentId FROM Attachment WHE
         result = await self._connector.execute("attachments", "list", params)
         # Cast generic envelope to concrete typed result
         return AttachmentsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -2516,7 +2515,8 @@ Examples:
         result = await self._connector.execute("query", "list", params)
         # Cast generic envelope to concrete typed result
         return QueryListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
