@@ -112,6 +112,6 @@ For the service's official API docs, see the [Intercom API reference](https://de
 
 ## Version information
 
-- **Package version:** 0.1.30
+- **Package version:** 0.1.31
 - **Connector version:** 0.1.3
-- **Generated with Connector SDK commit SHA:** 609c1d86c76b36ff699b57123a5a8c2050d958c3
+- **Generated with Connector SDK commit SHA:** b73c71e077aea8d316f7161dbd5014d4fb9f3098
