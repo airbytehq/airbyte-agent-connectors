@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-intercom"
-version = "0.1.30"
+version = "0.1.31"
 description = "Airbyte Intercom Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
