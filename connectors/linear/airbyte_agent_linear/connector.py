@@ -58,14 +58,14 @@ from .models import (
     CommentResponse,
     CommentUpdateResponse,
     CommentsListResponse,
+    Issue,
     IssueCreateResponse,
     IssueResponse,
     IssueUpdateResponse,
-    IssuesListResponse,
+    Project,
     ProjectResponse,
-    ProjectsListResponse,
+    Team,
     TeamResponse,
-    TeamsListResponse,
     UserResponse,
     UsersListResponse,
     AirbyteSearchHit,
@@ -127,7 +127,7 @@ class LinearConnector:
     """
 
     connector_name = "linear"
-    connector_version = "0.1.6"
+    connector_version = "0.1.7"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -582,7 +582,8 @@ class IssuesQuery:
         result = await self._connector.execute("issues", "list", params)
         # Cast generic envelope to concrete typed result
         return IssuesListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -833,7 +834,8 @@ class ProjectsQuery:
         result = await self._connector.execute("projects", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
@@ -991,7 +993,8 @@ class TeamsQuery:
         result = await self._connector.execute("teams", "list", params)
         # Cast generic envelope to concrete typed result
         return TeamsListResult(
-            data=result.data
+            data=result.data,
+            meta=result.meta
         )
 
 
