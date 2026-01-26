@@ -62,6 +62,53 @@ class TokenExtractValidationError(ConnectorModelLoaderError):
     pass
 
 
+# Expected auth_mapping keys for each auth type.
+# These are the auth parameters that each security scheme expects, NOT the user's credential field names.
+EXPECTED_AUTH_MAPPING_KEYS: dict[AuthType, set[str]] = {
+    AuthType.BEARER: {"token"},
+    AuthType.BASIC: {"username", "password"},
+    AuthType.API_KEY: {"api_key"},
+    AuthType.OAUTH2: {"access_token", "refresh_token", "client_id", "client_secret"},
+}
+
+
+def _validate_auth_mapping_keys(
+    auth_type: AuthType,
+    auth_config: AirbyteAuthConfig | None,
+    scheme_name: str = "default",
+) -> None:
+    """Validate that auth_mapping keys match expected parameters for the auth type.
+
+    The auth_mapping keys must be the parameters expected by the security scheme
+    (e.g., "token" for bearer), not the user's credential field names.
+
+    Args:
+        auth_type: The authentication type
+        auth_config: The x-airbyte-auth-config containing auth_mapping
+        scheme_name: Name of the security scheme for error messages
+
+    Raises:
+        InvalidOpenAPIError: If auth_mapping keys don't match expected parameters
+    """
+    if auth_config is None or auth_config.auth_mapping is None:
+        return  # No explicit auth_mapping, will use defaults
+
+    expected_keys = EXPECTED_AUTH_MAPPING_KEYS.get(auth_type)
+    if expected_keys is None:
+        return  # Unknown auth type, skip validation
+
+    actual_keys = set(auth_config.auth_mapping.keys())
+    invalid_keys = actual_keys - expected_keys
+
+    if invalid_keys:
+        raise InvalidOpenAPIError(
+            f"Invalid auth_mapping keys for {auth_type.value} auth in scheme '{scheme_name}': {invalid_keys}. "
+            f"Expected keys for {auth_type.value}: {sorted(expected_keys)}. "
+            f"Note: auth_mapping keys must be the auth parameters (e.g., 'token' for bearer), "
+            f'not your credential field names. Use template syntax to map: token: "${{your_field}}"'
+        )
+
+
 def extract_path_params(path: str) -> list[str]:
     """Extract parameter names from path template.
 
@@ -924,6 +971,9 @@ def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
         oauth2_config = _parse_oauth2_config(scheme)
         # Use explicit x-airbyte-auth-config if present, otherwise generate default
         auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(AuthType.OAUTH2)
+        # Validate auth_mapping keys if explicitly provided
+        if scheme.x_airbyte_auth_config:
+            _validate_auth_mapping_keys(AuthType.OAUTH2, scheme.x_airbyte_auth_config)
         return AuthConfig(
             type=AuthType.OAUTH2,
             config=oauth2_config,
@@ -933,6 +983,10 @@ def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
 
     # Use explicit x-airbyte-auth-config if present, otherwise generate default
     auth_config_obj = scheme.x_airbyte_auth_config or _generate_default_auth_config(auth_type)
+
+    # Validate auth_mapping keys if explicitly provided
+    if scheme.x_airbyte_auth_config:
+        _validate_auth_mapping_keys(auth_type, scheme.x_airbyte_auth_config)
 
     return AuthConfig(
         type=auth_type,
