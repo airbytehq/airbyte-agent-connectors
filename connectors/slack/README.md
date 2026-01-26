@@ -86,7 +86,7 @@ This example assumes you've already authenticated your connector with Airbyte. S
 from airbyte_agent_slack import SlackConnector
 
 connector = SlackConnector(
-    external_user_id="<your-scoped-token>",
+    external_user_id="<your_external_user_id>",
     airbyte_client_id="<your-client-id>",
     airbyte_client_secret="<your-client-secret>"
 )
@@ -125,6 +125,6 @@ For the service's official API docs, see the [Slack API reference](https://api.s
 
 ## Version information
 
-- **Package version:** 0.1.23
+- **Package version:** 0.1.24
 - **Connector version:** 0.1.8
-- **Generated with Connector SDK commit SHA:** b73c71e077aea8d316f7161dbd5014d4fb9f3098
+- **Generated with Connector SDK commit SHA:** 74809153299f81ed3e220538146012ee2abd2e0d
