@@ -26,7 +26,7 @@ from uuid import (
 JiraConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('68e63de2-bb83-4c7e-93fa-a8a9051e3993'),
     name='jira',
-    version='1.1.2',
+    version='1.1.3',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -44,7 +44,6 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                 'password': AuthConfigFieldSpec(
                     title='API Token',
                     description='Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'username': '${username}', 'password': '${password}'},
