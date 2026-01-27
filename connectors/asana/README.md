@@ -121,6 +121,6 @@ For the service's official API docs, see the [Asana API reference](https://devel
 
 ## Version information
 
-- **Package version:** 0.19.66
+- **Package version:** 0.19.67
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** a01f6b16406fb2ff9f9dd011b1c1e0114c0db70f
+- **Generated with Connector SDK commit SHA:** 0f5e1914fa0d7d52de7bc0018afab712184a0847
