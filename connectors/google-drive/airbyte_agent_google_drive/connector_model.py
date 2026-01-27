@@ -29,7 +29,7 @@ from uuid import (
 GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9f8dda77-1048-4368-815b-269bf54ee9b8'),
     name='google-drive',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://www.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -46,12 +46,10 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',
                     description='Your Google OAuth2 Access Token (optional, will be obtained via refresh)',
-                    airbyte_secret=True,
                 ),
                 'refresh_token': AuthConfigFieldSpec(
                     title='Refresh Token',
                     description='Your Google OAuth2 Refresh Token',
-                    airbyte_secret=True,
                 ),
                 'client_id': AuthConfigFieldSpec(
                     title='Client ID',
@@ -60,7 +58,6 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                 'client_secret': AuthConfigFieldSpec(
                     title='Client Secret',
                     description='Your Google OAuth2 Client Secret',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={
