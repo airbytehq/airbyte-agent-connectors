@@ -135,6 +135,6 @@ For the service's official API docs, see the [Shopify API reference](https://sho
 
 ## Version information
 
-- **Package version:** 0.1.11
+- **Package version:** 0.1.12
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 74809153299f81ed3e220538146012ee2abd2e0d
+- **Generated with Connector SDK commit SHA:** 4bded58d3cabff3ac257c30c425ccab118f6ed87
