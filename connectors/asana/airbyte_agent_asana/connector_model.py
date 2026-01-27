@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.8',
+    version='0.1.9',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -52,12 +52,10 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'access_token': AuthConfigFieldSpec(
                             title='Access Token',
                             description='OAuth access token for API requests',
-                            airbyte_secret=True,
                         ),
                         'refresh_token': AuthConfigFieldSpec(
                             title='Refresh Token',
                             description='OAuth refresh token for automatic token renewal',
-                            airbyte_secret=True,
                         ),
                         'client_id': AuthConfigFieldSpec(
                             title='Client ID',
@@ -66,7 +64,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'client_secret': AuthConfigFieldSpec(
                             title='Client Secret',
                             description='Connected App Consumer Secret',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={
@@ -94,7 +91,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'token': AuthConfigFieldSpec(
                             title='Personal Access Token',
                             description='Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={'token': '${token}'},
