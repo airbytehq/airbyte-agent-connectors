@@ -26,7 +26,7 @@ from uuid import (
 IntercomConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d8313939-3782-41b0-be29-b3ca20d8dd3a'),
     name='intercom',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.intercom.io',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -39,7 +39,6 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',
                     description='Your Intercom API Access Token',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'token': '${access_token}'},
