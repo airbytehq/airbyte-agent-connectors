@@ -1,0 +1,104 @@
+test_name: campaigns_get_id_01HTDA5JFKGMQ7E0R9X2CTCH7N
+description: Captured from real API call on 2026-01-27
+entity: campaigns
+action: get
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params:
+    id: 01HTDA5JFKGMQ7E0R9X2CTCH7N
+captured_request:
+  method: GET
+  path: /campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:24:18 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: frame-ancestors 'self' login.bigcommerce.com *.mybigcommerce.com
+      admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com klaviyo.my.salesforce.com;
+      object-src 'none'; script-src 'report-sample' 'strict-dynamic' 'unsafe-eval';
+      base-uri 'none'; report-uri /csp/
+    ratelimit-limit: 10, 10;w=1, 150;w=60
+    ratelimit-remaining: '9'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: e45f9d8c-ecba-49b4-b846-b09379314ad7
+    x-envoy-upstream-service-time: '92'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c4473207d85766a-SEA
+  body:
+    data:
+      type: campaign
+      id: 01HTDA5JFKGMQ7E0R9X2CTCH7N
+      attributes:
+        name: Email Campaign - Apr 1, 2024, 8:08 PM
+        status: Sent
+        archived: false
+        audiences:
+          included:
+          - RnsiHB
+          - TaSce6
+          excluded: []
+        send_options:
+          use_smart_sending: true
+          ignore_unsubscribes: false
+        tracking_options:
+          add_tracking_params: false
+          custom_tracking_params: []
+          is_tracking_clicks: true
+          is_tracking_opens: true
+        send_strategy:
+          method: static
+          options_static:
+            datetime: '2024-04-01T17:32:25+00:00'
+            is_local: false
+            send_past_recipients_immediately: null
+          options_throttled: null
+          options_sto: null
+        created_at: '2024-04-01T17:09:03.603888+00:00'
+        scheduled_at: '2024-04-01T17:32:25.225887+00:00'
+        updated_at: '2024-04-01T17:33:23.434465+00:00'
+        send_time: '2024-04-01T17:32:25+00:00'
+      relationships:
+        campaign-messages:
+          data:
+          - type: campaign-message
+            id: 01HTDA5JFR4JA5D38W70D6DQB0
+          links:
+            self: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N/relationships/campaign-messages/
+            related: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N/campaign-messages/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N/relationships/tags/
+            related: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N/tags/
+      links:
+        self: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N/
+    links:
+      self: https://a.klaviyo.com/api/campaigns/01HTDA5JFKGMQ7E0R9X2CTCH7N
+captured_file_request: null
+captured_file_response: null

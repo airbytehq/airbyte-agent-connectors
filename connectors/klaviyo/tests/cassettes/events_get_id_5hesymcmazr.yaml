@@ -1,0 +1,87 @@
+test_name: events_get_id_5hESYMCmAzR
+description: Captured from real API call on 2026-01-27
+entity: events
+action: get
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params:
+    id: 5hESYMCmAzR
+captured_request:
+  method: GET
+  path: /events/5hESYMCmAzR
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:25:14 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: object-src 'none'; base-uri 'none'; frame-ancestors 'self'
+      login.bigcommerce.com *.mybigcommerce.com admin.shopify.com klaviyo.file.force.com
+      klaviyo.lightning.force.com klaviyo.my.salesforce.com; script-src 'report-sample'
+      'strict-dynamic' 'unsafe-eval'; report-uri /csp/
+    ratelimit-limit: 10, 10;w=1, 150;w=60
+    ratelimit-remaining: '9'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: 9a1e63f2-189d-484c-882f-9a0271f12815
+    x-envoy-upstream-service-time: '98'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c44747f3f18a3a1-SEA
+  body:
+    data:
+      type: event
+      id: 5hESYMCmAzR
+      attributes:
+        timestamp: 1718022884
+        event_properties:
+          group_id: UeGLUr
+          company_id: RjQ4wJ
+          device_type:
+          - false
+          - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like
+            Gecko) Chrome/80.0.3987.149 Safari/537.36
+          $event_id: 2024-06-10 12:34:44.172678+00:00--f64d9988-920b-4592-b509-5ee0f9e27f0b
+        datetime: '2024-06-10T12:34:44+00:00'
+        uuid: d0ac4a00-2725-11ef-8001-2b80820363ba
+      relationships:
+        profile:
+          links:
+            self: https://a.klaviyo.com/api/events/5hESYMCmAzR/relationships/profile/
+            related: https://a.klaviyo.com/api/events/5hESYMCmAzR/profile/
+        metric:
+          data:
+            type: metric
+            id: SKQA5i
+          links:
+            self: https://a.klaviyo.com/api/events/5hESYMCmAzR/relationships/metric/
+            related: https://a.klaviyo.com/api/events/5hESYMCmAzR/metric/
+      links:
+        self: https://a.klaviyo.com/api/events/5hESYMCmAzR/
+    links:
+      self: https://a.klaviyo.com/api/events/5hESYMCmAzR
+captured_file_request: null
+captured_file_response: null

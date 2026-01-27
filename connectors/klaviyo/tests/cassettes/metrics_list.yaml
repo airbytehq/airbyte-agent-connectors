@@ -1,0 +1,630 @@
+test_name: metrics_list
+description: Captured from real API call on 2026-01-27
+entity: metrics
+action: list
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params: {}
+captured_request:
+  method: GET
+  path: /metrics
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:23:24 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, POST, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: object-src 'none'; base-uri 'none'; frame-ancestors 'self'
+      login.bigcommerce.com *.mybigcommerce.com admin.shopify.com klaviyo.file.force.com
+      klaviyo.lightning.force.com klaviyo.my.salesforce.com; script-src 'report-sample'
+      'strict-dynamic' 'unsafe-eval'; report-uri /csp/
+    ratelimit-limit: 10, 10;w=1, 150;w=60
+    ratelimit-remaining: '9'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: 860736f5-5fe6-4646-9a4b-f6128cc350c6
+    x-envoy-upstream-service-time: '70'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c4471ccc96ca9ba-SEA
+  body:
+    data:
+    - type: metric
+      id: R2WpFy
+      attributes:
+        name: Refunded Order
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/R2WpFy/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/R2WpFy/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/R2WpFy/
+    - type: metric
+      id: RDXsib
+      attributes:
+        name: Ordered Product
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/RDXsib/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/RDXsib/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/RDXsib/
+    - type: metric
+      id: RUQ6YQ
+      attributes:
+        name: Active on Site
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 7FtS4J
+          key: api
+          name: API
+          category: API
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/RUQ6YQ/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/RUQ6YQ/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/RUQ6YQ/
+    - type: metric
+      id: RcjEmN
+      attributes:
+        name: Fulfilled Partial Order
+        created: '2022-05-31T06:45:47+00:00'
+        updated: '2022-05-31T06:45:47+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/RcjEmN/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/RcjEmN/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/RcjEmN/
+    - type: metric
+      id: RhP4nd
+      attributes:
+        name: Dropped Email
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/RhP4nd/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/RhP4nd/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/RhP4nd/
+    - type: metric
+      id: RszrqT
+      attributes:
+        name: Received Automated Response SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/RszrqT/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/RszrqT/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/RszrqT/
+    - type: metric
+      id: S5Au3w
+      attributes:
+        name: Failed to Deliver SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/S5Au3w/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/S5Au3w/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/S5Au3w/
+    - type: metric
+      id: SPnhc3
+      attributes:
+        name: Checkout Started
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/SPnhc3/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/SPnhc3/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/SPnhc3/
+    - type: metric
+      id: SbwSyW
+      attributes:
+        name: Relayed SMS
+        created: '2025-03-26T22:33:29+00:00'
+        updated: '2025-03-26T22:33:29+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/SbwSyW/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/SbwSyW/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/SbwSyW/
+    - type: metric
+      id: SxR9Bt
+      attributes:
+        name: Clicked Email
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/SxR9Bt/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/SxR9Bt/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/SxR9Bt/
+    - type: metric
+      id: THfYvj
+      attributes:
+        name: Marked Email as Spam
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/THfYvj/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/THfYvj/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/THfYvj/
+    - type: metric
+      id: TS2mxZ
+      attributes:
+        name: Unsubscribed from SMS Marketing
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/TS2mxZ/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/TS2mxZ/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/TS2mxZ/
+    - type: metric
+      id: TeZiVn
+      attributes:
+        name: Failed to deliver Automated Response SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/TeZiVn/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/TeZiVn/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/TeZiVn/
+    - type: metric
+      id: Tp8t7d
+      attributes:
+        name: Subscribed to List
+        created: '2021-11-16T15:05:22+00:00'
+        updated: '2021-11-16T15:05:22+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/Tp8t7d/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/Tp8t7d/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/Tp8t7d/
+    - type: metric
+      id: TspjNE
+      attributes:
+        name: Placed Order
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/TspjNE/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/TspjNE/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/TspjNE/
+    - type: metric
+      id: UBNaGw
+      attributes:
+        name: Subscribed to Back in Stock
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/UBNaGw/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/UBNaGw/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/UBNaGw/
+    - type: metric
+      id: VEsf4u
+      attributes:
+        name: Subscribed to SMS Marketing
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/VEsf4u/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/VEsf4u/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/VEsf4u/
+    - type: metric
+      id: VFFb4u
+      attributes:
+        name: Clicked Email
+        created: '2021-05-17T23:43:50+00:00'
+        updated: '2021-05-17T23:43:50+00:00'
+        integration:
+          object: integration
+          id: 7FtS4J
+          key: api
+          name: API
+          category: API
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/VFFb4u/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/VFFb4u/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/VFFb4u/
+    - type: metric
+      id: VePdj9
+      attributes:
+        name: Cancelled Order
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/VePdj9/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/VePdj9/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/VePdj9/
+    - type: metric
+      id: VvFRZN
+      attributes:
+        name: Clicked email to unsubscribe
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2024-03-29T21:11:31+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/VvFRZN/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/VvFRZN/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/VvFRZN/
+    - type: metric
+      id: WKHXf4
+      attributes:
+        name: Received Email
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/WKHXf4/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/WKHXf4/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/WKHXf4/
+    - type: metric
+      id: WhthF7
+      attributes:
+        name: Received SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/WhthF7/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/WhthF7/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/WhthF7/
+    - type: metric
+      id: X3f6PC
+      attributes:
+        name: Fulfilled Order
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/X3f6PC/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/X3f6PC/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/X3f6PC/
+    - type: metric
+      id: Xi7Kwh
+      attributes:
+        name: Bounced Email
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/Xi7Kwh/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/Xi7Kwh/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/Xi7Kwh/
+    - type: metric
+      id: XsS8yX
+      attributes:
+        name: Sent SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/XsS8yX/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/XsS8yX/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/XsS8yX/
+    - type: metric
+      id: Y5TbbA
+      attributes:
+        name: Clicked SMS
+        created: '2022-05-31T06:52:24+00:00'
+        updated: '2022-05-31T06:52:24+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/Y5TbbA/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/Y5TbbA/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/Y5TbbA/
+    - type: metric
+      id: YcDVHu
+      attributes:
+        name: Viewed Product
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 7FtS4J
+          key: api
+          name: API
+          category: API
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/YcDVHu/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/YcDVHu/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/YcDVHu/
+    - type: metric
+      id: YjTBNv
+      attributes:
+        name: Subscribed to Email Marketing
+        created: '2024-05-22T23:33:54+00:00'
+        updated: '2024-05-22T23:33:54+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/YjTBNv/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/YjTBNv/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/YjTBNv/
+    - type: metric
+      id: Yy9QKx
+      attributes:
+        name: Opened Email
+        created: '2021-03-31T10:50:37+00:00'
+        updated: '2021-03-31T10:50:37+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/Yy9QKx/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/Yy9QKx/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/Yy9QKx/
+    - type: metric
+      id: SKQA5i
+      attributes:
+        name: subscribe_page_view
+        created: '2024-06-10T12:38:06+00:00'
+        updated: '2024-06-10T12:38:06+00:00'
+        integration:
+          object: integration
+          id: 0rG4eQ
+          key: klaviyo
+          name: Klaviyo
+          category: Internal
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/SKQA5i/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/SKQA5i/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/SKQA5i/
+    links:
+      self: https://a.klaviyo.com/api/metrics
+      next: null
+      prev: null
+captured_file_request: null
+captured_file_response: null

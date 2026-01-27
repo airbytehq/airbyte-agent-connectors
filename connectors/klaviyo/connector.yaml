@@ -1,0 +1,1175 @@
+# Klaviyo API Connector
+# OpenAPI 3.1 specification with Airbyte extensions
+
+openapi: 3.1.0
+
+info:
+  title: Klaviyo API Connector
+  version: 0.1.0
+  description: Connector for Klaviyo API - a marketing automation platform for email, SMS, and push notifications.
+  x-airbyte-connector-name: klaviyo
+  x-airbyte-connector-id: 95e8cffd-b8c4-4039-968e-d32fb4a69bde
+  x-airbyte-external-documentation-urls:
+    - type: api_reference
+      title: Klaviyo API Documentation
+      url: https://developers.klaviyo.com/en/reference/api-overview
+
+servers:
+  - url: https://a.klaviyo.com/api
+    description: Klaviyo API server
+
+security:
+  - apiKeyAuth: []
+
+paths:
+  # Profiles Resource
+  /profiles:
+    get:
+      summary: List profiles
+      description: Returns a paginated list of all profiles in the account
+      operationId: listProfiles
+      x-airbyte-entity: profiles
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of profiles to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: List of profiles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfilesListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /profiles/{id}:
+    get:
+      summary: Get a profile
+      description: Get a single profile by ID
+      operationId: getProfile
+      x-airbyte-entity: profiles
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Profile ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Profile object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProfileResponse"
+        "404":
+          description: Profile not found
+        "401":
+          description: Unauthorized
+
+  # Lists Resource
+  /lists:
+    get:
+      summary: List lists
+      description: Returns a paginated list of all lists in the account
+      operationId: listLists
+      x-airbyte-entity: lists
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of lists to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: List of lists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListsListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /lists/{id}:
+    get:
+      summary: Get a list
+      description: Get a single list by ID
+      operationId: getList
+      x-airbyte-entity: lists
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: List ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListResponse"
+        "404":
+          description: List not found
+        "401":
+          description: Unauthorized
+
+  # Campaigns Resource
+  /campaigns:
+    get:
+      summary: List campaigns
+      description: Returns a paginated list of all campaigns in the account
+      operationId: listCampaigns
+      x-airbyte-entity: campaigns
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of campaigns to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: filter
+          in: query
+          required: true
+          description: Filter campaigns by channel (email or sms)
+          schema:
+            type: string
+            default: "equals(messages.channel,'email')"
+      responses:
+        "200":
+          description: List of campaigns
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignsListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /campaigns/{id}:
+    get:
+      summary: Get a campaign
+      description: Get a single campaign by ID
+      operationId: getCampaign
+      x-airbyte-entity: campaigns
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Campaign ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Campaign object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CampaignResponse"
+        "404":
+          description: Campaign not found
+        "401":
+          description: Unauthorized
+
+  # Flows Resource
+  /flows:
+    get:
+      summary: List flows
+      description: Returns a paginated list of all flows in the account
+      operationId: listFlows
+      x-airbyte-entity: flows
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of flows to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: List of flows
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowsListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /flows/{id}:
+    get:
+      summary: Get a flow
+      description: Get a single flow by ID
+      operationId: getFlow
+      x-airbyte-entity: flows
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Flow ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Flow object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FlowResponse"
+        "404":
+          description: Flow not found
+        "401":
+          description: Unauthorized
+
+  # Metrics Resource
+  /metrics:
+    get:
+      summary: List metrics
+      description: Returns a paginated list of all metrics in the account
+      operationId: listMetrics
+      x-airbyte-entity: metrics
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of metrics to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: List of metrics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricsListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /metrics/{id}:
+    get:
+      summary: Get a metric
+      description: Get a single metric by ID
+      operationId: getMetric
+      x-airbyte-entity: metrics
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Metric ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Metric object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MetricResponse"
+        "404":
+          description: Metric not found
+        "401":
+          description: Unauthorized
+
+  # Events Resource
+  /events:
+    get:
+      summary: List events
+      description: Returns a paginated list of all events in the account
+      operationId: listEvents
+      x-airbyte-entity: events
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of events to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+        - name: filter
+          in: query
+          description: Filter events by metric, profile, or datetime
+          schema:
+            type: string
+        - name: sort
+          in: query
+          description: Sort events by datetime
+          schema:
+            type: string
+            default: "-datetime"
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventsListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /events/{id}:
+    get:
+      summary: Get an event
+      description: Get a single event by ID
+      operationId: getEvent
+      x-airbyte-entity: events
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Event ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Event object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventResponse"
+        "404":
+          description: Event not found
+        "401":
+          description: Unauthorized
+
+  # Templates Resource
+  /templates:
+    get:
+      summary: List email templates
+      description: Returns a paginated list of all email templates in the account
+      operationId: listTemplates
+      x-airbyte-entity: email_templates
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.data
+      x-airbyte-meta-extractor:
+        pagination: $.links.next
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: page[size]
+          in: query
+          description: Number of templates to return per page (max 100)
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        "200":
+          description: List of email templates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TemplatesListResponse"
+        "401":
+          description: Unauthorized
+        "429":
+          description: Rate limited
+
+  /templates/{id}:
+    get:
+      summary: Get an email template
+      description: Get a single email template by ID
+      operationId: getTemplate
+      x-airbyte-entity: email_templates
+      x-airbyte-action: get
+      x-airbyte-record-extractor: $.data
+      parameters:
+        - name: revision
+          in: header
+          required: true
+          description: API revision date in YYYY-MM-DD format
+          schema:
+            type: string
+            default: "2024-10-15"
+        - name: id
+          in: path
+          required: true
+          description: Template ID
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Template object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TemplateResponse"
+        "404":
+          description: Template not found
+        "401":
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: API key authentication using Klaviyo-API-Key prefix
+      x-airbyte-auth-config:
+        title: "API Key Authentication"
+        type: object
+        required:
+          - api_key
+        properties:
+          api_key:
+            type: string
+            title: "API Key"
+            description: "Your Klaviyo private API key"
+        auth_mapping:
+          api_key: "Klaviyo-API-Key ${api_key}"
+
+  schemas:
+    # Profile Schemas
+    Profile:
+      type: object
+      x-airbyte-entity-name: profiles
+      x-airbyte-stream-name: profiles
+      description: Klaviyo profile object representing a contact
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique profile identifier
+        type:
+          type: string
+          description: Object type (always "profile")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/ProfileAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+        relationships:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+
+    ProfileAttributes:
+      type: object
+      description: Profile attributes
+      properties:
+        email:
+          type: [string, "null"]
+          description: Profile email address
+        phone_number:
+          type: [string, "null"]
+          description: Profile phone number
+        external_id:
+          type: [string, "null"]
+          description: External ID from your system
+        first_name:
+          type: [string, "null"]
+          description: First name
+        last_name:
+          type: [string, "null"]
+          description: Last name
+        organization:
+          type: [string, "null"]
+          description: Organization name
+        locale:
+          type: [string, "null"]
+          description: Locale setting
+        title:
+          type: [string, "null"]
+          description: Title
+        image:
+          type: [string, "null"]
+          description: Profile image URL
+        created:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+        last_event_date:
+          type: [string, "null"]
+          format: date-time
+          description: Date of last event
+        location:
+          oneOf:
+            - $ref: "#/components/schemas/Location"
+            - type: "null"
+        properties:
+          type: [object, "null"]
+          additionalProperties: true
+          description: Custom properties
+
+    Location:
+      type: object
+      description: Location information
+      properties:
+        address1:
+          type: [string, "null"]
+        address2:
+          type: [string, "null"]
+        city:
+          type: [string, "null"]
+        country:
+          type: [string, "null"]
+        region:
+          type: [string, "null"]
+        zip:
+          type: [string, "null"]
+        timezone:
+          type: [string, "null"]
+        ip:
+          type: [string, "null"]
+        latitude:
+          oneOf:
+            - type: number
+            - type: string
+            - type: "null"
+        longitude:
+          oneOf:
+            - type: number
+            - type: string
+            - type: "null"
+
+    ProfilesListResponse:
+      type: object
+      description: Paginated list of profiles
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Profile"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    ProfileResponse:
+      type: object
+      description: Single profile response
+      properties:
+        data:
+          $ref: "#/components/schemas/Profile"
+
+    # List Schemas
+    List:
+      type: object
+      x-airbyte-entity-name: lists
+      x-airbyte-stream-name: lists
+      description: Klaviyo list object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique list identifier
+        type:
+          type: string
+          description: Object type (always "list")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/ListAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+        relationships:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+
+    ListAttributes:
+      type: object
+      description: List attributes
+      properties:
+        name:
+          type: [string, "null"]
+          description: List name
+        created:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+        opt_in_process:
+          type: [string, "null"]
+          description: Opt-in process type
+
+    ListsListResponse:
+      type: object
+      description: Paginated list of lists
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/List"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    ListResponse:
+      type: object
+      description: Single list response
+      properties:
+        data:
+          $ref: "#/components/schemas/List"
+
+    # Campaign Schemas
+    Campaign:
+      type: object
+      x-airbyte-entity-name: campaigns
+      x-airbyte-stream-name: campaigns
+      description: Klaviyo campaign object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique campaign identifier
+        type:
+          type: string
+          description: Object type (always "campaign")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/CampaignAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+        relationships:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+
+    CampaignAttributes:
+      type: object
+      description: Campaign attributes
+      properties:
+        name:
+          type: [string, "null"]
+          description: Campaign name
+        status:
+          type: [string, "null"]
+          description: Campaign status (draft, scheduled, sent, cancelled)
+        archived:
+          type: [boolean, "null"]
+          description: Whether campaign is archived
+        audiences:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+          description: Target audiences
+        send_options:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+          description: Send options
+        tracking_options:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+          description: Tracking options
+        send_strategy:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+          description: Send strategy
+        created_at:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        scheduled_at:
+          type: [string, "null"]
+          format: date-time
+          description: Scheduled send time
+        updated_at:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+        send_time:
+          type: [string, "null"]
+          format: date-time
+          description: Actual send time
+
+    CampaignsListResponse:
+      type: object
+      description: Paginated list of campaigns
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Campaign"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    CampaignResponse:
+      type: object
+      description: Single campaign response
+      properties:
+        data:
+          $ref: "#/components/schemas/Campaign"
+
+    # Flow Schemas
+    Flow:
+      type: object
+      x-airbyte-entity-name: flows
+      x-airbyte-stream-name: flows
+      description: Klaviyo flow object (automated workflow)
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique flow identifier
+        type:
+          type: string
+          description: Object type (always "flow")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/FlowAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+        relationships:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+
+    FlowAttributes:
+      type: object
+      description: Flow attributes
+      properties:
+        name:
+          type: [string, "null"]
+          description: Flow name
+        status:
+          type: [string, "null"]
+          description: Flow status (draft, manual, live)
+        archived:
+          type: [boolean, "null"]
+          description: Whether flow is archived
+        created:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+        trigger_type:
+          type: [string, "null"]
+          description: Type of trigger for the flow
+
+    FlowsListResponse:
+      type: object
+      description: Paginated list of flows
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Flow"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    FlowResponse:
+      type: object
+      description: Single flow response
+      properties:
+        data:
+          $ref: "#/components/schemas/Flow"
+
+    # Metric Schemas
+    Metric:
+      type: object
+      x-airbyte-entity-name: metrics
+      x-airbyte-stream-name: metrics
+      description: Klaviyo metric object (event type)
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique metric identifier
+        type:
+          type: string
+          description: Object type (always "metric")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/MetricAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+
+    MetricAttributes:
+      type: object
+      description: Metric attributes
+      properties:
+        name:
+          type: [string, "null"]
+          description: Metric name
+        created:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+        integration:
+          oneOf:
+            - type: object
+              properties:
+                id:
+                  type: [string, "null"]
+                name:
+                  type: [string, "null"]
+                category:
+                  type: [string, "null"]
+            - type: "null"
+          description: Integration information
+
+    MetricsListResponse:
+      type: object
+      description: Paginated list of metrics
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Metric"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    MetricResponse:
+      type: object
+      description: Single metric response
+      properties:
+        data:
+          $ref: "#/components/schemas/Metric"
+
+    # Event Schemas
+    Event:
+      type: object
+      x-airbyte-entity-name: events
+      x-airbyte-stream-name: events
+      description: Klaviyo event object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique event identifier
+        type:
+          type: string
+          description: Object type (always "event")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/EventAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+        relationships:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: "null"
+
+    EventAttributes:
+      type: object
+      description: Event attributes
+      properties:
+        timestamp:
+          type: [integer, "null"]
+          description: Event timestamp (Unix timestamp)
+        datetime:
+          type: [string, "null"]
+          format: date-time
+          description: Event datetime
+        uuid:
+          type: [string, "null"]
+          description: Event UUID
+        event_properties:
+          type: [object, "null"]
+          additionalProperties: true
+          description: Event properties
+
+    EventsListResponse:
+      type: object
+      description: Paginated list of events
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Event"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    EventResponse:
+      type: object
+      description: Single event response
+      properties:
+        data:
+          $ref: "#/components/schemas/Event"
+
+    # Template Schemas
+    Template:
+      type: object
+      x-airbyte-entity-name: email_templates
+      x-airbyte-stream-name: email_templates
+      description: Klaviyo email template object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Unique template identifier
+        type:
+          type: string
+          description: Object type (always "template")
+        attributes:
+          oneOf:
+            - $ref: "#/components/schemas/TemplateAttributes"
+            - type: "null"
+        links:
+          oneOf:
+            - $ref: "#/components/schemas/SelfLink"
+            - type: "null"
+
+    TemplateAttributes:
+      type: object
+      description: Template attributes
+      properties:
+        name:
+          type: [string, "null"]
+          description: Template name
+        editor_type:
+          type: [string, "null"]
+          description: Editor type used to create the template
+        html:
+          type: [string, "null"]
+          description: HTML content of the template
+        text:
+          type: [string, "null"]
+          description: Plain text content of the template
+        created:
+          type: [string, "null"]
+          format: date-time
+          description: Creation timestamp
+        updated:
+          type: [string, "null"]
+          format: date-time
+          description: Last update timestamp
+
+    TemplatesListResponse:
+      type: object
+      description: Paginated list of templates
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Template"
+        links:
+          $ref: "#/components/schemas/PaginationLinks"
+
+    TemplateResponse:
+      type: object
+      description: Single template response
+      properties:
+        data:
+          $ref: "#/components/schemas/Template"
+
+    # Common Schemas
+    SelfLink:
+      type: object
+      description: Self link
+      properties:
+        self:
+          type: [string, "null"]
+          description: URL to the resource
+
+    PaginationLinks:
+      type: object
+      description: Pagination links
+      properties:
+        self:
+          type: [string, "null"]
+          description: URL to current page
+        next:
+          type: [string, "null"]
+          description: URL to next page
+        prev:
+          type: [string, "null"]
+          description: URL to previous page

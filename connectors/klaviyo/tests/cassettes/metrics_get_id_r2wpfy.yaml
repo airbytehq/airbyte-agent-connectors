@@ -1,0 +1,78 @@
+test_name: metrics_get_id_R2WpFy
+description: Captured from real API call on 2026-01-27
+entity: metrics
+action: get
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params:
+    id: R2WpFy
+captured_request:
+  method: GET
+  path: /metrics/R2WpFy
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:24:50 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: base-uri 'none'; script-src 'report-sample' 'strict-dynamic'
+      'unsafe-eval'; frame-ancestors 'self' login.bigcommerce.com *.mybigcommerce.com
+      admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com klaviyo.my.salesforce.com;
+      object-src 'none'; report-uri /csp/
+    ratelimit-limit: 10, 10;w=1, 150;w=60
+    ratelimit-remaining: '9'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: 227e5d1a-6b11-4f04-8896-a0d12393e16b
+    x-envoy-upstream-service-time: '77'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c4473e7ab5fba0f-SEA
+  body:
+    data:
+      type: metric
+      id: R2WpFy
+      attributes:
+        name: Refunded Order
+        created: '2022-05-31T06:36:45+00:00'
+        updated: '2022-05-31T06:36:45+00:00'
+        integration:
+          object: integration
+          id: 0eMvjm
+          key: shopify
+          name: Shopify
+          category: eCommerce
+      relationships:
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/metrics/R2WpFy/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/metrics/R2WpFy/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/metrics/R2WpFy/
+    links:
+      self: https://a.klaviyo.com/api/metrics/R2WpFy
+captured_file_request: null
+captured_file_response: null

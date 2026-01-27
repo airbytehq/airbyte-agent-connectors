@@ -1,0 +1,108 @@
+test_name: profiles_get_id_01F23YG492HT91MKG2R285HN5W
+description: Captured from real API call on 2026-01-27
+entity: profiles
+action: get
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params:
+    id: 01F23YG492HT91MKG2R285HN5W
+captured_request:
+  method: GET
+  path: /profiles/01F23YG492HT91MKG2R285HN5W
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:23:03 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: frame-ancestors 'self' login.bigcommerce.com *.mybigcommerce.com
+      admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com klaviyo.my.salesforce.com;
+      object-src 'none'; base-uri 'none'; script-src 'report-sample' 'strict-dynamic'
+      'unsafe-eval'; report-uri /csp/
+    ratelimit-limit: 75, 75;w=1, 700;w=60
+    ratelimit-remaining: '74'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: 2f9da265-7757-4f91-8f9c-7b8370afce54
+    x-envoy-upstream-service-time: '60'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c44714839b7d45e-SEA
+  body:
+    data:
+      type: profile
+      id: 01F23YG492HT91MKG2R285HN5W
+      attributes:
+        email: integration-test@airbyte.io
+        phone_number: null
+        external_id: null
+        anonymous_id: null
+        first_name: Airbyte
+        last_name: Team
+        organization: null
+        locale: null
+        title: null
+        image: null
+        created: '2021-03-31T10:50:36+00:00'
+        updated: '2024-04-25T03:58:35+00:00'
+        last_event_date: '2024-04-25T03:58:30+00:00'
+        location:
+          address1: 2261 Market Street
+          address2: '4381'
+          city: San Francisco
+          country: United States
+          latitude: 50.5183
+          longitude: 30.5088
+          region: California
+          zip: '94114'
+          timezone: America/Los_Angeles
+          ip: 209.85.238.98
+        properties:
+          Accepts Marketing: false
+          Shopify Tags: []
+      relationships:
+        lists:
+          links:
+            self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/relationships/lists/
+            related: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/lists/
+        segments:
+          links:
+            self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/relationships/segments/
+            related: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/segments/
+        push-tokens:
+          links:
+            self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/relationships/push-tokens/
+            related: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/push-tokens/
+        conversation:
+          links:
+            self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/relationships/conversation/
+            related: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/conversation/
+      links:
+        self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W/
+    links:
+      self: https://a.klaviyo.com/api/profiles/01F23YG492HT91MKG2R285HN5W
+captured_file_request: null
+captured_file_response: null

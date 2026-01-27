@@ -1,0 +1,200 @@
+test_name: flows_list
+description: Captured from real API call on 2026-01-27
+entity: flows
+action: list
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params: {}
+captured_request:
+  method: GET
+  path: /flows
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:23:24 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, POST, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: script-src 'report-sample' 'strict-dynamic' 'unsafe-eval';
+      base-uri 'none'; object-src 'none'; frame-ancestors 'self' login.bigcommerce.com
+      *.mybigcommerce.com admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com
+      klaviyo.my.salesforce.com; report-uri /csp/
+    ratelimit-limit: 3, 3;w=1, 60;w=60
+    ratelimit-remaining: '2'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: de3f8ad5-13e4-47c3-8581-342773e3784a
+    x-envoy-upstream-service-time: '70'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c4471cca9e0755d-SEA
+  body:
+    data:
+    - type: flow
+      id: U5LCpF
+      attributes:
+        name: Welcome Series - Customer v. Non-Customer
+        status: live
+        archived: false
+        created: '2022-05-31T07:00:28+00:00'
+        updated: '2022-05-31T07:00:29+00:00'
+        trigger_type: Added to List
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/U5LCpF/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/U5LCpF/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/U5LCpF/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/U5LCpF/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/U5LCpF/
+    - type: flow
+      id: Ub7CPq
+      attributes:
+        name: Browse Abandonment
+        status: manual
+        archived: false
+        created: '2022-05-31T06:54:12+00:00'
+        updated: '2025-02-12T05:30:58+00:00'
+        trigger_type: Metric
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/Ub7CPq/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/Ub7CPq/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/Ub7CPq/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/Ub7CPq/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/Ub7CPq/
+    - type: flow
+      id: Usr9XK
+      attributes:
+        name: Welcome Series
+        status: live
+        archived: false
+        created: '2022-05-31T06:51:39+00:00'
+        updated: '2022-05-31T06:52:14+00:00'
+        trigger_type: Added to List
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/Usr9XK/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/Usr9XK/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/Usr9XK/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/Usr9XK/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/Usr9XK/
+    - type: flow
+      id: Uxqqk4
+      attributes:
+        name: Customer Thank You
+        status: live
+        archived: false
+        created: '2022-05-31T06:55:43+00:00'
+        updated: '2022-05-31T06:55:44+00:00'
+        trigger_type: Metric
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/Uxqqk4/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/Uxqqk4/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/Uxqqk4/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/Uxqqk4/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/Uxqqk4/
+    - type: flow
+      id: VcNt87
+      attributes:
+        name: Welcome Series - Standard (Email & SMS)
+        status: manual
+        archived: false
+        created: '2022-05-31T06:58:03+00:00'
+        updated: '2022-05-31T06:58:04+00:00'
+        trigger_type: Added to List
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/VcNt87/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/VcNt87/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/VcNt87/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/VcNt87/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/VcNt87/
+    - type: flow
+      id: VueJfU
+      attributes:
+        name: Happy Birthday Email - Standard
+        status: manual
+        archived: false
+        created: '2022-05-31T07:01:40+00:00'
+        updated: '2022-05-31T07:01:41+00:00'
+        trigger_type: Date Based
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/VueJfU/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/VueJfU/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/VueJfU/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/VueJfU/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/VueJfU/
+    - type: flow
+      id: YfYbWb
+      attributes:
+        name: Abandoned Cart
+        status: live
+        archived: false
+        created: '2022-05-31T06:48:46+00:00'
+        updated: '2022-05-31T06:50:35+00:00'
+        trigger_type: Metric
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/YfYbWb/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/YfYbWb/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/YfYbWb/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/YfYbWb/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/YfYbWb/
+    links:
+      self: https://a.klaviyo.com/api/flows
+      next: null
+      prev: null
+captured_file_request: null
+captured_file_response: null

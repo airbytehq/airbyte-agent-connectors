@@ -1,0 +1,280 @@
+test_name: lists_list
+description: Captured from real API call on 2026-01-27
+entity: lists
+action: list
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params: {}
+captured_request:
+  method: GET
+  path: /lists
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:22:10 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, POST, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: base-uri 'none'; frame-ancestors 'self' login.bigcommerce.com
+      *.mybigcommerce.com admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com
+      klaviyo.my.salesforce.com; script-src 'report-sample' 'strict-dynamic' 'unsafe-eval';
+      object-src 'none'; report-uri /csp/
+    ratelimit-limit: 75, 75;w=1, 700;w=60
+    ratelimit-remaining: '74'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: fcd9206f-357f-4ae3-a55d-3b86c601f225
+    x-envoy-upstream-service-time: '50'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c447001298576f2-SEA
+  body:
+    data:
+    - type: list
+      id: R2p3ry
+      attributes:
+        name: Test2
+        created: '2021-11-16T14:24:04+00:00'
+        updated: '2021-11-16T14:24:04+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/R2p3ry/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/R2p3ry/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/R2p3ry/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/R2p3ry/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/R2p3ry/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/R2p3ry/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/R2p3ry/
+    - type: list
+      id: R4ZhCr
+      attributes:
+        name: Test5
+        created: '2021-11-16T14:24:21+00:00'
+        updated: '2021-11-16T14:24:21+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/R4ZhCr/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/R4ZhCr/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/R4ZhCr/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/R4ZhCr/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/R4ZhCr/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/R4ZhCr/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/R4ZhCr/
+    - type: list
+      id: RPfQMj
+      attributes:
+        name: Test5
+        created: '2021-11-16T14:24:31+00:00'
+        updated: '2021-11-16T15:01:15+00:00'
+        opt_in_process: single_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/RPfQMj/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/RPfQMj/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/RPfQMj/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/RPfQMj/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/RPfQMj/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/RPfQMj/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/RPfQMj/
+    - type: list
+      id: RgS4w6
+      attributes:
+        name: Test5
+        created: '2021-11-16T14:24:30+00:00'
+        updated: '2021-11-16T14:24:30+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/RgS4w6/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/RgS4w6/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/RgS4w6/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/RgS4w6/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/RgS4w6/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/RgS4w6/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/RgS4w6/
+    - type: list
+      id: RnsiHB
+      attributes:
+        name: Newsletter
+        created: '2021-03-31T10:50:36+00:00'
+        updated: '2021-03-31T10:50:36+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/RnsiHB/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/RnsiHB/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/RnsiHB/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/RnsiHB/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/RnsiHB/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/RnsiHB/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/RnsiHB/
+    - type: list
+      id: RwKPyg
+      attributes:
+        name: Test5
+        created: '2021-11-16T14:24:26+00:00'
+        updated: '2021-11-16T14:24:26+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/RwKPyg/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/RwKPyg/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/RwKPyg/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/RwKPyg/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/RwKPyg/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/RwKPyg/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/RwKPyg/
+    - type: list
+      id: S7aBY2
+      attributes:
+        name: Test1
+        created: '2021-11-16T14:24:07+00:00'
+        updated: '2021-11-16T14:24:07+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/S7aBY2/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/S7aBY2/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/S7aBY2/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/S7aBY2/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/S7aBY2/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/S7aBY2/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/S7aBY2/
+    - type: list
+      id: S8nmQ9
+      attributes:
+        name: Test AAAB
+        created: '2021-11-16T15:02:51+00:00'
+        updated: '2021-11-16T15:02:51+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/S8nmQ9/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/S8nmQ9/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/S8nmQ9/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/S8nmQ9/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/S8nmQ9/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/S8nmQ9/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/S8nmQ9/
+    - type: list
+      id: SBYgiK
+      attributes:
+        name: SMS Subscribers
+        created: '2022-05-31T06:52:26+00:00'
+        updated: '2022-05-31T06:52:26+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/SBYgiK/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/SBYgiK/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/SBYgiK/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/SBYgiK/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/SBYgiK/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/SBYgiK/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/SBYgiK/
+    - type: list
+      id: SYEFFb
+      attributes:
+        name: Test_5
+        created: '2021-11-16T14:24:31+00:00'
+        updated: '2021-11-16T14:24:31+00:00'
+        opt_in_process: double_opt_in
+      relationships:
+        profiles:
+          links:
+            self: https://a.klaviyo.com/api/lists/SYEFFb/relationships/profiles/
+            related: https://a.klaviyo.com/api/lists/SYEFFb/profiles/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/lists/SYEFFb/relationships/tags/
+            related: https://a.klaviyo.com/api/lists/SYEFFb/tags/
+        flow-triggers:
+          links:
+            self: https://a.klaviyo.com/api/lists/SYEFFb/relationships/flow-triggers/
+            related: https://a.klaviyo.com/api/lists/SYEFFb/flow-triggers/
+      links:
+        self: https://a.klaviyo.com/api/lists/SYEFFb/
+    links:
+      self: https://a.klaviyo.com/api/lists
+      next: https://a.klaviyo.com/api/lists?page%5Bcursor%5D=bmV4dDo6aWQ6OlNZRUZGYg
+      prev: null
+captured_file_request: null
+captured_file_response: null

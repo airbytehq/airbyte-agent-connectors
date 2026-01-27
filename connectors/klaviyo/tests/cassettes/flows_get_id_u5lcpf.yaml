@@ -1,0 +1,79 @@
+test_name: flows_get_id_U5LCpF
+description: Captured from real API call on 2026-01-27
+entity: flows
+action: get
+auth_config:
+  api_key: ${KLAVIYO_API_KEY}
+auth_scheme: null
+inputs:
+  params:
+    id: U5LCpF
+captured_request:
+  method: GET
+  path: /flows/U5LCpF
+  query_params: null
+  headers:
+    revision: '2024-10-15'
+  body: null
+  validation:
+    query_params_strict: true
+    headers_strict: false
+    body_strict: true
+    ignore_headers:
+    - User-Agent
+    - Accept-Encoding
+    - Date
+captured_response:
+  status_code: 200
+  headers:
+    date: Tue, 27 Jan 2026 01:24:51 GMT
+    content-type: application/vnd.api+json
+    transfer-encoding: chunked
+    connection: keep-alive
+    content-encoding: gzip
+    allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS
+    cid: RjQ4wJ
+    content-language: en-us
+    content-security-policy: frame-ancestors 'self' login.bigcommerce.com *.mybigcommerce.com
+      admin.shopify.com klaviyo.file.force.com klaviyo.lightning.force.com klaviyo.my.salesforce.com;
+      object-src 'none'; script-src 'report-sample' 'strict-dynamic' 'unsafe-eval';
+      base-uri 'none'; report-uri /csp/
+    ratelimit-limit: 3, 3;w=1, 60;w=60
+    ratelimit-remaining: '2'
+    ratelimit-reset: '0'
+    vary: Accept, Accept-Language, Cookie
+    x-klaviyo-api-retirement-date: '2026-10-15'
+    x-klaviyo-api-revision: '2024-10-15'
+    x-klaviyo-req-id: 63b93f34-0df2-477d-8e6e-9ff22d834caa
+    x-envoy-upstream-service-time: '50'
+    cf-cache-status: DYNAMIC
+    strict-transport-security: max-age=31536000; includeSubDomains; preload
+    x-content-type-options: nosniff
+    server: cloudflare
+    cf-ray: 9c4473eadddf980d-SEA
+  body:
+    data:
+      type: flow
+      id: U5LCpF
+      attributes:
+        name: Welcome Series - Customer v. Non-Customer
+        status: live
+        archived: false
+        created: '2022-05-31T07:00:28+00:00'
+        updated: '2022-05-31T07:00:29+00:00'
+        trigger_type: Added to List
+      relationships:
+        flow-actions:
+          links:
+            self: https://a.klaviyo.com/api/flows/U5LCpF/relationships/flow-actions/
+            related: https://a.klaviyo.com/api/flows/U5LCpF/flow-actions/
+        tags:
+          links:
+            self: https://a.klaviyo.com/api/flows/U5LCpF/relationships/tags/
+            related: https://a.klaviyo.com/api/flows/U5LCpF/tags/
+      links:
+        self: https://a.klaviyo.com/api/flows/U5LCpF/
+    links:
+      self: https://a.klaviyo.com/api/flows/U5LCpF
+captured_file_request: null
+captured_file_response: null
