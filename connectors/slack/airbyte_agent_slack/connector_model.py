@@ -27,7 +27,7 @@ from uuid import (
 SlackConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c2281cee-86f9-4a86-bb48-d23286b4c7bd'),
     name='slack',
-    version='0.1.8',
+    version='0.1.9',
     base_url='https://slack.com/api',
     auth=AuthConfig(
         options=[
@@ -43,7 +43,6 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         'api_token': AuthConfigFieldSpec(
                             title='API Token',
                             description='Your Slack Bot Token (xoxb-) or User Token (xoxp-)',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={'token': '${api_token}'},
@@ -71,12 +70,10 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                         'client_secret': AuthConfigFieldSpec(
                             title='Client Secret',
                             description="Your Slack App's Client Secret",
-                            airbyte_secret=True,
                         ),
                         'access_token': AuthConfigFieldSpec(
                             title='Access Token',
                             description='OAuth access token (bot token from oauth.v2.access response)',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={
