@@ -112,6 +112,6 @@ For the service's official API docs, see the [Salesforce API reference](https://
 
 ## Version information
 
-- **Package version:** 0.1.56
+- **Package version:** 0.1.57
 - **Connector version:** 1.0.7
-- **Generated with Connector SDK commit SHA:** a01f6b16406fb2ff9f9dd011b1c1e0114c0db70f
+- **Generated with Connector SDK commit SHA:** 0f5e1914fa0d7d52de7bc0018afab712184a0847
