@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.8',
+    version='0.1.9',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
@@ -51,12 +51,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'access_token': AuthConfigFieldSpec(
                             title='Access Token',
                             description='OAuth 2.0 access token',
-                            airbyte_secret=True,
                         ),
                         'refresh_token': AuthConfigFieldSpec(
                             title='Refresh Token',
                             description='OAuth 2.0 refresh token (optional)',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={'access_token': '${access_token}', 'refresh_token': '${refresh_token}'},
@@ -80,7 +78,6 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'api_token': AuthConfigFieldSpec(
                             title='API Token',
                             description='Your Zendesk API token from Admin Center',
-                            airbyte_secret=True,
                         ),
                     },
                     auth_mapping={'username': '${email}/token', 'password': '${api_token}'},
