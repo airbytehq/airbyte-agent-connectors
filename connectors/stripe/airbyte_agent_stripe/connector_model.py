@@ -27,7 +27,7 @@ from uuid import (
 StripeConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e094cb9a-26de-4645-8761-65c0c425d1de'),
     name='stripe',
-    version='0.1.5',
+    version='0.1.6',
     base_url='https://api.stripe.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -40,7 +40,6 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                 'api_key': AuthConfigFieldSpec(
                     title='API Key',
                     description='Your Stripe API Key (starts with sk_test_ or sk_live_)',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'token': '${api_key}'},
