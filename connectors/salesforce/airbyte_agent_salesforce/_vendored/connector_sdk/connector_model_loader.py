@@ -758,7 +758,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="Authentication bearer token",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 )
             },
@@ -778,7 +777,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="Authentication username",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
                 "password": AuthConfigFieldSpec(
@@ -787,7 +785,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="Authentication password",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
             },
@@ -807,7 +804,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="API authentication key",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 )
             },
@@ -832,7 +828,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="OAuth2 access token",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
                 "refresh_token": AuthConfigFieldSpec(
@@ -841,7 +836,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="OAuth2 refresh token (optional)",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
                 "client_id": AuthConfigFieldSpec(
@@ -850,7 +844,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="OAuth2 client ID (optional)",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
                 "client_secret": AuthConfigFieldSpec(
@@ -859,7 +852,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                     description="OAuth2 client secret (optional)",
                     format=None,
                     pattern=None,
-                    airbyte_secret=False,
                     default=None,
                 ),
             },

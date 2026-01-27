@@ -29,7 +29,7 @@ from uuid import (
 SalesforceConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b117307c-14b6-41aa-9422-947e34922962'),
     name='salesforce',
-    version='1.0.6',
+    version='1.0.7',
     base_url='{instance_url}/services/data/v59.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -49,7 +49,6 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                 'refresh_token': AuthConfigFieldSpec(
                     title='Refresh Token',
                     description='OAuth refresh token for automatic token renewal',
-                    airbyte_secret=True,
                 ),
                 'client_id': AuthConfigFieldSpec(
                     title='Client ID',
@@ -58,7 +57,6 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                 'client_secret': AuthConfigFieldSpec(
                     title='Client Secret',
                     description='Connected App Consumer Secret',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={
