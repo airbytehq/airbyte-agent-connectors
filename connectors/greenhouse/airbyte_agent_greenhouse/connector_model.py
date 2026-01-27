@@ -29,7 +29,7 @@ from uuid import (
 GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('59f1e50a-331f-4f09-b3e8-2e8d4d355f44'),
     name='greenhouse',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://harvest.greenhouse.io/v1',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -41,7 +41,6 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                 'api_key': AuthConfigFieldSpec(
                     title='Harvest API Key',
                     description='Your Greenhouse Harvest API Key from the Dev Center',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'username': '${api_key}', 'password': ''},
