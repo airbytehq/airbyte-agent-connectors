@@ -29,7 +29,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -43,7 +43,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 'api_key': AuthConfigFieldSpec(
                     title='API Key',
                     description='Your Linear API key from Settings > API > Personal API keys',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={'api_key': '${api_key}'},
