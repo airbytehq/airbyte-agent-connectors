@@ -490,7 +490,7 @@ class HTTPClient:
 
                 if not response_text.strip():
                     response_data = {}
-                elif "application/json" in content_type or not content_type:
+                elif "application/json" in content_type or "+json" in content_type or not content_type:
                     response_data = await response.json()
                 else:
                     error_msg = f"Expected JSON response for {method.upper()} {url}, got content-type: {content_type}"
