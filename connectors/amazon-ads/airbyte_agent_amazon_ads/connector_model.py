@@ -26,7 +26,7 @@ from uuid import (
 AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c6b0a29e-1da9-4512-9002-7bfd0cba2246'),
     name='amazon-ads',
-    version='1.0.3',
+    version='1.0.4',
     base_url='{region}',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -44,17 +44,14 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'client_id': AuthConfigFieldSpec(
                     title='Client ID',
                     description='The client ID of your Amazon Ads API application',
-                    airbyte_secret=True,
                 ),
                 'client_secret': AuthConfigFieldSpec(
                     title='Client Secret',
                     description='The client secret of your Amazon Ads API application',
-                    airbyte_secret=True,
                 ),
                 'refresh_token': AuthConfigFieldSpec(
                     title='Refresh Token',
                     description='The refresh token obtained from the OAuth authorization flow',
-                    airbyte_secret=True,
                 ),
             },
             auth_mapping={
