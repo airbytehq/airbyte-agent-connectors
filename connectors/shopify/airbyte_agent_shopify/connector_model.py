@@ -26,7 +26,7 @@ from uuid import (
 ShopifyConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9da77001-af33-4bcd-be46-6252bf9342b9'),
     name='shopify',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://{shop}.myshopify.com/admin/api/2025-01',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -39,7 +39,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'api_key': AuthConfigFieldSpec(
                     title='Access Token',
                     description='Your Shopify Admin API access token',
-                    airbyte_secret=True,
                 ),
                 'shop': AuthConfigFieldSpec(
                     title='Shop Name',

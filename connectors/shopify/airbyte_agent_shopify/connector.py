@@ -178,7 +178,7 @@ class ShopifyConnector:
     """
 
     connector_name = "shopify"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
