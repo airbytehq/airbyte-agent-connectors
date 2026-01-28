@@ -13,9 +13,13 @@ This authentication method isn't available for this connector.
 
 #### Token
 
+`credentials` fields you need:
+
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
 | `api_key` | `str` | Yes | Your Greenhouse Harvest API Key from the Dev Center |
+
+Example request:
 
 ```python
 from airbyte_agent_greenhouse import GreenhouseConnector
@@ -36,16 +40,26 @@ In hosted mode, you first create a connector via the Airbyte API (providing your
 This authentication method isn't available for this connector.
 
 #### Token
+Create a connector with Token credentials.
 
-Create a connector with Token credentials:
+
+`credentials` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `api_key` | `str` | Yes | Your Greenhouse Harvest API Key from the Dev Center |
+
+Example request:
+
 
 ```bash
-curl -X POST 'https://api.airbyte.ai/v1/integrations/connectors' \
-  -H 'Authorization: Bearer <SCOPED_TOKEN>' \
-  -H 'Content-Type: application/json' \
+curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
+  -H "Authorization: Bearer <SCOPED_TOKEN>" \
+  -H "Content-Type: application/json" \
   -d '{
     "external_user_id": "<EXTERNAL_USER_ID>",
     "connector_type": "Greenhouse",
+    "name": "My Greenhouse Connector",
     "credentials": {
       "api_key": "<Your Greenhouse Harvest API Key from the Dev Center>"
     }
