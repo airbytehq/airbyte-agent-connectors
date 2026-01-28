@@ -102,6 +102,6 @@ See the official [Amazon-Ads API reference](https://advertising.amazon.com/API/d
 
 ## Version information
 
-- **Package version:** 0.1.17
+- **Package version:** 0.1.18
 - **Connector version:** 1.0.4
-- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
+- **Generated with Connector SDK commit SHA:** 97007bbdad3a6ac982ee2c0cdd667acdb5c12d3c
