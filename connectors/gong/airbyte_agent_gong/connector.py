@@ -530,6 +530,7 @@ class GongConnector:
         func: _F | None = None,
         *,
         update_docstring: bool = True,
+        enable_hosted_mode_features: bool = True,
         max_output_chars: int | None = DEFAULT_MAX_OUTPUT_CHARS,
     ) -> _F | Callable[[_F], _F]:
         """
@@ -548,12 +549,16 @@ class GongConnector:
 
         Args:
             update_docstring: When True, append connector capabilities to __doc__.
+            enable_hosted_mode_features: When False, omit hosted-mode search sections from docstrings.
             max_output_chars: Max serialized output size before raising. Use None to disable.
         """
 
         def decorate(inner: _F) -> _F:
             if update_docstring:
-                description = generate_tool_description(GongConnectorModel)
+                description = generate_tool_description(
+                    GongConnectorModel,
+                    enable_hosted_mode_features=enable_hosted_mode_features,
+                )
                 original_doc = inner.__doc__ or ""
                 if original_doc.strip():
                     full_doc = f"{original_doc.strip()}\n{description}"

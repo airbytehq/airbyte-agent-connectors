@@ -380,7 +380,11 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
     return entities
 
 
-def generate_tool_description(model: ConnectorModelProtocol) -> str:
+def generate_tool_description(
+    model: ConnectorModelProtocol,
+    *,
+    enable_hosted_mode_features: bool = True,
+) -> str:
     """Generate AI tool description from connector metadata.
 
     Produces a detailed description that includes:
@@ -393,6 +397,7 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
 
     Args:
         model: Object conforming to ConnectorModelProtocol (e.g., ConnectorModel)
+        enable_hosted_mode_features: When False, omit hosted-mode search guidance from the docstring.
 
     Returns:
         Formatted description string suitable for AI tool documentation
@@ -402,8 +407,9 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
     # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
-    search_field_paths = _collect_search_field_paths(model)
-    lines.append("ENTITIES AND PARAMETERS:")
+    search_field_paths = _collect_search_field_paths(model) if enable_hosted_mode_features else {}
+    # Avoid a "PARAMETERS:" header because some docstring parsers treat it as a params section marker.
+    lines.append("ENTITIES (ACTIONS + PARAMS):")
     for entity in model.entities:
         lines.append(f"  {entity.name}:")
         actions = getattr(entity, "actions", []) or []
@@ -427,8 +433,9 @@ def generate_tool_description(model: ConnectorModelProtocol) -> str:
     lines.append("  To paginate: pass starting_after=<last_id> while has_more is true")
 
     lines.append("GUIDELINES:")
-    lines.append('  - Prefer cached search over direct API calls when using execute(): action="search" whenever possible.')
-    lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
+    if enable_hosted_mode_features:
+        lines.append('  - Prefer cached search over direct API calls when using execute(): action="search" whenever possible.')
+        lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
 
