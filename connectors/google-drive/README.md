@@ -122,6 +122,6 @@ See the official [Google-Drive API reference](https://developers.google.com/work
 
 ## Version information
 
-- **Package version:** 0.1.36
+- **Package version:** 0.1.37
 - **Connector version:** 0.1.2
-- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
+- **Generated with Connector SDK commit SHA:** 97007bbdad3a6ac982ee2c0cdd667acdb5c12d3c
