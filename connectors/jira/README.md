@@ -118,6 +118,6 @@ See the official [Jira API reference](https://developer.atlassian.com/cloud/jira
 
 ## Version information
 
-- **Package version:** 0.1.60
+- **Package version:** 0.1.61
 - **Connector version:** 1.1.3
-- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
+- **Generated with Connector SDK commit SHA:** 97007bbdad3a6ac982ee2c0cdd667acdb5c12d3c
