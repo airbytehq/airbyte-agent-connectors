@@ -197,110 +197,11 @@ class TranscriptsResponse(BaseModel):
     records: Union[PaginationRecords, Any] = Field(default=None)
     request_id: Union[str, Any] = Field(default=None, alias="requestId")
 
-class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None, description="Field name")
-    """Field name"""
-    value: Union[Any, Any] = Field(default=None, description="Field value")
-    """Field value"""
-
-class ExtensiveCallPartiesItemContextItemObjectsItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItemContextItem.objects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="CRM object type (Account, Contact, Opportunity, Lead)")
-    """CRM object type (Account, Contact, Opportunity, Lead)"""
-    object_id: Union[str, Any] = Field(default=None, alias="objectId", description="CRM record ID")
-    """CRM record ID"""
-    fields: Union[list[ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem], Any] = Field(default=None, description="CRM field values")
-    """CRM field values"""
-
-class ExtensiveCallPartiesItemContextItem(BaseModel):
-    """Nested schema for ExtensiveCallPartiesItem.context_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    system: Union[str, Any] = Field(default=None, description="CRM system name (e.g., Salesforce, HubSpot)")
-    """CRM system name (e.g., Salesforce, HubSpot)"""
-    objects: Union[list[ExtensiveCallPartiesItemContextItemObjectsItem], Any] = Field(default=None, description="CRM objects linked to this participant")
-    """CRM objects linked to this participant"""
-
-class ExtensiveCallPartiesItem(BaseModel):
-    """Nested schema for ExtensiveCall.parties_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Party ID")
-    """Party ID"""
-    email_address: Union[str, Any] = Field(default=None, alias="emailAddress", description="Email address")
-    """Email address"""
-    name: Union[str, Any] = Field(default=None, description="Full name")
-    """Full name"""
-    title: Union[str, Any] = Field(default=None, description="Job title")
-    """Job title"""
-    user_id: Union[str, Any] = Field(default=None, alias="userId", description="Gong user ID if internal")
-    """Gong user ID if internal"""
-    speaker_id: Union[str | None, Any] = Field(default=None, alias="speakerId", description="Speaker ID for transcript matching")
-    """Speaker ID for transcript matching"""
-    affiliation: Union[str, Any] = Field(default=None, description="Internal or External")
-    """Internal or External"""
-    methods: Union[list[str], Any] = Field(default=None, description="Contact methods")
-    """Contact methods"""
-    phone_number: Union[str, Any] = Field(default=None, alias="phoneNumber", description="Phone number")
-    """Phone number"""
-    context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
-    """CRM context data linked to this participant"""
-
 class ExtensiveCallCollaboration(BaseModel):
     """Collaboration data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
-
-class ExtensiveCallMetadata(BaseModel):
-    """Call metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
-    """Unique call identifier"""
-    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
-    """URL to call in Gong"""
-    title: Union[str, Any] = Field(default=None, description="Call title")
-    """Call title"""
-    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
-    """Scheduled time"""
-    started: Union[str, Any] = Field(default=None, description="Call start time")
-    """Call start time"""
-    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
-    """Call duration in seconds"""
-    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
-    """Primary user ID"""
-    direction: Union[str, Any] = Field(default=None, description="Call direction")
-    """Call direction"""
-    system: Union[str, Any] = Field(default=None, description="System type")
-    """System type"""
-    scope: Union[str, Any] = Field(default=None, description="Call scope")
-    """Call scope"""
-    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
-    """Media type (Audio/Video)"""
-    language: Union[str, Any] = Field(default=None, description="Call language")
-    """Call language"""
-    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
-    """Workspace ID"""
-    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
-    """SDR disposition"""
-    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
-    """Client unique identifier"""
-    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
-    """Custom data"""
-    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
-    """Call purpose"""
-    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
-    """Whether call is private"""
-    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
-    """Meeting URL"""
-    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
-    """Calendar event ID"""
 
 class ExtensiveCallMedia(BaseModel):
     """Media URLs"""
@@ -356,6 +257,105 @@ class ExtensiveCallInteraction(BaseModel):
 
     interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
     questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
+
+class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Field name")
+    """Field name"""
+    value: Union[Any, Any] = Field(default=None, description="Field value")
+    """Field value"""
+
+class ExtensiveCallPartiesItemContextItemObjectsItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItemContextItem.objects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="CRM object type (Account, Contact, Opportunity, Lead)")
+    """CRM object type (Account, Contact, Opportunity, Lead)"""
+    object_id: Union[str, Any] = Field(default=None, alias="objectId", description="CRM record ID")
+    """CRM record ID"""
+    fields: Union[list[ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem], Any] = Field(default=None, description="CRM field values")
+    """CRM field values"""
+
+class ExtensiveCallPartiesItemContextItem(BaseModel):
+    """Nested schema for ExtensiveCallPartiesItem.context_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    system: Union[str, Any] = Field(default=None, description="CRM system name (e.g., Salesforce, HubSpot)")
+    """CRM system name (e.g., Salesforce, HubSpot)"""
+    objects: Union[list[ExtensiveCallPartiesItemContextItemObjectsItem], Any] = Field(default=None, description="CRM objects linked to this participant")
+    """CRM objects linked to this participant"""
+
+class ExtensiveCallPartiesItem(BaseModel):
+    """Nested schema for ExtensiveCall.parties_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None, description="Party ID")
+    """Party ID"""
+    email_address: Union[str, Any] = Field(default=None, alias="emailAddress", description="Email address")
+    """Email address"""
+    name: Union[str, Any] = Field(default=None, description="Full name")
+    """Full name"""
+    title: Union[str, Any] = Field(default=None, description="Job title")
+    """Job title"""
+    user_id: Union[str, Any] = Field(default=None, alias="userId", description="Gong user ID if internal")
+    """Gong user ID if internal"""
+    speaker_id: Union[str | None, Any] = Field(default=None, alias="speakerId", description="Speaker ID for transcript matching")
+    """Speaker ID for transcript matching"""
+    affiliation: Union[str, Any] = Field(default=None, description="Internal or External")
+    """Internal or External"""
+    methods: Union[list[str], Any] = Field(default=None, description="Contact methods")
+    """Contact methods"""
+    phone_number: Union[str, Any] = Field(default=None, alias="phoneNumber", description="Phone number")
+    """Phone number"""
+    context: Union[list[ExtensiveCallPartiesItemContextItem], Any] = Field(default=None, description="CRM context data linked to this participant")
+    """CRM context data linked to this participant"""
+
+class ExtensiveCallMetadata(BaseModel):
+    """Call metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
+    """Unique call identifier"""
+    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
+    """URL to call in Gong"""
+    title: Union[str, Any] = Field(default=None, description="Call title")
+    """Call title"""
+    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
+    """Scheduled time"""
+    started: Union[str, Any] = Field(default=None, description="Call start time")
+    """Call start time"""
+    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
+    """Call duration in seconds"""
+    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
+    """Primary user ID"""
+    direction: Union[str, Any] = Field(default=None, description="Call direction")
+    """Call direction"""
+    system: Union[str, Any] = Field(default=None, description="System type")
+    """System type"""
+    scope: Union[str, Any] = Field(default=None, description="Call scope")
+    """Call scope"""
+    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
+    """Media type (Audio/Video)"""
+    language: Union[str, Any] = Field(default=None, description="Call language")
+    """Call language"""
+    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
+    """Workspace ID"""
+    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
+    """SDR disposition"""
+    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
+    """Client unique identifier"""
+    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
+    """Custom data"""
+    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
+    """Call purpose"""
+    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
+    """Whether call is private"""
+    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
+    """Meeting URL"""
+    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
+    """Calendar event ID"""
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""
