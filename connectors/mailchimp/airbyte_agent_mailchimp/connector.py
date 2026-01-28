@@ -133,7 +133,7 @@ class MailchimpConnector:
     """
 
     connector_name = "mailchimp"
-    connector_version = "1.0.3"
+    connector_version = "1.0.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -208,7 +208,7 @@ class MailchimpConnector:
                 Example: lambda tokens: save_to_database(tokens)            data_center: The data center for your Mailchimp account (e.g., us1, us2, us6)
         Examples:
             # Local mode (direct API calls)
-            connector = MailchimpConnector(auth_config=MailchimpAuthConfig(api_key="...", data_center="..."))
+            connector = MailchimpConnector(auth_config=MailchimpAuthConfig(api_key="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = MailchimpConnector(
                 external_user_id="user-123",

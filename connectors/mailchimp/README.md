@@ -54,8 +54,7 @@ from airbyte_agent_mailchimp.models import MailchimpAuthConfig
 
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
-        api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>",
-        data_center="<The data center for your Mailchimp account. This is the suffix of your API key (e.g., 'us6' if your API key ends with '-us6').>"
+        api_key="<Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.>"
     )
 )
 
@@ -86,10 +85,11 @@ async def mailchimp_execute(entity: str, action: str, params: dict | None = None
     return await connector.execute(entity, action, params or {})
 ```
 
-
 ## Full documentation
 
-This connector supports the following entities and actions.
+### Entities and actions
+
+This connector supports the following entities and actions. For more details, see this connector's [full reference documentation](REFERENCE.md).
 
 | Entity | Actions |
 |--------|---------|
@@ -107,14 +107,16 @@ This connector supports the following entities and actions.
 | Unsubscribes | [List](./REFERENCE.md#unsubscribes-list) |
 
 
-For all authentication options, see the connector's [authentication documentation](AUTH.md).
+### Authentication and configuration
 
-For detailed documentation on available actions and parameters, see this connector's [full reference documentation](./REFERENCE.md).
+For all authentication and configuration options, see the connector's [authentication documentation](AUTH.md).
 
-For the service's official API docs, see the [Mailchimp API reference](https://mailchimp.com/developer/marketing/api/).
+### Mailchimp API docs
+
+See the official [Mailchimp API reference](https://mailchimp.com/developer/marketing/api/).
 
 ## Version information
 
-- **Package version:** 0.1.23
-- **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 71f48c102ce98c9298e5102761e740f0d97eb71b
+- **Package version:** 0.1.24
+- **Connector version:** 1.0.4
+- **Generated with Connector SDK commit SHA:** aed23a31fdbad71b171e865b5b254083c7b26155
