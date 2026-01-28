@@ -117,6 +117,6 @@ See the official [Mailchimp API reference](https://mailchimp.com/developer/marke
 
 ## Version information
 
-- **Package version:** 0.1.24
+- **Package version:** 0.1.25
 - **Connector version:** 1.0.4
-- **Generated with Connector SDK commit SHA:** aed23a31fdbad71b171e865b5b254083c7b26155
+- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
