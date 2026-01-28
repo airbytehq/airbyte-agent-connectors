@@ -90,10 +90,11 @@ async def linear_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
-
 ## Full documentation
 
-This connector supports the following entities and actions.
+### Entities and actions
+
+This connector supports the following entities and actions. For more details, see this connector's [full reference documentation](REFERENCE.md).
 
 | Entity | Actions |
 |--------|---------|
@@ -104,14 +105,16 @@ This connector supports the following entities and actions.
 | Comments | [List](./REFERENCE.md#comments-list), [Get](./REFERENCE.md#comments-get), [Create](./REFERENCE.md#comments-create), [Update](./REFERENCE.md#comments-update) |
 
 
-For all authentication options, see the connector's [authentication documentation](AUTH.md).
+### Authentication and configuration
 
-For detailed documentation on available actions and parameters, see this connector's [full reference documentation](./REFERENCE.md).
+For all authentication and configuration options, see the connector's [authentication documentation](AUTH.md).
 
-For the service's official API docs, see the [Linear API reference](https://linear.app/developers/graphql).
+### Linear API docs
+
+See the official [Linear API reference](https://linear.app/developers/graphql).
 
 ## Version information
 
-- **Package version:** 0.19.66
+- **Package version:** 0.19.67
 - **Connector version:** 0.1.8
-- **Generated with Connector SDK commit SHA:** 71f48c102ce98c9298e5102761e740f0d97eb71b
+- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
