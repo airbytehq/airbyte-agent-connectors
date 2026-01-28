@@ -90,15 +90,15 @@ This connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [Api_search](./REFERENCE.md#accounts-api_search) |
-| Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [Api_search](./REFERENCE.md#contacts-api_search) |
-| Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [Api_search](./REFERENCE.md#leads-api_search) |
-| Opportunities | [List](./REFERENCE.md#opportunities-list), [Get](./REFERENCE.md#opportunities-get), [Api_search](./REFERENCE.md#opportunities-api_search) |
-| Tasks | [List](./REFERENCE.md#tasks-list), [Get](./REFERENCE.md#tasks-get), [Api_search](./REFERENCE.md#tasks-api_search) |
-| Events | [List](./REFERENCE.md#events-list), [Get](./REFERENCE.md#events-get), [Api_search](./REFERENCE.md#events-api_search) |
-| Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [Api_search](./REFERENCE.md#campaigns-api_search) |
-| Cases | [List](./REFERENCE.md#cases-list), [Get](./REFERENCE.md#cases-get), [Api_search](./REFERENCE.md#cases-api_search) |
-| Notes | [List](./REFERENCE.md#notes-list), [Get](./REFERENCE.md#notes-get), [Api_search](./REFERENCE.md#notes-api_search) |
+| Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [API Search](./REFERENCE.md#accounts-api_search) |
+| Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [API Search](./REFERENCE.md#contacts-api_search) |
+| Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [API Search](./REFERENCE.md#leads-api_search) |
+| Opportunities | [List](./REFERENCE.md#opportunities-list), [Get](./REFERENCE.md#opportunities-get), [API Search](./REFERENCE.md#opportunities-api_search) |
+| Tasks | [List](./REFERENCE.md#tasks-list), [Get](./REFERENCE.md#tasks-get), [API Search](./REFERENCE.md#tasks-api_search) |
+| Events | [List](./REFERENCE.md#events-list), [Get](./REFERENCE.md#events-get), [API Search](./REFERENCE.md#events-api_search) |
+| Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [API Search](./REFERENCE.md#campaigns-api_search) |
+| Cases | [List](./REFERENCE.md#cases-list), [Get](./REFERENCE.md#cases-get), [API Search](./REFERENCE.md#cases-api_search) |
+| Notes | [List](./REFERENCE.md#notes-list), [Get](./REFERENCE.md#notes-get), [API Search](./REFERENCE.md#notes-api_search) |
 | Content Versions | [List](./REFERENCE.md#content-versions-list), [Get](./REFERENCE.md#content-versions-get), [Download](./REFERENCE.md#content-versions-download) |
 | Attachments | [List](./REFERENCE.md#attachments-list), [Get](./REFERENCE.md#attachments-get), [Download](./REFERENCE.md#attachments-download) |
 | Query | [List](./REFERENCE.md#query-list) |
@@ -112,6 +112,6 @@ For the service's official API docs, see the [Salesforce API reference](https://
 
 ## Version information
 
-- **Package version:** 0.1.57
+- **Package version:** 0.1.58
 - **Connector version:** 1.0.7
-- **Generated with Connector SDK commit SHA:** 0f5e1914fa0d7d52de7bc0018afab712184a0847
+- **Generated with Connector SDK commit SHA:** 71f48c102ce98c9298e5102761e740f0d97eb71b
