@@ -97,13 +97,11 @@ async def slack_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
-## Replication Configuration
-
-This connector supports replication configuration for MULTI mode sources. See the [full reference documentation](./REFERENCE.md#replication-configuration) for details on available options like `start_date`.
-
 ## Full documentation
 
-This connector supports the following entities and actions.
+### Entities and actions
+
+This connector supports the following entities and actions. For more details, see this connector's [full reference documentation](REFERENCE.md).
 
 | Entity | Actions |
 |--------|---------|
@@ -117,14 +115,16 @@ This connector supports the following entities and actions.
 | Reactions | [Create](./REFERENCE.md#reactions-create) |
 
 
-For all authentication options, see the connector's [authentication documentation](AUTH.md).
+### Authentication and configuration
 
-For detailed documentation on available actions and parameters, see this connector's [full reference documentation](./REFERENCE.md).
+For all authentication and configuration options, see the connector's [authentication documentation](AUTH.md).
 
-For the service's official API docs, see the [Slack API reference](https://api.slack.com/methods).
+### Slack API docs
+
+See the official [Slack API reference](https://api.slack.com/methods).
 
 ## Version information
 
-- **Package version:** 0.1.29
-- **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** 71f48c102ce98c9298e5102761e740f0d97eb71b
+- **Package version:** 0.1.30
+- **Connector version:** 0.1.10
+- **Generated with Connector SDK commit SHA:** 9aef9bd212728c778fc1a8dbba36fe6d74ef1f8c
