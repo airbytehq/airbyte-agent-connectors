@@ -129,6 +129,6 @@ See the official [Zendesk-Chat API reference](https://developer.zendesk.com/api-
 
 ## Version information
 
-- **Package version:** 0.1.19
+- **Package version:** 0.1.20
 - **Connector version:** 0.1.6
-- **Generated with Connector SDK commit SHA:** 9aef9bd212728c778fc1a8dbba36fe6d74ef1f8c
+- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
