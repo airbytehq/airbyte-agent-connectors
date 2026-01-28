@@ -1,5 +1,10 @@
 # Zendesk Chat changelog
 
+## [0.1.21] - 2026-01-28
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: 97007bbd
+- SDK version: 0.1.0
+
 ## [0.1.20] - 2026-01-28
 - Updated connector definition (YAML version 0.1.6)
 - Source commit: f6c6fca2
