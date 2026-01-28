@@ -123,6 +123,6 @@ See the official [Github API reference](https://docs.github.com/en/rest).
 
 ## Version information
 
-- **Package version:** 0.18.70
+- **Package version:** 0.18.71
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** f6c6fca292b291b200b31e4056856465129ae703
+- **Generated with Connector SDK commit SHA:** 97007bbdad3a6ac982ee2c0cdd667acdb5c12d3c
