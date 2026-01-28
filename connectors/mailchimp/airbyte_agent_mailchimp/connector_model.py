@@ -26,7 +26,7 @@ from uuid import (
 MailchimpConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b03a9f3e-22a5-11eb-adc1-0242ac120002'),
     name='mailchimp',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://{data_center}.api.mailchimp.com/3.0',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -39,13 +39,10 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     title='API Key',
                     description='Your Mailchimp API key. You can find this in your Mailchimp account under Account > Extras > API keys.',
                 ),
-                'data_center': AuthConfigFieldSpec(
-                    title='Data Center',
-                    description="The data center for your Mailchimp account. This is the suffix of your API key (e.g., 'us6' if your API key ends with '-us6').",
-                    default='us1',
-                ),
             },
             auth_mapping={'username': 'anystring', 'password': '${api_key}'},
+            replication_auth_key_mapping={'credentials.apikey': 'api_key'},
+            replication_auth_key_constants={'credentials.auth_type': 'apikey'},
         ),
     ),
     entities=[
