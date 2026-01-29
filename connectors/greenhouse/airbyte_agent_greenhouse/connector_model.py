@@ -191,6 +191,7 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'candidates',
                         },
                     },
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
