@@ -996,6 +996,7 @@ StripeConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'has_more': '$.has_more'},
+                    preferred_for_check=True,
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
