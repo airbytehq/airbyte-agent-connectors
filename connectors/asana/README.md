@@ -124,6 +124,6 @@ See the official [Asana API reference](https://developers.asana.com/reference/re
 
 ## Version information
 
-- **Package version:** 0.19.71
+- **Package version:** 0.19.72
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** c718c683a61ee72524442b7fd5e9ac3a1b94698c
+- **Generated with Connector SDK commit SHA:** 43200eed5845ee089ef5b9afc0199a8af3966169
