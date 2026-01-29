@@ -467,6 +467,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.pages.next.starting_after'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
