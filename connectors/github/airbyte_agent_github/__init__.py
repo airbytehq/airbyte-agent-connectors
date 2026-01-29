@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import GithubConnector
 from .models import (
     GithubAuthConfig,
+    GithubCheckResult,
     GithubExecuteResult,
     GithubExecuteResultWithMeta,
     RepositoriesListResult,
@@ -80,6 +81,7 @@ from .types import (
 __all__ = [
     "GithubConnector",
     "GithubAuthConfig",
+    "GithubCheckResult",
     "GithubExecuteResult",
     "GithubExecuteResultWithMeta",
     "RepositoriesListResult",
