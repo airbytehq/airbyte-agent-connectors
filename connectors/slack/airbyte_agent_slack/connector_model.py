@@ -314,6 +314,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.members',
                     meta_extractor={'next_cursor': '$.response_metadata.next_cursor'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
