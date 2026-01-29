@@ -15,7 +15,16 @@ from .schema.security import AirbyteAuthConfig
 
 
 class Action(str, Enum):
-    """Supported actions for Entity operations."""
+    """Supported actions for Entity operations.
+
+    Standard CRUD actions:
+        GET, CREATE, UPDATE, DELETE, LIST
+
+    Special actions:
+        API_SEARCH - Search via API endpoint
+        DOWNLOAD - Download file content
+        AUTHORIZE - OAuth authorization flow
+    """
 
     GET = "get"
     CREATE = "create"
@@ -221,6 +230,12 @@ class EndpointDefinition(BaseModel):
     untested: bool = Field(
         False,
         description="Mark operation as untested to skip cassette validation (from x-airbyte-untested extension)",
+    )
+
+    # Health check support (Airbyte extension)
+    preferred_for_check: bool = Field(
+        False,
+        description="Mark this list operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
 
