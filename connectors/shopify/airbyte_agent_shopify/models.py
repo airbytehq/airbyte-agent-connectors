@@ -329,22 +329,6 @@ class OrderList(BaseModel):
 
     orders: Union[list[Order], Any] = Field(default=None)
 
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    position: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    alt: Union[str | None, Any] = Field(default=None)
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
-    variant_ids: Union[list[int] | None, Any] = Field(default=None)
-    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
-
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -374,6 +358,22 @@ class ProductVariant(BaseModel):
     inventory_quantity: Union[int | None, Any] = Field(default=None)
     old_inventory_quantity: Union[int | None, Any] = Field(default=None)
     requires_shipping: Union[bool | None, Any] = Field(default=None)
+    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
+
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    product_id: Union[int | None, Any] = Field(default=None)
+    position: Union[int | None, Any] = Field(default=None)
+    created_at: Union[str | None, Any] = Field(default=None)
+    updated_at: Union[str | None, Any] = Field(default=None)
+    alt: Union[str | None, Any] = Field(default=None)
+    width: Union[int | None, Any] = Field(default=None)
+    height: Union[int | None, Any] = Field(default=None)
+    src: Union[str | None, Any] = Field(default=None)
+    variant_ids: Union[list[int] | None, Any] = Field(default=None)
     admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
 
 class Product(BaseModel):

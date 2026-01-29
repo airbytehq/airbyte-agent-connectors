@@ -3,7 +3,7 @@
 import logging
 import platform
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 
 from ..observability import ObservabilitySession
 
@@ -56,7 +56,7 @@ class SegmentTracker:
 
         try:
             event = ConnectorInitEvent(
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(UTC),
                 session_id=self.session.session_id,
                 user_id=self.session.user_id,
                 execution_context=self.session.execution_context,
@@ -99,7 +99,7 @@ class SegmentTracker:
 
         try:
             event = OperationEvent(
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(UTC),
                 session_id=self.session.session_id,
                 user_id=self.session.user_id,
                 execution_context=self.session.execution_context,
@@ -129,7 +129,7 @@ class SegmentTracker:
 
         try:
             event = SessionEndEvent(
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(UTC),
                 session_id=self.session.session_id,
                 user_id=self.session.user_id,
                 execution_context=self.session.execution_context,
