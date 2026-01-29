@@ -810,11 +810,31 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
 
     success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0
 
+    # Check for preferred_for_check on at least one list operation
+    has_preferred_check = False
+    for entity in config.entities:
+        for action_val in entity.actions:
+            endpoint = entity.endpoints.get(action_val)
+            if endpoint and getattr(endpoint, "preferred_for_check", False):
+                has_preferred_check = True
+                break
+        if has_preferred_check:
+            break
+
+    readiness_warnings = []
+    if not has_preferred_check:
+        readiness_warnings.append(
+            "No operation has x-airbyte-preferred-for-check: true. "
+            "Add this extension to a lightweight list operation (e.g., users.list) "
+            "to enable reliable health checks."
+        )
+
     return {
         "success": success,
         "connector_name": config.name,
         "connector_path": str(connector_path),
         "validation_results": validation_results,
+        "readiness_warnings": readiness_warnings,
         "summary": {
             "total_operations": total_operations,
             "operations_with_cassettes": operations_with_cassettes,
