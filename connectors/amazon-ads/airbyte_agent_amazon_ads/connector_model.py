@@ -157,6 +157,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'profiles',
                         },
                     },
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
