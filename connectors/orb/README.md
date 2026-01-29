@@ -114,6 +114,6 @@ See the official [Orb API reference](https://docs.withorb.com/api-reference).
 
 ## Version information
 
-- **Package version:** 0.1.1
+- **Package version:** 0.1.2
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** c718c683a61ee72524442b7fd5e9ac3a1b94698c
+- **Generated with Connector SDK commit SHA:** 43200eed5845ee089ef5b9afc0199a8af3966169
