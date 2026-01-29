@@ -154,6 +154,18 @@ class ExecutorProtocol(Protocol):
         """
         ...
 
+    async def check(self) -> ExecutionResult:
+        """Perform a health check to verify connectivity and credentials.
+
+        Returns:
+            ExecutionResult with data containing:
+                - status: "healthy" or "unhealthy"
+                - error: Error message if unhealthy
+                - checked_entity: Entity used for the check
+                - checked_action: Action used for the check
+        """
+        ...
+
 
 # ============================================================================
 # Executor Exceptions
