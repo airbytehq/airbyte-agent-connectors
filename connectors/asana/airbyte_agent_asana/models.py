@@ -91,8 +91,17 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -107,16 +116,8 @@ class ProjectWorkspace(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -153,17 +154,16 @@ class ProjectCurrentStatus(BaseModel):
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -628,6 +628,25 @@ class TaskDependentsListResultMeta(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+# ===== CHECK RESULT MODEL =====
+
+class AsanaCheckResult(BaseModel):
+    """Result of a health check operation.
+
+    Returned by the check() method to indicate connectivity and credential status.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+    """Health check status: 'healthy' or 'unhealthy'."""
+    error: str | None = None
+    """Error message if status is 'unhealthy', None otherwise."""
+    checked_entity: str | None = None
+    """Entity name used for the health check."""
+    checked_action: str | None = None
+    """Action name used for the health check."""
+
 
 # ===== RESPONSE ENVELOPE MODELS =====
 
