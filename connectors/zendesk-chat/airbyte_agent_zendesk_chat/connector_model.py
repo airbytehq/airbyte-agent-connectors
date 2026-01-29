@@ -364,6 +364,7 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$',
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
