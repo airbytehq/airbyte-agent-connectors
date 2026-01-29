@@ -115,6 +115,6 @@ See the official [Linear API reference](https://linear.app/developers/graphql).
 
 ## Version information
 
-- **Package version:** 0.19.68
+- **Package version:** 0.19.69
 - **Connector version:** 0.1.8
-- **Generated with Connector SDK commit SHA:** 97007bbdad3a6ac982ee2c0cdd667acdb5c12d3c
+- **Generated with Connector SDK commit SHA:** c718c683a61ee72524442b7fd5e9ac3a1b94698c
