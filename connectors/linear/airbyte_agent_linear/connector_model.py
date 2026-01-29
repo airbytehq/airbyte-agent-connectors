@@ -180,6 +180,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.issues.nodes',
                     meta_extractor={'hasNextPage': '$.data.issues.pageInfo.hasNextPage', 'endCursor': '$.data.issues.pageInfo.endCursor'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
