@@ -388,6 +388,7 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.customers',
                     meta_extractor={'next_page_url': '@link.next'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
