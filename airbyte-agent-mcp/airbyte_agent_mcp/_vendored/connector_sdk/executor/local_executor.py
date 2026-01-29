@@ -1852,5 +1852,3 @@ class _DownloadOperationHandler:
                         timing_ms=timing_ms,
                         error_type=None,
                     )
-
-
