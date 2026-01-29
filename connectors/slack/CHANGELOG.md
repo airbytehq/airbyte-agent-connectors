@@ -1,5 +1,10 @@
 # Slack changelog
 
+## [0.1.34] - 2026-01-29
+- Updated connector definition (YAML version 0.1.10)
+- Source commit: 43200eed
+- SDK version: 0.1.0
+
 ## [0.1.33] - 2026-01-29
 - Updated connector definition (YAML version 0.1.10)
 - Source commit: c718c683
