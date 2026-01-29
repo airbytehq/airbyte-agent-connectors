@@ -1895,6 +1895,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'users',
                         },
                     },
+                    preferred_for_check=True,
                 ),
                 Action.API_SEARCH: EndpointDefinition(
                     method='GET',
