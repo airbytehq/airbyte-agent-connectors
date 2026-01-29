@@ -179,6 +179,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id name nameWithOwner description url createdAt updatedAt pushedAt forkCount stargazerCount isPrivate isFork isArchived isTemplate hasIssuesEnabled hasWikiEnabled primaryLanguage { name } licenseInfo { name spdxId } owner { login avatarUrl } defaultBranchRef { name } repositoryTopics(first: 10) { nodes { topic { name } } }',
                     },
                     record_extractor='$.data.user.repositories.nodes',
+                    preferred_for_check=True,
                 ),
                 Action.API_SEARCH: EndpointDefinition(
                     method='POST',
