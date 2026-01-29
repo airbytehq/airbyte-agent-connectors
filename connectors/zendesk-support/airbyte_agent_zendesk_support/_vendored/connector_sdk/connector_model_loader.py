@@ -496,6 +496,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             # Extract untested flag
             untested = getattr(operation, "x_airbyte_untested", None) or False
 
+            # Extract preferred_for_check flag
+            preferred_for_check = getattr(operation, "x_airbyte_preferred_for_check", None) or False
+
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
@@ -520,6 +523,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 graphql_body=graphql_body,
                 file_field=file_field,
                 untested=untested,
+                preferred_for_check=preferred_for_check,
             )
 
             # Add to entities map

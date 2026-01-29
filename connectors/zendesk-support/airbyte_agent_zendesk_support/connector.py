@@ -88,6 +88,7 @@ if TYPE_CHECKING:
 from .models import ZendeskSupportOauth20AuthConfig, ZendeskSupportApiTokenAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
+    ZendeskSupportCheckResult,
     ZendeskSupportExecuteResult,
     ZendeskSupportExecuteResultWithMeta,
     TicketsListResult,
@@ -808,6 +809,40 @@ class ZendeskSupportConnector:
         else:
             # No extractors - return raw response data
             return result.data
+
+    # ===== HEALTH CHECK METHOD =====
+
+    async def check(self) -> ZendeskSupportCheckResult:
+        """
+        Perform a health check to verify connectivity and credentials.
+
+        Executes a lightweight list operation (limit=1) to validate that
+        the connector can communicate with the API and credentials are valid.
+
+        Returns:
+            ZendeskSupportCheckResult with status ("healthy" or "unhealthy") and optional error message
+
+        Example:
+            result = await connector.check()
+            if result.status == "healthy":
+                print("Connection verified!")
+            else:
+                print(f"Check failed: {result.error}")
+        """
+        result = await self._executor.check()
+
+        if result.success and isinstance(result.data, dict):
+            return ZendeskSupportCheckResult(
+                status=result.data.get("status", "unhealthy"),
+                error=result.data.get("error"),
+                checked_entity=result.data.get("checked_entity"),
+                checked_action=result.data.get("checked_action"),
+            )
+        else:
+            return ZendeskSupportCheckResult(
+                status="unhealthy",
+                error=result.error or "Unknown error during health check",
+            )
 
     # ===== INTROSPECTION METHODS =====
 
