@@ -589,6 +589,25 @@ class CompaniesListResultMeta(BaseModel):
 
     next_page: Union[str | None, Any] = Field(default=None)
 
+# ===== CHECK RESULT MODEL =====
+
+class IntercomCheckResult(BaseModel):
+    """Result of a health check operation.
+
+    Returned by the check() method to indicate connectivity and credential status.
+    """
+    model_config = ConfigDict(extra="forbid")
+
+    status: str
+    """Health check status: 'healthy' or 'unhealthy'."""
+    error: str | None = None
+    """Error message if status is 'unhealthy', None otherwise."""
+    checked_entity: str | None = None
+    """Entity name used for the health check."""
+    checked_action: str | None = None
+    """Action name used for the health check."""
+
+
 # ===== RESPONSE ENVELOPE MODELS =====
 
 # Type variables for generic envelope models
