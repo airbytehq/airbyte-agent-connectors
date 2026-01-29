@@ -195,6 +195,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={'next_cursor': '$.paging.next.after', 'next_link': '$.paging.next.link'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
