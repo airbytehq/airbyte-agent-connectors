@@ -70,6 +70,14 @@ class _OperationContext:
         self.validate_required_body_fields = executor._validate_required_body_fields
         self.extract_records = executor._extract_records
 
+    @property
+    def standard_handler(self) -> _StandardOperationHandler | None:
+        """Return the standard operation handler, or None if not registered."""
+        for h in self.executor._operation_handlers:
+            if isinstance(h, _StandardOperationHandler):
+                return h
+        return None
+
 
 class _OperationHandler(Protocol):
     """Protocol for operation handlers."""
@@ -543,6 +551,79 @@ class LocalExecutor:
         ) as e:
             # These are "expected" execution errors - return them in ExecutionResult
             return ExecutionResult(success=False, data={}, error=str(e))
+
+    async def check(self) -> ExecutionResult:
+        """Perform a health check by running a lightweight list operation.
+
+        Finds the operation marked with preferred_for_check=True, or falls back
+        to the first list operation. Executes it with limit=1 to verify
+        connectivity and credentials.
+
+        Returns:
+            ExecutionResult with data containing status, error, and checked operation details.
+        """
+        check_entity = None
+        check_endpoint = None
+
+        # Look for preferred check operation
+        for (ent_name, op_action), endpoint in self._operation_index.items():
+            if getattr(endpoint, "preferred_for_check", False):
+                check_entity = ent_name
+                check_endpoint = endpoint
+                break
+
+        # Fallback to first list operation
+        if check_endpoint is None:
+            for (ent_name, op_action), endpoint in self._operation_index.items():
+                if op_action == Action.LIST:
+                    check_entity = ent_name
+                    check_endpoint = endpoint
+                    break
+
+        if check_endpoint is None or check_entity is None:
+            return ExecutionResult(
+                success=True,
+                data={
+                    "status": "unhealthy",
+                    "error": "No list operation available for health check",
+                },
+            )
+
+        # Find the standard handler to execute the list operation
+        standard_handler = next(
+            (h for h in self._operation_handlers if isinstance(h, _StandardOperationHandler)),
+            None,
+        )
+
+        if standard_handler is None:
+            return ExecutionResult(
+                success=True,
+                data={
+                    "status": "unhealthy",
+                    "error": "No standard handler available",
+                },
+            )
+
+        try:
+            await standard_handler.execute_operation(check_entity, Action.LIST, {"limit": 1})
+            return ExecutionResult(
+                success=True,
+                data={
+                    "status": "healthy",
+                    "checked_entity": check_entity,
+                    "checked_action": "list",
+                },
+            )
+        except Exception as e:
+            return ExecutionResult(
+                success=True,
+                data={
+                    "status": "unhealthy",
+                    "error": str(e),
+                    "checked_entity": check_entity,
+                    "checked_action": "list",
+                },
+            )
 
     async def _execute_operation(
         self,

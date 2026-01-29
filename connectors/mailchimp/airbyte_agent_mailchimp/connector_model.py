@@ -384,6 +384,7 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.campaigns',
                     meta_extractor={'total_items': '$.total_items'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
