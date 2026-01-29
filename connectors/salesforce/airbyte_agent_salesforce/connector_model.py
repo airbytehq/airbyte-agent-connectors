@@ -123,6 +123,7 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.records',
                     meta_extractor={'done': '$.done', 'nextRecordsUrl': '$.nextRecordsUrl'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
