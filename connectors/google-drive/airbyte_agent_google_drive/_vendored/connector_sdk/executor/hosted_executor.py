@@ -164,6 +164,11 @@ class HostedExecutor:
                 span.record_exception(e)
                 raise
 
+    async def check(self) -> ExecutionResult:
+        """Perform a health check via the cloud API."""
+        config = ExecutionConfig(entity="*", action="check", params={})
+        return await self.execute(config)
+
     def _parse_execution_result(self, response: dict) -> ExecutionResult:
         """Parse API response into ExecutionResult.
 

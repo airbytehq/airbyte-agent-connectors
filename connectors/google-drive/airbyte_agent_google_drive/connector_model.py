@@ -712,6 +712,7 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.files',
                     meta_extractor={'nextPageToken': '$.nextPageToken', 'incompleteSearch': '$.incompleteSearch'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
