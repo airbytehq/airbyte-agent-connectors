@@ -86,6 +86,16 @@ class Operation(BaseModel):
             "Validation will generate a warning instead of an error when cassettes are missing."
         ),
     )
+    x_airbyte_preferred_for_check: bool | None = Field(
+        None,
+        alias="x-airbyte-preferred-for-check",
+        description=(
+            "Mark this list operation as the preferred operation for health checks. "
+            "When the CHECK action is executed, this operation will be used instead of "
+            "falling back to the first available list operation. Choose a lightweight, "
+            "always-available endpoint (e.g., users, accounts)."
+        ),
+    )
 
     # Future extensions (commented out, defined for future use)
     # from .extensions import PaginationConfig
