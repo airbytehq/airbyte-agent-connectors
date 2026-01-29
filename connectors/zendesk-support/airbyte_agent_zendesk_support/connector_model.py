@@ -260,6 +260,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'previous_page': '$.previous_page',
                         'count': '$.count',
                     },
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
