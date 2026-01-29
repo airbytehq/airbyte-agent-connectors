@@ -211,6 +211,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.users',
                     meta_extractor={'pagination': '$.records'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
