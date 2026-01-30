@@ -584,7 +584,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=True,
                 data={
-                    "status": "unhealthy",
+                    "status": "skipped",
                     "error": "No list operation available for health check",
                 },
             )
@@ -599,7 +599,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=True,
                 data={
-                    "status": "unhealthy",
+                    "status": "skipped",
                     "error": "No standard handler available",
                 },
             )
@@ -616,13 +616,14 @@ class LocalExecutor:
             )
         except Exception as e:
             return ExecutionResult(
-                success=True,
+                success=False,
                 data={
                     "status": "unhealthy",
                     "error": str(e),
                     "checked_entity": check_entity,
                     "checked_action": "list",
                 },
+                error=str(e),
             )
 
     async def _execute_operation(
