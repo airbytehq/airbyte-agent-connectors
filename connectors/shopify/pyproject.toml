@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-shopify"
-version = "0.1.20"
+version = "0.1.21"
 description = "Airbyte Shopify Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
