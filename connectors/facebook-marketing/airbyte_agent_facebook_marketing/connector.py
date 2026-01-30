@@ -134,7 +134,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.2"
+    connector_version = "1.0.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -192,7 +192,7 @@ class FacebookMarketingConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = FacebookMarketingConnector(auth_config=FacebookMarketingAuthConfig(access_token="...", account_id="..."))
+            connector = FacebookMarketingConnector(auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="...", account_id="..."))
             # Hosted mode (executed on Airbyte cloud)
             connector = FacebookMarketingConnector(
                 external_user_id="user-123",
