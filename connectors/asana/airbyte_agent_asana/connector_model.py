@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.9',
+    version='0.1.10',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -399,7 +399,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     method='GET',
                     path='/workspaces/{workspace_gid}/tasks/search',
                     action=Action.LIST,
-                    description='Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account. At least one search parameter must be provided.',
+                    description='Returns tasks that match the specified search criteria. This endpoint requires a premium Asana account.\n\nIMPORTANT: At least one search filter parameter must be provided. Valid filter parameters include: text, completed, assignee.any, projects.any, sections.any, teams.any, followers.any, created_at.after, created_at.before, modified_at.after, modified_at.before, due_on.after, due_on.before, and resource_subtype. The sort_by and sort_ascending parameters are for ordering results and do not count as search filters.\n',
                     query_params=[
                         'limit',
                         'offset',
