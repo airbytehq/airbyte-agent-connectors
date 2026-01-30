@@ -186,7 +186,16 @@ class HTTPXClient:
         # Try to get error message from response
         try:
             error_data = httpx_response.json()
-            error_message = error_data.get("message") or error_data.get("error") or str(error_data)
+            errors_list = error_data.get("errors")
+            if isinstance(errors_list, list):
+
+                def _extract_error(e: object) -> str:
+                    if isinstance(e, dict):
+                        return str(e.get("userPresentableMessage") or e.get("message") or e.get("error") or e)
+                    return str(e)
+
+                errors_list = ", ".join(_extract_error(e) for e in errors_list)
+            error_message = errors_list or error_data.get("message") or error_data.get("error") or str(error_data)
         except Exception:
             error_message = httpx_response.text or f"HTTP {status_code} error"
 
