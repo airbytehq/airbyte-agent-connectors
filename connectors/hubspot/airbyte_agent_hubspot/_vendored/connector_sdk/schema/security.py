@@ -199,6 +199,11 @@ class SecurityScheme(BaseModel):
         alias="x-airbyte-token-extract",
         description="List of fields to extract from OAuth2 token responses and use as server variables",
     )
+    x_airbyte_untested: bool = Field(
+        False,
+        alias="x-airbyte-untested",
+        description="Mark this auth scheme as untested to skip cassette coverage validation",
+    )
 
     @field_validator("x_airbyte_token_extract", mode="after")
     @classmethod
