@@ -20,6 +20,16 @@ class IntercomAuthConfig(BaseModel):
     access_token: str
     """Your Intercom API Access Token"""
 
+# Replication configuration
+
+class IntercomReplicationConfig(BaseModel):
+    """Replication Configuration - Settings for data replication from Intercom."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    start_date: str
+    """UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data."""
+
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 class PagesNext(BaseModel):

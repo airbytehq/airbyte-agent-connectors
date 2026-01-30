@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import IntercomConnector
 from .models import (
     IntercomAuthConfig,
+    IntercomReplicationConfig,
     PagesNext,
     Pages,
     Contact,
@@ -115,6 +116,7 @@ from .types import (
 __all__ = [
     "IntercomConnector",
     "IntercomAuthConfig",
+    "IntercomReplicationConfig",
     "PagesNext",
     "Pages",
     "Contact",
