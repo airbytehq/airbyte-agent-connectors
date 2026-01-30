@@ -60,6 +60,7 @@ from .types import (
 )
 if TYPE_CHECKING:
     from .models import GreenhouseAuthConfig
+
 # Import response models and envelope models at runtime
 from .models import (
     GreenhouseCheckResult,
@@ -212,26 +213,35 @@ class GreenhouseConnector:
         external_user_id: str | None = None,
         airbyte_client_id: str | None = None,
         airbyte_client_secret: str | None = None,
+        connector_id: str | None = None,
         on_token_refresh: Any | None = None    ):
         """
         Initialize a new greenhouse connector instance.
 
         Supports both local and hosted execution modes:
         - Local mode: Provide `auth_config` for direct API calls
-        - Hosted mode: Provide `external_user_id`, `airbyte_client_id`, and `airbyte_client_secret` for hosted execution
+        - Hosted mode: Provide Airbyte credentials with either `connector_id` or `external_user_id`
 
         Args:
             auth_config: Typed authentication configuration (required for local mode)
-            external_user_id: External user ID (required for hosted mode)
+            external_user_id: External user ID (for hosted mode lookup)
             airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
             airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+            connector_id: Specific connector/source ID (for hosted mode, skips lookup)
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
             connector = GreenhouseConnector(auth_config=GreenhouseAuthConfig(api_key="..."))
-            # Hosted mode (executed on Airbyte cloud)
+            # Hosted mode with explicit connector_id (no lookup needed)
+            connector = GreenhouseConnector(
+                airbyte_client_id="client_abc123",
+                airbyte_client_secret="secret_xyz789",
+                connector_id="existing-source-uuid"
+            )
+
+            # Hosted mode with lookup by external_user_id
             connector = GreenhouseConnector(
                 external_user_id="user-123",
                 airbyte_client_id="client_abc123",
@@ -249,21 +259,24 @@ class GreenhouseConnector:
                 on_token_refresh=save_tokens
             )
         """
-        # Hosted mode: external_user_id, airbyte_client_id, and airbyte_client_secret provided
-        if external_user_id and airbyte_client_id and airbyte_client_secret:
+        # Hosted mode: Airbyte credentials + either connector_id OR external_user_id
+        is_hosted = airbyte_client_id and airbyte_client_secret and (connector_id or external_user_id)
+
+        if is_hosted:
             from ._vendored.connector_sdk.executor import HostedExecutor
             self._executor = HostedExecutor(
-                external_user_id=external_user_id,
                 airbyte_client_id=airbyte_client_id,
                 airbyte_client_secret=airbyte_client_secret,
-                connector_definition_id=str(GreenhouseConnectorModel.id),
+                connector_id=connector_id,
+                external_user_id=external_user_id,
+                connector_definition_id=str(GreenhouseConnectorModel.id) if not connector_id else None,
             )
         else:
             # Local mode: auth_config required
             if not auth_config:
                 raise ValueError(
-                    "Either provide (external_user_id, airbyte_client_id, airbyte_client_secret) for hosted mode "
-                    "or auth_config for local mode"
+                    "Either provide Airbyte credentials (airbyte_client_id, airbyte_client_secret) with "
+                    "connector_id or external_user_id for hosted mode, or auth_config for local mode"
                 )
 
             from ._vendored.connector_sdk.executor import LocalExecutor
@@ -685,6 +698,96 @@ class GreenhouseConnector:
                 f"{[e.name for e in GreenhouseConnectorModel.entities]}"
             )
         return entity_def.entity_schema if entity_def else None
+
+    @property
+    def connector_id(self) -> str | None:
+        """Get the connector/source ID (only available in hosted mode).
+
+        Returns:
+            The connector ID if in hosted mode, None if in local mode.
+
+        Example:
+            connector = await GreenhouseConnector.create_hosted(...)
+            print(f"Created connector: {connector.connector_id}")
+        """
+        if hasattr(self, '_executor') and hasattr(self._executor, '_connector_id'):
+            return self._executor._connector_id
+        return None
+
+    # ===== HOSTED MODE FACTORY =====
+
+    @classmethod
+    async def create_hosted(
+        cls,
+        *,
+        external_user_id: str,
+        airbyte_client_id: str,
+        airbyte_client_secret: str,
+        auth_config: "GreenhouseAuthConfig",
+        name: str | None = None,
+        replication_config: dict[str, Any] | None = None,
+    ) -> "GreenhouseConnector":
+        """
+        Create a new hosted connector on Airbyte Cloud.
+
+        This factory method:
+        1. Creates a source on Airbyte Cloud with the provided credentials
+        2. Returns a connector configured with the new connector_id
+
+        Args:
+            external_user_id: Workspace identifier in Airbyte Cloud
+            airbyte_client_id: Airbyte OAuth client ID
+            airbyte_client_secret: Airbyte OAuth client secret
+            auth_config: Typed auth config (same as local mode)
+            name: Optional source name (defaults to connector name + external_user_id)
+            replication_config: Optional replication settings dict.
+                Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
+
+        Returns:
+            A GreenhouseConnector instance configured in hosted mode
+
+        Example:
+            # Create a new hosted connector with API key auth
+            connector = await GreenhouseConnector.create_hosted(
+                external_user_id="my-workspace",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+                auth_config=GreenhouseAuthConfig(api_key="..."),
+            )
+
+            # Use the connector
+            result = await connector.execute("entity", "list", {})
+        """
+        from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+
+        client = AirbyteCloudClient(
+            client_id=airbyte_client_id,
+            client_secret=airbyte_client_secret,
+        )
+
+        try:
+            # Build credentials from auth_config
+            credentials = auth_config.model_dump(exclude_none=True)
+            replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
+
+            # Create source on Airbyte Cloud
+            source_name = name or f"{cls.connector_name} - {external_user_id}"
+            source_id = await client.create_source(
+                name=source_name,
+                connector_definition_id=str(GreenhouseConnectorModel.id),
+                external_user_id=external_user_id,
+                credentials=credentials,
+                replication_config=replication_config_dict,
+            )
+        finally:
+            await client.close()
+
+        # Return connector configured with the new connector_id
+        return cls(
+            airbyte_client_id=airbyte_client_id,
+            airbyte_client_secret=airbyte_client_secret,
+            connector_id=source_id,
+        )
 
 
 
