@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import SlackConnector
 from .models import (
     SlackAuthConfig,
+    SlackReplicationConfig,
     User,
     UserProfile,
     ResponseMetadata,
@@ -17,9 +18,9 @@ from .models import (
     ChannelPurpose,
     ChannelsListResponse,
     ChannelResponse,
-    Reaction,
     Attachment,
     File,
+    Reaction,
     Message,
     Thread,
     EditedInfo,
@@ -86,6 +87,7 @@ from .types import (
 __all__ = [
     "SlackConnector",
     "SlackAuthConfig",
+    "SlackReplicationConfig",
     "User",
     "UserProfile",
     "ResponseMetadata",
@@ -96,9 +98,9 @@ __all__ = [
     "ChannelPurpose",
     "ChannelsListResponse",
     "ChannelResponse",
-    "Reaction",
     "Attachment",
     "File",
+    "Reaction",
     "Message",
     "Thread",
     "EditedInfo",
