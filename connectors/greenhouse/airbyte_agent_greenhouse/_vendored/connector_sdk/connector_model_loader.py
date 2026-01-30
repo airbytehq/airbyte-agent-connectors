@@ -1014,6 +1014,7 @@ def _parse_security_scheme_to_option(scheme_name: str, scheme: Any) -> AuthOptio
         type=single_auth.type,
         config=single_auth.config,
         user_config_spec=single_auth.user_config_spec,
+        untested=getattr(scheme, "x_airbyte_untested", False),
     )
 
 

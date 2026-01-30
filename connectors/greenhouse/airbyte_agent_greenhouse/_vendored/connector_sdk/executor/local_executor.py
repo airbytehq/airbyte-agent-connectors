@@ -36,6 +36,7 @@ from ..types import (
     EndpointDefinition,
     EntityDefinition,
 )
+from ..utils import find_matching_auth_options
 
 from .models import (
     ActionNotSupportedError,
@@ -356,8 +357,8 @@ class LocalExecutor:
     ) -> tuple[AuthOption, dict[str, SecretStr]]:
         """Infer authentication scheme from provided credentials.
 
-        Matches user credentials against each auth option's required fields
-        to determine which scheme to use.
+        Uses shared utility find_matching_auth_options to match credentials
+        against each auth option's required fields.
 
         Args:
             user_credentials: User-provided credentials
@@ -375,16 +376,8 @@ class LocalExecutor:
         # Get the credential keys provided by the user
         provided_keys = set(user_credentials.keys())
 
-        # Find all options where all required fields are present
-        matching_options: list[AuthOption] = []
-        for option in options:
-            if option.user_config_spec and option.user_config_spec.required:
-                required_fields = set(option.user_config_spec.required)
-                if required_fields.issubset(provided_keys):
-                    matching_options.append(option)
-            elif not option.user_config_spec or not option.user_config_spec.required:
-                # Option has no required fields - it matches any credentials
-                matching_options.append(option)
+        # Use shared utility to find matching options
+        matching_options = find_matching_auth_options(provided_keys, options)
 
         # Handle matching results
         if len(matching_options) == 0:
