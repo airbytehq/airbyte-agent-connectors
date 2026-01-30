@@ -34,6 +34,20 @@ class SlackOauth20AuthenticationAuthConfig(BaseModel):
 
 SlackAuthConfig = SlackTokenAuthenticationAuthConfig | SlackOauth20AuthenticationAuthConfig
 
+# Replication configuration
+
+class SlackReplicationConfig(BaseModel):
+    """Replication Configuration - Settings for data replication from Slack."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    start_date: str
+    """UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data."""
+    lookback_window: int
+    """Number of days to look back when syncing data (0-365)."""
+    join_channels: bool
+    """Whether to automatically join public channels to sync messages."""
+
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 class User(BaseModel):
@@ -176,14 +190,6 @@ class ChannelResponse(BaseModel):
     ok: Union[bool, Any] = Field(default=None)
     channel: Union[Channel, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
-
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -228,6 +234,14 @@ class File(BaseModel):
     permalink_public: Union[str | None, Any] = Field(default=None)
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
