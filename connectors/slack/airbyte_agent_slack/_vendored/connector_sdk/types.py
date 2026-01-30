@@ -90,6 +90,10 @@ class AuthOption(BaseModel):
         None,
         description="User-facing credential specification from x-airbyte-auth-config",
     )
+    untested: bool = Field(
+        False,
+        description="Mark this auth scheme as untested to skip cassette coverage validation",
+    )
 
 
 class AuthConfig(BaseModel):
