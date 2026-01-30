@@ -134,7 +134,7 @@ class MailchimpConnector:
     """
 
     connector_name = "mailchimp"
-    connector_version = "1.0.4"
+    connector_version = "1.0.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
