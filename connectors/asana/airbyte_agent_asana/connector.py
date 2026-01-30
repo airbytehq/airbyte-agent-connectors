@@ -172,7 +172,7 @@ class AsanaConnector:
     """
 
     connector_name = "asana"
-    connector_version = "0.1.9"
+    connector_version = "0.1.10"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -1050,7 +1050,10 @@ class WorkspaceTaskSearchQuery:
         **kwargs
     ) -> WorkspaceTaskSearchListResult:
         """
-        Returns tasks that match the specified search criteria. Note - This endpoint requires a premium Asana account. At least one search parameter must be provided.
+        Returns tasks that match the specified search criteria. This endpoint requires a premium Asana account.
+
+IMPORTANT: At least one search filter parameter must be provided. Valid filter parameters include: text, completed, assignee.any, projects.any, sections.any, teams.any, followers.any, created_at.after, created_at.before, modified_at.after, modified_at.before, due_on.after, due_on.before, and resource_subtype. The sort_by and sort_ascending parameters are for ordering results and do not count as search filters.
+
 
         Args:
             workspace_gid: Workspace GID to search tasks in
