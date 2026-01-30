@@ -7,8 +7,8 @@ Auto-generated from OpenAPI specification.
 from .connector import FacebookMarketingConnector
 from .models import (
     FacebookMarketingAuthConfig,
-    IssueInfo,
     AdLabel,
+    IssueInfo,
     Campaign,
     PagingCursors,
     Paging,
@@ -116,8 +116,8 @@ from .types import (
 __all__ = [
     "FacebookMarketingConnector",
     "FacebookMarketingAuthConfig",
-    "IssueInfo",
     "AdLabel",
+    "IssueInfo",
     "Campaign",
     "PagingCursors",
     "Paging",
