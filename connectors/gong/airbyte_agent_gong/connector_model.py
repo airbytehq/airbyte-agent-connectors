@@ -30,7 +30,7 @@ from uuid import (
 GongConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('32382e40-3b49-4b99-9c5c-4076501914e7'),
     name='gong',
-    version='0.1.13',
+    version='0.1.14',
     base_url='https://api.gong.io',
     auth=AuthConfig(
         options=[
@@ -79,6 +79,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     replication_auth_key_constants={'credentials.auth_type': 'OAuth2.0'},
                 ),
+                untested=True,
             ),
             AuthOption(
                 scheme_name='basicAuth',
