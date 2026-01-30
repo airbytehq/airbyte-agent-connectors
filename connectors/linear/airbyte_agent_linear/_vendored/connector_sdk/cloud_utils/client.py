@@ -161,6 +161,68 @@ class AirbyteCloudClient:
         connector_id = connectors[0]["id"]
         return connector_id
 
+    async def create_source(
+        self,
+        name: str,
+        connector_definition_id: str,
+        external_user_id: str,
+        credentials: dict[str, Any],
+        replication_config: dict[str, Any] | None = None,
+    ) -> str:
+        """Create a new source on Airbyte Agent Platform.
+
+        Args:
+            name: Source name
+            connector_definition_id: UUID of the connector definition
+            external_user_id: User identifier
+            credentials: Connector auth config dict
+            replication_config: Optional replication settings (e.g., start_date for
+                connectors with x-airbyte-replication-config). Required for REPLICATION
+                mode sources like Intercom.
+
+        Returns:
+            The created source ID (UUID string)
+
+        Raises:
+            httpx.HTTPStatusError: If creation fails
+
+        Example:
+            source_id = await client.create_source(
+                name="My Gong Source",
+                connector_definition_id="32382e40-3b49-4b99-9c5c-4076501914e7",
+                external_user_id="my-workspace",
+                credentials={"access_key": "...", "access_key_secret": "..."}
+            )
+
+            # For REPLICATION mode sources (e.g., Intercom):
+            source_id = await client.create_source(
+                name="My Intercom Source",
+                connector_definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
+                external_user_id="my-workspace",
+                credentials={"access_token": "..."},
+                replication_config={"start_date": "2024-01-01T00:00:00Z"}
+            )
+        """
+        token = await self.get_bearer_token()
+        url = f"{self.API_BASE_URL}/v1/integrations/connectors"
+        headers = {"Authorization": f"Bearer {token}"}
+
+        request_body: dict[str, Any] = {
+            "name": name,
+            "definition_id": connector_definition_id,
+            "external_user_id": external_user_id,
+            "credentials": credentials,
+        }
+
+        if replication_config is not None:
+            request_body["replication_config"] = replication_config
+
+        response = await self._http_client.post(url, json=request_body, headers=headers)
+        response.raise_for_status()
+
+        data = response.json()
+        return data["id"]
+
     async def execute_connector(
         self,
         connector_id: str,
