@@ -5,6 +5,7 @@ These tools help ensure that connectors are ready to ship by:
 - Checking that all entity/action operations have corresponding test cassettes
 - Validating that response schemas match the actual cassette responses
 - Detecting fields present in responses but not declared in schemas
+- Validating replication compatibility with Airbyte source connectors
 """
 
 from collections import defaultdict
@@ -21,6 +22,7 @@ from .connector_model_loader import (
 )
 from .testing.spec_loader import load_test_spec
 from .types import Action, EndpointDefinition
+from .validation_replication import validate_replication_compatibility
 
 
 def build_cassette_map(cassettes_dir: Path) -> Dict[Tuple[str, str], List[Path]]:
@@ -808,7 +810,25 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                 }
             )
 
-    success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0
+    # Validate replication compatibility with Airbyte
+    replication_result = validate_replication_compatibility(
+        connector_yaml_path=config_file,
+        raw_spec=raw_spec,
+    )
+
+    # Merge replication errors/warnings into totals
+    # Note: If connector is not in registry, we don't count warnings since this is expected for test connectors
+    replication_errors = replication_result.get("errors", [])
+    replication_warnings = replication_result.get("warnings", [])
+    total_errors += len(replication_errors)
+
+    # Only count replication warnings if the connector was found in the registry
+    # (i.e., there are actual validation issues, not just "not found in registry")
+    if replication_result.get("registry_found", False):
+        total_warnings += len(replication_warnings)
+
+    # Update success criteria to include replication validation
+    success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0 and len(replication_errors) == 0
 
     # Check for preferred_for_check on at least one list operation
     has_preferred_check = False
@@ -834,6 +854,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         "connector_name": config.name,
         "connector_path": str(connector_path),
         "validation_results": validation_results,
+        "replication_validation": replication_result,
         "readiness_warnings": readiness_warnings,
         "summary": {
             "total_operations": total_operations,
