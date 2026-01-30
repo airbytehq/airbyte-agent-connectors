@@ -142,7 +142,7 @@ class JiraConnector:
     """
 
     connector_name = "jira"
-    connector_version = "1.1.3"
+    connector_version = "1.1.4"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -691,7 +691,10 @@ class IssuesQuery:
         **kwargs
     ) -> IssuesApiSearchResult:
         """
-        Retrieve issues based on JQL query with pagination support
+        Retrieve issues based on JQL query with pagination support.
+
+IMPORTANT: This endpoint requires a bounded JQL query. A bounded query must include a search restriction that limits the scope of the search. Examples of valid restrictions include: project (e.g., "project = MYPROJECT"), assignee (e.g., "assignee = currentUser()"), reporter, issue key, sprint, or date-based filters combined with a project restriction. An unbounded query like "order by key desc" will be rejected with a 400 error. Example bounded query: "project = MYPROJECT AND updated >= -7d ORDER BY created DESC".
+
 
         Args:
             jql: JQL query string to filter issues
