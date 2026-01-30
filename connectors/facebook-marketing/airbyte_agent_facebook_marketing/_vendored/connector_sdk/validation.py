@@ -21,7 +21,8 @@ from .connector_model_loader import (
     load_connector_model,
 )
 from .testing.spec_loader import load_test_spec
-from .types import Action, EndpointDefinition
+from .types import Action, ConnectorModel, EndpointDefinition
+from .utils import infer_auth_scheme_name
 from .validation_replication import validate_replication_compatibility
 
 
@@ -51,6 +52,112 @@ def build_cassette_map(cassettes_dir: Path) -> Dict[Tuple[str, str], List[Path]]
             continue
 
     return dict(cassette_map)
+
+
+def build_auth_scheme_coverage(
+    cassettes_dir: Path,
+    auth_options: list | None = None,
+) -> Tuple[Dict[str | None, List[Path]], List[Tuple[Path, set[str]]]]:
+    """Build a map of auth_scheme -> list of cassette paths.
+
+    For multi-auth connectors, infers the auth scheme from the cassette's auth_config
+    keys using the same matching logic as the executor.
+
+    Args:
+        cassettes_dir: Directory containing cassette YAML files
+        auth_options: List of AuthOption from the connector model (for inference)
+
+    Returns:
+        Tuple of:
+        - Dictionary mapping auth_scheme names (or None for single-auth) to cassette paths
+        - List of (cassette_path, auth_config_keys) for cassettes that couldn't be matched
+    """
+    auth_scheme_map: Dict[str | None, List[Path]] = defaultdict(list)
+    unmatched_cassettes: List[Tuple[Path, set[str]]] = []
+
+    if not cassettes_dir.exists() or not cassettes_dir.is_dir():
+        return {}, []
+
+    for cassette_file in cassettes_dir.glob("*.yaml"):
+        try:
+            spec = load_test_spec(cassette_file, auth_config={})
+
+            # First, check if auth_scheme is explicitly set in the cassette
+            if spec.auth_scheme:
+                auth_scheme_map[spec.auth_scheme].append(cassette_file)
+            # Otherwise, try to infer from auth_config keys
+            elif spec.auth_config and auth_options:
+                auth_config_keys = set(spec.auth_config.keys())
+                inferred_scheme = infer_auth_scheme_name(auth_config_keys, auth_options)
+                if inferred_scheme is not None:
+                    auth_scheme_map[inferred_scheme].append(cassette_file)
+                else:
+                    # Couldn't infer - track as unmatched
+                    unmatched_cassettes.append((cassette_file, auth_config_keys))
+            else:
+                # No auth_scheme and no auth_config - treat as None
+                auth_scheme_map[None].append(cassette_file)
+        except Exception:
+            continue
+
+    return dict(auth_scheme_map), unmatched_cassettes
+
+
+def validate_auth_scheme_coverage(
+    config: ConnectorModel,
+    cassettes_dir: Path,
+) -> Tuple[bool, List[str], List[str], List[str], List[Tuple[Path, set[str]]]]:
+    """Validate that each auth scheme has at least one cassette.
+
+    For multi-auth connectors, every defined auth scheme must have coverage
+    unless marked with x-airbyte-untested: true.
+    For single-auth connectors, this check is skipped (existing cassette checks suffice).
+
+    Args:
+        config: Loaded connector model
+        cassettes_dir: Directory containing cassette files
+
+    Returns:
+        Tuple of (is_valid, errors, warnings, covered_schemes, unmatched_cassettes)
+    """
+    errors: List[str] = []
+    warnings: List[str] = []
+
+    # Skip check for single-auth connectors
+    if not config.auth.is_multi_auth():
+        return True, errors, warnings, [], []
+
+    # Get all defined auth schemes, separating tested from untested
+    options = config.auth.options or []
+
+    # Build auth scheme coverage from cassettes (pass options for inference)
+    auth_scheme_coverage, unmatched_cassettes = build_auth_scheme_coverage(cassettes_dir, options)
+    tested_schemes = {opt.scheme_name for opt in options if not opt.untested}
+    untested_schemes = {opt.scheme_name for opt in options if opt.untested}
+    covered_schemes = {scheme for scheme in auth_scheme_coverage.keys() if scheme is not None}
+
+    # Find missing tested schemes (errors)
+    missing_tested = tested_schemes - covered_schemes
+    for scheme in sorted(missing_tested):
+        errors.append(
+            f"Auth scheme '{scheme}' has no cassette coverage. "
+            f"Record at least one cassette using this authentication method, "
+            f"or add 'x-airbyte-untested: true' to skip this check."
+        )
+
+    # Warn about untested schemes without coverage
+    missing_untested = untested_schemes - covered_schemes
+    for scheme in sorted(missing_untested):
+        warnings.append(
+            f"Auth scheme '{scheme}' is marked as untested (x-airbyte-untested: true) " f"and has no cassette coverage. Validation skipped."
+        )
+
+    # Warn about cassettes that couldn't be matched to any auth scheme
+    for cassette_path, auth_config_keys in unmatched_cassettes:
+        warnings.append(f"Cassette '{cassette_path.name}' could not be matched to any auth scheme. " f"auth_config keys: {sorted(auth_config_keys)}")
+
+    is_valid = len(missing_tested) == 0
+    return is_valid, errors, warnings, sorted(covered_schemes), unmatched_cassettes
 
 
 def validate_response_against_schema(response_body: Any, schema: Dict[str, Any]) -> Tuple[bool, List[str]]:
@@ -588,6 +695,9 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     cassettes_dir = connector_path / "tests" / "cassettes"
     cassette_map = build_cassette_map(cassettes_dir)
 
+    # Validate auth scheme coverage for multi-auth connectors
+    auth_valid, auth_errors, auth_warnings, auth_covered_schemes, auth_unmatched_cassettes = validate_auth_scheme_coverage(config, cassettes_dir)
+
     validation_results = []
     total_operations = 0
     operations_with_cassettes = 0
@@ -827,8 +937,12 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     if replication_result.get("registry_found", False):
         total_warnings += len(replication_warnings)
 
-    # Update success criteria to include replication validation
-    success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0 and len(replication_errors) == 0
+    # Merge auth scheme validation errors/warnings into totals
+    total_errors += len(auth_errors)
+    total_warnings += len(auth_warnings)
+
+    # Update success criteria to include replication and auth scheme validation
+    success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0 and len(replication_errors) == 0 and auth_valid
 
     # Check for preferred_for_check on at least one list operation
     has_preferred_check = False
@@ -849,12 +963,26 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "to enable reliable health checks."
         )
 
+    # Build auth scheme validation result
+    options = config.auth.options or []
+    tested_schemes = [opt.scheme_name for opt in options if not opt.untested]
+    untested_schemes_list = [opt.scheme_name for opt in options if opt.untested]
+    missing_tested = [s for s in tested_schemes if s not in auth_covered_schemes]
+
     return {
         "success": success,
         "connector_name": config.name,
         "connector_path": str(connector_path),
         "validation_results": validation_results,
         "replication_validation": replication_result,
+        "auth_scheme_validation": {
+            "valid": auth_valid,
+            "errors": auth_errors,
+            "warnings": auth_warnings,
+            "covered_schemes": auth_covered_schemes,
+            "missing_schemes": missing_tested,
+            "untested_schemes": untested_schemes_list,
+        },
         "readiness_warnings": readiness_warnings,
         "summary": {
             "total_operations": total_operations,

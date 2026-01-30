@@ -26,26 +26,40 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
-        type=AuthType.BEARER,
+        type=AuthType.OAUTH2,
         config={'header': 'Authorization', 'prefix': 'Bearer'},
         user_config_spec=AirbyteAuthConfig(
-            title='Facebook Marketing Authentication',
+            title='OAuth 2.0 Authentication',
             type='object',
-            required=['access_token', 'account_id'],
+            required=['client_id', 'client_secret', 'account_id'],
             properties={
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',
-                    description='Facebook Marketing API access token',
+                    description='Facebook OAuth2 Access Token',
+                ),
+                'client_id': AuthConfigFieldSpec(
+                    title='Client ID',
+                    description='Facebook App Client ID',
+                ),
+                'client_secret': AuthConfigFieldSpec(
+                    title='Client Secret',
+                    description='Facebook App Client Secret',
                 ),
                 'account_id': AuthConfigFieldSpec(
                     title='Ad Account ID',
-                    description='Facebook Ad Account ID (without the act_ prefix)',
+                    description='Facebook Ad Account ID (without act_ prefix)',
                 ),
             },
-            auth_mapping={'token': '${access_token}'},
+            auth_mapping={
+                'access_token': '${access_token}',
+                'client_id': '${client_id}',
+                'client_secret': '${client_secret}',
+            },
+            replication_auth_key_mapping={'credentials.client_id': 'client_id', 'credentials.client_secret': 'client_secret'},
+            replication_auth_key_constants={'credentials.auth_type': 'oauth2.0'},
         ),
     ),
     entities=[

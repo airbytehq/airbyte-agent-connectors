@@ -9,18 +9,23 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
 # Authentication configuration
 
 class FacebookMarketingAuthConfig(BaseModel):
-    """Facebook Marketing Authentication"""
+    """OAuth 2.0 Authentication"""
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: str
-    """Facebook Marketing API access token"""
+    access_token: Optional[str] = None
+    """Facebook OAuth2 Access Token"""
+    client_id: str
+    """Facebook App Client ID"""
+    client_secret: str
+    """Facebook App Client Secret"""
     account_id: str
-    """Facebook Ad Account ID (without the act_ prefix)"""
+    """Facebook Ad Account ID (without act_ prefix)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
