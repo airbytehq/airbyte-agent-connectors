@@ -126,6 +126,17 @@ class Info(BaseModel):
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
     x_airbyte_cache: CacheConfig | None = Field(None, alias="x-airbyte-cache")
     x_airbyte_replication_config: ReplicationConfig | None = Field(None, alias="x-airbyte-replication-config")
+    x_airbyte_skip_suggested_streams: list[str] = Field(
+        default_factory=list,
+        alias="x-airbyte-skip-suggested-streams",
+        description="List of Airbyte suggested streams to skip when validating cache entity coverage",
+    )
+    x_airbyte_skip_auth_methods: list[str] = Field(
+        default_factory=list,
+        alias="x-airbyte-skip-auth-methods",
+        description="List of Airbyte auth methods to skip when validating auth compatibility. "
+        "Use the SelectiveAuthenticator option key (e.g., 'Private App Credentials', 'oauth2.0')",
+    )
 
 
 class ServerVariable(BaseModel):
