@@ -161,13 +161,6 @@ class ChatHistoryItem(BaseModel):
     new_tags: Union[list[str] | None, Any] = Field(default=None)
     options: Union[str | None, Any] = Field(default=None)
 
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_: Union[str | None, Any] = Field(default=None, alias="from")
-    timestamp: Union[str | None, Any] = Field(default=None)
-
 class ChatConversion(BaseModel):
     """ChatConversion type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -177,6 +170,13 @@ class ChatConversion(BaseModel):
     goal_name: Union[str | None, Any] = Field(default=None)
     timestamp: Union[str | None, Any] = Field(default=None)
     attribution: Union[Any, Any] = Field(default=None)
+
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: Union[str | None, Any] = Field(default=None, alias="from")
+    timestamp: Union[str | None, Any] = Field(default=None)
 
 class ChatEngagement(BaseModel):
     """ChatEngagement type definition"""
