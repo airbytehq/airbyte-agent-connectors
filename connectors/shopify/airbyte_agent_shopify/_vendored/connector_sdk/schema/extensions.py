@@ -14,7 +14,7 @@ are implemented.
 
 from typing import Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class PaginationConfig(BaseModel):
@@ -251,6 +251,24 @@ class ReplicationConfig(BaseModel):
         alias="replication_config_key_mapping",
         description="Mapping from replication_config field names to source_config field names",
     )
+
+    @model_validator(mode="after")
+    def validate_replication_config_key_mapping(self) -> "ReplicationConfig":
+        """Validate that replication_config_key_mapping keys exist in properties.
+
+        The mapping is: {local_key: airbyte_path}
+        We validate that local_key exists in our properties.
+        """
+        if self.replication_config_key_mapping and self.properties:
+            property_names = set(self.properties.keys())
+            for local_key, airbyte_path in self.replication_config_key_mapping.items():
+                if local_key not in property_names:
+                    available = ", ".join(sorted(property_names)) if property_names else "(none)"
+                    raise ValueError(
+                        f"replication_config_key_mapping: local key '{local_key}' "
+                        f"(mapped to '{airbyte_path}') not found in properties. Available: {available}"
+                    )
+        return self
 
 
 class CacheConfig(BaseModel):
