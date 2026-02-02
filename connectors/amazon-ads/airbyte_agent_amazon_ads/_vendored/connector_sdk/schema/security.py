@@ -81,6 +81,21 @@ class AuthConfigOption(BaseModel):
         description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
     )
 
+    @model_validator(mode="after")
+    def validate_replication_auth_key_mapping(self) -> "AuthConfigOption":
+        """Validate that replication_auth_key_mapping target keys exist in properties."""
+        if self.replication_auth_key_mapping and self.properties:
+            property_names = set(self.properties.keys())
+            for airbyte_path, our_key in self.replication_auth_key_mapping.items():
+                if our_key not in property_names:
+                    option_context = f"oneOf option '{self.title}'" if self.title else "oneOf option"
+                    available = ", ".join(sorted(property_names)) if property_names else "(none)"
+                    raise ValueError(
+                        f"replication_auth_key_mapping in {option_context}: target key '{our_key}' "
+                        f"(mapped from '{airbyte_path}') not found in properties. Available: {available}"
+                    )
+        return self
+
 
 class AirbyteAuthConfig(BaseModel):
     """
@@ -146,7 +161,29 @@ class AirbyteAuthConfig(BaseModel):
             if not self.auth_mapping:
                 raise ValueError("Single auth option must have auth_mapping")
 
+            # Validate replication_auth_key_mapping targets exist in properties
+            if self.replication_auth_key_mapping and self.properties:
+                self._validate_replication_auth_key_mapping(self.replication_auth_key_mapping, self.properties, context="x-airbyte-auth-config")
+
         return self
+
+    @staticmethod
+    def _validate_replication_auth_key_mapping(mapping: Dict[str, str], properties: Dict[str, AuthConfigFieldSpec], context: str) -> None:
+        """Validate that replication_auth_key_mapping target keys exist in properties.
+
+        Args:
+            mapping: The replication_auth_key_mapping dict (airbyte_path -> our_key)
+            properties: The properties dict from x-airbyte-auth-config
+            context: Context string for error messages
+        """
+        property_names = set(properties.keys())
+        for airbyte_path, our_key in mapping.items():
+            if our_key not in property_names:
+                available = ", ".join(sorted(property_names)) if property_names else "(none)"
+                raise ValueError(
+                    f"replication_auth_key_mapping in {context}: target key '{our_key}' "
+                    f"(mapped from '{airbyte_path}') not found in properties. Available: {available}"
+                )
 
 
 class SecurityScheme(BaseModel):
