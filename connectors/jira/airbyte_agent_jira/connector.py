@@ -707,6 +707,7 @@ class JiraConnector:
         auth_config: "JiraAuthConfig",
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
+        source_template_id: str | None = None,
     ) -> "JiraConnector":
         """
         Create a new hosted connector on Airbyte Cloud.
@@ -723,6 +724,8 @@ class JiraConnector:
             name: Optional source name (defaults to connector name + external_user_id)
             replication_config: Optional replication settings dict.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
 
         Returns:
             A JiraConnector instance configured in hosted mode
@@ -739,6 +742,7 @@ class JiraConnector:
             # Use the connector
             result = await connector.execute("entity", "list", {})
         """
+
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
 
         client = AirbyteCloudClient(
@@ -747,8 +751,8 @@ class JiraConnector:
         )
 
         try:
-            # Build credentials from auth_config
-            credentials = auth_config.model_dump(exclude_none=True)
+            # Build credentials from auth_config (if provided)
+            credentials = auth_config.model_dump(exclude_none=True) if auth_config else None
             replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
 
             # Create source on Airbyte Cloud
@@ -759,6 +763,7 @@ class JiraConnector:
                 external_user_id=external_user_id,
                 credentials=credentials,
                 replication_config=replication_config_dict,
+                source_template_id=source_template_id,
             )
         finally:
             await client.close()
@@ -769,6 +774,7 @@ class JiraConnector:
             airbyte_client_secret=airbyte_client_secret,
             connector_id=source_id,
         )
+
 
 
 
