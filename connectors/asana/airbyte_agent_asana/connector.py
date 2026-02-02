@@ -826,15 +826,70 @@ class AsanaConnector:
     # ===== HOSTED MODE FACTORY =====
 
     @classmethod
+    async def initiate_oauth(
+        cls,
+        *,
+        external_user_id: str,
+        redirect_url: str,
+        airbyte_client_id: str,
+        airbyte_client_secret: str,
+    ) -> str:
+        """
+        Initiate server-side OAuth flow for this connector.
+
+        Returns a consent URL where the end user should be redirected to grant access.
+        After completing consent, they'll be redirected to your redirect_url with a
+        `server_side_oauth_secret_id` query parameter that can be used with `create_hosted()`.
+
+        Args:
+            external_user_id: Workspace identifier in Airbyte Cloud
+            redirect_url: URL where users will be redirected after OAuth consent
+            airbyte_client_id: Airbyte OAuth client ID
+            airbyte_client_secret: Airbyte OAuth client secret
+
+        Returns:
+            The OAuth consent URL
+
+        Example:
+            consent_url = await AsanaConnector.initiate_oauth(
+                external_user_id="my-workspace",
+                redirect_url="https://myapp.com/oauth/callback",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+            )
+            # Redirect user to: consent_url
+            # After consent, user arrives at: https://myapp.com/oauth/callback?server_side_oauth_secret_id=...
+        """
+        from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+
+        client = AirbyteCloudClient(
+            client_id=airbyte_client_id,
+            client_secret=airbyte_client_secret,
+        )
+
+        try:
+            consent_url = await client.initiate_oauth(
+                definition_id=str(AsanaConnectorModel.id),
+                external_user_id=external_user_id,
+                redirect_url=redirect_url,
+            )
+        finally:
+            await client.close()
+
+        return consent_url
+
+    @classmethod
     async def create_hosted(
         cls,
         *,
         external_user_id: str,
         airbyte_client_id: str,
         airbyte_client_secret: str,
-        auth_config: "AsanaAuthConfig",
+        auth_config: "AsanaAuthConfig" | None = None,
+        server_side_oauth_secret_id: str | None = None,
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
+        source_template_id: str | None = None,
     ) -> "AsanaConnector":
         """
         Create a new hosted connector on Airbyte Cloud.
@@ -843,17 +898,28 @@ class AsanaConnector:
         1. Creates a source on Airbyte Cloud with the provided credentials
         2. Returns a connector configured with the new connector_id
 
+        Supports two authentication modes:
+        1. Direct credentials: Provide `auth_config` with typed credentials
+        2. Server-side OAuth: Provide `server_side_oauth_secret_id` from OAuth flow
+
         Args:
             external_user_id: Workspace identifier in Airbyte Cloud
             airbyte_client_id: Airbyte OAuth client ID
             airbyte_client_secret: Airbyte OAuth client secret
-            auth_config: Typed auth config (same as local mode)
+            auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
+            server_side_oauth_secret_id: OAuth secret ID from initiate_oauth redirect.
+                When provided, auth_config is not required.
             name: Optional source name (defaults to connector name + external_user_id)
             replication_config: Optional replication settings dict.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
 
         Returns:
             A AsanaConnector instance configured in hosted mode
+
+        Raises:
+            ValueError: If neither or both auth_config and server_side_oauth_secret_id provided
 
         Example:
             # Create a new hosted connector with API key auth
@@ -864,9 +930,27 @@ class AsanaConnector:
                 auth_config=AsanaAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."),
             )
 
+            # With server-side OAuth:
+            connector = await AsanaConnector.create_hosted(
+                external_user_id="my-workspace",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+                server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
+            )
+
             # Use the connector
             result = await connector.execute("entity", "list", {})
         """
+        # Validate: exactly one of auth_config or server_side_oauth_secret_id required
+        if auth_config is None and server_side_oauth_secret_id is None:
+            raise ValueError(
+                "Either auth_config or server_side_oauth_secret_id must be provided"
+            )
+        if auth_config is not None and server_side_oauth_secret_id is not None:
+            raise ValueError(
+                "Cannot provide both auth_config and server_side_oauth_secret_id"
+            )
+
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
 
         client = AirbyteCloudClient(
@@ -875,8 +959,8 @@ class AsanaConnector:
         )
 
         try:
-            # Build credentials from auth_config
-            credentials = auth_config.model_dump(exclude_none=True)
+            # Build credentials from auth_config (if provided)
+            credentials = auth_config.model_dump(exclude_none=True) if auth_config else None
             replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
 
             # Create source on Airbyte Cloud
@@ -887,6 +971,8 @@ class AsanaConnector:
                 external_user_id=external_user_id,
                 credentials=credentials,
                 replication_config=replication_config_dict,
+                server_side_oauth_secret_id=server_side_oauth_secret_id,
+                source_template_id=source_template_id,
             )
         finally:
             await client.close()
@@ -897,6 +983,7 @@ class AsanaConnector:
             airbyte_client_secret=airbyte_client_secret,
             connector_id=source_id,
         )
+
 
 
 
