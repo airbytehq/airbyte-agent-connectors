@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import FacebookMarketingConnector
 from .models import (
     FacebookMarketingAuthConfig,
+    CurrentUser,
     IssueInfo,
     AdLabel,
     Campaign,
@@ -46,6 +47,7 @@ from .models import (
     FacebookMarketingCheckResult,
     FacebookMarketingExecuteResult,
     FacebookMarketingExecuteResultWithMeta,
+    CurrentUserListResult,
     CampaignsListResult,
     AdSetsListResult,
     AdsListResult,
@@ -74,6 +76,7 @@ from .models import (
     VideosSearchResult
 )
 from .types import (
+    CurrentUserListParams,
     CampaignsListParams,
     AdSetsListParams,
     AdsListParams,
@@ -116,6 +119,7 @@ from .types import (
 __all__ = [
     "FacebookMarketingConnector",
     "FacebookMarketingAuthConfig",
+    "CurrentUser",
     "IssueInfo",
     "AdLabel",
     "Campaign",
@@ -155,6 +159,7 @@ __all__ = [
     "FacebookMarketingCheckResult",
     "FacebookMarketingExecuteResult",
     "FacebookMarketingExecuteResultWithMeta",
+    "CurrentUserListResult",
     "CampaignsListResult",
     "AdSetsListResult",
     "AdsListResult",
@@ -181,6 +186,7 @@ __all__ = [
     "ImagesSearchResult",
     "VideosSearchData",
     "VideosSearchResult",
+    "CurrentUserListParams",
     "CampaignsListParams",
     "AdSetsListParams",
     "AdsListParams",

@@ -25,6 +25,7 @@ from .types import (
     AdsListParams,
     CampaignsGetParams,
     CampaignsListParams,
+    CurrentUserListParams,
     CustomConversionsListParams,
     ImagesListParams,
     VideosListParams,
@@ -54,6 +55,7 @@ from .models import (
     FacebookMarketingCheckResult,
     FacebookMarketingExecuteResult,
     FacebookMarketingExecuteResultWithMeta,
+    CurrentUserListResult,
     CampaignsListResult,
     AdSetsListResult,
     AdsListResult,
@@ -67,6 +69,7 @@ from .models import (
     AdSet,
     AdsInsight,
     Campaign,
+    CurrentUser,
     CustomConversion,
     Image,
     Video,
@@ -135,11 +138,12 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.3"
+    connector_version = "1.0.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
+        ("current_user", "list"): True,
         ("campaigns", "list"): True,
         ("ad_sets", "list"): True,
         ("ads", "list"): True,
@@ -156,6 +160,7 @@ class FacebookMarketingConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
+        ('current_user', 'list'): {'fields': 'fields'},
         ('campaigns', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ad_sets', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ads', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
@@ -195,7 +200,7 @@ class FacebookMarketingConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = FacebookMarketingConnector(auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="...", account_id="..."))
+            connector = FacebookMarketingConnector(auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = FacebookMarketingConnector(
                 airbyte_client_id="client_abc123",
@@ -256,6 +261,7 @@ class FacebookMarketingConnector:
             # Update base_url with server variables if provided
 
         # Initialize entity query objects
+        self.current_user = CurrentUserQuery(self)
         self.campaigns = CampaignsQuery(self)
         self.ad_sets = AdSetsQuery(self)
         self.ads = AdsQuery(self)
@@ -266,6 +272,14 @@ class FacebookMarketingConnector:
         self.videos = VideosQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["current_user"],
+        action: Literal["list"],
+        params: "CurrentUserListParams"
+    ) -> "CurrentUserListResult": ...
 
     @overload
     async def execute(
@@ -696,7 +710,7 @@ class FacebookMarketingConnector:
                 external_user_id="my-workspace",
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
-                auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="...", account_id="..."),
+                auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="..."),
             )
 
             # With server-side OAuth:
@@ -753,6 +767,43 @@ class FacebookMarketingConnector:
             connector_id=source_id,
         )
 
+
+
+
+class CurrentUserQuery:
+    """
+    Query class for CurrentUser entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        fields: str | None = None,
+        **kwargs
+    ) -> CurrentUserListResult:
+        """
+        Returns information about the current user associated with the access token
+
+        Args:
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            CurrentUserListResult
+        """
+        params = {k: v for k, v in {
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("current_user", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CurrentUserListResult(
+            data=result.data
+        )
 
 
 

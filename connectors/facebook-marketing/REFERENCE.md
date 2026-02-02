@@ -8,6 +8,7 @@ The Facebook-Marketing connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
+| Current User | [List](#current-user-list) |
 | Campaigns | [List](#campaigns-list), [Get](#campaigns-get), [Search](#campaigns-search) |
 | Ad Sets | [List](#ad-sets-list), [Get](#ad-sets-get), [Search](#ad-sets-search) |
 | Ads | [List](#ads-list), [Get](#ads-get), [Search](#ads-search) |
@@ -16,6 +17,51 @@ The Facebook-Marketing connector supports the following entities and actions.
 | Custom Conversions | [List](#custom-conversions-list), [Search](#custom-conversions-search) |
 | Images | [List](#images-list), [Search](#images-search) |
 | Videos | [List](#videos-list), [Search](#videos-search) |
+
+## Current User
+
+### Current User List
+
+Returns information about the current user associated with the access token
+
+#### Python SDK
+
+```python
+await facebook_marketing.current_user.list()
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "current_user",
+    "action": "list"
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `fields` | `string` | No | Comma-separated list of fields to return |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `id` | `string` |  |
+| `name` | `string \| null` |  |
+
+
+</details>
 
 ## Campaigns
 

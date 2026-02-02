@@ -26,7 +26,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.3',
+    version='1.0.8',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -34,7 +34,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='OAuth 2.0 Authentication',
             type='object',
-            required=['client_id', 'client_secret', 'account_id'],
+            required=['client_id', 'client_secret'],
             properties={
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',
@@ -48,21 +48,69 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     title='Client Secret',
                     description='Facebook App Client Secret',
                 ),
-                'account_id': AuthConfigFieldSpec(
-                    title='Ad Account ID',
-                    description='Facebook Ad Account ID (without act_ prefix)',
-                ),
             },
             auth_mapping={
                 'access_token': '${access_token}',
                 'client_id': '${client_id}',
                 'client_secret': '${client_secret}',
             },
-            replication_auth_key_mapping={'credentials.client_id': 'client_id', 'credentials.client_secret': 'client_secret'},
+            replication_auth_key_mapping={
+                'credentials.client_id': 'client_id',
+                'credentials.client_secret': 'client_secret',
+                'credentials.access_token': 'access_token',
+            },
             replication_auth_key_constants={'credentials.auth_type': 'oauth2.0'},
         ),
     ),
     entities=[
+        EntityDefinition(
+            name='current_user',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/me',
+                    action=Action.LIST,
+                    description='Returns information about the current user associated with the access token',
+                    query_params=['fields'],
+                    query_params_schema={
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,name',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Current Facebook user associated with the access token',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'User ID'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'User name',
+                            },
+                        },
+                        'required': ['id'],
+                        'x-airbyte-entity-name': 'current_user',
+                    },
+                    record_extractor='$',
+                    preferred_for_check=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Current Facebook user associated with the access token',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'User ID'},
+                    'name': {
+                        'type': ['string', 'null'],
+                        'description': 'User name',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'current_user',
+            },
+        ),
         EntityDefinition(
             name='campaigns',
             stream_name='campaigns',
@@ -288,7 +336,6 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
-                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',

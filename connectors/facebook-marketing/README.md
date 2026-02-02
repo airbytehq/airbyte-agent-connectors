@@ -52,8 +52,7 @@ connector = FacebookMarketingConnector(
     auth_config=FacebookMarketingAuthConfig(
         access_token="<Facebook OAuth2 Access Token>",
         client_id="<Facebook App Client ID>",
-        client_secret="<Facebook App Client Secret>",
-        account_id="<Facebook Ad Account ID (without act_ prefix)>"
+        client_secret="<Facebook App Client Secret>"
     )
 )
 
@@ -92,6 +91,7 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
+| Current User | [List](./REFERENCE.md#current-user-list) |
 | Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get) |
 | Ad Sets | [List](./REFERENCE.md#ad-sets-list), [Get](./REFERENCE.md#ad-sets-get) |
 | Ads | [List](./REFERENCE.md#ads-list), [Get](./REFERENCE.md#ads-get) |
@@ -112,7 +112,7 @@ See the official [Facebook-Marketing API reference](https://developers.facebook.
 
 ## Version information
 
-- **Package version:** 0.1.6
-- **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 9d9866b0aae8c3494d04d34e193b9bd860bfc1c6
+- **Package version:** 0.1.7
+- **Connector version:** 1.0.8
+- **Generated with Connector SDK commit SHA:** 940246757c7476ed4edd7d16b873ebe54ea2b456
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/facebook-marketing/CHANGELOG.md)
