@@ -1,5 +1,10 @@
 # Mailchimp changelog
 
+## [0.1.34] - 2026-02-02
+- Updated connector definition (YAML version 1.0.5)
+- Source commit: 94024675
+- SDK version: 0.1.0
+
 ## [0.1.33] - 2026-02-02
 - Updated connector definition (YAML version 1.0.5)
 - Source commit: 9d9866b0
