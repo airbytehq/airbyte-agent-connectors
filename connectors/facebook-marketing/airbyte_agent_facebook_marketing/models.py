@@ -24,10 +24,15 @@ class FacebookMarketingAuthConfig(BaseModel):
     """Facebook App Client ID"""
     client_secret: str
     """Facebook App Client Secret"""
-    account_id: str
-    """Facebook Ad Account ID (without act_ prefix)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
+
+class CurrentUser(BaseModel):
+    """Current Facebook user associated with the access token"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
 
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
@@ -792,6 +797,9 @@ VideosSearchResult = AirbyteSearchResult[VideosSearchData]
 
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
+
+CurrentUserListResult = FacebookMarketingExecuteResult[CurrentUser]
+"""Result type for current_user.list operation."""
 
 CampaignsListResult = FacebookMarketingExecuteResultWithMeta[list[Campaign], CampaignsListResultMeta]
 """Result type for campaigns.list operation with data and metadata."""

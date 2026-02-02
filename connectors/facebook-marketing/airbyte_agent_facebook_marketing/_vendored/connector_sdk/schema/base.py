@@ -10,7 +10,7 @@ from enum import StrEnum
 from typing import Any, Dict
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core import Url
 
 from .extensions import CacheConfig, ReplicationConfig, RetryConfig
@@ -210,3 +210,34 @@ class Server(BaseModel):
             raise ValueError("Server URL cannot be empty")
         # Allow both absolute URLs and relative paths
         return v
+
+    @model_validator(mode="after")
+    def validate_replication_environment_mapping(self) -> "Server":
+        """Validate that x-airbyte-replication-environment-mapping sources exist in variables.
+
+        For simple mappings like {"subdomain": "subdomain"}, the key is the source variable.
+        For transform mappings like {"domain": {"source": "subdomain", "format": "..."}},
+        the "source" field is the source variable.
+        """
+        env_mapping = self.x_airbyte_replication_environment_mapping
+        if not env_mapping or not self.variables:
+            return self
+
+        variable_names = set(self.variables.keys())
+
+        for env_key, mapping_value in env_mapping.items():
+            if isinstance(mapping_value, str):
+                source_var = env_key
+            elif isinstance(mapping_value, EnvironmentMappingTransform):
+                source_var = mapping_value.source
+            else:
+                continue
+
+            if source_var not in variable_names:
+                available = ", ".join(sorted(variable_names)) if variable_names else "(none)"
+                raise ValueError(
+                    f"x-airbyte-replication-environment-mapping: source variable '{source_var}' "
+                    f"not found in server variables. Available: {available}"
+                )
+
+        return self
