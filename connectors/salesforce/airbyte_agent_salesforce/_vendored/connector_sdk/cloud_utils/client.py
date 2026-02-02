@@ -161,24 +161,80 @@ class AirbyteCloudClient:
         connector_id = connectors[0]["id"]
         return connector_id
 
+    async def initiate_oauth(
+        self,
+        definition_id: str,
+        external_user_id: str,
+        redirect_url: str,
+    ) -> str:
+        """Initiate a server-side OAuth flow.
+
+        Starts the OAuth flow for a connector. Returns a consent URL where the
+        end user should be redirected to grant access. After completing consent,
+        they'll be redirected to your redirect_url with a `server_side_oauth_secret_id`
+        query parameter that can be used with `create_source()`.
+
+        Args:
+            definition_id: Connector definition UUID
+            external_user_id: Workspace identifier
+            redirect_url: URL where users will be redirected after OAuth consent
+
+        Returns:
+            The OAuth consent URL
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails
+
+        Example:
+            consent_url = await client.initiate_oauth(
+                definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
+                external_user_id="my-workspace",
+                redirect_url="https://myapp.com/oauth/callback",
+            )
+            # Redirect user to: consent_url
+            # After consent: https://myapp.com/oauth/callback?server_side_oauth_secret_id=...
+        """
+        token = await self.get_bearer_token()
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/oauth/initiate"
+        headers = {"Authorization": f"Bearer {token}"}
+        request_body = {
+            "external_user_id": external_user_id,
+            "definition_id": definition_id,
+            "redirect_url": redirect_url,
+        }
+
+        response = await self._http_client.post(url, json=request_body, headers=headers)
+        response.raise_for_status()
+        return response.json()["consent_url"]
+
     async def create_source(
         self,
         name: str,
         connector_definition_id: str,
         external_user_id: str,
-        credentials: dict[str, Any],
+        credentials: dict[str, Any] | None = None,
         replication_config: dict[str, Any] | None = None,
+        server_side_oauth_secret_id: str | None = None,
+        source_template_id: str | None = None,
     ) -> str:
-        """Create a new source on Airbyte Agent Platform.
+        """Create a new source on Airbyte Cloud.
+
+        Supports two authentication modes:
+        1. Direct credentials: Provide `credentials` dict
+        2. Server-side OAuth: Provide `server_side_oauth_secret_id` from OAuth flow
 
         Args:
             name: Source name
             connector_definition_id: UUID of the connector definition
             external_user_id: User identifier
-            credentials: Connector auth config dict
+            credentials: Connector auth config dict. Required unless using OAuth.
             replication_config: Optional replication settings (e.g., start_date for
                 connectors with x-airbyte-replication-config). Required for REPLICATION
                 mode sources like Intercom.
+            server_side_oauth_secret_id: OAuth secret ID from initiate_oauth redirect.
+                When provided, credentials are not required.
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
 
         Returns:
             The created source ID (UUID string)
@@ -187,19 +243,21 @@ class AirbyteCloudClient:
             httpx.HTTPStatusError: If creation fails
 
         Example:
-            source_id = await client.create_source(
-                name="My Gong Source",
-                connector_definition_id="32382e40-3b49-4b99-9c5c-4076501914e7",
-                external_user_id="my-workspace",
-                credentials={"access_key": "...", "access_key_secret": "..."}
-            )
-
-            # For REPLICATION mode sources (e.g., Intercom):
+            # With direct credentials:
             source_id = await client.create_source(
                 name="My Intercom Source",
                 connector_definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
                 external_user_id="my-workspace",
                 credentials={"access_token": "..."},
+                replication_config={"start_date": "2024-01-01T00:00:00Z"}
+            )
+
+            # With server-side OAuth:
+            source_id = await client.create_source(
+                name="My Intercom Source",
+                connector_definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
+                external_user_id="my-workspace",
+                server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
                 replication_config={"start_date": "2024-01-01T00:00:00Z"}
             )
         """
@@ -211,11 +269,16 @@ class AirbyteCloudClient:
             "name": name,
             "definition_id": connector_definition_id,
             "external_user_id": external_user_id,
-            "credentials": credentials,
         }
 
+        if credentials is not None:
+            request_body["credentials"] = credentials
         if replication_config is not None:
             request_body["replication_config"] = replication_config
+        if server_side_oauth_secret_id is not None:
+            request_body["server_side_oauth_secret_id"] = server_side_oauth_secret_id
+        if source_template_id is not None:
+            request_body["source_template_id"] = source_template_id
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
         response.raise_for_status()
