@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Github agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `ef69ef6e-aa7f-4af1-a01d-ef775033524e` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

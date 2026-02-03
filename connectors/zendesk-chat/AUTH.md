@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Zendesk-Chat agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `40d24d0f-b8f9-4fe0-9e6c-b06c0f3f45e4` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

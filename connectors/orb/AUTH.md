@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Orb agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `7f0455fb-4518-4ec0-b7a3-d808bf8081cc` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

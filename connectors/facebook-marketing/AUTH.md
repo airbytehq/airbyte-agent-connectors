@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Facebook-Marketing agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `e7778cfc-e97c-4458-9ecb-b4f2bba8946c` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

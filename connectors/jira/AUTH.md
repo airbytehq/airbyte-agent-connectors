@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Jira agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `68e63de2-bb83-4c7e-93fa-a8a9051e3993` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

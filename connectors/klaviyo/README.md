@@ -41,6 +41,43 @@ The Klaviyo connector isn't currently able to handle prompts like these.
 uv pip install airbyte-agent-klaviyo
 ```
 
+## Quick Setup (Hosted)
+
+Get running with Airbyte's hosted infrastructure in 3 steps.
+
+**Prerequisites:** `AIRBYTE_CLIENT_ID` and `AIRBYTE_CLIENT_SECRET` from [app.airbyte.ai](https://app.airbyte.ai) settings.
+
+**1. Get application token:**
+```bash
+curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{"client_id": "'"$AIRBYTE_CLIENT_ID"'", "client_secret": "'"$AIRBYTE_CLIENT_SECRET"'"}'
+```
+
+**2. Get scoped token:**
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/embedded/scoped-token' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{"workspace_name": "<YOUR_USER_ID>"}'
+```
+
+**3. Create connector:**
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances' \
+  -H 'Authorization: Bearer <SCOPED_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "connector_definition_id": "95e8cffd-b8c4-4039-968e-d32fb4a69bde",
+    "name": "my-klaviyo-connector",
+    "auth_config": {
+      "api_key": "<YOUR_API_KEY>"
+    }
+  }'
+```
+
+Save the returned `id` as your `CONNECTOR_ID` for subsequent requests.
+
 ## Usage
 
 Connectors can run in open source or hosted mode.

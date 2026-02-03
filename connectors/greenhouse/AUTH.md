@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Greenhouse agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `59f1e50a-331f-4f09-b3e8-2e8d4d355f44` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

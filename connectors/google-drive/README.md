@@ -44,6 +44,31 @@ The Google-Drive connector isn't currently able to handle prompts like these.
 uv pip install airbyte-agent-google-drive
 ```
 
+## Quick Setup (Hosted)
+
+Get running with Airbyte's hosted infrastructure in 3 steps.
+
+**Prerequisites:** `AIRBYTE_CLIENT_ID` and `AIRBYTE_CLIENT_SECRET` from [app.airbyte.ai](https://app.airbyte.ai) settings.
+
+**1. Get application token:**
+```bash
+curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{"client_id": "'"$AIRBYTE_CLIENT_ID"'", "client_secret": "'"$AIRBYTE_CLIENT_SECRET"'"}'
+```
+
+**2. Get scoped token:**
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/embedded/scoped-token' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{"workspace_name": "<YOUR_USER_ID>"}'
+```
+
+**3. Create connector (OAuth):**
+
+OAuth connectors require a server-side flow. See [AUTH.md](./AUTH.md#hosted-execution) for the complete setup.
+
 ## Usage
 
 Connectors can run in open source or hosted mode.

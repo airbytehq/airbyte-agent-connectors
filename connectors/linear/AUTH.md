@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Linear agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `1c5d8316-ed42-4473-8fbc-2626f03f070c` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

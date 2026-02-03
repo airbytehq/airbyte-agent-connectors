@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Klaviyo agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `95e8cffd-b8c4-4039-968e-d32fb4a69bde` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

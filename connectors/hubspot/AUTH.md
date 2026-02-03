@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Hubspot agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `36c891d9-4bd9-43ac-bad2-10e12756272c` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

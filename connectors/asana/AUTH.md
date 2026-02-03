@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Asana agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `d0243522-dccf-4978-8ba0-37ed47a0bdbf` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

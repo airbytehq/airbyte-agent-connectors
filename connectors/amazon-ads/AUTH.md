@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Amazon-Ads agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `c6b0a29e-1da9-4512-9002-7bfd0cba2246` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution

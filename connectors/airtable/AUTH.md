@@ -2,6 +2,16 @@
 
 This page documents the authentication and configuration options for the Airtable agent connector.
 
+## Connector ID
+
+For programmatic setup via the Airbyte API:
+
+| Field | Value |
+|-------|-------|
+| `connector_id` | `14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212` |
+
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+
 ## Authentication
 
 ### Open source execution
