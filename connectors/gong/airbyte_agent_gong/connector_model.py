@@ -30,7 +30,7 @@ from uuid import (
 GongConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('32382e40-3b49-4b99-9c5c-4076501914e7'),
     name='gong',
-    version='0.1.14',
+    version='0.1.15',
     base_url='https://api.gong.io',
     auth=AuthConfig(
         options=[
@@ -1095,7 +1095,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         path='/v2/calls/extensive',
                     ),
                     action=Action.DOWNLOAD,
-                    description='Downloads the audio media file for a call. Temporarily, the request body must be configured with:\n{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}\n',
+                    description='ALWAYS configure the request with the exposedFields: {"media": true}. If you don\'t the call won\'t work.\nDownloads the audio media file for a call. Temporarily, the request body must be configured with:\n{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}\n',
                     body_fields=['filter', 'contentSelector'],
                     request_schema={
                         'type': 'object',
@@ -1352,7 +1352,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                         path='/v2/calls/extensive',
                     ),
                     action=Action.DOWNLOAD,
-                    description='Downloads the video media file for a call. Temporarily, the request body must be configured with:\n{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}\n',
+                    description='ALWAYS configure the request with the exposedFields: {"media": true}. If you don\'t the call won\'t work.\nDownloads the video media file for a call. Temporarily, the request body must be configured with:\n{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}\n',
                     body_fields=['filter', 'contentSelector'],
                     request_schema={
                         'type': 'object',

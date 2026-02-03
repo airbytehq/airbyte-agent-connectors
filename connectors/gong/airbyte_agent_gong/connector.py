@@ -155,7 +155,7 @@ class GongConnector:
     """
 
     connector_name = "gong"
-    connector_version = "0.1.14"
+    connector_version = "0.1.15"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -1259,7 +1259,8 @@ class CallAudioQuery:
         **kwargs
     ) -> AsyncIterator[bytes]:
         """
-        Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the audio media file for a call. Temporarily, the request body must be configured with:
 {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
 
 
@@ -1292,7 +1293,8 @@ class CallAudioQuery:
         **kwargs
     ) -> Path:
         """
-        Downloads the audio media file for a call. Temporarily, the request body must be configured with:
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the audio media file for a call. Temporarily, the request body must be configured with:
 {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
  and save to file.
 
@@ -1336,7 +1338,8 @@ class CallVideoQuery:
         **kwargs
     ) -> AsyncIterator[bytes]:
         """
-        Downloads the video media file for a call. Temporarily, the request body must be configured with:
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the video media file for a call. Temporarily, the request body must be configured with:
 {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
 
 
@@ -1369,7 +1372,8 @@ class CallVideoQuery:
         **kwargs
     ) -> Path:
         """
-        Downloads the video media file for a call. Temporarily, the request body must be configured with:
+        ALWAYS configure the request with the exposedFields: {"media": true}. If you don't the call won't work.
+Downloads the video media file for a call. Temporarily, the request body must be configured with:
 {"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
  and save to file.
 
