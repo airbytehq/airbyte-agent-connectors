@@ -26,7 +26,7 @@ from uuid import (
 AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c6b0a29e-1da9-4512-9002-7bfd0cba2246'),
     name='amazon-ads',
-    version='1.0.5',
+    version='1.0.6',
     base_url='{region}',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -39,7 +39,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='OAuth2 Authentication',
             type='object',
-            required=['client_id', 'client_secret', 'refresh_token'],
+            required=['refresh_token'],
             properties={
                 'client_id': AuthConfigFieldSpec(
                     title='Client ID',

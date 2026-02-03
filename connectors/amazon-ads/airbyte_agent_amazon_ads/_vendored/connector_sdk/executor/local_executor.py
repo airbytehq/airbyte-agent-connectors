@@ -546,23 +546,25 @@ class LocalExecutor:
             return ExecutionResult(success=False, data={}, error=str(e))
 
     async def check(self) -> ExecutionResult:
-        """Perform a health check by running a lightweight list operation.
+        """Perform a health check by running a lightweight operation.
 
         Finds the operation marked with preferred_for_check=True, or falls back
-        to the first list operation. Executes it with limit=1 to verify
-        connectivity and credentials.
+        to the first list operation. Executes it to verify connectivity and credentials.
+        For list operations, uses limit=1 to minimize data transfer.
 
         Returns:
             ExecutionResult with data containing status, error, and checked operation details.
         """
         check_entity = None
         check_endpoint = None
+        check_action = None
 
-        # Look for preferred check operation
+        # Look for preferred check operation (can be any action type)
         for (ent_name, op_action), endpoint in self._operation_index.items():
             if getattr(endpoint, "preferred_for_check", False):
                 check_entity = ent_name
                 check_endpoint = endpoint
+                check_action = op_action
                 break
 
         # Fallback to first list operation
@@ -571,18 +573,19 @@ class LocalExecutor:
                 if op_action == Action.LIST:
                     check_entity = ent_name
                     check_endpoint = endpoint
+                    check_action = op_action
                     break
 
-        if check_endpoint is None or check_entity is None:
+        if check_endpoint is None or check_entity is None or check_action is None:
             return ExecutionResult(
                 success=True,
                 data={
                     "status": "skipped",
-                    "error": "No list operation available for health check",
+                    "error": "No operation available for health check",
                 },
             )
 
-        # Find the standard handler to execute the list operation
+        # Find the standard handler to execute the operation
         standard_handler = next(
             (h for h in self._operation_handlers if isinstance(h, _StandardOperationHandler)),
             None,
@@ -598,13 +601,15 @@ class LocalExecutor:
             )
 
         try:
-            await standard_handler.execute_operation(check_entity, Action.LIST, {"limit": 1})
+            # Use limit=1 for list operations to minimize data transfer
+            params = {"limit": 1} if check_action == Action.LIST else {}
+            await standard_handler.execute_operation(check_entity, check_action, params)
             return ExecutionResult(
                 success=True,
                 data={
                     "status": "healthy",
                     "checked_entity": check_entity,
-                    "checked_action": "list",
+                    "checked_action": check_action.value,
                 },
             )
         except Exception as e:
@@ -614,7 +619,7 @@ class LocalExecutor:
                     "status": "unhealthy",
                     "error": str(e),
                     "checked_entity": check_entity,
-                    "checked_action": "list",
+                    "checked_action": check_action.value,
                 },
                 error=str(e),
             )
