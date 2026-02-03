@@ -31,7 +31,6 @@ from .operations import Operation, PathItem
 from .security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
-    AuthConfigOption,
     OAuth2Flow,
     OAuth2Flows,
     SecurityRequirement,
@@ -55,7 +54,6 @@ __all__ = [
     "OAuth2Flow",
     "OAuth2Flows",
     "AirbyteAuthConfig",
-    "AuthConfigOption",
     "AuthConfigFieldSpec",
     # Component models
     "Components",
