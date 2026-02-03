@@ -65,8 +65,16 @@ connector = await StripeConnector.create_hosted(
 
 ### Register in UI (Required for UI Visibility)
 
-After creating the connector programmatically, register it as a template to make it appear in the Airbyte UI's Connectors page:
+After creating the connector programmatically, register it as a template to make it appear in the Airbyte UI's Connectors page.
 
+**Get an Application Token first:**
+```bash
+curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{"client_id": "<AIRBYTE_CLIENT_ID>", "client_secret": "<AIRBYTE_CLIENT_SECRET>"}'
+```
+
+**Then register the template:**
 ```bash
 curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -H 'Content-Type: application/json' \
@@ -79,7 +87,8 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   }'
 ```
 
-Get `actor_definition_id` from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids).
+- Get `actor_definition_id` from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids)
+- If registration fails with "already exists", a template with that name already exists—choose a different name
 
 Your connector now appears in the Connectors page at [app.airbyte.ai](https://app.airbyte.ai) with a "Direct" badge.
 
@@ -308,18 +317,7 @@ auth_config=SalesforceOAuthConfig(
        name="Gong Source"
    )
    ```
-5. Register the connector template so it appears in the UI:
-   ```bash
-   curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
-     -H 'Content-Type: application/json' \
-     -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
-     -d '{
-       "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
-       "name": "Gong",
-       "partial_default_config": {},
-       "mode": "DIRECT"
-     }'
-   ```
+5. Register the connector template so it appears in the UI (see [Programmatic Setup](references/programmatic-setup.md#pattern-c-ui-template-registration) for the API call). Use Gong's definition ID from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids).
 6. Confirm: "Connector created and registered! It now appears in your Airbyte Connectors page at [app.airbyte.ai](https://app.airbyte.ai)."
 
 ### OSS User: "Set up a GitHub connector"

@@ -17,6 +17,8 @@ You need Airbyte application credentials:
 - `AIRBYTE_CLIENT_ID` - from app.airbyte.ai settings (one-time)
 - `AIRBYTE_CLIENT_SECRET` - from app.airbyte.ai settings (one-time)
 
+> **Note:** Airbyte uses two API hosts: `api.airbyte.com` for authentication/workspace management and `api.airbyte.ai` for embedded connector operations. The examples below use the correct host for each endpoint.
+
 ## Step 1: Get Application Token
 
 ```bash
@@ -254,6 +256,14 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
     "mode": "OAUTH"
   }'
 ```
+
+### Troubleshooting Template Registration
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `"already exists"` | Template with that name exists | Choose a different `name` value |
+| `"invalid actor_definition_id"` | Wrong connector definition ID | Check the [Connector Definition IDs table](#connector-definition-ids) |
+| `"unauthorized"` | Invalid or expired token | Regenerate the APPLICATION_TOKEN |
 
 ### Verify in UI
 

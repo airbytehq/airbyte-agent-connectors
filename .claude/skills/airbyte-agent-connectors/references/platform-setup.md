@@ -54,8 +54,8 @@ connector = await StripeConnector.create_hosted(
     name="Stripe Source"  # Optional: display name in UI
 )
 
-# Connector is now registered and visible in your Airbyte dashboard
-# The connector object can be used immediately for operations
+# Connector is created and ready to use programmatically
+# For UI visibility, register a template (see "Making Connectors Visible in the UI" below)
 
 # Use it immediately
 result = await connector.execute("customers", "list", {"limit": 10})
