@@ -55,7 +55,7 @@ connector = await StripeConnector.create_hosted(
 )
 
 # Connector is now registered and visible in your Airbyte dashboard
-print(f"Created connector: {connector.connector_id}")
+# The connector object can be used immediately for operations
 
 # Use it immediately
 result = await connector.execute("customers", "list", {"limit": 10})
@@ -183,17 +183,11 @@ After `create_hosted()` succeeds:
 
 ## Entity Cache
 
-Platform connectors can optionally enable entity caching for faster repeated queries:
+Platform connectors support entity caching for faster repeated queries. Entity cache is managed through the Airbyte UI:
 
-```python
-connector = await StripeConnector.create_hosted(
-    external_user_id="user_123",
-    airbyte_client_id=os.environ["AIRBYTE_CLIENT_ID"],
-    airbyte_client_secret=os.environ["AIRBYTE_CLIENT_SECRET"],
-    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"]),
-    enable_entity_cache=True  # Enable caching
-)
-```
+1. Go to [app.airbyte.ai](https://app.airbyte.ai)
+2. Select your connector
+3. Enable entity cache in the connector settings
 
 When entity cache is enabled:
 - Common queries are cached and served faster
@@ -253,3 +247,4 @@ load_dotenv()
 - [Authentication](authentication.md) - Auth patterns by connector
 - [Programmatic Setup](programmatic-setup.md) - HTTP API and curl examples
 - [Troubleshooting](troubleshooting.md) - Common errors and solutions
+- [Entity-Action API](entity-action-api.md) - Core API patterns

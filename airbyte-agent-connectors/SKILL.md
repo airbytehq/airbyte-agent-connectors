@@ -34,7 +34,7 @@ Use when:
 - User is doing quick development or prototyping
 - User wants Claude Code/Desktop integration via MCP only
 
-**Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
+> **Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
 
 ---
 
@@ -74,7 +74,7 @@ connector = StripeConnector(
 result = await connector.execute("customers", "list", {"limit": 10})
 ```
 
-**For OAuth connectors and complete platform setup:** See [Platform Setup Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/platform-setup.md)
+**For OAuth connectors and complete platform setup:** See [Platform Setup Reference](references/platform-setup.md)
 
 ---
 
@@ -113,7 +113,7 @@ result = await connector.execute("issues", "list", {
 claude mcp add airbyte-agent-mcp --scope project
 ```
 
-**For MCP configuration and complete OSS setup:** See [OSS Setup Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/oss-setup.md)
+**For MCP configuration and complete OSS setup:** See [OSS Setup Reference](references/oss-setup.md)
 
 ---
 
@@ -153,12 +153,14 @@ All connectors use the same interface:
 
 ```python
 result = await connector.execute(entity, action, params)
+# result.data contains the records (list or dict depending on action)
+# result.meta contains pagination info for list operations
 ```
 
 ### Actions
 
-| Action | Description | Returns |
-|--------|-------------|---------|
+| Action | Description | `result.data` Type |
+|--------|-------------|-------------------|
 | `list` | Get multiple records | `list[dict]` |
 | `get` | Get single record by ID | `dict` |
 | `create` | Create new record | `dict` |
@@ -211,7 +213,7 @@ async def fetch_all(connector, entity, params=None):
     return all_records
 ```
 
-**For complete API reference:** See [Entity-Action API Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md)
+**For complete API reference:** See [Entity-Action API Reference](references/entity-action-api.md)
 
 ---
 
@@ -257,7 +259,7 @@ auth_config=SalesforceOAuthConfig(
 )
 ```
 
-**For complete auth details:** See [Authentication Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md)
+**For complete auth details:** See [Authentication Reference](references/authentication.md)
 
 ---
 
@@ -327,13 +329,22 @@ async def github_execute(entity: str, action: str, params: dict | None = None):
 
 ```python
 from langchain.tools import StructuredTool
+import asyncio
+
+# For sync contexts, wrap the async call
+def execute_sync(entity: str, action: str, params: dict):
+    return asyncio.get_event_loop().run_until_complete(
+        connector.execute(entity, action, params)
+    )
 
 github_tool = StructuredTool.from_function(
-    func=lambda entity, action, params: connector.execute(entity, action, params),
+    func=execute_sync,
     name="github",
     description="Execute GitHub operations"
 )
 ```
+
+**Note:** If you're already in an async context, use LangChain's async tool support instead.
 
 ---
 
@@ -360,14 +371,14 @@ connector = StripeConnector(
 
 | Topic | Link |
 |-------|------|
-| Platform Setup | [platform-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/platform-setup.md) |
-| OSS Setup | [oss-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/oss-setup.md) |
-| Getting Started | [getting-started.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/getting-started.md) |
-| Entity-Action API | [entity-action-api.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md) |
-| Authentication | [authentication.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md) |
-| Programmatic Setup | [programmatic-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/programmatic-setup.md) |
-| MCP Integration | [mcp-integration.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/mcp-integration.md) |
-| Troubleshooting | [troubleshooting.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/troubleshooting.md) |
+| Platform Setup | [references/platform-setup.md](references/platform-setup.md) |
+| OSS Setup | [references/oss-setup.md](references/oss-setup.md) |
+| Getting Started | [references/getting-started.md](references/getting-started.md) |
+| Entity-Action API | [references/entity-action-api.md](references/entity-action-api.md) |
+| Authentication | [references/authentication.md](references/authentication.md) |
+| Programmatic Setup | [references/programmatic-setup.md](references/programmatic-setup.md) |
+| MCP Integration | [references/mcp-integration.md](references/mcp-integration.md) |
+| Troubleshooting | [references/troubleshooting.md](references/troubleshooting.md) |
 
 ## Per-Connector Documentation
 

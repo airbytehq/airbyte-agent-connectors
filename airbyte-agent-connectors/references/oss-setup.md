@@ -332,15 +332,22 @@ async def get_repository(owner: str, repo: str) -> str:
 
 ```python
 from langchain.tools import StructuredTool
+import asyncio
+
+# For sync contexts, wrap the async call properly
+def execute_sync(entity: str, action: str, params: dict):
+    """Wrapper for async connector.execute() in sync context."""
+    loop = asyncio.get_event_loop()
+    return loop.run_until_complete(connector.execute(entity, action, params))
 
 github_tool = StructuredTool.from_function(
-    func=lambda entity, action, params: asyncio.run(
-        connector.execute(entity, action, params)
-    ),
+    func=execute_sync,
     name="github",
     description="Execute GitHub operations"
 )
 ```
+
+**Note:** If you're already in an async context (e.g., inside an async function), use LangChain's async tool support or call `connector.execute()` directly with `await`.
 
 ## Credential Security Best Practices
 
