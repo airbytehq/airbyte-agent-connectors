@@ -17,12 +17,11 @@ You need Airbyte application credentials:
 - `AIRBYTE_CLIENT_ID` - from app.airbyte.ai settings (one-time)
 - `AIRBYTE_CLIENT_SECRET` - from app.airbyte.ai settings (one-time)
 
-> **Note:** Airbyte uses two API hosts: `api.airbyte.com` for authentication/workspace management and `api.airbyte.ai` for embedded connector operations. The examples below use the correct host for each endpoint.
 
 ## Step 1: Get Application Token
 
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
   -H 'Content-Type: application/json' \
   -d '{
     "client_id": "<AIRBYTE_CLIENT_ID>",
@@ -44,7 +43,7 @@ Save this as `APPLICATION_TOKEN`. Use it for all subsequent requests.
 | Pattern | Best For | API Base |
 |---------|----------|----------|
 | **A: Scoped Token** | API key connectors, simpler flow | `api.airbyte.ai` |
-| **B: Workspace** | OAuth connectors, enterprise multi-tenant | `api.airbyte.com` + `api.airbyte.ai` |
+| **B: Workspace** | OAuth connectors, enterprise multi-tenant | `api.airbyte.ai` |
 | **C: UI Template** | Making connectors visible in Airbyte UI | `api.airbyte.ai` |
 
 ---
@@ -123,7 +122,7 @@ Use this pattern when you need OAuth (Salesforce, HubSpot, Google Drive, Interco
 ### Step B2: Create Workspace
 
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/workspaces' \
+curl -X POST 'https://api.airbyte.ai/api/v1/workspaces' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -144,7 +143,7 @@ Save `workspaceId`.
 ### Step B3: Initiate OAuth
 
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/sources/initiateOAuth' \
+curl -X POST 'https://api.airbyte.ai/api/v1/sources/initiateOAuth' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
@@ -166,7 +165,7 @@ Redirect user to `consentUrl`. After authorization, they return to your `redirec
 ### Step B4: Create Source with OAuth Secret
 
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/sources' \
+curl -X POST 'https://api.airbyte.ai/api/v1/sources' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{

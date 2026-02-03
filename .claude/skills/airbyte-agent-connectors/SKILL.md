@@ -71,7 +71,7 @@ After creating the connector programmatically, register it as a template to make
 
 **Get an Application Token first:**
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
   -H 'Content-Type: application/json' \
   -d '{"client_id": "<AIRBYTE_CLIENT_ID>", "client_secret": "<AIRBYTE_CLIENT_SECRET>"}'
 ```

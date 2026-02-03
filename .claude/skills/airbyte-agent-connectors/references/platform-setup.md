@@ -202,7 +202,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
 ### Get the Application Token
 
 ```bash
-curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
   -H 'Content-Type: application/json' \
   -d '{
     "client_id": "<AIRBYTE_CLIENT_ID>",
