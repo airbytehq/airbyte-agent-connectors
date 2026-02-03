@@ -90,9 +90,10 @@ class Operation(BaseModel):
         None,
         alias="x-airbyte-preferred-for-check",
         description=(
-            "Mark this list operation as the preferred operation for health checks. "
+            "Mark this operation as the preferred operation for health checks. "
             "When the CHECK action is executed, this operation will be used instead of "
-            "falling back to the first available list operation. Choose a lightweight, "
+            "falling back to the first available list operation. The operation's actual "
+            "action type (get, list, etc.) will be respected. Choose a lightweight, "
             "always-available endpoint (e.g., users, accounts)."
         ),
     )
