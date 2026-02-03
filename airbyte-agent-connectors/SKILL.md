@@ -18,6 +18,8 @@ metadata:
 
 Airbyte Agent Connectors let AI agents call third-party APIs through strongly typed, well-documented tools. Each connector is a standalone Python package.
 
+> **Important:** This skill provides documentation and setup guidance. When helping users set up connectors, follow the documented workflows in the "Common Workflows" section below. Do NOT attempt to import Python modules, verify package installations, or run code to check configurations—simply guide users through the steps using the code examples provided in this documentation.
+
 ## Mode Detection
 
 **First, determine which mode the user needs:**
