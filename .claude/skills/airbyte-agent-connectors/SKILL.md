@@ -60,8 +60,28 @@ connector = await StripeConnector.create_hosted(
     airbyte_client_secret="...",
     auth_config=StripeAuthConfig(api_key="sk_live_...")
 )
-# Connector now appears in your Airbyte UI!
+# Connector is created and ready to use programmatically
 ```
+
+### Register in UI (Required for UI Visibility)
+
+After creating the connector programmatically, register it as a template to make it appear in the Airbyte UI's Connectors page:
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "name": "Stripe",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+Get `actor_definition_id` from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids).
+
+Your connector now appears in the Connectors page at [app.airbyte.ai](https://app.airbyte.ai) with a "Direct" badge.
 
 ### Use Existing Connector
 
@@ -288,7 +308,19 @@ auth_config=SalesforceOAuthConfig(
        name="Gong Source"
    )
    ```
-5. Confirm: "Connector created! It will appear in your Airbyte Connectors UI."
+5. Register the connector template so it appears in the UI:
+   ```bash
+   curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+     -H 'Content-Type: application/json' \
+     -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+     -d '{
+       "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
+       "name": "Gong",
+       "partial_default_config": {},
+       "mode": "DIRECT"
+     }'
+   ```
+6. Confirm: "Connector created and registered! It now appears in your Airbyte Connectors page at [app.airbyte.ai](https://app.airbyte.ai)."
 
 ### OSS User: "Set up a GitHub connector"
 
