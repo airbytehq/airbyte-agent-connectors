@@ -1,11 +1,11 @@
 ---
 name: airbyte-agent-connectors
 description: |
-  Set up and configure Airbyte Agent Connectors for AI agent applications.
-  Use when working with Airbyte, agent connectors, data integration for agents,
-  connecting to Salesforce/HubSpot/GitHub/Slack/Stripe via agents, or building
-  agentic data pipelines. Helps with authentication, connector selection,
-  entity-action APIs, framework integration (PydanticAI, LangChain), and MCP setup.
+  MCP server and tools for Claude to access third-party APIs (Salesforce, HubSpot,
+  GitHub, Slack, Stripe, Jira, and 15+ more). Use for Claude Desktop integration,
+  Claude Code MCP setup, or building AI agents with data connectors. Covers
+  authentication, entity-action APIs, PydanticAI/LangChain integration, and
+  programmatic connector setup.
 license: Elastic-2.0
 metadata:
   author: Airbyte
@@ -65,27 +65,27 @@ All 21 connectors follow the same entity-action pattern. Each has README.md, AUT
 
 | Connector | Package | Auth Type | Key Entities |
 |-----------|---------|-----------|--------------|
-| [Airtable](../../../connectors/airtable/) | `airbyte-agent-airtable` | API Key | bases, tables, records |
-| [Amazon Ads](../../../connectors/amazon-ads/) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
-| [Asana](../../../connectors/asana/) | `airbyte-agent-asana` | PAT | projects, tasks, users |
-| [Facebook Marketing](../../../connectors/facebook-marketing/) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
-| [GitHub](../../../connectors/github/) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
-| [Gong](../../../connectors/gong/) | `airbyte-agent-gong` | API Key | calls, users, deals |
-| [Google Drive](../../../connectors/google-drive/) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
-| [Greenhouse](../../../connectors/greenhouse/) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
-| [HubSpot](../../../connectors/hubspot/) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
-| [Intercom](../../../connectors/intercom/) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
-| [Jira](../../../connectors/jira/) | `airbyte-agent-jira` | API Key | issues, projects, users |
-| [Klaviyo](../../../connectors/klaviyo/) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
-| [Linear](../../../connectors/linear/) | `airbyte-agent-linear` | API Key | issues, projects, teams |
-| [Mailchimp](../../../connectors/mailchimp/) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
-| [Orb](../../../connectors/orb/) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
-| [Salesforce](../../../connectors/salesforce/) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
-| [Shopify](../../../connectors/shopify/) | `airbyte-agent-shopify` | API Key | orders, products, customers |
-| [Slack](../../../connectors/slack/) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
-| [Stripe](../../../connectors/stripe/) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
-| [Zendesk Chat](../../../connectors/zendesk-chat/) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
-| [Zendesk Support](../../../connectors/zendesk-support/) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
+| [Airtable](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/airtable) | `airbyte-agent-airtable` | API Key | bases, tables, records |
+| [Amazon Ads](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/amazon-ads) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
+| [Asana](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/asana) | `airbyte-agent-asana` | PAT | projects, tasks, users |
+| [Facebook Marketing](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/facebook-marketing) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
+| [GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
+| [Gong](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong) | `airbyte-agent-gong` | API Key | calls, users, deals |
+| [Google Drive](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/google-drive) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
+| [Greenhouse](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/greenhouse) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
+| [HubSpot](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
+| [Intercom](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/intercom) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
+| [Jira](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/jira) | `airbyte-agent-jira` | API Key | issues, projects, users |
+| [Klaviyo](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/klaviyo) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
+| [Linear](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/linear) | `airbyte-agent-linear` | API Key | issues, projects, teams |
+| [Mailchimp](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/mailchimp) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
+| [Orb](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/orb) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
+| [Salesforce](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/salesforce) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
+| [Shopify](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/shopify) | `airbyte-agent-shopify` | API Key | orders, products, customers |
+| [Slack](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/slack) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
+| [Stripe](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
+| [Zendesk Chat](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-chat) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
+| [Zendesk Support](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
 
 ## Setup Patterns
 
@@ -122,9 +122,14 @@ Best for: Development, self-hosted deployments, single-tenant applications.
 
 ### 2. Hosted Engine (Airbyte Agent Engine)
 
-For multi-tenant apps or managed credential storage. **Sign up once, then everything is programmatic.**
+For multi-tenant apps or managed credential storage.
 
-**One-time setup**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) and get your `airbyte_client_id` and `airbyte_client_secret` from settings.
+**Setup options:**
+- **Programmatic (terminal/API)**: Create connectors via curl or scripts—see [Programmatic Setup](./skill-references/programmatic-setup.md)
+- **Python SDK**: Use `create_hosted()` (shown below)
+- **UI**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) for visual configuration
+
+**One-time setup**: Get `airbyte_client_id` and `airbyte_client_secret` from app.airbyte.ai settings.
 
 **Step 1: Create a connector (first time)**
 ```python
@@ -202,6 +207,19 @@ connector = StripeConnector(
 - For local SDK, implement rotation in your deployment pipeline
 - Never hardcode credentials in source code
 
+## Common Mistakes
+
+Avoid these patterns when using Airbyte Agent Connectors:
+
+| Mistake | Why It's Wrong | Do This Instead |
+|---------|----------------|-----------------|
+| Hardcoding credentials in code | Security risk, can't rotate | Use environment variables or secret managers |
+| Creating new connector on every request | Wastes resources, hits rate limits | Reuse connector instances; use `external_user_id` lookup |
+| Ignoring pagination | Missing data on large datasets | Always check `result.meta.has_more` and paginate |
+| Not handling rate limits | Requests fail unexpectedly | Implement exponential backoff; check connector's rate limit docs |
+| Using `create_hosted()` without caching `connector_id` | Extra API calls on every request | Cache the returned `connector_id` after first creation |
+| Mixing token types in API calls | Auth failures | Application token for setup, scoped token for user operations |
+
 ## Framework Integration
 
 ### Choosing a Framework
@@ -247,6 +265,7 @@ For detailed information, see:
 - **[Getting Started](./skill-references/getting-started.md)** - Installation, environment setup, first connector
 - **[Entity-Action API](./skill-references/entity-action-api.md)** - Core API patterns, actions, pagination
 - **[Authentication](./skill-references/authentication.md)** - Auth types overview, OAuth setup
+- **[Programmatic Setup](./skill-references/programmatic-setup.md)** - Terminal/curl setup without UI (tokens, HTTP API)
 - **[MCP Integration](./skill-references/mcp-integration.md)** - MCP server setup, Claude Code/Desktop config
 - **[Troubleshooting](./skill-references/troubleshooting.md)** - Common errors, rate limiting, debugging
 
@@ -259,9 +278,9 @@ Each connector directory contains:
 - **REFERENCE.md** - Complete entity/action reference with parameters
 
 Example: For GitHub details, see:
-- [connectors/github/README.md](../../../connectors/github/README.md)
-- [connectors/github/AUTH.md](../../../connectors/github/AUTH.md)
-- [connectors/github/REFERENCE.md](../../../connectors/github/REFERENCE.md)
+- [connectors/github/README.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/README.md)
+- [connectors/github/AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/AUTH.md)
+- [connectors/github/REFERENCE.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/REFERENCE.md)
 
 ## Quick Reference
 
