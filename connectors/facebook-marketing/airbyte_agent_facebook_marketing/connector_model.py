@@ -26,7 +26,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.9',
+    version='1.0.10',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -34,7 +34,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='OAuth 2.0 Authentication',
             type='object',
-            required=['client_id', 'client_secret'],
+            required=['access_token'],
             properties={
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',

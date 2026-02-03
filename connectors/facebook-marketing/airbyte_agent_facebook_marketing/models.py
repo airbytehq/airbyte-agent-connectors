@@ -18,11 +18,11 @@ class FacebookMarketingAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    access_token: Optional[str] = None
+    access_token: str
     """Facebook OAuth2 Access Token"""
-    client_id: str
+    client_id: Optional[str] = None
     """Facebook App Client ID"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """Facebook App Client Secret"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
