@@ -317,7 +317,7 @@ class AirbyteCloudClient:
             )
         """
         token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/connectors/sources/{connector_id}/execute"
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute"
         headers = {"Authorization": f"Bearer {token}"}
         request_body = {
             "entity": entity,
