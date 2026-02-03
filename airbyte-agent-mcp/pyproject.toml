@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-mcp"
-version = "0.1.105"
+version = "0.1.106"
 description = "MCP server that exposes Airbyte Connector SDK as MCP tools"
 readme = "README.md"
 requires-python = ">=3.13"
