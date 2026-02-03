@@ -17,8 +17,8 @@ In open source mode, you provide API credentials directly to the connector.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | OAuth access token for API requests |
 | `refresh_token` | `str` | Yes | OAuth refresh token for automatic token renewal |
-| `client_id` | `str` | Yes | Connected App Consumer Key |
-| `client_secret` | `str` | Yes | Connected App Consumer Secret |
+| `client_id` | `str` | No | Connected App Consumer Key |
+| `client_secret` | `str` | No | Connected App Consumer Secret |
 
 Example request:
 
@@ -71,8 +71,8 @@ Create a connector with OAuth credentials.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | OAuth access token for API requests |
 | `refresh_token` | `str` | Yes | OAuth refresh token for automatic token renewal |
-| `client_id` | `str` | Yes | Connected App Consumer Key |
-| `client_secret` | `str` | Yes | Connected App Consumer Secret |
+| `client_id` | `str` | No | Connected App Consumer Key |
+| `client_secret` | `str` | No | Connected App Consumer Secret |
 
 Example request:
 
