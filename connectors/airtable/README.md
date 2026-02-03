@@ -101,7 +101,7 @@ See the official [Airtable API reference](https://airtable.com/developers/web/ap
 
 ## Version information
 
-- **Package version:** 0.1.7
+- **Package version:** 0.1.8
 - **Connector version:** 1.0.2
-- **Generated with Connector SDK commit SHA:** 5c6dbf883d3b057550333775bd83a78777527017
+- **Generated with Connector SDK commit SHA:** 5ef2158e48be294dd68d60f7d9993684d424d388
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/airtable/CHANGELOG.md)
