@@ -15,8 +15,8 @@ In open source mode, you provide API credentials directly to the connector.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | Your Slack App's Client ID |
-| `client_secret` | `str` | Yes | Your Slack App's Client Secret |
+| `client_id` | `str` | No | Your Slack App's Client ID |
+| `client_secret` | `str` | No | Your Slack App's Client Secret |
 | `access_token` | `str` | Yes | OAuth access token (bot token from oauth.v2.access response) |
 
 Example request:
@@ -67,8 +67,8 @@ Create a connector with OAuth credentials.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | Your Slack App's Client ID |
-| `client_secret` | `str` | Yes | Your Slack App's Client Secret |
+| `client_id` | `str` | No | Your Slack App's Client ID |
+| `client_secret` | `str` | No | Your Slack App's Client Secret |
 | `access_token` | `str` | Yes | OAuth access token (bot token from oauth.v2.access response) |
 
 `replication_config` fields you need:

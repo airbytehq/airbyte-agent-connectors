@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
 # Authentication configuration - multiple options available
 
@@ -25,9 +26,9 @@ class SlackOauth20AuthenticationAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    client_id: str
+    client_id: Optional[str] = None
     """Your Slack App's Client ID"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """Your Slack App's Client Secret"""
     access_token: str
     """OAuth access token (bot token from oauth.v2.access response)"""
@@ -214,14 +215,6 @@ class File(BaseModel):
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
 
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
-
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -242,6 +235,14 @@ class Attachment(BaseModel):
     footer: Union[str | None, Any] = Field(default=None)
     footer_icon: Union[str | None, Any] = Field(default=None)
     ts: Union[Any, Any] = Field(default=None)
+
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
