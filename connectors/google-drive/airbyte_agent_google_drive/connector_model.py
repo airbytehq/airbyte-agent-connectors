@@ -29,7 +29,7 @@ from uuid import (
 GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9f8dda77-1048-4368-815b-269bf54ee9b8'),
     name='google-drive',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://www.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -41,7 +41,7 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='OAuth 2.0 Authentication',
             type='object',
-            required=['refresh_token', 'client_id', 'client_secret'],
+            required=['refresh_token'],
             properties={
                 'access_token': AuthConfigFieldSpec(
                     title='Access Token',

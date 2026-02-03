@@ -17,8 +17,8 @@ In open source mode, you provide API credentials directly to the connector.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | Your Google OAuth2 Access Token (optional, will be obtained via refresh) |
 | `refresh_token` | `str` | Yes | Your Google OAuth2 Refresh Token |
-| `client_id` | `str` | Yes | Your Google OAuth2 Client ID |
-| `client_secret` | `str` | Yes | Your Google OAuth2 Client Secret |
+| `client_id` | `str` | No | Your Google OAuth2 Client ID |
+| `client_secret` | `str` | No | Your Google OAuth2 Client Secret |
 
 Example request:
 
@@ -53,8 +53,8 @@ Create a connector with OAuth credentials.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | Your Google OAuth2 Access Token (optional, will be obtained via refresh) |
 | `refresh_token` | `str` | Yes | Your Google OAuth2 Refresh Token |
-| `client_id` | `str` | Yes | Your Google OAuth2 Client ID |
-| `client_secret` | `str` | Yes | Your Google OAuth2 Client Secret |
+| `client_id` | `str` | No | Your Google OAuth2 Client ID |
+| `client_secret` | `str` | No | Your Google OAuth2 Client Secret |
 
 Example request:
 
