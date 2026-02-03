@@ -27,7 +27,7 @@ from uuid import (
 SlackConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c2281cee-86f9-4a86-bb48-d23286b4c7bd'),
     name='slack',
-    version='0.1.12',
+    version='0.1.13',
     base_url='https://slack.com/api',
     auth=AuthConfig(
         options=[
@@ -61,7 +61,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 user_config_spec=AirbyteAuthConfig(
                     title='OAuth 2.0 Authentication',
                     type='object',
-                    required=['client_id', 'client_secret', 'access_token'],
+                    required=['access_token'],
                     properties={
                         'client_id': AuthConfigFieldSpec(
                             title='Client ID',
