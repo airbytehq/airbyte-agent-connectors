@@ -179,48 +179,55 @@ result = await connector.execute("files", "download", {
 
 ## Execution Result
 
-All operations return an `ExecutionResult`:
+Result types vary by connector and operation:
 
-```python
-@dataclass
-class ExecutionResult:
-    success: bool
-    data: dict[str, Any] | list[dict] | AsyncIterator[bytes]
-    error: str | None = None
-    meta: dict[str, Any] | None = None
-```
-
-### Handling Results
+### List Operations (with pagination)
 
 ```python
 result = await connector.execute("customers", "list", {"limit": 10})
+# result.data: list of records
+# result.meta: pagination info (cursor, totalRecords, etc.)
+```
 
-if result.success:
-    # Access the data
+### Get/Create/Update/Delete Operations
+
+```python
+result = await connector.execute("customers", "get", {"id": "cus_xxx"})
+# result.data: the entity dict
+# result.meta: may be None or contain additional info
+```
+
+### Error Handling
+
+Operations raise `RuntimeError` on failure rather than returning error flags:
+
+```python
+try:
+    result = await connector.execute("customers", "list", {"limit": 10})
     customers = result.data
     for customer in customers:
         print(f"{customer['id']}: {customer['email']}")
 
-    # Check pagination metadata
-    if result.meta and result.meta.get("has_more"):
-        next_cursor = result.meta.get("next_cursor")
-        print(f"More results available, cursor: {next_cursor}")
-else:
-    # Handle error
-    print(f"Operation failed: {result.error}")
+    # Check pagination
+    if result.meta and hasattr(result.meta, 'pagination'):
+        print(f"Has more: {result.meta.pagination.cursor is not None}")
+except RuntimeError as e:
+    print(f"Operation failed: {e}")
 ```
 
 ### Result Structure by Action
 
-| Action | `result.data` Type | Notes |
-|--------|-------------------|-------|
-| `get` | `dict` | Single record |
-| `list` | `list[dict]` | Array of records |
-| `create` | `dict` | Created record |
-| `update` | `dict` | Updated record |
-| `delete` | `dict` | Deletion confirmation |
-| `api_search` | `list[dict]` | Array of matching records |
-| `download` | `AsyncIterator[bytes]` | Stream for file content |
+| Action | `result.data` Type | `result.meta` |
+|--------|-------------------|---------------|
+| `get` | `dict` | Typically None |
+| `list` | `list[dict]` | Pagination info |
+| `create` | `dict` | Typically None |
+| `update` | `dict` | Typically None |
+| `delete` | `dict` | Typically None |
+| `api_search` | `list[dict]` | Pagination info |
+| `download` | `AsyncIterator[bytes]` | Stream metadata |
+
+**Note:** Result types are connector-specific Pydantic models (e.g., `GongExecuteResultWithMeta`). Access `.data` and `.meta` attributes directly.
 
 ## Pagination
 
@@ -239,16 +246,18 @@ async def list_all_customers(connector):
         if cursor:
             params["starting_after"] = cursor
 
-        result = await connector.execute("customers", "list", params)
-
-        if not result.success:
-            raise Exception(f"Failed: {result.error}")
+        try:
+            result = await connector.execute("customers", "list", params)
+        except RuntimeError as e:
+            raise Exception(f"Failed: {e}")
 
         all_customers.extend(result.data)
 
         # Check if more pages exist
-        if result.meta and result.meta.get("has_more"):
-            cursor = result.meta.get("next_cursor")
+        if result.meta and hasattr(result.meta, 'pagination') and result.meta.pagination:
+            cursor = getattr(result.meta.pagination, 'cursor', None)
+            if not cursor:
+                break
         else:
             break
 
@@ -314,11 +323,11 @@ async def safe_execute(entity: str, action: str, params: dict | None = None) -> 
         return f"Invalid operation: {', '.join(validation.errors)}"
 
     # Execute if valid
-    result = await connector.execute(entity, action, params)
-    if result.success:
+    try:
+        result = await connector.execute(entity, action, params)
         return json.dumps(result.data)
-    else:
-        return f"Error: {result.error}"
+    except RuntimeError as e:
+        return f"Error: {e}"
 ```
 
 ### What Validation Checks
@@ -425,11 +434,11 @@ async def execute(entity: str, action: str, params: dict | None = None) -> str:
     Returns:
         JSON string of the result
     """
-    result = await connector.execute(entity, action, params or {})
-    if result.success:
+    try:
+        result = await connector.execute(entity, action, params or {})
         return json.dumps(result.data)
-    else:
-        return f"Error: {result.error}"
+    except RuntimeError as e:
+        return f"Error: {e}"
 ```
 
 ### Entity-Specific Tools
@@ -443,14 +452,20 @@ async def list_customers(limit: int = 10, email_filter: str | None = None) -> st
     params = {"limit": limit}
     if email_filter:
         params["email"] = email_filter
-    result = await connector.execute("customers", "list", params)
-    return json.dumps(result.data) if result.success else f"Error: {result.error}"
+    try:
+        result = await connector.execute("customers", "list", params)
+        return json.dumps(result.data)
+    except RuntimeError as e:
+        return f"Error: {e}"
 
 @agent.tool_plain
 async def get_customer(customer_id: str) -> str:
     """Get a specific Stripe customer by ID."""
-    result = await connector.execute("customers", "get", {"id": customer_id})
-    return json.dumps(result.data) if result.success else f"Error: {result.error}"
+    try:
+        result = await connector.execute("customers", "get", {"id": customer_id})
+        return json.dumps(result.data)
+    except RuntimeError as e:
+        return f"Error: {e}"
 ```
 
 ## Discovering Available Entities and Actions

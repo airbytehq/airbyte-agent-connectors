@@ -145,6 +145,11 @@ connector = await StripeConnector.create_hosted(
 # Connector is now registered in Airbyte - no UI needed
 ```
 
+**Note:** `create_hosted()` is an async classmethod added in SDK v0.1.0. If you get `AttributeError`, update your SDK:
+```bash
+pip install --upgrade airbyte-agent-stripe
+```
+
 **Step 2: Use existing connector (subsequent calls)**
 ```python
 connector = StripeConnector(
@@ -353,14 +358,19 @@ async def fetch_all(connector, entity, params=None):
         if cursor:
             params["after"] = cursor  # or "starting_after" for Stripe
 
-        result = await connector.execute(entity, "list", params)
-        if not result.success:
+        try:
+            result = await connector.execute(entity, "list", params)
+        except RuntimeError as e:
+            print(f"Failed: {e}")
             break
 
         all_records.extend(result.data)
 
-        if result.meta and result.meta.get("has_more"):
-            cursor = result.meta.get("next_cursor")
+        # Check for pagination cursor
+        if result.meta and hasattr(result.meta, 'pagination') and result.meta.pagination:
+            cursor = getattr(result.meta.pagination, 'cursor', None)
+            if not cursor:
+                break
         else:
             break
 

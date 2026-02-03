@@ -145,16 +145,56 @@ This guide covers common errors and solutions when working with Airbyte Agent Co
    import asyncio
 
    async def execute_with_retry(connector, entity, action, params, max_retries=3):
+       last_error = None
        for attempt in range(max_retries):
-           result = await connector.execute(entity, action, params)
-           if result.success:
-               return result
-           if "5" in str(result.error)[:3]:  # 5xx error
-               await asyncio.sleep(2 ** attempt)  # Exponential backoff
-           else:
-               break
-       return result
+           try:
+               return await connector.execute(entity, action, params)
+           except RuntimeError as e:
+               last_error = e
+               if "5" in str(e)[:3]:  # 5xx error
+                   await asyncio.sleep(2 ** attempt)  # Exponential backoff
+               else:
+                   raise
+       raise last_error
    ```
+
+### Embedded Connector Instability (Pattern A)
+
+**Symptoms:**
+- Pattern A connector worked initially, then returns 500 errors
+- Errors occur after period of inactivity
+- Connector instance becomes unresponsive
+
+**Causes:**
+- Scoped tokens have limited lifetime
+- Connector instances may be recycled during inactivity
+- Backend scaling events
+
+**Solutions:**
+
+1. **Regenerate scoped token:**
+   ```bash
+   # Get fresh scoped token before operations
+   curl -X POST 'https://api.airbyte.ai/api/v1/embedded/scoped-token' \
+     -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+     -H 'Content-Type: application/json' \
+     -d '{"workspace_name": "<EXTERNAL_USER_ID>"}'
+   ```
+
+2. **Implement token refresh logic:**
+   - Cache scoped tokens with conservative TTL
+   - Refresh proactively or on 401/500 errors
+   - Retry with fresh token before failing
+
+3. **Use Pattern B for production:**
+   - Pattern B (Workspace flow) creates persistent Sources
+   - Better stability for long-running workloads
+
+4. **Retry with backoff:**
+   - 500 errors may be transient
+   - Use exponential backoff (see Retry Configuration section)
+
+**Note:** Pattern A (Scoped Token flow) is optimized for stateless, short-lived operations. For production workloads requiring persistent connections, use Pattern B.
 
 ## Retry Configuration
 
@@ -398,13 +438,14 @@ logging.getLogger("airbyte_agent_github").setLevel(logging.DEBUG)
 ### Inspect Result Objects
 
 ```python
-result = await connector.execute("customers", "list", {"limit": 1})
-
-print(f"Success: {result.success}")
-print(f"Error: {result.error}")
-print(f"Data type: {type(result.data)}")
-print(f"Data: {result.data}")
-print(f"Meta: {result.meta}")
+try:
+    result = await connector.execute("customers", "list", {"limit": 1})
+    # List operations return an object with .data and .meta
+    print(f"Data type: {type(result.data)}")
+    print(f"Data: {result.data}")
+    print(f"Meta: {result.meta}")  # Pagination info
+except RuntimeError as e:
+    print(f"Error: {e}")
 ```
 
 ### Test Credentials Independently

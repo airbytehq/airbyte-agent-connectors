@@ -44,6 +44,19 @@ Save this as `APPLICATION_TOKEN`. Use it for all subsequent requests.
 | **A: Scoped Token** | API key connectors, simpler flow | `api.airbyte.ai` |
 | **B: Workspace** | OAuth connectors, enterprise multi-tenant | `api.airbyte.com` + `api.airbyte.ai` |
 
+### What Each Pattern Creates
+
+| Pattern | Creates | UI Visibility | Best For |
+|---------|---------|---------------|----------|
+| **A: Scoped Token** | Embedded connector instance | Not visible in UI | API-only, short-lived, multi-tenant |
+| **B: Workspace** | Source in workspace | Visible in Sources page | OAuth connectors, visual management |
+
+**Pattern A (Scoped Token):** Creates connector instances tied to a scoped workspace. Managed via API only - they don't appear in the Airbyte Cloud UI. Best for programmatic multi-tenant setups where you don't need visual management.
+
+**Pattern B (Workspace):** Creates traditional Sources that appear in the Airbyte Cloud UI under Sources. Required for OAuth connectors using server-side OAuth flow. Better stability for production workloads.
+
+**Stability Note:** Pattern A connector instances may be recycled during inactivity. Implement token refresh logic for production use, or use Pattern B for long-running workloads.
+
 ---
 
 ## Pattern A: Scoped Token Flow (Recommended for API Key Connectors)
@@ -97,6 +110,22 @@ Response:
 ```
 
 Save the `id` as `CONNECTOR_ID`.
+
+**Note:** The `auth_config` structure varies by connector. See each connector's AUTH.md for exact fields:
+
+| Connector | Auth Type | `auth_config` Fields |
+|-----------|-----------|---------------------|
+| Stripe | API Key | `{"api_key": "sk_live_..."}` |
+| Gong | API Key | `{"access_key": "...", "access_key_secret": "..."}` |
+| GitHub | PAT | `{"token": "ghp_..."}` |
+| Slack | Bot Token | `{"token": "xoxb-..."}` |
+| Jira | API Token | `{"api_token": "...", "email": "...", "domain": "..."}` |
+| HubSpot | Private App | `{"access_token": "pat-na1-..."}` |
+
+For the complete auth config structure, see:
+- [Gong AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong/AUTH.md)
+- [Stripe AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe/AUTH.md)
+- [GitHub AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/AUTH.md)
 
 ### Step A4: Execute Operations
 
