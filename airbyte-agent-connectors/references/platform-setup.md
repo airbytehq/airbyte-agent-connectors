@@ -108,9 +108,9 @@ connector = StripeConnector(
     airbyte_client_secret=os.environ["AIRBYTE_CLIENT_SECRET"],
 )
 
-# Option B: Use cached connector_id (faster, no lookup)
+# Option B: Use connector_id directly (if you have it cached)
 connector = StripeConnector(
-    connector_id="uuid-from-create-hosted",
+    connector_id="your-connector-uuid",  # From previous create_hosted() or API
     airbyte_client_id=os.environ["AIRBYTE_CLIENT_ID"],
     airbyte_client_secret=os.environ["AIRBYTE_CLIENT_SECRET"],
 )
