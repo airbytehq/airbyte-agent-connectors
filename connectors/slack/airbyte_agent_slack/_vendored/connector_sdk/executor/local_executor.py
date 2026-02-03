@@ -261,19 +261,10 @@ class LocalExecutor:
         auth_mapping = None
         required_fields: list[str] | None = None
 
-        # Check for single option (direct auth_mapping)
+        # Get auth_mapping from the config
         if user_config_spec.auth_mapping:
             auth_mapping = user_config_spec.auth_mapping
             required_fields = user_config_spec.required
-        # Check for oneOf (multiple auth options)
-        elif user_config_spec.one_of:
-            # Find the matching option based on which required fields are present
-            for option in user_config_spec.one_of:
-                option_required = option.required or []
-                if all(field in user_secrets for field in option_required):
-                    auth_mapping = option.auth_mapping
-                    required_fields = option_required
-                    break
 
         if not auth_mapping:
             # No matching auth_mapping found, use secrets as-is
