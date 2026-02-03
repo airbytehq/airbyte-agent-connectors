@@ -29,7 +29,7 @@ from uuid import (
 SalesforceConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b117307c-14b6-41aa-9422-947e34922962'),
     name='salesforce',
-    version='1.0.8',
+    version='1.0.9',
     base_url='{instance_url}/services/data/v59.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -123,7 +123,6 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.records',
                     meta_extractor={'done': '$.done', 'nextRecordsUrl': '$.nextRecordsUrl'},
-                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
