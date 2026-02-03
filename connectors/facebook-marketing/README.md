@@ -92,11 +92,13 @@ This connector supports the following entities and actions. For more details, se
 | Entity | Actions |
 |--------|---------|
 | Current User | [Get](./REFERENCE.md#current-user-get) |
+| Ad Accounts | [List](./REFERENCE.md#ad-accounts-list) |
 | Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get) |
 | Ad Sets | [List](./REFERENCE.md#ad-sets-list), [Get](./REFERENCE.md#ad-sets-get) |
 | Ads | [List](./REFERENCE.md#ads-list), [Get](./REFERENCE.md#ads-get) |
 | Ad Creatives | [List](./REFERENCE.md#ad-creatives-list) |
 | Ads Insights | [List](./REFERENCE.md#ads-insights-list) |
+| Ad Account | [Get](./REFERENCE.md#ad-account-get) |
 | Custom Conversions | [List](./REFERENCE.md#custom-conversions-list) |
 | Images | [List](./REFERENCE.md#images-list) |
 | Videos | [List](./REFERENCE.md#videos-list) |
@@ -112,7 +114,7 @@ See the official [Facebook-Marketing API reference](https://developers.facebook.
 
 ## Version information
 
-- **Package version:** 0.1.9
-- **Connector version:** 1.0.10
-- **Generated with Connector SDK commit SHA:** 888d0538a17d95c6769f63dbad90e713de97c89b
+- **Package version:** 0.1.10
+- **Connector version:** 1.0.11
+- **Generated with Connector SDK commit SHA:** faf61dad6bfe75c1c6fd7291dcad61b924f80238
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/facebook-marketing/CHANGELOG.md)

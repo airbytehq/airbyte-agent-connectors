@@ -26,7 +26,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.10',
+    version='1.0.11',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -109,6 +109,223 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id'],
                 'x-airbyte-entity-name': 'current_user',
+            },
+        ),
+        EntityDefinition(
+            name='ad_accounts',
+            stream_name='ad_accounts',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/me/adaccounts',
+                    action=Action.LIST,
+                    description='Returns a list of ad accounts associated with the current user',
+                    query_params=['fields', 'limit', 'after'],
+                    query_params_schema={
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,account_id,name,account_status,age,amount_spent,balance,business,business_name,created_time,currency,disable_reason,spend_cap,timezone_id,timezone_name',
+                        },
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'List of Facebook Ad Accounts',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Facebook Ad Account in list response',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Ad account ID (with act_ prefix)'},
+                                        'account_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Ad account ID (numeric, without prefix)',
+                                        },
+                                        'name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Ad account name',
+                                        },
+                                        'account_status': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Account status (1=ACTIVE, 2=DISABLED, 3=UNSETTLED, etc.)',
+                                        },
+                                        'age': {
+                                            'type': ['number', 'null'],
+                                            'description': 'Age of the account in days',
+                                        },
+                                        'amount_spent': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Total amount spent by the account',
+                                        },
+                                        'balance': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Current balance of the ad account',
+                                        },
+                                        'business': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Reference to a Facebook Business',
+                                                    'properties': {
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Business ID',
+                                                        },
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Business name',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                            'description': 'Business associated with the account',
+                                        },
+                                        'business_name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Business name',
+                                        },
+                                        'created_time': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Account creation time',
+                                        },
+                                        'currency': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Currency used by the ad account',
+                                        },
+                                        'disable_reason': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Reason the account was disabled',
+                                        },
+                                        'spend_cap': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Spend cap for the account',
+                                        },
+                                        'timezone_id': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Timezone ID',
+                                        },
+                                        'timezone_name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Timezone name',
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ad_accounts',
+                                    'x-airbyte-stream-name': 'ad_accounts',
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'cursors': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'before': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for previous page',
+                                            },
+                                            'after': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for next page',
+                                            },
+                                        },
+                                    },
+                                    'next': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for next page',
+                                    },
+                                    'previous': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for previous page',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'after': '$.paging.cursors.after'},
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Facebook Ad Account in list response',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Ad account ID (with act_ prefix)'},
+                    'account_id': {
+                        'type': ['string', 'null'],
+                        'description': 'Ad account ID (numeric, without prefix)',
+                    },
+                    'name': {
+                        'type': ['string', 'null'],
+                        'description': 'Ad account name',
+                    },
+                    'account_status': {
+                        'type': ['integer', 'null'],
+                        'description': 'Account status (1=ACTIVE, 2=DISABLED, 3=UNSETTLED, etc.)',
+                    },
+                    'age': {
+                        'type': ['number', 'null'],
+                        'description': 'Age of the account in days',
+                    },
+                    'amount_spent': {
+                        'type': ['string', 'null'],
+                        'description': 'Total amount spent by the account',
+                    },
+                    'balance': {
+                        'type': ['string', 'null'],
+                        'description': 'Current balance of the ad account',
+                    },
+                    'business': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/BusinessRef'},
+                            {'type': 'null'},
+                        ],
+                        'description': 'Business associated with the account',
+                    },
+                    'business_name': {
+                        'type': ['string', 'null'],
+                        'description': 'Business name',
+                    },
+                    'created_time': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Account creation time',
+                    },
+                    'currency': {
+                        'type': ['string', 'null'],
+                        'description': 'Currency used by the ad account',
+                    },
+                    'disable_reason': {
+                        'type': ['integer', 'null'],
+                        'description': 'Reason the account was disabled',
+                    },
+                    'spend_cap': {
+                        'type': ['string', 'null'],
+                        'description': 'Spend cap for the account',
+                    },
+                    'timezone_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'Timezone ID',
+                    },
+                    'timezone_name': {
+                        'type': ['string', 'null'],
+                        'description': 'Timezone name',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ad_accounts',
+                'x-airbyte-stream-name': 'ad_accounts',
             },
         ),
         EntityDefinition(
@@ -2028,7 +2245,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'fields': {
                             'type': 'string',
                             'required': False,
-                            'default': 'account_id,account_name,campaign_id,campaign_name,adset_id,adset_name,ad_id,ad_name,clicks,impressions,reach,spend,cpc,cpm,ctr,date_start,date_stop',
+                            'default': 'account_id,account_name,campaign_id,campaign_name,adset_id,adset_name,ad_id,ad_name,clicks,impressions,reach,spend,cpc,cpm,ctr,date_start,date_stop,actions,action_values',
                         },
                         'date_preset': {'type': 'string', 'required': False},
                         'time_range': {'type': 'string', 'required': False},
@@ -2126,6 +2343,106 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['string', 'null'],
                                             'format': 'date',
                                             'description': 'End date of the data',
+                                        },
+                                        'actions': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Total number of actions taken',
+                                            'items': {
+                                                'type': 'object',
+                                                'description': 'Action statistics for Facebook ads',
+                                                'properties': {
+                                                    'action_type': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The type of action',
+                                                    },
+                                                    'action_destination': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The destination of the action',
+                                                    },
+                                                    'action_target_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The target ID of the action',
+                                                    },
+                                                    'value': {
+                                                        'type': ['number', 'null'],
+                                                        'description': 'The value of the action',
+                                                    },
+                                                    '1d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '1-day click attribution',
+                                                    },
+                                                    '7d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '7-day click attribution',
+                                                    },
+                                                    '28d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '28-day click attribution',
+                                                    },
+                                                    '1d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '1-day view attribution',
+                                                    },
+                                                    '7d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '7-day view attribution',
+                                                    },
+                                                    '28d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '28-day view attribution',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'action_values': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Action values taken on the ad',
+                                            'items': {
+                                                'type': 'object',
+                                                'description': 'Action statistics for Facebook ads',
+                                                'properties': {
+                                                    'action_type': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The type of action',
+                                                    },
+                                                    'action_destination': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The destination of the action',
+                                                    },
+                                                    'action_target_id': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'The target ID of the action',
+                                                    },
+                                                    'value': {
+                                                        'type': ['number', 'null'],
+                                                        'description': 'The value of the action',
+                                                    },
+                                                    '1d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '1-day click attribution',
+                                                    },
+                                                    '7d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '7-day click attribution',
+                                                    },
+                                                    '28d_click': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '28-day click attribution',
+                                                    },
+                                                    '1d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '1-day view attribution',
+                                                    },
+                                                    '7d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '7-day view attribution',
+                                                    },
+                                                    '28d_view': {
+                                                        'type': ['number', 'null'],
+                                                        'description': '28-day view attribution',
+                                                    },
+                                                },
+                                            },
                                         },
                                     },
                                     'x-airbyte-entity-name': 'ads_insights',
@@ -2238,9 +2555,344 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'format': 'date',
                         'description': 'End date of the data',
                     },
+                    'actions': {
+                        'type': ['array', 'null'],
+                        'description': 'Total number of actions taken',
+                        'items': {'$ref': '#/components/schemas/AdsActionStats'},
+                    },
+                    'action_values': {
+                        'type': ['array', 'null'],
+                        'description': 'Action values taken on the ad',
+                        'items': {'$ref': '#/components/schemas/AdsActionStats'},
+                    },
                 },
                 'x-airbyte-entity-name': 'ads_insights',
                 'x-airbyte-stream-name': 'ads_insights',
+            },
+        ),
+        EntityDefinition(
+            name='ad_account',
+            stream_name='ad_account',
+            actions=[Action.GET],
+            endpoints={
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/act_{account_id}',
+                    action=Action.GET,
+                    description='Returns information about the specified ad account including balance and currency',
+                    query_params=['fields'],
+                    query_params_schema={
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,account_id,name,account_status,age,amount_spent,balance,business,business_city,business_country_code,business_name,business_state,business_street,business_street2,business_zip,created_time,currency,disable_reason,end_advertiser,end_advertiser_name,funding_source,funding_source_details,has_migrated_permissions,is_personal,is_prepay_account,is_tax_id_required,min_campaign_group_spend_cap,min_daily_budget,owner,spend_cap,timezone_id,timezone_name,timezone_offset_hours_utc',
+                        },
+                    },
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Facebook Ad Account',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Ad account ID (with act_ prefix)'},
+                            'account_id': {
+                                'type': ['string', 'null'],
+                                'description': 'Ad account ID (numeric, without prefix)',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Ad account name',
+                            },
+                            'account_status': {
+                                'type': ['integer', 'null'],
+                                'description': 'Account status (1=ACTIVE, 2=DISABLED, 3=UNSETTLED, etc.)',
+                            },
+                            'age': {
+                                'type': ['number', 'null'],
+                                'description': 'Age of the account in days',
+                            },
+                            'amount_spent': {
+                                'type': ['string', 'null'],
+                                'description': 'Total amount spent by the account',
+                            },
+                            'balance': {
+                                'type': ['string', 'null'],
+                                'description': 'Current balance of the ad account',
+                            },
+                            'business': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Reference to a Facebook Business',
+                                        'properties': {
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Business ID',
+                                            },
+                                            'name': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Business name',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'Business associated with the account',
+                            },
+                            'business_city': {
+                                'type': ['string', 'null'],
+                                'description': 'Business city',
+                            },
+                            'business_country_code': {
+                                'type': ['string', 'null'],
+                                'description': 'Business country code',
+                            },
+                            'business_name': {
+                                'type': ['string', 'null'],
+                                'description': 'Business name',
+                            },
+                            'business_state': {
+                                'type': ['string', 'null'],
+                                'description': 'Business state',
+                            },
+                            'business_street': {
+                                'type': ['string', 'null'],
+                                'description': 'Business street address',
+                            },
+                            'business_street2': {
+                                'type': ['string', 'null'],
+                                'description': 'Business street address line 2',
+                            },
+                            'business_zip': {
+                                'type': ['string', 'null'],
+                                'description': 'Business ZIP code',
+                            },
+                            'created_time': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Account creation time',
+                            },
+                            'currency': {
+                                'type': ['string', 'null'],
+                                'description': 'Currency used by the ad account',
+                            },
+                            'disable_reason': {
+                                'type': ['integer', 'null'],
+                                'description': 'Reason the account was disabled',
+                            },
+                            'end_advertiser': {
+                                'type': ['string', 'null'],
+                                'description': 'End advertiser ID',
+                            },
+                            'end_advertiser_name': {
+                                'type': ['string', 'null'],
+                                'description': 'End advertiser name',
+                            },
+                            'funding_source': {
+                                'type': ['string', 'null'],
+                                'description': 'Funding source ID',
+                            },
+                            'funding_source_details': {
+                                'type': ['object', 'null'],
+                                'description': 'Funding source details',
+                                'additionalProperties': True,
+                            },
+                            'has_migrated_permissions': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether permissions have been migrated',
+                            },
+                            'is_personal': {
+                                'type': ['integer', 'null'],
+                                'description': 'Whether this is a personal account',
+                            },
+                            'is_prepay_account': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this is a prepay account',
+                            },
+                            'is_tax_id_required': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether tax ID is required',
+                            },
+                            'min_campaign_group_spend_cap': {
+                                'type': ['string', 'null'],
+                                'description': 'Minimum campaign group spend cap',
+                            },
+                            'min_daily_budget': {
+                                'type': ['integer', 'null'],
+                                'description': 'Minimum daily budget',
+                            },
+                            'owner': {
+                                'type': ['string', 'null'],
+                                'description': 'Owner ID',
+                            },
+                            'spend_cap': {
+                                'type': ['string', 'null'],
+                                'description': 'Spend cap for the account',
+                            },
+                            'timezone_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'Timezone ID',
+                            },
+                            'timezone_name': {
+                                'type': ['string', 'null'],
+                                'description': 'Timezone name',
+                            },
+                            'timezone_offset_hours_utc': {
+                                'type': ['number', 'null'],
+                                'description': 'Timezone offset from UTC in hours',
+                            },
+                        },
+                        'required': ['id'],
+                        'x-airbyte-entity-name': 'ad_account',
+                        'x-airbyte-stream-name': 'ad_account',
+                    },
+                    record_extractor='$',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Facebook Ad Account',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Ad account ID (with act_ prefix)'},
+                    'account_id': {
+                        'type': ['string', 'null'],
+                        'description': 'Ad account ID (numeric, without prefix)',
+                    },
+                    'name': {
+                        'type': ['string', 'null'],
+                        'description': 'Ad account name',
+                    },
+                    'account_status': {
+                        'type': ['integer', 'null'],
+                        'description': 'Account status (1=ACTIVE, 2=DISABLED, 3=UNSETTLED, etc.)',
+                    },
+                    'age': {
+                        'type': ['number', 'null'],
+                        'description': 'Age of the account in days',
+                    },
+                    'amount_spent': {
+                        'type': ['string', 'null'],
+                        'description': 'Total amount spent by the account',
+                    },
+                    'balance': {
+                        'type': ['string', 'null'],
+                        'description': 'Current balance of the ad account',
+                    },
+                    'business': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/BusinessRef'},
+                            {'type': 'null'},
+                        ],
+                        'description': 'Business associated with the account',
+                    },
+                    'business_city': {
+                        'type': ['string', 'null'],
+                        'description': 'Business city',
+                    },
+                    'business_country_code': {
+                        'type': ['string', 'null'],
+                        'description': 'Business country code',
+                    },
+                    'business_name': {
+                        'type': ['string', 'null'],
+                        'description': 'Business name',
+                    },
+                    'business_state': {
+                        'type': ['string', 'null'],
+                        'description': 'Business state',
+                    },
+                    'business_street': {
+                        'type': ['string', 'null'],
+                        'description': 'Business street address',
+                    },
+                    'business_street2': {
+                        'type': ['string', 'null'],
+                        'description': 'Business street address line 2',
+                    },
+                    'business_zip': {
+                        'type': ['string', 'null'],
+                        'description': 'Business ZIP code',
+                    },
+                    'created_time': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Account creation time',
+                    },
+                    'currency': {
+                        'type': ['string', 'null'],
+                        'description': 'Currency used by the ad account',
+                    },
+                    'disable_reason': {
+                        'type': ['integer', 'null'],
+                        'description': 'Reason the account was disabled',
+                    },
+                    'end_advertiser': {
+                        'type': ['string', 'null'],
+                        'description': 'End advertiser ID',
+                    },
+                    'end_advertiser_name': {
+                        'type': ['string', 'null'],
+                        'description': 'End advertiser name',
+                    },
+                    'funding_source': {
+                        'type': ['string', 'null'],
+                        'description': 'Funding source ID',
+                    },
+                    'funding_source_details': {
+                        'type': ['object', 'null'],
+                        'description': 'Funding source details',
+                        'additionalProperties': True,
+                    },
+                    'has_migrated_permissions': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether permissions have been migrated',
+                    },
+                    'is_personal': {
+                        'type': ['integer', 'null'],
+                        'description': 'Whether this is a personal account',
+                    },
+                    'is_prepay_account': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether this is a prepay account',
+                    },
+                    'is_tax_id_required': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether tax ID is required',
+                    },
+                    'min_campaign_group_spend_cap': {
+                        'type': ['string', 'null'],
+                        'description': 'Minimum campaign group spend cap',
+                    },
+                    'min_daily_budget': {
+                        'type': ['integer', 'null'],
+                        'description': 'Minimum daily budget',
+                    },
+                    'owner': {
+                        'type': ['string', 'null'],
+                        'description': 'Owner ID',
+                    },
+                    'spend_cap': {
+                        'type': ['string', 'null'],
+                        'description': 'Spend cap for the account',
+                    },
+                    'timezone_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'Timezone ID',
+                    },
+                    'timezone_name': {
+                        'type': ['string', 'null'],
+                        'description': 'Timezone name',
+                    },
+                    'timezone_offset_hours_utc': {
+                        'type': ['number', 'null'],
+                        'description': 'Timezone offset from UTC in hours',
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ad_account',
+                'x-airbyte-stream-name': 'ad_account',
             },
         ),
         EntityDefinition(
@@ -3140,6 +3792,36 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'ctr',
             'date_start',
             'date_stop',
+            'actions',
+            'actions[]',
+            'action_values',
+            'action_values[]',
+        ],
+        'ad_account': [
+            'id',
+            'account_id',
+            'name',
+            'balance',
+            'currency',
+            'account_status',
+            'amount_spent',
+            'business_name',
+            'created_time',
+            'spend_cap',
+            'timezone_name',
+        ],
+        'ad_accounts': [
+            'id',
+            'account_id',
+            'name',
+            'balance',
+            'currency',
+            'account_status',
+            'amount_spent',
+            'business_name',
+            'created_time',
+            'spend_cap',
+            'timezone_name',
         ],
         'custom_conversions': [
             'id',
