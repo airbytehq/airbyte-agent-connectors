@@ -18,9 +18,9 @@ class HubspotAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    client_id: str
+    client_id: Optional[str] = None
     """Your HubSpot OAuth2 Client ID"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """Your HubSpot OAuth2 Client Secret"""
     refresh_token: str
     """Your HubSpot OAuth2 Refresh Token"""
@@ -184,6 +184,13 @@ class TicketsList(BaseModel):
     paging: Union[Paging, Any] = Field(default=None)
     total: Union[int, Any] = Field(default=None)
 
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
+
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -219,13 +226,6 @@ class SchemaPropertiesItem(BaseModel):
     updated_user_id: Union[str, Any] = Field(default=None, alias="updatedUserId")
     show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
-
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
 
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""

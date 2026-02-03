@@ -26,7 +26,7 @@ from uuid import (
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
-    version='0.1.9',
+    version='0.1.10',
     base_url='https://api.hubapi.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -40,7 +40,7 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='OAuth2 Authentication',
             type='object',
-            required=['client_id', 'client_secret', 'refresh_token'],
+            required=['refresh_token'],
             properties={
                 'client_id': AuthConfigFieldSpec(
                     title='Client ID',

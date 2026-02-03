@@ -15,8 +15,8 @@ In open source mode, you provide API credentials directly to the connector.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | Your HubSpot OAuth2 Client ID |
-| `client_secret` | `str` | Yes | Your HubSpot OAuth2 Client Secret |
+| `client_id` | `str` | No | Your HubSpot OAuth2 Client ID |
+| `client_secret` | `str` | No | Your HubSpot OAuth2 Client Secret |
 | `refresh_token` | `str` | Yes | Your HubSpot OAuth2 Refresh Token |
 | `access_token` | `str` | No | Your HubSpot OAuth2 Access Token (optional if refresh_token is provided) |
 
@@ -51,8 +51,8 @@ Create a connector with OAuth credentials.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | Your HubSpot OAuth2 Client ID |
-| `client_secret` | `str` | Yes | Your HubSpot OAuth2 Client Secret |
+| `client_id` | `str` | No | Your HubSpot OAuth2 Client ID |
+| `client_secret` | `str` | No | Your HubSpot OAuth2 Client Secret |
 | `refresh_token` | `str` | Yes | Your HubSpot OAuth2 Refresh Token |
 | `access_token` | `str` | No | Your HubSpot OAuth2 Access Token (optional if refresh_token is provided) |
 
