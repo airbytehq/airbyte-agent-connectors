@@ -766,7 +766,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                 )
             },
             auth_mapping={"token": "${token}"},
-            oneOf=None,
         )
     elif auth_type == AuthType.BASIC:
         return AirbyteAuthConfig(
@@ -793,7 +792,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                 ),
             },
             auth_mapping={"username": "${username}", "password": "${password}"},
-            oneOf=None,
         )
     elif auth_type == AuthType.API_KEY:
         return AirbyteAuthConfig(
@@ -812,7 +810,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                 )
             },
             auth_mapping={"api_key": "${api_key}"},
-            oneOf=None,
         )
     elif auth_type == AuthType.OAUTH2:
         # OAuth2: No fields are strictly required to support both modes:
@@ -865,7 +862,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
                 "client_id": "${client_id}",
                 "client_secret": "${client_secret}",
             },
-            oneOf=None,
         )
     else:
         # Unknown auth type - return minimal config
@@ -876,7 +872,6 @@ def _generate_default_auth_config(auth_type: AuthType) -> AirbyteAuthConfig:
             required=None,
             properties={},
             auth_mapping={},
-            oneOf=None,
         )
 
 

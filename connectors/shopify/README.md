@@ -137,7 +137,7 @@ See the official [Shopify API reference](https://shopify.dev/docs/api/admin-rest
 
 ## Version information
 
-- **Package version:** 0.1.28
+- **Package version:** 0.1.29
 - **Connector version:** 0.1.5
-- **Generated with Connector SDK commit SHA:** 1fc2ac286cff08133bc2a07f7181779928a3461b
+- **Generated with Connector SDK commit SHA:** 5c6dbf883d3b057550333775bd83a78777527017
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/shopify/CHANGELOG.md)
