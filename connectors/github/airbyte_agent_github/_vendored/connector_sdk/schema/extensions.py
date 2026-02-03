@@ -182,12 +182,25 @@ class CacheEntityConfig(BaseModel):
         return self.x_airbyte_name or self.entity
 
 
+class ReplicationConfigPropertyItems(BaseModel):
+    """
+    Items definition for array-type replication configuration fields.
+
+    Defines the schema for items in an array-type replication config property.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    type: str
+
+
 class ReplicationConfigProperty(BaseModel):
     """
     Property definition for replication configuration fields.
 
     Defines a single field in the replication configuration with its type,
-    description, and optional default value.
+    description, and optional default value. Supports both simple types
+    (string, integer, boolean) and array types.
 
     Example YAML usage:
         x-airbyte-replication-config:
@@ -197,6 +210,12 @@ class ReplicationConfigProperty(BaseModel):
               title: Start Date
               description: UTC date and time from which to replicate data
               format: date-time
+            account_ids:
+              type: array
+              title: Account IDs
+              description: List of account IDs to replicate
+              items:
+                type: string
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -205,8 +224,9 @@ class ReplicationConfigProperty(BaseModel):
     title: str | None = None
     description: str | None = None
     format: str | None = None
-    default: str | int | float | bool | None = None
+    default: str | int | float | bool | list | None = None
     enum: list[str] | None = None
+    items: ReplicationConfigPropertyItems | None = None
 
 
 class ReplicationConfig(BaseModel):

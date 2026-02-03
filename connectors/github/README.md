@@ -123,7 +123,7 @@ See the official [Github API reference](https://docs.github.com/en/rest).
 
 ## Version information
 
-- **Package version:** 0.18.78
+- **Package version:** 0.18.79
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** 940246757c7476ed4edd7d16b873ebe54ea2b456
+- **Generated with Connector SDK commit SHA:** 5c6dbf883d3b057550333775bd83a78777527017
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/github/CHANGELOG.md)
