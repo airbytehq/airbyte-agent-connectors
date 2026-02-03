@@ -58,45 +58,6 @@ class AuthConfigFieldSpec(BaseModel):
     default: Any | None = None
 
 
-class AuthConfigOption(BaseModel):
-    """
-    A single authentication configuration option.
-
-    Defines user-facing fields and how they map to auth parameters.
-    """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
-
-    title: str | None = None
-    description: str | None = None
-    type: Literal["object"] = "object"
-    required: List[str] = Field(default_factory=list)
-    properties: Dict[str, AuthConfigFieldSpec] = Field(default_factory=dict)
-    auth_mapping: Dict[str, str] = Field(
-        default_factory=dict,
-        description="Mapping from auth parameters (e.g., 'username', 'password', 'token') to template strings using ${field} syntax",
-    )
-    replication_auth_key_mapping: Dict[str, str] | None = Field(
-        None,
-        description="Mapping from source config paths (e.g., 'credentials.api_key') to auth config keys for direct connectors",
-    )
-
-    @model_validator(mode="after")
-    def validate_replication_auth_key_mapping(self) -> "AuthConfigOption":
-        """Validate that replication_auth_key_mapping target keys exist in properties."""
-        if self.replication_auth_key_mapping and self.properties:
-            property_names = set(self.properties.keys())
-            for airbyte_path, our_key in self.replication_auth_key_mapping.items():
-                if our_key not in property_names:
-                    option_context = f"oneOf option '{self.title}'" if self.title else "oneOf option"
-                    available = ", ".join(sorted(property_names)) if property_names else "(none)"
-                    raise ValueError(
-                        f"replication_auth_key_mapping in {option_context}: target key '{our_key}' "
-                        f"(mapped from '{airbyte_path}') not found in properties. Available: {available}"
-                    )
-        return self
-
-
 class AirbyteAuthConfig(BaseModel):
     """
     Airbyte auth configuration extension (x-airbyte-auth-config).
@@ -104,12 +65,12 @@ class AirbyteAuthConfig(BaseModel):
     Defines user-facing authentication configuration and how it maps to
     the underlying OpenAPI security scheme.
 
-    Either a single auth option or multiple options via oneOf.
+    For multiple authentication methods, define separate security schemes
+    rather than using oneOf within a single scheme.
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    # Single option fields
     title: str | None = None
     description: str | None = None
     type: Literal["object"] | None = None
@@ -137,29 +98,23 @@ class AirbyteAuthConfig(BaseModel):
         None,
         description="Constant values to always inject at source config paths (e.g., 'credentials.auth_type': 'OAuth2.0')",
     )
-    # Multiple options (oneOf)
-    one_of: List[AuthConfigOption] | None = Field(None, alias="oneOf")
 
     @model_validator(mode="after")
     def validate_config_structure(self) -> "AirbyteAuthConfig":
-        """Validate that either single option or oneOf is provided, not both."""
-        has_single = self.type is not None or self.properties is not None or self.auth_mapping is not None
-        has_one_of = self.one_of is not None and len(self.one_of) > 0
+        """Validate that required fields are provided for auth config."""
+        has_config = self.type is not None or self.properties is not None or self.auth_mapping is not None
 
-        if not has_single and not has_one_of:
-            raise ValueError("Either single auth option (type/properties/auth_mapping) or oneOf must be provided")
+        if not has_config:
+            raise ValueError("Auth config must have type, properties, and auth_mapping")
 
-        if has_single and has_one_of:
-            raise ValueError("Cannot have both single auth option and oneOf")
-
-        if has_single:
-            # Validate single option has required fields
+        if has_config:
+            # Validate required fields
             if self.type != "object":
-                raise ValueError("Single auth option must have type='object'")
+                raise ValueError("Auth config must have type='object'")
             if not self.properties:
-                raise ValueError("Single auth option must have properties")
+                raise ValueError("Auth config must have properties")
             if not self.auth_mapping:
-                raise ValueError("Single auth option must have auth_mapping")
+                raise ValueError("Auth config must have auth_mapping")
 
             # Validate replication_auth_key_mapping targets exist in properties
             if self.replication_auth_key_mapping and self.properties:
