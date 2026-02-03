@@ -180,7 +180,7 @@ class ShopifyConnector:
     """
 
     connector_name = "shopify"
-    connector_version = "0.1.4"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -321,7 +321,7 @@ class ShopifyConnector:
                 Example: lambda tokens: save_to_database(tokens)            shop: Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)
         Examples:
             # Local mode (direct API calls)
-            connector = ShopifyConnector(auth_config=ShopifyAuthConfig(api_key="...", shop="..."))
+            connector = ShopifyConnector(auth_config=ShopifyAuthConfig(api_key="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = ShopifyConnector(
                 airbyte_client_id="client_abc123",
@@ -1117,7 +1117,7 @@ class ShopifyConnector:
                 external_user_id="my-workspace",
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
-                auth_config=ShopifyAuthConfig(api_key="...", shop="..."),
+                auth_config=ShopifyAuthConfig(api_key="..."),
             )
 
             # Use the connector
