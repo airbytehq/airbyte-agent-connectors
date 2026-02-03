@@ -17,8 +17,8 @@ In open source mode, you provide API credentials directly to the connector.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | Your Gong OAuth2 Access Token. |
 | `refresh_token` | `str` | Yes | Your Gong OAuth2 Refresh Token. Note: Gong uses single-use refresh tokens. |
-| `client_id` | `str` | Yes | Your Gong OAuth App Client ID. |
-| `client_secret` | `str` | Yes | Your Gong OAuth App Client Secret. |
+| `client_id` | `str` | No | Your Gong OAuth App Client ID. |
+| `client_secret` | `str` | No | Your Gong OAuth App Client Secret. |
 
 Example request:
 
@@ -73,8 +73,8 @@ Create a connector with OAuth credentials.
 |------------|------|----------|-------------|
 | `access_token` | `str` | No | Your Gong OAuth2 Access Token. |
 | `refresh_token` | `str` | Yes | Your Gong OAuth2 Refresh Token. Note: Gong uses single-use refresh tokens. |
-| `client_id` | `str` | Yes | Your Gong OAuth App Client ID. |
-| `client_secret` | `str` | Yes | Your Gong OAuth App Client Secret. |
+| `client_id` | `str` | No | Your Gong OAuth App Client ID. |
+| `client_secret` | `str` | No | Your Gong OAuth App Client Secret. |
 
 Example request:
 
