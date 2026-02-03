@@ -196,41 +196,100 @@ connector = GoogleDriveConnector(
 )
 ```
 
-## Hosted Execution (Airbyte Cloud)
+## Hosted Execution (Airbyte Agent Engine)
 
-For production deployments, you can store credentials in Airbyte Cloud and execute operations via API.
+For production deployments, you can store credentials in Airbyte Agent Engine and execute operations via API. **Sign up once, then everything is programmatic.**
 
-### Setting Up Hosted Credentials
+### Getting Started
 
-1. Create a connector via the Airbyte API:
+**One-time manual step**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) and get your `airbyte_client_id` and `airbyte_client_secret` from the settings page.
 
-```bash
-curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
-  -H "Authorization: Bearer <SCOPED_TOKEN>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "external_user_id": "user_123",
-    "connector_type": "Stripe",
-    "name": "My Stripe Connector",
-    "credentials": {
-      "api_key": "sk_live_..."
-    }
-  }'
+After this, you can create connectors, manage credentials, and execute operations entirely through code - no UI needed.
+
+### Understanding `external_user_id`
+
+The `external_user_id` is **your identifier** for the user or tenant - you define it (e.g., `"user_123"`, `"acme-corp"`, `"tenant_abc"`). It's used to:
+- Scope connectors to specific users in multi-tenant applications
+- Look up existing connectors when you don't have the `connector_id` cached
+
+### Creating a New Hosted Connector
+
+Use `create_hosted()` to register a new connector with credentials stored in Airbyte:
+
+```python
+from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
+
+# Create and register a new connector
+connector = await StripeConnector.create_hosted(
+    external_user_id="user_123",      # Your identifier for this user/tenant
+    airbyte_client_id="...",          # From app.airbyte.ai settings
+    airbyte_client_secret="...",      # From app.airbyte.ai settings
+    auth_config=StripeAuthConfig(api_key="sk_live_...")
+)
+
+# Connector is now registered - use it immediately
+result = await connector.execute("customers", "list", {"limit": 10})
 ```
 
-2. Execute using hosted credentials:
+### Using an Existing Hosted Connector
+
+Once a connector is created, instantiate it without `auth_config` to use the stored credentials:
 
 ```python
 from airbyte_agent_stripe import StripeConnector
 
+# Option A: Look up by external_user_id
 connector = StripeConnector(
-    external_user_id="user_123",
-    airbyte_client_id="your_client_id",
-    airbyte_client_secret="your_client_secret"
+    external_user_id="user_123",      # Looks up existing connector for this user
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
 )
 
-# Operations use credentials stored in Airbyte Cloud
+# Option B: Use cached connector_id (faster, no lookup)
+connector = StripeConnector(
+    connector_id="uuid-from-create-hosted",  # Returned from create_hosted()
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
+)
+
+# Operations use credentials stored in Airbyte
 result = await connector.execute("customers", "list", {"limit": 10})
+```
+
+### Complete Hosted Flow Example
+
+Here's the full flow from zero to working:
+
+```python
+import os
+from airbyte_agent_gong import GongConnector
+from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
+
+# Airbyte credentials (from app.airbyte.ai settings)
+AIRBYTE_CLIENT_ID = os.environ["AIRBYTE_CLIENT_ID"]
+AIRBYTE_CLIENT_SECRET = os.environ["AIRBYTE_CLIENT_SECRET"]
+
+# First time: Create the connector
+connector = await GongConnector.create_hosted(
+    external_user_id="acme-corp",     # Your tenant identifier
+    airbyte_client_id=AIRBYTE_CLIENT_ID,
+    airbyte_client_secret=AIRBYTE_CLIENT_SECRET,
+    auth_config=GongAccessKeyAuthenticationAuthConfig(
+        access_key=os.environ["GONG_ACCESS_KEY"],
+        access_key_secret=os.environ["GONG_ACCESS_KEY_SECRET"]
+    ),
+)
+
+# Subsequent calls: Just reference the existing connector
+connector = GongConnector(
+    external_user_id="acme-corp",
+    airbyte_client_id=AIRBYTE_CLIENT_ID,
+    airbyte_client_secret=AIRBYTE_CLIENT_SECRET,
+)
+
+# Execute operations
+calls = await connector.execute("calls", "list", {})
 ```
 
 ### Server-Side OAuth Flow

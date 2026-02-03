@@ -54,27 +54,27 @@ All 21 connectors follow the same entity-action pattern. Each has README.md, AUT
 
 | Connector | Package | Auth Type | Key Entities |
 |-----------|---------|-----------|--------------|
-| [Airtable](./connectors/airtable/) | `airbyte-agent-airtable` | API Key | bases, tables, records |
-| [Amazon Ads](./connectors/amazon-ads/) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
-| [Asana](./connectors/asana/) | `airbyte-agent-asana` | PAT | projects, tasks, users |
-| [Facebook Marketing](./connectors/facebook-marketing/) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
-| [GitHub](./connectors/github/) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
-| [Gong](./connectors/gong/) | `airbyte-agent-gong` | API Key | calls, users, deals |
-| [Google Drive](./connectors/google-drive/) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
-| [Greenhouse](./connectors/greenhouse/) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
-| [HubSpot](./connectors/hubspot/) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
-| [Intercom](./connectors/intercom/) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
-| [Jira](./connectors/jira/) | `airbyte-agent-jira` | API Key | issues, projects, users |
-| [Klaviyo](./connectors/klaviyo/) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
-| [Linear](./connectors/linear/) | `airbyte-agent-linear` | API Key | issues, projects, teams |
-| [Mailchimp](./connectors/mailchimp/) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
-| [Orb](./connectors/orb/) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
-| [Salesforce](./connectors/salesforce/) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
-| [Shopify](./connectors/shopify/) | `airbyte-agent-shopify` | API Key | orders, products, customers |
-| [Slack](./connectors/slack/) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
-| [Stripe](./connectors/stripe/) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
-| [Zendesk Chat](./connectors/zendesk-chat/) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
-| [Zendesk Support](./connectors/zendesk-support/) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
+| [Airtable](../../../connectors/airtable/) | `airbyte-agent-airtable` | API Key | bases, tables, records |
+| [Amazon Ads](../../../connectors/amazon-ads/) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
+| [Asana](../../../connectors/asana/) | `airbyte-agent-asana` | PAT | projects, tasks, users |
+| [Facebook Marketing](../../../connectors/facebook-marketing/) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
+| [GitHub](../../../connectors/github/) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
+| [Gong](../../../connectors/gong/) | `airbyte-agent-gong` | API Key | calls, users, deals |
+| [Google Drive](../../../connectors/google-drive/) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
+| [Greenhouse](../../../connectors/greenhouse/) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
+| [HubSpot](../../../connectors/hubspot/) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
+| [Intercom](../../../connectors/intercom/) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
+| [Jira](../../../connectors/jira/) | `airbyte-agent-jira` | API Key | issues, projects, users |
+| [Klaviyo](../../../connectors/klaviyo/) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
+| [Linear](../../../connectors/linear/) | `airbyte-agent-linear` | API Key | issues, projects, teams |
+| [Mailchimp](../../../connectors/mailchimp/) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
+| [Orb](../../../connectors/orb/) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
+| [Salesforce](../../../connectors/salesforce/) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
+| [Shopify](../../../connectors/shopify/) | `airbyte-agent-shopify` | API Key | orders, products, customers |
+| [Slack](../../../connectors/slack/) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
+| [Stripe](../../../connectors/stripe/) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
+| [Zendesk Chat](../../../connectors/zendesk-chat/) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
+| [Zendesk Support](../../../connectors/zendesk-support/) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
 
 ## Setup Patterns
 
@@ -93,19 +93,37 @@ connector = StripeConnector(
 
 Best for: Development, self-hosted deployments, single-tenant applications.
 
-### 2. Hosted Engine (Airbyte Cloud)
+### 2. Hosted Engine (Airbyte Agent Engine)
 
-Store credentials securely in Airbyte Cloud and execute via API:
+For multi-tenant apps or managed credential storage. **Sign up once, then everything is programmatic.**
 
+**One-time setup**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) and get your `airbyte_client_id` and `airbyte_client_secret` from settings.
+
+**Step 1: Create a connector (first time)**
 ```python
 from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
 
-connector = StripeConnector(
-    external_user_id="user_123",
-    airbyte_client_id="your_client_id",
-    airbyte_client_secret="your_client_secret"
+connector = await StripeConnector.create_hosted(
+    external_user_id="user_123",      # Your identifier for this user/tenant (you define this)
+    airbyte_client_id="...",          # From app.airbyte.ai settings
+    airbyte_client_secret="...",      # From app.airbyte.ai settings
+    auth_config=StripeAuthConfig(api_key="sk_live_...")
 )
+# Connector is now registered in Airbyte - no UI needed
 ```
+
+**Step 2: Use existing connector (subsequent calls)**
+```python
+connector = StripeConnector(
+    external_user_id="user_123",      # Same identifier - looks up existing connector
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
+)
+result = await connector.execute("customers", "list", {})
+```
+
+**Note**: `external_user_id` is YOUR identifier (user ID, tenant name, etc.) that you define. It's used to scope and look up connectors in multi-tenant apps.
 
 Best for: Multi-tenant SaaS, production deployments, credential management at scale.
 
@@ -166,9 +184,9 @@ Each connector directory contains:
 - **REFERENCE.md** - Complete entity/action reference with parameters
 
 Example: For GitHub details, see:
-- [connectors/github/README.md](./connectors/github/README.md)
-- [connectors/github/AUTH.md](./connectors/github/AUTH.md)
-- [connectors/github/REFERENCE.md](./connectors/github/REFERENCE.md)
+- [connectors/github/README.md](../../../connectors/github/README.md)
+- [connectors/github/AUTH.md](../../../connectors/github/AUTH.md)
+- [connectors/github/REFERENCE.md](../../../connectors/github/REFERENCE.md)
 
 ## Quick Reference
 
