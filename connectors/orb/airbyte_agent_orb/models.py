@@ -78,15 +78,6 @@ class CustomersList(BaseModel):
     data: Union[list[Customer], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
-class SubscriptionPlan(BaseModel):
-    """The plan associated with the subscription"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The plan ID")
-    """The plan ID"""
-    name: Union[str | None, Any] = Field(default=None, description="The plan name")
-    """The plan name"""
-
 class SubscriptionCustomer(BaseModel):
     """The customer associated with the subscription"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -95,6 +86,15 @@ class SubscriptionCustomer(BaseModel):
     """The customer ID"""
     external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
     """The external customer ID"""
+
+class SubscriptionPlan(BaseModel):
+    """The plan associated with the subscription"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The plan ID")
+    """The plan ID"""
+    name: Union[str | None, Any] = Field(default=None, description="The plan name")
+    """The plan name"""
 
 class Subscription(BaseModel):
     """Subscription object"""
