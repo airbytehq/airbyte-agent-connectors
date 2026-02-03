@@ -91,7 +91,7 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Current User | [List](./REFERENCE.md#current-user-list) |
+| Current User | [Get](./REFERENCE.md#current-user-get) |
 | Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get) |
 | Ad Sets | [List](./REFERENCE.md#ad-sets-list), [Get](./REFERENCE.md#ad-sets-get) |
 | Ads | [List](./REFERENCE.md#ads-list), [Get](./REFERENCE.md#ads-get) |
@@ -112,7 +112,7 @@ See the official [Facebook-Marketing API reference](https://developers.facebook.
 
 ## Version information
 
-- **Package version:** 0.1.7
-- **Connector version:** 1.0.8
-- **Generated with Connector SDK commit SHA:** 940246757c7476ed4edd7d16b873ebe54ea2b456
+- **Package version:** 0.1.8
+- **Connector version:** 1.0.9
+- **Generated with Connector SDK commit SHA:** c007cfdb97641aeb2a950966f836985de68fe572
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/facebook-marketing/CHANGELOG.md)

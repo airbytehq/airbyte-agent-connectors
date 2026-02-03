@@ -25,7 +25,7 @@ from .types import (
     AdsListParams,
     CampaignsGetParams,
     CampaignsListParams,
-    CurrentUserListParams,
+    CurrentUserGetParams,
     CustomConversionsListParams,
     ImagesListParams,
     VideosListParams,
@@ -55,7 +55,6 @@ from .models import (
     FacebookMarketingCheckResult,
     FacebookMarketingExecuteResult,
     FacebookMarketingExecuteResultWithMeta,
-    CurrentUserListResult,
     CampaignsListResult,
     AdSetsListResult,
     AdsListResult,
@@ -138,12 +137,12 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.8"
+    connector_version = "1.0.9"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
-        ("current_user", "list"): True,
+        ("current_user", "get"): None,
         ("campaigns", "list"): True,
         ("ad_sets", "list"): True,
         ("ads", "list"): True,
@@ -160,7 +159,7 @@ class FacebookMarketingConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('current_user', 'list'): {'fields': 'fields'},
+        ('current_user', 'get'): {'fields': 'fields'},
         ('campaigns', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ad_sets', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ads', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
@@ -277,9 +276,9 @@ class FacebookMarketingConnector:
     async def execute(
         self,
         entity: Literal["current_user"],
-        action: Literal["list"],
-        params: "CurrentUserListParams"
-    ) -> "CurrentUserListResult": ...
+        action: Literal["get"],
+        params: "CurrentUserGetParams"
+    ) -> "CurrentUser": ...
 
     @overload
     async def execute(
@@ -374,14 +373,14 @@ class FacebookMarketingConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["get", "list", "search"],
         params: Mapping[str, Any]
     ) -> FacebookMarketingExecuteResult[Any] | FacebookMarketingExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["get", "list", "search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -779,11 +778,11 @@ class CurrentUserQuery:
         """Initialize query with connector reference."""
         self._connector = connector
 
-    async def list(
+    async def get(
         self,
         fields: str | None = None,
         **kwargs
-    ) -> CurrentUserListResult:
+    ) -> CurrentUser:
         """
         Returns information about the current user associated with the access token
 
@@ -792,18 +791,15 @@ class CurrentUserQuery:
             **kwargs: Additional parameters
 
         Returns:
-            CurrentUserListResult
+            CurrentUser
         """
         params = {k: v for k, v in {
             "fields": fields,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("current_user", "list", params)
-        # Cast generic envelope to concrete typed result
-        return CurrentUserListResult(
-            data=result.data
-        )
+        result = await self._connector.execute("current_user", "get", params)
+        return result
 
 
 

@@ -26,7 +26,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.8',
+    version='1.0.9',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -65,12 +65,12 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='current_user',
-            actions=[Action.LIST],
+            actions=[Action.GET],
             endpoints={
-                Action.LIST: EndpointDefinition(
+                Action.GET: EndpointDefinition(
                     method='GET',
                     path='/me',
-                    action=Action.LIST,
+                    action=Action.GET,
                     description='Returns information about the current user associated with the access token',
                     query_params=['fields'],
                     query_params_schema={

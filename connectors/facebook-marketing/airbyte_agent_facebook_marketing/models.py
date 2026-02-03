@@ -798,9 +798,6 @@ VideosSearchResult = AirbyteSearchResult[VideosSearchData]
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
 
-CurrentUserListResult = FacebookMarketingExecuteResult[CurrentUser]
-"""Result type for current_user.list operation."""
-
 CampaignsListResult = FacebookMarketingExecuteResultWithMeta[list[Campaign], CampaignsListResultMeta]
 """Result type for campaigns.list operation with data and metadata."""
 
