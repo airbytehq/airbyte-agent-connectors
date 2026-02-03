@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
 # Authentication configuration
 
@@ -19,9 +20,9 @@ class SalesforceAuthConfig(BaseModel):
 
     refresh_token: str
     """OAuth refresh token for automatic token renewal"""
-    client_id: str
+    client_id: Optional[str] = None
     """Connected App Consumer Key"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """Connected App Consumer Secret"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
