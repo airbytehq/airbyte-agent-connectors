@@ -54,8 +54,8 @@ connector = await StripeConnector.create_hosted(
     name="Stripe Source"  # Optional: display name in UI
 )
 
-# Connector is now registered and visible in your Airbyte dashboard
-# The connector object can be used immediately for operations
+# Connector is created and ready to use programmatically
+# For UI visibility, register a template (see "Making Connectors Visible in the UI" below)
 
 # Use it immediately
 result = await connector.execute("customers", "list", {"limit": 10})
@@ -172,14 +172,70 @@ connector = await SalesforceConnector.create_hosted(
 | Zendesk Chat | Yes | Requires Zendesk OAuth app |
 | GitHub | Optional | Can also use PAT |
 
+## Making Connectors Visible in the UI
+
+After `create_hosted()` succeeds, the connector is functional programmatically. To make it appear in the Airbyte UI's Connectors page, you must register it as a template.
+
+### Register a UI Template
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "name": "Gong",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+### Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `actor_definition_id` | Connector definition ID from the [Connector Definition IDs table](programmatic-setup.md#connector-definition-ids) |
+| `name` | Display name shown in the UI card |
+| `partial_default_config` | Pre-filled configuration values (usually `{}`) |
+| `mode` | Template mode: `DIRECT` for API-key connectors, `OAUTH` for OAuth connectors |
+
+### Get the Application Token
+
+```bash
+curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "client_id": "<AIRBYTE_CLIENT_ID>",
+    "client_secret": "<AIRBYTE_CLIENT_SECRET>"
+  }'
+```
+
+Use the `access_token` from the response as `<APPLICATION_TOKEN>`.
+
+### Example: Register Gong Connector
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1...' \
+  -d '{
+    "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
+    "name": "Gong",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+After registration, your connector appears in the Connectors page with a card showing the name and "Direct" badge.
+
 ## Verifying Connector in UI
 
-After `create_hosted()` succeeds:
+After registering the template:
 
 1. Go to [app.airbyte.ai](https://app.airbyte.ai)
-2. Navigate to **Connectors** or **Sources**
-3. Your connector should appear with the name you specified
-4. Click to view status, sync history, and entity cache
+2. Navigate to **Connectors** page
+3. Your connector should appear with the name you specified and a "Direct" badge
+4. Click to view status, configuration, and usage
 
 ## Entity Cache
 

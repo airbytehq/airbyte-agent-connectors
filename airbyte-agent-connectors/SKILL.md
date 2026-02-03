@@ -60,8 +60,37 @@ connector = await StripeConnector.create_hosted(
     airbyte_client_secret="...",
     auth_config=StripeAuthConfig(api_key="sk_live_...")
 )
-# Connector now appears in your Airbyte UI!
+# Connector is created and ready to use programmatically
 ```
+
+### Register in UI (Required for UI Visibility)
+
+After creating the connector programmatically, register it as a template to make it appear in the Airbyte UI's Connectors page.
+
+**Get an Application Token first:**
+```bash
+curl -X POST 'https://api.airbyte.com/v1/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{"client_id": "<AIRBYTE_CLIENT_ID>", "client_secret": "<AIRBYTE_CLIENT_SECRET>"}'
+```
+
+**Then register the template:**
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "name": "Stripe",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+- Get `actor_definition_id` from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids)
+- If registration fails with "already exists", a template with that name already exists—choose a different name
+
+Your connector now appears in the Connectors page at [app.airbyte.ai](https://app.airbyte.ai) with a "Direct" badge.
 
 ### Use Existing Connector
 
@@ -85,9 +114,15 @@ For users running connectors locally without platform integration.
 ### Install
 
 ```bash
+# Using uv (recommended)
+uv add airbyte-agent-github
+
+# Or using pip in a virtual environment
+python3 -m venv .venv && source .venv/bin/activate
 pip install airbyte-agent-github
-# or: uv add airbyte-agent-github
 ```
+
+> **Note:** When working in the `airbyte-agent-connectors` repo, packages are already available—no installation needed.
 
 ### Use Directly
 
@@ -282,7 +317,8 @@ auth_config=SalesforceOAuthConfig(
        name="Gong Source"
    )
    ```
-5. Confirm: "Connector created! It will appear in your Airbyte Connectors UI."
+5. Register the connector template so it appears in the UI (see [Programmatic Setup](references/programmatic-setup.md#pattern-c-ui-template-registration) for the API call). Use Gong's definition ID from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids).
+6. Confirm: "Connector created and registered! It now appears in your Airbyte Connectors page at [app.airbyte.ai](https://app.airbyte.ai)."
 
 ### OSS User: "Set up a GitHub connector"
 
@@ -302,12 +338,18 @@ auth_config=SalesforceOAuthConfig(
 
 ## File Placement
 
-When creating files, place them based on context:
+> **Important:** When working in the `airbyte-agent-connectors` repo, place ALL files (`.env`, scripts, examples) in the specific connector directory, NOT the repo root.
 
-| Working in... | Put files in... |
-|---------------|-----------------|
-| `airbyte-agent-connectors` repo | The specific connector directory (e.g., `connectors/gong/`) |
-| Your own project | Your project root |
+| Working in... | Put files in... | Example |
+|---------------|-----------------|---------|
+| `airbyte-agent-connectors` repo | `connectors/{connector}/` | `connectors/gong/.env`, `connectors/gong/example.py` |
+| Your own project | Project root | `.env`, `main.py` |
+
+**In the airbyte-agent-connectors repo:**
+- `.env` files go in `connectors/{connector}/.env`
+- Test scripts go in `connectors/{connector}/`
+- Virtual environments should be created in the connector directory if needed
+- Each connector directory is self-contained
 
 ---
 

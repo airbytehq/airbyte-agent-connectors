@@ -17,6 +17,8 @@ You need Airbyte application credentials:
 - `AIRBYTE_CLIENT_ID` - from app.airbyte.ai settings (one-time)
 - `AIRBYTE_CLIENT_SECRET` - from app.airbyte.ai settings (one-time)
 
+> **Note:** Airbyte uses two API hosts: `api.airbyte.com` for authentication/workspace management and `api.airbyte.ai` for embedded connector operations. The examples below use the correct host for each endpoint.
+
 ## Step 1: Get Application Token
 
 ```bash
@@ -43,6 +45,7 @@ Save this as `APPLICATION_TOKEN`. Use it for all subsequent requests.
 |---------|----------|----------|
 | **A: Scoped Token** | API key connectors, simpler flow | `api.airbyte.ai` |
 | **B: Workspace** | OAuth connectors, enterprise multi-tenant | `api.airbyte.com` + `api.airbyte.ai` |
+| **C: UI Template** | Making connectors visible in Airbyte UI | `api.airbyte.ai` |
 
 ---
 
@@ -191,6 +194,83 @@ curl -X POST 'https://api.airbyte.ai/api/v1/connectors/sources/<SOURCE_ID>/execu
     "params": {"per_page": 50}
   }'
 ```
+
+---
+
+## Pattern C: UI Template Registration
+
+Use this pattern to make connectors appear in the Airbyte UI's Connectors page. Run this after creating a connector with Pattern A or B.
+
+### Why Register a Template?
+
+When you create a connector programmatically via `create_hosted()` or the HTTP API, it's functional but **not visible in the UI**. Registering a template creates a card in the Connectors page at [app.airbyte.ai](https://app.airbyte.ai).
+
+### Step C1: Register the Template
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "name": "Gong",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+### Parameters
+
+| Parameter | Description | Example |
+|-----------|-------------|---------|
+| `actor_definition_id` | Connector type ID from the table below | `32382e40-3b49-4b99-9c5c-4076501914e7` (Gong) |
+| `name` | Display name shown on the UI card | `"Gong"`, `"My Stripe Connector"` |
+| `partial_default_config` | Pre-filled configuration values | `{}` or `{"start_date": "2024-01-01"}` |
+| `mode` | Template mode | `"DIRECT"` for API-key, `"OAUTH"` for OAuth connectors |
+
+### Example: Register Gong Connector
+
+```bash
+# Using the APPLICATION_TOKEN from Step 1
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer eyJhbGciOiJIUzI1...' \
+  -d '{
+    "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
+    "name": "Gong",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+
+### Example: Register Salesforce Connector (OAuth)
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "b117307c-14b6-41aa-9422-947e34922962",
+    "name": "Salesforce",
+    "partial_default_config": {},
+    "mode": "OAUTH"
+  }'
+```
+
+### Troubleshooting Template Registration
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| `"already exists"` | Template with that name exists | Choose a different `name` value |
+| `"invalid actor_definition_id"` | Wrong connector definition ID | Check the [Connector Definition IDs table](#connector-definition-ids) |
+| `"unauthorized"` | Invalid or expired token | Regenerate the APPLICATION_TOKEN |
+
+### Verify in UI
+
+After successful registration:
+1. Go to [app.airbyte.ai](https://app.airbyte.ai)
+2. Navigate to the **Connectors** page
+3. Your connector appears as a card with the name and a "Direct" or "OAuth" badge
 
 ---
 
