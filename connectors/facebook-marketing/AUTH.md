@@ -53,6 +53,12 @@ Create a connector with OAuth credentials.
 | `client_id` | `str` | No | Facebook App Client ID |
 | `client_secret` | `str` | No | Facebook App Client Secret |
 
+`replication_config` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `account_ids` | `str` | Yes | The Facebook Ad account ID(s) to pull data from. The Ad account ID number is in the account dropdown menu or in your browser's address bar of your Meta Ads Manager. |
+
 Example request:
 
 ```bash
@@ -67,6 +73,9 @@ curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
       "access_token": "<Facebook OAuth2 Access Token>",
       "client_id": "<Facebook App Client ID>",
       "client_secret": "<Facebook App Client Secret>"
+    },
+    "replication_config": {
+      "account_ids": "<The Facebook Ad account ID(s) to pull data from. The Ad account ID number is in the account dropdown menu or in your browser's address bar of your Meta Ads Manager.>"
     }
   }'
 ```
@@ -109,6 +118,7 @@ Redirect your user to the `consent_url` from the response. After they authorize,
 | `connector_type` | `string` | Yes | The connector type (e.g., "Facebook-Marketing") |
 | `name` | `string` | Yes | A name for this connector instance |
 | `server_side_oauth_secret_id` | `string` | Yes | The secret_id from the OAuth callback |
+| `replication_config.account_ids` | `str` | Yes | The Facebook Ad account ID(s) to pull data from. The Ad account ID number is in the account dropdown menu or in your browser's address bar of your Meta Ads Manager. |
 
 Example request:
 
@@ -120,7 +130,10 @@ curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
     "external_user_id": "<EXTERNAL_USER_ID>",
     "connector_type": "Facebook-Marketing",
     "name": "My Facebook-Marketing Connector",
-    "server_side_oauth_secret_id": "<secret_id_from_callback>"
+    "server_side_oauth_secret_id": "<secret_id_from_callback>",
+    "replication_config": {
+      "account_ids": "<The Facebook Ad account ID(s) to pull data from. The Ad account ID number is in the account dropdown menu or in your browser's address bar of your Meta Ads Manager.>"
+    }
   }'
 ```
 

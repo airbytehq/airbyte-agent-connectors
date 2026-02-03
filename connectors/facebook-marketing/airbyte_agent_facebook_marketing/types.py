@@ -21,6 +21,12 @@ class CurrentUserGetParams(TypedDict):
     """Parameters for current_user.get operation"""
     fields: NotRequired[str]
 
+class AdAccountsListParams(TypedDict):
+    """Parameters for ad_accounts.list operation"""
+    fields: NotRequired[str]
+    limit: NotRequired[int]
+    after: NotRequired[str]
+
 class CampaignsListParams(TypedDict):
     """Parameters for campaigns.list operation"""
     account_id: str
@@ -58,6 +64,11 @@ class AdsInsightsListParams(TypedDict):
     level: NotRequired[str]
     limit: NotRequired[int]
     after: NotRequired[str]
+
+class AdAccountGetParams(TypedDict):
+    """Parameters for ad_account.get operation"""
+    account_id: str
+    fields: NotRequired[str]
 
 class CustomConversionsListParams(TypedDict):
     """Parameters for custom_conversions.list operation"""
@@ -1058,6 +1069,10 @@ class AdsInsightsSearchFilter(TypedDict, total=False):
     """Start date of the reporting period"""
     date_stop: str | None
     """End date of the reporting period"""
+    actions: list[Any] | None
+    """Total number of actions taken"""
+    action_values: list[Any] | None
+    """Action values taken on the ad"""
 
 
 class AdsInsightsInFilter(TypedDict, total=False):
@@ -1096,6 +1111,10 @@ class AdsInsightsInFilter(TypedDict, total=False):
     """Start date of the reporting period"""
     date_stop: list[str]
     """End date of the reporting period"""
+    actions: list[list[Any]]
+    """Total number of actions taken"""
+    action_values: list[list[Any]]
+    """Action values taken on the ad"""
 
 
 class AdsInsightsAnyValueFilter(TypedDict, total=False):
@@ -1134,6 +1153,10 @@ class AdsInsightsAnyValueFilter(TypedDict, total=False):
     """Start date of the reporting period"""
     date_stop: Any
     """End date of the reporting period"""
+    actions: Any
+    """Total number of actions taken"""
+    action_values: Any
+    """Action values taken on the ad"""
 
 
 class AdsInsightsStringFilter(TypedDict, total=False):
@@ -1172,6 +1195,10 @@ class AdsInsightsStringFilter(TypedDict, total=False):
     """Start date of the reporting period"""
     date_stop: str
     """End date of the reporting period"""
+    actions: str
+    """Total number of actions taken"""
+    action_values: str
+    """Action values taken on the ad"""
 
 
 class AdsInsightsSortFilter(TypedDict, total=False):
@@ -1210,6 +1237,10 @@ class AdsInsightsSortFilter(TypedDict, total=False):
     """Start date of the reporting period"""
     date_stop: AirbyteSortOrder
     """End date of the reporting period"""
+    actions: AirbyteSortOrder
+    """Total number of actions taken"""
+    action_values: AirbyteSortOrder
+    """Action values taken on the ad"""
 
 
 # Entity-specific condition types for ads_insights
@@ -1303,6 +1334,456 @@ class AdsInsightsSearchQuery(TypedDict, total=False):
     """Search query for ads_insights entity."""
     filter: AdsInsightsCondition
     sort: list[AdsInsightsSortFilter]
+
+
+# ===== AD_ACCOUNT SEARCH TYPES =====
+
+class AdAccountSearchFilter(TypedDict, total=False):
+    """Available fields for filtering ad_account search queries."""
+    id: str | None
+    """Ad account ID"""
+    account_id: str | None
+    """Ad account ID (numeric)"""
+    name: str | None
+    """Ad account name"""
+    balance: str | None
+    """Current balance of the ad account"""
+    currency: str | None
+    """Currency used by the ad account"""
+    account_status: int | None
+    """Account status"""
+    amount_spent: str | None
+    """Total amount spent"""
+    business_name: str | None
+    """Business name"""
+    created_time: str | None
+    """Account creation time"""
+    spend_cap: str | None
+    """Spend cap"""
+    timezone_name: str | None
+    """Timezone name"""
+
+
+class AdAccountInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[str]
+    """Ad account ID"""
+    account_id: list[str]
+    """Ad account ID (numeric)"""
+    name: list[str]
+    """Ad account name"""
+    balance: list[str]
+    """Current balance of the ad account"""
+    currency: list[str]
+    """Currency used by the ad account"""
+    account_status: list[int]
+    """Account status"""
+    amount_spent: list[str]
+    """Total amount spent"""
+    business_name: list[str]
+    """Business name"""
+    created_time: list[str]
+    """Account creation time"""
+    spend_cap: list[str]
+    """Spend cap"""
+    timezone_name: list[str]
+    """Timezone name"""
+
+
+class AdAccountAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Ad account ID"""
+    account_id: Any
+    """Ad account ID (numeric)"""
+    name: Any
+    """Ad account name"""
+    balance: Any
+    """Current balance of the ad account"""
+    currency: Any
+    """Currency used by the ad account"""
+    account_status: Any
+    """Account status"""
+    amount_spent: Any
+    """Total amount spent"""
+    business_name: Any
+    """Business name"""
+    created_time: Any
+    """Account creation time"""
+    spend_cap: Any
+    """Spend cap"""
+    timezone_name: Any
+    """Timezone name"""
+
+
+class AdAccountStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Ad account ID"""
+    account_id: str
+    """Ad account ID (numeric)"""
+    name: str
+    """Ad account name"""
+    balance: str
+    """Current balance of the ad account"""
+    currency: str
+    """Currency used by the ad account"""
+    account_status: str
+    """Account status"""
+    amount_spent: str
+    """Total amount spent"""
+    business_name: str
+    """Business name"""
+    created_time: str
+    """Account creation time"""
+    spend_cap: str
+    """Spend cap"""
+    timezone_name: str
+    """Timezone name"""
+
+
+class AdAccountSortFilter(TypedDict, total=False):
+    """Available fields for sorting ad_account search results."""
+    id: AirbyteSortOrder
+    """Ad account ID"""
+    account_id: AirbyteSortOrder
+    """Ad account ID (numeric)"""
+    name: AirbyteSortOrder
+    """Ad account name"""
+    balance: AirbyteSortOrder
+    """Current balance of the ad account"""
+    currency: AirbyteSortOrder
+    """Currency used by the ad account"""
+    account_status: AirbyteSortOrder
+    """Account status"""
+    amount_spent: AirbyteSortOrder
+    """Total amount spent"""
+    business_name: AirbyteSortOrder
+    """Business name"""
+    created_time: AirbyteSortOrder
+    """Account creation time"""
+    spend_cap: AirbyteSortOrder
+    """Spend cap"""
+    timezone_name: AirbyteSortOrder
+    """Timezone name"""
+
+
+# Entity-specific condition types for ad_account
+class AdAccountEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: AdAccountSearchFilter
+
+
+class AdAccountNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: AdAccountSearchFilter
+
+
+class AdAccountGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: AdAccountSearchFilter
+
+
+class AdAccountGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: AdAccountSearchFilter
+
+
+class AdAccountLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: AdAccountSearchFilter
+
+
+class AdAccountLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: AdAccountSearchFilter
+
+
+class AdAccountLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: AdAccountStringFilter
+
+
+class AdAccountFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: AdAccountStringFilter
+
+
+class AdAccountKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: AdAccountStringFilter
+
+
+class AdAccountContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: AdAccountAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+AdAccountInCondition = TypedDict("AdAccountInCondition", {"in": AdAccountInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+AdAccountNotCondition = TypedDict("AdAccountNotCondition", {"not": "AdAccountCondition"}, total=False)
+"""Negates the nested condition."""
+
+AdAccountAndCondition = TypedDict("AdAccountAndCondition", {"and": "list[AdAccountCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+AdAccountOrCondition = TypedDict("AdAccountOrCondition", {"or": "list[AdAccountCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+AdAccountAnyCondition = TypedDict("AdAccountAnyCondition", {"any": AdAccountAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all ad_account condition types
+AdAccountCondition = (
+    AdAccountEqCondition
+    | AdAccountNeqCondition
+    | AdAccountGtCondition
+    | AdAccountGteCondition
+    | AdAccountLtCondition
+    | AdAccountLteCondition
+    | AdAccountInCondition
+    | AdAccountLikeCondition
+    | AdAccountFuzzyCondition
+    | AdAccountKeywordCondition
+    | AdAccountContainsCondition
+    | AdAccountNotCondition
+    | AdAccountAndCondition
+    | AdAccountOrCondition
+    | AdAccountAnyCondition
+)
+
+
+class AdAccountSearchQuery(TypedDict, total=False):
+    """Search query for ad_account entity."""
+    filter: AdAccountCondition
+    sort: list[AdAccountSortFilter]
+
+
+# ===== AD_ACCOUNTS SEARCH TYPES =====
+
+class AdAccountsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering ad_accounts search queries."""
+    id: str | None
+    """Ad account ID"""
+    account_id: str | None
+    """Ad account ID (numeric)"""
+    name: str | None
+    """Ad account name"""
+    balance: str | None
+    """Current balance of the ad account"""
+    currency: str | None
+    """Currency used by the ad account"""
+    account_status: int | None
+    """Account status"""
+    amount_spent: str | None
+    """Total amount spent"""
+    business_name: str | None
+    """Business name"""
+    created_time: str | None
+    """Account creation time"""
+    spend_cap: str | None
+    """Spend cap"""
+    timezone_name: str | None
+    """Timezone name"""
+
+
+class AdAccountsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[str]
+    """Ad account ID"""
+    account_id: list[str]
+    """Ad account ID (numeric)"""
+    name: list[str]
+    """Ad account name"""
+    balance: list[str]
+    """Current balance of the ad account"""
+    currency: list[str]
+    """Currency used by the ad account"""
+    account_status: list[int]
+    """Account status"""
+    amount_spent: list[str]
+    """Total amount spent"""
+    business_name: list[str]
+    """Business name"""
+    created_time: list[str]
+    """Account creation time"""
+    spend_cap: list[str]
+    """Spend cap"""
+    timezone_name: list[str]
+    """Timezone name"""
+
+
+class AdAccountsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """Ad account ID"""
+    account_id: Any
+    """Ad account ID (numeric)"""
+    name: Any
+    """Ad account name"""
+    balance: Any
+    """Current balance of the ad account"""
+    currency: Any
+    """Currency used by the ad account"""
+    account_status: Any
+    """Account status"""
+    amount_spent: Any
+    """Total amount spent"""
+    business_name: Any
+    """Business name"""
+    created_time: Any
+    """Account creation time"""
+    spend_cap: Any
+    """Spend cap"""
+    timezone_name: Any
+    """Timezone name"""
+
+
+class AdAccountsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """Ad account ID"""
+    account_id: str
+    """Ad account ID (numeric)"""
+    name: str
+    """Ad account name"""
+    balance: str
+    """Current balance of the ad account"""
+    currency: str
+    """Currency used by the ad account"""
+    account_status: str
+    """Account status"""
+    amount_spent: str
+    """Total amount spent"""
+    business_name: str
+    """Business name"""
+    created_time: str
+    """Account creation time"""
+    spend_cap: str
+    """Spend cap"""
+    timezone_name: str
+    """Timezone name"""
+
+
+class AdAccountsSortFilter(TypedDict, total=False):
+    """Available fields for sorting ad_accounts search results."""
+    id: AirbyteSortOrder
+    """Ad account ID"""
+    account_id: AirbyteSortOrder
+    """Ad account ID (numeric)"""
+    name: AirbyteSortOrder
+    """Ad account name"""
+    balance: AirbyteSortOrder
+    """Current balance of the ad account"""
+    currency: AirbyteSortOrder
+    """Currency used by the ad account"""
+    account_status: AirbyteSortOrder
+    """Account status"""
+    amount_spent: AirbyteSortOrder
+    """Total amount spent"""
+    business_name: AirbyteSortOrder
+    """Business name"""
+    created_time: AirbyteSortOrder
+    """Account creation time"""
+    spend_cap: AirbyteSortOrder
+    """Spend cap"""
+    timezone_name: AirbyteSortOrder
+    """Timezone name"""
+
+
+# Entity-specific condition types for ad_accounts
+class AdAccountsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: AdAccountsSearchFilter
+
+
+class AdAccountsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: AdAccountsSearchFilter
+
+
+class AdAccountsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: AdAccountsSearchFilter
+
+
+class AdAccountsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: AdAccountsSearchFilter
+
+
+class AdAccountsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: AdAccountsSearchFilter
+
+
+class AdAccountsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: AdAccountsSearchFilter
+
+
+class AdAccountsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: AdAccountsStringFilter
+
+
+class AdAccountsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: AdAccountsStringFilter
+
+
+class AdAccountsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: AdAccountsStringFilter
+
+
+class AdAccountsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: AdAccountsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+AdAccountsInCondition = TypedDict("AdAccountsInCondition", {"in": AdAccountsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+AdAccountsNotCondition = TypedDict("AdAccountsNotCondition", {"not": "AdAccountsCondition"}, total=False)
+"""Negates the nested condition."""
+
+AdAccountsAndCondition = TypedDict("AdAccountsAndCondition", {"and": "list[AdAccountsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+AdAccountsOrCondition = TypedDict("AdAccountsOrCondition", {"or": "list[AdAccountsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+AdAccountsAnyCondition = TypedDict("AdAccountsAnyCondition", {"any": AdAccountsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all ad_accounts condition types
+AdAccountsCondition = (
+    AdAccountsEqCondition
+    | AdAccountsNeqCondition
+    | AdAccountsGtCondition
+    | AdAccountsGteCondition
+    | AdAccountsLtCondition
+    | AdAccountsLteCondition
+    | AdAccountsInCondition
+    | AdAccountsLikeCondition
+    | AdAccountsFuzzyCondition
+    | AdAccountsKeywordCondition
+    | AdAccountsContainsCondition
+    | AdAccountsNotCondition
+    | AdAccountsAndCondition
+    | AdAccountsOrCondition
+    | AdAccountsAnyCondition
+)
+
+
+class AdAccountsSearchQuery(TypedDict, total=False):
+    """Search query for ad_accounts entity."""
+    filter: AdAccountsCondition
+    sort: list[AdAccountsSortFilter]
 
 
 # ===== CUSTOM_CONVERSIONS SEARCH TYPES =====

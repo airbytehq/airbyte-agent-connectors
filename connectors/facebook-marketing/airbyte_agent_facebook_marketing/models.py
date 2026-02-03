@@ -25,6 +25,16 @@ class FacebookMarketingAuthConfig(BaseModel):
     client_secret: Optional[str] = None
     """Facebook App Client Secret"""
 
+# Replication configuration
+
+class FacebookMarketingReplicationConfig(BaseModel):
+    """Replication Configuration - Settings for data replication from Facebook Marketing."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    account_ids: str
+    """The Facebook Ad account ID(s) to pull data from. The Ad account ID number is in the account dropdown menu or in your browser's address bar of your Meta Ads Manager."""
+
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 class CurrentUser(BaseModel):
@@ -211,6 +221,21 @@ class AdCreativesList(BaseModel):
     data: Union[list[AdCreative], Any] = Field(default=None)
     paging: Union[Paging, Any] = Field(default=None)
 
+class AdsActionStats(BaseModel):
+    """Action statistics for Facebook ads"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    action_type: Union[str | None, Any] = Field(default=None)
+    action_destination: Union[str | None, Any] = Field(default=None)
+    action_target_id: Union[str | None, Any] = Field(default=None)
+    value: Union[float | None, Any] = Field(default=None)
+    field_1d_click: Union[float | None, Any] = Field(default=None, alias="1d_click")
+    field_7d_click: Union[float | None, Any] = Field(default=None, alias="7d_click")
+    field_28d_click: Union[float | None, Any] = Field(default=None, alias="28d_click")
+    field_1d_view: Union[float | None, Any] = Field(default=None, alias="1d_view")
+    field_7d_view: Union[float | None, Any] = Field(default=None, alias="7d_view")
+    field_28d_view: Union[float | None, Any] = Field(default=None, alias="28d_view")
+
 class AdsInsight(BaseModel):
     """Facebook Ads Insight"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -232,12 +257,86 @@ class AdsInsight(BaseModel):
     ctr: Union[float | None, Any] = Field(default=None)
     date_start: Union[str | None, Any] = Field(default=None)
     date_stop: Union[str | None, Any] = Field(default=None)
+    actions: Union[list[AdsActionStats] | None, Any] = Field(default=None)
+    action_values: Union[list[AdsActionStats] | None, Any] = Field(default=None)
 
 class AdsInsightsList(BaseModel):
     """AdsInsightsList type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     data: Union[list[AdsInsight], Any] = Field(default=None)
+    paging: Union[Paging, Any] = Field(default=None)
+
+class AdAccount(BaseModel):
+    """Facebook Ad Account"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    account_id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    account_status: Union[int | None, Any] = Field(default=None)
+    age: Union[float | None, Any] = Field(default=None)
+    amount_spent: Union[str | None, Any] = Field(default=None)
+    balance: Union[str | None, Any] = Field(default=None)
+    business: Union[Any, Any] = Field(default=None)
+    business_city: Union[str | None, Any] = Field(default=None)
+    business_country_code: Union[str | None, Any] = Field(default=None)
+    business_name: Union[str | None, Any] = Field(default=None)
+    business_state: Union[str | None, Any] = Field(default=None)
+    business_street: Union[str | None, Any] = Field(default=None)
+    business_street2: Union[str | None, Any] = Field(default=None)
+    business_zip: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    currency: Union[str | None, Any] = Field(default=None)
+    disable_reason: Union[int | None, Any] = Field(default=None)
+    end_advertiser: Union[str | None, Any] = Field(default=None)
+    end_advertiser_name: Union[str | None, Any] = Field(default=None)
+    funding_source: Union[str | None, Any] = Field(default=None)
+    funding_source_details: Union[dict[str, Any] | None, Any] = Field(default=None)
+    has_migrated_permissions: Union[bool | None, Any] = Field(default=None)
+    is_personal: Union[int | None, Any] = Field(default=None)
+    is_prepay_account: Union[bool | None, Any] = Field(default=None)
+    is_tax_id_required: Union[bool | None, Any] = Field(default=None)
+    min_campaign_group_spend_cap: Union[str | None, Any] = Field(default=None)
+    min_daily_budget: Union[int | None, Any] = Field(default=None)
+    owner: Union[str | None, Any] = Field(default=None)
+    spend_cap: Union[str | None, Any] = Field(default=None)
+    timezone_id: Union[int | None, Any] = Field(default=None)
+    timezone_name: Union[str | None, Any] = Field(default=None)
+    timezone_offset_hours_utc: Union[float | None, Any] = Field(default=None)
+
+class BusinessRef(BaseModel):
+    """Reference to a Facebook Business"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+
+class AdAccountListItem(BaseModel):
+    """Facebook Ad Account in list response"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    account_id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    account_status: Union[int | None, Any] = Field(default=None)
+    age: Union[float | None, Any] = Field(default=None)
+    amount_spent: Union[str | None, Any] = Field(default=None)
+    balance: Union[str | None, Any] = Field(default=None)
+    business: Union[Any, Any] = Field(default=None)
+    business_name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    currency: Union[str | None, Any] = Field(default=None)
+    disable_reason: Union[int | None, Any] = Field(default=None)
+    spend_cap: Union[str | None, Any] = Field(default=None)
+    timezone_id: Union[int | None, Any] = Field(default=None)
+    timezone_name: Union[str | None, Any] = Field(default=None)
+
+class AdAccountsList(BaseModel):
+    """List of Facebook Ad Accounts"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AdAccountListItem], Any] = Field(default=None)
     paging: Union[Paging, Any] = Field(default=None)
 
 class DataSource(BaseModel):
@@ -405,6 +504,12 @@ class AdCreativeRef(BaseModel):
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
+
+class AdAccountsListResultMeta(BaseModel):
+    """Metadata for ad_accounts.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    after: Union[str | None, Any] = Field(default=None)
 
 class CampaignsListResultMeta(BaseModel):
     """Metadata for campaigns.Action.LIST operation"""
@@ -659,6 +764,66 @@ class AdsInsightsSearchData(BaseModel):
     """Start date of the reporting period"""
     date_stop: str | None = None
     """End date of the reporting period"""
+    actions: list[Any] | None = None
+    """Total number of actions taken"""
+    action_values: list[Any] | None = None
+    """Action values taken on the ad"""
+
+
+class AdAccountSearchData(BaseModel):
+    """Search result data for ad_account entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Ad account ID"""
+    account_id: str | None = None
+    """Ad account ID (numeric)"""
+    name: str | None = None
+    """Ad account name"""
+    balance: str | None = None
+    """Current balance of the ad account"""
+    currency: str | None = None
+    """Currency used by the ad account"""
+    account_status: int | None = None
+    """Account status"""
+    amount_spent: str | None = None
+    """Total amount spent"""
+    business_name: str | None = None
+    """Business name"""
+    created_time: str | None = None
+    """Account creation time"""
+    spend_cap: str | None = None
+    """Spend cap"""
+    timezone_name: str | None = None
+    """Timezone name"""
+
+
+class AdAccountsSearchData(BaseModel):
+    """Search result data for ad_accounts entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: str | None = None
+    """Ad account ID"""
+    account_id: str | None = None
+    """Ad account ID (numeric)"""
+    name: str | None = None
+    """Ad account name"""
+    balance: str | None = None
+    """Current balance of the ad account"""
+    currency: str | None = None
+    """Currency used by the ad account"""
+    account_status: int | None = None
+    """Account status"""
+    amount_spent: str | None = None
+    """Total amount spent"""
+    business_name: str | None = None
+    """Business name"""
+    created_time: str | None = None
+    """Account creation time"""
+    spend_cap: str | None = None
+    """Spend cap"""
+    timezone_name: str | None = None
+    """Timezone name"""
 
 
 class CustomConversionsSearchData(BaseModel):
@@ -782,6 +947,12 @@ AdCreativesSearchResult = AirbyteSearchResult[AdCreativesSearchData]
 AdsInsightsSearchResult = AirbyteSearchResult[AdsInsightsSearchData]
 """Search result type for ads_insights entity."""
 
+AdAccountSearchResult = AirbyteSearchResult[AdAccountSearchData]
+"""Search result type for ad_account entity."""
+
+AdAccountsSearchResult = AirbyteSearchResult[AdAccountsSearchData]
+"""Search result type for ad_accounts entity."""
+
 CustomConversionsSearchResult = AirbyteSearchResult[CustomConversionsSearchData]
 """Search result type for custom_conversions entity."""
 
@@ -797,6 +968,9 @@ VideosSearchResult = AirbyteSearchResult[VideosSearchData]
 
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
+
+AdAccountsListResult = FacebookMarketingExecuteResultWithMeta[list[AdAccountListItem], AdAccountsListResultMeta]
+"""Result type for ad_accounts.list operation with data and metadata."""
 
 CampaignsListResult = FacebookMarketingExecuteResultWithMeta[list[Campaign], CampaignsListResultMeta]
 """Result type for campaigns.list operation with data and metadata."""
