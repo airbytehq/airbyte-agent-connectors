@@ -10,7 +10,7 @@ For programmatic setup via the Airbyte API:
 |-------|-------|
 | `connector_id` | `e094cb9a-26de-4645-8761-65c0c425d1de` |
 
-See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/skill-references/programmatic-setup.md) for the full API workflow.
+See [Programmatic Setup](/.claude/skills/airbyte-agent-connectors/references/programmatic-setup.md) for the full API workflow.
 
 ## Authentication
 

@@ -125,7 +125,7 @@ Best for: Development, self-hosted deployments, single-tenant applications.
 For multi-tenant apps or managed credential storage.
 
 **Setup options:**
-- **Programmatic (terminal/API)**: Create connectors via curl or scripts—see [Programmatic Setup](./skill-references/programmatic-setup.md)
+- **Programmatic (terminal/API)**: Create connectors via curl or scripts—see [Programmatic Setup](./references/programmatic-setup.md)
 - **Python SDK**: Use `create_hosted()` (shown below)
 - **UI**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) for visual configuration
 
@@ -262,12 +262,12 @@ github_tool = StructuredTool.from_function(
 
 For detailed information, see:
 
-- **[Getting Started](./skill-references/getting-started.md)** - Installation, environment setup, first connector
-- **[Entity-Action API](./skill-references/entity-action-api.md)** - Core API patterns, actions, pagination
-- **[Authentication](./skill-references/authentication.md)** - Auth types overview, OAuth setup
-- **[Programmatic Setup](./skill-references/programmatic-setup.md)** - Terminal/curl setup without UI (tokens, HTTP API)
-- **[MCP Integration](./skill-references/mcp-integration.md)** - MCP server setup, Claude Code/Desktop config
-- **[Troubleshooting](./skill-references/troubleshooting.md)** - Common errors, rate limiting, debugging
+- **[Getting Started](./references/getting-started.md)** - Installation, environment setup, first connector
+- **[Entity-Action API](./references/entity-action-api.md)** - Core API patterns, actions, pagination
+- **[Authentication](./references/authentication.md)** - Auth types overview, OAuth setup
+- **[Programmatic Setup](./references/programmatic-setup.md)** - Terminal/curl setup without UI (tokens, HTTP API)
+- **[MCP Integration](./references/mcp-integration.md)** - MCP server setup, Claude Code/Desktop config
+- **[Troubleshooting](./references/troubleshooting.md)** - Common errors, rate limiting, debugging
 
 ## Per-Connector Documentation
 
