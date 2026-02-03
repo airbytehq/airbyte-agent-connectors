@@ -367,3 +367,26 @@ For example:
 - [GitHub README](../connectors/github/README.md)
 - [Stripe README](../connectors/stripe/README.md)
 - [Salesforce README](../connectors/salesforce/README.md)
+
+## Version Management
+
+### Checking for Updates
+```bash
+# Check current version
+pip show airbyte-agent-stripe
+
+# Check latest on PyPI
+pip index versions airbyte-agent-stripe
+```
+
+### Upgrade Strategy
+1. Pin versions in production: `airbyte-agent-stripe==0.5.75`
+2. Test upgrades in staging first
+3. Check connector's CHANGELOG.md for breaking changes
+4. Update one connector at a time
+
+### Breaking Changes
+Connectors follow semantic versioning:
+- **Patch** (0.5.74 → 0.5.75): Bug fixes, safe to upgrade
+- **Minor** (0.5.x → 0.6.0): New features, usually backward compatible
+- **Major** (0.x → 1.0): Breaking changes, review changelog

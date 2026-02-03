@@ -48,6 +48,17 @@ pip install airbyte-agent-github
 uv add airbyte-agent-github
 ```
 
+### File Placement
+
+When creating files (.env, scripts, examples), place them based on context:
+
+| Working in... | Put files in... |
+|---------------|-----------------|
+| `airbyte-agent-connectors` repo | The specific connector directory (e.g., `connectors/gong/`) |
+| Your own project | Your project root |
+
+**In the airbyte-agent-connectors repo:** Each connector directory (`connectors/{name}/`) is self-contained. Put .env files, test scripts, and examples there—not in the repo root.
+
 ## Available Connectors
 
 All 21 connectors follow the same entity-action pattern. Each has README.md, AUTH.md, and REFERENCE.md in its directory.
@@ -77,6 +88,22 @@ All 21 connectors follow the same entity-action pattern. Each has README.md, AUT
 | [Zendesk Support](../../../connectors/zendesk-support/) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
 
 ## Setup Patterns
+
+### Choosing a Setup Pattern
+
+| If you need... | Use |
+|----------------|-----|
+| Quick development/prototyping | Local SDK |
+| Single-tenant production app | Local SDK |
+| Multi-tenant SaaS | Hosted Engine |
+| Managed credential storage | Hosted Engine |
+| Claude Desktop/Claude Code integration | MCP Server |
+| LLM tool discovery | MCP Server |
+
+**Decision flow:**
+1. Building for Claude/LLM tools? → MCP Server
+2. Multi-tenant or need managed credentials? → Hosted Engine
+3. Otherwise → Local SDK
 
 ### 1. Local SDK (Open Source)
 
@@ -138,7 +165,55 @@ claude mcp add airbyte-agent-mcp --scope project
 
 Best for: Claude Desktop, Claude Code, any MCP-compatible LLM interface.
 
+## Security Best Practices
+
+**Never commit credentials to git.** Use environment variables or secret managers.
+
+### Environment Variables (Development)
+```python
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"])
+)
+```
+
+### Secret Manager (Production)
+```python
+# AWS Secrets Manager example
+import boto3
+import json
+
+def get_secret(secret_name: str) -> dict:
+    client = boto3.client("secretsmanager")
+    response = client.get_secret_value(SecretId=secret_name)
+    return json.loads(response["SecretString"])
+
+secrets = get_secret("my-app/stripe")
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(api_key=secrets["api_key"])
+)
+```
+
+### Credential Rotation
+- Use Hosted Engine for automatic credential management
+- For local SDK, implement rotation in your deployment pipeline
+- Never hardcode credentials in source code
+
 ## Framework Integration
+
+### Choosing a Framework
+
+| Framework | Best For | Trade-offs |
+|-----------|----------|------------|
+| **Direct SDK** | Maximum control, minimal overhead | No agent orchestration |
+| **PydanticAI** | Type-safe agents, structured outputs | Newer ecosystem |
+| **LangChain** | Large ecosystem, many integrations | More abstraction layers |
+| **MCP** | Claude-native, tool discovery | Claude-specific |
+
+**Recommendation:** Start with Direct SDK for simple use cases. Add PydanticAI when you need agent orchestration with type safety.
 
 ### PydanticAI
 
