@@ -19,8 +19,6 @@ class ShopifyAuthConfig(BaseModel):
 
     api_key: str
     """Your Shopify Admin API access token"""
-    shop: str
-    """Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 

@@ -26,7 +26,7 @@ from uuid import (
 ShopifyConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9da77001-af33-4bcd-be46-6252bf9342b9'),
     name='shopify',
-    version='0.1.4',
+    version='0.1.5',
     base_url='https://{shop}.myshopify.com/admin/api/2025-01',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -34,19 +34,15 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
         user_config_spec=AirbyteAuthConfig(
             title='Access Token Authentication',
             type='object',
-            required=['api_key', 'shop'],
+            required=['api_key'],
             properties={
                 'api_key': AuthConfigFieldSpec(
                     title='Access Token',
                     description='Your Shopify Admin API access token',
                 ),
-                'shop': AuthConfigFieldSpec(
-                    title='Shop Name',
-                    description="Your Shopify store name (e.g., 'my-store' from my-store.myshopify.com)",
-                ),
             },
             auth_mapping={'api_key': '${api_key}'},
-            replication_auth_key_mapping={'credentials.access_token': 'api_key', 'shop': 'shop'},
+            replication_auth_key_mapping={'credentials.access_token': 'api_key'},
         ),
     ),
     entities=[

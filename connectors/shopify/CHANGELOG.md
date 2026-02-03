@@ -1,5 +1,10 @@
 # Shopify changelog
 
+## [0.1.28] - 2026-02-03
+- Updated connector definition (YAML version 0.1.5)
+- Source commit: 1fc2ac28
+- SDK version: 0.1.0
+
 ## [0.1.27] - 2026-02-03
 - Updated connector definition (YAML version 0.1.4)
 - Source commit: f2dbc00e
