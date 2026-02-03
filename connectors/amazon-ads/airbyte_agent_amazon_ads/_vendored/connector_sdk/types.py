@@ -239,7 +239,7 @@ class EndpointDefinition(BaseModel):
     # Health check support (Airbyte extension)
     preferred_for_check: bool = Field(
         False,
-        description="Mark this list operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
+        description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
 

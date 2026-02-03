@@ -1,5 +1,10 @@
 # Amazon Ads changelog
 
+## [0.1.27] - 2026-02-03
+- Updated connector definition (YAML version 1.0.6)
+- Source commit: 888d0538
+- SDK version: 0.1.0
+
 ## [0.1.26] - 2026-02-02
 - Updated connector definition (YAML version 1.0.5)
 - Source commit: 94024675

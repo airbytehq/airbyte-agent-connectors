@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
+from typing import Optional
 
 # Authentication configuration
 
@@ -17,9 +18,9 @@ class AmazonAdsAuthConfig(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    client_id: str
+    client_id: Optional[str] = None
     """The client ID of your Amazon Ads API application"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """The client secret of your Amazon Ads API application"""
     refresh_token: str
     """The refresh token obtained from the OAuth authorization flow"""

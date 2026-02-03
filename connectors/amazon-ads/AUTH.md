@@ -15,8 +15,8 @@ In open source mode, you provide API credentials directly to the connector.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | The client ID of your Amazon Ads API application |
-| `client_secret` | `str` | Yes | The client secret of your Amazon Ads API application |
+| `client_id` | `str` | No | The client ID of your Amazon Ads API application |
+| `client_secret` | `str` | No | The client secret of your Amazon Ads API application |
 | `refresh_token` | `str` | Yes | The refresh token obtained from the OAuth authorization flow |
 
 Example request:
@@ -49,8 +49,8 @@ Create a connector with OAuth credentials.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `client_id` | `str` | Yes | The client ID of your Amazon Ads API application |
-| `client_secret` | `str` | Yes | The client secret of your Amazon Ads API application |
+| `client_id` | `str` | No | The client ID of your Amazon Ads API application |
+| `client_secret` | `str` | No | The client secret of your Amazon Ads API application |
 | `refresh_token` | `str` | Yes | The refresh token obtained from the OAuth authorization flow |
 
 Example request:
