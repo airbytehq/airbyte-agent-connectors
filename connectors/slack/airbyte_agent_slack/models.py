@@ -191,30 +191,6 @@ class ChannelResponse(BaseModel):
     ok: Union[bool, Any] = Field(default=None)
     channel: Union[Channel, Any] = Field(default=None)
 
-class File(BaseModel):
-    """File object"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    mimetype: Union[str | None, Any] = Field(default=None)
-    filetype: Union[str | None, Any] = Field(default=None)
-    pretty_type: Union[str | None, Any] = Field(default=None)
-    user: Union[str | None, Any] = Field(default=None)
-    size: Union[int | None, Any] = Field(default=None)
-    mode: Union[str | None, Any] = Field(default=None)
-    is_external: Union[bool | None, Any] = Field(default=None)
-    external_type: Union[str | None, Any] = Field(default=None)
-    is_public: Union[bool | None, Any] = Field(default=None)
-    public_url_shared: Union[bool | None, Any] = Field(default=None)
-    url_private: Union[str | None, Any] = Field(default=None)
-    url_private_download: Union[str | None, Any] = Field(default=None)
-    permalink: Union[str | None, Any] = Field(default=None)
-    permalink_public: Union[str | None, Any] = Field(default=None)
-    created: Union[int | None, Any] = Field(default=None)
-    timestamp: Union[int | None, Any] = Field(default=None)
-
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -243,6 +219,30 @@ class Reaction(BaseModel):
     name: Union[str | None, Any] = Field(default=None)
     users: Union[list[str] | None, Any] = Field(default=None)
     count: Union[int | None, Any] = Field(default=None)
+
+class File(BaseModel):
+    """File object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    title: Union[str | None, Any] = Field(default=None)
+    mimetype: Union[str | None, Any] = Field(default=None)
+    filetype: Union[str | None, Any] = Field(default=None)
+    pretty_type: Union[str | None, Any] = Field(default=None)
+    user: Union[str | None, Any] = Field(default=None)
+    size: Union[int | None, Any] = Field(default=None)
+    mode: Union[str | None, Any] = Field(default=None)
+    is_external: Union[bool | None, Any] = Field(default=None)
+    external_type: Union[str | None, Any] = Field(default=None)
+    is_public: Union[bool | None, Any] = Field(default=None)
+    public_url_shared: Union[bool | None, Any] = Field(default=None)
+    url_private: Union[str | None, Any] = Field(default=None)
+    url_private_download: Union[str | None, Any] = Field(default=None)
+    permalink: Union[str | None, Any] = Field(default=None)
+    permalink_public: Union[str | None, Any] = Field(default=None)
+    created: Union[int | None, Any] = Field(default=None)
+    timestamp: Union[int | None, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
