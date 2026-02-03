@@ -959,7 +959,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     if not has_preferred_check:
         readiness_warnings.append(
             "No operation has x-airbyte-preferred-for-check: true. "
-            "Add this extension to a lightweight list operation (e.g., users.list) "
+            "Add this extension to a lightweight operation (e.g., users.list or accounts.get) "
             "to enable reliable health checks."
         )
 
