@@ -206,7 +206,7 @@ For production deployments, you can store credentials in Airbyte Agent Engine an
 
 After this, you can create connectors, manage credentials, and execute operations entirely through code - no UI needed.
 
-**Prefer terminal/curl over Python?** See [Programmatic Setup](./programmatic-setup.md) for HTTP API examples with curl commands.
+**Prefer terminal/curl over Python?** See [Programmatic Setup](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/programmatic-setup.md) for HTTP API examples with curl commands.
 
 ### Understanding `external_user_id`
 
@@ -232,7 +232,15 @@ connector = await StripeConnector.create_hosted(
 
 # Connector is now registered - use it immediately
 result = await connector.execute("customers", "list", {"limit": 10})
+
+# Access the connector_id for caching (recommended for production)
+print(connector.connector_id)  # e.g., "abc123-uuid-..."
 ```
+
+**What `create_hosted()` returns:** A fully configured connector instance with:
+- `connector.connector_id` - The unique ID assigned by Airbyte (cache this for faster subsequent lookups)
+- `connector.external_user_id` - The identifier you provided
+- Ready to call `connector.execute()` immediately
 
 ### Using an Existing Hosted Connector
 

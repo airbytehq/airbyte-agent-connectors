@@ -113,9 +113,9 @@ Each connector's AUTH.md file documents how to obtain credentials:
 | Salesforce | OAuth Credentials | [Salesforce Setup > App Manager > Connected App](https://help.salesforce.com/s/articleView?id=sf.connected_app_create.htm) |
 
 For detailed authentication instructions, see the connector's AUTH.md:
-- [GitHub AUTH.md](../connectors/github/AUTH.md)
-- [Stripe AUTH.md](../connectors/stripe/AUTH.md)
-- [Salesforce AUTH.md](../connectors/salesforce/AUTH.md)
+- [GitHub AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/github/AUTH.md)
+- [Stripe AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/AUTH.md)
+- [Salesforce AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/AUTH.md)
 
 ## Your First Connector: GitHub Example
 
@@ -347,10 +347,10 @@ await connector.execute("deals", "list", {"limit": 50})
 
 ## Next Steps
 
-- **[Entity-Action API](./entity-action-api.md)** - Understand the core API patterns
-- **[Authentication](./authentication.md)** - Deep dive into auth options
-- **[MCP Integration](./mcp-integration.md)** - Set up MCP server for Claude
-- **[Troubleshooting](./troubleshooting.md)** - Common issues and solutions
+- **[Entity-Action API](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md)** - Understand the core API patterns
+- **[Authentication](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md)** - Deep dive into auth options
+- **[MCP Integration](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/mcp-integration.md)** - Set up MCP server for Claude
+- **[Troubleshooting](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/troubleshooting.md)** - Common issues and solutions
 
 ## Connector-Specific Documentation
 
@@ -364,9 +364,9 @@ connectors/{connector}/
 ```
 
 For example:
-- [GitHub README](../connectors/github/README.md)
-- [Stripe README](../connectors/stripe/README.md)
-- [Salesforce README](../connectors/salesforce/README.md)
+- [GitHub README](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/github/README.md)
+- [Stripe README](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/README.md)
+- [Salesforce README](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/README.md)
 
 ## Version Management
 

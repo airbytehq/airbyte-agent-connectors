@@ -158,26 +158,40 @@ connectors:
 
 ### Step 2: Create .env File
 
-Create `.env` in the `airbyte-agent-mcp` directory (no template provided, create from scratch):
+Create `.env` in the `airbyte-agent-mcp` directory with your connector credentials:
 
 ```bash
-# Stripe
+# .env template - copy and fill in your values
+# Only include variables for connectors you're using
+
+# Stripe (API Key)
 STRIPE_API_KEY=sk_live_your_key_here
 
-# GitHub
+# GitHub (Personal Access Token)
 GITHUB_ACCESS_TOKEN=ghp_your_token_here
 
-# Salesforce
+# Salesforce (OAuth - requires refresh token)
 SALESFORCE_CLIENT_ID=your_client_id
 SALESFORCE_CLIENT_SECRET=your_client_secret
 SALESFORCE_REFRESH_TOKEN=your_refresh_token
 
-# HubSpot
+# HubSpot (Private App Token)
 HUBSPOT_ACCESS_TOKEN=pat-na1-xxx
 
-# Slack
+# Slack (Bot Token)
 SLACK_BOT_TOKEN=xoxb-your-token
+
+# Gong (API Key pair)
+GONG_ACCESS_KEY=your_access_key
+GONG_ACCESS_KEY_SECRET=your_access_key_secret
+
+# Jira (API Token)
+JIRA_API_TOKEN=your_api_token
+JIRA_EMAIL=your_email@example.com
+JIRA_DOMAIN=your-domain.atlassian.net
 ```
+
+**Tip:** Only include environment variables for the connectors you've configured in `configured_connectors.yaml`. The variable names must match the `secrets` keys in your YAML config.
 
 ### Configuration Options
 
@@ -534,8 +548,8 @@ uv run ruff check .
 
 ## Related Documentation
 
-- [Getting Started](./getting-started.md) - Install and configure connectors
-- [Entity-Action API](./entity-action-api.md) - Understand the API patterns
-- [Authentication](./authentication.md) - Set up credentials
-- [Troubleshooting](./troubleshooting.md) - Common issues and solutions
-- [airbyte-agent-mcp README](../airbyte-agent-mcp/README.md) - Server-specific documentation
+- [Getting Started](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/getting-started.md) - Install and configure connectors
+- [Entity-Action API](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md) - Understand the API patterns
+- [Authentication](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md) - Set up credentials
+- [Troubleshooting](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/troubleshooting.md) - Common issues and solutions
+- [airbyte-agent-mcp README](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/airbyte-agent-mcp/README.md) - Server-specific documentation

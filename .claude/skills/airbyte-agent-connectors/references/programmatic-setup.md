@@ -129,6 +129,8 @@ For the complete auth config structure, see:
 
 ### Step A4: Execute Operations
 
+**Note:** Execute uses the `APPLICATION_TOKEN` (not the scoped token). The scoped token is only needed for connector creation in Step A3.
+
 ```bash
 curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances/<CONNECTOR_ID>/execute' \
   -H 'Content-Type: application/json' \
@@ -290,6 +292,6 @@ curl -X POST 'https://api.airbyte.ai/api/v1/connectors/sources/<SOURCE_ID>/execu
 
 ## Related Documentation
 
-- [Authentication](./authentication.md) - SDK-based auth patterns
-- [Getting Started](./getting-started.md) - Installation and setup
-- [Entity-Action API](./entity-action-api.md) - Core API patterns
+- [Authentication](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md) - SDK-based auth patterns
+- [Getting Started](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/getting-started.md) - Installation and setup
+- [Entity-Action API](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md) - Core API patterns

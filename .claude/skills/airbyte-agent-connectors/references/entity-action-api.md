@@ -217,17 +217,17 @@ except RuntimeError as e:
 
 ### Result Structure by Action
 
-| Action | `result.data` Type | `result.meta` |
-|--------|-------------------|---------------|
-| `get` | `dict` | Typically None |
-| `list` | `list[dict]` | Pagination info |
-| `create` | `dict` | Typically None |
-| `update` | `dict` | Typically None |
-| `delete` | `dict` | Typically None |
-| `api_search` | `list[dict]` | Pagination info |
-| `download` | `AsyncIterator[bytes]` | Stream metadata |
+| Action | `result.data` Type | `result.meta` | Example Access |
+|--------|-------------------|---------------|----------------|
+| `get` | `dict` | Typically None | `customer = result.data` |
+| `list` | `list[dict]` | Pagination info | `for item in result.data:` |
+| `create` | `dict` | Typically None | `new_id = result.data["id"]` |
+| `update` | `dict` | Typically None | `updated = result.data` |
+| `delete` | `dict` | Typically None | `deleted_id = result.data["id"]` |
+| `api_search` | `list[dict]` | Pagination info | `for match in result.data:` |
+| `download` | `AsyncIterator[bytes]` | Stream metadata | `async for chunk in result.data:` |
 
-**Note:** Result types are connector-specific Pydantic models (e.g., `GongExecuteResultWithMeta`). Access `.data` and `.meta` attributes directly.
+**Note:** Result types are connector-specific Pydantic models (e.g., `GongExecuteResultWithMeta`). Access `.data` and `.meta` attributes directly. The `result.data` type depends on the action: single-record actions (`get`, `create`, `update`, `delete`) return a `dict`, while multi-record actions (`list`, `api_search`) return a `list[dict]`.
 
 ## Pagination
 
@@ -273,6 +273,8 @@ async def list_all_customers(connector):
 | HubSpot | `limit` | `after` | `has_more`, `next_cursor` |
 | Salesforce | `limit` | `next_page_token` | `has_more`, `next_page_token` |
 | Slack | `limit` | `cursor` | `has_more`, `next_cursor` |
+
+**Important:** The cursor parameter name varies by connector. Check the connector's REFERENCE.md for the exact parameter name, or use the `result.meta.pagination.cursor` value which provides the cursor in a normalized format.
 
 ## Field Selection
 
@@ -486,9 +488,9 @@ print(schema)  # Shows available actions and parameters
 
 Each connector's REFERENCE.md provides a complete listing:
 
-- [GitHub REFERENCE.md](../connectors/github/REFERENCE.md)
-- [Stripe REFERENCE.md](../connectors/stripe/REFERENCE.md)
-- [Salesforce REFERENCE.md](../connectors/salesforce/REFERENCE.md)
+- [GitHub REFERENCE.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/github/REFERENCE.md)
+- [Stripe REFERENCE.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/REFERENCE.md)
+- [Salesforce REFERENCE.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/REFERENCE.md)
 
 The reference docs include:
 - All entities with descriptions
