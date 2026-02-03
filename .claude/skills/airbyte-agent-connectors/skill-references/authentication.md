@@ -206,6 +206,8 @@ For production deployments, you can store credentials in Airbyte Agent Engine an
 
 After this, you can create connectors, manage credentials, and execute operations entirely through code - no UI needed.
 
+**Prefer terminal/curl over Python?** See [Programmatic Setup](./programmatic-setup.md) for HTTP API examples with curl commands.
+
 ### Understanding `external_user_id`
 
 The `external_user_id` is **your identifier** for the user or tenant - you define it (e.g., `"user_123"`, `"acme-corp"`, `"tenant_abc"`). It's used to:
@@ -429,11 +431,11 @@ stripe_key = os.environ["STRIPE_API_KEY"]
 
 Each connector's AUTH.md has complete authentication details:
 
-- [GitHub AUTH.md](../connectors/github/AUTH.md) - PAT and OAuth
-- [Stripe AUTH.md](../connectors/stripe/AUTH.md) - API Key
-- [Salesforce AUTH.md](../connectors/salesforce/AUTH.md) - OAuth with refresh
-- [HubSpot AUTH.md](../connectors/hubspot/AUTH.md) - Private App and OAuth
-- [Zendesk Support AUTH.md](../connectors/zendesk-support/AUTH.md) - API Token and OAuth
+- [GitHub AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/AUTH.md) - PAT and OAuth
+- [Stripe AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe/AUTH.md) - API Key
+- [Salesforce AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/salesforce/AUTH.md) - OAuth with refresh
+- [HubSpot AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot/AUTH.md) - Private App and OAuth
+- [Zendesk Support AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support/AUTH.md) - API Token and OAuth
 
 See the connector's AUTH.md for:
 - All supported authentication methods
