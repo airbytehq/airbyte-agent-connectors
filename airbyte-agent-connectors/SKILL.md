@@ -16,11 +16,80 @@ metadata:
 
 # Airbyte Agent Connectors
 
-Airbyte Agent Connectors let AI agents call third-party APIs through strongly typed, well-documented tools. Each connector is a standalone Python package that you can use directly in your app, plug into an agent framework (PydanticAI, LangChain), or expose through MCP.
+Airbyte Agent Connectors let AI agents call third-party APIs through strongly typed, well-documented tools. Each connector is a standalone Python package.
 
-## Quick Start
+## Mode Detection
 
-Install a connector and execute operations in under 10 lines:
+**First, determine which mode the user needs:**
+
+### Platform Mode (Airbyte Cloud)
+Use when:
+- Environment has `AIRBYTE_CLIENT_ID` + `AIRBYTE_CLIENT_SECRET`
+- User wants connectors visible in the Airbyte UI at app.airbyte.ai
+- User needs managed credential storage, entity cache, or multi-tenant deployments
+
+### OSS Mode (Open Source / Local SDK)
+Use when:
+- User wants to run connectors directly without platform integration
+- User is doing quick development or prototyping
+- User wants Claude Code/Desktop integration via MCP only
+
+**Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
+
+---
+
+## Platform Mode Quick Start
+
+For users with Airbyte Platform credentials.
+
+### Prerequisites
+
+Get credentials from [app.airbyte.ai](https://app.airbyte.ai) > Settings > API Keys:
+- `AIRBYTE_CLIENT_ID`
+- `AIRBYTE_CLIENT_SECRET`
+
+### Create a Connector
+
+```python
+from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
+
+connector = await StripeConnector.create_hosted(
+    external_user_id="user_123",      # Your identifier for this user/tenant
+    airbyte_client_id="...",          # From app.airbyte.ai
+    airbyte_client_secret="...",
+    auth_config=StripeAuthConfig(api_key="sk_live_...")
+)
+# Connector now appears in your Airbyte UI!
+```
+
+### Use Existing Connector
+
+```python
+connector = StripeConnector(
+    external_user_id="user_123",
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
+)
+result = await connector.execute("customers", "list", {"limit": 10})
+```
+
+**For OAuth connectors and complete platform setup:** See [Platform Setup Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/platform-setup.md)
+
+---
+
+## OSS Mode Quick Start
+
+For users running connectors locally without platform integration.
+
+### Install
+
+```bash
+pip install airbyte-agent-github
+# or: uv add airbyte-agent-github
+```
+
+### Use Directly
 
 ```python
 from airbyte_agent_github import GithubConnector
@@ -30,38 +99,27 @@ connector = GithubConnector(
     auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_your_token")
 )
 
-# List open issues
 result = await connector.execute("issues", "list", {
     "owner": "airbytehq",
     "repo": "airbyte",
     "states": ["OPEN"],
     "per_page": 10
 })
-print(result.data)
 ```
 
-Installation:
+### Add to Claude via MCP
 
 ```bash
-pip install airbyte-agent-github
-# or
-uv add airbyte-agent-github
+claude mcp add airbyte-agent-mcp --scope project
 ```
 
-### File Placement
+**For MCP configuration and complete OSS setup:** See [OSS Setup Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/oss-setup.md)
 
-When creating files (.env, scripts, examples), place them based on context:
-
-| Working in... | Put files in... |
-|---------------|-----------------|
-| `airbyte-agent-connectors` repo | The specific connector directory (e.g., `connectors/gong/`) |
-| Your own project | Your project root |
-
-**In the airbyte-agent-connectors repo:** Each connector directory (`connectors/{name}/`) is self-contained. Put .env files, test scripts, and examples there—not in the repo root.
+---
 
 ## Available Connectors
 
-All 21 connectors follow the same entity-action pattern. Each has README.md, AUTH.md, and REFERENCE.md in its directory.
+All 21 connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
 
 | Connector | Package | Auth Type | Key Entities |
 |-----------|---------|-----------|--------------|
@@ -87,151 +145,171 @@ All 21 connectors follow the same entity-action pattern. Each has README.md, AUT
 | [Zendesk Chat](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-chat) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
 | [Zendesk Support](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
 
-## Setup Patterns
+---
 
-### Choosing a Setup Pattern
+## Entity-Action API Pattern
 
-| If you need... | Use |
-|----------------|-----|
-| Quick development/prototyping | Local SDK |
-| Single-tenant production app | Local SDK |
-| Multi-tenant SaaS | Hosted Engine |
-| Managed credential storage | Hosted Engine |
-| Claude Desktop/Claude Code integration | MCP Server |
-| LLM tool discovery | MCP Server |
-
-**Decision flow:**
-1. Building for Claude/LLM tools? → MCP Server
-2. Multi-tenant or need managed credentials? → Hosted Engine
-3. Otherwise → Local SDK
-
-### 1. Local SDK (Open Source)
-
-Run connectors directly in your application with your own API credentials:
+All connectors use the same interface:
 
 ```python
-from airbyte_agent_stripe import StripeConnector
+result = await connector.execute(entity, action, params)
+```
+
+### Actions
+
+| Action | Description | Returns |
+|--------|-------------|---------|
+| `list` | Get multiple records | `list[dict]` |
+| `get` | Get single record by ID | `dict` |
+| `create` | Create new record | `dict` |
+| `update` | Modify existing record | `dict` |
+| `delete` | Remove record | `dict` |
+| `api_search` | Native API search syntax | `list[dict]` |
+
+### Quick Examples
+
+```python
+# List
+await connector.execute("customers", "list", {"limit": 10})
+
+# Get
+await connector.execute("customers", "get", {"id": "cus_xxx"})
+
+# Search
+await connector.execute("repositories", "api_search", {
+    "query": "language:python stars:>1000"
+})
+
+# Create
+await connector.execute("customers", "create", {
+    "email": "user@example.com",
+    "name": "Jane Doe"
+})
+```
+
+### Pagination
+
+```python
+async def fetch_all(connector, entity, params=None):
+    all_records = []
+    cursor = None
+    params = params or {}
+
+    while True:
+        if cursor:
+            params["after"] = cursor
+        result = await connector.execute(entity, "list", params)
+        all_records.extend(result.data)
+
+        if result.meta and hasattr(result.meta, 'pagination'):
+            cursor = getattr(result.meta.pagination, 'cursor', None)
+            if not cursor:
+                break
+        else:
+            break
+
+    return all_records
+```
+
+**For complete API reference:** See [Entity-Action API Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md)
+
+---
+
+## Authentication Quick Reference
+
+### API Key Connectors
+
+```python
+# Stripe
 from airbyte_agent_stripe.models import StripeAuthConfig
+auth_config=StripeAuthConfig(api_key="sk_live_...")
 
-connector = StripeConnector(
-    auth_config=StripeAuthConfig(api_key="sk_live_...")
+# Gong
+from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
+auth_config=GongAccessKeyAuthenticationAuthConfig(
+    access_key="...", access_key_secret="..."
 )
+
+# HubSpot (Private App)
+from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
+auth_config=HubspotPrivateAppAuthConfig(access_token="pat-na1-...")
 ```
 
-Best for: Development, self-hosted deployments, single-tenant applications.
+### Personal Access Token
 
-### 2. Hosted Engine (Airbyte Agent Engine)
-
-For multi-tenant apps or managed credential storage.
-
-**Setup options:**
-- **Programmatic (terminal/API)**: Create connectors via curl or scripts—see [Programmatic Setup](./references/programmatic-setup.md)
-- **Python SDK**: Use `create_hosted()` (shown below)
-- **UI**: Sign up at [app.airbyte.ai](https://app.airbyte.ai) for visual configuration
-
-**One-time setup**: Get `airbyte_client_id` and `airbyte_client_secret` from app.airbyte.ai settings.
-
-**Step 1: Create a connector (first time)**
 ```python
-from airbyte_agent_stripe import StripeConnector
-from airbyte_agent_stripe.models import StripeAuthConfig
+# GitHub
+from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
+auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
 
-connector = await StripeConnector.create_hosted(
-    external_user_id="user_123",      # Your identifier for this user/tenant (you define this)
-    airbyte_client_id="...",          # From app.airbyte.ai settings
-    airbyte_client_secret="...",      # From app.airbyte.ai settings
-    auth_config=StripeAuthConfig(api_key="sk_live_...")
-)
-# Connector is now registered in Airbyte - no UI needed
+# Slack
+from airbyte_agent_slack.models import SlackAuthConfig
+auth_config=SlackAuthConfig(token="xoxb-...")
 ```
 
-**Step 2: Use existing connector (subsequent calls)**
+### OAuth (requires refresh token)
+
 ```python
-connector = StripeConnector(
-    external_user_id="user_123",      # Same identifier - looks up existing connector
-    airbyte_client_id="...",
-    airbyte_client_secret="...",
-)
-result = await connector.execute("customers", "list", {})
-```
-
-**Note**: `external_user_id` is YOUR identifier (user ID, tenant name, etc.) that you define. It's used to scope and look up connectors in multi-tenant apps.
-
-Best for: Multi-tenant SaaS, production deployments, credential management at scale.
-
-### 3. MCP Server
-
-Expose connectors through Model Context Protocol for Claude and other LLM tools:
-
-```bash
-# Add to Claude Code
-claude mcp add airbyte-agent-mcp --scope project
-```
-
-Best for: Claude Desktop, Claude Code, any MCP-compatible LLM interface.
-
-## Security Best Practices
-
-**Never commit credentials to git.** Use environment variables or secret managers.
-
-### Environment Variables (Development)
-```python
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
-connector = StripeConnector(
-    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"])
+# Salesforce
+from airbyte_agent_salesforce.models import SalesforceOAuthConfig
+auth_config=SalesforceOAuthConfig(
+    client_id="...", client_secret="...", refresh_token="..."
 )
 ```
 
-### Secret Manager (Production)
-```python
-# AWS Secrets Manager example
-import boto3
-import json
+**For complete auth details:** See [Authentication Reference](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md)
 
-def get_secret(secret_name: str) -> dict:
-    client = boto3.client("secretsmanager")
-    response = client.get_secret_value(SecretId=secret_name)
-    return json.loads(response["SecretString"])
+---
 
-secrets = get_secret("my-app/stripe")
-connector = StripeConnector(
-    auth_config=StripeAuthConfig(api_key=secrets["api_key"])
-)
-```
+## Common Workflows
 
-### Credential Rotation
-- Use Hosted Engine for automatic credential management
-- For local SDK, implement rotation in your deployment pipeline
-- Never hardcode credentials in source code
+### Platform User: "Set up a Gong connector"
 
-## Common Mistakes
+1. Check for platform credentials: "Do you have your Airbyte credentials (`AIRBYTE_CLIENT_ID`, `AIRBYTE_CLIENT_SECRET`)?"
+2. If NO: "Go to [app.airbyte.ai](https://app.airbyte.ai) > Settings > API Keys to get them."
+3. If YES: Ask for Gong credentials (access_key, access_key_secret)
+4. Use `create_hosted()`:
+   ```python
+   connector = await GongConnector.create_hosted(
+       external_user_id="your_tenant_id",
+       airbyte_client_id=AIRBYTE_CLIENT_ID,
+       airbyte_client_secret=AIRBYTE_CLIENT_SECRET,
+       auth_config=GongAccessKeyAuthenticationAuthConfig(
+           access_key="...", access_key_secret="..."
+       ),
+       name="Gong Source"
+   )
+   ```
+5. Confirm: "Connector created! It will appear in your Airbyte Connectors UI."
 
-Avoid these patterns when using Airbyte Agent Connectors:
+### OSS User: "Set up a GitHub connector"
 
-| Mistake | Why It's Wrong | Do This Instead |
-|---------|----------------|-----------------|
-| Hardcoding credentials in code | Security risk, can't rotate | Use environment variables or secret managers |
-| Creating new connector on every request | Wastes resources, hits rate limits | Reuse connector instances; use `external_user_id` lookup |
-| Ignoring pagination | Missing data on large datasets | Always check `result.meta.has_more` and paginate |
-| Not handling rate limits | Requests fail unexpectedly | Implement exponential backoff; check connector's rate limit docs |
-| Using `create_hosted()` without caching `connector_id` | Extra API calls on every request | Cache the returned `connector_id` after first creation |
-| Mixing token types in API calls | Auth failures | Application token for setup, scoped token for user operations |
+1. Ask for GitHub token (Personal Access Token)
+2. Guide local SDK usage:
+   ```python
+   from airbyte_agent_github import GithubConnector
+   from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
+
+   connector = GithubConnector(
+       auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
+   )
+   ```
+3. Optionally: Guide MCP server setup for Claude integration
+
+---
+
+## File Placement
+
+When creating files, place them based on context:
+
+| Working in... | Put files in... |
+|---------------|-----------------|
+| `airbyte-agent-connectors` repo | The specific connector directory (e.g., `connectors/gong/`) |
+| Your own project | Your project root |
+
+---
 
 ## Framework Integration
-
-### Choosing a Framework
-
-| Framework | Best For | Trade-offs |
-|-----------|----------|------------|
-| **Direct SDK** | Maximum control, minimal overhead | No agent orchestration |
-| **PydanticAI** | Type-safe agents, structured outputs | Newer ecosystem |
-| **LangChain** | Large ecosystem, many integrations | More abstraction layers |
-| **MCP** | Claude-native, tool discovery | Claude-specific |
-
-**Recommendation:** Start with Direct SDK for simple use cases. Add PydanticAI when you need agent orchestration with type safety.
 
 ### PydanticAI
 
@@ -241,7 +319,6 @@ from pydantic_ai import Agent
 agent = Agent("openai:gpt-4o", system_prompt="You help with GitHub data.")
 
 @agent.tool_plain
-@GithubConnector.tool_utils
 async def github_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
@@ -258,114 +335,50 @@ github_tool = StructuredTool.from_function(
 )
 ```
 
+---
+
+## Security Best Practices
+
+- **Never commit credentials** to git
+- Use `.env` files for development (add to `.gitignore`)
+- Use secret managers for production (AWS Secrets Manager, HashiCorp Vault)
+- Rotate credentials regularly
+
+```python
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"])
+)
+```
+
+---
+
 ## Reference Documentation
 
-For detailed information, see:
-
-- **[Getting Started](./references/getting-started.md)** - Installation, environment setup, first connector
-- **[Entity-Action API](./references/entity-action-api.md)** - Core API patterns, actions, pagination
-- **[Authentication](./references/authentication.md)** - Auth types overview, OAuth setup
-- **[Programmatic Setup](./references/programmatic-setup.md)** - Terminal/curl setup without UI (tokens, HTTP API)
-- **[MCP Integration](./references/mcp-integration.md)** - MCP server setup, Claude Code/Desktop config
-- **[Troubleshooting](./references/troubleshooting.md)** - Common errors, rate limiting, debugging
+| Topic | Link |
+|-------|------|
+| Platform Setup | [platform-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/platform-setup.md) |
+| OSS Setup | [oss-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/oss-setup.md) |
+| Getting Started | [getting-started.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/getting-started.md) |
+| Entity-Action API | [entity-action-api.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md) |
+| Authentication | [authentication.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md) |
+| Programmatic Setup | [programmatic-setup.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/programmatic-setup.md) |
+| MCP Integration | [mcp-integration.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/mcp-integration.md) |
+| Troubleshooting | [troubleshooting.md](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/troubleshooting.md) |
 
 ## Per-Connector Documentation
 
 Each connector directory contains:
-
-- **README.md** - Overview, example questions, installation, basic usage
-- **AUTH.md** - All authentication options (open source and hosted)
+- **README.md** - Overview, example questions, basic usage
+- **AUTH.md** - All authentication options
 - **REFERENCE.md** - Complete entity/action reference with parameters
 
-Example: For GitHub details, see:
-- [connectors/github/README.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/README.md)
-- [connectors/github/AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/AUTH.md)
-- [connectors/github/REFERENCE.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github/REFERENCE.md)
+Example: `connectors/github/README.md`, `connectors/github/AUTH.md`, `connectors/github/REFERENCE.md`
 
-## Quick Reference
-
-Common operations across all connectors. Copy-paste these patterns and adapt for your use case.
-
-### List Operations
-
-| Connector | Entity | Example |
-|-----------|--------|---------|
-| GitHub | issues | `await connector.execute("issues", "list", {"owner": "org", "repo": "name", "states": ["OPEN"]})` |
-| GitHub | pull_requests | `await connector.execute("pull_requests", "list", {"owner": "org", "repo": "name", "states": ["OPEN"]})` |
-| Stripe | customers | `await connector.execute("customers", "list", {"limit": 10})` |
-| Stripe | invoices | `await connector.execute("invoices", "list", {"customer": "cus_xxx"})` |
-| Salesforce | accounts | `await connector.execute("accounts", "list", {"limit": 50})` |
-| Salesforce | opportunities | `await connector.execute("opportunities", "list", {"limit": 50})` |
-| HubSpot | contacts | `await connector.execute("contacts", "list", {"limit": 100})` |
-| HubSpot | deals | `await connector.execute("deals", "list", {"limit": 100})` |
-| Slack | channels | `await connector.execute("channels", "list", {})` |
-| Jira | issues | `await connector.execute("issues", "list", {"project": "PROJ"})` |
-
-### Get Operations
-
-| Connector | Entity | Example |
-|-----------|--------|---------|
-| GitHub | issues | `await connector.execute("issues", "get", {"owner": "org", "repo": "name", "number": 123})` |
-| GitHub | repositories | `await connector.execute("repositories", "get", {"owner": "org", "repo": "name"})` |
-| Stripe | customers | `await connector.execute("customers", "get", {"id": "cus_xxx"})` |
-| Stripe | invoices | `await connector.execute("invoices", "get", {"id": "in_xxx"})` |
-| Salesforce | accounts | `await connector.execute("accounts", "get", {"id": "001xxx"})` |
-| HubSpot | contacts | `await connector.execute("contacts", "get", {"id": "123"})` |
-| Jira | issues | `await connector.execute("issues", "get", {"issue_key": "PROJ-123"})` |
-
-### Search Operations
-
-| Connector | Entity | Example Query Syntax |
-|-----------|--------|---------------------|
-| GitHub | repositories | `"language:python stars:>1000 topic:ml"` |
-| GitHub | issues | `"is:open label:bug author:username"` |
-| Stripe | customers | `"email:'user@example.com' AND metadata['plan']:'pro'"` |
-| Salesforce | accounts | `"Industry = 'Technology' AND AnnualRevenue > 1000000"` |
-| Salesforce | contacts | `"Email LIKE '%@example.com'"` |
-
-### Create Operations (where supported)
-
-```python
-# Stripe: Create customer
-await connector.execute("customers", "create", {
-    "email": "user@example.com",
-    "name": "Jane Doe",
-    "metadata": {"source": "agent"}
-})
-
-# Stripe: Create product
-await connector.execute("products", "create", {
-    "name": "Premium Plan",
-    "description": "Full access subscription"
-})
-```
-
-### Pagination Pattern
-
-```python
-async def fetch_all(connector, entity, params=None):
-    """Fetch all records with automatic pagination."""
-    all_records = []
-    cursor = None
-    params = params or {}
-
-    while True:
-        if cursor:
-            params["after"] = cursor  # or "starting_after" for Stripe
-
-        result = await connector.execute(entity, "list", params)
-        if not result.success:
-            break
-
-        all_records.extend(result.data)
-
-        if result.meta and result.meta.get("has_more"):
-            cursor = result.meta.get("next_cursor")
-        else:
-            break
-
-    return all_records
-```
+---
 
 ## Support
 
