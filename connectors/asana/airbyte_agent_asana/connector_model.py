@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.10',
+    version='0.1.11',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -47,7 +47,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                 user_config_spec=AirbyteAuthConfig(
                     title='OAuth 2',
                     type='object',
-                    required=['refresh_token', 'client_id', 'client_secret'],
+                    required=['refresh_token'],
                     properties={
                         'access_token': AuthConfigFieldSpec(
                             title='Access Token',

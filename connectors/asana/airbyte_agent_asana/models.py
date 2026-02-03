@@ -22,9 +22,9 @@ class AsanaOauth2AuthConfig(BaseModel):
     """OAuth access token for API requests"""
     refresh_token: str
     """OAuth refresh token for automatic token renewal"""
-    client_id: str
+    client_id: Optional[str] = None
     """Connected App Consumer Key"""
-    client_secret: str
+    client_secret: Optional[str] = None
     """Connected App Consumer Secret"""
 
 class AsanaPersonalAccessTokenAuthConfig(BaseModel):
@@ -91,8 +91,16 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
+class ProjectMembersItem(BaseModel):
+    """Nested schema for Project.members_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -129,16 +137,8 @@ class ProjectCurrentStatus(BaseModel):
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -154,8 +154,8 @@ class ProjectCurrentStatusUpdate(BaseModel):
     resource_subtype: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
-class ProjectMembersItem(BaseModel):
-    """Nested schema for Project.members_item"""
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
