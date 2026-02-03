@@ -7,19 +7,26 @@
 <h1 align="center">Airbyte Agent Connectors</h1>
 
 <p align="center">
-  <strong>Give your AI agents access to 21+ third-party APIs</strong>
+  <strong>Give your AI agents access to 21 third-party APIs</strong>
 </p>
 
 <p align="center">
   <a href="https://github.com/airbytehq/airbyte-agent-connectors/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Elastic--2.0-blue" alt="License"></a>
   <a href="https://github.com/airbytehq/airbyte-agent-connectors"><img src="https://img.shields.io/badge/version-1.0.0-green" alt="Version"></a>
-  <a href="#available-connectors"><img src="https://img.shields.io/badge/connectors-21+-purple" alt="Connectors"></a>
+  <a href="#available-connectors"><img src="https://img.shields.io/badge/connectors-21-purple" alt="Connectors"></a>
   <a href="https://slack.airbyte.com/"><img src="https://img.shields.io/badge/slack-join-orange" alt="Slack"></a>
 </p>
 
 <p align="center">
   Salesforce, HubSpot, GitHub, Slack, Stripe, Jira, and more — all through strongly typed, well-documented tools. Use them directly in your app, plug into agent frameworks (PydanticAI, LangChain), or expose through MCP for Claude.
 </p>
+
+---
+
+## Requirements
+
+- Python 3.9+
+- pip or uv
 
 ---
 
@@ -30,22 +37,31 @@
 **Project Scope** (recommended for teams):
 ```bash
 # Clone the skill into your project's .claude/skills/ directory
-git clone https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skill
+mkdir -p .claude/skills
+git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skill
 cp -r /tmp/airbyte-skill/.claude/skills/airbyte-agent-connectors .claude/skills/
+rm -rf /tmp/airbyte-skill
 ```
 > Available only in this project. Version-controlled with your code. Best for team collaboration and CI/CD.
 
 **Global Scope** (for personal use):
 ```bash
 # Clone to your home directory for all Claude Code sessions
-git clone https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skill
+mkdir -p ~/.claude/skills
+git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skill
 cp -r /tmp/airbyte-skill/.claude/skills/airbyte-agent-connectors ~/.claude/skills/
+rm -rf /tmp/airbyte-skill
 ```
 > Available in all your Claude Code sessions. Best for personal productivity and experimentation.
 
 ### Your First Connector
 
-After installation, set up a connector in under 10 lines:
+Install a connector and start making API calls:
+
+```bash
+pip install airbyte-agent-github
+# or: uv add airbyte-agent-github
+```
 
 ```python
 from airbyte_agent_github import GithubConnector
@@ -65,11 +81,7 @@ result = await connector.execute("issues", "list", {
 print(result.data)
 ```
 
-```bash
-pip install airbyte-agent-github
-```
-
-See [SKILL.md](./SKILL.md) for the complete quick start guide.
+See the [full documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/SKILL.md) for all setup patterns and examples.
 
 ---
 
@@ -149,7 +161,7 @@ Choose the right setup pattern for your use case:
 | **Hosted Engine** | Multi-tenant SaaS, managed credentials | [app.airbyte.ai](https://app.airbyte.ai) + SDK |
 | **MCP Server** | Claude Desktop, Claude Code, LLM tools | `claude mcp add airbyte-agent-mcp` |
 
-See [SKILL.md](./SKILL.md#setup-patterns) for detailed setup instructions.
+See the [full documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/SKILL.md#setup-patterns) for detailed setup instructions.
 
 ---
 
@@ -157,13 +169,13 @@ See [SKILL.md](./SKILL.md#setup-patterns) for detailed setup instructions.
 
 | Document | Description |
 |----------|-------------|
-| **[SKILL.md](./SKILL.md)** | Complete reference — quick start, all patterns, code examples |
-| **[Getting Started](./references/getting-started.md)** | Installation, environment setup, first connector |
-| **[Entity-Action API](./references/entity-action-api.md)** | Core API patterns, actions, pagination |
-| **[Authentication](./references/authentication.md)** | Auth types overview, OAuth setup |
-| **[Programmatic Setup](./references/programmatic-setup.md)** | Terminal/curl setup without UI |
-| **[MCP Integration](./references/mcp-integration.md)** | Claude Code/Desktop configuration |
-| **[Troubleshooting](./references/troubleshooting.md)** | Common errors, debugging |
+| **[Full Documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/SKILL.md)** | Complete reference — quick start, all patterns, code examples |
+| **[Getting Started](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/getting-started.md)** | Installation, environment setup, first connector |
+| **[Entity-Action API](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/entity-action-api.md)** | Core API patterns, actions, pagination |
+| **[Authentication](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/authentication.md)** | Auth types overview, OAuth setup |
+| **[Programmatic Setup](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/programmatic-setup.md)** | Terminal/curl setup without UI |
+| **[MCP Integration](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/mcp-integration.md)** | Claude Code/Desktop configuration |
+| **[Troubleshooting](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/.claude/skills/airbyte-agent-connectors/references/troubleshooting.md)** | Common errors, debugging |
 
 ### Per-Connector Documentation
 
