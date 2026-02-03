@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-stripe"
-version = "0.5.76"
+version = "0.5.77"
 description = "Airbyte Stripe Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
