@@ -47,7 +47,6 @@ from .models import (
     FacebookMarketingCheckResult,
     FacebookMarketingExecuteResult,
     FacebookMarketingExecuteResultWithMeta,
-    CurrentUserListResult,
     CampaignsListResult,
     AdSetsListResult,
     AdsListResult,
@@ -76,7 +75,7 @@ from .models import (
     VideosSearchResult
 )
 from .types import (
-    CurrentUserListParams,
+    CurrentUserGetParams,
     CampaignsListParams,
     AdSetsListParams,
     AdsListParams,
@@ -159,7 +158,6 @@ __all__ = [
     "FacebookMarketingCheckResult",
     "FacebookMarketingExecuteResult",
     "FacebookMarketingExecuteResultWithMeta",
-    "CurrentUserListResult",
     "CampaignsListResult",
     "AdSetsListResult",
     "AdsListResult",
@@ -186,7 +184,7 @@ __all__ = [
     "ImagesSearchResult",
     "VideosSearchData",
     "VideosSearchResult",
-    "CurrentUserListParams",
+    "CurrentUserGetParams",
     "CampaignsListParams",
     "AdSetsListParams",
     "AdsListParams",

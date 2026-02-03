@@ -17,8 +17,8 @@ from typing import Any, Literal
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
-class CurrentUserListParams(TypedDict):
-    """Parameters for current_user.list operation"""
+class CurrentUserGetParams(TypedDict):
+    """Parameters for current_user.get operation"""
     fields: NotRequired[str]
 
 class CampaignsListParams(TypedDict):

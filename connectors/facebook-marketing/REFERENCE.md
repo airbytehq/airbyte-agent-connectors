@@ -8,7 +8,7 @@ The Facebook-Marketing connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Current User | [List](#current-user-list) |
+| Current User | [Get](#current-user-get) |
 | Campaigns | [List](#campaigns-list), [Get](#campaigns-get), [Search](#campaigns-search) |
 | Ad Sets | [List](#ad-sets-list), [Get](#ad-sets-get), [Search](#ad-sets-search) |
 | Ads | [List](#ads-list), [Get](#ads-get), [Search](#ads-search) |
@@ -20,14 +20,14 @@ The Facebook-Marketing connector supports the following entities and actions.
 
 ## Current User
 
-### Current User List
+### Current User Get
 
 Returns information about the current user associated with the access token
 
 #### Python SDK
 
 ```python
-await facebook_marketing.current_user.list()
+await facebook_marketing.current_user.get()
 ```
 
 #### API
@@ -38,7 +38,7 @@ curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_i
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "current_user",
-    "action": "list"
+    "action": "get"
 }'
 ```
 
