@@ -26,7 +26,7 @@ from uuid import (
 AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c6b0a29e-1da9-4512-9002-7bfd0cba2246'),
     name='amazon-ads',
-    version='1.0.6',
+    version='1.0.7',
     base_url='{region}',
     auth=AuthConfig(
         type=AuthType.OAUTH2,

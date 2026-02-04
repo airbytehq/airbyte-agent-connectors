@@ -26,9 +26,13 @@ class ExampleQuestions(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
-    supported: list[str] = Field(
+    direct: list[str] = Field(
         default_factory=list,
-        description="Example questions the connector can handle",
+        description="Example questions answerable via direct API operations",
+    )
+    search: list[str] = Field(
+        default_factory=list,
+        description="Example questions requiring cached search operations",
     )
     unsupported: list[str] = Field(
         default_factory=list,
