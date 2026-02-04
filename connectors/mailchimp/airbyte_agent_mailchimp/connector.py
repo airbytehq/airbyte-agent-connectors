@@ -16,6 +16,7 @@ except ImportError:
 
 from .connector_model import MailchimpConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 from .types import (
     AutomationsListParams,
     CampaignsGetParams,
@@ -187,26 +188,18 @@ class MailchimpConnector:
 
     def __init__(
         self,
-        auth_config: MailchimpAuthConfig | None = None,
-        external_user_id: str | None = None,
-        airbyte_client_id: str | None = None,
-        airbyte_client_secret: str | None = None,
-        connector_id: str | None = None,
+        auth_config: MailchimpAuthConfig | AirbyteHostedAuthConfig | None = None,
         on_token_refresh: Any | None = None,
         data_center: str | None = None    ):
         """
         Initialize a new mailchimp connector instance.
 
         Supports both local and hosted execution modes:
-        - Local mode: Provide `auth_config` for direct API calls
-        - Hosted mode: Provide Airbyte credentials with either `connector_id` or `external_user_id`
+        - Local mode: Provide connector-specific auth config (e.g., MailchimpAuthConfig)
+        - Hosted mode: Provide `AirbyteHostedAuthConfig` with client credentials and either `connector_id` or `external_user_id`
 
         Args:
-            auth_config: Typed authentication configuration (required for local mode)
-            external_user_id: External user ID (for hosted mode lookup)
-            airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
-            airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
-            connector_id: Specific connector/source ID (for hosted mode, skips lookup)
+            auth_config: Either connector-specific auth config for local mode, or AirbyteHostedAuthConfig for hosted mode
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)            data_center: The data center for your Mailchimp account (e.g., us1, us2, us6)
@@ -215,47 +208,40 @@ class MailchimpConnector:
             connector = MailchimpConnector(auth_config=MailchimpAuthConfig(api_key="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = MailchimpConnector(
-                airbyte_client_id="client_abc123",
-                airbyte_client_secret="secret_xyz789",
-                connector_id="existing-source-uuid"
+                auth_config=AirbyteHostedAuthConfig(
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789",
+                    connector_id="existing-source-uuid"
+                )
             )
 
             # Hosted mode with lookup by external_user_id
             connector = MailchimpConnector(
-                external_user_id="user-123",
-                airbyte_client_id="client_abc123",
-                airbyte_client_secret="secret_xyz789"
-            )
-
-            # Local mode with OAuth2 token refresh callback
-            def save_tokens(new_tokens: dict) -> None:
-                # Persist updated tokens to your storage (file, database, etc.)
-                with open("tokens.json", "w") as f:
-                    json.dump(new_tokens, f)
-
-            connector = MailchimpConnector(
-                auth_config=MailchimpAuthConfig(access_token="...", refresh_token="..."),
-                on_token_refresh=save_tokens
+                auth_config=AirbyteHostedAuthConfig(
+                    external_user_id="user-123",
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789"
+                )
             )
         """
-        # Hosted mode: Airbyte credentials + either connector_id OR external_user_id
-        is_hosted = airbyte_client_id and airbyte_client_secret and (connector_id or external_user_id)
+        # Hosted mode: auth_config is AirbyteHostedAuthConfig
+        is_hosted = isinstance(auth_config, AirbyteHostedAuthConfig)
 
         if is_hosted:
             from ._vendored.connector_sdk.executor import HostedExecutor
             self._executor = HostedExecutor(
-                airbyte_client_id=airbyte_client_id,
-                airbyte_client_secret=airbyte_client_secret,
-                connector_id=connector_id,
-                external_user_id=external_user_id,
-                connector_definition_id=str(MailchimpConnectorModel.id) if not connector_id else None,
+                airbyte_client_id=auth_config.airbyte_client_id,
+                airbyte_client_secret=auth_config.airbyte_client_secret,
+                connector_id=auth_config.connector_id,
+                external_user_id=auth_config.external_user_id,
+                connector_definition_id=str(MailchimpConnectorModel.id),
             )
         else:
-            # Local mode: auth_config required
+            # Local mode: auth_config required (must be connector-specific auth type)
             if not auth_config:
                 raise ValueError(
-                    "Either provide Airbyte credentials (airbyte_client_id, airbyte_client_secret) with "
-                    "connector_id or external_user_id for hosted mode, or auth_config for local mode"
+                    "Either provide AirbyteHostedAuthConfig with client credentials for hosted mode, "
+                    "or MailchimpAuthConfig for local mode"
                 )
 
             from ._vendored.connector_sdk.executor import LocalExecutor
