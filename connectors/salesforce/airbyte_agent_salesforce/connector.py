@@ -163,7 +163,7 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.0.10"
+    connector_version = "1.0.11"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
