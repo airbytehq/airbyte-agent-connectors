@@ -188,6 +188,37 @@ Example: [connectors/github/](https://github.com/airbytehq/airbyte-agent-connect
 
 ---
 
+## Contributing
+
+### Development Setup
+
+When contributing to this repository, set up the Claude Code skill symlink for local testing:
+
+```bash
+# Clone the repository
+git clone https://github.com/airbytehq/airbyte-agent-connectors.git
+cd airbyte-agent-connectors
+
+# Create the symlink for Claude Code to discover the skill
+ln -s ../../skills/airbyte-agent-connectors .claude/skills/airbyte-agent-connectors
+```
+
+This symlink is gitignored so you need to create it locally. It allows Claude Code to load the skill from the canonical `/skills/` location while you work on the repository.
+
+### Windows Users
+
+On Windows, you may need to enable symlink support:
+```bash
+git config core.symlinks true
+```
+
+Or copy the directory instead:
+```bash
+xcopy /E /I skills\airbyte-agent-connectors .claude\skills\airbyte-agent-connectors
+```
+
+---
+
 ## Support
 
 - **Slack Community**: [slack.airbyte.com](https://slack.airbyte.com/)
