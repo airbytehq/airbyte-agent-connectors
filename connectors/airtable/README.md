@@ -67,11 +67,14 @@ This example assumes you've already authenticated your connector with Airbyte. S
 
 ```python
 from airbyte_agent_airtable import AirtableConnector
+from airbyte_agent_airtable._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 connector = AirtableConnector(
-    external_user_id="<your_external_user_id>",
-    airbyte_client_id="<your-client-id>",
-    airbyte_client_secret="<your-client-secret>"
+    auth_config=AirbyteHostedAuthConfig(
+        external_user_id="<your_external_user_id>",
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
@@ -103,7 +106,7 @@ See the official [Airtable API reference](https://airtable.com/developers/web/ap
 
 ## Version information
 
-- **Package version:** 0.1.10
+- **Package version:** 0.1.11
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 7aef2bc05710e208111456010b6971a2ad8ed112
+- **Generated with Connector SDK commit SHA:** 5c699b63de47ab09d9e52e38d1c61f7f994da24d
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/airtable/CHANGELOG.md)
