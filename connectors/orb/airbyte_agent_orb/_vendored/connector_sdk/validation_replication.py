@@ -133,15 +133,13 @@ def validate_connector_id(
 
     if registry_metadata is None:
         # Connector not in registry - warn but don't fail (could be new connector)
-        warnings.append(f"Connector '{connector_name}' not found in Airbyte registry. " f"Skipping replication compatibility checks.")
+        warnings.append(f"Connector '{connector_name}' not found in Airbyte registry. Skipping replication compatibility checks.")
         return True, errors, warnings, True  # Valid (no blocking error), but skip remaining checks
 
     registry_id = registry_metadata.get("sourceDefinitionId", "")
 
     if connector_id.lower() != registry_id.lower():
-        errors.append(
-            f"Connector ID mismatch: connector.yaml has '{connector_id}' but " f"Airbyte registry has '{registry_id}' for '{connector_name}'."
-        )
+        errors.append(f"Connector ID mismatch: connector.yaml has '{connector_id}' but Airbyte registry has '{registry_id}' for '{connector_name}'.")
         return False, errors, warnings, True  # Invalid, skip remaining checks
 
     return True, errors, warnings, False  # Valid, continue with checks
@@ -168,7 +166,7 @@ def validate_auth_key_mapping(
     for source_path, _target_key in auth_mappings.items():
         found, error_detail = resolve_spec_path(spec, source_path)
         if not found:
-            errors.append(f"replication_auth_key_mapping in '{scheme_name}': " f"path '{source_path}' not found in Airbyte spec. {error_detail}")
+            errors.append(f"replication_auth_key_mapping in '{scheme_name}': path '{source_path}' not found in Airbyte spec. {error_detail}")
 
     return len(errors) == 0, errors, warnings
 
@@ -192,7 +190,7 @@ def validate_config_key_mapping(
     for _local_key, target_path in config_mappings.items():
         found, error_detail = resolve_spec_path(spec, target_path)
         if not found:
-            errors.append(f"replication_config_key_mapping: target path '{target_path}' " f"not found in Airbyte spec. {error_detail}")
+            errors.append(f"replication_config_key_mapping: target path '{target_path}' not found in Airbyte spec. {error_detail}")
 
     return len(errors) == 0, errors, warnings
 
@@ -227,12 +225,12 @@ def validate_environment_mapping(
             # The mapping maps to the spec field, not from it
             target_path = _env_key  # The env key maps to the same-named spec field
         else:
-            warnings.append(f"x-airbyte-replication-environment-mapping: " f"unexpected mapping type for '{_env_key}': {type(mapping_value)}")
+            warnings.append(f"x-airbyte-replication-environment-mapping: unexpected mapping type for '{_env_key}': {type(mapping_value)}")
             continue
 
         found, error_detail = resolve_spec_path(spec, target_path)
         if not found:
-            errors.append(f"x-airbyte-replication-environment-mapping: " f"target path '{target_path}' not found in Airbyte spec. {error_detail}")
+            errors.append(f"x-airbyte-replication-environment-mapping: target path '{target_path}' not found in Airbyte spec. {error_detail}")
 
     return len(errors) == 0, errors, warnings
 
@@ -668,8 +666,7 @@ def validate_auth_methods(
     # If we couldn't determine any Airbyte auth types, skip validation
     if not airbyte_auth_types:
         warnings.append(
-            f"Could not determine Airbyte auth types for '{connector_name}' "
-            f"(no manifest found and no OAuth in registry). Skipping auth validation."
+            f"Could not determine Airbyte auth types for '{connector_name}' (no manifest found and no OAuth in registry). Skipping auth validation."
         )
         return True, errors, warnings
 
@@ -709,7 +706,7 @@ def validate_auth_methods(
 
     if extra:
         warnings.append(
-            f"Extra auth methods in our connector: {', '.join(sorted(extra))}. " f"These are not in Airbyte's connector but may still be valid."
+            f"Extra auth methods in our connector: {', '.join(sorted(extra))}. These are not in Airbyte's connector but may still be valid."
         )
 
     return len(errors) == 0, errors, warnings
