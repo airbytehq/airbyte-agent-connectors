@@ -465,10 +465,22 @@ def generate_tool_description(
         if info:
             example_questions = getattr(info, "x_airbyte_example_questions", None)
             if example_questions:
-                supported = getattr(example_questions, "supported", None)
-                if supported:
+                direct_questions = getattr(example_questions, "direct", None)
+                search_questions = getattr(example_questions, "search", None)
+
+                direct_questions = direct_questions if isinstance(direct_questions, list) else []
+                search_questions = search_questions if isinstance(search_questions, list) else []
+
+                selected_questions: list[str] = []
+                if direct_questions or search_questions:
+                    if enable_hosted_mode_features and search_questions:
+                        selected_questions = list(search_questions)
+                    else:
+                        selected_questions = list(direct_questions) or list(search_questions)
+
+                if selected_questions:
                     lines.append("EXAMPLE QUESTIONS:")
-                    for q in supported[:MAX_EXAMPLE_QUESTIONS]:
+                    for q in selected_questions[:MAX_EXAMPLE_QUESTIONS]:
                         lines.append(f"  - {q}")
 
     # Generic parameter description for function signature
