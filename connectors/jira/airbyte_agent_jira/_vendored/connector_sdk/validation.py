@@ -148,13 +148,11 @@ def validate_auth_scheme_coverage(
     # Warn about untested schemes without coverage
     missing_untested = untested_schemes - covered_schemes
     for scheme in sorted(missing_untested):
-        warnings.append(
-            f"Auth scheme '{scheme}' is marked as untested (x-airbyte-untested: true) " f"and has no cassette coverage. Validation skipped."
-        )
+        warnings.append(f"Auth scheme '{scheme}' is marked as untested (x-airbyte-untested: true) and has no cassette coverage. Validation skipped.")
 
     # Warn about cassettes that couldn't be matched to any auth scheme
     for cassette_path, auth_config_keys in unmatched_cassettes:
-        warnings.append(f"Cassette '{cassette_path.name}' could not be matched to any auth scheme. " f"auth_config keys: {sorted(auth_config_keys)}")
+        warnings.append(f"Cassette '{cassette_path.name}' could not be matched to any auth scheme. auth_config keys: {sorted(auth_config_keys)}")
 
     is_valid = len(missing_tested) == 0
     return is_valid, errors, warnings, sorted(covered_schemes), unmatched_cassettes
