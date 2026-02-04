@@ -35,7 +35,7 @@ from .executor import (
 from .http_client import HTTPClient
 from .logging import LogSession, NullLogger, RequestLog, RequestLogger
 from .performance import PerformanceMonitor, instrument
-from .types import Action, AuthType, ConnectorModel, EntityDefinition
+from .types import Action, AirbyteHostedAuthConfig, AuthType, ConnectorModel, EntityDefinition
 from .utils import save_download
 
 __version__ = SDK_VERSION
@@ -50,6 +50,7 @@ __all__ = [
     "ExecutionConfig",
     "ExecutionResult",
     # Types
+    "AirbyteHostedAuthConfig",
     "ConnectorModel",
     "Action",
     "AuthType",
