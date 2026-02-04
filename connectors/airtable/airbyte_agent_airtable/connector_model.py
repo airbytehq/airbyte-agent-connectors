@@ -26,7 +26,7 @@ from uuid import (
 AirtableConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212'),
     name='airtable',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://api.airtable.com/v0',
     auth=AuthConfig(
         type=AuthType.BEARER,
