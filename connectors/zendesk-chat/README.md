@@ -61,7 +61,7 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_zendesk-chat import ZendeskChatConnector
+from airbyte_agent_zendesk_chat import ZendeskChatConnector
 from airbyte_agent_zendesk_chat.models import ZendeskChatAuthConfig
 
 connector = ZendeskChatConnector(
@@ -72,7 +72,7 @@ connector = ZendeskChatConnector(
 
 @agent.tool_plain # assumes you're using Pydantic AI
 @ZendeskChatConnector.tool_utils
-async def zendesk-chat_execute(entity: str, action: str, params: dict | None = None):
+async def zendesk_chat_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -83,17 +83,20 @@ In hosted mode, API credentials are stored securely in Airbyte Cloud. You provid
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_zendesk-chat import ZendeskChatConnector
+from airbyte_agent_zendesk_chat import ZendeskChatConnector
+from airbyte_agent_zendesk_chat._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 connector = ZendeskChatConnector(
-    external_user_id="<your_external_user_id>",
-    airbyte_client_id="<your-client-id>",
-    airbyte_client_secret="<your-client-secret>"
+    auth_config=AirbyteHostedAuthConfig(
+        external_user_id="<your_external_user_id>",
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
 @ZendeskChatConnector.tool_utils
-async def zendesk-chat_execute(entity: str, action: str, params: dict | None = None):
+async def zendesk_chat_execute(entity: str, action: str, params: dict | None = None):
     return await connector.execute(entity, action, params or {})
 ```
 
@@ -129,7 +132,7 @@ See the official [Zendesk-Chat API reference](https://developer.zendesk.com/api-
 
 ## Version information
 
-- **Package version:** 0.1.32
+- **Package version:** 0.1.33
 - **Connector version:** 0.1.7
-- **Generated with Connector SDK commit SHA:** 7aef2bc05710e208111456010b6971a2ad8ed112
+- **Generated with Connector SDK commit SHA:** 5c699b63de47ab09d9e52e38d1c61f7f994da24d
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-chat/CHANGELOG.md)
