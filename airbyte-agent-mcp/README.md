@@ -70,7 +70,7 @@ connector:
   type: cloud
   connector_id: <connector-id>
 credentials:
-  external_user_id: ${env.AIRBYTE_EXTERNAL_USER_ID}
+  airbyte_external_user_id: ${env.AIRBYTE_EXTERNAL_USER_ID}
   airbyte_client_id: ${env.AIRBYTE_CLIENT_ID}
   airbyte_client_secret: ${env.AIRBYTE_CLIENT_SECRET}
 ```

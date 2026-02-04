@@ -45,17 +45,17 @@ class TestGetCloudAuthConfigType:
 class TestAirbyteCloudAuthConfig:
     def test_create(self):
         cfg = AirbyteCloudAuthConfig(
-            external_user_id="user1",
+            airbyte_external_user_id="user1",
             airbyte_client_id="client1",
             airbyte_client_secret="secret1",
         )
-        assert cfg.external_user_id == "user1"
+        assert cfg.airbyte_external_user_id == "user1"
         assert cfg.airbyte_client_id == "client1"
         assert cfg.airbyte_client_secret == "secret1"
 
     def test_fields_present(self):
         fields = AirbyteCloudAuthConfig.model_fields
-        assert "external_user_id" in fields
+        assert "airbyte_external_user_id" in fields
         assert "airbyte_client_id" in fields
         assert "airbyte_client_secret" in fields
 
