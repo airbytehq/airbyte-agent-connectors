@@ -14,6 +14,60 @@ from .schema.extensions import RetryConfig
 from .schema.security import AirbyteAuthConfig
 
 
+class AirbyteHostedAuthConfig(BaseModel):
+    """Authentication configuration for Airbyte hosted mode execution.
+
+    Pass this to the connector's `auth_config` parameter to use hosted mode,
+    where API credentials are stored securely in Airbyte Cloud.
+
+    For hosted mode execution, provide client credentials with either:
+    - `connector_id`: Direct connector/source ID (skips lookup)
+    - `external_user_id`: User ID for connector lookup
+
+    Attributes:
+        external_user_id: External user ID for hosted mode connector lookup
+        airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
+        airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
+        connector_id: Specific connector/source ID (skips lookup if provided)
+
+    Examples:
+        # Hosted mode with connector_id (no lookup needed)
+        connector = GongConnector(
+            auth_config=AirbyteHostedAuthConfig(
+                airbyte_client_id="client_abc123",
+                airbyte_client_secret="secret_xyz789",
+                connector_id="existing-source-uuid"
+            )
+        )
+
+        # Hosted mode with external_user_id (lookup by user)
+        connector = GongConnector(
+            auth_config=AirbyteHostedAuthConfig(
+                external_user_id="user-123",
+                airbyte_client_id="client_abc123",
+                airbyte_client_secret="secret_xyz789"
+            )
+        )
+    """
+
+    external_user_id: str | None = Field(
+        None,
+        description="External user ID for hosted mode connector lookup",
+    )
+    airbyte_client_id: str | None = Field(
+        None,
+        description="Airbyte OAuth client ID (required for hosted mode)",
+    )
+    airbyte_client_secret: str | None = Field(
+        None,
+        description="Airbyte OAuth client secret (required for hosted mode)",
+    )
+    connector_id: str | None = Field(
+        None,
+        description="Specific connector/source ID (skips lookup if provided)",
+    )
+
+
 class Action(str, Enum):
     """Supported actions for Entity operations.
 

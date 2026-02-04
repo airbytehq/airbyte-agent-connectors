@@ -34,10 +34,6 @@ _STANDARD_CONNECTOR_PARAMS = frozenset(
     {
         "self",
         "auth_config",
-        "connector_id",
-        "external_user_id",
-        "airbyte_client_id",
-        "airbyte_client_secret",
         "on_token_refresh",
     }
 )
@@ -46,7 +42,7 @@ _STANDARD_CONNECTOR_PARAMS = frozenset(
 class AirbyteCloudAuthConfig(BaseModel):
     """Authentication configuration for Airbyte Cloud hosted execution."""
 
-    external_user_id: str = Field(description="External user ID for hosted execution")
+    airbyte_external_user_id: str = Field(description="External user ID for hosted execution")
     airbyte_client_id: str = Field(description="Airbyte OAuth client ID")
     airbyte_client_secret: str = Field(description="Airbyte OAuth client secret")
 
@@ -297,13 +293,22 @@ def load_connector(config: ConnectorConfig) -> Any:
     connector_kwargs: dict[str, Any] = {}
 
     if isinstance(source, CloudSource):
-        required_keys = ["external_user_id", "airbyte_client_id", "airbyte_client_secret"]
+        required_keys = ["airbyte_external_user_id", "airbyte_client_id", "airbyte_client_secret"]
         missing_keys = [k for k in required_keys if k not in resolved_credentials]
         if missing_keys:
             raise ConnectorLoadError(f"CloudSource requires credentials: {required_keys}. Missing: {missing_keys}")
-        for key in required_keys:
-            connector_kwargs[key] = resolved_credentials[key]
-        connector_kwargs["connector_id"] = source.connector_id
+
+        # Import AirbyteHostedAuthConfig from the connector's vendored SDK
+        # Pass AirbyteHostedAuthConfig via auth_config parameter for hosted mode
+        vendored_types = importlib.import_module(f"{_package_to_module_name(package_name)}._vendored.connector_sdk.types")
+        AirbyteHostedAuthConfig = vendored_types.AirbyteHostedAuthConfig
+
+        connector_kwargs["auth_config"] = AirbyteHostedAuthConfig(
+            external_user_id=resolved_credentials["airbyte_external_user_id"],
+            airbyte_client_id=resolved_credentials["airbyte_client_id"],
+            airbyte_client_secret=resolved_credentials["airbyte_client_secret"],
+            connector_id=source.connector_id,
+        )
     else:
         auth_config = _find_matching_auth_config(package_name, resolved_credentials)
         connector_kwargs["auth_config"] = auth_config
