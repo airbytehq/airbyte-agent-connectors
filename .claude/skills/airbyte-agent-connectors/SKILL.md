@@ -1,11 +1,11 @@
 ---
 name: airbyte-agent-connectors
 description: |
-  MCP server and tools for Claude to access third-party APIs (Salesforce, HubSpot,
-  GitHub, Slack, Stripe, Jira, and 15+ more). Use for Claude Desktop integration,
-  Claude Code MCP setup, or building AI agents with data connectors. Covers
-  authentication, entity-action APIs, PydanticAI/LangChain integration, and
-  programmatic connector setup.
+  Documentation and setup guidance for Airbyte Agent Connectors — strongly typed
+  Python packages for accessing 21+ third-party APIs (Salesforce, HubSpot, GitHub,
+  Slack, Stripe, Jira, and more). Covers Platform Mode (Airbyte Cloud) and OSS Mode
+  (local SDK). Includes authentication, entity-action APIs, PydanticAI/LangChain
+  integration, and optional MCP integration for Claude Desktop/Code.
 license: Elastic-2.0
 metadata:
   author: Airbyte
