@@ -430,6 +430,61 @@ async def test_auth(connector):
         return False
 ```
 
+## SDK Known Issues
+
+### `create_hosted()` Returns 404
+
+**Symptom:** Calling `create_hosted()` fails with HTTP 404.
+
+**Cause:** SDK bug - uses `/v1/integrations/connectors` instead of `/api/v1/integrations/connectors`.
+
+**Workaround:** Use HTTP API directly:
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
+  -H 'Authorization: Bearer <TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "workspace_name": "<WORKSPACE_NAME>",
+    "connector_definition_id": "<DEFINITION_ID>",
+    "name": "my-connector",
+    "credentials": {...}
+  }'
+```
+
+**Status:** Bug reported upstream. Check SDK version for fix.
+
+---
+
+### "Workspace not found" with external_user_id
+
+**Symptom:** Error "Workspace not found" when using `external_user_id`.
+
+**Cause:** `external_user_id` must match an existing workspace NAME (not a custom identifier you create).
+
+**Fix:**
+1. List workspaces: `GET /api/v1/workspaces`
+2. Use the `name` field from an existing workspace
+3. Or create a new workspace first
+
+---
+
+### API Rejects Credentials with auth_type
+
+**Symptom:** 400 error when creating connector with `auth_type` in credentials.
+
+**Cause:** The API infers auth type from credentials structure. Including `auth_type` causes validation failure.
+
+**Fix:** Remove `auth_type` from credentials:
+```json
+// WRONG
+{"auth_type": "APIKey", "access_key": "...", "access_key_secret": "..."}
+
+// CORRECT
+{"access_key": "...", "access_key_secret": "..."}
+```
+
+---
+
 ## Getting Help
 
 If you're still experiencing issues:

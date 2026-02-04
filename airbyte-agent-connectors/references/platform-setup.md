@@ -228,6 +228,61 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
 
 After registration, your connector appears in the Connectors page with a card showing the name and "Direct" badge.
 
+## Creating Connector Instances
+
+After registering a template, you need to create an actual connector instance to access data.
+
+> **Important:** The SDK's `create_hosted()` has a known bug with the API URL (uses `/v1/integrations/connectors` instead of `/api/v1/integrations/connectors`). Use the HTTP API directly until this is fixed upstream.
+
+### Step 1: List Workspaces
+
+First, find your workspace name:
+
+```bash
+curl 'https://api.airbyte.ai/api/v1/workspaces' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>'
+```
+
+Use the workspace `name` (not `id`) as your `external_user_id` when creating connectors.
+
+### Step 2: Create Instance
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "workspace_name": "<YOUR_WORKSPACE_NAME>",
+    "connector_definition_id": "<DEFINITION_ID>",
+    "name": "my-connector",
+    "credentials": {
+      // Connector-specific fields ONLY - no auth_type
+    }
+  }'
+```
+
+### Credentials Format by Connector
+
+| Connector | Credentials Fields |
+|-----------|-------------------|
+| Gong | `{"access_key": "...", "access_key_secret": "..."}` |
+| Stripe | `{"api_key": "sk_live_..."}` |
+| GitHub | `{"token": "ghp_..."}` |
+| Slack | `{"token": "xoxb-..."}` |
+
+**Do NOT include `auth_type`** - the API infers it from the credentials structure.
+
+### Step 3: Verify Connection
+
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances/<CONNECTOR_ID>/execute' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
+```
+
+A successful response confirms your connector is working.
+
 ## Verifying Connector in UI
 
 After registering the template:

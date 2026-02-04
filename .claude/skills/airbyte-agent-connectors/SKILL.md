@@ -302,29 +302,74 @@ auth_config=SalesforceOAuthConfig(
 
 ## Common Workflows
 
-### Platform User: "Set up a Gong connector"
+### Platform User: "Set up a [Connector] connector"
 
-1. Check for platform credentials: "Do you have your Airbyte credentials (`AIRBYTE_CLIENT_ID`, `AIRBYTE_CLIENT_SECRET`)?"
-2. If NO: "Go to [app.airbyte.ai](https://app.airbyte.ai) > Settings > API Keys to get them."
-3. If YES: Ask for Gong credentials (access_key, access_key_secret)
-4. Use `create_hosted()`:
-   ```python
-   connector = await GongConnector.create_hosted(
-       external_user_id="your_tenant_id",
-       airbyte_client_id=AIRBYTE_CLIENT_ID,
-       airbyte_client_secret=AIRBYTE_CLIENT_SECRET,
-       auth_config=GongAccessKeyAuthenticationAuthConfig(
-           access_key="...", access_key_secret="..."
-       ),
-       name="Gong Source"
-   )
+1. **Ask mode**: "Platform mode (Airbyte Cloud) or OSS mode (local only)?"
+
+2. **Gather credentials**:
+   - Airbyte: `AIRBYTE_CLIENT_ID`, `AIRBYTE_CLIENT_SECRET`
+   - Connector-specific (see [Authentication Reference](references/authentication.md))
+
+3. **Get application token**:
+   ```bash
+   curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
+     -H 'Content-Type: application/json' \
+     -d '{"client_id": "<CLIENT_ID>", "client_secret": "<CLIENT_SECRET>"}'
    ```
-5. Register the connector template so it appears in the UI (see [Programmatic Setup](references/programmatic-setup.md#pattern-c-ui-template-registration) for the API call). **Always look up the definition ID from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids) first** - don't guess.
-6. Confirm: "Connector created and registered! It now appears in your Airbyte Connectors page at [app.airbyte.ai](https://app.airbyte.ai)."
 
-### OSS User: "Set up a GitHub connector"
+4. **Auto-detect workspace**:
+   ```bash
+   curl 'https://api.airbyte.ai/api/v1/workspaces' \
+     -H 'Authorization: Bearer <TOKEN>'
+   ```
+   - If one workspace: use it
+   - If multiple: ask user which one
+   - Save workspace name for `external_user_id`
 
-1. Ask for GitHub token (Personal Access Token)
+5. **Create .env file** in connector directory:
+   ```bash
+   AIRBYTE_CLIENT_ID=...
+   AIRBYTE_CLIENT_SECRET=...
+   GONG_ACCESS_KEY=...
+   GONG_ACCESS_KEY_SECRET=...
+   ```
+
+6. **Register template** (if connector not in UI):
+   - Look up definition ID from [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids)
+   - POST to `/api/v1/integrations/templates/sources`
+
+7. **Create connector instance** (required for data access):
+   ```bash
+   curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
+     -H 'Authorization: Bearer <TOKEN>' \
+     -H 'Content-Type: application/json' \
+     -d '{
+       "workspace_name": "<WORKSPACE_NAME>",
+       "connector_definition_id": "<DEFINITION_ID>",
+       "name": "my-gong-connector",
+       "credentials": {
+         "access_key": "...",
+         "access_key_secret": "..."
+       }
+     }'
+   ```
+   **Note:** Do NOT include `auth_type` in credentials - API infers it automatically.
+
+   > **SDK Bug:** The SDK's `create_hosted()` currently has a bug with the API URL causing 404 errors. Use the HTTP API directly until fixed upstream. See [SDK Known Issues](references/troubleshooting.md#sdk-known-issues).
+
+8. **Verify with data pull**:
+   ```bash
+   curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances/<CONNECTOR_ID>/execute' \
+     -H 'Authorization: Bearer <TOKEN>' \
+     -H 'Content-Type: application/json' \
+     -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
+   ```
+
+9. **Confirm**: "Connector created and verified! Pulled [N] records successfully."
+
+### OSS User: "Set up a [Connector] connector"
+
+1. Ask for connector credentials (e.g., GitHub token, Stripe API key)
 2. Guide local SDK usage:
    ```python
    from airbyte_agent_github import GithubConnector
