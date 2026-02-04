@@ -165,18 +165,27 @@ class AirbyteCloudClient:
         definition_id: str,
         external_user_id: str,
         redirect_url: str,
+        name: str | None = None,
+        replication_config: dict[str, Any] | None = None,
+        source_template_id: str | None = None,
     ) -> str:
-        """Initiate a server-side OAuth flow.
+        """Initiate a server-side OAuth flow with auto-source creation.
 
         Starts the OAuth flow for a connector. Returns a consent URL where the
         end user should be redirected to grant access. After completing consent,
-        they'll be redirected to your redirect_url with a `server_side_oauth_secret_id`
-        query parameter that can be used with `create_source()`.
+        the source is automatically created and the user is redirected to your
+        redirect_url with a `connector_id` query parameter.
 
         Args:
             definition_id: Connector definition UUID
             external_user_id: Workspace identifier
-            redirect_url: URL where users will be redirected after OAuth consent
+            redirect_url: URL where users will be redirected after OAuth consent.
+                After consent, user arrives at: redirect_url?connector_id=...
+            name: Optional name for the source. Defaults to connector name + external_user_id.
+            replication_config: Optional replication settings (e.g., start_date).
+                Merged with OAuth credentials during source creation.
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
 
         Returns:
             The OAuth consent URL
@@ -189,18 +198,27 @@ class AirbyteCloudClient:
                 definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
                 external_user_id="my-workspace",
                 redirect_url="https://myapp.com/oauth/callback",
+                name="My HubSpot Source",
+                replication_config={"start_date": "2024-01-01"},
             )
             # Redirect user to: consent_url
-            # After consent: https://myapp.com/oauth/callback?server_side_oauth_secret_id=...
+            # After consent: https://myapp.com/oauth/callback?connector_id=...
         """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/oauth/initiate"
         headers = {"Authorization": f"Bearer {token}"}
-        request_body = {
+        request_body: dict[str, Any] = {
             "external_user_id": external_user_id,
             "definition_id": definition_id,
             "redirect_url": redirect_url,
         }
+
+        if name is not None:
+            request_body["name"] = name
+        if replication_config is not None:
+            request_body["replication_config"] = replication_config
+        if source_template_id is not None:
+            request_body["source_template_id"] = source_template_id
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
         response.raise_for_status()

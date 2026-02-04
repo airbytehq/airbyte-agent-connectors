@@ -77,11 +77,14 @@ This example assumes you've already authenticated your connector with Airbyte. S
 
 ```python
 from airbyte_agent_orb import OrbConnector
+from airbyte_agent_orb._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 connector = OrbConnector(
-    external_user_id="<your_external_user_id>",
-    airbyte_client_id="<your-client-id>",
-    airbyte_client_secret="<your-client-secret>"
+    auth_config=AirbyteHostedAuthConfig(
+        external_user_id="<your_external_user_id>",
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
@@ -114,7 +117,7 @@ See the official [Orb API reference](https://docs.withorb.com/api-reference).
 
 ## Version information
 
-- **Package version:** 0.1.11
+- **Package version:** 0.1.12
 - **Connector version:** 0.1.2
-- **Generated with Connector SDK commit SHA:** 7aef2bc05710e208111456010b6971a2ad8ed112
+- **Generated with Connector SDK commit SHA:** 5c699b63de47ab09d9e52e38d1c61f7f994da24d
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/orb/CHANGELOG.md)
