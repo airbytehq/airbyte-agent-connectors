@@ -1,0 +1,363 @@
+"""MCP server for Airbyte Agent connectors."""
+
+from __future__ import annotations
+
+import importlib
+import inspect
+import uuid
+from collections.abc import Callable
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import filetype
+from fastmcp import FastMCP
+
+from .models.cli_config import get_config_dir
+
+_INSTRUCTIONS = """\
+CRITICAL — context budget is limited. Large responses waste tokens and degrade performance. Follow these rules strictly:
+
+ACTION SELECTION (READ THIS FIRST):
+- You MUST use `search` as your DEFAULT action for all queries. NEVER use `list` as your first choice.
+- `search` supports filtering, sorting, field selection, and pagination — it returns only what you need.
+- `list` returns ALL records and is expensive. Only use `list` when:
+  (a) You need today's data (search index may lag by hours), OR
+  (b) `search` returned no results and you suspect an indexing delay.
+- Example: to find a user by name, use action="search" with params={"query": {"filter": {"like": {"firstName": "Teo"}}}}, \
+NOT action="list" on users.
+
+FIELD SELECTION (MANDATORY for every call):
+- You MUST use `select_fields` or `exclude_fields` on EVERY `execute` call. Omitting both is almost never correct.
+- `select_fields`: allowlist — only these fields are returned. Use when you know exactly which fields you need. \
+Example: select_fields=["id", "title", "started", "primaryUserId"]
+- `exclude_fields`: blocklist — these fields are removed. Use when you need most fields but want to drop \
+known-heavy ones (e.g. transcripts, content bodies, nested objects). \
+Example: exclude_fields=["content", "interaction", "parties", "context"]
+- Both support dot notation for nested fields (e.g. "content.brief", "interaction.speakers").
+- Both are top-level arguments on `execute`, separate from `params`.
+- If you provide both, `select_fields` takes priority and `exclude_fields` is ignored.
+- When in doubt, use `select_fields` with just the fields you need — fewer fields = faster + cheaper.
+
+FILTERING (MANDATORY when the user's question implies criteria):
+- ALWAYS add filters that match the user's intent. Never do a broad list/search and filter client-side.
+- For `search`: use `params.query.filter` with the appropriate condition (eq, like, gt, lt, in, etc.).
+- For `list`: use the available query parameters (e.g. fromDateTime, toDateTime, workspaceId) to narrow results server-side.
+- Examples of when filters are required:
+  - "calls from last week" → filter by date range, do NOT list all calls and discard old ones.
+  - "users named Alice" → search with a name filter, do NOT list all users and scan locally.
+  - "calls longer than 30 minutes" → filter by duration, do NOT fetch everything and compute.
+- If you are unsure which filter fields are available, call `entity_schema` or `connector_info` first.
+
+QUERY SIZING:
+- Use small `limit` values (5-10) and paginate with `cursor` if more results are needed.
+- Use filters to narrow queries instead of fetching everything.
+- If a response is too large, retry with tighter `select_fields`, smaller `limit`, or more specific filters.
+
+PAGINATION:
+- When using `list`, always check the `meta` object in the response for pagination info \
+(e.g. `has_more`, `cursor`, `next`). Continue fetching pages until there are no more results.
+- The only exception is when you are using `list` to find a specific element — you may stop \
+as soon as you find it.
+- For aggregation queries (counts, totals, averages), you MUST iterate through ALL pages to \
+get accurate results.
+
+DATE RANGE QUERIES:
+- If the date range includes today (e.g. "calls from today", "this week's activity", "since yesterday"), \
+the search index may lag behind by hours and miss recent records. You MUST issue BOTH a `search` call \
+AND a `list` call with date boundary parameters, then merge the results and deduplicate by `id`. \
+This ensures you get both fast indexed results and the latest unindexed records.
+- If the date range ends before today, `search` alone is sufficient.
+
+DOWNLOADS:
+- Some entities support a `download` action (e.g., call_audio, call_video).
+- Download results include a file_path where the file was saved and its size.
+- Share the file path with the user so they can access the downloaded file.
+
+OTHER:
+- In `list` and `search` results, long text fields are truncated and marked with "[truncated]". \
+Use the `get` action with the record id to retrieve full values.
+"""
+
+mcp = FastMCP("Airbyte Agent MCP", instructions=_INSTRUCTIONS)
+
+MAX_TEXT_FIELD_CHARS = 200
+_TRUNCATION_SUFFIX = "... [truncated — use `get` action with the record id to retrieve the full value]"
+
+
+def _detect_extension(file_path: Path) -> str:
+    """Detect file extension from magic bytes using filetype."""
+    kind = filetype.guess(str(file_path))
+    if kind:
+        return f".{kind.extension}"
+    return ""
+
+
+def _get_save_download() -> Any:
+    """Import save_download from the loaded connector's vendored SDK."""
+    package = type(_connector).__module__.split(".")[0]
+    vendored = importlib.import_module(f"{package}._vendored.connector_sdk")
+    return vendored.save_download
+
+
+async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> dict[str, Any]:
+    """Handle download actions by saving streamed bytes to a file.
+
+    Returns metadata about the saved file instead of raw bytes.
+    """
+    if _connector is None:
+        raise RuntimeError("Connector not initialized")
+
+    result = await _connector.execute(entity, action, params)
+
+    if not inspect.isasyncgen(result):
+        return _to_dict(result)
+
+    download_dir = get_config_dir() / "downloads"
+    download_dir.mkdir(parents=True, exist_ok=True)
+    base_name = f"{entity}_{uuid.uuid4().hex[:12]}"
+    file_path = download_dir / base_name
+
+    save_download = _get_save_download()
+    saved_path: Path = await save_download(result, file_path)
+
+    ext = _detect_extension(saved_path)
+    if ext:
+        final_path = saved_path.with_suffix(ext)
+        saved_path.rename(final_path)
+        saved_path = final_path
+
+    size_bytes = saved_path.stat().st_size
+
+    return {
+        "download": {
+            "file_path": str(saved_path),
+            "size_bytes": size_bytes,
+            "entity": entity,
+            "message": f"File downloaded and saved to: {saved_path} ({size_bytes:,} bytes). Share this path with the user.",
+        }
+    }
+
+
+def _to_dict(obj: Any) -> Any:
+    """Convert Pydantic models (or any object with model_dump) to plain dicts, recursively."""
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump()
+    return obj
+
+
+def _compact(obj: Any) -> Any:
+    """Recursively strip None values, empty strings, and empty collections from a result."""
+    if isinstance(obj, dict):
+        compacted = {k: _compact(v) for k, v in obj.items()}
+        return {k: v for k, v in compacted.items() if v is not None and v != "" and v != [] and v != {}}
+    if isinstance(obj, list):
+        return [_compact(item) for item in obj]
+    return obj
+
+
+def _truncate_long_text_deep(obj: Any) -> Any:
+    """Recursively truncate string values that exceed MAX_TEXT_FIELD_CHARS."""
+    if isinstance(obj, dict):
+        return {k: _truncate_long_text_deep(v) for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_truncate_long_text_deep(item) for item in obj]
+    if isinstance(obj, str) and len(obj) > MAX_TEXT_FIELD_CHARS:
+        return obj[:MAX_TEXT_FIELD_CHARS] + _TRUNCATION_SUFFIX
+    return obj
+
+
+def _truncate_long_text(obj: Any) -> Any:
+    """Truncate long text in data records while preserving envelope metadata (meta, cursor, etc.)."""
+    if isinstance(obj, dict) and "data" in obj and isinstance(obj["data"], list):
+        return {
+            **{k: v for k, v in obj.items() if k != "data"},
+            "data": [_truncate_long_text_deep(item) for item in obj["data"]],
+        }
+    return _truncate_long_text_deep(obj)
+
+
+def _pick_fields_from_record(record: Any, fields: list[str]) -> Any:
+    """Select only the specified fields from a single record dict.
+
+    Supports dot notation for nested fields (e.g., "content.topics").
+    """
+    if not isinstance(record, dict):
+        return record
+    result: dict[str, Any] = {}
+    for field in fields:
+        if "." in field:
+            top, rest = field.split(".", 1)
+            if top in record and isinstance(record[top], dict):
+                if top not in result:
+                    result[top] = {}
+                nested = _pick_fields_from_record(record[top], [rest])
+                result[top].update(nested)
+        elif field in record:
+            result[field] = record[field]
+    return result
+
+
+def _drop_fields_from_record(record: Any, fields: list[str]) -> Any:
+    """Remove the specified fields from a single record dict.
+
+    Supports dot notation for nested fields (e.g., "content.brief").
+    """
+    if not isinstance(record, dict):
+        return record
+    top_level_drops = {f for f in fields if "." not in f}
+    nested_drops: dict[str, list[str]] = {}
+    for field in fields:
+        if "." in field:
+            top, rest = field.split(".", 1)
+            nested_drops.setdefault(top, []).append(rest)
+
+    result: dict[str, Any] = {}
+    for key, value in record.items():
+        if key in top_level_drops:
+            continue
+        if key in nested_drops and isinstance(value, dict):
+            result[key] = _drop_fields_from_record(value, nested_drops[key])
+        else:
+            result[key] = value
+    return result
+
+
+def _apply_to_records(obj: Any, fields: list[str], record_fn: Callable[[Any, list[str]], Any]) -> Any:
+    """Apply a record-level field transform to a response.
+
+    Handles both envelope responses ({"data": [...], "meta": {...}}) and
+    direct entity responses from get actions.
+    """
+    if not isinstance(obj, dict):
+        return obj
+    if "data" in obj and isinstance(obj["data"], list):
+        return {
+            **{k: v for k, v in obj.items() if k != "data"},
+            "data": [record_fn(item, fields) for item in obj["data"]],
+        }
+    return record_fn(obj, fields)
+
+
+def _select_fields(obj: Any, fields: list[str]) -> Any:
+    """Select only the specified fields from a response."""
+    return _apply_to_records(obj, fields, _pick_fields_from_record)
+
+
+def _exclude_fields(obj: Any, fields: list[str]) -> Any:
+    """Remove the specified fields from a response."""
+    return _apply_to_records(obj, fields, _drop_fields_from_record)
+
+
+@mcp.tool(name="current_datetime")
+def current_datetime() -> str:
+    """Get the current date and time in ISO 8601 format (UTC)."""
+    return datetime.now(UTC).isoformat()
+
+
+@mcp.tool(name="get_instructions")
+def get_instructions() -> str:
+    """Get the instructions for using this MCP server effectively.
+
+    Call this tool when you need a reminder of best practices for querying data,
+    including action selection, field selection, query sizing, and date range handling.
+    """
+    return _INSTRUCTIONS
+
+
+# Global reference to loaded connector (set during server initialization)
+_connector: Any | None = None
+
+
+def register_connector_tools(connector: Any) -> None:
+    """Register connector-specific MCP tools dynamically.
+
+    This function creates and registers three tools:
+    1. connector_info - Returns connector metadata and available entities
+    2. execute - Executes entity operations (uses tool_utils decorator)
+    3. entity_schema - Returns JSON schema for an entity
+
+    Args:
+        connector: Instantiated connector object with list_entities(), execute(),
+                   entity_schema(), and tool_utils methods.
+    """
+    global _connector
+    _connector = connector
+
+    # Tool 1: Connector info/metadata
+    @mcp.tool(name="connector_info")
+    def connector_info() -> dict[str, Any]:
+        """Get connector metadata including version and available entities/actions.
+
+        Returns a dict with:
+        - connector_name: Name of the connector
+        - connector_version: Version string
+        - entities: List of entity descriptions with available actions and parameters
+        """
+        if _connector is None:
+            raise RuntimeError("Connector not initialized")
+        return {
+            "connector_name": _connector.connector_name,
+            "connector_version": _connector.connector_version,
+            "entities": _connector.list_entities(),
+        }
+
+    # Tool 2: Execute operations - uses tool_utils for docstring/output handling
+    # We need to define the function first, then apply the decorator
+    async def _execute_impl(
+        entity: str,
+        action: str,
+        params: dict[str, Any] | None = None,
+        select_fields: list[str] | None = None,
+        exclude_fields: list[str] | None = None,
+    ) -> Any:
+        """Execute an operation on a connector entity.
+
+        Args:
+            entity: Entity name (e.g., "users", "calls")
+            action: Operation to perform (e.g., "list", "get", "search")
+            params: Operation parameters as a dict
+            select_fields: Optional list of field names to include in the response (allowlist).
+                Supports dot notation for nested fields (e.g., "content.topics").
+                When provided, only the specified fields are returned per record.
+            exclude_fields: Optional list of field names to remove from the response (blocklist).
+                Supports dot notation for nested fields (e.g., "content.brief").
+                Ignored if select_fields is provided.
+
+        Returns:
+            Operation result (structure varies by entity/action)
+        """
+        if _connector is None:
+            raise RuntimeError("Connector not initialized")
+        if action == "download":
+            return await _handle_download(entity, action, params or {})
+        result = _to_dict(await _connector.execute(entity, action, params or {}))
+        if select_fields:
+            result = _select_fields(result, select_fields)
+        elif exclude_fields:
+            result = _exclude_fields(result, exclude_fields)
+        result = _compact(result)
+        if action in ("list", "search"):
+            result = _truncate_long_text(result)
+        return result
+
+    # Apply tool_utils decorator for docstring augmentation and output limits
+    decorated_execute = connector.tool_utils(max_output_chars=None)(_execute_impl)
+
+    # Register with MCP
+    mcp.tool(name="execute")(decorated_execute)
+
+    # Tool 3: Entity schema lookup
+    @mcp.tool(name="entity_schema")
+    def entity_schema(entity: str) -> dict[str, Any] | None:
+        """Get the JSON schema for a specific entity.
+
+        Args:
+            entity: Entity name to get schema for (e.g., "users", "calls")
+
+        Returns:
+            JSON schema dict describing the entity structure, or None if not found.
+        """
+        if _connector is None:
+            raise RuntimeError("Connector not initialized")
+        return _connector.entity_schema(entity)
