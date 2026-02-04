@@ -16,6 +16,7 @@ except ImportError:
 
 from .connector_model import SlackConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 from .types import (
     ChannelMessagesListParams,
     ChannelPurposesCreateParams,
@@ -150,25 +151,17 @@ class SlackConnector:
 
     def __init__(
         self,
-        auth_config: SlackAuthConfig | None = None,
-        external_user_id: str | None = None,
-        airbyte_client_id: str | None = None,
-        airbyte_client_secret: str | None = None,
-        connector_id: str | None = None,
+        auth_config: SlackAuthConfig | AirbyteHostedAuthConfig | None = None,
         on_token_refresh: Any | None = None    ):
         """
         Initialize a new slack connector instance.
 
         Supports both local and hosted execution modes:
-        - Local mode: Provide `auth_config` for direct API calls
-        - Hosted mode: Provide Airbyte credentials with either `connector_id` or `external_user_id`
+        - Local mode: Provide connector-specific auth config (e.g., SlackAuthConfig)
+        - Hosted mode: Provide `AirbyteHostedAuthConfig` with client credentials and either `connector_id` or `external_user_id`
 
         Args:
-            auth_config: Typed authentication configuration (required for local mode)
-            external_user_id: External user ID (for hosted mode lookup)
-            airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
-            airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
-            connector_id: Specific connector/source ID (for hosted mode, skips lookup)
+            auth_config: Either connector-specific auth config for local mode, or AirbyteHostedAuthConfig for hosted mode
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)
@@ -177,47 +170,40 @@ class SlackConnector:
             connector = SlackConnector(auth_config=SlackAuthConfig(api_token="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = SlackConnector(
-                airbyte_client_id="client_abc123",
-                airbyte_client_secret="secret_xyz789",
-                connector_id="existing-source-uuid"
+                auth_config=AirbyteHostedAuthConfig(
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789",
+                    connector_id="existing-source-uuid"
+                )
             )
 
             # Hosted mode with lookup by external_user_id
             connector = SlackConnector(
-                external_user_id="user-123",
-                airbyte_client_id="client_abc123",
-                airbyte_client_secret="secret_xyz789"
-            )
-
-            # Local mode with OAuth2 token refresh callback
-            def save_tokens(new_tokens: dict) -> None:
-                # Persist updated tokens to your storage (file, database, etc.)
-                with open("tokens.json", "w") as f:
-                    json.dump(new_tokens, f)
-
-            connector = SlackConnector(
-                auth_config=SlackAuthConfig(access_token="...", refresh_token="..."),
-                on_token_refresh=save_tokens
+                auth_config=AirbyteHostedAuthConfig(
+                    external_user_id="user-123",
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789"
+                )
             )
         """
-        # Hosted mode: Airbyte credentials + either connector_id OR external_user_id
-        is_hosted = airbyte_client_id and airbyte_client_secret and (connector_id or external_user_id)
+        # Hosted mode: auth_config is AirbyteHostedAuthConfig
+        is_hosted = isinstance(auth_config, AirbyteHostedAuthConfig)
 
         if is_hosted:
             from ._vendored.connector_sdk.executor import HostedExecutor
             self._executor = HostedExecutor(
-                airbyte_client_id=airbyte_client_id,
-                airbyte_client_secret=airbyte_client_secret,
-                connector_id=connector_id,
-                external_user_id=external_user_id,
-                connector_definition_id=str(SlackConnectorModel.id) if not connector_id else None,
+                airbyte_client_id=auth_config.airbyte_client_id,
+                airbyte_client_secret=auth_config.airbyte_client_secret,
+                connector_id=auth_config.connector_id,
+                external_user_id=auth_config.external_user_id,
+                connector_definition_id=str(SlackConnectorModel.id),
             )
         else:
-            # Local mode: auth_config required
+            # Local mode: auth_config required (must be connector-specific auth type)
             if not auth_config:
                 raise ValueError(
-                    "Either provide Airbyte credentials (airbyte_client_id, airbyte_client_secret) with "
-                    "connector_id or external_user_id for hosted mode, or auth_config for local mode"
+                    "Either provide AirbyteHostedAuthConfig with client credentials for hosted mode, "
+                    "or SlackAuthConfig for local mode"
                 )
 
             from ._vendored.connector_sdk.executor import LocalExecutor
@@ -599,39 +585,49 @@ class SlackConnector:
     # ===== HOSTED MODE FACTORY =====
 
     @classmethod
-    async def initiate_oauth(
+    async def get_consent_url(
         cls,
         *,
         external_user_id: str,
         redirect_url: str,
         airbyte_client_id: str,
         airbyte_client_secret: str,
+        name: str | None = None,
+        replication_config: "SlackReplicationConfig" | None = None,
+        source_template_id: str | None = None,
     ) -> str:
         """
-        Initiate server-side OAuth flow for this connector.
+        Initiate server-side OAuth flow with auto-source creation.
 
         Returns a consent URL where the end user should be redirected to grant access.
-        After completing consent, they'll be redirected to your redirect_url with a
-        `server_side_oauth_secret_id` query parameter that can be used with `create_hosted()`.
+        After completing consent, the source is automatically created and the user is
+        redirected to your redirect_url with a `connector_id` query parameter.
 
         Args:
             external_user_id: Workspace identifier in Airbyte Cloud
-            redirect_url: URL where users will be redirected after OAuth consent
+            redirect_url: URL where users will be redirected after OAuth consent.
+                After consent, user arrives at: redirect_url?connector_id=...
             airbyte_client_id: Airbyte OAuth client ID
             airbyte_client_secret: Airbyte OAuth client secret
+            name: Optional name for the source. Defaults to connector name + external_user_id.
+            replication_config: Typed replication settings. Merged with OAuth credentials.
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
 
         Returns:
             The OAuth consent URL
 
         Example:
-            consent_url = await SlackConnector.initiate_oauth(
+            consent_url = await SlackConnector.get_consent_url(
                 external_user_id="my-workspace",
                 redirect_url="https://myapp.com/oauth/callback",
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
+                name="My Slack Source",
+                replication_config=SlackReplicationConfig(start_date="...", lookback_window="...", join_channels="..."),
             )
             # Redirect user to: consent_url
-            # After consent, user arrives at: https://myapp.com/oauth/callback?server_side_oauth_secret_id=...
+            # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
         """
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
 
@@ -641,10 +637,15 @@ class SlackConnector:
         )
 
         try:
+            replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config and hasattr(replication_config, 'model_dump') else replication_config
+
             consent_url = await client.initiate_oauth(
                 definition_id=str(SlackConnectorModel.id),
                 external_user_id=external_user_id,
                 redirect_url=redirect_url,
+                name=name,
+                replication_config=replication_config_dict,
+                source_template_id=source_template_id,
             )
         finally:
             await client.close()
@@ -680,7 +681,7 @@ class SlackConnector:
             airbyte_client_id: Airbyte OAuth client ID
             airbyte_client_secret: Airbyte OAuth client secret
             auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
-            server_side_oauth_secret_id: OAuth secret ID from initiate_oauth redirect.
+            server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
             name: Optional source name (defaults to connector name + external_user_id)
             replication_config: Typed replication settings.
