@@ -108,7 +108,7 @@ See the official [Hubspot API reference](https://developers.hubspot.com/docs/api
 
 ## Version information
 
-- **Package version:** 0.15.81
+- **Package version:** 0.15.82
 - **Connector version:** 0.1.10
-- **Generated with Connector SDK commit SHA:** 5ef2158e48be294dd68d60f7d9993684d424d388
+- **Generated with Connector SDK commit SHA:** 30d23e05ea640689df95fa82153916c6f67fa916
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/hubspot/CHANGELOG.md)
