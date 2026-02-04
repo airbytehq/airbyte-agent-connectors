@@ -26,7 +26,7 @@ from uuid import (
 OrbConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('7f0455fb-4518-4ec0-b7a3-d808bf8081cc'),
     name='orb',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://api.billwithorb.com/v1',
     auth=AuthConfig(
         type=AuthType.BEARER,
