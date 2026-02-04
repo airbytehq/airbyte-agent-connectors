@@ -27,7 +27,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.12',
+    version='1.0.13',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -2263,6 +2263,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'date_preset',
                         'time_range',
                         'level',
+                        'time_increment',
                         'limit',
                         'after',
                     ],
@@ -2279,6 +2280,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': 'account',
                         },
+                        'time_increment': {'type': 'string', 'required': False},
                         'limit': {
                             'type': 'integer',
                             'required': False,

@@ -153,7 +153,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.12"
+    connector_version = "1.0.13"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -183,7 +183,7 @@ class FacebookMarketingConnector:
         ('ad_sets', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ads', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ad_creatives', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
-        ('ads_insights', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'date_preset': 'date_preset', 'time_range': 'time_range', 'level': 'level', 'limit': 'limit', 'after': 'after'},
+        ('ads_insights', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'date_preset': 'date_preset', 'time_range': 'time_range', 'level': 'level', 'time_increment': 'time_increment', 'limit': 'limit', 'after': 'after'},
         ('ad_account', 'get'): {'account_id': 'account_id', 'fields': 'fields'},
         ('custom_conversions', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('images', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
@@ -1514,6 +1514,7 @@ class AdsInsightsQuery:
         date_preset: str | None = None,
         time_range: str | None = None,
         level: str | None = None,
+        time_increment: str | None = None,
         limit: int | None = None,
         after: str | None = None,
         **kwargs
@@ -1527,6 +1528,7 @@ class AdsInsightsQuery:
             date_preset: Predefined date range
             time_range: Time range as JSON object with since and until dates (YYYY-MM-DD)
             level: Level of aggregation
+            time_increment: Number of days (1-90) to aggregate data over, or 'monthly' for monthly aggregation, or 'all_days' for daily breakdown. Use time_increment=1 to get daily insights data.
             limit: Maximum number of results to return
             after: Cursor for pagination
             **kwargs: Additional parameters
@@ -1540,6 +1542,7 @@ class AdsInsightsQuery:
             "date_preset": date_preset,
             "time_range": time_range,
             "level": level,
+            "time_increment": time_increment,
             "limit": limit,
             "after": after,
             **kwargs

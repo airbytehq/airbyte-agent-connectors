@@ -62,6 +62,7 @@ class AdsInsightsListParams(TypedDict):
     date_preset: NotRequired[str]
     time_range: NotRequired[str]
     level: NotRequired[str]
+    time_increment: NotRequired[str]
     limit: NotRequired[int]
     after: NotRequired[str]
 
