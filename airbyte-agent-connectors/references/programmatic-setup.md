@@ -77,7 +77,7 @@ Save this as `SCOPED_TOKEN`.
 For API Key Connectors (Stripe, Gong, Jira, etc.):
 
 ```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances' \
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <SCOPED_TOKEN>' \
   -d '{
@@ -103,7 +103,7 @@ Save the `id` as `CONNECTOR_ID`.
 ### Step A4: Execute Operations
 
 ```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances/<CONNECTOR_ID>/execute' \
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<CONNECTOR_ID>/execute' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -d '{

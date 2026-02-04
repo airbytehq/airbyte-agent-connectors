@@ -275,7 +275,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
 ### Step 3: Verify Connection
 
 ```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/connectors/instances/<CONNECTOR_ID>/execute' \
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<CONNECTOR_ID>/execute' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
