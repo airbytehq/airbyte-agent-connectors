@@ -319,7 +319,7 @@ auth_config=SalesforceOAuthConfig(
        name="Gong Source"
    )
    ```
-5. Register the connector template so it appears in the UI (see [Programmatic Setup](references/programmatic-setup.md#pattern-c-ui-template-registration) for the API call). Use Gong's definition ID from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids).
+5. Register the connector template so it appears in the UI (see [Programmatic Setup](references/programmatic-setup.md#pattern-c-ui-template-registration) for the API call). **Always look up the definition ID from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids) first** - don't guess.
 6. Confirm: "Connector created and registered! It now appears in your Airbyte Connectors page at [app.airbyte.ai](https://app.airbyte.ai)."
 
 ### OSS User: "Set up a GitHub connector"
