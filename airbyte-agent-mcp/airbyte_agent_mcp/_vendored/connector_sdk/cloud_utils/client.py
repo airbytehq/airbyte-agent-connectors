@@ -37,8 +37,7 @@ class AirbyteCloudClient:
         )
     """
 
-    AUTH_BASE_URL = "https://cloud.airbyte.com"  # For token endpoint
-    API_BASE_URL = "https://api.airbyte.ai"  # For instance lookup & execution
+    API_BASE_URL = "https://api.airbyte.ai"  # For all API calls including token endpoint
 
     def __init__(self, client_id: str, client_secret: str):
         """Initialize AirbyteCloudClient.
@@ -85,7 +84,7 @@ class AirbyteCloudClient:
                 return self._cached_token
 
         # Token is missing or expired, fetch a new one
-        url = f"{self.AUTH_BASE_URL}/api/v1/applications/token"
+        url = f"{self.API_BASE_URL}/api/v1/account/applications/token"
         request_body = {
             "client_id": self._client_id,
             "client_secret": self._client_secret,
@@ -317,7 +316,7 @@ class AirbyteCloudClient:
             )
         """
         token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/connectors/sources/{connector_id}/execute"
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute"
         headers = {"Authorization": f"Bearer {token}"}
         request_body = {
             "entity": entity,
