@@ -11,9 +11,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
 from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class FacebookMarketingAuthConfig(BaseModel):
+class FacebookMarketingOauth20AuthenticationAuthConfig(BaseModel):
     """OAuth 2.0 Authentication"""
 
     model_config = ConfigDict(extra="forbid")
@@ -24,6 +24,16 @@ class FacebookMarketingAuthConfig(BaseModel):
     """Facebook App Client ID"""
     client_secret: Optional[str] = None
     """Facebook App Client Secret"""
+
+class FacebookMarketingServiceAccountKeyAuthenticationAuthConfig(BaseModel):
+    """Service Account Key Authentication"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    account_key: str
+    """Facebook long-lived access token for Service Account authentication"""
+
+FacebookMarketingAuthConfig = FacebookMarketingOauth20AuthenticationAuthConfig | FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
 
 # Replication configuration
 
@@ -44,6 +54,15 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
+
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -53,15 +72,6 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
-
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""

@@ -57,6 +57,8 @@ if TYPE_CHECKING:
     from .models import FacebookMarketingAuthConfig
     from .models import FacebookMarketingReplicationConfig
 
+# Import specific auth config classes for multi-auth isinstance checks
+from .models import FacebookMarketingOauth20AuthenticationAuthConfig, FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     FacebookMarketingCheckResult,
@@ -151,7 +153,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.11"
+    connector_version = "1.0.12"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -268,9 +270,18 @@ class FacebookMarketingConnector:
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, FacebookMarketingOauth20AuthenticationAuthConfig):
+                    auth_scheme = "facebookOAuth"
+                if isinstance(auth_config, FacebookMarketingServiceAccountKeyAuthenticationAuthConfig):
+                    auth_scheme = "facebookServiceAuth"
+
             self._executor = LocalExecutor(
                 model=FacebookMarketingConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )
