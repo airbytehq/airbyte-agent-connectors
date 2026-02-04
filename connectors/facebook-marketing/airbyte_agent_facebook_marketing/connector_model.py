@@ -10,6 +10,7 @@ from __future__ import annotations
 from ._vendored.connector_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -26,41 +27,65 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.11',
+    version='1.0.12',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
-        type=AuthType.OAUTH2,
-        config={'header': 'Authorization', 'prefix': 'Bearer'},
-        user_config_spec=AirbyteAuthConfig(
-            title='OAuth 2.0 Authentication',
-            type='object',
-            required=['access_token'],
-            properties={
-                'access_token': AuthConfigFieldSpec(
-                    title='Access Token',
-                    description='Facebook OAuth2 Access Token',
+        options=[
+            AuthOption(
+                scheme_name='facebookOAuth',
+                type=AuthType.OAUTH2,
+                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                user_config_spec=AirbyteAuthConfig(
+                    title='OAuth 2.0 Authentication',
+                    type='object',
+                    required=['access_token'],
+                    properties={
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Facebook OAuth2 Access Token',
+                        ),
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Facebook App Client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Facebook App Client Secret',
+                        ),
+                    },
+                    auth_mapping={
+                        'access_token': '${access_token}',
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.access_token': 'access_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_type': 'Client'},
                 ),
-                'client_id': AuthConfigFieldSpec(
-                    title='Client ID',
-                    description='Facebook App Client ID',
+            ),
+            AuthOption(
+                scheme_name='facebookServiceAuth',
+                type=AuthType.BEARER,
+                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                user_config_spec=AirbyteAuthConfig(
+                    title='Service Account Key Authentication',
+                    type='object',
+                    required=['account_key'],
+                    properties={
+                        'account_key': AuthConfigFieldSpec(
+                            title='Account Key',
+                            description='Facebook long-lived access token for Service Account authentication',
+                        ),
+                    },
+                    auth_mapping={'token': '${account_key}'},
+                    replication_auth_key_mapping={'credentials.access_token': 'account_key'},
+                    replication_auth_key_constants={'credentials.auth_type': 'Service'},
                 ),
-                'client_secret': AuthConfigFieldSpec(
-                    title='Client Secret',
-                    description='Facebook App Client Secret',
-                ),
-            },
-            auth_mapping={
-                'access_token': '${access_token}',
-                'client_id': '${client_id}',
-                'client_secret': '${client_secret}',
-            },
-            replication_auth_key_mapping={
-                'credentials.client_id': 'client_id',
-                'credentials.client_secret': 'client_secret',
-                'credentials.access_token': 'access_token',
-            },
-            replication_auth_key_constants={'credentials.auth_type': 'oauth2.0'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
