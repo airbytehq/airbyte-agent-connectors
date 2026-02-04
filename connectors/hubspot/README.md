@@ -72,11 +72,14 @@ This example assumes you've already authenticated your connector with Airbyte. S
 
 ```python
 from airbyte_agent_hubspot import HubspotConnector
+from airbyte_agent_hubspot._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 connector = HubspotConnector(
-    external_user_id="<your_external_user_id>",
-    airbyte_client_id="<your-client-id>",
-    airbyte_client_secret="<your-client-secret>"
+    auth_config=AirbyteHostedAuthConfig(
+        external_user_id="<your_external_user_id>",
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
@@ -111,7 +114,7 @@ See the official [Hubspot API reference](https://developers.hubspot.com/docs/api
 
 ## Version information
 
-- **Package version:** 0.15.83
+- **Package version:** 0.15.84
 - **Connector version:** 0.1.11
-- **Generated with Connector SDK commit SHA:** 7aef2bc05710e208111456010b6971a2ad8ed112
+- **Generated with Connector SDK commit SHA:** 5c699b63de47ab09d9e52e38d1c61f7f994da24d
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/hubspot/CHANGELOG.md)
