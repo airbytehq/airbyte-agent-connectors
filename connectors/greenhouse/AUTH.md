@@ -56,8 +56,8 @@ Example request:
 
 
 ```bash
-curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
-  -H "Authorization: Bearer <SCOPED_TOKEN>" \
+curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
+  -H "Authorization: Bearer <APPLICATION_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
     "external_user_id": "<EXTERNAL_USER_ID>",
@@ -77,11 +77,14 @@ After creating the connector, execute operations using either the Python SDK or 
 
 ```python
 from airbyte_agent_greenhouse import GreenhouseConnector
+from airbyte_agent_greenhouse._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 connector = GreenhouseConnector(
-    external_user_id="<your_external_user_id>",
-    airbyte_client_id="<your-client-id>",
-    airbyte_client_secret="<your-client-secret>"
+    auth_config=AirbyteHostedAuthConfig(
+        external_user_id="<your_external_user_id>",
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
@@ -93,8 +96,8 @@ async def greenhouse_execute(entity: str, action: str, params: dict | None = Non
 **API**
 
 ```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/connectors/sources/<connector_id>/execute' \
-  -H 'Authorization: Bearer <SCOPED_TOKEN>' \
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<connector_id>/execute' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{"entity": "<entity>", "action": "<action>", "params": {}}'
 ```

@@ -1,5 +1,10 @@
 # Greenhouse changelog
 
+## [0.17.78] - 2026-02-04
+- Updated connector definition (YAML version 0.1.5)
+- Source commit: 5c699b63
+- SDK version: 0.1.0
+
 ## [0.17.77] - 2026-02-04
 - Updated connector definition (YAML version 0.1.5)
 - Source commit: 7aef2bc0
