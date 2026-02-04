@@ -240,8 +240,7 @@ class Server(BaseModel):
             if source_var not in variable_names:
                 available = ", ".join(sorted(variable_names)) if variable_names else "(none)"
                 raise ValueError(
-                    f"x-airbyte-replication-environment-mapping: source variable '{source_var}' "
-                    f"not found in server variables. Available: {available}"
+                    f"x-airbyte-replication-environment-mapping: source variable '{source_var}' not found in server variables. Available: {available}"
                 )
 
         return self
