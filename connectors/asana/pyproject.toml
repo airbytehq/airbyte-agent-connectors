@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-asana"
-version = "0.19.83"
+version = "0.19.84"
 description = "Airbyte Asana Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
