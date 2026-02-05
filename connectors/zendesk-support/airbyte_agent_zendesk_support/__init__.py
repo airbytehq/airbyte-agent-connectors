@@ -181,13 +181,11 @@ from .types import (
     UsersSearchQuery,
     UsersCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "ZendeskSupportConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "ZendeskSupportAuthConfig",
     "Ticket",
     "User",

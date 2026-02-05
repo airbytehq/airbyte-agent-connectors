@@ -126,7 +126,7 @@ See the official [Zendesk-Support API reference](https://developer.zendesk.com/a
 
 ## Version information
 
-- **Package version:** 0.18.91
+- **Package version:** 0.18.92
 - **Connector version:** 0.1.12
-- **Generated with Connector SDK commit SHA:** 271d94f6e1d70597b8e70de1d95d3c673495ea5c
+- **Generated with Connector SDK commit SHA:** 481be6548899e256deebb545a84a7f4f1c8ce826
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-support/CHANGELOG.md)
