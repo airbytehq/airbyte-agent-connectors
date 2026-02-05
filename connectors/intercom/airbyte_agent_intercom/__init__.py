@@ -112,9 +112,11 @@ from .types import (
     TeamsSearchQuery,
     TeamsCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "IntercomConnector",
+    "AirbyteHostedAuthConfig",
     "IntercomAuthConfig",
     "IntercomReplicationConfig",
     "PagesNext",
