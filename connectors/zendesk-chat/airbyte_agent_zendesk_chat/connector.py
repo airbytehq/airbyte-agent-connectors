@@ -688,7 +688,7 @@ class ZendeskChatConnector:
             The connector ID if in hosted mode, None if in local mode.
 
         Example:
-            connector = await ZendeskChatConnector.create_hosted(...)
+            connector = await ZendeskChatConnector.create(...)
             print(f"Created connector: {connector.connector_id}")
         """
         if hasattr(self, '_executor') and hasattr(self._executor, '_connector_id'):
@@ -698,7 +698,7 @@ class ZendeskChatConnector:
     # ===== HOSTED MODE FACTORY =====
 
     @classmethod
-    async def create_hosted(
+    async def create(
         cls,
         *,
         airbyte_config: AirbyteAuthConfig,
@@ -728,7 +728,7 @@ class ZendeskChatConnector:
 
         Example:
             # Create a new hosted connector with API key auth
-            connector = await ZendeskChatConnector.create_hosted(
+            connector = await ZendeskChatConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
                     airbyte_client_id="client_abc",
@@ -738,7 +738,7 @@ class ZendeskChatConnector:
             )
 
             # With replication config (required for this connector):
-            connector = await ZendeskChatConnector.create_hosted(
+            connector = await ZendeskChatConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
                     airbyte_client_id="client_abc",
@@ -752,7 +752,7 @@ class ZendeskChatConnector:
             result = await connector.execute("entity", "list", {})
         """
         if not airbyte_config.external_user_id:
-            raise ValueError("airbyte_config.external_user_id is required for create_hosted()")
+            raise ValueError("airbyte_config.external_user_id is required for create()")
 
 
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
