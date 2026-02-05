@@ -30,6 +30,16 @@ class GithubPersonalAccessTokenAuthConfig(BaseModel):
 
 GithubAuthConfig = GithubOauth2AuthConfig | GithubPersonalAccessTokenAuthConfig
 
+# Replication configuration
+
+class GithubReplicationConfig(BaseModel):
+    """Replication Configuration - Settings for data replication from GitHub."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    repositories: str
+    """List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization"""
+
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====

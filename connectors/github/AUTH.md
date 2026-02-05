@@ -65,6 +65,12 @@ Create a connector with OAuth credentials.
 |------------|------|----------|-------------|
 | `access_token` | `str` | Yes | OAuth 2.0 access token |
 
+`replication_config` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `repositories` | `str` | Yes | List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization |
+
 Example request:
 
 ```bash
@@ -77,6 +83,9 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "name": "My Github Connector",
     "credentials": {
       "access_token": "<OAuth 2.0 access token>"
+    },
+    "replication_config": {
+      "repositories": "<List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization>"
     }
   }'
 ```
@@ -119,6 +128,7 @@ Redirect your user to the `consent_url` from the response. After they authorize,
 | `connector_type` | `string` | Yes | The connector type (e.g., "Github") |
 | `name` | `string` | Yes | A name for this connector instance |
 | `server_side_oauth_secret_id` | `string` | Yes | The secret_id from the OAuth callback |
+| `replication_config.repositories` | `str` | Yes | List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization |
 
 Example request:
 
@@ -130,7 +140,10 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "external_user_id": "<EXTERNAL_USER_ID>",
     "connector_type": "Github",
     "name": "My Github Connector",
-    "server_side_oauth_secret_id": "<secret_id_from_callback>"
+    "server_side_oauth_secret_id": "<secret_id_from_callback>",
+    "replication_config": {
+      "repositories": "<List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization>"
+    }
   }'
 ```
 
@@ -143,6 +156,12 @@ Create a connector with Token credentials.
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
 | `token` | `str` | Yes | GitHub personal access token (fine-grained or classic) |
+
+`replication_config` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `repositories` | `str` | Yes | List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization |
 
 Example request:
 
@@ -157,6 +176,9 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "name": "My Github Connector",
     "credentials": {
       "token": "<GitHub personal access token (fine-grained or classic)>"
+    },
+    "replication_config": {
+      "repositories": "<List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization>"
     }
   }'
 ```

@@ -7,6 +7,7 @@ Auto-generated from OpenAPI specification.
 from .connector import GithubConnector
 from .models import (
     GithubAuthConfig,
+    GithubReplicationConfig,
     GithubCheckResult,
     GithubExecuteResult,
     GithubExecuteResultWithMeta,
@@ -83,6 +84,7 @@ __all__ = [
     "GithubConnector",
     "AirbyteAuthConfig",
     "GithubAuthConfig",
+    "GithubReplicationConfig",
     "GithubCheckResult",
     "GithubExecuteResult",
     "GithubExecuteResultWithMeta",
