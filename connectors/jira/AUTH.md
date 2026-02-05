@@ -80,8 +80,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_jira import JiraConnector
-from airbyte_agent_jira._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_jira import JiraConnector, AirbyteHostedAuthConfig
 
 connector = JiraConnector(
     auth_config=AirbyteHostedAuthConfig(
