@@ -19,8 +19,8 @@ from .models import (
     Fulfillment,
     Order,
     OrderList,
-    ProductVariant,
     ProductImage,
+    ProductVariant,
     Product,
     ProductList,
     ProductVariantList,
@@ -177,11 +177,11 @@ from .types import (
     FulfillmentOrdersListParams,
     FulfillmentOrdersGetParams
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "ShopifyConnector",
-    "AirbyteHostedAuthConfig",
+    "AirbyteAuthConfig",
     "ShopifyAuthConfig",
     "CustomerAddress",
     "Customer",
@@ -195,8 +195,8 @@ __all__ = [
     "Fulfillment",
     "Order",
     "OrderList",
-    "ProductVariant",
     "ProductImage",
+    "ProductVariant",
     "Product",
     "ProductList",
     "ProductVariantList",
