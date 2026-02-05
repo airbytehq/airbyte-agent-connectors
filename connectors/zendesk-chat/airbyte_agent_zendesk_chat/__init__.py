@@ -15,10 +15,10 @@ from .models import (
     AgentRoles,
     AgentTimeline,
     Ban,
-    ChatEngagement,
+    ChatHistoryItem,
     WebpathItem,
     ChatConversion,
-    ChatHistoryItem,
+    ChatEngagement,
     Chat,
     Visitor,
     ChatSession,
@@ -100,13 +100,11 @@ from .types import (
     TriggersSearchQuery,
     TriggersCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "ZendeskChatConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "ZendeskChatAuthConfig",
     "ZendeskChatReplicationConfig",
     "Account",
@@ -116,10 +114,10 @@ __all__ = [
     "AgentRoles",
     "AgentTimeline",
     "Ban",
-    "ChatEngagement",
+    "ChatHistoryItem",
     "WebpathItem",
     "ChatConversion",
-    "ChatHistoryItem",
+    "ChatEngagement",
     "Chat",
     "Visitor",
     "ChatSession",
