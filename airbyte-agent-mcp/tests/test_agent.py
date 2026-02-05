@@ -102,6 +102,28 @@ class TestBuildSystemPrompt:
         prompt = build_system_prompt(connector)
         assert "items: list, get" in prompt
 
+    def test_embeds_critical_rules(self):
+        connector = MagicMock()
+        connector.connector_name = "Test"
+        connector.connector_version = "0.1"
+        connector.list_entities.return_value = []
+
+        prompt = build_system_prompt(connector)
+        assert "current_datetime" in prompt
+        assert "CROSS-ENTITY RESOLUTION" in prompt
+        assert "entity_schema" in prompt
+        assert "select_fields" in prompt
+        assert "PAGINATION" in prompt
+
+    def test_does_not_require_get_instructions_first(self):
+        connector = MagicMock()
+        connector.connector_name = "Test"
+        connector.connector_version = "0.1"
+        connector.list_entities.return_value = []
+
+        prompt = build_system_prompt(connector)
+        assert "Before your first query, call the get_instructions" not in prompt
+
 
 class TestCreateAgent:
     @patch("airbyte_agent_mcp.agent.Agent")

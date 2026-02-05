@@ -2,18 +2,12 @@
 
 from .cli_config import Config
 from .connector_config import (
-    CloudSource,
     ConnectorConfig,
-    PackageSource,
-    Source,
-    SourceType,
+    ConnectorSource,
 )
 
 __all__ = [
     "Config",
-    "CloudSource",
     "ConnectorConfig",
-    "PackageSource",
-    "Source",
-    "SourceType",
+    "ConnectorSource",
 ]

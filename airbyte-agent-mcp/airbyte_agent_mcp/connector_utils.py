@@ -11,11 +11,10 @@ from typing import Any
 from pydantic import BaseModel, Field
 
 from .airbyte_api import AirbyteApi, fetch_registry
-from .installer import get_package_name, install_package, is_local_path
+from .installer import get_package_name, install_package
 from .models.connector_config import (
-    CloudSource,
     ConnectorConfig,
-    PackageSource,
+    ConnectorSource,
     resolve_credentials,
 )
 
@@ -42,7 +41,6 @@ _STANDARD_CONNECTOR_PARAMS = frozenset(
 class AirbyteCloudAuthConfig(BaseModel):
     """Authentication configuration for Airbyte Cloud hosted execution."""
 
-    airbyte_external_user_id: str = Field(description="External user ID for hosted execution")
     airbyte_client_id: str = Field(description="Airbyte OAuth client ID")
     airbyte_client_secret: str = Field(description="Airbyte OAuth client secret")
 
@@ -67,6 +65,19 @@ def get_cloud_auth_config_type() -> type[BaseModel]:
     return AirbyteCloudAuthConfig
 
 
+def _get_airbyte_auth_config_class(package_name: str) -> type[BaseModel] | None:
+    """Get the hosted auth config class from a connector module.
+
+    Uses the public ``AirbyteAuthConfig`` alias exported by the connector
+    package rather than reaching into the vendored SDK internals.
+
+    Returns:
+        The hosted auth config class, or None if not found.
+    """
+    module = _load_connector_module(package_name)
+    return getattr(module, "AirbyteAuthConfig", None)
+
+
 def get_auth_config_types(package_name: str) -> list[type[BaseModel]]:
     """Get the AuthConfig types from a connector package.
 
@@ -83,7 +94,10 @@ def get_auth_config_types(package_name: str) -> list[type[BaseModel]]:
     module = _load_connector_module(package_name)
     module_name = _package_to_module_name(package_name)
 
-    auth_config_names = [name for name in dir(module) if name.endswith("AuthConfig")]
+    # Skip AirbyteAuthConfig / AirbyteHostedAuthConfig — that's the hosted mode auth,
+    # not connector-specific auth config.
+    hosted_class = _get_airbyte_auth_config_class(package_name)
+    auth_config_names = [name for name in dir(module) if name.endswith("AuthConfig") and getattr(module, name) is not hosted_class]
     if not auth_config_names:
         raise ValueError(f"No AuthConfig type found in {module_name}")
 
@@ -154,6 +168,71 @@ class ConnectorLoadError(Exception):
     pass
 
 
+def _install_and_get_package_name(source: ConnectorSource) -> str:
+    """Install a connector package from a ConnectorSource and return the package name.
+
+    Args:
+        source: ConnectorSource with package/path/git info.
+
+    Returns:
+        The installed Python package name.
+
+    Raises:
+        ConnectorLoadError: If installation fails.
+    """
+    spec = source.to_install_spec()
+    if spec is None:
+        raise ConnectorLoadError("No package source specified (connector_id-only requires API lookup)")
+    install_package(spec)
+    return get_package_name(spec)
+
+
+def _resolve_cloud_package_name(source: ConnectorSource, resolved_credentials: dict[str, str]) -> str:
+    """Resolve package name for a cloud-only source via Airbyte API.
+
+    Args:
+        source: ConnectorSource with connector_id.
+        resolved_credentials: Already-resolved credentials dict.
+
+    Returns:
+        The PyPI package name (e.g., "airbyte-agent-gong").
+
+    Raises:
+        ConnectorLoadError: If API lookup fails.
+    """
+    required_cred_keys = list(AirbyteCloudAuthConfig.model_fields)
+    missing_cred_keys = [k for k in required_cred_keys if k not in resolved_credentials]
+    if missing_cred_keys:
+        raise ConnectorLoadError(f"Cloud source requires credentials: {required_cred_keys}. Missing: {missing_cred_keys}")
+
+    if source.connector_id is None:
+        raise ConnectorLoadError("connector_id is required for cloud source resolution")
+
+    try:
+        api = AirbyteApi(
+            client_id=resolved_credentials["airbyte_client_id"],
+            client_secret=resolved_credentials["airbyte_client_secret"],
+        )
+        connector_source = api.get_connector(source.connector_id)
+    except Exception as e:
+        raise ConnectorLoadError(f"Failed to fetch connector source: {e}") from e
+
+    defn_id = connector_source.get("source_template", {}).get("source_definition_id", "")
+
+    try:
+        registry_entries = fetch_registry()
+    except Exception as e:
+        raise ConnectorLoadError(f"Failed to fetch connector registry: {e}") from e
+
+    registry = {e["connector_id"]: e for e in registry_entries if "connector_id" in e}
+    reg = registry.get(defn_id, {})
+    connector_name = reg.get("connector_name")
+    if not connector_name:
+        raise ConnectorLoadError(f"Could not determine connector type for ID: {source.connector_id}")
+
+    return f"airbyte-agent-{connector_name}"
+
+
 def get_connector_name(config: ConnectorConfig) -> str:
     """Get the connector name by installing the package and reading the class attribute.
 
@@ -170,14 +249,10 @@ def get_connector_name(config: ConnectorConfig) -> str:
     """
     source = config.connector
 
-    if isinstance(source, PackageSource):
-        spec = f"{source.package}=={source.version}" if source.version and not is_local_path(source.package) else source.package
-        install_package(spec)
-        package_name = get_package_name(spec)
-    elif isinstance(source, CloudSource):
-        raise ConnectorLoadError("Cannot determine connector name from CloudSource without credentials")
-    else:
-        raise ConnectorLoadError(f"Unknown source type: {type(source)}")
+    if not source.has_package_source:
+        raise ConnectorLoadError("Cannot determine connector name from cloud-only source without credentials")
+
+    package_name = _install_and_get_package_name(source)
 
     try:
         connector_class = _get_connector_class(package_name)
@@ -230,58 +305,20 @@ def load_connector(config: ConnectorConfig) -> Any:
     """
     source = config.connector
 
-    # Determine package name and install if needed
-    if isinstance(source, PackageSource):
-        spec = f"{source.package}=={source.version}" if source.version and not is_local_path(source.package) else source.package
-        install_package(spec)
-        package_name = get_package_name(spec)
-
-    elif isinstance(source, CloudSource):
-        # Resolve credentials early — needed for API lookup
-        try:
-            resolved_credentials = resolve_credentials(config.credentials)
-        except ValueError as e:
-            raise ConnectorLoadError(str(e)) from e
-
-        # Derive package name from connector ID via Airbyte API
-        required_cred_keys = ["airbyte_client_id", "airbyte_client_secret"]
-        missing_cred_keys = [k for k in required_cred_keys if k not in resolved_credentials]
-        if missing_cred_keys:
-            raise ConnectorLoadError(f"CloudSource requires credentials: {required_cred_keys}. Missing: {missing_cred_keys}")
-
-        try:
-            api = AirbyteApi(
-                client_id=resolved_credentials["airbyte_client_id"],
-                client_secret=resolved_credentials["airbyte_client_secret"],
-            )
-            connector_source = api.get_connector(source.connector_id)
-        except Exception as e:
-            raise ConnectorLoadError(f"Failed to fetch connector source: {e}") from e
-
-        defn_id = connector_source.get("source_template", {}).get("source_definition_id", "")
-
-        try:
-            registry_entries = fetch_registry()
-        except Exception as e:
-            raise ConnectorLoadError(f"Failed to fetch connector registry: {e}") from e
-
-        registry = {e["connector_id"]: e for e in registry_entries if "connector_id" in e}
-        reg = registry.get(defn_id, {})
-        connector_name = reg.get("connector_name")
-        if not connector_name:
-            raise ConnectorLoadError(f"Could not determine connector type for ID: {source.connector_id}")
-
-        package_name = f"airbyte-agent-{connector_name}"
-        install_package(package_name)
-
-    else:
-        raise ConnectorLoadError(f"Unknown source type: {type(source)}")
-
     # Resolve environment variables in credentials
     try:
         resolved_credentials = resolve_credentials(config.credentials)
     except ValueError as e:
         raise ConnectorLoadError(str(e)) from e
+
+    # Determine package name and install
+    if source.has_package_source:
+        package_name = _install_and_get_package_name(source)
+    elif source.is_cloud:
+        package_name = _resolve_cloud_package_name(source, resolved_credentials)
+        install_package(package_name)
+    else:
+        raise ConnectorLoadError("No package source or connector_id specified")
 
     # Get connector class
     try:
@@ -292,19 +329,17 @@ def load_connector(config: ConnectorConfig) -> Any:
     # Build connector kwargs based on source type
     connector_kwargs: dict[str, Any] = {}
 
-    if isinstance(source, CloudSource):
-        required_keys = ["airbyte_external_user_id", "airbyte_client_id", "airbyte_client_secret"]
+    if source.is_cloud:
+        required_keys = list(AirbyteCloudAuthConfig.model_fields)
         missing_keys = [k for k in required_keys if k not in resolved_credentials]
         if missing_keys:
-            raise ConnectorLoadError(f"CloudSource requires credentials: {required_keys}. Missing: {missing_keys}")
+            raise ConnectorLoadError(f"Cloud source requires credentials: {required_keys}. Missing: {missing_keys}")
 
-        # Import AirbyteHostedAuthConfig from the connector's vendored SDK
-        # Pass AirbyteHostedAuthConfig via auth_config parameter for hosted mode
-        vendored_types = importlib.import_module(f"{_package_to_module_name(package_name)}._vendored.connector_sdk.types")
-        AirbyteHostedAuthConfig = vendored_types.AirbyteHostedAuthConfig
+        hosted_class = _get_airbyte_auth_config_class(package_name)
+        if hosted_class is None:
+            raise ConnectorLoadError(f"Package {package_name} does not support hosted mode (no AirbyteHostedAuthConfig)")
 
-        connector_kwargs["auth_config"] = AirbyteHostedAuthConfig(
-            external_user_id=resolved_credentials["airbyte_external_user_id"],
+        connector_kwargs["auth_config"] = hosted_class(
             airbyte_client_id=resolved_credentials["airbyte_client_id"],
             airbyte_client_secret=resolved_credentials["airbyte_client_secret"],
             connector_id=source.connector_id,

@@ -15,11 +15,10 @@ from ..connector_utils import (
     get_auth_config_types,
     get_cloud_auth_config_type,
 )
-from ..installer import ConnectorInstallError, get_package_name, install_package, is_local_path
+from ..installer import ConnectorInstallError, get_package_name, install_package, is_git_url, is_local_path
 from ..models.connector_config import (
-    CloudSource,
     ConnectorConfig,
-    PackageSource,
+    ConnectorSource,
     auth_config_to_env_template,
     connector_params_to_template,
 )
@@ -37,6 +36,26 @@ def _connector_name_from_package(package_name: str) -> str:
         if lower.startswith(prefix):
             return package_name[len(prefix) :]
     return package_name
+
+
+def _parse_git_url(spec: str) -> dict:
+    """Parse a ``git+https://...`` spec into ConnectorSource fields.
+
+    Handles ``git+<url>@<ref>#subdirectory=<subdir>``.
+    """
+    url = spec.removeprefix("git+")
+    result: dict = {}
+
+    if "#subdirectory=" in url:
+        url, subdir = url.rsplit("#subdirectory=", 1)
+        result["subdirectory"] = subdir
+
+    if "@" in url:
+        url, ref = url.rsplit("@", 1)
+        result["ref"] = ref
+
+    result["git"] = url
+    return result
 
 
 connectors_app = typer.Typer(help="Manage Airbyte agent connectors.", no_args_is_help=True)
@@ -98,16 +117,8 @@ def configure_connector(
     """Configure a connector by installing it and generating a config."""
     console = Console(stderr=True)
 
-    # Validate that exactly one source option is provided
-    source_options = [connector_id, package]
-    provided_options = [opt for opt in source_options if opt is not None]
-
-    if len(provided_options) == 0:
-        console.print("[red]Error: Must provide one of --connector-id or --package[/red]")
-        raise typer.Exit(1)
-
-    if len(provided_options) > 1:
-        console.print("[red]Error: Only one of --connector-id or --package can be provided[/red]")
+    if not connector_id and not package:
+        console.print("[red]Error: Must provide at least one of --connector-id or --package[/red]")
         raise typer.Exit(1)
 
     if version and not package:
@@ -123,40 +134,51 @@ def configure_connector(
         console.print(f"[red]Error: Output file already exists: {output} (use --overwrite to replace)[/red]")
         raise typer.Exit(1)
 
-    # Determine connector source and install if needed
     try:
+        # Build the ConnectorSource
+        source_kwargs: dict = {}
+
         if connector_id:
-            # Cloud connector - look up connector details from Airbyte API
+            source_kwargs["connector_id"] = connector_id
+
+        if package:
+            if is_local_path(package):
+                source_kwargs["path"] = package
+            elif is_git_url(package):
+                source_kwargs.update(_parse_git_url(package))
+            else:
+                source_kwargs["package"] = package
+                if version:
+                    source_kwargs["version"] = version
+
+        source = ConnectorSource(**source_kwargs)
+
+        # Determine auth types and connector name
+        if connector_id:
             api = get_api()
             connector_source = api.get_connector(connector_id)
             registry = registry_lookup()
             defn_id = connector_source.get("source_template", {}).get("source_definition_id", "")
             reg = registry.get(defn_id, {})
             connector_name = reg.get("connector_name", "unknown")
-
-            source = CloudSource(connector_id=connector_id)
             auth_types = [get_cloud_auth_config_type()]
             additional_params: list = []
             console.print(f"[green]✓[/green] Cloud connector configured: {connector_name} ({connector_id})")
-
         elif package:
             spec = f"{package}=={version}" if version else package
             install_package(spec)
             package_name = get_package_name(spec)
             connector_name = _connector_name_from_package(package_name)
-
-            source = PackageSource(package=package, version=version)
             auth_types = get_auth_config_types(package_name)
             additional_params = get_additional_connector_params(package_name)
             console.print("[green]✓[/green] Connector installed and configured")
-
         else:
             console.print("[red]Error: No valid source option provided[/red]")
             raise typer.Exit(1)
 
         # Create connector config with credentials and config templates
-        # Use the first auth type as the primary credentials
-        credentials = auth_config_to_env_template(auth_types[0], connector_name)
+        # Cloud auth fields are global (AIRBYTE_CLIENT_ID), not connector-prefixed
+        credentials = auth_config_to_env_template(auth_types[0], connector_name if not connector_id else None)
         config = connector_params_to_template(additional_params)
         connector_config = ConnectorConfig(connector=source, credentials=credentials, config=config)
 
@@ -205,16 +227,8 @@ def auth_schemas(
     """Get the JSON schema for a connector's auth configuration."""
     console = Console(stderr=True)
 
-    # Validate that exactly one option is provided
-    source_options = [connector_id, package]
-    provided_options = [opt for opt in source_options if opt is not None]
-
-    if len(provided_options) == 0:
-        console.print("[red]Error: Must provide one of --connector-id or --package[/red]")
-        raise typer.Exit(1)
-
-    if len(provided_options) > 1:
-        console.print("[red]Error: Only one of --connector-id or --package can be provided[/red]")
+    if not connector_id and not package:
+        console.print("[red]Error: Must provide at least one of --connector-id or --package[/red]")
         raise typer.Exit(1)
 
     if version and not package:
