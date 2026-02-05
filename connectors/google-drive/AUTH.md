@@ -138,8 +138,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_google_drive import GoogleDriveConnector
-from airbyte_agent_google_drive._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_google_drive import GoogleDriveConnector, AirbyteHostedAuthConfig
 
 connector = GoogleDriveConnector(
     auth_config=AirbyteHostedAuthConfig(
