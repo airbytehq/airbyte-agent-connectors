@@ -13,14 +13,14 @@ from .models import (
     CustomerAddressList,
     MarketingConsent,
     OrderAddress,
-    LineItem,
     Transaction,
     Refund,
+    LineItem,
     Fulfillment,
     Order,
     OrderList,
-    ProductImage,
     ProductVariant,
+    ProductImage,
     Product,
     ProductList,
     ProductVariantList,
@@ -177,13 +177,11 @@ from .types import (
     FulfillmentOrdersListParams,
     FulfillmentOrdersGetParams
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "ShopifyConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "ShopifyAuthConfig",
     "CustomerAddress",
     "Customer",
@@ -191,14 +189,14 @@ __all__ = [
     "CustomerAddressList",
     "MarketingConsent",
     "OrderAddress",
-    "LineItem",
     "Transaction",
     "Refund",
+    "LineItem",
     "Fulfillment",
     "Order",
     "OrderList",
-    "ProductImage",
     "ProductVariant",
+    "ProductImage",
     "Product",
     "ProductList",
     "ProductVariantList",
