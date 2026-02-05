@@ -562,15 +562,15 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
     # Extract retry config from x-airbyte-retry-config extension
     retry_config = spec.info.x_airbyte_retry_config
-    connector_id = spec.info.x_airbyte_connector_id
-    if not connector_id:
+    connector_definition_id = spec.info.x_airbyte_connector_definition_id
+    if not connector_definition_id:
         raise InvalidOpenAPIError("Missing required x-airbyte-connector-id field")
 
     search_field_paths = _extract_search_field_paths(spec)
 
     # Create ConnectorModel
     model = ConnectorModel(
-        id=connector_id,
+        id=connector_definition_id,
         name=name,
         version=version,
         base_url=base_url,
@@ -1092,20 +1092,20 @@ def load_connector_model(definition_path: str | Path) -> ConnectorModel:
         )
         entities.append(entity)
 
-    # Get connector ID
-    connector_id_value = connector_meta.get("id")
-    if connector_id_value:
+    # Get connector definition ID
+    connector_definition_id_value = connector_meta.get("id")
+    if connector_definition_id_value:
         # Try to parse as UUID (handles string UUIDs)
-        if isinstance(connector_id_value, str):
-            connector_id = UUID(connector_id_value)
+        if isinstance(connector_definition_id_value, str):
+            connector_definition_id = UUID(connector_definition_id_value)
         else:
-            connector_id = connector_id_value
+            connector_definition_id = connector_definition_id_value
     else:
         raise ValueError
 
     # Build ConnectorModel
     model = ConnectorModel(
-        id=connector_id,
+        id=connector_definition_id,
         name=connector_meta["name"],
         version=connector_meta.get("version", OPENAPI_DEFAULT_VERSION),
         base_url=raw_definition.get("base_url", connector_meta.get("base_url", "")),
