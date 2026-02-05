@@ -198,8 +198,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector
-from airbyte_agent_facebook_marketing._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_facebook_marketing import FacebookMarketingConnector, AirbyteHostedAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=AirbyteHostedAuthConfig(
