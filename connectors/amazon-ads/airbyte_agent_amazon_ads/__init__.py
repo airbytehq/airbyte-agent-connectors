@@ -40,9 +40,11 @@ from .types import (
     ProfilesSearchQuery,
     ProfilesCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "AmazonAdsConnector",
+    "AirbyteHostedAuthConfig",
     "AmazonAdsAuthConfig",
     "Profile",
     "AccountInfo",

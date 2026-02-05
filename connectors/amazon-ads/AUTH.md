@@ -134,8 +134,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector
-from airbyte_agent_amazon_ads._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_amazon_ads import AmazonAdsConnector, AirbyteHostedAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AirbyteHostedAuthConfig(
