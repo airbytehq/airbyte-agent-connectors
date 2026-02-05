@@ -14,6 +14,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from pydantic import BaseModel
+
 from .connector_model import GithubConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
@@ -59,12 +61,11 @@ from .types import (
     ViewerGetParams,
     ViewerRepositoriesListParams,
 )
+from .models import GithubOauth2AuthConfig, GithubPersonalAccessTokenAuthConfig
+from .models import GithubAuthConfig
 if TYPE_CHECKING:
-    from .models import GithubAuthConfig
     from .models import GithubReplicationConfig
 
-# Import specific auth config classes for multi-auth isinstance checks
-from .models import GithubOauth2AuthConfig, GithubPersonalAccessTokenAuthConfig
 # Import response models and envelope models at runtime
 from .models import (
     GithubCheckResult,
@@ -233,9 +234,12 @@ class GithubConnector:
         ('project_items', 'list'): {'org': 'org', 'project_number': 'project_number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
     }
 
+    # Accepted auth_config types for isinstance validation
+    _ACCEPTED_AUTH_TYPES = (GithubOauth2AuthConfig, GithubPersonalAccessTokenAuthConfig, AirbyteAuthConfig)
+
     def __init__(
         self,
-        auth_config: GithubAuthConfig | AirbyteAuthConfig | None = None,
+        auth_config: GithubAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
         on_token_refresh: Any | None = None    ):
         """
         Initialize a new github connector instance.
@@ -270,6 +274,21 @@ class GithubConnector:
                 )
             )
         """
+        # Accept AirbyteAuthConfig from any vendored SDK version
+        if (
+            auth_config is not None
+            and not isinstance(auth_config, AirbyteAuthConfig)
+            and type(auth_config).__name__ == AirbyteAuthConfig.__name__
+        ):
+            auth_config = AirbyteAuthConfig(**auth_config.model_dump())
+
+        # Validate auth_config type
+        if auth_config is not None and not isinstance(auth_config, self._ACCEPTED_AUTH_TYPES):
+            raise TypeError(
+                f"Unsupported auth_config type: {type(auth_config).__name__}. "
+                f"Expected one of: {', '.join(t.__name__ for t in self._ACCEPTED_AUTH_TYPES)}"
+            )
+
         # Hosted mode: auth_config is AirbyteAuthConfig
         is_hosted = isinstance(auth_config, AirbyteAuthConfig)
 
