@@ -115,9 +115,11 @@ from .types import (
     UsersSearchQuery,
     UsersCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "LinearConnector",
+    "AirbyteHostedAuthConfig",
     "LinearAuthConfig",
     "Issue",
     "IssuesListResponseDataIssuesPageinfo",
