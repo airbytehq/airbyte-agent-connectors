@@ -367,7 +367,9 @@ connector = ZendeskSupportConnector(
 
 ### HubSpot (Private App vs OAuth)
 
-**Private App Token:**
+> **Platform Mode note:** The Airbyte API only recognizes the OAuth auth scheme for HubSpot. Private App tokens work in OSS Mode but not in Platform Mode. Use OAuth credentials (`client_id`, `client_secret`, `refresh_token`) when creating connectors via the HTTP API or `create_hosted()`.
+
+**Private App Token (OSS Mode only):**
 ```python
 from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
 
@@ -378,7 +380,7 @@ connector = HubspotConnector(
 )
 ```
 
-**OAuth:**
+**OAuth (OSS and Platform Mode):**
 ```python
 from airbyte_agent_hubspot.models import HubspotOAuthConfig
 
