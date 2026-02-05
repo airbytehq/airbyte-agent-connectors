@@ -8,11 +8,13 @@ import inspect
 import json
 import logging
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
+from typing import Any, Callable, Mapping, TypeVar, overload
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+from pydantic import BaseModel
 
 from .connector_model import ShopifyConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
@@ -71,8 +73,7 @@ from .types import (
     TransactionsGetParams,
     TransactionsListParams,
 )
-if TYPE_CHECKING:
-    from .models import ShopifyAuthConfig
+from .models import ShopifyAuthConfig
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -295,9 +296,12 @@ class ShopifyConnector:
         ('fulfillment_orders', 'get'): {'fulfillment_order_id': 'fulfillment_order_id'},
     }
 
+    # Accepted auth_config types for isinstance validation
+    _ACCEPTED_AUTH_TYPES = (ShopifyAuthConfig, AirbyteAuthConfig)
+
     def __init__(
         self,
-        auth_config: ShopifyAuthConfig | AirbyteAuthConfig | None = None,
+        auth_config: ShopifyAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
         on_token_refresh: Any | None = None,
         shop: str | None = None    ):
         """
@@ -333,6 +337,21 @@ class ShopifyConnector:
                 )
             )
         """
+        # Accept AirbyteAuthConfig from any vendored SDK version
+        if (
+            auth_config is not None
+            and not isinstance(auth_config, AirbyteAuthConfig)
+            and type(auth_config).__name__ == AirbyteAuthConfig.__name__
+        ):
+            auth_config = AirbyteAuthConfig(**auth_config.model_dump())
+
+        # Validate auth_config type
+        if auth_config is not None and not isinstance(auth_config, self._ACCEPTED_AUTH_TYPES):
+            raise TypeError(
+                f"Unsupported auth_config type: {type(auth_config).__name__}. "
+                f"Expected one of: {', '.join(t.__name__ for t in self._ACCEPTED_AUTH_TYPES)}"
+            )
+
         # Hosted mode: auth_config is AirbyteAuthConfig
         is_hosted = isinstance(auth_config, AirbyteAuthConfig)
 
