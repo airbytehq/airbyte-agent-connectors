@@ -76,8 +76,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_stripe import StripeConnector
-from airbyte_agent_stripe._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_stripe import StripeConnector, AirbyteHostedAuthConfig
 
 connector = StripeConnector(
     auth_config=AirbyteHostedAuthConfig(
