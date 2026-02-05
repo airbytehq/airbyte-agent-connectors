@@ -150,13 +150,11 @@ from .types import (
     TasksSearchQuery,
     TasksCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "SalesforceConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "SalesforceAuthConfig",
     "SObject",
     "SObjectsResponse",
