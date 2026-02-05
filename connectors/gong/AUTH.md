@@ -184,8 +184,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_gong import GongConnector
-from airbyte_agent_gong._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_gong import GongConnector, AirbyteHostedAuthConfig
 
 connector = GongConnector(
     auth_config=AirbyteHostedAuthConfig(
