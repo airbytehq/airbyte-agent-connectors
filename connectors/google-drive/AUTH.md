@@ -56,6 +56,13 @@ Create a connector with OAuth credentials.
 | `client_id` | `str` | No | Your Google OAuth2 Client ID |
 | `client_secret` | `str` | No | Your Google OAuth2 Client Secret |
 
+`replication_config` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `folder_url` | `str` | Yes | URL for the Google Drive folder you want to sync (e.g., https://drive.google.com/drive/folders/YOUR-FOLDER-ID) |
+| `streams` | `str` | Yes | Configuration for file streams to sync from Google Drive |
+
 Example request:
 
 ```bash
@@ -71,6 +78,10 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
       "refresh_token": "<Your Google OAuth2 Refresh Token>",
       "client_id": "<Your Google OAuth2 Client ID>",
       "client_secret": "<Your Google OAuth2 Client Secret>"
+    },
+    "replication_config": {
+      "folder_url": "<URL for the Google Drive folder you want to sync (e.g., https://drive.google.com/drive/folders/YOUR-FOLDER-ID)>",
+      "streams": "<Configuration for file streams to sync from Google Drive>"
     }
   }'
 ```
@@ -113,6 +124,8 @@ Redirect your user to the `consent_url` from the response. After they authorize,
 | `connector_type` | `string` | Yes | The connector type (e.g., "Google-Drive") |
 | `name` | `string` | Yes | A name for this connector instance |
 | `server_side_oauth_secret_id` | `string` | Yes | The secret_id from the OAuth callback |
+| `replication_config.folder_url` | `str` | Yes | URL for the Google Drive folder you want to sync (e.g., https://drive.google.com/drive/folders/YOUR-FOLDER-ID) |
+| `replication_config.streams` | `str` | Yes | Configuration for file streams to sync from Google Drive |
 
 Example request:
 
@@ -124,7 +137,11 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "external_user_id": "<EXTERNAL_USER_ID>",
     "connector_type": "Google-Drive",
     "name": "My Google-Drive Connector",
-    "server_side_oauth_secret_id": "<secret_id_from_callback>"
+    "server_side_oauth_secret_id": "<secret_id_from_callback>",
+    "replication_config": {
+      "folder_url": "<URL for the Google Drive folder you want to sync (e.g., https://drive.google.com/drive/folders/YOUR-FOLDER-ID)>",
+      "streams": "<Configuration for file streams to sync from Google Drive>"
+    }
   }'
 ```
 
