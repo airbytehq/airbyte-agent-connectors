@@ -134,9 +134,11 @@ from .types import (
     VideosSearchQuery,
     VideosCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "FacebookMarketingConnector",
+    "AirbyteHostedAuthConfig",
     "FacebookMarketingAuthConfig",
     "FacebookMarketingReplicationConfig",
     "CurrentUser",
