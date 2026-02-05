@@ -18,9 +18,9 @@ from .models import (
     ChannelPurpose,
     ChannelsListResponse,
     ChannelResponse,
-    File,
     Reaction,
     Attachment,
+    File,
     Message,
     Thread,
     EditedInfo,
@@ -83,13 +83,11 @@ from .types import (
     UsersSearchQuery,
     UsersCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "SlackConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "SlackAuthConfig",
     "SlackReplicationConfig",
     "User",
@@ -102,9 +100,9 @@ __all__ = [
     "ChannelPurpose",
     "ChannelsListResponse",
     "ChannelResponse",
-    "File",
     "Reaction",
     "Attachment",
+    "File",
     "Message",
     "Thread",
     "EditedInfo",
