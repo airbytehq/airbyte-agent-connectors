@@ -180,8 +180,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_asana import AsanaConnector
-from airbyte_agent_asana._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_asana import AsanaConnector, AirbyteHostedAuthConfig
 
 connector = AsanaConnector(
     auth_config=AirbyteHostedAuthConfig(
