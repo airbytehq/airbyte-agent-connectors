@@ -8,6 +8,7 @@ The Salesforce connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
+| Sobjects | [List](#sobjects-list) |
 | Accounts | [List](#accounts-list), [Get](#accounts-get), [API Search](#accounts-api-search), [Search](#accounts-search) |
 | Contacts | [List](#contacts-list), [Get](#contacts-get), [API Search](#contacts-api-search), [Search](#contacts-search) |
 | Leads | [List](#leads-list), [Get](#leads-get), [API Search](#leads-api-search), [Search](#leads-search) |
@@ -20,6 +21,56 @@ The Salesforce connector supports the following entities and actions.
 | Content Versions | [List](#content-versions-list), [Get](#content-versions-get), [Download](#content-versions-download) |
 | Attachments | [List](#attachments-list), [Get](#attachments-get), [Download](#attachments-download) |
 | Query | [List](#query-list) |
+
+## Sobjects
+
+### Sobjects List
+
+Returns a list of all available Salesforce objects (sObjects) in the organization.
+This endpoint is used for health checks to verify authentication and connectivity.
+
+
+#### Python SDK
+
+```python
+await salesforce.sobjects.list()
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/connectors/sources/{your_source_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "sobjects",
+    "action": "list"
+}'
+```
+
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `name` | `string` |  |
+| `label` | `null \| string` |  |
+| `labelPlural` | `null \| string` |  |
+| `keyPrefix` | `null \| string` |  |
+| `custom` | `null \| boolean` |  |
+| `queryable` | `null \| boolean` |  |
+| `searchable` | `null \| boolean` |  |
+| `createable` | `null \| boolean` |  |
+| `updateable` | `null \| boolean` |  |
+| `deletable` | `null \| boolean` |  |
+| `urls` | `null \| object` |  |
+
+
+</details>
 
 ## Accounts
 

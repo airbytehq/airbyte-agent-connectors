@@ -49,6 +49,7 @@ from .types import (
     OpportunitiesGetParams,
     OpportunitiesListParams,
     QueryListParams,
+    SobjectsListParams,
     TasksApiSearchParams,
     TasksGetParams,
     TasksListParams,
@@ -72,6 +73,7 @@ from .models import (
     SalesforceCheckResult,
     SalesforceExecuteResult,
     SalesforceExecuteResultWithMeta,
+    SobjectsListResult,
     AccountsListResult,
     AccountsApiSearchResult,
     ContactsListResult,
@@ -103,6 +105,7 @@ from .models import (
     Lead,
     Note,
     Opportunity,
+    SObject,
     SearchResult,
     Task,
     AirbyteSearchHit,
@@ -164,11 +167,12 @@ class SalesforceConnector:
     """
 
     connector_name = "salesforce"
-    connector_version = "1.0.11"
+    connector_version = "1.0.12"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
+        ("sobjects", "list"): True,
         ("accounts", "list"): True,
         ("accounts", "get"): None,
         ("accounts", "api_search"): True,
@@ -323,6 +327,7 @@ class SalesforceConnector:
             self._executor.http_client.base_url = base_url
 
         # Initialize entity query objects
+        self.sobjects = SobjectsQuery(self)
         self.accounts = AccountsQuery(self)
         self.contacts = ContactsQuery(self)
         self.leads = LeadsQuery(self)
@@ -337,6 +342,14 @@ class SalesforceConnector:
         self.query = QueryQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sobjects"],
+        action: Literal["list"],
+        params: "SobjectsListParams"
+    ) -> "SobjectsListResult": ...
 
     @overload
     async def execute(
@@ -1022,6 +1035,39 @@ class SalesforceConnector:
             connector_id=source_id,
         )
 
+
+
+
+class SobjectsQuery:
+    """
+    Query class for Sobjects entity operations.
+    """
+
+    def __init__(self, connector: SalesforceConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        **kwargs
+    ) -> SobjectsListResult:
+        """
+        Returns a list of all available Salesforce objects (sObjects) in the organization.
+This endpoint is used for health checks to verify authentication and connectivity.
+
+
+        Returns:
+            SobjectsListResult
+        """
+        params = {k: v for k, v in {
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sobjects", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SobjectsListResult(
+            data=result.data
+        )
 
 
 

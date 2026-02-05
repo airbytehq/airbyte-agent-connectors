@@ -29,7 +29,7 @@ from uuid import (
 SalesforceConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b117307c-14b6-41aa-9422-947e34922962'),
     name='salesforce',
-    version='1.0.11',
+    version='1.0.12',
     base_url='{instance_url}/services/data/v59.0',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -72,6 +72,136 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
         ),
     ),
     entities=[
+        EntityDefinition(
+            name='sobjects',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/sobjects',
+                    action=Action.LIST,
+                    description='Returns a list of all available Salesforce objects (sObjects) in the organization.\nThis endpoint is used for health checks to verify authentication and connectivity.\n',
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from the sobjects endpoint listing all available Salesforce objects',
+                        'properties': {
+                            'encoding': {
+                                'type': ['null', 'string'],
+                                'description': 'Character encoding used',
+                            },
+                            'maxBatchSize': {
+                                'type': ['null', 'integer'],
+                                'description': 'Maximum batch size for operations',
+                            },
+                            'sobjects': {
+                                'type': 'array',
+                                'description': 'List of available Salesforce objects',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Salesforce sObject metadata',
+                                    'properties': {
+                                        'name': {'type': 'string', 'description': 'API name of the sObject'},
+                                        'label': {
+                                            'type': ['null', 'string'],
+                                            'description': 'User-friendly label for the sObject',
+                                        },
+                                        'labelPlural': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Plural label for the sObject',
+                                        },
+                                        'keyPrefix': {
+                                            'type': ['null', 'string'],
+                                            'description': 'Three-character prefix for record IDs',
+                                        },
+                                        'custom': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether this is a custom object',
+                                        },
+                                        'queryable': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether the object can be queried',
+                                        },
+                                        'searchable': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether the object can be searched',
+                                        },
+                                        'createable': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether records can be created',
+                                        },
+                                        'updateable': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether records can be updated',
+                                        },
+                                        'deletable': {
+                                            'type': ['null', 'boolean'],
+                                            'description': 'Whether records can be deleted',
+                                        },
+                                        'urls': {
+                                            'type': ['null', 'object'],
+                                            'description': 'URLs for various operations on this object',
+                                        },
+                                    },
+                                    'additionalProperties': True,
+                                    'x-airbyte-entity-name': 'sobjects',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.sobjects',
+                    preferred_for_check=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Salesforce sObject metadata',
+                'properties': {
+                    'name': {'type': 'string', 'description': 'API name of the sObject'},
+                    'label': {
+                        'type': ['null', 'string'],
+                        'description': 'User-friendly label for the sObject',
+                    },
+                    'labelPlural': {
+                        'type': ['null', 'string'],
+                        'description': 'Plural label for the sObject',
+                    },
+                    'keyPrefix': {
+                        'type': ['null', 'string'],
+                        'description': 'Three-character prefix for record IDs',
+                    },
+                    'custom': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether this is a custom object',
+                    },
+                    'queryable': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether the object can be queried',
+                    },
+                    'searchable': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether the object can be searched',
+                    },
+                    'createable': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether records can be created',
+                    },
+                    'updateable': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether records can be updated',
+                    },
+                    'deletable': {
+                        'type': ['null', 'boolean'],
+                        'description': 'Whether records can be deleted',
+                    },
+                    'urls': {
+                        'type': ['null', 'object'],
+                        'description': 'URLs for various operations on this object',
+                    },
+                },
+                'additionalProperties': True,
+                'x-airbyte-entity-name': 'sobjects',
+            },
+        ),
         EntityDefinition(
             name='accounts',
             actions=[Action.LIST, Action.GET, Action.API_SEARCH],

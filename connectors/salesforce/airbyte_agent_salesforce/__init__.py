@@ -7,6 +7,8 @@ Auto-generated from OpenAPI specification.
 from .connector import SalesforceConnector
 from .models import (
     SalesforceAuthConfig,
+    SObject,
+    SObjectsResponse,
     AccountAttributes,
     Account,
     AccountQueryResult,
@@ -59,6 +61,7 @@ from .models import (
     SalesforceCheckResult,
     SalesforceExecuteResult,
     SalesforceExecuteResultWithMeta,
+    SobjectsListResult,
     AccountsListResult,
     AccountsApiSearchResult,
     ContactsListResult,
@@ -94,6 +97,7 @@ from .models import (
     TasksSearchResult
 )
 from .types import (
+    SobjectsListParams,
     AccountsListParams,
     AccountsGetParams,
     AccountsApiSearchParams,
@@ -152,6 +156,8 @@ __all__ = [
     "SalesforceConnector",
     "AirbyteHostedAuthConfig",
     "SalesforceAuthConfig",
+    "SObject",
+    "SObjectsResponse",
     "AccountAttributes",
     "Account",
     "AccountQueryResult",
@@ -204,6 +210,7 @@ __all__ = [
     "SalesforceCheckResult",
     "SalesforceExecuteResult",
     "SalesforceExecuteResultWithMeta",
+    "SobjectsListResult",
     "AccountsListResult",
     "AccountsApiSearchResult",
     "ContactsListResult",
@@ -237,6 +244,7 @@ __all__ = [
     "OpportunitiesSearchResult",
     "TasksSearchData",
     "TasksSearchResult",
+    "SobjectsListParams",
     "AccountsListParams",
     "AccountsGetParams",
     "AccountsApiSearchParams",

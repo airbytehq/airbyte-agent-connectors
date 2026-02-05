@@ -95,6 +95,7 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
+| Sobjects | [List](./REFERENCE.md#sobjects-list) |
 | Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [API Search](./REFERENCE.md#accounts-api_search) |
 | Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [API Search](./REFERENCE.md#contacts-api_search) |
 | Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [API Search](./REFERENCE.md#leads-api_search) |
@@ -119,7 +120,7 @@ See the official [Salesforce API reference](https://developer.salesforce.com/doc
 
 ## Version information
 
-- **Package version:** 0.1.76
-- **Connector version:** 1.0.11
-- **Generated with Connector SDK commit SHA:** def0e484c083c942973a2784c157255c5dc7f546
+- **Package version:** 0.1.77
+- **Connector version:** 1.0.12
+- **Generated with Connector SDK commit SHA:** 226d1290f0390b18355e0bc4e0754cb1cf8d008e
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/CHANGELOG.md)
