@@ -210,8 +210,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_slack import SlackConnector
-from airbyte_agent_slack._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_slack import SlackConnector, AirbyteHostedAuthConfig
 
 connector = SlackConnector(
     auth_config=AirbyteHostedAuthConfig(
