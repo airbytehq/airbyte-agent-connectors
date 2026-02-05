@@ -138,8 +138,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_hubspot import HubspotConnector
-from airbyte_agent_hubspot._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_hubspot import HubspotConnector, AirbyteHostedAuthConfig
 
 connector = HubspotConnector(
     auth_config=AirbyteHostedAuthConfig(

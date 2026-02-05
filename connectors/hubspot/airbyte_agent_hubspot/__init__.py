@@ -21,10 +21,10 @@ from .models import (
     TicketProperties,
     Ticket,
     TicketsList,
-    SchemaLabels,
     SchemaAssociationsItem,
     SchemaPropertiesItemModificationmetadata,
     SchemaPropertiesItem,
+    SchemaLabels,
     Schema,
     SchemasList,
     CRMObjectProperties,
@@ -102,9 +102,11 @@ from .types import (
     DealsSearchQuery,
     DealsCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "HubspotConnector",
+    "AirbyteHostedAuthConfig",
     "HubspotAuthConfig",
     "ContactProperties",
     "Contact",
@@ -120,10 +122,10 @@ __all__ = [
     "TicketProperties",
     "Ticket",
     "TicketsList",
-    "SchemaLabels",
     "SchemaAssociationsItem",
     "SchemaPropertiesItemModificationmetadata",
     "SchemaPropertiesItem",
+    "SchemaLabels",
     "Schema",
     "SchemasList",
     "CRMObjectProperties",
