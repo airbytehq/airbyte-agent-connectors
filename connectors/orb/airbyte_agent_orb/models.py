@@ -88,15 +88,6 @@ class CustomersList(BaseModel):
     data: Union[list[Customer], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
-class SubscriptionCustomer(BaseModel):
-    """The customer associated with the subscription"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
-    """The customer ID"""
-    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
-    """The external customer ID"""
-
 class SubscriptionPlan(BaseModel):
     """The plan associated with the subscription"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -105,6 +96,15 @@ class SubscriptionPlan(BaseModel):
     """The plan ID"""
     name: Union[str | None, Any] = Field(default=None, description="The plan name")
     """The plan name"""
+
+class SubscriptionCustomer(BaseModel):
+    """The customer associated with the subscription"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
+    """The customer ID"""
+    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
+    """The external customer ID"""
 
 class Subscription(BaseModel):
     """Subscription object"""
@@ -190,13 +190,6 @@ class PlansList(BaseModel):
     data: Union[list[Plan], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
-class InvoiceSubscription(BaseModel):
-    """The subscription associated with the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
-    """The subscription ID"""
-
 class InvoiceLineItemsItem(BaseModel):
     """Nested schema for Invoice.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -213,6 +206,13 @@ class InvoiceLineItemsItem(BaseModel):
     """The start date of the line item"""
     end_date: Union[str | None, Any] = Field(default=None, description="The end date of the line item")
     """The end date of the line item"""
+
+class InvoiceSubscription(BaseModel):
+    """The subscription associated with the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
+    """The subscription ID"""
 
 class InvoiceCustomer(BaseModel):
     """The customer associated with the invoice"""
