@@ -866,10 +866,8 @@ class SalesforceConnector:
     async def get_consent_url(
         cls,
         *,
-        external_user_id: str,
+        airbyte_config: AirbyteAuthConfig,
         redirect_url: str,
-        airbyte_client_id: str,
-        airbyte_client_secret: str,
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
         source_template_id: str | None = None,
@@ -882,11 +880,9 @@ class SalesforceConnector:
         redirected to your redirect_url with a `connector_id` query parameter.
 
         Args:
-            external_user_id: Workspace identifier in Airbyte Cloud
+            airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
             redirect_url: URL where users will be redirected after OAuth consent.
                 After consent, user arrives at: redirect_url?connector_id=...
-            airbyte_client_id: Airbyte OAuth client ID
-            airbyte_client_secret: Airbyte OAuth client secret
             name: Optional name for the source. Defaults to connector name + external_user_id.
             replication_config: Optional replication settings dict. Merged with OAuth credentials.
             source_template_id: Source template ID. Required when organization has
@@ -897,20 +893,25 @@ class SalesforceConnector:
 
         Example:
             consent_url = await SalesforceConnector.get_consent_url(
-                external_user_id="my-workspace",
+                airbyte_config=AirbyteAuthConfig(
+                    external_user_id="my-workspace",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
                 redirect_url="https://myapp.com/oauth/callback",
-                airbyte_client_id="client_abc",
-                airbyte_client_secret="secret_xyz",
                 name="My Salesforce Source",
             )
             # Redirect user to: consent_url
             # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
         """
+        if not airbyte_config.external_user_id:
+            raise ValueError("airbyte_config.external_user_id is required for get_consent_url()")
+
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
 
         client = AirbyteCloudClient(
-            client_id=airbyte_client_id,
-            client_secret=airbyte_client_secret,
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
         )
 
         try:
@@ -918,7 +919,7 @@ class SalesforceConnector:
 
             consent_url = await client.initiate_oauth(
                 definition_id=str(SalesforceConnectorModel.id),
-                external_user_id=external_user_id,
+                external_user_id=airbyte_config.external_user_id,
                 redirect_url=redirect_url,
                 name=name,
                 replication_config=replication_config_dict,
@@ -933,9 +934,7 @@ class SalesforceConnector:
     async def create_hosted(
         cls,
         *,
-        external_user_id: str,
-        airbyte_client_id: str,
-        airbyte_client_secret: str,
+        airbyte_config: AirbyteAuthConfig,
         auth_config: "SalesforceAuthConfig" | None = None,
         server_side_oauth_secret_id: str | None = None,
         name: str | None = None,
@@ -954,9 +953,7 @@ class SalesforceConnector:
         2. Server-side OAuth: Provide `server_side_oauth_secret_id` from OAuth flow
 
         Args:
-            external_user_id: Workspace identifier in Airbyte Cloud
-            airbyte_client_id: Airbyte OAuth client ID
-            airbyte_client_secret: Airbyte OAuth client secret
+            airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
             auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
             server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
@@ -975,23 +972,30 @@ class SalesforceConnector:
         Example:
             # Create a new hosted connector with API key auth
             connector = await SalesforceConnector.create_hosted(
-                external_user_id="my-workspace",
-                airbyte_client_id="client_abc",
-                airbyte_client_secret="secret_xyz",
+                airbyte_config=AirbyteAuthConfig(
+                    external_user_id="my-workspace",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
                 auth_config=SalesforceAuthConfig(refresh_token="...", client_id="...", client_secret="..."),
             )
 
             # With server-side OAuth:
             connector = await SalesforceConnector.create_hosted(
-                external_user_id="my-workspace",
-                airbyte_client_id="client_abc",
-                airbyte_client_secret="secret_xyz",
+                airbyte_config=AirbyteAuthConfig(
+                    external_user_id="my-workspace",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
                 server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
             )
 
             # Use the connector
             result = await connector.execute("entity", "list", {})
         """
+        if not airbyte_config.external_user_id:
+            raise ValueError("airbyte_config.external_user_id is required for create_hosted()")
+
         # Validate: exactly one of auth_config or server_side_oauth_secret_id required
         if auth_config is None and server_side_oauth_secret_id is None:
             raise ValueError(
@@ -1003,10 +1007,11 @@ class SalesforceConnector:
             )
 
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+        from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as _AirbyteAuthConfig
 
         client = AirbyteCloudClient(
-            client_id=airbyte_client_id,
-            client_secret=airbyte_client_secret,
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
         )
 
         try:
@@ -1015,11 +1020,11 @@ class SalesforceConnector:
             replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
 
             # Create source on Airbyte Cloud
-            source_name = name or f"{cls.connector_name} - {external_user_id}"
+            source_name = name or f"{cls.connector_name} - {airbyte_config.external_user_id}"
             source_id = await client.create_source(
                 name=source_name,
                 connector_definition_id=str(SalesforceConnectorModel.id),
-                external_user_id=external_user_id,
+                external_user_id=airbyte_config.external_user_id,
                 credentials=credentials,
                 replication_config=replication_config_dict,
                 server_side_oauth_secret_id=server_side_oauth_secret_id,
@@ -1030,9 +1035,11 @@ class SalesforceConnector:
 
         # Return connector configured with the new connector_id
         return cls(
-            airbyte_client_id=airbyte_client_id,
-            airbyte_client_secret=airbyte_client_secret,
-            connector_id=source_id,
+            auth_config=_AirbyteAuthConfig(
+                airbyte_client_id=airbyte_config.airbyte_client_id,
+                airbyte_client_secret=airbyte_config.airbyte_client_secret,
+                connector_id=source_id,
+            ),
         )
 
 

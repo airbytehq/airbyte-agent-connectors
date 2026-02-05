@@ -6,7 +6,8 @@ References:
 - https://spec.openapis.org/oas/v3.1.0#oauth-flows-object
 """
 
-from typing import Any, Dict, List, Literal
+import re
+from typing import Any, Dict, List, Literal, Set
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -107,18 +108,21 @@ class AirbyteAuthConfig(BaseModel):
         if not has_config:
             raise ValueError("Auth config must have type, properties, and auth_mapping")
 
-        if has_config:
-            # Validate required fields
-            if self.type != "object":
-                raise ValueError("Auth config must have type='object'")
-            if not self.properties:
-                raise ValueError("Auth config must have properties")
-            if not self.auth_mapping:
-                raise ValueError("Auth config must have auth_mapping")
+        # Validate required fields
+        if self.type != "object":
+            raise ValueError("Auth config must have type='object'")
+        if not self.properties:
+            raise ValueError("Auth config must have properties")
+        if not self.auth_mapping:
+            raise ValueError("Auth config must have auth_mapping")
 
-            # Validate replication_auth_key_mapping targets exist in properties
-            if self.replication_auth_key_mapping and self.properties:
-                self._validate_replication_auth_key_mapping(self.replication_auth_key_mapping, self.properties, context="x-airbyte-auth-config")
+        # Validate replication_auth_key_mapping targets exist in properties
+        if self.replication_auth_key_mapping and self.properties:
+            self._validate_replication_auth_key_mapping(self.replication_auth_key_mapping, self.properties, context="x-airbyte-auth-config")
+
+        # Validate all properties are used in auth_mapping
+        if self.properties and self.auth_mapping:
+            self._validate_properties_used_in_auth_mapping(self.properties, self.auth_mapping, context="x-airbyte-auth-config")
 
         return self
 
@@ -139,6 +143,35 @@ class AirbyteAuthConfig(BaseModel):
                     f"replication_auth_key_mapping in {context}: target key '{our_key}' "
                     f"(mapped from '{airbyte_path}') not found in properties. Available: {available}"
                 )
+
+    @staticmethod
+    def _validate_properties_used_in_auth_mapping(properties: Dict[str, AuthConfigFieldSpec], auth_mapping: Dict[str, str], context: str) -> None:
+        """Validate that all properties are referenced in auth_mapping.
+
+        Auth mapping values use ${field_name} syntax to reference properties.
+        All defined properties must be used somewhere in auth_mapping.
+
+        Args:
+            properties: The properties dict from x-airbyte-auth-config
+            auth_mapping: The auth_mapping dict (param_name -> template string)
+            context: Context string for error messages
+        """
+        # Extract all ${field_name} references from auth_mapping values
+        referenced_fields: Set[str] = set()
+        for template_value in auth_mapping.values():
+            # Match ${field_name} pattern
+            matches = re.findall(r"\$\{(\w+)\}", template_value)
+            referenced_fields.update(matches)
+
+        # Check all properties are referenced
+        property_names: Set[str] = set(properties.keys())
+        unused_properties = property_names - referenced_fields
+
+        if unused_properties:
+            raise ValueError(
+                f"Properties in {context} not used in auth_mapping: {', '.join(sorted(unused_properties))}. "
+                f"All properties must be referenced in auth_mapping using ${{field_name}} syntax."
+            )
 
 
 class SecurityScheme(BaseModel):
