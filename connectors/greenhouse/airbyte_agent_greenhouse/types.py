@@ -3,6 +3,8 @@ Type definitions for greenhouse connector.
 """
 from __future__ import annotations
 
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig  # noqa: F401
+
 # Use typing_extensions.TypedDict for Pydantic compatibility
 try:
     from typing_extensions import TypedDict, NotRequired
