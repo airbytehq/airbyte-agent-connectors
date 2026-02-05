@@ -76,8 +76,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_airtable import AirtableConnector
-from airbyte_agent_airtable._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_airtable import AirtableConnector, AirbyteHostedAuthConfig
 
 connector = AirtableConnector(
     auth_config=AirbyteHostedAuthConfig(
