@@ -117,6 +117,40 @@ class OrderAddress(BaseModel):
     latitude: Union[float | None, Any] = Field(default=None)
     longitude: Union[float | None, Any] = Field(default=None)
 
+class LineItem(BaseModel):
+    """LineItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
+    attributed_staffs: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    current_quantity: Union[int | None, Any] = Field(default=None)
+    fulfillable_quantity: Union[int | None, Any] = Field(default=None)
+    fulfillment_service: Union[str | None, Any] = Field(default=None)
+    fulfillment_status: Union[str | None, Any] = Field(default=None)
+    gift_card: Union[bool | None, Any] = Field(default=None)
+    grams: Union[int | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    price: Union[str | None, Any] = Field(default=None)
+    price_set: Union[dict[str, Any] | None, Any] = Field(default=None)
+    product_exists: Union[bool | None, Any] = Field(default=None)
+    product_id: Union[int | None, Any] = Field(default=None)
+    properties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    quantity: Union[int | None, Any] = Field(default=None)
+    requires_shipping: Union[bool | None, Any] = Field(default=None)
+    sku: Union[str | None, Any] = Field(default=None)
+    taxable: Union[bool | None, Any] = Field(default=None)
+    title: Union[str | None, Any] = Field(default=None)
+    total_discount: Union[str | None, Any] = Field(default=None)
+    total_discount_set: Union[dict[str, Any] | None, Any] = Field(default=None)
+    variant_id: Union[int | None, Any] = Field(default=None)
+    variant_inventory_management: Union[str | None, Any] = Field(default=None)
+    variant_title: Union[str | None, Any] = Field(default=None)
+    vendor: Union[str | None, Any] = Field(default=None)
+    tax_lines: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    duties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    discount_allocations: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+
 class Transaction(BaseModel):
     """An order transaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -165,40 +199,6 @@ class Refund(BaseModel):
     order_adjustments: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
     admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
     refund_shipping_lines: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-
-class LineItem(BaseModel):
-    """LineItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
-    attributed_staffs: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    current_quantity: Union[int | None, Any] = Field(default=None)
-    fulfillable_quantity: Union[int | None, Any] = Field(default=None)
-    fulfillment_service: Union[str | None, Any] = Field(default=None)
-    fulfillment_status: Union[str | None, Any] = Field(default=None)
-    gift_card: Union[bool | None, Any] = Field(default=None)
-    grams: Union[int | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    price: Union[str | None, Any] = Field(default=None)
-    price_set: Union[dict[str, Any] | None, Any] = Field(default=None)
-    product_exists: Union[bool | None, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    properties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    quantity: Union[int | None, Any] = Field(default=None)
-    requires_shipping: Union[bool | None, Any] = Field(default=None)
-    sku: Union[str | None, Any] = Field(default=None)
-    taxable: Union[bool | None, Any] = Field(default=None)
-    title: Union[str | None, Any] = Field(default=None)
-    total_discount: Union[str | None, Any] = Field(default=None)
-    total_discount_set: Union[dict[str, Any] | None, Any] = Field(default=None)
-    variant_id: Union[int | None, Any] = Field(default=None)
-    variant_inventory_management: Union[str | None, Any] = Field(default=None)
-    variant_title: Union[str | None, Any] = Field(default=None)
-    vendor: Union[str | None, Any] = Field(default=None)
-    tax_lines: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    duties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
-    discount_allocations: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
 
 class Fulfillment(BaseModel):
     """A fulfillment"""
