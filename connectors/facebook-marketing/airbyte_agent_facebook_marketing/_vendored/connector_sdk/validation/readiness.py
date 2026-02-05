@@ -16,14 +16,14 @@ import jsonschema
 import yaml
 from jsonpath_ng import parse as parse_jsonpath
 
-from .connector_model_loader import (
+from ..connector_model_loader import (
     ConnectorModelLoaderError,
     load_connector_model,
 )
-from .testing.spec_loader import load_test_spec
-from .types import Action, ConnectorModel, EndpointDefinition
-from .utils import infer_auth_scheme_name
-from .validation_replication import validate_replication_compatibility
+from ..testing.spec_loader import load_test_spec
+from ..types import Action, ConnectorModel, EndpointDefinition
+from ..utils import infer_auth_scheme_name
+from .replication import validate_replication_compatibility
 
 
 def build_cassette_map(cassettes_dir: Path) -> Dict[Tuple[str, str], List[Path]]:
@@ -921,7 +921,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     # Validate replication compatibility with Airbyte
     replication_result = validate_replication_compatibility(
         connector_yaml_path=config_file,
-        raw_spec=raw_spec,
+        connector_def=raw_spec,
     )
 
     # Merge replication errors/warnings into totals
