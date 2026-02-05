@@ -119,7 +119,7 @@ See the official [Mailchimp API reference](https://mailchimp.com/developer/marke
 
 ## Version information
 
-- **Package version:** 0.1.42
+- **Package version:** 0.1.43
 - **Connector version:** 1.0.6
-- **Generated with Connector SDK commit SHA:** 0c907160a962de46ba606d21dfea4f916c83320d
+- **Generated with Connector SDK commit SHA:** 3e4f6ea0793efc24af66df3a3e843753833f1d58
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/mailchimp/CHANGELOG.md)
