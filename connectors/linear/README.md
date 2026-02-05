@@ -117,7 +117,7 @@ See the official [Linear API reference](https://linear.app/developers/graphql).
 
 ## Version information
 
-- **Package version:** 0.19.88
+- **Package version:** 0.19.89
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** 481be6548899e256deebb545a84a7f4f1c8ce826
+- **Generated with Connector SDK commit SHA:** cddf6b9fb41e981bb489b71675cc4a9059e55608
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/linear/CHANGELOG.md)
