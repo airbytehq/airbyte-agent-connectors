@@ -16,7 +16,7 @@ except ImportError:
 
 from .connector_model import JiraConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 from .types import (
     IssueCommentsCreateParams,
     IssueCommentsCreateParamsBody,
@@ -197,7 +197,7 @@ class JiraConnector:
 
     def __init__(
         self,
-        auth_config: JiraAuthConfig | AirbyteHostedAuthConfig | None = None,
+        auth_config: JiraAuthConfig | AirbyteAuthConfig | None = None,
         on_token_refresh: Any | None = None,
         subdomain: str | None = None    ):
         """
@@ -205,10 +205,10 @@ class JiraConnector:
 
         Supports both local and hosted execution modes:
         - Local mode: Provide connector-specific auth config (e.g., JiraAuthConfig)
-        - Hosted mode: Provide `AirbyteHostedAuthConfig` with client credentials and either `connector_id` or `external_user_id`
+        - Hosted mode: Provide `AirbyteAuthConfig` with client credentials and either `connector_id` or `external_user_id`
 
         Args:
-            auth_config: Either connector-specific auth config for local mode, or AirbyteHostedAuthConfig for hosted mode
+            auth_config: Either connector-specific auth config for local mode, or AirbyteAuthConfig for hosted mode
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
                 Example: lambda tokens: save_to_database(tokens)            subdomain: Your Jira Cloud subdomain
@@ -217,7 +217,7 @@ class JiraConnector:
             connector = JiraConnector(auth_config=JiraAuthConfig(username="...", password="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = JiraConnector(
-                auth_config=AirbyteHostedAuthConfig(
+                auth_config=AirbyteAuthConfig(
                     airbyte_client_id="client_abc123",
                     airbyte_client_secret="secret_xyz789",
                     connector_id="existing-source-uuid"
@@ -226,15 +226,15 @@ class JiraConnector:
 
             # Hosted mode with lookup by external_user_id
             connector = JiraConnector(
-                auth_config=AirbyteHostedAuthConfig(
+                auth_config=AirbyteAuthConfig(
                     external_user_id="user-123",
                     airbyte_client_id="client_abc123",
                     airbyte_client_secret="secret_xyz789"
                 )
             )
         """
-        # Hosted mode: auth_config is AirbyteHostedAuthConfig
-        is_hosted = isinstance(auth_config, AirbyteHostedAuthConfig)
+        # Hosted mode: auth_config is AirbyteAuthConfig
+        is_hosted = isinstance(auth_config, AirbyteAuthConfig)
 
         if is_hosted:
             from ._vendored.connector_sdk.executor import HostedExecutor
@@ -249,7 +249,7 @@ class JiraConnector:
             # Local mode: auth_config required (must be connector-specific auth type)
             if not auth_config:
                 raise ValueError(
-                    "Either provide AirbyteHostedAuthConfig with client credentials for hosted mode, "
+                    "Either provide AirbyteAuthConfig with client credentials for hosted mode, "
                     "or JiraAuthConfig for local mode"
                 )
 
