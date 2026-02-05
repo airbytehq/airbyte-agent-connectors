@@ -96,7 +96,7 @@ def list_connectors(
             name,
             f"airbyte-agent-{name}" if name else "",
             c.get("latest_version", ""),
-            c.get("connector_id", ""),
+            c.get("connector_definition_id", ""),
         )
 
     console.print(table)

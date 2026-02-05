@@ -11,8 +11,8 @@ from airbyte_agent_mcp.cli.cloud_commands import cloud_app
 runner = CliRunner()
 
 _REGISTRY = [
-    {"connector_id": "def-gong", "connector_name": "gong", "latest_version": "0.1.14"},
-    {"connector_id": "def-sf", "connector_name": "salesforce", "latest_version": "0.2.0"},
+    {"connector_definition_id": "def-gong", "connector_name": "gong", "latest_version": "0.1.14"},
+    {"connector_definition_id": "def-sf", "connector_name": "salesforce", "latest_version": "0.2.0"},
 ]
 
 
@@ -65,7 +65,7 @@ class TestListCustomers:
 
 
 class TestListCloudConnectors:
-    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_id"]: e for e in _REGISTRY})
+    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_definition_id"]: e for e in _REGISTRY})
     @patch.object(httpx.Client, "post")
     @patch.object(httpx.Client, "get")
     def test_lists_connectors(self, mock_get, mock_post, _mock_reg):
@@ -100,7 +100,7 @@ class TestListCloudConnectors:
         assert "airbyte-agent-salesforce" in result.output
         assert "2 connectors" in result.output
 
-    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_id"]: e for e in _REGISTRY})
+    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_definition_id"]: e for e in _REGISTRY})
     @patch.object(httpx.Client, "post")
     @patch.object(httpx.Client, "get")
     def test_empty_list(self, mock_get, mock_post, _mock_reg):
@@ -133,7 +133,7 @@ class TestListCloudConnectors:
 
 
 class TestGetCloudConnector:
-    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_id"]: e for e in _REGISTRY})
+    @patch("airbyte_agent_mcp.cli.cloud_commands.registry_lookup", return_value={e["connector_definition_id"]: e for e in _REGISTRY})
     @patch.object(httpx.Client, "post")
     @patch.object(httpx.Client, "get")
     def test_gets_connector(self, mock_get, mock_post, _mock_reg):

@@ -154,7 +154,7 @@ class TestFetchRegistry:
 
     @patch("airbyte_agent_mcp.airbyte_api.httpx.get")
     def test_returns_connectors(self, mock_get):
-        items = [{"connector_id": "id-1", "connector_name": "gong"}]
+        items = [{"connector_definition_id": "id-1", "connector_name": "gong"}]
         mock_get.return_value = MagicMock(json=lambda: {"connectors": items}, raise_for_status=lambda: None)
 
         from airbyte_agent_mcp.airbyte_api import fetch_registry
