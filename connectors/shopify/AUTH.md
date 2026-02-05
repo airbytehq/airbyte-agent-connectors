@@ -76,8 +76,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_shopify import ShopifyConnector
-from airbyte_agent_shopify._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_shopify import ShopifyConnector, AirbyteHostedAuthConfig
 
 connector = ShopifyConnector(
     auth_config=AirbyteHostedAuthConfig(
