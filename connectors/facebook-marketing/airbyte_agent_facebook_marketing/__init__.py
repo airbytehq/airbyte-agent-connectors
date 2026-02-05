@@ -9,8 +9,8 @@ from .models import (
     FacebookMarketingAuthConfig,
     FacebookMarketingReplicationConfig,
     CurrentUser,
-    AdLabel,
     IssueInfo,
+    AdLabel,
     Campaign,
     PagingCursors,
     Paging,
@@ -134,16 +134,16 @@ from .types import (
     VideosSearchQuery,
     VideosCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "FacebookMarketingConnector",
-    "AirbyteHostedAuthConfig",
+    "AirbyteAuthConfig",
     "FacebookMarketingAuthConfig",
     "FacebookMarketingReplicationConfig",
     "CurrentUser",
-    "AdLabel",
     "IssueInfo",
+    "AdLabel",
     "Campaign",
     "PagingCursors",
     "Paging",
