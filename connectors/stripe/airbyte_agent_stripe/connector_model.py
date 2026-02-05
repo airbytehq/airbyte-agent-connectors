@@ -27,7 +27,7 @@ from uuid import (
 StripeConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e094cb9a-26de-4645-8761-65c0c425d1de'),
     name='stripe',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.stripe.com',
     auth=AuthConfig(
         type=AuthType.BEARER,

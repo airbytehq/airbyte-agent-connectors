@@ -80,6 +80,7 @@ from .types import (
 )
 if TYPE_CHECKING:
     from .models import StripeAuthConfig
+    from .models import StripeReplicationConfig
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -177,7 +178,7 @@ class StripeConnector:
     """
 
     connector_name = "stripe"
-    connector_version = "0.1.7"
+    connector_version = "0.1.8"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -859,7 +860,7 @@ class StripeConnector:
         airbyte_client_secret: str,
         auth_config: "StripeAuthConfig",
         name: str | None = None,
-        replication_config: dict[str, Any] | None = None,
+        replication_config: "StripeReplicationConfig" | None = None,
         source_template_id: str | None = None,
     ) -> "StripeConnector":
         """
@@ -875,7 +876,7 @@ class StripeConnector:
             airbyte_client_secret: Airbyte OAuth client secret
             auth_config: Typed auth config (same as local mode)
             name: Optional source name (defaults to connector name + external_user_id)
-            replication_config: Optional replication settings dict.
+            replication_config: Typed replication settings.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
@@ -890,6 +891,15 @@ class StripeConnector:
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
                 auth_config=StripeAuthConfig(api_key="..."),
+            )
+
+            # With replication config (required for this connector):
+            connector = await StripeConnector.create_hosted(
+                external_user_id="my-workspace",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+                auth_config=StripeAuthConfig(api_key="..."),
+                replication_config=StripeReplicationConfig(account_id="..."),
             )
 
             # Use the connector
