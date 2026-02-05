@@ -224,7 +224,7 @@ def _resolve_cloud_package_name(source: ConnectorSource, resolved_credentials: d
     except Exception as e:
         raise ConnectorLoadError(f"Failed to fetch connector registry: {e}") from e
 
-    registry = {e["connector_id"]: e for e in registry_entries if "connector_id" in e}
+    registry = {e["connector_definition_id"]: e for e in registry_entries if "connector_definition_id" in e}
     reg = registry.get(defn_id, {})
     connector_name = reg.get("connector_name")
     if not connector_name:

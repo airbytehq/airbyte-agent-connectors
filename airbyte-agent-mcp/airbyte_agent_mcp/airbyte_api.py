@@ -137,4 +137,4 @@ def registry_lookup() -> dict[str, dict[str, str]]:
         entries = fetch_registry()
     except Exception:
         return {}
-    return {e["connector_id"]: e for e in entries if "connector_id" in e}
+    return {e["connector_definition_id"]: e for e in entries if "connector_definition_id" in e}
