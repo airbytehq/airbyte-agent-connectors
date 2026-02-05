@@ -27,6 +27,30 @@ class SalesforceAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class SObject(BaseModel):
+    """Salesforce sObject metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    label: Union[str | None, Any] = Field(default=None)
+    label_plural: Union[str | None, Any] = Field(default=None, alias="labelPlural")
+    key_prefix: Union[str | None, Any] = Field(default=None, alias="keyPrefix")
+    custom: Union[bool | None, Any] = Field(default=None)
+    queryable: Union[bool | None, Any] = Field(default=None)
+    searchable: Union[bool | None, Any] = Field(default=None)
+    createable: Union[bool | None, Any] = Field(default=None)
+    updateable: Union[bool | None, Any] = Field(default=None)
+    deletable: Union[bool | None, Any] = Field(default=None)
+    urls: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class SObjectsResponse(BaseModel):
+    """Response from the sobjects endpoint listing all available Salesforce objects"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    encoding: Union[str | None, Any] = Field(default=None)
+    max_batch_size: Union[int | None, Any] = Field(default=None, alias="maxBatchSize")
+    sobjects: Union[list[SObject], Any] = Field(default=None)
+
 class AccountAttributes(BaseModel):
     """Nested schema for Account.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -826,6 +850,9 @@ TasksSearchResult = AirbyteSearchResult[TasksSearchData]
 
 # Concrete type aliases for each operation result.
 # These provide simpler, more readable type annotations than using the generic forms.
+
+SobjectsListResult = SalesforceExecuteResult[list[SObject]]
+"""Result type for sobjects.list operation."""
 
 AccountsListResult = SalesforceExecuteResultWithMeta[list[Account], AccountsListResultMeta]
 """Result type for accounts.list operation with data and metadata."""

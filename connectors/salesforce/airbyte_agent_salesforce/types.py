@@ -17,6 +17,10 @@ from typing import Any, Literal
 
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
+class SobjectsListParams(TypedDict):
+    """Parameters for sobjects.list operation"""
+    pass
+
 class AccountsListParams(TypedDict):
     """Parameters for accounts.list operation"""
     q: str
