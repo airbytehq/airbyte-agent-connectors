@@ -124,7 +124,7 @@ See the official [Google-Drive API reference](https://developers.google.com/work
 
 ## Version information
 
-- **Package version:** 0.1.54
+- **Package version:** 0.1.55
 - **Connector version:** 0.1.6
-- **Generated with Connector SDK commit SHA:** 40df16232406c89ab04108bad63d50207dbe0dcb
+- **Generated with Connector SDK commit SHA:** 0c907160a962de46ba606d21dfea4f916c83320d
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/google-drive/CHANGELOG.md)
