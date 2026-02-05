@@ -52,6 +52,12 @@ Create a connector with Token credentials.
 |------------|------|----------|-------------|
 | `api_key` | `str` | Yes | Your Stripe API Key (starts with sk_test_ or sk_live_) |
 
+`replication_config` fields you need:
+
+| Field Name | Type | Required | Description |
+|------------|------|----------|-------------|
+| `account_id` | `str` | Yes | Your Stripe account ID (starts with 'acct_', find yours at https://dashboard.stripe.com/settings/account) |
+
 Example request:
 
 
@@ -65,6 +71,9 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "name": "My Stripe Connector",
     "credentials": {
       "api_key": "<Your Stripe API Key (starts with sk_test_ or sk_live_)>"
+    },
+    "replication_config": {
+      "account_id": "<Your Stripe account ID (starts with 'acct_', find yours at https://dashboard.stripe.com/settings/account)>"
     }
   }'
 ```
