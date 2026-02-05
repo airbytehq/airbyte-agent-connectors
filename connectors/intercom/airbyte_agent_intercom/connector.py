@@ -14,6 +14,8 @@ try:
 except ImportError:
     from typing_extensions import Literal
 
+from pydantic import BaseModel
+
 from .connector_model import IntercomConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
 from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
@@ -42,8 +44,8 @@ from .types import (
     TeamsSearchFilter,
     TeamsSearchQuery,
 )
+from .models import IntercomAuthConfig
 if TYPE_CHECKING:
-    from .models import IntercomAuthConfig
     from .models import IntercomReplicationConfig
 
 # Import response models and envelope models at runtime
@@ -159,9 +161,12 @@ class IntercomConnector:
         ('segments', 'get'): {'id': 'id'},
     }
 
+    # Accepted auth_config types for isinstance validation
+    _ACCEPTED_AUTH_TYPES = (IntercomAuthConfig, AirbyteAuthConfig)
+
     def __init__(
         self,
-        auth_config: IntercomAuthConfig | AirbyteAuthConfig | None = None,
+        auth_config: IntercomAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
         on_token_refresh: Any | None = None    ):
         """
         Initialize a new intercom connector instance.
@@ -196,6 +201,21 @@ class IntercomConnector:
                 )
             )
         """
+        # Accept AirbyteAuthConfig from any vendored SDK version
+        if (
+            auth_config is not None
+            and not isinstance(auth_config, AirbyteAuthConfig)
+            and type(auth_config).__name__ == AirbyteAuthConfig.__name__
+        ):
+            auth_config = AirbyteAuthConfig(**auth_config.model_dump())
+
+        # Validate auth_config type
+        if auth_config is not None and not isinstance(auth_config, self._ACCEPTED_AUTH_TYPES):
+            raise TypeError(
+                f"Unsupported auth_config type: {type(auth_config).__name__}. "
+                f"Expected one of: {', '.join(t.__name__ for t in self._ACCEPTED_AUTH_TYPES)}"
+            )
+
         # Hosted mode: auth_config is AirbyteAuthConfig
         is_hosted = isinstance(auth_config, AirbyteAuthConfig)
 
