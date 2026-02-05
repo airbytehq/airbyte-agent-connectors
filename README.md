@@ -199,7 +199,8 @@ When contributing to this repository, set up the Claude Code skill symlink for l
 git clone https://github.com/airbytehq/airbyte-agent-connectors.git
 cd airbyte-agent-connectors
 
-# Create the symlink for Claude Code to discover the skill
+# Create the directory and symlink for Claude Code to discover the skill
+mkdir -p .claude/skills
 ln -s ../../skills/airbyte-agent-connectors .claude/skills/airbyte-agent-connectors
 ```
 
