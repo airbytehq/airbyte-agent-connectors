@@ -134,8 +134,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_salesforce import SalesforceConnector
-from airbyte_agent_salesforce._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_salesforce import SalesforceConnector, AirbyteHostedAuthConfig
 
 connector = SalesforceConnector(
     auth_config=AirbyteHostedAuthConfig(
