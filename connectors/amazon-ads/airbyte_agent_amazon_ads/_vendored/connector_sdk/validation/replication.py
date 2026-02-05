@@ -11,6 +11,8 @@ from typing import Any
 import httpx
 import yaml
 
+from .models import ValidationResult
+
 REGISTRY_URL = "https://connectors.airbyte.com/files/metadata/airbyte/source-{name}/latest/cloud.json"
 
 
@@ -149,56 +151,48 @@ def validate_auth_key_mapping(
     auth_mappings: dict[str, str],
     spec: dict[str, Any],
     scheme_name: str,
-) -> tuple[bool, list[str], list[str]]:
+) -> ValidationResult:
     """Validate replication_auth_key_mapping paths exist in spec.
 
     Args:
         auth_mappings: Dict like {"credentials.access_token": "access_token"}
         spec: connectionSpecification from registry
         scheme_name: Name of the security scheme (for error messages)
-
-    Returns:
-        (is_valid, errors, warnings)
     """
     errors = []
-    warnings = []
 
     for source_path, _target_key in auth_mappings.items():
         found, error_detail = resolve_spec_path(spec, source_path)
         if not found:
             errors.append(f"replication_auth_key_mapping in '{scheme_name}': path '{source_path}' not found in Airbyte spec. {error_detail}")
 
-    return len(errors) == 0, errors, warnings
+    return ValidationResult(len(errors) == 0, errors, [])
 
 
 def validate_config_key_mapping(
     config_mappings: dict[str, str],
     spec: dict[str, Any],
-) -> tuple[bool, list[str], list[str]]:
+) -> ValidationResult:
     """Validate replication_config_key_mapping targets exist in spec.
 
     Args:
         config_mappings: Dict like {"start_date": "start_date"}
         spec: connectionSpecification from registry
-
-    Returns:
-        (is_valid, errors, warnings)
     """
     errors = []
-    warnings = []
 
     for _local_key, target_path in config_mappings.items():
         found, error_detail = resolve_spec_path(spec, target_path)
         if not found:
             errors.append(f"replication_config_key_mapping: target path '{target_path}' not found in Airbyte spec. {error_detail}")
 
-    return len(errors) == 0, errors, warnings
+    return ValidationResult(len(errors) == 0, errors, [])
 
 
 def validate_environment_mapping(
     env_mappings: dict[str, Any],
     spec: dict[str, Any],
-) -> tuple[bool, list[str], list[str]]:
+) -> ValidationResult:
     """Validate x-airbyte-replication-environment-mapping targets exist.
 
     Handles both simple string mappings and transform dicts.
@@ -207,23 +201,15 @@ def validate_environment_mapping(
         env_mappings: Dict like {"subdomain": "subdomain"} or
                       {"domain": {"source": "subdomain", "format": "..."}}
         spec: connectionSpecification from registry
-
-    Returns:
-        (is_valid, errors, warnings)
     """
     errors = []
     warnings = []
 
     for _env_key, mapping_value in env_mappings.items():
-        # Extract the target path from the mapping
         if isinstance(mapping_value, str):
             target_path = mapping_value
         elif isinstance(mapping_value, dict):
-            # Transform mapping - the target is still the key in the spec
-            # For transforms like {"source": "subdomain", "format": "..."}, the target
-            # is typically the same as the env_key or specified separately
-            # The mapping maps to the spec field, not from it
-            target_path = _env_key  # The env key maps to the same-named spec field
+            target_path = _env_key
         else:
             warnings.append(f"x-airbyte-replication-environment-mapping: unexpected mapping type for '{_env_key}': {type(mapping_value)}")
             continue
@@ -232,14 +218,348 @@ def validate_environment_mapping(
         if not found:
             errors.append(f"x-airbyte-replication-environment-mapping: target path '{target_path}' not found in Airbyte spec. {error_detail}")
 
-    return len(errors) == 0, errors, warnings
+    return ValidationResult(len(errors) == 0, errors, warnings)
+
+
+def _find_valid_const_values(spec: dict[str, Any], path: str) -> list[Any] | None:
+    """Find valid const values for a path in the spec.
+
+    For paths like "credentials.auth_type", navigates to the parent object
+    and checks if the target field has const values defined (either directly
+    or via oneOf variants).
+
+    Args:
+        spec: connectionSpecification from registry
+        path: Dotted path like "credentials.auth_type"
+
+    Returns:
+        List of valid const values if found, None if the field exists but has no const constraints
+    """
+    if not path:
+        return None
+
+    parts = path.split(".")
+    current = spec
+
+    # Navigate to the parent of the target field
+    for i, part in enumerate(parts[:-1]):
+        properties = current.get("properties", {})
+
+        if part in properties:
+            current = properties[part]
+            continue
+
+        # Check oneOf variants
+        one_of = current.get("oneOf", [])
+        found_in_one_of = False
+        for variant in one_of:
+            variant_props = variant.get("properties", {})
+            if part in variant_props:
+                current = variant_props[part]
+                found_in_one_of = True
+                break
+
+        if not found_in_one_of:
+            return None  # Path doesn't exist
+
+    # Now look at the target field
+    target_field = parts[-1]
+    const_values: list[Any] = []
+
+    # Check direct properties
+    properties = current.get("properties", {})
+    if target_field in properties:
+        field_def = properties[target_field]
+        if "const" in field_def:
+            const_values.append(field_def["const"])
+
+    # Check oneOf variants for const values
+    one_of = current.get("oneOf", [])
+    for variant in one_of:
+        variant_props = variant.get("properties", {})
+        if target_field in variant_props:
+            field_def = variant_props[target_field]
+            if "const" in field_def:
+                const_values.append(field_def["const"])
+
+    return const_values if const_values else None
+
+
+def validate_auth_key_constants(
+    auth_constants: dict[str, Any],
+    spec: dict[str, Any],
+    scheme_name: str,
+) -> ValidationResult:
+    """Validate replication_auth_key_constants values match spec const values.
+
+    When a constant like {"credentials.auth_type": "OAuth2.0"} is specified,
+    validates that "OAuth2.0" is a valid const value in the Airbyte spec's
+    oneOf variants.
+
+    Args:
+        auth_constants: Dict like {"credentials.auth_type": "OAuth2.0"}
+        spec: connectionSpecification from registry
+        scheme_name: Name of the security scheme (for error messages)
+    """
+    errors = []
+
+    for source_path, constant_value in auth_constants.items():
+        found, error_detail = resolve_spec_path(spec, source_path)
+        if not found:
+            errors.append(f"replication_auth_key_constants in '{scheme_name}': path '{source_path}' not found in Airbyte spec. {error_detail}")
+            continue
+
+        valid_consts = _find_valid_const_values(spec, source_path)
+
+        if valid_consts is not None and constant_value not in valid_consts:
+            errors.append(
+                f"replication_auth_key_constants in '{scheme_name}': "
+                f"value '{constant_value}' for path '{source_path}' is not a valid option. "
+                f"Valid options: {valid_consts}"
+            )
+
+    return ValidationResult(len(errors) == 0, errors, [])
+
+
+def validate_auth_properties_mapped(
+    connector_def: dict[str, Any],
+) -> ValidationResult:
+    """Validate that required auth config properties have replication mappings.
+
+    For each security scheme with x-airbyte-auth-config, ensures that every
+    property listed in 'required' has a corresponding entry in
+    'replication_auth_key_mapping'.
+
+    Optional properties (like access_token, which is derived from OAuth refresh)
+    don't need mappings since they're not required for replication to work.
+
+    Args:
+        connector_def: Our connector.yaml as dict
+    """
+    errors: list[str] = []
+
+    security_schemes = connector_def.get("components", {}).get("securitySchemes", {})
+
+    for scheme_name, scheme_def in security_schemes.items():
+        auth_config = scheme_def.get("x-airbyte-auth-config", {})
+        required_properties = set(auth_config.get("required", []))
+        replication_mapping = auth_config.get("replication_auth_key_mapping", {})
+
+        if not required_properties:
+            continue
+
+        if not replication_mapping:
+            errors.append(
+                f"Security scheme '{scheme_name}': x-airbyte-auth-config has required properties "
+                f"but no replication_auth_key_mapping. Unmapped properties: {', '.join(sorted(required_properties))}"
+            )
+            continue
+
+        # Get all mapped property names (values/right-hand side of mapping)
+        mapped_properties = set(replication_mapping.values())
+        unmapped_properties = required_properties - mapped_properties
+
+        if unmapped_properties:
+            errors.append(
+                f"Security scheme '{scheme_name}': required x-airbyte-auth-config properties not mapped "
+                f"in replication_auth_key_mapping: {', '.join(sorted(unmapped_properties))}"
+            )
+
+    return ValidationResult(len(errors) == 0, errors, [])
+
+
+def _collect_required_paths(
+    schema: dict[str, Any],
+    prefix: str = "",
+    constants: dict[str, Any] | None = None,
+) -> list[tuple[str, bool]]:
+    """Recursively collect all required field paths from a JSON schema.
+
+    Handles:
+    - Top-level required fields
+    - Nested required fields within required objects
+    - oneOf structures with const discriminators
+
+    Args:
+        schema: A JSON schema object with 'required' and 'properties'
+        prefix: Current path prefix (e.g., "credentials")
+        constants: Dict of constant values for oneOf discriminator matching
+
+    Returns:
+        List of (path, has_default) tuples where has_default indicates if the field
+        has a default value in the schema
+    """
+    result: list[tuple[str, bool]] = []
+    constants = constants or {}
+
+    required_fields = schema.get("required", [])
+    properties = schema.get("properties", {})
+
+    for field_name in required_fields:
+        result.extend(_collect_field_paths(field_name, properties.get(field_name, {}), prefix, constants))
+
+    # Also check oneOf at the current level
+    one_of = schema.get("oneOf", [])
+    if one_of:
+        for variant in _match_one_of_variants(one_of, prefix, constants):
+            for field_name in variant.get("required", []):
+                result.extend(_collect_field_paths(field_name, variant.get("properties", {}).get(field_name, {}), prefix, constants))
+
+    return result
+
+
+def _collect_field_paths(
+    field_name: str,
+    field_def: dict[str, Any],
+    prefix: str,
+    constants: dict[str, Any],
+) -> list[tuple[str, bool]]:
+    """Collect required paths for a single field, recursing into nested objects."""
+    result: list[tuple[str, bool]] = []
+    field_path = f"{prefix}.{field_name}" if prefix else field_name
+    has_default = "default" in field_def or "const" in field_def
+
+    result.append((field_path, has_default))
+
+    if field_def.get("type") == "object":
+        result.extend(_collect_required_paths(field_def, field_path, constants))
+
+    return result
+
+
+def _match_one_of_variants(
+    one_of: list[dict[str, Any]],
+    prefix: str,
+    constants: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Find oneOf variants that match the provided constants.
+
+    When constants specify a discriminator value (e.g., credentials.auth_type: "OAuth2.0"),
+    returns only matching variants. Returns empty list if no matches found.
+    """
+    matched = []
+
+    for variant in one_of:
+        variant_props = variant.get("properties", {})
+
+        for const_path, const_value in constants.items():
+            if prefix and const_path.startswith(prefix + "."):
+                relative_path = const_path[len(prefix) + 1 :]
+            elif not prefix:
+                relative_path = const_path
+            else:
+                continue
+
+            field_name = relative_path.split(".")[0]
+            if field_name in variant_props:
+                if variant_props[field_name].get("const") == const_value:
+                    matched.append(variant)
+                    break
+
+    return matched
+
+
+def _extract_all_mapped_paths(connector_def: dict[str, Any]) -> set[str]:
+    """Extract all paths that are mapped via any replication mapping mechanism.
+
+    Collects paths from:
+    - replication_config_key_mapping (targets/right-hand side)
+    - replication_auth_key_mapping (sources/left-hand side paths)
+    - replication_auth_key_constants (paths)
+
+    Args:
+        connector_def: Our connector.yaml as dict
+
+    Returns:
+        Set of all mapped Airbyte spec paths
+    """
+    mapped_paths: set[str] = set()
+
+    # Config key mapping - targets are Airbyte paths
+    replication_config = connector_def.get("info", {}).get("x-airbyte-replication-config", {})
+    config_mapping = replication_config.get("replication_config_key_mapping", {})
+    for _our_key, airbyte_path in config_mapping.items():
+        mapped_paths.add(airbyte_path)
+
+    # Auth key mappings and constants from security schemes
+    security_schemes = connector_def.get("components", {}).get("securitySchemes", {})
+    for _scheme_name, scheme_def in security_schemes.items():
+        auth_config = scheme_def.get("x-airbyte-auth-config", {})
+
+        # Auth key mapping - sources (left-hand side) are Airbyte paths
+        auth_mapping = auth_config.get("replication_auth_key_mapping", {})
+        for airbyte_path, _our_key in auth_mapping.items():
+            mapped_paths.add(airbyte_path)
+
+        # Auth key constants - the paths are Airbyte paths
+        auth_constants = auth_config.get("replication_auth_key_constants", {})
+        for airbyte_path in auth_constants.keys():
+            mapped_paths.add(airbyte_path)
+
+    # Environment mapping - targets are Airbyte paths
+    servers = connector_def.get("servers", [])
+    for server in servers:
+        env_mapping = server.get("x-airbyte-replication-environment-mapping", {})
+        for airbyte_path in env_mapping.keys():
+            mapped_paths.add(airbyte_path)
+
+    return mapped_paths
+
+
+def validate_required_config_fields(
+    connector_def: dict[str, Any],
+    connection_spec: dict[str, Any],
+) -> ValidationResult:
+    """Validate required Airbyte config fields are mapped or have defaults.
+
+    Handles:
+    - Top-level required fields
+    - Nested required fields within required objects
+    - oneOf structures with const discriminators
+
+    Args:
+        connector_def: Our connector.yaml as dict
+        connection_spec: connectionSpecification from registry
+    """
+    # Get all constants for discriminator matching (combine from all schemes)
+    all_constants: dict[str, Any] = {}
+    for constants in _extract_auth_constants_from_connector_def(connector_def).values():
+        all_constants.update(constants)
+
+    required_paths = _collect_required_paths(connection_spec, "", all_constants)
+    mapped_paths = _extract_all_mapped_paths(connector_def)
+
+    missing_paths = []
+    for path, has_default in required_paths:
+        if has_default:
+            continue
+
+        if path in mapped_paths:
+            continue
+
+        # Check if any child paths are mapped (parent is implicitly satisfied)
+        path_prefix = path + "."
+        if any(mp.startswith(path_prefix) for mp in mapped_paths):
+            continue
+
+        missing_paths.append(path)
+
+    errors = []
+    if missing_paths:
+        errors.append(
+            f"Required Airbyte config fields not mapped: {', '.join(sorted(missing_paths))}. "
+            f"Add mappings via replication_config_key_mapping, replication_auth_key_mapping, "
+            f"replication_auth_key_constants, or x-airbyte-replication-environment-mapping, as appropriate."
+        )
+
+    return ValidationResult(len(errors) == 0, errors, [])
 
 
 def validate_suggested_streams_coverage(
     connector_entities: list[dict[str, str | None]],
     suggested_streams: list[str],
     skip_streams: list[str] | None = None,
-) -> tuple[bool, list[str], list[str]]:
+) -> ValidationResult:
     """Check connector entities cover all suggested streams.
 
     Args:
@@ -247,17 +567,13 @@ def validate_suggested_streams_coverage(
                            (from x-airbyte-entity and x-airbyte-stream-name)
         suggested_streams: List of stream names from registry
         skip_streams: Optional list of stream names to skip validation for
-
-    Returns:
-        (is_valid, errors, warnings)
     """
     errors = []
     warnings = []
     skip_streams = skip_streams or []
 
     if not suggested_streams:
-        # No suggested streams in registry - nothing to validate
-        return True, errors, warnings
+        return ValidationResult(True, [], [])
 
     # Build set of covered stream names from connector entities
     covered_streams: set[str] = set()
@@ -265,12 +581,11 @@ def validate_suggested_streams_coverage(
         entity_name = entity.get("name", "")
         if entity_name:
             covered_streams.add(entity_name)
-        # x-airbyte-stream-name overrides entity name for stream matching
         stream_name = entity.get("stream_name")
         if stream_name:
             covered_streams.add(stream_name)
 
-    # Check each suggested stream is covered (excluding skipped ones)
+    # Check each suggested stream is covered
     missing_streams = []
     skipped_streams = []
     for stream in suggested_streams:
@@ -289,17 +604,17 @@ def validate_suggested_streams_coverage(
             f"or add to x-airbyte-skip-suggested-streams to skip."
         )
 
-    return len(errors) == 0, errors, warnings
+    return ValidationResult(len(errors) == 0, errors, warnings)
 
 
-def _extract_auth_mappings_from_spec(raw_spec: dict[str, Any]) -> dict[str, dict[str, str]]:
+def _extract_auth_mappings_from_connector_def(connector_def: dict[str, Any]) -> dict[str, dict[str, str]]:
     """Extract all replication_auth_key_mapping from security schemes.
 
     Returns:
         Dict mapping scheme_name -> auth_mappings
     """
     result = {}
-    security_schemes = raw_spec.get("components", {}).get("securitySchemes", {})
+    security_schemes = connector_def.get("components", {}).get("securitySchemes", {})
 
     for scheme_name, scheme_def in security_schemes.items():
         auth_config = scheme_def.get("x-airbyte-auth-config", {})
@@ -310,15 +625,33 @@ def _extract_auth_mappings_from_spec(raw_spec: dict[str, Any]) -> dict[str, dict
     return result
 
 
-def _extract_config_mappings_from_spec(raw_spec: dict[str, Any]) -> dict[str, str]:
+def _extract_auth_constants_from_connector_def(connector_def: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Extract all replication_auth_key_constants from security schemes.
+
+    Returns:
+        Dict mapping scheme_name -> auth_constants
+    """
+    result: dict[str, dict[str, Any]] = {}
+    security_schemes = connector_def.get("components", {}).get("securitySchemes", {})
+
+    for scheme_name, scheme_def in security_schemes.items():
+        auth_config = scheme_def.get("x-airbyte-auth-config", {})
+        auth_constants = auth_config.get("replication_auth_key_constants", {})
+        if auth_constants:
+            result[scheme_name] = auth_constants
+
+    return result
+
+
+def _extract_config_mappings_from_connector_def(connector_def: dict[str, Any]) -> dict[str, str]:
     """Extract replication_config_key_mapping from info section."""
-    replication_config = raw_spec.get("info", {}).get("x-airbyte-replication-config", {})
+    replication_config = connector_def.get("info", {}).get("x-airbyte-replication-config", {})
     return replication_config.get("replication_config_key_mapping", {})
 
 
-def _extract_environment_mappings_from_spec(raw_spec: dict[str, Any]) -> dict[str, Any]:
+def _extract_environment_mappings_from_connector_def(connector_def: dict[str, Any]) -> dict[str, Any]:
     """Extract x-airbyte-replication-environment-mapping from servers."""
-    servers = raw_spec.get("servers", [])
+    servers = connector_def.get("servers", [])
     result = {}
 
     for server in servers:
@@ -328,13 +661,7 @@ def _extract_environment_mappings_from_spec(raw_spec: dict[str, Any]) -> dict[st
     return result
 
 
-def _extract_cache_entities_from_spec(raw_spec: dict[str, Any]) -> list[dict[str, Any]]:
-    """Extract x-airbyte-cache entities from info section."""
-    cache_config = raw_spec.get("info", {}).get("x-airbyte-cache", {})
-    return cache_config.get("entities", [])
-
-
-def _extract_connector_entities_from_spec(raw_spec: dict[str, Any]) -> list[dict[str, str | None]]:
+def _extract_connector_entities_from_connector_def(connector_def: dict[str, Any]) -> list[dict[str, str | None]]:
     """Extract entities from connector spec paths/operations.
 
     Entities are defined via x-airbyte-entity on operations. Each entity can have
@@ -351,8 +678,8 @@ def _extract_connector_entities_from_spec(raw_spec: dict[str, Any]) -> list[dict
     """
     entities: dict[str, str | None] = {}  # entity_name -> stream_name
 
-    paths = raw_spec.get("paths", {})
-    schemas = raw_spec.get("components", {}).get("schemas", {})
+    paths = connector_def.get("paths", {})
+    schemas = connector_def.get("components", {}).get("schemas", {})
 
     # First pass: collect all entity names from operations
     for _path, path_item in paths.items():
@@ -393,14 +720,14 @@ def _extract_connector_entities_from_spec(raw_spec: dict[str, Any]) -> list[dict
     return [{"name": name, "stream_name": stream_name} for name, stream_name in entities.items()]
 
 
-def _extract_skip_suggested_streams_from_spec(raw_spec: dict[str, Any]) -> list[str]:
+def _extract_skip_suggested_streams_from_connector_def(connector_def: dict[str, Any]) -> list[str]:
     """Extract x-airbyte-skip-suggested-streams from info section."""
-    return raw_spec.get("info", {}).get("x-airbyte-skip-suggested-streams", [])
+    return connector_def.get("info", {}).get("x-airbyte-skip-suggested-streams", [])
 
 
-def _extract_skip_auth_methods_from_spec(raw_spec: dict[str, Any]) -> list[str]:
+def _extract_skip_auth_methods_from_connector_def(connector_def: dict[str, Any]) -> list[str]:
     """Extract x-airbyte-skip-auth-methods from info section."""
-    return raw_spec.get("info", {}).get("x-airbyte-skip-auth-methods", [])
+    return connector_def.get("info", {}).get("x-airbyte-skip-auth-methods", [])
 
 
 # ============================================
@@ -598,14 +925,14 @@ def _extract_auth_types_from_registry(registry_metadata: dict[str, Any]) -> set[
     return auth_types
 
 
-def _extract_auth_types_from_connector(raw_spec: dict[str, Any]) -> set[str]:
+def _extract_auth_types_from_connector(connector_def: dict[str, Any]) -> set[str]:
     """Extract auth types from our connector.yaml.
 
     Looks at components.securitySchemes.
     """
     auth_types: set[str] = set()
 
-    security_schemes = raw_spec.get("components", {}).get("securitySchemes", {})
+    security_schemes = connector_def.get("components", {}).get("securitySchemes", {})
 
     for _name, scheme in security_schemes.items():
         scheme_type = scheme.get("type", "")
@@ -625,10 +952,10 @@ def _extract_auth_types_from_connector(raw_spec: dict[str, Any]) -> set[str]:
 
 
 def validate_auth_methods(
-    raw_spec: dict[str, Any],
+    connector_def: dict[str, Any],
     connector_name: str,
     registry_metadata: dict[str, Any] | None,
-) -> tuple[bool, list[str], list[str]]:
+) -> ValidationResult:
     """Validate that connector supports required auth methods.
 
     Strategy:
@@ -636,50 +963,36 @@ def validate_auth_methods(
     2. If NO manifest, fall back to registry advanced_auth to detect OAuth only
 
     Args:
-        raw_spec: Our connector.yaml as dict
+        connector_def: Our connector.yaml as dict
         connector_name: Connector name for fetching manifest
         registry_metadata: Pre-fetched registry metadata
-
-    Returns:
-        (is_valid, errors, warnings)
     """
     errors: list[str] = []
     warnings: list[str] = []
 
-    # Get our auth types
-    our_auth_types = _extract_auth_types_from_connector(raw_spec)
+    our_auth_types = _extract_auth_types_from_connector(connector_def)
+    skip_auth_types = set(_extract_skip_auth_methods_from_connector_def(connector_def))
 
-    # Get skip list from connector spec (these are normalized auth types like "bearer", "oauth2")
-    skip_auth_types = set(_extract_skip_auth_methods_from_spec(raw_spec))
-
-    # Try to get auth types from manifest (source of truth)
+    # Try manifest first (source of truth), fall back to registry
     manifest = fetch_airbyte_manifest(connector_name)
     airbyte_auth_types: set[str] = set()
-    auth_option_keys: dict[str, str] = {}  # Maps auth type to SelectiveAuthenticator option key
+    auth_option_keys: dict[str, str] = {}
 
     if manifest:
         airbyte_auth_types, auth_option_keys = _extract_auth_types_from_manifest(manifest)
     elif registry_metadata:
-        # No manifest - fall back to registry for OAuth detection only
         airbyte_auth_types = _extract_auth_types_from_registry(registry_metadata)
 
-    # If we couldn't determine any Airbyte auth types, skip validation
     if not airbyte_auth_types:
         warnings.append(
             f"Could not determine Airbyte auth types for '{connector_name}' (no manifest found and no OAuth in registry). Skipping auth validation."
         )
-        return True, errors, warnings
+        return ValidationResult(True, errors, warnings)
 
-    # Apply skip list and report
+    # Apply skip list
     skipped = airbyte_auth_types & skip_auth_types
     if skipped:
-        skipped_formatted = []
-        for auth_type in sorted(skipped):
-            option_key = auth_option_keys.get(auth_type)
-            if option_key:
-                skipped_formatted.append(f'{auth_type} ("{option_key}")')
-            else:
-                skipped_formatted.append(auth_type)
+        skipped_formatted = _format_auth_types(sorted(skipped), auth_option_keys)
         warnings.append(f"Skipped auth methods (via x-airbyte-skip-auth-methods): {', '.join(skipped_formatted)}")
         airbyte_auth_types = airbyte_auth_types - skip_auth_types
 
@@ -688,15 +1001,7 @@ def validate_auth_methods(
     extra = our_auth_types - airbyte_auth_types
 
     if missing:
-        # Format missing auth types with option keys if available
-        missing_formatted = []
-        for auth_type in sorted(missing):
-            option_key = auth_option_keys.get(auth_type)
-            if option_key:
-                missing_formatted.append(f'{auth_type} ("{option_key}")')
-            else:
-                missing_formatted.append(auth_type)
-
+        missing_formatted = _format_auth_types(sorted(missing), auth_option_keys)
         errors.append(
             f"Missing auth methods: {', '.join(missing_formatted)}. "
             f"Our connector supports: {', '.join(sorted(our_auth_types)) if our_auth_types else '(none)'}. "
@@ -709,12 +1014,24 @@ def validate_auth_methods(
             f"Extra auth methods in our connector: {', '.join(sorted(extra))}. These are not in Airbyte's connector but may still be valid."
         )
 
-    return len(errors) == 0, errors, warnings
+    return ValidationResult(len(errors) == 0, errors, warnings)
+
+
+def _format_auth_types(auth_types: list[str], option_keys: dict[str, str]) -> list[str]:
+    """Format auth types with their SelectiveAuthenticator option keys if available."""
+    formatted = []
+    for auth_type in auth_types:
+        option_key = option_keys.get(auth_type)
+        if option_key:
+            formatted.append(f'{auth_type} ("{option_key}")')
+        else:
+            formatted.append(auth_type)
+    return formatted
 
 
 def validate_replication_compatibility(
     connector_yaml_path: str | Path,
-    raw_spec: dict[str, Any] | None = None,
+    connector_def: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate all replication compatibility aspects.
 
@@ -722,7 +1039,7 @@ def validate_replication_compatibility(
 
     Args:
         connector_yaml_path: Path to connector.yaml
-        raw_spec: Pre-loaded raw spec dict (optional, will load from file if not provided)
+        connector_def: Pre-loaded raw spec dict (optional, will load from file if not provided)
 
     Returns:
         {
@@ -740,10 +1057,10 @@ def validate_replication_compatibility(
     connector_path = Path(connector_yaml_path)
 
     # Load raw spec if not provided
-    if raw_spec is None:
+    if connector_def is None:
         try:
             with open(connector_path) as f:
-                raw_spec = yaml.safe_load(f)
+                connector_def = yaml.safe_load(f)
         except Exception as e:
             return {
                 "registry_found": False,
@@ -754,7 +1071,7 @@ def validate_replication_compatibility(
             }
 
     # Extract connector info
-    info = raw_spec.get("info", {})
+    info = connector_def.get("info", {})
     connector_id = info.get("x-airbyte-connector-id", "")
     connector_name = info.get("x-airbyte-connector-name", "")
 
@@ -809,7 +1126,7 @@ def validate_replication_compatibility(
     connection_spec = registry_metadata.get("spec", {}).get("connectionSpecification", {})
 
     # Check 2: Auth key mappings
-    auth_mappings_by_scheme = _extract_auth_mappings_from_spec(raw_spec)
+    auth_mappings_by_scheme = _extract_auth_mappings_from_connector_def(connector_def)
     auth_valid = True
     auth_messages: list[str] = []
 
@@ -831,7 +1148,7 @@ def validate_replication_compatibility(
     )
 
     # Check 3: Config key mappings
-    config_mappings = _extract_config_mappings_from_spec(raw_spec)
+    config_mappings = _extract_config_mappings_from_connector_def(connector_def)
     if config_mappings:
         config_valid, config_errors, config_warnings = validate_config_key_mapping(config_mappings, connection_spec)
         all_errors.extend(config_errors)
@@ -853,7 +1170,7 @@ def validate_replication_compatibility(
         )
 
     # Check 4: Environment mappings
-    env_mappings = _extract_environment_mappings_from_spec(raw_spec)
+    env_mappings = _extract_environment_mappings_from_connector_def(connector_def)
     if env_mappings:
         env_valid, env_errors, env_warnings = validate_environment_mapping(env_mappings, connection_spec)
         all_errors.extend(env_errors)
@@ -875,9 +1192,9 @@ def validate_replication_compatibility(
         )
 
     # Check 5: Suggested streams coverage (based on entities, not cache)
-    connector_entities = _extract_connector_entities_from_spec(raw_spec)
+    connector_entities = _extract_connector_entities_from_connector_def(connector_def)
     suggested_streams = registry_metadata.get("suggestedStreams", {}).get("streams", [])
-    skip_streams = _extract_skip_suggested_streams_from_spec(raw_spec)
+    skip_streams = _extract_skip_suggested_streams_from_connector_def(connector_def)
 
     if connector_entities:
         streams_valid, streams_errors, streams_warnings = validate_suggested_streams_coverage(connector_entities, suggested_streams, skip_streams)
@@ -938,7 +1255,7 @@ def validate_replication_compatibility(
         )
 
     # Check 6: Auth methods compatibility
-    auth_valid, auth_errors, auth_warnings = validate_auth_methods(raw_spec, connector_name, registry_metadata)
+    auth_valid, auth_errors, auth_warnings = validate_auth_methods(connector_def, connector_name, registry_metadata)
     all_errors.extend(auth_errors)
     all_warnings.extend(auth_warnings)
 
@@ -955,6 +1272,63 @@ def validate_replication_compatibility(
             "name": "auth_methods",
             "status": auth_status,
             "messages": auth_errors + auth_warnings,
+        }
+    )
+
+    # Check 7: Auth key constants validation
+    auth_constants_by_scheme = _extract_auth_constants_from_connector_def(connector_def)
+    constants_valid = True
+    constants_messages: list[str] = []
+
+    for scheme_name, auth_constants in auth_constants_by_scheme.items():
+        valid, errors, warnings = validate_auth_key_constants(auth_constants, connection_spec, scheme_name)
+        if not valid:
+            constants_valid = False
+        constants_messages.extend(errors)
+        constants_messages.extend(warnings)
+        all_errors.extend(errors)
+        all_warnings.extend(warnings)
+
+    if auth_constants_by_scheme:
+        checks.append(
+            {
+                "name": "auth_key_constants",
+                "status": "pass" if constants_valid else "fail",
+                "messages": constants_messages,
+            }
+        )
+    else:
+        checks.append(
+            {
+                "name": "auth_key_constants",
+                "status": "pass",
+                "messages": ["No replication_auth_key_constants defined (skipped)"],
+            }
+        )
+
+    # Check 8: Required config fields validation
+    req_valid, req_errors, req_warnings = validate_required_config_fields(connector_def, connection_spec)
+    all_errors.extend(req_errors)
+    all_warnings.extend(req_warnings)
+    checks.append(
+        {
+            "name": "required_config_fields",
+            "status": "pass" if req_valid else "fail",
+            "messages": req_errors + req_warnings if (req_errors or req_warnings) else ["All required fields are mapped or have defaults"],
+        }
+    )
+
+    # Check 9: Auth properties have replication mappings
+    props_valid, props_errors, props_warnings = validate_auth_properties_mapped(connector_def)
+    all_errors.extend(props_errors)
+    all_warnings.extend(props_warnings)
+    checks.append(
+        {
+            "name": "auth_properties_mapped",
+            "status": "pass" if props_valid else "fail",
+            "messages": props_errors + props_warnings
+            if (props_errors or props_warnings)
+            else ["All auth config properties have replication mappings"],
         }
     )
 
