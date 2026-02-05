@@ -138,12 +138,6 @@ class ListsList(BaseModel):
     data: Union[list[List], Any] = Field(default=None)
     links: Union[ListsListLinks | None, Any] = Field(default=None)
 
-class CampaignLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class CampaignAttributes(BaseModel):
     """Campaign attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -170,6 +164,12 @@ class CampaignAttributes(BaseModel):
     """Last update timestamp"""
     send_time: Union[str | None, Any] = Field(default=None, description="Actual send time")
     """Actual send time"""
+
+class CampaignLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """A Klaviyo campaign"""
@@ -323,6 +323,12 @@ class MetricsList(BaseModel):
     data: Union[list[Metric], Any] = Field(default=None)
     links: Union[MetricsListLinks | None, Any] = Field(default=None)
 
+class FlowLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -339,12 +345,6 @@ class FlowAttributes(BaseModel):
     """Last update timestamp"""
     trigger_type: Union[str | None, Any] = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
-
-class FlowLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
