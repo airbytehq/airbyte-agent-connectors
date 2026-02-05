@@ -22,8 +22,8 @@ from .models import (
     Plan,
     PlansList,
     InvoiceCustomer,
-    InvoiceLineItemsItem,
     InvoiceSubscription,
+    InvoiceLineItemsItem,
     Invoice,
     InvoicesList,
     CustomersListResultMeta,
@@ -72,13 +72,11 @@ from .types import (
     InvoicesSearchQuery,
     InvoicesCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
-AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "OrbConnector",
     "AirbyteAuthConfig",
-    "AirbyteHostedAuthConfig",
     "OrbAuthConfig",
     "OrbReplicationConfig",
     "Address",
@@ -95,8 +93,8 @@ __all__ = [
     "Plan",
     "PlansList",
     "InvoiceCustomer",
-    "InvoiceLineItemsItem",
     "InvoiceSubscription",
+    "InvoiceLineItemsItem",
     "Invoice",
     "InvoicesList",
     "CustomersListResultMeta",
