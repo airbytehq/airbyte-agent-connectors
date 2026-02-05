@@ -100,11 +100,13 @@ from .types import (
     TriggersSearchQuery,
     TriggersCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
 
 __all__ = [
     "ZendeskChatConnector",
     "AirbyteAuthConfig",
+    "AirbyteHostedAuthConfig",
     "ZendeskChatAuthConfig",
     "ZendeskChatReplicationConfig",
     "Account",
