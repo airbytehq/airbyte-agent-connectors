@@ -18,8 +18,8 @@ from .models import (
     List,
     ListsListLinks,
     ListsList,
-    CampaignLinks,
     CampaignAttributes,
+    CampaignLinks,
     Campaign,
     CampaignsListLinks,
     CampaignsList,
@@ -39,8 +39,8 @@ from .models import (
     Metric,
     MetricsListLinks,
     MetricsList,
-    FlowAttributes,
     FlowLinks,
+    FlowAttributes,
     Flow,
     FlowsListLinks,
     FlowsList,
@@ -114,9 +114,11 @@ from .types import (
     ListsSearchQuery,
     ListsCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "KlaviyoConnector",
+    "AirbyteHostedAuthConfig",
     "KlaviyoAuthConfig",
     "ProfileLinks",
     "ProfileAttributesLocation",
@@ -129,8 +131,8 @@ __all__ = [
     "List",
     "ListsListLinks",
     "ListsList",
-    "CampaignLinks",
     "CampaignAttributes",
+    "CampaignLinks",
     "Campaign",
     "CampaignsListLinks",
     "CampaignsList",
@@ -150,8 +152,8 @@ __all__ = [
     "Metric",
     "MetricsListLinks",
     "MetricsList",
-    "FlowAttributes",
     "FlowLinks",
+    "FlowAttributes",
     "Flow",
     "FlowsListLinks",
     "FlowsList",

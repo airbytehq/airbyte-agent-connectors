@@ -76,8 +76,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_klaviyo import KlaviyoConnector
-from airbyte_agent_klaviyo._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_klaviyo import KlaviyoConnector, AirbyteHostedAuthConfig
 
 connector = KlaviyoConnector(
     auth_config=AirbyteHostedAuthConfig(
