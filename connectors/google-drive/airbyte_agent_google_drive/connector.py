@@ -38,6 +38,7 @@ from .types import (
 )
 if TYPE_CHECKING:
     from .models import GoogleDriveAuthConfig
+    from .models import GoogleDriveReplicationConfig
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -107,7 +108,7 @@ class GoogleDriveConnector:
     """
 
     connector_name = "google-drive"
-    connector_version = "0.1.5"
+    connector_version = "0.1.6"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -622,7 +623,7 @@ class GoogleDriveConnector:
         airbyte_client_id: str,
         airbyte_client_secret: str,
         name: str | None = None,
-        replication_config: dict[str, Any] | None = None,
+        replication_config: "GoogleDriveReplicationConfig" | None = None,
         source_template_id: str | None = None,
     ) -> str:
         """
@@ -639,7 +640,7 @@ class GoogleDriveConnector:
             airbyte_client_id: Airbyte OAuth client ID
             airbyte_client_secret: Airbyte OAuth client secret
             name: Optional name for the source. Defaults to connector name + external_user_id.
-            replication_config: Optional replication settings dict. Merged with OAuth credentials.
+            replication_config: Typed replication settings. Merged with OAuth credentials.
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
 
@@ -653,6 +654,7 @@ class GoogleDriveConnector:
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
                 name="My Google-Drive Source",
+                replication_config=GoogleDriveReplicationConfig(folder_url="...", streams="..."),
             )
             # Redirect user to: consent_url
             # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
@@ -690,7 +692,7 @@ class GoogleDriveConnector:
         auth_config: "GoogleDriveAuthConfig" | None = None,
         server_side_oauth_secret_id: str | None = None,
         name: str | None = None,
-        replication_config: dict[str, Any] | None = None,
+        replication_config: "GoogleDriveReplicationConfig" | None = None,
         source_template_id: str | None = None,
     ) -> "GoogleDriveConnector":
         """
@@ -712,7 +714,7 @@ class GoogleDriveConnector:
             server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
             name: Optional source name (defaults to connector name + external_user_id)
-            replication_config: Optional replication settings dict.
+            replication_config: Typed replication settings.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
@@ -732,12 +734,22 @@ class GoogleDriveConnector:
                 auth_config=GoogleDriveAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."),
             )
 
+            # With replication config (required for this connector):
+            connector = await GoogleDriveConnector.create_hosted(
+                external_user_id="my-workspace",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+                auth_config=GoogleDriveAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."),
+                replication_config=GoogleDriveReplicationConfig(folder_url="...", streams="..."),
+            )
+
             # With server-side OAuth:
             connector = await GoogleDriveConnector.create_hosted(
                 external_user_id="my-workspace",
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
                 server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
+                replication_config=GoogleDriveReplicationConfig(folder_url="...", streams="..."),
             )
 
             # Use the connector
