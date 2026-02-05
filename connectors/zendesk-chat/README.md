@@ -131,7 +131,7 @@ See the official [Zendesk-Chat API reference](https://developer.zendesk.com/api-
 
 ## Version information
 
-- **Package version:** 0.1.41
+- **Package version:** 0.1.42
 - **Connector version:** 0.1.7
-- **Generated with Connector SDK commit SHA:** 481be6548899e256deebb545a84a7f4f1c8ce826
+- **Generated with Connector SDK commit SHA:** cddf6b9fb41e981bb489b71675cc4a9059e55608
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-chat/CHANGELOG.md)
