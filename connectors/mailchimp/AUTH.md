@@ -76,8 +76,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_mailchimp import MailchimpConnector
-from airbyte_agent_mailchimp._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_mailchimp import MailchimpConnector, AirbyteHostedAuthConfig
 
 connector = MailchimpConnector(
     auth_config=AirbyteHostedAuthConfig(
