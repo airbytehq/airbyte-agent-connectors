@@ -134,7 +134,7 @@ class AirbyteCloudClient:
         """
 
         token = await self.get_bearer_token()
-        url = f"{self.API_BASE_URL}/api/v1/connectors/connectors_for_user"
+        url = f"{self.API_BASE_URL}/api/v1/integrations/connectors"
         params = {
             "external_user_id": external_user_id,
             "definition_id": connector_definition_id,
@@ -145,7 +145,7 @@ class AirbyteCloudClient:
         response.raise_for_status()
 
         data = response.json()
-        connectors = data["connectors"]
+        connectors = data["data"]
 
         if len(connectors) == 0:
             raise ValueError(f"No connector found for user '{external_user_id}' and connector definition '{connector_definition_id}'")
