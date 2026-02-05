@@ -65,8 +65,7 @@ In hosted mode, API credentials are stored securely in Airbyte Cloud. You provid
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector
-from airbyte_agent_amazon_ads._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_amazon_ads import AmazonAdsConnector, AirbyteHostedAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AirbyteHostedAuthConfig(
@@ -105,7 +104,7 @@ See the official [Amazon-Ads API reference](https://advertising.amazon.com/API/d
 
 ## Version information
 
-- **Package version:** 0.1.32
+- **Package version:** 0.1.33
 - **Connector version:** 1.0.7
-- **Generated with Connector SDK commit SHA:** 5c699b63de47ab09d9e52e38d1c61f7f994da24d
+- **Generated with Connector SDK commit SHA:** def0e484c083c942973a2784c157255c5dc7f546
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/amazon-ads/CHANGELOG.md)
