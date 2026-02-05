@@ -181,9 +181,11 @@ from .types import (
     UsersSearchQuery,
     UsersCondition
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "ZendeskSupportConnector",
+    "AirbyteHostedAuthConfig",
     "ZendeskSupportAuthConfig",
     "Ticket",
     "User",
