@@ -625,7 +625,7 @@ class GoogleDriveConnector:
             The connector ID if in hosted mode, None if in local mode.
 
         Example:
-            connector = await GoogleDriveConnector.create_hosted(...)
+            connector = await GoogleDriveConnector.create(...)
             print(f"Created connector: {connector.connector_id}")
         """
         if hasattr(self, '_executor') and hasattr(self._executor, '_connector_id'):
@@ -704,7 +704,7 @@ class GoogleDriveConnector:
         return consent_url
 
     @classmethod
-    async def create_hosted(
+    async def create(
         cls,
         *,
         airbyte_config: AirbyteAuthConfig,
@@ -744,7 +744,7 @@ class GoogleDriveConnector:
 
         Example:
             # Create a new hosted connector with API key auth
-            connector = await GoogleDriveConnector.create_hosted(
+            connector = await GoogleDriveConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
                     airbyte_client_id="client_abc",
@@ -754,7 +754,7 @@ class GoogleDriveConnector:
             )
 
             # With replication config (required for this connector):
-            connector = await GoogleDriveConnector.create_hosted(
+            connector = await GoogleDriveConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
                     airbyte_client_id="client_abc",
@@ -765,7 +765,7 @@ class GoogleDriveConnector:
             )
 
             # With server-side OAuth:
-            connector = await GoogleDriveConnector.create_hosted(
+            connector = await GoogleDriveConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
                     airbyte_client_id="client_abc",
@@ -779,7 +779,7 @@ class GoogleDriveConnector:
             result = await connector.execute("entity", "list", {})
         """
         if not airbyte_config.external_user_id:
-            raise ValueError("airbyte_config.external_user_id is required for create_hosted()")
+            raise ValueError("airbyte_config.external_user_id is required for create()")
 
         # Validate: exactly one of auth_config or server_side_oauth_secret_id required
         if auth_config is None and server_side_oauth_secret_id is None:
