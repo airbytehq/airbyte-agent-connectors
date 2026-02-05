@@ -76,10 +76,10 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_airtable import AirtableConnector, AirbyteHostedAuthConfig
+from airbyte_agent_airtable import AirtableConnector, AirbyteAuthConfig
 
 connector = AirtableConnector(
-    auth_config=AirbyteHostedAuthConfig(
+    auth_config=AirbyteAuthConfig(
         external_user_id="<your_external_user_id>",
         airbyte_client_id="<your-client-id>",
         airbyte_client_secret="<your-client-secret>"

@@ -42,11 +42,11 @@ from .types import (
     TablesSearchQuery,
     TablesCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "AirtableConnector",
-    "AirbyteHostedAuthConfig",
+    "AirbyteAuthConfig",
     "AirtableAuthConfig",
     "Base",
     "BasesList",
