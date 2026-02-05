@@ -61,6 +61,7 @@ from .types import (
 )
 if TYPE_CHECKING:
     from .models import GithubAuthConfig
+    from .models import GithubReplicationConfig
 
 # Import specific auth config classes for multi-auth isinstance checks
 from .models import GithubOauth2AuthConfig, GithubPersonalAccessTokenAuthConfig
@@ -140,7 +141,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.10"
+    connector_version = "0.1.11"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -905,7 +906,7 @@ class GithubConnector:
         airbyte_client_id: str,
         airbyte_client_secret: str,
         name: str | None = None,
-        replication_config: dict[str, Any] | None = None,
+        replication_config: "GithubReplicationConfig" | None = None,
         source_template_id: str | None = None,
     ) -> str:
         """
@@ -922,7 +923,7 @@ class GithubConnector:
             airbyte_client_id: Airbyte OAuth client ID
             airbyte_client_secret: Airbyte OAuth client secret
             name: Optional name for the source. Defaults to connector name + external_user_id.
-            replication_config: Optional replication settings dict. Merged with OAuth credentials.
+            replication_config: Typed replication settings. Merged with OAuth credentials.
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
 
@@ -936,6 +937,7 @@ class GithubConnector:
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
                 name="My Github Source",
+                replication_config=GithubReplicationConfig(repositories="..."),
             )
             # Redirect user to: consent_url
             # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
@@ -973,7 +975,7 @@ class GithubConnector:
         auth_config: "GithubAuthConfig" | None = None,
         server_side_oauth_secret_id: str | None = None,
         name: str | None = None,
-        replication_config: dict[str, Any] | None = None,
+        replication_config: "GithubReplicationConfig" | None = None,
         source_template_id: str | None = None,
     ) -> "GithubConnector":
         """
@@ -995,7 +997,7 @@ class GithubConnector:
             server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
             name: Optional source name (defaults to connector name + external_user_id)
-            replication_config: Optional replication settings dict.
+            replication_config: Typed replication settings.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
@@ -1015,12 +1017,22 @@ class GithubConnector:
                 auth_config=GithubAuthConfig(access_token="..."),
             )
 
+            # With replication config (required for this connector):
+            connector = await GithubConnector.create_hosted(
+                external_user_id="my-workspace",
+                airbyte_client_id="client_abc",
+                airbyte_client_secret="secret_xyz",
+                auth_config=GithubAuthConfig(access_token="..."),
+                replication_config=GithubReplicationConfig(repositories="..."),
+            )
+
             # With server-side OAuth:
             connector = await GithubConnector.create_hosted(
                 external_user_id="my-workspace",
                 airbyte_client_id="client_abc",
                 airbyte_client_secret="secret_xyz",
                 server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
+                replication_config=GithubReplicationConfig(repositories="..."),
             )
 
             # Use the connector
