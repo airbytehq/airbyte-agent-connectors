@@ -61,10 +61,27 @@ We are actively expanding AI Connectors. Coming soon:
 * More connectors added weekly
 
 ## Contributing / Feedback
-We actively welcome feedback, ideas, and bug reports. 
-If you're building AI agents with Airbyte Agent Connectors and want to share ideas or get help, join our community on [slack](https://slack.airbyte.com/). We’d love to hear what you're building and what connectors or capabilities you’d like to see next.
+We actively welcome feedback, ideas, and bug reports.
+If you're building AI agents with Airbyte Agent Connectors and want to share ideas or get help, join our community on [slack](https://slack.airbyte.com/). We'd love to hear what you're building and what connectors or capabilities you'd like to see next.
 
+## Claude Code Skill
 
+This repo includes a Claude Code skill that provides documentation and setup guidance for all 21 connectors.
+
+**Install the skill:**
+```bash
+mkdir -p .claude/skills
+git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skills
+cp -r /tmp/airbyte-skills/skills/airbyte-agent-connectors .claude/skills/
+rm -rf /tmp/airbyte-skills
+```
+
+**Or install via marketplace:**
+```
+/plugin marketplace add airbytehq/airbyte-agent-connectors
+```
+
+See the [full skill documentation](skills/airbyte-agent-connectors/SKILL.md) for setup patterns, authentication guides, and code examples.
 
 ## Tutorial using the Python SDK
 
