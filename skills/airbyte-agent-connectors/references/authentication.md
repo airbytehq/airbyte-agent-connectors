@@ -301,7 +301,7 @@ For OAuth connectors, implement the OAuth flow on your server:
 **Step 1: Initiate OAuth**
 
 ```bash
-curl -X POST "https://api.airbyte.ai/v1/integrations/connectors/oauth/initiate" \
+curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors/oauth/initiate" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -320,7 +320,7 @@ The response contains a `consent_url`. Redirect your user there to authorize.
 After authorization, the user is redirected to your callback URL with a `secret_id`. Use it to create the connector:
 
 ```bash
-curl -X POST "https://api.airbyte.ai/v1/integrations/connectors" \
+curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
   -H "Authorization: Bearer <TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
