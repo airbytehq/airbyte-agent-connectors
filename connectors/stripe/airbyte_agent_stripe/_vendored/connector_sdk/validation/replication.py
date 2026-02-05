@@ -111,15 +111,15 @@ def resolve_spec_path(spec: dict[str, Any], path: str) -> tuple[bool, str | None
     return True, None
 
 
-def validate_connector_id(
-    connector_id: str,
+def validate_connector_definition_id(
+    connector_definition_id: str,
     connector_name: str,
     registry_metadata: dict[str, Any] | None,
 ) -> tuple[bool, list[str], list[str], bool]:
-    """Validate connector ID matches registry.
+    """Validate connector definition ID matches registry.
 
     Args:
-        connector_id: The x-airbyte-connector-id from connector.yaml
+        connector_definition_id: The x-airbyte-connector-id from connector.yaml
         connector_name: The x-airbyte-connector-name from connector.yaml
         registry_metadata: Fetched registry metadata or None
 
@@ -140,8 +140,8 @@ def validate_connector_id(
 
     registry_id = registry_metadata.get("sourceDefinitionId", "")
 
-    if connector_id.lower() != registry_id.lower():
-        errors.append(f"Connector ID mismatch: connector.yaml has '{connector_id}' but Airbyte registry has '{registry_id}' for '{connector_name}'.")
+    if connector_definition_id.lower() != registry_id.lower():
+        errors.append(f"Connector ID mismatch: connector.yaml has '{connector_definition_id}' but Airbyte registry has '{registry_id}' for '{connector_name}'.")
         return False, errors, warnings, True  # Invalid, skip remaining checks
 
     return True, errors, warnings, False  # Valid, continue with checks
@@ -1044,9 +1044,9 @@ def validate_replication_compatibility(
     Returns:
         {
             "registry_found": bool,
-            "connector_id_matches": bool,
+            "connector_definition_id_matches": bool,
             "checks": [
-                {"name": "connector_id", "status": "pass|warn|fail", "messages": [...]},
+                {"name": "connector_definition_id", "status": "pass|warn|fail", "messages": [...]},
                 {"name": "auth_key_mapping", ...},
                 ...
             ],
@@ -1064,7 +1064,7 @@ def validate_replication_compatibility(
         except Exception as e:
             return {
                 "registry_found": False,
-                "connector_id_matches": False,
+                "connector_definition_id_matches": False,
                 "checks": [],
                 "errors": [f"Failed to load connector.yaml: {str(e)}"],
                 "warnings": [],
@@ -1072,13 +1072,13 @@ def validate_replication_compatibility(
 
     # Extract connector info
     info = connector_def.get("info", {})
-    connector_id = info.get("x-airbyte-connector-id", "")
+    connector_definition_id = info.get("x-airbyte-connector-id", "")
     connector_name = info.get("x-airbyte-connector-name", "")
 
-    if not connector_id or not connector_name:
+    if not connector_definition_id or not connector_name:
         return {
             "registry_found": False,
-            "connector_id_matches": False,
+            "connector_definition_id_matches": False,
             "checks": [],
             "errors": ["Missing x-airbyte-connector-id or x-airbyte-connector-name in connector.yaml"],
             "warnings": [],
@@ -1091,8 +1091,8 @@ def validate_replication_compatibility(
     all_warnings: list[str] = []
     checks: list[dict[str, Any]] = []
 
-    # Check 1: Connector ID validation
-    id_valid, id_errors, id_warnings, skip_remaining = validate_connector_id(connector_id, connector_name, registry_metadata)
+    # Check 1: Connector definition ID validation
+    id_valid, id_errors, id_warnings, skip_remaining = validate_connector_definition_id(connector_definition_id, connector_name, registry_metadata)
     all_errors.extend(id_errors)
     all_warnings.extend(id_warnings)
 
@@ -1106,17 +1106,17 @@ def validate_replication_compatibility(
 
     checks.append(
         {
-            "name": "connector_id",
+            "name": "connector_definition_id",
             "status": id_status,
             "messages": id_errors + id_warnings,
         }
     )
 
-    # If connector ID doesn't match or registry not found, skip remaining checks
+    # If connector definition ID doesn't match or registry not found, skip remaining checks
     if skip_remaining:
         return {
             "registry_found": registry_metadata is not None,
-            "connector_id_matches": id_valid and not skip_remaining,
+            "connector_definition_id_matches": id_valid and not skip_remaining,
             "checks": checks,
             "errors": all_errors,
             "warnings": all_warnings,
@@ -1334,7 +1334,7 @@ def validate_replication_compatibility(
 
     return {
         "registry_found": True,
-        "connector_id_matches": True,
+        "connector_definition_id_matches": True,
         "checks": checks,
         "errors": all_errors,
         "warnings": all_warnings,
