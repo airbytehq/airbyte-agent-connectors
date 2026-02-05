@@ -1,5 +1,10 @@
 # Orb changelog
 
+## [0.1.15] - 2026-02-05
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 40df1623
+- SDK version: 0.1.0
+
 ## [0.1.14] - 2026-02-05
 - Updated connector definition (YAML version 0.1.2)
 - Source commit: aceb0c64
