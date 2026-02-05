@@ -142,33 +142,15 @@ class Ban(BaseModel):
     reason: Union[str | None, Any] = Field(default=None)
     created_at: Union[str | None, Any] = Field(default=None)
 
-class ChatEngagement(BaseModel):
-    """ChatEngagement type definition"""
+class ChatConversion(BaseModel):
+    """ChatConversion type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
-    agent_id: Union[str | None, Any] = Field(default=None)
-    agent_name: Union[str | None, Any] = Field(default=None)
-    agent_full_name: Union[str | None, Any] = Field(default=None)
-    department_id: Union[int | None, Any] = Field(default=None)
+    goal_id: Union[int | None, Any] = Field(default=None)
+    goal_name: Union[str | None, Any] = Field(default=None)
     timestamp: Union[str | None, Any] = Field(default=None)
-    duration: Union[float | None, Any] = Field(default=None)
-    accepted: Union[bool | None, Any] = Field(default=None)
-    assigned: Union[bool | None, Any] = Field(default=None)
-    started_by: Union[str | None, Any] = Field(default=None)
-    rating: Union[str | None, Any] = Field(default=None)
-    comment: Union[str | None, Any] = Field(default=None)
-    count: Union[Any, Any] = Field(default=None)
-    response_time: Union[Any, Any] = Field(default=None)
-    skills_requested: Union[list[int] | None, Any] = Field(default=None)
-    skills_fulfilled: Union[bool | None, Any] = Field(default=None)
-
-class WebpathItem(BaseModel):
-    """WebpathItem type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_: Union[str | None, Any] = Field(default=None, alias="from")
-    timestamp: Union[str | None, Any] = Field(default=None)
+    attribution: Union[Any, Any] = Field(default=None)
 
 class ChatHistoryItem(BaseModel):
     """ChatHistoryItem type definition"""
@@ -189,15 +171,33 @@ class ChatHistoryItem(BaseModel):
     new_tags: Union[list[str] | None, Any] = Field(default=None)
     options: Union[str | None, Any] = Field(default=None)
 
-class ChatConversion(BaseModel):
-    """ChatConversion type definition"""
+class WebpathItem(BaseModel):
+    """WebpathItem type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_: Union[str | None, Any] = Field(default=None, alias="from")
+    timestamp: Union[str | None, Any] = Field(default=None)
+
+class ChatEngagement(BaseModel):
+    """ChatEngagement type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str | None, Any] = Field(default=None)
-    goal_id: Union[int | None, Any] = Field(default=None)
-    goal_name: Union[str | None, Any] = Field(default=None)
+    agent_id: Union[str | None, Any] = Field(default=None)
+    agent_name: Union[str | None, Any] = Field(default=None)
+    agent_full_name: Union[str | None, Any] = Field(default=None)
+    department_id: Union[int | None, Any] = Field(default=None)
     timestamp: Union[str | None, Any] = Field(default=None)
-    attribution: Union[Any, Any] = Field(default=None)
+    duration: Union[float | None, Any] = Field(default=None)
+    accepted: Union[bool | None, Any] = Field(default=None)
+    assigned: Union[bool | None, Any] = Field(default=None)
+    started_by: Union[str | None, Any] = Field(default=None)
+    rating: Union[str | None, Any] = Field(default=None)
+    comment: Union[str | None, Any] = Field(default=None)
+    count: Union[Any, Any] = Field(default=None)
+    response_time: Union[Any, Any] = Field(default=None)
+    skills_requested: Union[list[int] | None, Any] = Field(default=None)
+    skills_fulfilled: Union[bool | None, Any] = Field(default=None)
 
 class Chat(BaseModel):
     """Chat conversation transcript"""
