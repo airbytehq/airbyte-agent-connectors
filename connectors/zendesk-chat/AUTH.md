@@ -139,8 +139,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_zendesk_chat import ZendeskChatConnector
-from airbyte_agent_zendesk_chat._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_zendesk_chat import ZendeskChatConnector, AirbyteHostedAuthConfig
 
 connector = ZendeskChatConnector(
     auth_config=AirbyteHostedAuthConfig(
