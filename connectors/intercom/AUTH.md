@@ -85,8 +85,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_intercom import IntercomConnector
-from airbyte_agent_intercom._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_intercom import IntercomConnector, AirbyteHostedAuthConfig
 
 connector = IntercomConnector(
     auth_config=AirbyteHostedAuthConfig(
