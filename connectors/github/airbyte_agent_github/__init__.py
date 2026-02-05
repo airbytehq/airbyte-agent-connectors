@@ -77,9 +77,11 @@ from .types import (
     ProjectsGetParams,
     ProjectItemsListParams
 )
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
 
 __all__ = [
     "GithubConnector",
+    "AirbyteHostedAuthConfig",
     "GithubAuthConfig",
     "GithubCheckResult",
     "GithubExecuteResult",

@@ -168,8 +168,7 @@ After creating the connector, execute operations using either the Python SDK or 
 **Python SDK**
 
 ```python
-from airbyte_agent_github import GithubConnector
-from airbyte_agent_github._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from airbyte_agent_github import GithubConnector, AirbyteHostedAuthConfig
 
 connector = GithubConnector(
     auth_config=AirbyteHostedAuthConfig(
