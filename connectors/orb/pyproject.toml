@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-orb"
-version = "0.1.20"
+version = "0.1.21"
 description = "Airbyte Orb Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
