@@ -40,6 +40,40 @@ Use when:
 
 ---
 
+## Supported Connectors Check
+
+**IMPORTANT:** Before proceeding with any setup, verify the requested connector is in this list:
+
+| Connector | Auth Type |
+|-----------|-----------|
+| Airtable | API Key |
+| Amazon Ads | OAuth |
+| Asana | API Key |
+| Facebook Marketing | OAuth |
+| GitHub | PAT |
+| Gong | API Key |
+| Google Drive | OAuth |
+| Greenhouse | API Key |
+| HubSpot | API Key or OAuth |
+| Intercom | API Key |
+| Jira | API Key |
+| Klaviyo | API Key |
+| Linear | API Key |
+| Mailchimp | API Key |
+| Orb | API Key |
+| Salesforce | OAuth |
+| Shopify | API Key |
+| Slack | Bot Token |
+| Stripe | API Key |
+| Zendesk Chat | OAuth |
+| Zendesk Support | API Key |
+
+**If the connector is NOT in this list:** Inform the user that this connector isn't available yet. Point them to:
+- GitHub issues: https://github.com/airbytehq/airbyte-agent-connectors/issues
+- Request a new connector by opening an issue
+
+---
+
 ## Platform Mode Quick Start
 
 For users with Airbyte Platform credentials.
@@ -155,6 +189,8 @@ claude mcp add airbyte-agent-mcp --scope project
 ---
 
 ## Available Connectors
+
+> **Gating Check:** If the user requests a connector NOT in this list, inform them it's not yet supported and suggest they open a GitHub issue at https://github.com/airbytehq/airbyte-agent-connectors/issues.
 
 All 21 connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
 
@@ -300,72 +336,151 @@ auth_config=SalesforceOAuthConfig(
 
 ---
 
-## Common Workflows
+## Platform Mode: Complete Setup Checklist
 
-### Platform User: "Set up a [Connector] connector"
+Follow these steps IN ORDER. Do not skip ahead.
 
-1. **Ask mode**: "Platform mode (Airbyte Cloud) or OSS mode (local only)?"
+### Prerequisites
+- [ ] Airbyte Cloud account at app.airbyte.ai
+- [ ] Connector credentials (API key, OAuth app, etc.)
 
-2. **Gather credentials**:
-   - Airbyte: `AIRBYTE_CLIENT_ID`, `AIRBYTE_CLIENT_SECRET`
-   - Connector-specific (see [Authentication Reference](references/authentication.md))
+### Step 1: Get Application Token (REQUIRED)
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
+  -H 'Content-Type: application/json' \
+  -d '{"client_id": "<CLIENT_ID>", "client_secret": "<CLIENT_SECRET>"}'
+```
+Save the `access_token` as APPLICATION_TOKEN.
 
-3. **Get application token**:
-   ```bash
-   curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
-     -H 'Content-Type: application/json' \
-     -d '{"client_id": "<CLIENT_ID>", "client_secret": "<CLIENT_SECRET>"}'
-   ```
+### Step 2: Detect Workspace
+```bash
+curl 'https://api.airbyte.ai/api/v1/workspaces' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>'
+```
+- If ONE workspace: use it automatically
+- If MULTIPLE: ask user which workspace to use
 
-4. **Auto-detect workspace**:
-   ```bash
-   curl 'https://api.airbyte.ai/api/v1/workspaces' \
-     -H 'Authorization: Bearer <TOKEN>'
-   ```
-   - If one workspace: use it
-   - If multiple: ask user which one
-   - Save workspace name for `external_user_id`
+### Step 3: Check if Template Exists (CRITICAL)
+```bash
+curl 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>'
+```
+Look for an existing template for your connector.
+- If template EXISTS: skip to Step 5
+- If NO template: proceed to Step 4
 
-5. **Create .env file** in connector directory:
-   ```bash
-   AIRBYTE_CLIENT_ID=...
-   AIRBYTE_CLIENT_SECRET=...
-   GONG_ACCESS_KEY=...
-   GONG_ACCESS_KEY_SECRET=...
-   ```
+### Step 4: Register Template (Required if none exists)
 
-6. **Register template** (if connector not in UI):
-   - Look up definition ID from [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids)
-   - POST to `/api/v1/integrations/templates/sources`
+**You need the Definition ID for your connector:**
 
-7. **Create connector instance** (required for data access):
-   ```bash
-   curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
-     -H 'Authorization: Bearer <TOKEN>' \
-     -H 'Content-Type: application/json' \
-     -d '{
-       "workspace_name": "<WORKSPACE_NAME>",
-       "connector_definition_id": "<DEFINITION_ID>",
-       "name": "my-gong-connector",
-       "credentials": {
-         "access_key": "...",
-         "access_key_secret": "..."
-       }
-     }'
-   ```
-   **Note:** Do NOT include `auth_type` in credentials - API infers it automatically.
+| Connector | Definition ID |
+|-----------|---------------|
+| Airtable | `14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212` |
+| Amazon Ads | `c6b0a29e-1da9-4512-9002-7bfd0cba2246` |
+| Asana | `d0243522-dccf-4978-8ba0-37ed47a0bdbf` |
+| Facebook Marketing | `e7778cfc-e97c-4458-9ecb-b4f2bba8946c` |
+| GitHub | `ef69ef6e-aa7f-4af1-a01d-ef775033524e` |
+| Gong | `32382e40-3b49-4b99-9c5c-4076501914e7` |
+| Google Drive | `9f8dda77-1048-4368-815b-269bf54ee9b8` |
+| Greenhouse | `59f1e50a-331f-4f09-b3e8-2e8d4d355f44` |
+| HubSpot | `36c891d9-4bd9-43ac-bad2-10e12756272c` |
+| Intercom | `d8313939-3782-41b0-be29-b3ca20d8dd3a` |
+| Jira | `68e63de2-bb83-4c7e-93fa-a8a9051e3993` |
+| Klaviyo | `95e8cffd-b8c4-4039-968e-d32fb4a69bde` |
+| Linear | `1c5d8316-ed42-4473-8fbc-2626f03f070c` |
+| Mailchimp | `b03a9f3e-22a5-11eb-adc1-0242ac120002` |
+| Orb | `7f0455fb-4518-4ec0-b7a3-d808bf8081cc` |
+| Salesforce | `b117307c-14b6-41aa-9422-947e34922962` |
+| Shopify | `9da77001-af33-4bcd-be46-6252bf9342b9` |
+| Slack | `c2281cee-86f9-4a86-bb48-d23286b4c7bd` |
+| Stripe | `e094cb9a-26de-4645-8761-65c0c425d1de` |
+| Zendesk Chat | `40d24d0f-b8f9-4fe0-9e6c-b06c0f3f45e4` |
+| Zendesk Support | `79c1aa37-dae3-42ae-b333-d1c105477715` |
 
-   > **SDK Bug:** The SDK's `create_hosted()` currently has a bug with the API URL causing 404 errors. Use the HTTP API directly until fixed upstream. See [SDK Known Issues](references/troubleshooting.md#sdk-known-issues).
+Register the template:
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
+  -H 'Content-Type: application/json' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -d '{
+    "actor_definition_id": "<DEFINITION_ID>",
+    "name": "<CONNECTOR_NAME>",
+    "partial_default_config": {},
+    "mode": "DIRECT"
+  }'
+```
+Use `"mode": "OAUTH"` for OAuth connectors (Salesforce, Google Drive, Amazon Ads, Facebook Marketing, Zendesk Chat).
 
-8. **Verify with data pull**:
-   ```bash
-   curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<CONNECTOR_ID>/execute' \
-     -H 'Authorization: Bearer <TOKEN>' \
-     -H 'Content-Type: application/json' \
-     -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
-   ```
+**Idempotency Note:** If you get "already exists" error, a template with that name already exists. Either:
+- Use a different name, OR
+- Skip this step and use the existing template
 
-9. **Confirm**: "Connector created and verified! Pulled [N] records successfully."
+### Step 5: Create Connector Instance
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "external_user_id": "<WORKSPACE_NAME>",
+    "workspace_name": "<WORKSPACE_NAME>",
+    "connector_type": "<CONNECTOR_NAME>",
+    "name": "my-connector",
+    "credentials": {
+      "api_key": "..."
+    }
+  }'
+```
+- `external_user_id`: Your identifier for this user/tenant (use workspace name for simplicity)
+- `connector_type`: The connector name, e.g., "Slack", "Stripe", "GitHub"
+- **Note:** Do NOT include `auth_type` in credentials - API infers it automatically.
+
+> **SDK Bug:** The SDK's `create_hosted()` currently has a bug with the API URL causing 404 errors. Use the HTTP API directly until fixed upstream. See [SDK Known Issues](references/troubleshooting.md#sdk-known-issues).
+
+### Step 6: Verify with Test Query
+```bash
+curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<CONNECTOR_ID>/execute' \
+  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Content-Type: application/json' \
+  -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
+```
+
+### Step 7: Create .env File
+Create `.env` in the connector directory:
+```bash
+AIRBYTE_CLIENT_ID=...
+AIRBYTE_CLIENT_SECRET=...
+# Connector-specific credentials
+API_KEY=...
+```
+
+**Confirm**: "Connector created and verified! Pulled [N] records successfully."
+
+---
+
+## Handling "Already Exists" Errors
+
+When running the Platform workflow multiple times, you may encounter:
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "Template already exists" | Template with this name registered | Use existing template or choose different name |
+| "Connector already exists" | `external_user_id` already used | Retrieve existing connector instead of creating |
+| "Workspace already exists" | Workspace with this name exists | Use existing workspace |
+
+**Retrieving an existing connector:**
+```python
+# If connector was previously created, just reference it:
+connector = StripeConnector(
+    external_user_id="user_123",  # Same ID used during creation
+    airbyte_client_id="...",
+    airbyte_client_secret="..."
+)
+# This retrieves the existing connector - no re-auth needed
+```
+
+---
+
+## OSS Mode: Setup Workflow
 
 ### OSS User: "Set up a [Connector] connector"
 
@@ -457,6 +572,8 @@ connector = StripeConnector(
 ---
 
 ## Reference Documentation
+
+> **Quick Reference:** Connector Definition IDs are inlined in the Platform Mode checklist above (Step 4). For additional HTTP API examples, see [Programmatic Setup](references/programmatic-setup.md).
 
 | Topic | Link |
 |-------|------|
