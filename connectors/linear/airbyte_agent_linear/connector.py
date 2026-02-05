@@ -605,9 +605,7 @@ class LinearConnector:
     async def create_hosted(
         cls,
         *,
-        external_user_id: str,
-        airbyte_client_id: str,
-        airbyte_client_secret: str,
+        airbyte_config: AirbyteAuthConfig,
         auth_config: "LinearAuthConfig",
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
@@ -621,9 +619,7 @@ class LinearConnector:
         2. Returns a connector configured with the new connector_id
 
         Args:
-            external_user_id: Workspace identifier in Airbyte Cloud
-            airbyte_client_id: Airbyte OAuth client ID
-            airbyte_client_secret: Airbyte OAuth client secret
+            airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
             auth_config: Typed auth config (same as local mode)
             name: Optional source name (defaults to connector name + external_user_id)
             replication_config: Optional replication settings dict.
@@ -637,21 +633,27 @@ class LinearConnector:
         Example:
             # Create a new hosted connector with API key auth
             connector = await LinearConnector.create_hosted(
-                external_user_id="my-workspace",
-                airbyte_client_id="client_abc",
-                airbyte_client_secret="secret_xyz",
+                airbyte_config=AirbyteAuthConfig(
+                    external_user_id="my-workspace",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
                 auth_config=LinearAuthConfig(api_key="..."),
             )
 
             # Use the connector
             result = await connector.execute("entity", "list", {})
         """
+        if not airbyte_config.external_user_id:
+            raise ValueError("airbyte_config.external_user_id is required for create_hosted()")
+
 
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+        from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as _AirbyteAuthConfig
 
         client = AirbyteCloudClient(
-            client_id=airbyte_client_id,
-            client_secret=airbyte_client_secret,
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
         )
 
         try:
@@ -660,11 +662,11 @@ class LinearConnector:
             replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
 
             # Create source on Airbyte Cloud
-            source_name = name or f"{cls.connector_name} - {external_user_id}"
+            source_name = name or f"{cls.connector_name} - {airbyte_config.external_user_id}"
             source_id = await client.create_source(
                 name=source_name,
                 connector_definition_id=str(LinearConnectorModel.id),
-                external_user_id=external_user_id,
+                external_user_id=airbyte_config.external_user_id,
                 credentials=credentials,
                 replication_config=replication_config_dict,
                 source_template_id=source_template_id,
@@ -674,9 +676,11 @@ class LinearConnector:
 
         # Return connector configured with the new connector_id
         return cls(
-            airbyte_client_id=airbyte_client_id,
-            airbyte_client_secret=airbyte_client_secret,
-            connector_id=source_id,
+            auth_config=_AirbyteAuthConfig(
+                airbyte_client_id=airbyte_config.airbyte_client_id,
+                airbyte_client_secret=airbyte_config.airbyte_client_secret,
+                connector_id=source_id,
+            ),
         )
 
 
