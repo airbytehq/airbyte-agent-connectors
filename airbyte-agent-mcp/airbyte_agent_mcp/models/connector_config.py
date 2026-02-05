@@ -2,12 +2,10 @@
 
 import os
 import re
-from enum import Enum
 from pathlib import Path
-from typing import Literal
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 _ENV_PATTERN = re.compile(r"\$\{env\.([^}]+)\}")
 
@@ -50,50 +48,82 @@ def resolve_credentials(credentials: dict[str, str]) -> dict[str, str]:
     return {key: resolve_env_vars(value) for key, value in credentials.items()}
 
 
-class SourceType(str, Enum):
-    """Type of connector source."""
+class ConnectorSource(BaseModel):
+    """Connector source configuration.
 
-    PACKAGE = "package"
-    CLOUD = "cloud"
+    Supports three mutually exclusive package source types:
+    - ``package``: A PyPI package name (e.g., ``airbyte-agent-gong``)
+    - ``path``: A local filesystem path (e.g., ``../integrations/gong/.generated``)
+    - ``git``: A git repository URL (e.g., ``https://github.com/org/repo.git``)
 
-
-class PackageSource(BaseModel):
-    """Package connector source configuration.
-
-    The ``package`` field accepts anything ``pip install`` understands:
-    - A PyPI name: ``airbyte-agent-gong``
-    - A local path (contains ``/``): ``/path/to/connector`` or ``./rel/path``
-    - A git URL: ``git+https://github.com/org/repo.git@branch``
+    Additionally, ``connector_id`` is orthogonal and can be combined with any
+    package source, or used alone (auto-resolves the package from the registry).
     """
 
-    type: Literal[SourceType.PACKAGE] = SourceType.PACKAGE
-    package: str
-    version: str | None = None  # None means latest (PyPI only)
+    package: str | None = None
+    version: str | None = None
+    path: str | None = None
+    git: str | None = None
+    ref: str | None = None
+    subdirectory: str | None = None
+    connector_id: str | None = None
+
+    @model_validator(mode="after")
+    def validate_source(self) -> "ConnectorSource":
+        sources = [s for s in (self.package, self.path, self.git) if s is not None]
+        if len(sources) > 1:
+            raise ValueError("At most one of 'package', 'path', 'git' may be specified")
+        if len(sources) == 0 and self.connector_id is None:
+            raise ValueError("At least one of 'package', 'path', 'git', or 'connector_id' must be specified")
+        if self.version is not None and self.package is None:
+            raise ValueError("'version' can only be used with 'package'")
+        if self.ref is not None and self.git is None:
+            raise ValueError("'ref' can only be used with 'git'")
+        if self.subdirectory is not None and self.git is None:
+            raise ValueError("'subdirectory' can only be used with 'git'")
+        return self
+
+    @property
+    def is_cloud(self) -> bool:
+        return self.connector_id is not None
+
+    @property
+    def has_package_source(self) -> bool:
+        return self.package is not None or self.path is not None or self.git is not None
+
+    def to_install_spec(self) -> str | None:
+        """Return a pip-installable spec string, or None if cloud-only."""
+        if self.path is not None:
+            return self.path
+        if self.git is not None:
+            spec = f"git+{self.git}"
+            if self.ref:
+                spec += f"@{self.ref}"
+            if self.subdirectory:
+                spec += f"#subdirectory={self.subdirectory}"
+            return spec
+        if self.package is not None:
+            if self.version:
+                return f"{self.package}=={self.version}"
+            return self.package
+        return None
 
 
-class CloudSource(BaseModel):
-    """Airbyte Cloud connector source configuration."""
-
-    type: Literal[SourceType.CLOUD] = SourceType.CLOUD
-    connector_id: str
-
-
-Source = PackageSource | CloudSource
-
-
-def auth_config_to_env_template(auth_config_type: type[BaseModel], connector_name: str) -> dict[str, str]:
+def auth_config_to_env_template(auth_config_type: type[BaseModel], connector_name: str | None = None) -> dict[str, str]:
     """Convert an auth config type to a dict with environment variable placeholders.
 
     Args:
         auth_config_type: A Pydantic model class for auth configuration.
-        connector_name: Name of the connector, used as env var prefix (e.g., "gong").
+        connector_name: Optional connector name used as env var prefix (e.g., "gong").
+            When None, field names are used directly (e.g., ``airbyte_client_id`` -> ``AIRBYTE_CLIENT_ID``).
 
     Returns:
         Dict mapping field names to environment variable placeholders.
-        E.g., {"access_key": "${env.GONG_ACCESS_KEY}", "access_key_secret": "${env.GONG_ACCESS_KEY_SECRET}"}
     """
-    prefix = connector_name.upper().replace("-", "_").replace(" ", "_")
-    return {field_name: f"${{env.{prefix}_{field_name.upper()}}}" for field_name in auth_config_type.model_fields}
+    if connector_name:
+        prefix = connector_name.upper().replace("-", "_").replace(" ", "_")
+        return {field_name: f"${{env.{prefix}_{field_name.upper()}}}" for field_name in auth_config_type.model_fields}
+    return {field_name: f"${{env.{field_name.upper()}}}" for field_name in auth_config_type.model_fields}
 
 
 def connector_params_to_template(params: list) -> dict[str, str]:
@@ -109,12 +139,26 @@ def connector_params_to_template(params: list) -> dict[str, str]:
     return {p.name: f"# TODO: {p.name}" for p in params}
 
 
+_PACKAGE_PREFIX = "airbyte-agent-"
+
+
 class ConnectorConfig(BaseModel):
     """Configuration for a single connector."""
 
-    connector: Source
+    connector: ConnectorSource
     credentials: dict[str, str] = Field(default_factory=dict)
     config: dict[str, str] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_connector(cls, data: dict) -> dict:
+        if not isinstance(data, dict) or "connector" not in data:
+            return data
+        value = data["connector"]
+        if isinstance(value, str):
+            name = value if value.startswith(_PACKAGE_PREFIX) else f"{_PACKAGE_PREFIX}{value}"
+            data["connector"] = {"package": name}
+        return data
 
     @classmethod
     def load(cls, config_path: Path) -> "ConnectorConfig":
@@ -143,7 +187,6 @@ class ConnectorConfig(BaseModel):
             Dict representation with empty values removed.
         """
         data = self.model_dump(mode="json", exclude_none=True)
-        # Remove empty dicts
         return {k: v for k, v in data.items() if v != {}}
 
     def save(self, config_path: Path) -> None:
@@ -152,7 +195,6 @@ class ConnectorConfig(BaseModel):
         Args:
             config_path: Path to config file.
         """
-        # Ensure parent directory exists
         config_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(config_path, "w") as f:

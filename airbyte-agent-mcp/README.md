@@ -70,7 +70,6 @@ connector:
   type: cloud
   connector_id: <connector-id>
 credentials:
-  airbyte_external_user_id: ${env.AIRBYTE_EXTERNAL_USER_ID}
   airbyte_client_id: ${env.AIRBYTE_CLIENT_ID}
   airbyte_client_secret: ${env.AIRBYTE_CLIENT_SECRET}
 ```
@@ -90,6 +89,36 @@ credentials:
 ## CLI Commands
 
 All commands are run with `uv run adp <command>`.
+
+### Login
+
+Save your Airbyte Cloud credentials so they are available to all commands without a local `.env` file:
+
+```bash
+uv run adp login <organization-id>
+```
+
+This prints a link to the Airbyte authentication page for your organization where you can find your Client ID and Secret, then prompts for both values. Credentials are written to `~/.airbyte_agent_mcp/orgs/<organization-id>/.env` and the organization is set as the default. A local `.env` in your project directory will override these values if present.
+
+You can log into multiple organizations and switch between them:
+
+```bash
+# Log into multiple orgs
+uv run adp login org-abc
+uv run adp login org-xyz
+
+# List logged-in organizations
+uv run adp orgs list
+
+# Show the current default organization
+uv run adp orgs default
+
+# Change the default organization
+uv run adp orgs default org-xyz
+
+# Use a specific org for a single command (overrides default)
+uv run adp --org org-abc cloud workspaces list
+```
 
 ### Connector Commands
 

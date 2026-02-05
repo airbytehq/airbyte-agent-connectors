@@ -13,19 +13,43 @@ from typing import Any
 import filetype
 from fastmcp import FastMCP
 
-from .models.cli_config import get_config_dir
+from .models.cli_config import get_download_dir
 
 _INSTRUCTIONS = """\
 CRITICAL — context budget is limited. Large responses waste tokens and degrade performance. Follow these rules strictly:
 
-ACTION SELECTION (READ THIS FIRST):
-- You MUST use `search` as your DEFAULT action for all queries. NEVER use `list` as your first choice.
-- `search` supports filtering, sorting, field selection, and pagination — it returns only what you need.
+QUERY PLANNING (DO THIS FIRST):
+- For ANY time-based question, call `current_datetime` FIRST to get the current date/time.
+- Concrete date mappings (relative to current date):
+  - "recent" or "lately" = last 7 days
+  - "last week" = last 7 days
+  - "this week" = since Monday of the current week
+  - "this month" = since the 1st of the current month
+  - "last month" = from the 1st to the last day of the previous month
+  - "today" = since midnight UTC today
+  - "yesterday" = the previous calendar day (midnight to midnight UTC)
+- When a question mentions a person, team, project, or any entity by name, you MUST resolve \
+the name to an ID BEFORE querying the target entity. Call `entity_schema` on the target entity \
+to find fields ending in `Id` or `_id` — these tell you which related entity to look up. \
+Then search that related entity by name to get the ID, and use the ID as a filter.
+
+NEVER PAGINATE TO FILTER — USE IDs INSTEAD:
+- If you get back a large result set and need a specific subset, do NOT paginate through all pages \
+scanning for matches. Instead:
+  Step 1: Look at the fields in the response — find any field ending in `Id` or `_id` that links \
+to the entity you care about.
+  Step 2: If you don't already have the ID, search the related entity to resolve it.
+  Step 3: Re-query with the ID as a filter.
+- This applies even if you already have the first page of results. Stop, resolve the ID, re-query filtered.
+
+ACTION SELECTION:
+- Use `search` as your DEFAULT action. NEVER use `list` as your first choice.
+- `search` supports filtering, sorting, field selection, and pagination.
 - `list` returns ALL records and is expensive. Only use `list` when:
   (a) You need today's data (search index may lag by hours), OR
   (b) `search` returned no results and you suspect an indexing delay.
-- Example: to find a user by name, use action="search" with params={"query": {"filter": {"like": {"firstName": "Teo"}}}}, \
-NOT action="list" on users.
+- Example: to find a user by name, use action="search" with \
+params={"query": {"filter": {"like": {"firstName": "Teo"}}}}, NOT action="list" on users.
 
 FIELD SELECTION (MANDATORY for every call):
 - You MUST use `select_fields` or `exclude_fields` on EVERY `execute` call. Omitting both is almost never correct.
@@ -43,24 +67,19 @@ FILTERING (MANDATORY when the user's question implies criteria):
 - ALWAYS add filters that match the user's intent. Never do a broad list/search and filter client-side.
 - For `search`: use `params.query.filter` with the appropriate condition (eq, like, gt, lt, in, etc.).
 - For `list`: use the available query parameters (e.g. fromDateTime, toDateTime, workspaceId) to narrow results server-side.
-- Examples of when filters are required:
-  - "calls from last week" → filter by date range, do NOT list all calls and discard old ones.
-  - "users named Alice" → search with a name filter, do NOT list all users and scan locally.
-  - "calls longer than 30 minutes" → filter by duration, do NOT fetch everything and compute.
 - If you are unsure which filter fields are available, call `entity_schema` or `connector_info` first.
 
-QUERY SIZING:
-- Use small `limit` values (5-10) and paginate with `cursor` if more results are needed.
+QUERY SIZING AND PAGINATION:
+- Use a default `limit` of 20-25. This is enough for most questions.
+- Do NOT paginate by default — the first page usually answers the question.
+- Only paginate when:
+  (a) The user explicitly asks for "all" results, OR
+  (b) You need an exact count and the first page has `has_more: true`.
+- Hard stop: never fetch more than 3 pages without pausing to check if you have enough data.
+- For "how many" questions: if the first page shows `has_more: true`, say "at least N" \
+based on what you have rather than exhaustively paginating.
 - Use filters to narrow queries instead of fetching everything.
 - If a response is too large, retry with tighter `select_fields`, smaller `limit`, or more specific filters.
-
-PAGINATION:
-- When using `list`, always check the `meta` object in the response for pagination info \
-(e.g. `has_more`, `cursor`, `next`). Continue fetching pages until there are no more results.
-- The only exception is when you are using `list` to find a specific element — you may stop \
-as soon as you find it.
-- For aggregation queries (counts, totals, averages), you MUST iterate through ALL pages to \
-get accurate results.
 
 DATE RANGE QUERIES:
 - If the date range includes today (e.g. "calls from today", "this week's activity", "since yesterday"), \
@@ -113,7 +132,7 @@ async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> 
     if not inspect.isasyncgen(result):
         return _to_dict(result)
 
-    download_dir = get_config_dir() / "downloads"
+    download_dir = get_download_dir()
     download_dir.mkdir(parents=True, exist_ok=True)
     base_name = f"{entity}_{uuid.uuid4().hex[:12]}"
     file_path = download_dir / base_name

@@ -1,5 +1,6 @@
 """Configuration model for Airbyte Agent MCP."""
 
+import os
 import uuid
 from pathlib import Path
 
@@ -36,6 +37,7 @@ class Config(BaseModel):
     """Configuration model for Airbyte Agent MCP."""
 
     installation_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    default_organization_id: str | None = None
 
     @classmethod
     def load(cls, config_dir: Path | None = None) -> "Config":
@@ -85,3 +87,37 @@ class Config(BaseModel):
             Config object with current configuration.
         """
         return cls.load(config_dir)
+
+
+def get_download_dir(config_dir: Path | None = None) -> Path:
+    """Get the download directory, scoped to the current organization if set.
+
+    If AIRBYTE_ORGANIZATION_ID is set in the environment, downloads go to
+    ``<config_dir>/orgs/<org_id>/downloads``. Otherwise they fall back to
+    ``<config_dir>/downloads``.
+
+    Args:
+        config_dir: Optional config directory path. If None, uses global config dir.
+
+    Returns:
+        Path to the download directory.
+    """
+    dir_path = config_dir or _config_dir
+    org_id = os.environ.get("AIRBYTE_ORGANIZATION_ID")
+    if org_id:
+        return dir_path / "orgs" / org_id / "downloads"
+    return dir_path / "downloads"
+
+
+def get_org_env_path(org_id: str, config_dir: Path | None = None) -> Path:
+    """Get the path to the .env file for a specific organization.
+
+    Args:
+        org_id: The organization ID.
+        config_dir: Optional config directory path. If None, uses global config dir.
+
+    Returns:
+        Path to the organization's .env file.
+    """
+    dir_path = config_dir or _config_dir
+    return dir_path / "orgs" / org_id / ".env"
