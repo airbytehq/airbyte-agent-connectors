@@ -352,6 +352,8 @@ curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
 ```
 Save the `access_token` as APPLICATION_TOKEN.
 
+> **Token TTL:** Tokens expire after 15 minutes. Re-run this step if you get unauthorized errors later.
+
 ### Step 2: Detect Workspace
 ```bash
 curl 'https://api.airbyte.ai/api/v1/workspaces' \
@@ -405,11 +407,11 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "<DEFINITION_ID>",
     "name": "<CONNECTOR_NAME>",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
-```
-Use `"mode": "OAUTH"` for OAuth connectors (Salesforce, Google Drive, Amazon Ads, Facebook Marketing, Zendesk Chat).
+Use `"mode": "DIRECT"` for all connectors. If the API rejects the mode, check the error for accepted values.
 
 **Idempotency Note:** If you get "already exists" error, a template with that name already exists. Either:
 - Use a different name, OR
@@ -423,7 +425,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -d '{
     "external_user_id": "<WORKSPACE_NAME>",
     "workspace_name": "<WORKSPACE_NAME>",
-    "connector_type": "<CONNECTOR_NAME>",
+    "definition_id": "<DEFINITION_ID>",
     "name": "my-connector",
     "credentials": {
       "api_key": "..."
@@ -431,10 +433,10 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   }'
 ```
 - `external_user_id`: Your identifier for this user/tenant (use workspace name for simplicity)
-- `connector_type`: The connector name, e.g., "Slack", "Stripe", "GitHub"
-- **Note:** Do NOT include `auth_type` in credentials - API infers it automatically.
+- `definition_id`: The connector definition ID from the table in Step 4
+- **Note:** Do NOT include discriminator fields like `auth_type` or `credentials_title` in credentials — the API infers auth type and rejects these.
 
-> **SDK Bug:** The SDK's `create_hosted()` currently has a bug with the API URL causing 404 errors. Use the HTTP API directly until fixed upstream. See [SDK Known Issues](references/troubleshooting.md#sdk-known-issues).
+> **Note:** `create_hosted()` has a known URL bug. Use the HTTP API above until the SDK is updated.
 
 ### Step 6: Verify with Test Query
 ```bash

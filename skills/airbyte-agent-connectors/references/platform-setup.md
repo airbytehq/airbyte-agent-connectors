@@ -185,6 +185,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
@@ -196,8 +197,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
 |-----------|-------------|
 | `actor_definition_id` | Connector definition ID from the [Connector Definition IDs table](programmatic-setup.md#connector-definition-ids) |
 | `name` | Display name shown in the UI card |
+| `original_source_template_id` | Always pass `""` (empty string) — required by the API |
 | `partial_default_config` | Pre-filled configuration values (usually `{}`) |
-| `mode` | Template mode: `DIRECT` for API-key connectors, `OAUTH` for OAuth connectors |
+| `mode` | Always use `DIRECT`. If the API rejects the mode, check the error for accepted values |
 
 ### Get the Application Token
 
@@ -232,7 +234,7 @@ After registration, your connector appears in the Connectors page with a card sh
 
 After registering a template, you need to create an actual connector instance to access data.
 
-> **Important:** The SDK's `create_hosted()` has a known bug with the API URL (uses `/v1/integrations/connectors` instead of `/api/v1/integrations/connectors`). Use the HTTP API directly until this is fixed upstream.
+> **Note:** `create_hosted()` has a known URL bug. Use the HTTP API above until the SDK is updated.
 
 ### Step 1: List Workspaces
 
@@ -252,11 +254,12 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
+    "external_user_id": "<YOUR_WORKSPACE_NAME>",
     "workspace_name": "<YOUR_WORKSPACE_NAME>",
-    "connector_definition_id": "<DEFINITION_ID>",
+    "definition_id": "<DEFINITION_ID>",
     "name": "my-connector",
     "credentials": {
-      // Connector-specific fields ONLY - no auth_type
+      // Connector-specific fields ONLY - no auth_type or credentials_title
     }
   }'
 ```
@@ -270,7 +273,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
 | GitHub | `{"token": "ghp_..."}` |
 | Slack | `{"token": "xoxb-..."}` |
 
-**Do NOT include `auth_type`** - the API infers it from the credentials structure.
+**Do NOT include discriminator fields like `auth_type` or `credentials_title`** — the API infers auth type from the credentials structure and rejects these.
 
 ### Step 3: Verify Connection
 

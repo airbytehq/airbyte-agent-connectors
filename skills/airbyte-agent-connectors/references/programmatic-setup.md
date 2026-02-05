@@ -213,6 +213,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
@@ -224,8 +225,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
 |-----------|-------------|---------|
 | `actor_definition_id` | Connector type ID from the table below | `32382e40-3b49-4b99-9c5c-4076501914e7` (Gong) |
 | `name` | Display name shown on the UI card | `"Gong"`, `"My Stripe Connector"` |
+| `original_source_template_id` | Always pass `""` (empty string) — required by the API | `""` |
 | `partial_default_config` | Pre-filled configuration values | `{}` or `{"start_date": "2024-01-01"}` |
-| `mode` | Template mode | `"DIRECT"` for API-key, `"OAUTH"` for OAuth connectors |
+| `mode` | Always use `DIRECT`. If the API rejects the mode, check the error for accepted values | `"DIRECT"` |
 
 ### Example: Register Gong Connector
 
@@ -237,12 +239,13 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
 ```
 
-### Example: Register Salesforce Connector (OAuth)
+### Example: Register Salesforce Connector
 
 ```bash
 curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
@@ -251,8 +254,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "b117307c-14b6-41aa-9422-947e34922962",
     "name": "Salesforce",
+    "original_source_template_id": "",
     "partial_default_config": {},
-    "mode": "OAUTH"
+    "mode": "DIRECT"
   }'
 ```
 

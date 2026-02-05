@@ -444,8 +444,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Authorization: Bearer <TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
+    "external_user_id": "<WORKSPACE_NAME>",
     "workspace_name": "<WORKSPACE_NAME>",
-    "connector_definition_id": "<DEFINITION_ID>",
+    "definition_id": "<DEFINITION_ID>",
     "name": "my-connector",
     "credentials": {...}
   }'
@@ -468,16 +469,16 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
 
 ---
 
-### API Rejects Credentials with auth_type
+### API Rejects Credentials with Discriminator Fields
 
-**Symptom:** 400 error when creating connector with `auth_type` in credentials.
+**Symptom:** 400 error when creating connector with `auth_type` or `credentials_title` in credentials.
 
-**Cause:** The API infers auth type from credentials structure. Including `auth_type` causes validation failure.
+**Cause:** The API infers auth type from credentials structure. Including discriminator fields like `auth_type` or `credentials_title` causes validation failure.
 
-**Fix:** Remove `auth_type` from credentials:
+**Fix:** Remove discriminator fields from credentials:
 ```json
 // WRONG
-{"auth_type": "APIKey", "access_key": "...", "access_key_secret": "..."}
+{"auth_type": "APIKey", "credentials_title": "API Key", "access_key": "...", "access_key_secret": "..."}
 
 // CORRECT
 {"access_key": "...", "access_key_secret": "..."}
