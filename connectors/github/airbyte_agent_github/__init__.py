@@ -77,11 +77,11 @@ from .types import (
     ProjectsGetParams,
     ProjectItemsListParams
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
 __all__ = [
     "GithubConnector",
-    "AirbyteHostedAuthConfig",
+    "AirbyteAuthConfig",
     "GithubAuthConfig",
     "GithubCheckResult",
     "GithubExecuteResult",
