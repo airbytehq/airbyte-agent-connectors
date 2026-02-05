@@ -104,11 +104,13 @@ from .types import (
     UsersSearchQuery,
     UsersCondition
 )
-from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig
+AirbyteAuthConfig = AirbyteHostedAuthConfig  # Alias for new SDK name
 
 __all__ = [
     "GreenhouseConnector",
     "AirbyteAuthConfig",
+    "AirbyteHostedAuthConfig",
     "GreenhouseAuthConfig",
     "Attachment",
     "Candidate",

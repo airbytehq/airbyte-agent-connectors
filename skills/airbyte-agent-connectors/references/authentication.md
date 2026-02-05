@@ -198,6 +198,8 @@ connector = GoogleDriveConnector(
 
 ## Hosted Execution (Airbyte Agent Engine)
 
+> **Note:** `AirbyteHostedAuthConfig` has been renamed to `AirbyteAuthConfig` in the SDK.
+
 For production deployments, you can store credentials in Airbyte Agent Engine and execute operations via API. **Sign up once, then everything is programmatic.**
 
 ### Getting Started
