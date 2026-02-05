@@ -57,7 +57,7 @@ Example request:
 
 ```bash
 curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
-  -H "Authorization: Bearer <APPLICATION_TOKEN>" \
+  -H "Authorization: Bearer <YOUR_BEARER_TOKEN>" \
   -H "Content-Type: application/json" \
   -d '{
     "external_user_id": "<EXTERNAL_USER_ID>",
@@ -96,7 +96,7 @@ async def klaviyo_execute(entity: str, action: str, params: dict | None = None):
 
 ```bash
 curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<connector_id>/execute' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
+  -H 'Authorization: Bearer <YOUR_BEARER_TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{"entity": "<entity>", "action": "<action>", "params": {}}'
 ```
