@@ -8,11 +8,13 @@ import inspect
 import json
 import logging
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, AsyncIterator, overload
+from typing import Any, Callable, Mapping, TypeVar, AsyncIterator, overload
 try:
     from typing import Literal
 except ImportError:
     from typing_extensions import Literal
+
+from pydantic import BaseModel
 
 from .connector_model import ZendeskSupportConnectorModel
 from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
@@ -83,11 +85,9 @@ from .types import (
     UsersSearchFilter,
     UsersSearchQuery,
 )
-if TYPE_CHECKING:
-    from .models import ZendeskSupportAuthConfig
-
-# Import specific auth config classes for multi-auth isinstance checks
 from .models import ZendeskSupportOauth20AuthConfig, ZendeskSupportApiTokenAuthConfig
+from .models import ZendeskSupportAuthConfig
+
 # Import response models and envelope models at runtime
 from .models import (
     ZendeskSupportCheckResult,
@@ -301,9 +301,12 @@ class ZendeskSupportConnector:
         ('article_attachments', 'download'): {'article_id': 'article_id', 'attachment_id': 'attachment_id', 'range_header': 'range_header'},
     }
 
+    # Accepted auth_config types for isinstance validation
+    _ACCEPTED_AUTH_TYPES = (ZendeskSupportOauth20AuthConfig, ZendeskSupportApiTokenAuthConfig, AirbyteAuthConfig)
+
     def __init__(
         self,
-        auth_config: ZendeskSupportAuthConfig | AirbyteAuthConfig | None = None,
+        auth_config: ZendeskSupportAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
         on_token_refresh: Any | None = None,
         subdomain: str | None = None    ):
         """
@@ -339,6 +342,21 @@ class ZendeskSupportConnector:
                 )
             )
         """
+        # Accept AirbyteAuthConfig from any vendored SDK version
+        if (
+            auth_config is not None
+            and not isinstance(auth_config, AirbyteAuthConfig)
+            and type(auth_config).__name__ == AirbyteAuthConfig.__name__
+        ):
+            auth_config = AirbyteAuthConfig(**auth_config.model_dump())
+
+        # Validate auth_config type
+        if auth_config is not None and not isinstance(auth_config, self._ACCEPTED_AUTH_TYPES):
+            raise TypeError(
+                f"Unsupported auth_config type: {type(auth_config).__name__}. "
+                f"Expected one of: {', '.join(t.__name__ for t in self._ACCEPTED_AUTH_TYPES)}"
+            )
+
         # Hosted mode: auth_config is AirbyteAuthConfig
         is_hosted = isinstance(auth_config, AirbyteAuthConfig)
 
