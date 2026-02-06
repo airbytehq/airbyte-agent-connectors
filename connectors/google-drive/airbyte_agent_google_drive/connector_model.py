@@ -29,7 +29,7 @@ from uuid import (
 GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9f8dda77-1048-4368-815b-269bf54ee9b8'),
     name='google-drive',
-    version='0.1.6',
+    version='0.1.7',
     base_url='https://www.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
