@@ -119,7 +119,7 @@ def validate_connector_definition_id(
     """Validate connector definition ID matches registry.
 
     Args:
-        connector_definition_id: The x-airbyte-connector-id from connector.yaml
+        connector_definition_id: The x-airbyte-connector-definition-id from connector.yaml
         connector_name: The x-airbyte-connector-name from connector.yaml
         registry_metadata: Fetched registry metadata or None
 
@@ -1072,7 +1072,7 @@ def validate_replication_compatibility(
 
     # Extract connector info
     info = connector_def.get("info", {})
-    connector_definition_id = info.get("x-airbyte-connector-id", "")
+    connector_definition_id = info.get("x-airbyte-connector-definition-id", "")
     connector_name = info.get("x-airbyte-connector-name", "")
 
     if not connector_definition_id or not connector_name:
@@ -1080,7 +1080,7 @@ def validate_replication_compatibility(
             "registry_found": False,
             "connector_definition_id_matches": False,
             "checks": [],
-            "errors": ["Missing x-airbyte-connector-id or x-airbyte-connector-name in connector.yaml"],
+            "errors": ["Missing x-airbyte-connector-definition-id or x-airbyte-connector-name in connector.yaml"],
             "warnings": [],
         }
 
