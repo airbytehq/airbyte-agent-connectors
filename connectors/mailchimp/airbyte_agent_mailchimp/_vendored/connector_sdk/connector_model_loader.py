@@ -564,7 +564,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     retry_config = spec.info.x_airbyte_retry_config
     connector_definition_id = spec.info.x_airbyte_connector_definition_id
     if not connector_definition_id:
-        raise InvalidOpenAPIError("Missing required x-airbyte-connector-id field")
+        raise InvalidOpenAPIError("Missing required x-airbyte-connector-definition-id field")
 
     search_field_paths = _extract_search_field_paths(spec)
 
