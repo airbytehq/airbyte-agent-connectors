@@ -1,5 +1,10 @@
 # Jira changelog
 
+## [0.1.87] - 2026-02-06
+- Updated connector definition (YAML version 1.1.6)
+- Source commit: df1e8094
+- SDK version: 0.1.0
+
 ## [0.1.86] - 2026-02-06
 - Updated connector definition (YAML version 1.1.6)
 - Source commit: b36beaea
