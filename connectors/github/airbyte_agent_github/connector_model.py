@@ -30,7 +30,7 @@ from uuid import (
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('ef69ef6e-aa7f-4af1-a01d-ef775033524e'),
     name='github',
-    version='0.1.11',
+    version='0.1.12',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
