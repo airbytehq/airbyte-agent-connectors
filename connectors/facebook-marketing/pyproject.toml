@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-facebook-marketing"
-version = "0.1.27"
+version = "0.1.28"
 description = "Airbyte Facebook-Marketing Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
