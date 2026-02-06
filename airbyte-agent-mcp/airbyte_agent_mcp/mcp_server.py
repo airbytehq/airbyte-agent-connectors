@@ -15,6 +15,20 @@ from fastmcp import FastMCP
 
 from .models.cli_config import get_download_dir
 
+# Action type constants
+ACTION_LIST = "list"
+ACTION_SEARCH = "search"
+ACTION_DOWNLOAD = "download"
+
+COLLECTION_ACTIONS = {ACTION_LIST, ACTION_SEARCH}
+
+# Response envelope keys
+ENVELOPE_DATA_FIELD = {
+    ACTION_SEARCH: "hits",
+    ACTION_LIST: "data",
+}
+
+
 _INSTRUCTIONS = """\
 CRITICAL — context budget is limited. Large responses waste tokens and degrade performance. Follow these rules strictly:
 
@@ -68,6 +82,8 @@ FILTERING (MANDATORY when the user's question implies criteria):
 - For `search`: use `params.query.filter` with the appropriate condition (eq, like, gt, lt, in, etc.).
 - For `list`: use the available query parameters (e.g. fromDateTime, toDateTime, workspaceId) to narrow results server-side.
 - If you are unsure which filter fields are available, call `entity_schema` or `connector_info` first.
+- When searching for text, try `like` first. If `like` returns no results, retry with `fuzzy` \
+(e.g., {"fuzzy": {"name": "search term"}}) which matches words in any order and ignores punctuation.
 
 QUERY SIZING AND PAGINATION:
 - Use a default `limit` of 20-25. This is enough for most questions.
@@ -124,10 +140,8 @@ async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> 
 
     Returns metadata about the saved file instead of raw bytes.
     """
-    if _connector is None:
-        raise RuntimeError("Connector not initialized")
-
-    result = await _connector.execute(entity, action, params)
+    connector = _require_connector()
+    result = await connector.execute(entity, action, params)
 
     if not inspect.isasyncgen(result):
         return _to_dict(result)
@@ -159,7 +173,7 @@ async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> 
 
 
 def _to_dict(obj: Any) -> Any:
-    """Convert Pydantic models (or any object with model_dump) to plain dicts, recursively."""
+    """Convert Pydantic models (or any object with model_dump) to plain dicts."""
     if hasattr(obj, "model_dump"):
         return obj.model_dump()
     return obj
@@ -187,13 +201,8 @@ def _truncate_long_text_deep(obj: Any) -> Any:
 
 
 def _truncate_long_text(obj: Any) -> Any:
-    """Truncate long text in data records while preserving envelope metadata (meta, cursor, etc.)."""
-    if isinstance(obj, dict) and "data" in obj and isinstance(obj["data"], list):
-        return {
-            **{k: v for k, v in obj.items() if k != "data"},
-            "data": [_truncate_long_text_deep(item) for item in obj["data"]],
-        }
-    return _truncate_long_text_deep(obj)
+    """Truncate long text in records."""
+    return _apply_to_records(obj, _truncate_long_text_deep)
 
 
 def _pick_fields_from_record(record: Any, fields: list[str]) -> Any:
@@ -242,30 +251,25 @@ def _drop_fields_from_record(record: Any, fields: list[str]) -> Any:
     return result
 
 
-def _apply_to_records(obj: Any, fields: list[str], record_fn: Callable[[Any, list[str]], Any]) -> Any:
-    """Apply a record-level field transform to a response.
+def _apply_to_records(obj: Any, record_fn: Callable[[Any], Any]) -> Any:
+    """Apply a transform function to records.
 
-    Handles both envelope responses ({"data": [...], "meta": {...}}) and
-    direct entity responses from get actions.
+    If obj is a list, applies record_fn to each item.
+    If obj is a single record (dict), applies record_fn directly.
     """
-    if not isinstance(obj, dict):
-        return obj
-    if "data" in obj and isinstance(obj["data"], list):
-        return {
-            **{k: v for k, v in obj.items() if k != "data"},
-            "data": [record_fn(item, fields) for item in obj["data"]],
-        }
-    return record_fn(obj, fields)
+    if isinstance(obj, list):
+        return [record_fn(item) for item in obj]
+    return record_fn(obj)
 
 
 def _select_fields(obj: Any, fields: list[str]) -> Any:
-    """Select only the specified fields from a response."""
-    return _apply_to_records(obj, fields, _pick_fields_from_record)
+    """Select only the specified fields from records."""
+    return _apply_to_records(obj, lambda r: _pick_fields_from_record(r, fields))
 
 
 def _exclude_fields(obj: Any, fields: list[str]) -> Any:
-    """Remove the specified fields from a response."""
-    return _apply_to_records(obj, fields, _drop_fields_from_record)
+    """Remove the specified fields from records."""
+    return _apply_to_records(obj, lambda r: _drop_fields_from_record(r, fields))
 
 
 @mcp.tool(name="current_datetime")
@@ -286,6 +290,60 @@ def get_instructions() -> str:
 
 # Global reference to loaded connector (set during server initialization)
 _connector: Any | None = None
+
+
+def _require_connector() -> Any:
+    """Get the connector, raising if not initialized."""
+    if _connector is None:
+        raise RuntimeError("Connector not initialized")
+    return _connector
+
+
+def _transform_response(
+    result: dict[str, Any],
+    action: str,
+    select_fields: list[str] | None,
+    exclude_fields: list[str] | None,
+) -> dict[str, Any]:
+    """Transform API response with field selection, truncation, and compaction.
+
+    For list/search actions, extracts records from envelope, transforms them,
+    and puts them back. For other actions, transforms the result directly.
+
+    Raises:
+        KeyError: If expected envelope key is missing from list/search response.
+    """
+    records = result
+    # Determine envelope structure based on action type
+    if action in COLLECTION_ACTIONS:
+        if ENVELOPE_DATA_FIELD[action] not in result:
+            raise KeyError(f"{action.capitalize()} response missing '{ENVELOPE_DATA_FIELD[action]}' envelope key. Got keys: {list(result.keys())}")
+        records = result[ENVELOPE_DATA_FIELD[action]]
+
+    # Search hits nest entity data under "data" key
+    if action == ACTION_SEARCH:
+        if select_fields:
+            select_fields = [f"data.{f}" for f in select_fields]
+        if exclude_fields:
+            exclude_fields = [f"data.{f}" for f in exclude_fields]
+
+    # Apply transformations
+    if select_fields:
+        records = _select_fields(records, select_fields)
+    elif exclude_fields:
+        records = _exclude_fields(records, exclude_fields)
+
+    if action in COLLECTION_ACTIONS:
+        records = _truncate_long_text(records)
+
+    records = _compact(records)
+
+    # Reconstruct response
+    if action in COLLECTION_ACTIONS:
+        result[ENVELOPE_DATA_FIELD[action]] = records
+        return result
+
+    return records
 
 
 def register_connector_tools(connector: Any) -> None:
@@ -313,12 +371,11 @@ def register_connector_tools(connector: Any) -> None:
         - connector_version: Version string
         - entities: List of entity descriptions with available actions and parameters
         """
-        if _connector is None:
-            raise RuntimeError("Connector not initialized")
+        connector = _require_connector()
         return {
-            "connector_name": _connector.connector_name,
-            "connector_version": _connector.connector_version,
-            "entities": _connector.list_entities(),
+            "connector_name": connector.connector_name,
+            "connector_version": connector.connector_version,
+            "entities": connector.list_entities(),
         }
 
     # Tool 2: Execute operations - uses tool_utils for docstring/output handling
@@ -346,19 +403,13 @@ def register_connector_tools(connector: Any) -> None:
         Returns:
             Operation result (structure varies by entity/action)
         """
-        if _connector is None:
-            raise RuntimeError("Connector not initialized")
-        if action == "download":
+        connector = _require_connector()
+
+        if action == ACTION_DOWNLOAD:
             return await _handle_download(entity, action, params or {})
-        result = _to_dict(await _connector.execute(entity, action, params or {}))
-        if select_fields:
-            result = _select_fields(result, select_fields)
-        elif exclude_fields:
-            result = _exclude_fields(result, exclude_fields)
-        result = _compact(result)
-        if action in ("list", "search"):
-            result = _truncate_long_text(result)
-        return result
+
+        result = _to_dict(await connector.execute(entity, action, params or {}))
+        return _transform_response(result, action, select_fields, exclude_fields)
 
     # Apply tool_utils decorator for docstring augmentation and output limits
     decorated_execute = connector.tool_utils(max_output_chars=None)(_execute_impl)
@@ -377,6 +428,5 @@ def register_connector_tools(connector: Any) -> None:
         Returns:
             JSON schema dict describing the entity structure, or None if not found.
         """
-        if _connector is None:
-            raise RuntimeError("Connector not initialized")
-        return _connector.entity_schema(entity)
+        connector = _require_connector()
+        return connector.entity_schema(entity)
