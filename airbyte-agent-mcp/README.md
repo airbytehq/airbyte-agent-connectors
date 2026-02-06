@@ -47,13 +47,12 @@ For **Claude Desktop**, use `add-to claude-desktop` instead in step 4. For **Cur
 
 ### Local Mode (Direct API Access)
 
-For local execution with your own credentials. This mode calls the data source API directly and only supports operations that the API provides (e.g., list, get by ID). 
+For local execution with your own credentials. This mode calls the data source API directly and only supports operations that the API provides (e.g., list, get by ID).
 
 Arbitrary search/filter queries are not supported unless the underlying API supports them.
 
 ```yaml
 connector:
-  type: package
   package: airbyte-agent-gong
   version: 0.1.13  # optional, defaults to latest
 credentials:
@@ -67,7 +66,6 @@ For execution through Airbyte Cloud. This mode supports arbitrary search and fil
 
 ```yaml
 connector:
-  type: cloud
   connector_id: <connector-id>
 credentials:
   airbyte_client_id: ${env.AIRBYTE_CLIENT_ID}
@@ -80,8 +78,20 @@ For testing with a local connector (pass a local path as the package):
 
 ```yaml
 connector:
-  type: package
-  package: /path/to/your/connector
+  path: /path/to/your/connector
+credentials:
+  # connector-specific credentials
+```
+
+### Git Repository
+
+For installing from a git repository:
+
+```yaml
+connector:
+  git: https://github.com/org/repo
+  ref: main  # branch, tag, or commit
+  subdirectory: connectors/my-connector  # optional
 credentials:
   # connector-specific credentials
 ```
@@ -140,6 +150,9 @@ uv run adp connectors configure --connector-id <connector-id> -o connector-confi
 
 # Configure a local connector (pass a local path as --package)
 uv run adp connectors configure --package /path/to/connector -o connector-config.yaml
+
+# Configure from a git repository
+uv run adp connectors configure --package git+https://github.com/org/repo@main#subdirectory=connectors/my-connector -o connector-config.yaml
 ```
 
 ### Cloud Commands
