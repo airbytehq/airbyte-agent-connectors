@@ -105,7 +105,7 @@ class Info(BaseModel):
 
     Extensions:
     - x-airbyte-connector-name: Name of the connector (Airbyte extension)
-    - x-airbyte-connector-id: UUID of the connector (Airbyte extension)
+    - x-airbyte-connector-definition-id: UUID of the connector (Airbyte extension)
     - x-airbyte-external-documentation-urls: List of external documentation URLs (Airbyte extension)
     - x-airbyte-retry-config: Retry configuration for transient errors (Airbyte extension)
     - x-airbyte-example-questions: Example questions for AI connector README (Airbyte extension)
@@ -124,7 +124,7 @@ class Info(BaseModel):
 
     # Airbyte extension
     x_airbyte_connector_name: str | None = Field(None, alias="x-airbyte-connector-name")
-    x_airbyte_connector_definition_id: UUID | None = Field(None, alias="x-airbyte-connector-id")
+    x_airbyte_connector_definition_id: UUID | None = Field(None, alias="x-airbyte-connector-definition-id")
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(..., alias="x-airbyte-external-documentation-urls")
     x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
