@@ -1,5 +1,10 @@
 # Airtable changelog
 
+## [0.1.22] - 2026-02-06
+- Updated connector definition (YAML version 1.0.3)
+- Source commit: 883f64f2
+- SDK version: 0.1.0
+
 ## [0.1.21] - 2026-02-05
 - Updated connector definition (YAML version 1.0.3)
 - Source commit: e4f3b9c8
