@@ -184,23 +184,6 @@ class TicketsList(BaseModel):
     paging: Union[Paging, Any] = Field(default=None)
     total: Union[int, Any] = Field(default=None)
 
-class SchemaAssociationsItem(BaseModel):
-    """Nested schema for Schema.associations_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
-    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
-    name: Union[str, Any] = Field(default=None)
-    cardinality: Union[str, Any] = Field(default=None)
-    id: Union[str, Any] = Field(default=None)
-    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
-    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
-    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
-    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
-    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
-    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
-    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
-
 class SchemaPropertiesItemModificationmetadata(BaseModel):
     """Nested schema for SchemaPropertiesItem.modificationMetadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -243,6 +226,23 @@ class SchemaLabels(BaseModel):
 
     singular: Union[str, Any] = Field(default=None)
     plural: Union[str, Any] = Field(default=None)
+
+class SchemaAssociationsItem(BaseModel):
+    """Nested schema for Schema.associations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    from_object_type_id: Union[str, Any] = Field(default=None, alias="fromObjectTypeId")
+    to_object_type_id: Union[str, Any] = Field(default=None, alias="toObjectTypeId")
+    name: Union[str, Any] = Field(default=None)
+    cardinality: Union[str, Any] = Field(default=None)
+    id: Union[str, Any] = Field(default=None)
+    inverse_cardinality: Union[str, Any] = Field(default=None, alias="inverseCardinality")
+    has_user_enforced_max_to_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxToObjectIds")
+    has_user_enforced_max_from_object_ids: Union[bool, Any] = Field(default=None, alias="hasUserEnforcedMaxFromObjectIds")
+    max_to_object_ids: Union[int, Any] = Field(default=None, alias="maxToObjectIds")
+    max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
+    created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
+    updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
 
 class Schema(BaseModel):
     """Custom object schema definition"""
