@@ -8,6 +8,25 @@ from typing import Any
 import httpx
 
 
+def _raise_with_body(response: httpx.Response) -> None:
+    """Raise HTTPStatusError with response body included in the message.
+
+    Unlike httpx's raise_for_status(), this includes the response body in the
+    error message so that API validation errors are visible to the caller.
+    """
+    if response.is_success:
+        return
+
+    # Try to get the response body for a more informative error
+    try:
+        body = response.text
+    except Exception:
+        body = "<unable to read response body>"
+
+    message = f"HTTP {response.status_code} error for {response.request.method} {response.url}: {body}"
+    raise httpx.HTTPStatusError(message=message, request=response.request, response=response)
+
+
 class AirbyteCloudClient:
     """Client for interacting with Airbyte Platform APIs.
 
@@ -91,7 +110,7 @@ class AirbyteCloudClient:
         }
 
         response = await self._http_client.post(url, json=request_body)
-        response.raise_for_status()
+        _raise_with_body(response)
 
         data = response.json()
         access_token = data["access_token"]
@@ -142,7 +161,7 @@ class AirbyteCloudClient:
 
         headers = {"Authorization": f"Bearer {token}"}
         response = await self._http_client.get(url, params=params, headers=headers)
-        response.raise_for_status()
+        _raise_with_body(response)
 
         data = response.json()
         connectors = data["data"]
@@ -221,7 +240,7 @@ class AirbyteCloudClient:
             request_body["source_template_id"] = source_template_id
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
-        response.raise_for_status()
+        _raise_with_body(response)
         return response.json()["consent_url"]
 
     async def create_source(
@@ -298,7 +317,7 @@ class AirbyteCloudClient:
             request_body["source_template_id"] = source_template_id
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
-        response.raise_for_status()
+        _raise_with_body(response)
 
         data = response.json()
         return data["id"]
@@ -343,7 +362,7 @@ class AirbyteCloudClient:
         }
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
-        response.raise_for_status()
+        _raise_with_body(response)
 
         return response.json()
 
