@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-amazon-ads"
-version = "0.1.44"
+version = "0.1.45"
 description = "Airbyte Amazon-Ads Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
