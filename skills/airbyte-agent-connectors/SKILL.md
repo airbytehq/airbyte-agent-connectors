@@ -412,6 +412,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
+```
 Use `"mode": "DIRECT"` for all connectors. If the API rejects the mode, check the error for accepted values.
 
 **Idempotency Note:** If you get "already exists" error, a template with that name already exists. Either:
