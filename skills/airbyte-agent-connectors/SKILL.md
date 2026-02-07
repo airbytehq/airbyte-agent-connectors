@@ -118,6 +118,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "Stripe",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'

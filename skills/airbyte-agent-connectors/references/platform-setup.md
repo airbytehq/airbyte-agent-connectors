@@ -223,6 +223,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
