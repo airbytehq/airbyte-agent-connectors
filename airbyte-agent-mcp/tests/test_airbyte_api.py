@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import httpx
 import pytest
 
-from airbyte_agent_mcp.airbyte_api import AirbyteApi
+from airbyte_agent_mcp.airbyte_api import AirbyteApi, AirbyteAuthError, get_api
 
 
 def _token_response(expires_in: int = 3600) -> dict:
@@ -74,6 +74,14 @@ class TestAuthentication:
         mock_time.return_value = 50.0
         api.get_connector("2")
         assert mock_post.call_count == 2
+
+    @pytest.mark.parametrize("status_code", [401, 403, 500])
+    @patch.object(httpx.Client, "post")
+    def test_auth_failure_raises_airbyte_auth_error(self, mock_post, status_code):
+        mock_post.return_value = MagicMock(status_code=status_code)
+        api = _make_api()
+        with pytest.raises(AirbyteAuthError, match=str(status_code)):
+            api.get_connector("123")
 
 
 class TestGetConnectorSource:
@@ -170,3 +178,29 @@ class TestFetchRegistry:
 
         with pytest.raises(httpx.HTTPStatusError):
             fetch_registry()
+
+
+class TestGetApi:
+    def test_returns_api_when_env_set(self, monkeypatch):
+        monkeypatch.setenv("AIRBYTE_CLIENT_ID", "cid")
+        monkeypatch.setenv("AIRBYTE_CLIENT_SECRET", "csec")
+        api = get_api()
+        assert isinstance(api, AirbyteApi)
+
+    def test_raises_auth_error_when_missing_client_id(self, monkeypatch):
+        monkeypatch.delenv("AIRBYTE_CLIENT_ID", raising=False)
+        monkeypatch.setenv("AIRBYTE_CLIENT_SECRET", "csec")
+        with pytest.raises(AirbyteAuthError, match="credentials not configured"):
+            get_api()
+
+    def test_raises_auth_error_when_missing_client_secret(self, monkeypatch):
+        monkeypatch.setenv("AIRBYTE_CLIENT_ID", "cid")
+        monkeypatch.delenv("AIRBYTE_CLIENT_SECRET", raising=False)
+        with pytest.raises(AirbyteAuthError, match="credentials not configured"):
+            get_api()
+
+    def test_raises_auth_error_when_both_missing(self, monkeypatch):
+        monkeypatch.delenv("AIRBYTE_CLIENT_ID", raising=False)
+        monkeypatch.delenv("AIRBYTE_CLIENT_SECRET", raising=False)
+        with pytest.raises(AirbyteAuthError, match="credentials not configured"):
+            get_api()

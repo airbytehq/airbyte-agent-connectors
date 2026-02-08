@@ -12,6 +12,10 @@ BASE_URL = "https://api.airbyte.ai/api/v1"
 REGISTRY_URL = "https://connectors.airbyte.ai/registry.json"
 
 
+class AirbyteAuthError(Exception):
+    """Raised when Airbyte API authentication fails."""
+
+
 _registry_cache: list[dict[str, Any]] | None = None
 
 
@@ -63,6 +67,9 @@ class AirbyteApi:
             "/account/applications/token",
             json={"client_id": self._client_id, "client_secret": self._client_secret},
         )
+        # Temporary 500 since the API doesn't properly return
+        if resp.status_code in (401, 403, 500):
+            raise AirbyteAuthError(f"Authentication failed ({resp.status_code}).")
         resp.raise_for_status()
         data = resp.json()
         self._token = data["access_token"]
@@ -120,13 +127,13 @@ def get_api() -> AirbyteApi:
     """Create an AirbyteApi client from environment variables.
 
     Raises:
-        ValueError: If AIRBYTE_CLIENT_ID or AIRBYTE_CLIENT_SECRET are not set.
+        AirbyteAuthError: If AIRBYTE_CLIENT_ID or AIRBYTE_CLIENT_SECRET are not set.
     """
     client_id = os.environ.get("AIRBYTE_CLIENT_ID")
     client_secret = os.environ.get("AIRBYTE_CLIENT_SECRET")
 
     if not client_id or not client_secret:
-        raise ValueError("AIRBYTE_CLIENT_ID and AIRBYTE_CLIENT_SECRET environment variables must be set")
+        raise AirbyteAuthError("Airbyte credentials not configured.")
 
     return AirbyteApi(client_id=client_id, client_secret=client_secret)
 

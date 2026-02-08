@@ -1,3 +1,3 @@
-from airbyte_agent_mcp.cli import cli
+from airbyte_agent_mcp.cli import main
 
-cli()
+main()

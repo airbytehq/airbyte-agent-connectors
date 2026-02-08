@@ -7,27 +7,7 @@ from typing import Annotated
 import typer
 from rich.console import Console
 
-from ..connector_utils import ConnectorLoadError, load_connector
-from ..models.connector_config import ConnectorConfig
-
-
-def _load_connector_from_config(config: Path, console: Console):
-    """Load a connector from a config file, handling common errors."""
-    try:
-        connector_config = ConnectorConfig.load(config)
-        console.print(f"[dim]Loading connector from config: {config}[/dim]")
-        connector = load_connector(connector_config)
-        console.print(f"[green]✓[/green] Loaded connector: {connector.connector_name} v{connector.connector_version}")
-        return connector
-    except FileNotFoundError as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1) from None
-    except ConnectorLoadError as e:
-        console.print(f"[red]Connector load error: {e}[/red]")
-        raise typer.Exit(1) from None
-    except ValueError as e:
-        console.print(f"[red]Configuration error: {e}[/red]")
-        raise typer.Exit(1) from None
+from .helpers import load_connector_from_config
 
 
 def chat(
@@ -50,7 +30,7 @@ def chat(
 ) -> None:
     """Chat with connector data. Pass a prompt for one-shot mode, or omit it for interactive REPL."""
     console = Console(stderr=True)
-    connector = _load_connector_from_config(config, console)
+    connector = load_connector_from_config(config, console)
 
     if prompt:
         from ..terminal_chat import run_ask
