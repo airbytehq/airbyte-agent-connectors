@@ -125,7 +125,7 @@ def _run_cli_add(cmd: list[str], server_name: str, target_name: str, console: Co
         raise typer.Exit(1) from None
 
 
-register_app = typer.Typer(help="Register the MCP server with an AI coding tool.", no_args_is_help=True)
+register_app = typer.Typer(help="Register the MCP server with an AI coding tool", no_args_is_help=True)
 
 
 @register_app.command("claude-code")

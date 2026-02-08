@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-mcp"
-version = "0.1.129"
+version = "0.1.130"
 description = "MCP server for Airbyte connectors - connect AI assistants to 500+ data sources"
 readme = "README.md"
 license = { text = "MIT" }
@@ -53,7 +53,7 @@ dev = [
 ]
 
 [project.scripts]
-adp = "airbyte_agent_mcp.cli:cli"
+adp = "airbyte_agent_mcp.cli:main"
 
 [tool.poe.tasks]
 test = "python -m pytest tests/ -v"

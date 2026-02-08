@@ -8,7 +8,7 @@ from rich.table import Table
 
 from ..models.cli_config import Config, get_config_dir
 
-orgs_app = typer.Typer(add_completion=False, no_args_is_help=True)
+orgs_app = typer.Typer(help="Manage logged-in organizations", no_args_is_help=True)
 
 
 @orgs_app.command("list")

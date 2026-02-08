@@ -15,6 +15,7 @@ from ..connector_utils import (
     get_auth_config_types,
     get_cloud_auth_config_type,
 )
+from ..constants import PACKAGE_PREFIXES
 from ..installer import ConnectorInstallError, get_package_name, install_package, is_git_url, is_local_path
 from ..models.connector_config import (
     ConnectorConfig,
@@ -23,8 +24,6 @@ from ..models.connector_config import (
     connector_params_to_template,
 )
 
-_PACKAGE_PREFIXES = ("airbyte-agent-", "airbyte_agent_")
-
 
 def _connector_name_from_package(package_name: str) -> str:
     """Derive a connector name from a package name.
@@ -32,7 +31,7 @@ def _connector_name_from_package(package_name: str) -> str:
     Strips the ``airbyte-agent-`` / ``airbyte_agent_`` prefix when present.
     """
     lower = package_name.lower()
-    for prefix in _PACKAGE_PREFIXES:
+    for prefix in PACKAGE_PREFIXES:
         if lower.startswith(prefix):
             return package_name[len(prefix) :]
     return package_name
@@ -58,13 +57,13 @@ def _parse_git_url(spec: str) -> dict:
     return result
 
 
-connectors_app = typer.Typer(help="Manage Airbyte agent connectors.", no_args_is_help=True)
-internal_app = typer.Typer(help="Internal commands.", hidden=True)
+connectors_app = typer.Typer(help="Manage Airbyte agent connectors", no_args_is_help=True)
+internal_app = typer.Typer(help="Internal commands", hidden=True)
 connectors_app.add_typer(internal_app, name="internal")
 
 
-@connectors_app.command("list")
-def list_connectors(
+@connectors_app.command("list-oss")
+def list_oss_connectors(
     pattern: Annotated[
         str | None,
         typer.Option("--pattern", "-p", help="Filter connectors by name pattern (e.g., 'salesforce')"),
@@ -88,7 +87,7 @@ def list_connectors(
     table.add_column("Name", style="cyan")
     table.add_column("Package", style="dim")
     table.add_column("Version", style="yellow")
-    table.add_column("ID", style="dim")
+    table.add_column("Connector Definition ID", style="dim")
 
     for c in connectors:
         name = c.get("connector_name", "")
@@ -103,16 +102,76 @@ def list_connectors(
     console.print(f"\n[dim]Total: {len(connectors)} connectors[/dim]")
 
 
+@connectors_app.command("list-cloud")
+def list_cloud_connectors(
+    customer_id: Annotated[
+        str | None,
+        typer.Option("--customer-id", help="Filter by customer ID"),
+    ] = None,
+    customer: Annotated[
+        str | None,
+        typer.Option("--customer", "-c", help="Filter by customer name pattern (e.g. 'acme')"),
+    ] = None,
+) -> None:
+    """List configured cloud connectors."""
+    console = Console()
+    api = get_api()
+
+    with console.status("Fetching cloud connectors..."):
+        if customer_id:
+            connectors = api.list_connector_sources(customer_id)
+            for c in connectors:
+                c["_customer_id"] = customer_id
+        else:
+            customers = api.list_customers()
+            if customer:
+                pattern_lower = customer.lower()
+                customers = [c for c in customers if pattern_lower in c.get("name", "").lower()]
+            connectors = []
+            for cust in customers:
+                for c in api.list_connector_sources(cust["id"]):
+                    c["_customer_id"] = cust["id"]
+                    c["_customer_name"] = cust.get("name", "")
+                    connectors.append(c)
+        registry = registry_lookup()
+
+    if not connectors:
+        console.print("[yellow]No cloud connectors found.[/yellow]")
+        raise typer.Exit(0)
+
+    table = Table()
+    table.add_column("ID", style="cyan")
+    table.add_column("Name", style="green")
+    table.add_column("Connector", style="yellow")
+    table.add_column("Customer", style="dim")
+    table.add_column("Created", style="dim")
+
+    for c in connectors:
+        defn_id = c.get("summarized_source_template", {}).get("actor_definition_id", "")
+        reg = registry.get(defn_id, {})
+        customer_label = c.get("_customer_name") or c.get("_customer_id", "")
+        table.add_row(
+            c.get("id", ""),
+            c.get("name", ""),
+            reg.get("connector_name", ""),
+            customer_label,
+            c.get("created_at", ""),
+        )
+
+    console.print(table)
+    console.print(f"\n[dim]Total: {len(connectors)} connectors[/dim]")
+
+
 @connectors_app.command("configure")
 def configure_connector(
-    connector_id: Annotated[str | None, typer.Option("--connector-id", help="Airbyte Cloud connector ID")] = None,
+    connector_id: Annotated[str | None, typer.Option("--connector-id", "-c", help="Airbyte Cloud connector ID")] = None,
     package: Annotated[
         str | None,
         typer.Option("--package", help="Package to install: PyPI name, local path, or git+https:// URL"),
     ] = None,
     version: Annotated[str | None, typer.Option("--version", "-v", help="Package version (PyPI only)")] = None,
-    output: Annotated[Path | None, typer.Option("--output", "-o", help="Output file path (defaults to stdout)")] = None,
-    overwrite: Annotated[bool, typer.Option("--overwrite", help="Overwrite output file if it already exists")] = False,
+    filename: Annotated[Path | None, typer.Option("--filename", "-f", help="Output file path (auto-generated if not specified)")] = None,
+    overwrite: Annotated[bool, typer.Option("--overwrite", "-o", help="Overwrite output file if it already exists")] = False,
 ) -> None:
     """Configure a connector by installing it and generating a config."""
     console = Console(stderr=True)
@@ -127,11 +186,6 @@ def configure_connector(
 
     if version and package and is_local_path(package):
         console.print("[red]Error: --version can only be used with PyPI packages[/red]")
-        raise typer.Exit(1)
-
-    # Check if output file already exists
-    if output and output.exists() and not overwrite:
-        console.print(f"[red]Error: Output file already exists: {output} (use --overwrite to replace)[/red]")
         raise typer.Exit(1)
 
     try:
@@ -200,12 +254,16 @@ def configure_connector(
                 lines.extend(["#", ""])
                 config_yaml += "\n".join(lines)
 
-        if output:
-            output.parent.mkdir(parents=True, exist_ok=True)
-            output.write_text(config_yaml)
-            console.print(f"[green]✓[/green] Configuration saved to: {output}")
-        else:
-            print(config_yaml, end="")
+        if not filename:
+            if connector_id:
+                source_type = "cloud"
+            elif package and is_local_path(package):
+                source_type = "path"
+            elif package and is_git_url(package):
+                source_type = "git"
+            else:
+                source_type = "package"
+            filename = Path(f"connector-{connector_name}-{source_type}.yaml")
 
     except ConnectorInstallError as e:
         console.print(f"[red]Installation error: {e}[/red]")
@@ -213,6 +271,14 @@ def configure_connector(
     except Exception as e:
         console.print(f"[red]Error: {e}[/red]")
         raise typer.Exit(1) from None
+
+    if filename.exists() and not overwrite:
+        console.print(f"[red]Error: Output file already exists: {filename} (use -o to overwrite)[/red]")
+        raise typer.Exit(1)
+
+    filename.parent.mkdir(parents=True, exist_ok=True)
+    filename.write_text(config_yaml)
+    console.print(f"[green]✓[/green] Configuration saved to: {filename}")
 
 
 @internal_app.command("auth-schemas")
