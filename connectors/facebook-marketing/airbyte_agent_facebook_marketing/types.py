@@ -36,6 +36,10 @@ class CampaignsListParams(TypedDict):
     limit: NotRequired[int]
     after: NotRequired[str]
 
+class CampaignsCreateParams(TypedDict):
+    """Parameters for campaigns.create operation"""
+    account_id: str
+
 class AdSetsListParams(TypedDict):
     """Parameters for ad_sets.list operation"""
     account_id: str
@@ -43,12 +47,20 @@ class AdSetsListParams(TypedDict):
     limit: NotRequired[int]
     after: NotRequired[str]
 
+class AdSetsCreateParams(TypedDict):
+    """Parameters for ad_sets.create operation"""
+    account_id: str
+
 class AdsListParams(TypedDict):
     """Parameters for ads.list operation"""
     account_id: str
     fields: NotRequired[str]
     limit: NotRequired[int]
     after: NotRequired[str]
+
+class AdsCreateParams(TypedDict):
+    """Parameters for ads.create operation"""
+    account_id: str
 
 class AdCreativesListParams(TypedDict):
     """Parameters for ad_creatives.list operation"""
@@ -99,15 +111,27 @@ class CampaignsGetParams(TypedDict):
     campaign_id: str
     fields: NotRequired[str]
 
+class CampaignsUpdateParams(TypedDict):
+    """Parameters for campaigns.update operation"""
+    campaign_id: str
+
 class AdSetsGetParams(TypedDict):
     """Parameters for ad_sets.get operation"""
     adset_id: str
     fields: NotRequired[str]
 
+class AdSetsUpdateParams(TypedDict):
+    """Parameters for ad_sets.update operation"""
+    adset_id: str
+
 class AdsGetParams(TypedDict):
     """Parameters for ads.get operation"""
     ad_id: str
     fields: NotRequired[str]
+
+class AdsUpdateParams(TypedDict):
+    """Parameters for ads.update operation"""
+    ad_id: str
 
 # ===== SEARCH TYPES =====
 

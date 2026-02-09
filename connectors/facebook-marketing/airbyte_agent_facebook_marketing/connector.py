@@ -23,13 +23,19 @@ from .types import (
     AdAccountGetParams,
     AdAccountsListParams,
     AdCreativesListParams,
+    AdSetsCreateParams,
     AdSetsGetParams,
     AdSetsListParams,
+    AdSetsUpdateParams,
+    AdsCreateParams,
     AdsGetParams,
     AdsInsightsListParams,
     AdsListParams,
+    AdsUpdateParams,
+    CampaignsCreateParams,
     CampaignsGetParams,
     CampaignsListParams,
+    CampaignsUpdateParams,
     CurrentUserGetParams,
     CustomConversionsListParams,
     ImagesListParams,
@@ -78,13 +84,17 @@ from .models import (
     Ad,
     AdAccount,
     AdAccountListItem,
+    AdCreateResponse,
     AdCreative,
     AdSet,
+    AdSetCreateResponse,
     AdsInsight,
     Campaign,
+    CampaignCreateResponse,
     CurrentUser,
     CustomConversion,
     Image,
+    UpdateResponse,
     Video,
     AirbyteSearchHit,
     AirbyteSearchResult,
@@ -155,7 +165,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.15"
+    connector_version = "1.0.16"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -163,8 +173,11 @@ class FacebookMarketingConnector:
         ("current_user", "get"): None,
         ("ad_accounts", "list"): True,
         ("campaigns", "list"): True,
+        ("campaigns", "create"): None,
         ("ad_sets", "list"): True,
+        ("ad_sets", "create"): None,
         ("ads", "list"): True,
+        ("ads", "create"): None,
         ("ad_creatives", "list"): True,
         ("ads_insights", "list"): True,
         ("ad_account", "get"): None,
@@ -172,8 +185,11 @@ class FacebookMarketingConnector:
         ("images", "list"): True,
         ("videos", "list"): True,
         ("campaigns", "get"): None,
+        ("campaigns", "update"): None,
         ("ad_sets", "get"): None,
+        ("ad_sets", "update"): None,
         ("ads", "get"): None,
+        ("ads", "update"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -182,8 +198,11 @@ class FacebookMarketingConnector:
         ('current_user', 'get'): {'fields': 'fields'},
         ('ad_accounts', 'list'): {'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('campaigns', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('campaigns', 'create'): {'account_id': 'account_id'},
         ('ad_sets', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('ad_sets', 'create'): {'account_id': 'account_id'},
         ('ads', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('ads', 'create'): {'account_id': 'account_id'},
         ('ad_creatives', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('ads_insights', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'date_preset': 'date_preset', 'time_range': 'time_range', 'level': 'level', 'time_increment': 'time_increment', 'limit': 'limit', 'after': 'after'},
         ('ad_account', 'get'): {'account_id': 'account_id', 'fields': 'fields'},
@@ -191,8 +210,11 @@ class FacebookMarketingConnector:
         ('images', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('videos', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('campaigns', 'get'): {'campaign_id': 'campaign_id', 'fields': 'fields'},
+        ('campaigns', 'update'): {'campaign_id': 'campaign_id'},
         ('ad_sets', 'get'): {'adset_id': 'adset_id', 'fields': 'fields'},
+        ('ad_sets', 'update'): {'adset_id': 'adset_id'},
         ('ads', 'get'): {'ad_id': 'ad_id', 'fields': 'fields'},
+        ('ads', 'update'): {'ad_id': 'ad_id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -335,6 +357,14 @@ class FacebookMarketingConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["campaigns"],
+        action: Literal["create"],
+        params: "CampaignsCreateParams"
+    ) -> "CampaignCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["ad_sets"],
         action: Literal["list"],
         params: "AdSetsListParams"
@@ -343,10 +373,26 @@ class FacebookMarketingConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["ad_sets"],
+        action: Literal["create"],
+        params: "AdSetsCreateParams"
+    ) -> "AdSetCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["ads"],
         action: Literal["list"],
         params: "AdsListParams"
     ) -> "AdsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["create"],
+        params: "AdsCreateParams"
+    ) -> "AdCreateResponse": ...
 
     @overload
     async def execute(
@@ -407,10 +453,26 @@ class FacebookMarketingConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["campaigns"],
+        action: Literal["update"],
+        params: "CampaignsUpdateParams"
+    ) -> "UpdateResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["ad_sets"],
         action: Literal["get"],
         params: "AdSetsGetParams"
     ) -> "AdSet": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_sets"],
+        action: Literal["update"],
+        params: "AdSetsUpdateParams"
+    ) -> "UpdateResponse": ...
 
     @overload
     async def execute(
@@ -420,19 +482,27 @@ class FacebookMarketingConnector:
         params: "AdsGetParams"
     ) -> "Ad": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["update"],
+        params: "AdsUpdateParams"
+    ) -> "UpdateResponse": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "search"],
+        action: Literal["get", "list", "create", "update", "search"],
         params: Mapping[str, Any]
     ) -> FacebookMarketingExecuteResult[Any] | FacebookMarketingExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "search"],
+        action: Literal["get", "list", "create", "update", "search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1044,6 +1114,31 @@ class CampaignsQuery:
 
 
 
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> CampaignCreateResponse:
+        """
+        Creates a new ad campaign in the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            CampaignCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "create", params)
+        return result
+
+
+
     async def get(
         self,
         campaign_id: str,
@@ -1068,6 +1163,31 @@ class CampaignsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("campaigns", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        campaign_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad campaign
+
+        Args:
+            campaign_id: The campaign ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "campaign_id": campaign_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "update", params)
         return result
 
 
@@ -1185,6 +1305,31 @@ class AdSetsQuery:
 
 
 
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> AdSetCreateResponse:
+        """
+        Creates a new ad set in the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdSetCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "create", params)
+        return result
+
+
+
     async def get(
         self,
         adset_id: str,
@@ -1209,6 +1354,31 @@ class AdSetsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("ad_sets", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        adset_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad set
+
+        Args:
+            adset_id: The ad set ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "adset_id": adset_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "update", params)
         return result
 
 
@@ -1327,6 +1497,31 @@ class AdsQuery:
 
 
 
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> AdCreateResponse:
+        """
+        Creates a new ad in the specified ad account. Note - requires a Facebook Page to be connected to the ad account.
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "create", params)
+        return result
+
+
+
     async def get(
         self,
         ad_id: str,
@@ -1351,6 +1546,31 @@ class AdsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("ads", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        ad_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad
+
+        Args:
+            ad_id: The ad ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "ad_id": ad_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "update", params)
         return result
 
 
