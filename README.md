@@ -76,10 +76,7 @@ cp -r /tmp/airbyte-skills/skills/airbyte-agent-connectors .claude/skills/
 rm -rf /tmp/airbyte-skills
 ```
 
-**Or install via marketplace:**
-```
-/plugin marketplace add airbytehq/airbyte-agent-connectors
-```
+Once installed, invoke it in Claude Code with `/airbyte-agent-connectors`.
 
 See the [full skill documentation](skills/airbyte-agent-connectors/SKILL.md) for setup patterns, authentication guides, and code examples.
 
