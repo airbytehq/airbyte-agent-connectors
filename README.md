@@ -68,13 +68,16 @@ If you're building AI agents with Airbyte Agent Connectors and want to share ide
 
 This repo includes a Claude Code skill that provides documentation and setup guidance for all 21 connectors.
 
-**Install via plugin marketplace (recommended):**
+**Install via plugin marketplace:**
 
 In Claude Code, run:
 ```
 /plugin marketplace add airbytehq/airbyte-agent-connectors
 ```
-Then open `/plugin` and install from the marketplace.
+Then install the plugin:
+```
+/plugin install airbyte-agent-connectors@airbyte-agent-connectors
+```
 
 **Or install manually:**
 ```bash
