@@ -2,6 +2,19 @@
 
 Airbyte Agent Connectors use a unified entity-action model for interacting with third-party APIs. This document explains the core concepts, available actions, and how to work with results.
 
+## Contents
+
+- [Core Concepts](#core-concepts)
+- [Available Actions](#available-actions)
+- [Execution Result](#execution-result)
+- [Pagination](#pagination)
+- [Field Selection](#field-selection)
+- [Validation](#validation)
+- [Error Types](#error-types)
+- [Using with Agent Frameworks](#using-with-agent-frameworks)
+- [Framework Quick Start](#framework-quick-start)
+- [Discovering Available Entities and Actions](#discovering-available-entities-and-actions)
+
 ## Core Concepts
 
 ### Entity-Action Model
@@ -452,6 +465,41 @@ async def get_customer(customer_id: str) -> str:
     result = await connector.execute("customers", "get", {"id": customer_id})
     return json.dumps(result.data) if result.success else f"Error: {result.error}"
 ```
+
+### Framework Quick Start
+
+#### PydanticAI
+
+```python
+from pydantic_ai import Agent
+
+agent = Agent("openai:gpt-4o", system_prompt="You help with GitHub data.")
+
+@agent.tool_plain
+async def github_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+#### LangChain
+
+```python
+from langchain.tools import StructuredTool
+import asyncio
+
+# For sync contexts, wrap the async call
+def execute_sync(entity: str, action: str, params: dict):
+    return asyncio.get_event_loop().run_until_complete(
+        connector.execute(entity, action, params)
+    )
+
+github_tool = StructuredTool.from_function(
+    func=execute_sync,
+    name="github",
+    description="Execute GitHub operations"
+)
+```
+
+**Note:** If you're already in an async context, use LangChain's async tool support instead.
 
 ## Discovering Available Entities and Actions
 

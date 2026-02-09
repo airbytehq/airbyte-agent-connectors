@@ -2,6 +2,21 @@
 
 Set up connectors entirely from the terminal or via HTTP APIs—no UI required.
 
+## Contents
+
+- [When to Use This Guide](#when-to-use-this-guide)
+- [Prerequisites](#prerequisites)
+- [Step 1: Get Application Token](#step-1-get-application-token)
+- [Choose Your Pattern](#choose-your-pattern)
+- [Pattern A: Scoped Token Flow](#pattern-a-scoped-token-flow-recommended-for-api-key-connectors)
+- [Pattern B: Workspace Flow](#pattern-b-workspace-flow-for-oauth-connectors)
+- [Pattern C: UI Template Registration](#pattern-c-ui-template-registration)
+- [Connector Definition IDs](#connector-definition-ids)
+- [Token Reference](#token-reference)
+- [SDK vs HTTP API vs UI Decision Guide](#sdk-vs-http-api-vs-ui-decision-guide)
+- [Troubleshooting](#troubleshooting)
+- [Related Documentation](#related-documentation)
+
 ## When to Use This Guide
 
 | If you want to... | Use |
@@ -81,7 +96,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <SCOPED_TOKEN>' \
   -d '{
-    "connector_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "my-stripe-connector",
     "auth_config": {
       "api_key": "<YOUR_API_KEY>"

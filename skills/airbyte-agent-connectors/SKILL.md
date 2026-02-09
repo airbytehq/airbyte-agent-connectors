@@ -1,15 +1,17 @@
 ---
 name: airbyte-agent-connectors
 description: |
-  Documentation and setup guidance for Airbyte Agent Connectors — strongly typed
-  Python packages for accessing 21+ third-party APIs (Salesforce, HubSpot, GitHub,
-  Slack, Stripe, Jira, and more). Covers Platform Mode (Airbyte Cloud) and OSS Mode
-  (local SDK). Includes authentication, entity-action APIs, PydanticAI/LangChain
-  integration, and optional MCP integration for Claude Desktop/Code.
+  Sets up and operates Airbyte Agent Connectors — strongly typed Python packages
+  for accessing 21+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
+  Jira, and more) through a unified entity-action interface. Use when the user wants
+  to connect to a SaaS API, set up an Airbyte connector, integrate third-party data
+  into an AI agent, or configure MCP tools for Claude. Covers Platform Mode (Airbyte
+  Cloud) and OSS Mode (local SDK).
 license: Elastic-2.0
+compatibility: Requires Python 3.11+. Recommends uv for package management.
 metadata:
   author: Airbyte
-  version: 1.0.0
+  version: 1.1.0
   repo: https://github.com/airbytehq/airbyte-agent-connectors
   mcp-server: airbyte-agent-mcp
 ---
@@ -17,6 +19,8 @@ metadata:
 # Airbyte Agent Connectors
 
 Airbyte Agent Connectors let AI agents call third-party APIs through strongly typed, well-documented tools. Each connector is a standalone Python package.
+
+> **Terminology:** **Platform Mode** = Airbyte Cloud at app.airbyte.ai (managed credentials, UI visibility). **OSS Mode** = local Python SDK (self-managed credentials, no cloud dependency). **Definition ID** = UUID that identifies a connector type in the Airbyte API (used in `definition_id` fields, not `connector_type` or `connector_definition_id`).
 
 > **Important:** This skill provides documentation and setup guidance. When helping users set up connectors, follow the documented workflows in the "Common Workflows" section below. Do NOT attempt to import Python modules, verify package installations, or run code to check configurations—simply guide users through the steps using the code examples provided in this documentation.
 
@@ -40,33 +44,33 @@ Use when:
 
 ---
 
-## Supported Connectors Check
+## Supported Connectors
 
-**IMPORTANT:** Before proceeding with any setup, verify the requested connector is in this list:
+**IMPORTANT:** Before proceeding with any setup, verify the requested connector is in this list. All 21 connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
 
-| Connector | Auth Type |
-|-----------|-----------|
-| Airtable | API Key |
-| Amazon Ads | OAuth |
-| Asana | API Key |
-| Facebook Marketing | OAuth |
-| GitHub | PAT |
-| Gong | API Key |
-| Google Drive | OAuth |
-| Greenhouse | API Key |
-| HubSpot | API Key or OAuth |
-| Intercom | API Key |
-| Jira | API Key |
-| Klaviyo | API Key |
-| Linear | API Key |
-| Mailchimp | API Key |
-| Orb | API Key |
-| Salesforce | OAuth |
-| Shopify | API Key |
-| Slack | Bot Token |
-| Stripe | API Key |
-| Zendesk Chat | OAuth |
-| Zendesk Support | API Key |
+| Connector | Package | Auth Type | Key Entities |
+|-----------|---------|-----------|--------------|
+| [Airtable](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/airtable) | `airbyte-agent-airtable` | API Key | bases, tables, records |
+| [Amazon Ads](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/amazon-ads) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
+| [Asana](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/asana) | `airbyte-agent-asana` | PAT | projects, tasks, users |
+| [Facebook Marketing](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/facebook-marketing) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
+| [GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
+| [Gong](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong) | `airbyte-agent-gong` | API Key | calls, users, deals |
+| [Google Drive](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/google-drive) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
+| [Greenhouse](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/greenhouse) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
+| [HubSpot](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
+| [Intercom](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/intercom) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
+| [Jira](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/jira) | `airbyte-agent-jira` | API Key | issues, projects, users |
+| [Klaviyo](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/klaviyo) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
+| [Linear](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/linear) | `airbyte-agent-linear` | API Key | issues, projects, teams |
+| [Mailchimp](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/mailchimp) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
+| [Orb](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/orb) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
+| [Salesforce](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/salesforce) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
+| [Shopify](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/shopify) | `airbyte-agent-shopify` | API Key | orders, products, customers |
+| [Slack](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/slack) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
+| [Stripe](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
+| [Zendesk Chat](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-chat) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
+| [Zendesk Support](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
 
 **If the connector is NOT in this list:** Inform the user that this connector isn't available yet. Point them to:
 - GitHub issues: https://github.com/airbytehq/airbyte-agent-connectors/issues
@@ -189,38 +193,6 @@ claude mcp add airbyte-agent-mcp --scope project
 
 ---
 
-## Available Connectors
-
-> **Gating Check:** If the user requests a connector NOT in this list, inform them it's not yet supported and suggest they open a GitHub issue at https://github.com/airbytehq/airbyte-agent-connectors/issues.
-
-All 21 connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
-
-| Connector | Package | Auth Type | Key Entities |
-|-----------|---------|-----------|--------------|
-| [Airtable](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/airtable) | `airbyte-agent-airtable` | API Key | bases, tables, records |
-| [Amazon Ads](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/amazon-ads) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
-| [Asana](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/asana) | `airbyte-agent-asana` | PAT | projects, tasks, users |
-| [Facebook Marketing](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/facebook-marketing) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
-| [GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
-| [Gong](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong) | `airbyte-agent-gong` | API Key | calls, users, deals |
-| [Google Drive](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/google-drive) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
-| [Greenhouse](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/greenhouse) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
-| [HubSpot](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
-| [Intercom](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/intercom) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
-| [Jira](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/jira) | `airbyte-agent-jira` | API Key | issues, projects, users |
-| [Klaviyo](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/klaviyo) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
-| [Linear](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/linear) | `airbyte-agent-linear` | API Key | issues, projects, teams |
-| [Mailchimp](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/mailchimp) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
-| [Orb](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/orb) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
-| [Salesforce](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/salesforce) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
-| [Shopify](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/shopify) | `airbyte-agent-shopify` | API Key | orders, products, customers |
-| [Slack](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/slack) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
-| [Stripe](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
-| [Zendesk Chat](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-chat) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
-| [Zendesk Support](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
-
----
-
 ## Entity-Action API Pattern
 
 All connectors use the same interface:
@@ -337,247 +309,45 @@ auth_config=SalesforceOAuthConfig(
 
 ---
 
-## Platform Mode: Complete Setup Checklist
+## Platform Mode: Full Setup
 
-Follow these steps IN ORDER. Do not skip ahead.
-
-### Prerequisites
-- [ ] Airbyte Cloud account at app.airbyte.ai
-- [ ] Connector credentials (API key, OAuth app, etc.)
-
-### Step 1: Get Application Token (REQUIRED)
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
-  -H 'Content-Type: application/json' \
-  -d '{"client_id": "<CLIENT_ID>", "client_secret": "<CLIENT_SECRET>"}'
-```
-Save the `access_token` as APPLICATION_TOKEN.
-
-> **Token TTL:** Tokens expire after 15 minutes. Re-run this step if you get unauthorized errors later.
-
-### Step 2: Detect Workspace
-```bash
-curl 'https://api.airbyte.ai/api/v1/workspaces' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>'
-```
-- If ONE workspace: use it automatically
-- If MULTIPLE: ask user which workspace to use
-
-### Step 3: Check if Template Exists (CRITICAL)
-```bash
-curl 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>'
-```
-Look for an existing template for your connector.
-- If template EXISTS: skip to Step 5
-- If NO template: proceed to Step 4
-
-### Step 4: Register Template (Required if none exists)
-
-**You need the Definition ID for your connector:**
-
-| Connector | Definition ID |
-|-----------|---------------|
-| Airtable | `14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212` |
-| Amazon Ads | `c6b0a29e-1da9-4512-9002-7bfd0cba2246` |
-| Asana | `d0243522-dccf-4978-8ba0-37ed47a0bdbf` |
-| Facebook Marketing | `e7778cfc-e97c-4458-9ecb-b4f2bba8946c` |
-| GitHub | `ef69ef6e-aa7f-4af1-a01d-ef775033524e` |
-| Gong | `32382e40-3b49-4b99-9c5c-4076501914e7` |
-| Google Drive | `9f8dda77-1048-4368-815b-269bf54ee9b8` |
-| Greenhouse | `59f1e50a-331f-4f09-b3e8-2e8d4d355f44` |
-| HubSpot | `36c891d9-4bd9-43ac-bad2-10e12756272c` |
-| Intercom | `d8313939-3782-41b0-be29-b3ca20d8dd3a` |
-| Jira | `68e63de2-bb83-4c7e-93fa-a8a9051e3993` |
-| Klaviyo | `95e8cffd-b8c4-4039-968e-d32fb4a69bde` |
-| Linear | `1c5d8316-ed42-4473-8fbc-2626f03f070c` |
-| Mailchimp | `b03a9f3e-22a5-11eb-adc1-0242ac120002` |
-| Orb | `7f0455fb-4518-4ec0-b7a3-d808bf8081cc` |
-| Salesforce | `b117307c-14b6-41aa-9422-947e34922962` |
-| Shopify | `9da77001-af33-4bcd-be46-6252bf9342b9` |
-| Slack | `c2281cee-86f9-4a86-bb48-d23286b4c7bd` |
-| Stripe | `e094cb9a-26de-4645-8761-65c0c425d1de` |
-| Zendesk Chat | `40d24d0f-b8f9-4fe0-9e6c-b06c0f3f45e4` |
-| Zendesk Support | `79c1aa37-dae3-42ae-b333-d1c105477715` |
-
-Register the template:
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
-  -d '{
-    "actor_definition_id": "<DEFINITION_ID>",
-    "name": "<CONNECTOR_NAME>",
-    "original_source_template_id": "",
-    "partial_default_config": {},
-    "mode": "DIRECT"
-  }'
-```
-Use `"mode": "DIRECT"` for all connectors. If the API rejects the mode, check the error for accepted values.
-
-**Idempotency Note:** If you get "already exists" error, a template with that name already exists. Either:
-- Use a different name, OR
-- Skip this step and use the existing template
-
-### Step 5: Create Connector Instance
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "external_user_id": "<WORKSPACE_NAME>",
-    "workspace_name": "<WORKSPACE_NAME>",
-    "definition_id": "<DEFINITION_ID>",
-    "name": "my-connector",
-    "credentials": {
-      "api_key": "..."
-    }
-  }'
-```
-- `external_user_id`: Your identifier for this user/tenant (use workspace name for simplicity)
-- `definition_id`: The connector definition ID from the table in Step 4
-- **Note:** Do NOT include discriminator fields like `auth_type` or `credentials_title` in credentials — the API infers auth type and rejects these.
-
-> **Note:** `create_hosted()` has a known URL bug. Use the HTTP API above until the SDK is updated.
-
-### Step 6: Verify with Test Query
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors/<CONNECTOR_ID>/execute' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
-  -H 'Content-Type: application/json' \
-  -d '{"entity": "users", "action": "list", "params": {"limit": 1}}'
-```
-
-### Step 7: Create .env File
-Create `.env` in the connector directory:
-```bash
-AIRBYTE_CLIENT_ID=...
-AIRBYTE_CLIENT_SECRET=...
-# Connector-specific credentials
-API_KEY=...
-```
-
-**Confirm**: "Connector created and verified! Pulled [N] records successfully."
+For the complete 7-step HTTP API workflow, see [Platform Setup Checklist](references/platform-setup.md#complete-setup-checklist).
 
 ---
 
 ## Handling "Already Exists" Errors
 
-When running the Platform workflow multiple times, you may encounter:
-
-| Error | Cause | Solution |
-|-------|-------|----------|
-| "Template already exists" | Template with this name registered | Use existing template or choose different name |
-| "Connector already exists" | `external_user_id` already used | Retrieve existing connector instead of creating |
-| "Workspace already exists" | Workspace with this name exists | Use existing workspace |
-
-**Retrieving an existing connector:**
-```python
-# If connector was previously created, just reference it:
-connector = StripeConnector(
-    external_user_id="user_123",  # Same ID used during creation
-    airbyte_client_id="...",
-    airbyte_client_secret="..."
-)
-# This retrieves the existing connector - no re-auth needed
-```
+For solutions to "already exists" errors during Platform Mode setup, see [Troubleshooting](references/troubleshooting.md#handling-already-exists-errors).
 
 ---
 
 ## OSS Mode: Setup Workflow
 
-### OSS User: "Set up a [Connector] connector"
-
-1. Ask for connector credentials (e.g., GitHub token, Stripe API key)
-2. Guide local SDK usage:
-   ```python
-   from airbyte_agent_github import GithubConnector
-   from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
-
-   connector = GithubConnector(
-       auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
-   )
-   ```
-3. Optionally: Guide MCP server setup for Claude integration
+For the step-by-step OSS setup walkthrough, see [OSS Setup Reference](references/oss-setup.md#setup-workflow).
 
 ---
 
 ## File Placement
 
-> **Important:** When working in the `airbyte-agent-connectors` repo, place ALL files (`.env`, scripts, examples) in the specific connector directory, NOT the repo root.
-
-| Working in... | Put files in... | Example |
-|---------------|-----------------|---------|
-| `airbyte-agent-connectors` repo | `connectors/{connector}/` | `connectors/gong/.env`, `connectors/gong/example.py` |
-| Your own project | Project root | `.env`, `main.py` |
-
-**In the airbyte-agent-connectors repo:**
-- `.env` files go in `connectors/{connector}/.env`
-- Test scripts go in `connectors/{connector}/`
-- Virtual environments should be created in the connector directory if needed
-- Each connector directory is self-contained
+When working in the `airbyte-agent-connectors` repo, place files in the connector directory (not the repo root). See [Getting Started](references/getting-started.md#file-placement) for details.
 
 ---
 
 ## Framework Integration
 
-### PydanticAI
-
-```python
-from pydantic_ai import Agent
-
-agent = Agent("openai:gpt-4o", system_prompt="You help with GitHub data.")
-
-@agent.tool_plain
-async def github_execute(entity: str, action: str, params: dict | None = None):
-    return await connector.execute(entity, action, params or {})
-```
-
-### LangChain
-
-```python
-from langchain.tools import StructuredTool
-import asyncio
-
-# For sync contexts, wrap the async call
-def execute_sync(entity: str, action: str, params: dict):
-    return asyncio.get_event_loop().run_until_complete(
-        connector.execute(entity, action, params)
-    )
-
-github_tool = StructuredTool.from_function(
-    func=execute_sync,
-    name="github",
-    description="Execute GitHub operations"
-)
-```
-
-**Note:** If you're already in an async context, use LangChain's async tool support instead.
+For PydanticAI and LangChain integration examples, see [Entity-Action API Reference](references/entity-action-api.md#framework-quick-start).
 
 ---
 
 ## Security Best Practices
 
-- **Never commit credentials** to git
-- Use `.env` files for development (add to `.gitignore`)
-- Use secret managers for production (AWS Secrets Manager, HashiCorp Vault)
-- Rotate credentials regularly
-
-```python
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
-connector = StripeConnector(
-    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"])
-)
-```
+For credential security guidelines, `.env` file patterns, and production recommendations, see [Authentication Reference](references/authentication.md#security-best-practices).
 
 ---
 
 ## Reference Documentation
 
-> **Quick Reference:** Connector Definition IDs are inlined in the Platform Mode checklist above (Step 4). For additional HTTP API examples, see [Programmatic Setup](references/programmatic-setup.md).
+> **Quick Reference:** Connector Definition IDs are in the [Platform Setup Checklist](references/platform-setup.md#complete-setup-checklist) and [Programmatic Setup](references/programmatic-setup.md#connector-definition-ids).
 
 | Topic | Link |
 |-------|------|
@@ -589,6 +359,7 @@ connector = StripeConnector(
 | Programmatic Setup | [references/programmatic-setup.md](references/programmatic-setup.md) |
 | MCP Integration | [references/mcp-integration.md](references/mcp-integration.md) |
 | Troubleshooting | [references/troubleshooting.md](references/troubleshooting.md) |
+| Demo Walkthrough | [references/demo-walkthrough.md](references/demo-walkthrough.md) |
 
 ## Per-Connector Documentation
 

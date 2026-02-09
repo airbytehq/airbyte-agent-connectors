@@ -2,6 +2,18 @@
 
 This guide covers common errors and solutions when working with Airbyte Agent Connectors.
 
+## Contents
+
+- [HTTP Errors](#http-errors)
+- [Retry Configuration](#retry-configuration)
+- [OAuth Token Refresh Issues](#oauth-token-refresh-issues)
+- [Common Setup Mistakes](#common-setup-mistakes)
+- [MCP Server Issues](#mcp-server-issues)
+- [Debugging Tips](#debugging-tips)
+- [SDK Known Issues](#sdk-known-issues)
+- [Handling "Already Exists" Errors](#handling-already-exists-errors)
+- [Getting Help](#getting-help)
+
 ## HTTP Errors
 
 ### 401 Unauthorized
@@ -485,6 +497,27 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
 ```
 
 ---
+
+## Handling "Already Exists" Errors
+
+When running the Platform Mode workflow multiple times, you may encounter:
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "Template already exists" | Template with this name registered | Use existing template or choose different name |
+| "Connector already exists" | `external_user_id` already used | Retrieve existing connector instead of creating |
+| "Workspace already exists" | Workspace with this name exists | Use existing workspace |
+
+**Retrieving an existing connector:**
+```python
+# If connector was previously created, just reference it:
+connector = StripeConnector(
+    external_user_id="user_123",  # Same ID used during creation
+    airbyte_client_id="...",
+    airbyte_client_secret="..."
+)
+# This retrieves the existing connector - no re-auth needed
+```
 
 ## Getting Help
 

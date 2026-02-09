@@ -2,9 +2,24 @@
 
 This guide covers using Airbyte Agent Connectors directly via the Python SDK without platform integration. Use this approach when you want to run connectors locally with your own credential management.
 
+## Contents
+
+- [When to Use OSS Mode](#when-to-use-oss-mode)
+- [Installation](#installation)
+- [Basic Usage](#basic-usage)
+- [OAuth Connectors (Local Mode)](#oauth-connectors-local-mode)
+- [Environment Setup](#environment-setup)
+- [MCP Server Setup for Claude](#mcp-server-setup-for-claude)
+- [Agent Framework Integration](#agent-framework-integration)
+- [Credential Security Best Practices](#credential-security-best-practices)
+- [Common Operations Quick Reference](#common-operations-quick-reference)
+- [Troubleshooting](#troubleshooting)
+- [Setup Workflow](#setup-workflow)
+- [Related Documentation](#related-documentation)
+
 ## When to Use OSS Mode
 
-Use OSS mode when you want:
+Use OSS Mode when you want:
 - Quick development and prototyping
 - Self-hosted deployments
 - Single-tenant applications
@@ -126,7 +141,7 @@ result = await connector.execute("contacts", "list", {"limit": 100})
 
 ## OAuth Connectors (Local Mode)
 
-For OAuth connectors in OSS mode, you need to handle the OAuth flow yourself and provide the tokens directly:
+For OAuth connectors in OSS Mode, you need to handle the OAuth flow yourself and provide the tokens directly:
 
 ### Salesforce with OAuth
 
@@ -415,6 +430,22 @@ await connector.execute("customers", "create", {"email": "user@example.com", "na
 - Verify uv is installed: `uv --version`
 - Check paths in configuration are correct
 - Test manually: `cd airbyte-agent-mcp && uv run airbyte_agent_mcp`
+
+## Setup Workflow
+
+### OSS User: "Set up a [Connector] connector"
+
+1. Ask for connector credentials (e.g., GitHub token, Stripe API key)
+2. Guide local SDK usage:
+   ```python
+   from airbyte_agent_github import GithubConnector
+   from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
+
+   connector = GithubConnector(
+       auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
+   )
+   ```
+3. Optionally: Guide MCP server setup for Claude integration
 
 ## Related Documentation
 
