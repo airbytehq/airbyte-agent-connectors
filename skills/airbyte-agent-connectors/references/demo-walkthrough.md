@@ -293,7 +293,7 @@ Terminal output:
 
 ### What Happened Behind the Scenes
 
-Claude followed the [Platform Mode Complete Setup Checklist](../SKILL.md#platform-mode-complete-setup-checklist) end-to-end:
+Claude followed the [Platform Mode Complete Setup Checklist](platform-setup.md#complete-setup-checklist) end-to-end:
 
 1. **Token acquisition** -- exchanged client credentials for an application token
 2. **Workspace detection** -- found one workspace and used it automatically
@@ -513,7 +513,7 @@ claude mcp add airbyte-agent-mcp --scope project
 
 ### What Happened Behind the Scenes
 
-Claude followed the [OSS Mode Quick Start](../SKILL.md#oss-mode-quick-start) workflow:
+Claude followed the [OSS Mode Setup Workflow](oss-setup.md#setup-workflow) workflow:
 
 1. **Package installation** -- `uv add airbyte-agent-github` pulled the connector and its dependencies
 2. **Credential setup** -- created `.env` with the GitHub token (never hardcoded in source)
