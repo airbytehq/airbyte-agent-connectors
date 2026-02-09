@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "airbyte-agent-connectors",
-      "source": ".",
+      "source": "./",
       "description": "Give your AI agents access to 21+ third-party APIs through strongly typed, well-documented tools."
     }
   ]
