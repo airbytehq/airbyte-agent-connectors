@@ -9,10 +9,15 @@ Once installed, Claude gains the knowledge to help you set up and use Airbyte Ag
 
 ## Install
 
-### Via Claude Code CLI
+### Via plugin marketplace
 
-```bash
-claude skills add airbytehq/airbyte-agent-connectors
+In Claude Code, run:
+```
+/plugin marketplace add airbytehq/airbyte-agent-connectors
+```
+Then install the plugin:
+```
+/plugin install airbyte-agent-connectors@airbyte-agent-connectors
 ```
 
 ### Manual
