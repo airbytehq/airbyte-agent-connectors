@@ -54,15 +54,6 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
-
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -72,6 +63,15 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
+
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -511,6 +511,104 @@ class AdCreativeRef(BaseModel):
 
     id: Union[str | None, Any] = Field(default=None)
     creative_id: Union[str | None, Any] = Field(default=None)
+
+class CampaignCreateParams(BaseModel):
+    """Parameters for creating a new campaign"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    objective: Union[str, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    special_ad_categories: Union[str, Any] = Field(default=None)
+    daily_budget: Union[str | None, Any] = Field(default=None)
+    lifetime_budget: Union[str | None, Any] = Field(default=None)
+    bid_strategy: Union[str | None, Any] = Field(default=None)
+    is_adset_budget_sharing_enabled: Union[bool | None, Any] = Field(default=None)
+
+class CampaignCreateResponse(BaseModel):
+    """Response from creating a campaign"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+
+class CampaignUpdateParams(BaseModel):
+    """Parameters for updating a campaign"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    status: Union[str | None, Any] = Field(default=None)
+    daily_budget: Union[str | None, Any] = Field(default=None)
+    lifetime_budget: Union[str | None, Any] = Field(default=None)
+    bid_strategy: Union[str | None, Any] = Field(default=None)
+    spend_cap: Union[str | None, Any] = Field(default=None)
+
+class UpdateResponse(BaseModel):
+    """Generic response from update operations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    success: Union[bool, Any] = Field(default=None)
+
+class AdSetCreateParams(BaseModel):
+    """Parameters for creating a new ad set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    campaign_id: Union[str, Any] = Field(default=None)
+    daily_budget: Union[str | None, Any] = Field(default=None)
+    lifetime_budget: Union[str | None, Any] = Field(default=None)
+    billing_event: Union[str, Any] = Field(default=None)
+    optimization_goal: Union[str, Any] = Field(default=None)
+    targeting: Union[str, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    start_time: Union[str | None, Any] = Field(default=None)
+    end_time: Union[str | None, Any] = Field(default=None)
+    bid_amount: Union[str | None, Any] = Field(default=None)
+
+class AdSetCreateResponse(BaseModel):
+    """Response from creating an ad set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+
+class AdSetUpdateParams(BaseModel):
+    """Parameters for updating an ad set"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    status: Union[str | None, Any] = Field(default=None)
+    daily_budget: Union[str | None, Any] = Field(default=None)
+    lifetime_budget: Union[str | None, Any] = Field(default=None)
+    targeting: Union[str | None, Any] = Field(default=None)
+    bid_amount: Union[str | None, Any] = Field(default=None)
+    start_time: Union[str | None, Any] = Field(default=None)
+    end_time: Union[str | None, Any] = Field(default=None)
+
+class AdCreateParams(BaseModel):
+    """Parameters for creating a new ad. Note - requires a Facebook Page to be connected to the ad account."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    adset_id: Union[str, Any] = Field(default=None)
+    creative: Union[str, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+    tracking_specs: Union[str | None, Any] = Field(default=None)
+    bid_amount: Union[str | None, Any] = Field(default=None)
+
+class AdCreateResponse(BaseModel):
+    """Response from creating an ad"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+
+class AdUpdateParams(BaseModel):
+    """Parameters for updating an ad"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    status: Union[str | None, Any] = Field(default=None)
+    creative: Union[str | None, Any] = Field(default=None)
+    tracking_specs: Union[str | None, Any] = Field(default=None)
+    bid_amount: Union[str | None, Any] = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

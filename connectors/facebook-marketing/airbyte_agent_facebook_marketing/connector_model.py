@@ -13,6 +13,7 @@ from ._vendored.connector_sdk.types import (
     AuthOption,
     AuthType,
     ConnectorModel,
+    ContentType,
     EndpointDefinition,
     EntityDefinition,
 )
@@ -27,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.15',
+    version='1.0.16',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -84,6 +85,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     replication_auth_key_mapping={'credentials.access_token': 'account_key'},
                     replication_auth_key_constants={'credentials.auth_type': 'Service'},
                 ),
+                untested=True,
             ),
         ],
     ),
@@ -356,7 +358,12 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='campaigns',
             stream_name='campaigns',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -579,6 +586,82 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/act_{account_id}/campaigns',
+                    action=Action.CREATE,
+                    description='Creates a new ad campaign in the specified ad account',
+                    body_fields=[
+                        'name',
+                        'objective',
+                        'status',
+                        'special_ad_categories',
+                        'daily_budget',
+                        'lifetime_budget',
+                        'bid_strategy',
+                        'is_adset_budget_sharing_enabled',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new campaign',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the campaign'},
+                            'objective': {
+                                'type': 'string',
+                                'description': 'The campaign objective (e.g., OUTCOME_TRAFFIC, OUTCOME_ENGAGEMENT, OUTCOME_LEADS, OUTCOME_AWARENESS, OUTCOME_SALES, OUTCOME_APP_PROMOTION)',
+                                'enum': [
+                                    'OUTCOME_TRAFFIC',
+                                    'OUTCOME_ENGAGEMENT',
+                                    'OUTCOME_LEADS',
+                                    'OUTCOME_AWARENESS',
+                                    'OUTCOME_SALES',
+                                    'OUTCOME_APP_PROMOTION',
+                                ],
+                            },
+                            'status': {
+                                'type': 'string',
+                                'description': 'The campaign status',
+                                'enum': ['ACTIVE', 'PAUSED'],
+                            },
+                            'special_ad_categories': {'type': 'string', 'description': 'Special ad categories as JSON array (e.g., \'[]\' for none, \'["HOUSING"]\' for housing ads)'},
+                            'daily_budget': {
+                                'type': ['string', 'null'],
+                                'description': "Daily budget in cents (e.g., '1000' for $10.00). Required if not using campaign budget optimization.",
+                            },
+                            'lifetime_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Lifetime budget in cents',
+                            },
+                            'bid_strategy': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid strategy for the campaign',
+                                'enum': ['LOWEST_COST_WITHOUT_CAP', 'LOWEST_COST_WITH_BID_CAP', 'COST_CAP'],
+                            },
+                            'is_adset_budget_sharing_enabled': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether ad sets can share up to 20% of their budget to optimize performance. Required if not using campaign budget optimization.',
+                            },
+                        },
+                        'required': [
+                            'name',
+                            'objective',
+                            'status',
+                            'special_ad_categories',
+                        ],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating a campaign',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the created campaign'},
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/{campaign_id}',
@@ -758,6 +841,63 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-stream-name': 'campaigns',
                     },
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/{campaign_id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing ad campaign',
+                    body_fields=[
+                        'name',
+                        'status',
+                        'daily_budget',
+                        'lifetime_budget',
+                        'bid_strategy',
+                        'spend_cap',
+                    ],
+                    path_params=['campaign_id'],
+                    path_params_schema={
+                        'campaign_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating a campaign',
+                        'properties': {
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the campaign',
+                            },
+                            'status': {
+                                'type': ['string', 'null'],
+                                'description': 'The campaign status',
+                                'enum': ['ACTIVE', 'PAUSED', 'ARCHIVED'],
+                            },
+                            'daily_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Daily budget in cents',
+                            },
+                            'lifetime_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Lifetime budget in cents',
+                            },
+                            'bid_strategy': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid strategy for the campaign',
+                            },
+                            'spend_cap': {
+                                'type': ['string', 'null'],
+                                'description': 'Spend cap for the campaign in cents',
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Generic response from update operations',
+                        'properties': {
+                            'success': {'type': 'boolean', 'description': 'Whether the update was successful'},
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -878,7 +1018,12 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='ad_sets',
             stream_name='ad_sets',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1153,6 +1298,122 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/act_{account_id}/adsets',
+                    action=Action.CREATE,
+                    description='Creates a new ad set in the specified ad account',
+                    body_fields=[
+                        'name',
+                        'campaign_id',
+                        'daily_budget',
+                        'lifetime_budget',
+                        'billing_event',
+                        'optimization_goal',
+                        'targeting',
+                        'status',
+                        'start_time',
+                        'end_time',
+                        'bid_amount',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new ad set',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the ad set'},
+                            'campaign_id': {'type': 'string', 'description': 'The ID of the parent campaign'},
+                            'daily_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Daily budget in cents (required if no lifetime_budget)',
+                            },
+                            'lifetime_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Lifetime budget in cents (required if no daily_budget)',
+                            },
+                            'billing_event': {
+                                'type': 'string',
+                                'description': 'The billing event for the ad set',
+                                'enum': [
+                                    'IMPRESSIONS',
+                                    'LINK_CLICKS',
+                                    'APP_INSTALLS',
+                                    'PAGE_LIKES',
+                                    'POST_ENGAGEMENT',
+                                    'VIDEO_VIEWS',
+                                    'THRUPLAY',
+                                ],
+                            },
+                            'optimization_goal': {
+                                'type': 'string',
+                                'description': 'The optimization goal for the ad set',
+                                'enum': [
+                                    'NONE',
+                                    'APP_INSTALLS',
+                                    'AD_RECALL_LIFT',
+                                    'ENGAGED_USERS',
+                                    'EVENT_RESPONSES',
+                                    'IMPRESSIONS',
+                                    'LEAD_GENERATION',
+                                    'QUALITY_LEAD',
+                                    'LINK_CLICKS',
+                                    'OFFSITE_CONVERSIONS',
+                                    'PAGE_LIKES',
+                                    'POST_ENGAGEMENT',
+                                    'QUALITY_CALL',
+                                    'REACH',
+                                    'LANDING_PAGE_VIEWS',
+                                    'VISIT_INSTAGRAM_PROFILE',
+                                    'VALUE',
+                                    'THRUPLAY',
+                                    'DERIVED_EVENTS',
+                                    'APP_INSTALLS_AND_OFFSITE_CONVERSIONS',
+                                    'CONVERSATIONS',
+                                    'IN_APP_VALUE',
+                                    'MESSAGING_PURCHASE_CONVERSION',
+                                    'MESSAGING_APPOINTMENT_CONVERSION',
+                                ],
+                            },
+                            'targeting': {'type': 'string', 'description': 'Targeting specification as JSON object (e.g., \'{"geo_locations":{"countries":["US"]}}\')'},
+                            'status': {
+                                'type': 'string',
+                                'description': 'The ad set status',
+                                'enum': ['ACTIVE', 'PAUSED'],
+                            },
+                            'start_time': {
+                                'type': ['string', 'null'],
+                                'description': 'Start time in ISO 8601 format',
+                            },
+                            'end_time': {
+                                'type': ['string', 'null'],
+                                'description': 'End time in ISO 8601 format',
+                            },
+                            'bid_amount': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid amount in cents',
+                            },
+                        },
+                        'required': [
+                            'name',
+                            'campaign_id',
+                            'billing_event',
+                            'optimization_goal',
+                            'targeting',
+                            'status',
+                        ],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating an ad set',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the created ad set'},
+                        },
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/{adset_id}',
@@ -1384,6 +1645,73 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-stream-name': 'ad_sets',
                     },
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/{adset_id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing ad set',
+                    body_fields=[
+                        'name',
+                        'status',
+                        'daily_budget',
+                        'lifetime_budget',
+                        'targeting',
+                        'bid_amount',
+                        'start_time',
+                        'end_time',
+                    ],
+                    path_params=['adset_id'],
+                    path_params_schema={
+                        'adset_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an ad set',
+                        'properties': {
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the ad set',
+                            },
+                            'status': {
+                                'type': ['string', 'null'],
+                                'description': 'The ad set status',
+                                'enum': ['ACTIVE', 'PAUSED', 'ARCHIVED'],
+                            },
+                            'daily_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Daily budget in cents',
+                            },
+                            'lifetime_budget': {
+                                'type': ['string', 'null'],
+                                'description': 'Lifetime budget in cents',
+                            },
+                            'targeting': {
+                                'type': ['string', 'null'],
+                                'description': 'Targeting specification as JSON object',
+                            },
+                            'bid_amount': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid amount in cents',
+                            },
+                            'start_time': {
+                                'type': ['string', 'null'],
+                                'description': 'Start time in ISO 8601 format',
+                            },
+                            'end_time': {
+                                'type': ['string', 'null'],
+                                'description': 'End time in ISO 8601 format',
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Generic response from update operations',
+                        'properties': {
+                            'success': {'type': 'boolean', 'description': 'Whether the update was successful'},
+                        },
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -1489,7 +1817,12 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='ads',
             stream_name='ads',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1733,6 +2066,61 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/act_{account_id}/ads',
+                    action=Action.CREATE,
+                    description='Creates a new ad in the specified ad account. Note - requires a Facebook Page to be connected to the ad account.',
+                    body_fields=[
+                        'name',
+                        'adset_id',
+                        'creative',
+                        'status',
+                        'tracking_specs',
+                        'bid_amount',
+                    ],
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new ad. Note - requires a Facebook Page to be connected to the ad account.',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the ad'},
+                            'adset_id': {'type': 'string', 'description': 'The ID of the parent ad set'},
+                            'creative': {'type': 'string', 'description': 'Creative specification as JSON object. Can be either a reference to an existing creative (e.g., \'{"creative_id":"123"}\') or inline creative spec with object_story_spec'},
+                            'status': {
+                                'type': 'string',
+                                'description': 'The ad status',
+                                'enum': ['ACTIVE', 'PAUSED'],
+                            },
+                            'tracking_specs': {
+                                'type': ['string', 'null'],
+                                'description': 'Tracking specifications as JSON array',
+                            },
+                            'bid_amount': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid amount in cents (overrides ad set bid)',
+                            },
+                        },
+                        'required': [
+                            'name',
+                            'adset_id',
+                            'creative',
+                            'status',
+                        ],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating an ad',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the created ad'},
+                        },
+                    },
+                    untested=True,
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/{ad_id}',
@@ -1932,6 +2320,59 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'ads',
                         'x-airbyte-stream-name': 'ads',
                     },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/{ad_id}',
+                    action=Action.UPDATE,
+                    description='Updates an existing ad',
+                    body_fields=[
+                        'name',
+                        'status',
+                        'creative',
+                        'tracking_specs',
+                        'bid_amount',
+                    ],
+                    path_params=['ad_id'],
+                    path_params_schema={
+                        'ad_id': {'type': 'string', 'required': True},
+                    },
+                    content_type=ContentType.FORM_URLENCODED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an ad',
+                        'properties': {
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the ad',
+                            },
+                            'status': {
+                                'type': ['string', 'null'],
+                                'description': 'The ad status',
+                                'enum': ['ACTIVE', 'PAUSED', 'ARCHIVED'],
+                            },
+                            'creative': {
+                                'type': ['string', 'null'],
+                                'description': 'Creative specification as JSON object',
+                            },
+                            'tracking_specs': {
+                                'type': ['string', 'null'],
+                                'description': 'Tracking specifications as JSON array',
+                            },
+                            'bid_amount': {
+                                'type': ['string', 'null'],
+                                'description': 'Bid amount in cents',
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Generic response from update operations',
+                        'properties': {
+                            'success': {'type': 'boolean', 'description': 'Whether the update was successful'},
+                        },
+                    },
+                    untested=True,
                 ),
             },
             entity_schema={
