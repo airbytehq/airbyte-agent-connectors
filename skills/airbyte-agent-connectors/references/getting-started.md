@@ -2,6 +2,18 @@
 
 This guide walks you through installing your first connector, setting up authentication, and executing your first operation.
 
+## Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Environment Setup](#environment-setup)
+- [Your First Connector: GitHub Example](#your-first-connector-github-example)
+- [Quick Reference: Common Operations](#quick-reference-common-operations)
+- [Next Steps](#next-steps)
+- [Connector-Specific Documentation](#connector-specific-documentation)
+- [File Placement](#file-placement)
+- [Version Management](#version-management)
+
 ## Prerequisites
 
 - Python 3.11 or later
@@ -370,6 +382,21 @@ For example:
 - [GitHub README](../connectors/github/README.md)
 - [Stripe README](../connectors/stripe/README.md)
 - [Salesforce README](../connectors/salesforce/README.md)
+
+## File Placement
+
+> **Important:** When working in the `airbyte-agent-connectors` repo, place ALL files (`.env`, scripts, examples) in the specific connector directory, NOT the repo root.
+
+| Working in... | Put files in... | Example |
+|---------------|-----------------|---------|
+| `airbyte-agent-connectors` repo | `connectors/{connector}/` | `connectors/gong/.env`, `connectors/gong/example.py` |
+| Your own project | Project root | `.env`, `main.py` |
+
+**In the airbyte-agent-connectors repo:**
+- `.env` files go in `connectors/{connector}/.env`
+- Test scripts go in `connectors/{connector}/`
+- Virtual environments should be created in the connector directory if needed
+- Each connector directory is self-contained
 
 ## Version Management
 

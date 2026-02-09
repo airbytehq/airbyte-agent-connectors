@@ -2,6 +2,18 @@
 
 Airbyte Agent Connectors support multiple authentication methods depending on the underlying API. This guide covers the authentication types, how to configure them, and best practices for credential management.
 
+## Contents
+
+- [Authentication Overview](#authentication-overview)
+- [API Key Authentication](#api-key-authentication)
+- [Personal Access Token (PAT)](#personal-access-token-pat)
+- [OAuth 2.0](#oauth-20)
+- [Hosted Execution (Airbyte Agent Engine)](#hosted-execution-airbyte-agent-engine)
+- [Multi-Auth Connectors](#multi-auth-connectors)
+- [Best Practices](#best-practices)
+- [Security Best Practices](#security-best-practices)
+- [Connector-Specific Documentation](#connector-specific-documentation)
+
 ## Authentication Overview
 
 ### Authentication Types by Connector
@@ -308,7 +320,7 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors/oauth/initia
   -H "Content-Type: application/json" \
   -d '{
     "external_user_id": "user_123",
-    "connector_type": "Salesforce",
+    "definition_id": "b117307c-14b6-41aa-9422-947e34922962",
     "redirect_url": "https://yourapp.com/oauth/callback"
   }'
 ```
@@ -327,7 +339,7 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
   -H "Content-Type: application/json" \
   -d '{
     "external_user_id": "user_123",
-    "connector_type": "Salesforce",
+    "definition_id": "b117307c-14b6-41aa-9422-947e34922962",
     "name": "User Salesforce",
     "server_side_oauth_secret_id": "<secret_id_from_callback>"
   }'
@@ -367,7 +379,9 @@ connector = ZendeskSupportConnector(
 
 ### HubSpot (Private App vs OAuth)
 
-**Private App Token:**
+> **Platform Mode note:** The Airbyte API only recognizes the OAuth auth scheme for HubSpot. Private App tokens work in OSS Mode but not in Platform Mode. Use OAuth credentials (`client_id`, `client_secret`, `refresh_token`) when creating connectors via the HTTP API or `create_hosted()`. See the [HubSpot OAuth setup](#hubspot) above for a code example, or [HubSpot AUTH.md](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot/AUTH.md) for step-by-step credential setup.
+
+**Private App Token (OSS Mode only):**
 ```python
 from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
 
@@ -378,7 +392,7 @@ connector = HubspotConnector(
 )
 ```
 
-**OAuth:**
+**OAuth (OSS and Platform Mode):**
 ```python
 from airbyte_agent_hubspot.models import HubspotOAuthConfig
 
@@ -428,6 +442,23 @@ stripe_key = os.environ["STRIPE_API_KEY"]
 | Development | `.env` file with test/sandbox credentials |
 | Staging | Environment variables from CI/CD |
 | Production | Secret manager (AWS Secrets Manager, HashiCorp Vault, etc.) or Airbyte Cloud hosted execution |
+
+## Security Best Practices
+
+- **Never commit credentials** to git
+- Use `.env` files for development (add to `.gitignore`)
+- Use secret managers for production (AWS Secrets Manager, HashiCorp Vault)
+- Rotate credentials regularly
+
+```python
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(api_key=os.environ["STRIPE_API_KEY"])
+)
+```
 
 ## Connector-Specific Documentation
 

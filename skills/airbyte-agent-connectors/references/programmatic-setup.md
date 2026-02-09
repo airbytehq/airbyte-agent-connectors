@@ -2,6 +2,21 @@
 
 Set up connectors entirely from the terminal or via HTTP APIs—no UI required.
 
+## Contents
+
+- [When to Use This Guide](#when-to-use-this-guide)
+- [Prerequisites](#prerequisites)
+- [Step 1: Get Application Token](#step-1-get-application-token)
+- [Choose Your Pattern](#choose-your-pattern)
+- [Pattern A: Scoped Token Flow](#pattern-a-scoped-token-flow-recommended-for-api-key-connectors)
+- [Pattern B: Workspace Flow](#pattern-b-workspace-flow-for-oauth-connectors)
+- [Pattern C: UI Template Registration](#pattern-c-ui-template-registration)
+- [Connector Definition IDs](#connector-definition-ids)
+- [Token Reference](#token-reference)
+- [SDK vs HTTP API vs UI Decision Guide](#sdk-vs-http-api-vs-ui-decision-guide)
+- [Troubleshooting](#troubleshooting)
+- [Related Documentation](#related-documentation)
+
 ## When to Use This Guide
 
 | If you want to... | Use |
@@ -81,7 +96,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Content-Type: application/json' \
   -H 'Authorization: Bearer <SCOPED_TOKEN>' \
   -d '{
-    "connector_definition_id": "<CONNECTOR_DEFINITION_ID>",
+    "definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "my-stripe-connector",
     "auth_config": {
       "api_key": "<YOUR_API_KEY>"
@@ -213,6 +228,7 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
@@ -224,8 +240,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
 |-----------|-------------|---------|
 | `actor_definition_id` | Connector type ID from the table below | `32382e40-3b49-4b99-9c5c-4076501914e7` (Gong) |
 | `name` | Display name shown on the UI card | `"Gong"`, `"My Stripe Connector"` |
+| `original_source_template_id` | Always pass `""` (empty string) — required by the API | `""` |
 | `partial_default_config` | Pre-filled configuration values | `{}` or `{"start_date": "2024-01-01"}` |
-| `mode` | Template mode | `"DIRECT"` for API-key, `"OAUTH"` for OAuth connectors |
+| `mode` | Always use `DIRECT`. If the API rejects the mode, check the error for accepted values | `"DIRECT"` |
 
 ### Example: Register Gong Connector
 
@@ -237,12 +254,13 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "32382e40-3b49-4b99-9c5c-4076501914e7",
     "name": "Gong",
+    "original_source_template_id": "",
     "partial_default_config": {},
     "mode": "DIRECT"
   }'
 ```
 
-### Example: Register Salesforce Connector (OAuth)
+### Example: Register Salesforce Connector
 
 ```bash
 curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
@@ -251,8 +269,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
   -d '{
     "actor_definition_id": "b117307c-14b6-41aa-9422-947e34922962",
     "name": "Salesforce",
+    "original_source_template_id": "",
     "partial_default_config": {},
-    "mode": "OAUTH"
+    "mode": "DIRECT"
   }'
 ```
 

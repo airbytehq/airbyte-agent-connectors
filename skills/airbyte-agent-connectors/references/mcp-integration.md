@@ -2,6 +2,20 @@
 
 Model Context Protocol (MCP) enables AI assistants like Claude to interact with external tools and data sources. This guide covers setting up the Airbyte Agent MCP server for use with Claude Code and Claude Desktop.
 
+## Contents
+
+- [Overview](#overview)
+- [MCP Server Location](#mcp-server-location)
+- [Available MCP Tools](#available-mcp-tools)
+- [Configuration](#configuration)
+- [Claude Code Setup](#claude-code-setup)
+- [Claude Desktop Setup](#claude-desktop-setup)
+- [Running the Server Manually](#running-the-server-manually)
+- [Example Usage with Claude](#example-usage-with-claude)
+- [Troubleshooting](#troubleshooting)
+- [Development](#development)
+- [Related Documentation](#related-documentation)
+
 ## Overview
 
 The `airbyte-agent-mcp` server exposes Airbyte Agent Connectors as MCP tools, allowing Claude to:

@@ -2,6 +2,18 @@
 
 This guide covers common errors and solutions when working with Airbyte Agent Connectors.
 
+## Contents
+
+- [HTTP Errors](#http-errors)
+- [Retry Configuration](#retry-configuration)
+- [OAuth Token Refresh Issues](#oauth-token-refresh-issues)
+- [Common Setup Mistakes](#common-setup-mistakes)
+- [MCP Server Issues](#mcp-server-issues)
+- [Debugging Tips](#debugging-tips)
+- [SDK Known Issues](#sdk-known-issues)
+- [Handling "Already Exists" Errors](#handling-already-exists-errors)
+- [Getting Help](#getting-help)
+
 ## HTTP Errors
 
 ### 401 Unauthorized
@@ -444,8 +456,9 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
   -H 'Authorization: Bearer <TOKEN>' \
   -H 'Content-Type: application/json' \
   -d '{
+    "external_user_id": "<WORKSPACE_NAME>",
     "workspace_name": "<WORKSPACE_NAME>",
-    "connector_definition_id": "<DEFINITION_ID>",
+    "definition_id": "<DEFINITION_ID>",
     "name": "my-connector",
     "credentials": {...}
   }'
@@ -468,22 +481,43 @@ curl -X POST 'https://api.airbyte.ai/api/v1/integrations/connectors' \
 
 ---
 
-### API Rejects Credentials with auth_type
+### API Rejects Credentials with Discriminator Fields
 
-**Symptom:** 400 error when creating connector with `auth_type` in credentials.
+**Symptom:** 400 error when creating connector with `auth_type` or `credentials_title` in credentials.
 
-**Cause:** The API infers auth type from credentials structure. Including `auth_type` causes validation failure.
+**Cause:** The API infers auth type from credentials structure. Including discriminator fields like `auth_type` or `credentials_title` causes validation failure.
 
-**Fix:** Remove `auth_type` from credentials:
+**Fix:** Remove discriminator fields from credentials:
 ```json
 // WRONG
-{"auth_type": "APIKey", "access_key": "...", "access_key_secret": "..."}
+{"auth_type": "APIKey", "credentials_title": "API Key", "access_key": "...", "access_key_secret": "..."}
 
 // CORRECT
 {"access_key": "...", "access_key_secret": "..."}
 ```
 
 ---
+
+## Handling "Already Exists" Errors
+
+When running the Platform Mode workflow multiple times, you may encounter:
+
+| Error | Cause | Solution |
+|-------|-------|----------|
+| "Template already exists" | Template with this name registered | Use existing template or choose different name |
+| "Connector already exists" | `external_user_id` already used | Retrieve existing connector instead of creating |
+| "Workspace already exists" | Workspace with this name exists | Use existing workspace |
+
+**Retrieving an existing connector:**
+```python
+# If connector was previously created, just reference it:
+connector = StripeConnector(
+    external_user_id="user_123",  # Same ID used during creation
+    airbyte_client_id="...",
+    airbyte_client_secret="..."
+)
+# This retrieves the existing connector - no re-auth needed
+```
 
 ## Getting Help
 
