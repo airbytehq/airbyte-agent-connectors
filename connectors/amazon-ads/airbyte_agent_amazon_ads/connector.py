@@ -44,7 +44,7 @@ from .models import (
     Portfolio,
     Profile,
     SponsoredProductCampaign,
-    AirbyteSearchHit,
+    AirbyteSearchMeta,
     AirbyteSearchResult,
     ProfilesSearchData,
     ProfilesSearchResult,
@@ -791,12 +791,12 @@ information about the advertiser's account in a specific marketplace.
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's next_cursor
+            cursor: Pagination cursor from previous response's meta.cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            ProfilesSearchResult with hits (list of AirbyteSearchHit[ProfilesSearchData]) and pagination info
+            ProfilesSearchResult with typed records, pagination metadata, and optional search metadata
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -812,17 +812,18 @@ information about the advertiser's account in a specific marketplace.
         result = await self._connector.execute("profiles", "search", params)
 
         # Parse response into typed result
+        meta_data = result.get("meta")
         return ProfilesSearchResult(
-            hits=[
-                AirbyteSearchHit[ProfilesSearchData](
-                    id=hit.get("id"),
-                    score=hit.get("score"),
-                    data=ProfilesSearchData(**hit.get("data", {}))
-                )
-                for hit in result.get("hits", [])
+            data=[
+                ProfilesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
             ],
-            next_cursor=result.get("next_cursor"),
-            took_ms=result.get("took_ms")
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
         )
 
 class PortfoliosQuery:
