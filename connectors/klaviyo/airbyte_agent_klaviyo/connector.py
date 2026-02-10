@@ -70,7 +70,7 @@ from .models import (
     Metric,
     Profile,
     Template,
-    AirbyteSearchMeta,
+    AirbyteSearchHit,
     AirbyteSearchResult,
     ProfilesSearchData,
     ProfilesSearchResult,
@@ -790,12 +790,12 @@ class ProfilesQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            ProfilesSearchResult with typed records, pagination metadata, and optional search metadata
+            ProfilesSearchResult with hits (list of AirbyteSearchHit[ProfilesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -811,18 +811,17 @@ class ProfilesQuery:
         result = await self._connector.execute("profiles", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return ProfilesSearchResult(
-            data=[
-                ProfilesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[ProfilesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ProfilesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class ListsQuery:
@@ -915,12 +914,12 @@ class ListsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            ListsSearchResult with typed records, pagination metadata, and optional search metadata
+            ListsSearchResult with hits (list of AirbyteSearchHit[ListsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -936,18 +935,17 @@ class ListsQuery:
         result = await self._connector.execute("lists", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return ListsSearchResult(
-            data=[
-                ListsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[ListsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=ListsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class CampaignsQuery:
@@ -1043,12 +1041,12 @@ class CampaignsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            CampaignsSearchResult with typed records, pagination metadata, and optional search metadata
+            CampaignsSearchResult with hits (list of AirbyteSearchHit[CampaignsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1064,18 +1062,17 @@ class CampaignsQuery:
         result = await self._connector.execute("campaigns", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return CampaignsSearchResult(
-            data=[
-                CampaignsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[CampaignsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=CampaignsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class EventsQuery:
@@ -1146,12 +1143,12 @@ class EventsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            EventsSearchResult with typed records, pagination metadata, and optional search metadata
+            EventsSearchResult with hits (list of AirbyteSearchHit[EventsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1167,18 +1164,17 @@ class EventsQuery:
         result = await self._connector.execute("events", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return EventsSearchResult(
-            data=[
-                EventsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[EventsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=EventsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class MetricsQuery:
@@ -1271,12 +1267,12 @@ class MetricsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            MetricsSearchResult with typed records, pagination metadata, and optional search metadata
+            MetricsSearchResult with hits (list of AirbyteSearchHit[MetricsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1292,18 +1288,17 @@ class MetricsQuery:
         result = await self._connector.execute("metrics", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return MetricsSearchResult(
-            data=[
-                MetricsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[MetricsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=MetricsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class FlowsQuery:
@@ -1396,12 +1391,12 @@ class FlowsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            FlowsSearchResult with typed records, pagination metadata, and optional search metadata
+            FlowsSearchResult with hits (list of AirbyteSearchHit[FlowsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1417,18 +1412,17 @@ class FlowsQuery:
         result = await self._connector.execute("flows", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return FlowsSearchResult(
-            data=[
-                FlowsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[FlowsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=FlowsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class EmailTemplatesQuery:
@@ -1520,12 +1514,12 @@ class EmailTemplatesQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            EmailTemplatesSearchResult with typed records, pagination metadata, and optional search metadata
+            EmailTemplatesSearchResult with hits (list of AirbyteSearchHit[EmailTemplatesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1541,16 +1535,15 @@ class EmailTemplatesQuery:
         result = await self._connector.execute("email_templates", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return EmailTemplatesSearchResult(
-            data=[
-                EmailTemplatesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[EmailTemplatesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=EmailTemplatesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
