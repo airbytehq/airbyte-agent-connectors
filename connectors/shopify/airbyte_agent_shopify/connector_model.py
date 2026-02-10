@@ -26,7 +26,7 @@ from uuid import (
 ShopifyConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9da77001-af33-4bcd-be46-6252bf9342b9'),
     name='shopify',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://{shop}.myshopify.com/admin/api/2025-01',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -42,7 +42,8 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'api_key': '${api_key}'},
-            replication_auth_key_mapping={'credentials.access_token': 'api_key'},
+            replication_auth_key_mapping={'credentials.api_password': 'api_key'},
+            replication_auth_key_constants={'credentials.auth_method': 'api_password'},
         ),
     ),
     entities=[
