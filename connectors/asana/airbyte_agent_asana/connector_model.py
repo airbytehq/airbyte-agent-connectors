@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.13',
+    version='0.1.14',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -171,7 +171,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -902,6 +901,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    preferred_for_check=True,
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
