@@ -137,7 +137,7 @@ from .models import (
     Trigger,
     User,
     View,
-    AirbyteSearchMeta,
+    AirbyteSearchHit,
     AirbyteSearchResult,
     BrandsSearchData,
     BrandsSearchResult,
@@ -1302,12 +1302,12 @@ class TicketsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketsSearchResult with hits (list of AirbyteSearchHit[TicketsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1323,18 +1323,17 @@ class TicketsQuery:
         result = await self._connector.execute("tickets", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketsSearchResult(
-            data=[
-                TicketsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class UsersQuery:
@@ -1464,12 +1463,12 @@ class UsersQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            UsersSearchResult with typed records, pagination metadata, and optional search metadata
+            UsersSearchResult with hits (list of AirbyteSearchHit[UsersSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1485,18 +1484,17 @@ class UsersQuery:
         result = await self._connector.execute("users", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return UsersSearchResult(
-            data=[
-                UsersSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[UsersSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=UsersSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class OrganizationsQuery:
@@ -1596,12 +1594,12 @@ class OrganizationsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            OrganizationsSearchResult with typed records, pagination metadata, and optional search metadata
+            OrganizationsSearchResult with hits (list of AirbyteSearchHit[OrganizationsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1617,18 +1615,17 @@ class OrganizationsQuery:
         result = await self._connector.execute("organizations", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return OrganizationsSearchResult(
-            data=[
-                OrganizationsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[OrganizationsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=OrganizationsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class GroupsQuery:
@@ -1725,12 +1722,12 @@ class GroupsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            GroupsSearchResult with typed records, pagination metadata, and optional search metadata
+            GroupsSearchResult with hits (list of AirbyteSearchHit[GroupsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1746,18 +1743,17 @@ class GroupsQuery:
         result = await self._connector.execute("groups", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return GroupsSearchResult(
-            data=[
-                GroupsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[GroupsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=GroupsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class TicketCommentsQuery:
@@ -1843,12 +1839,12 @@ class TicketCommentsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketCommentsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketCommentsSearchResult with hits (list of AirbyteSearchHit[TicketCommentsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1864,18 +1860,17 @@ class TicketCommentsQuery:
         result = await self._connector.execute("ticket_comments", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketCommentsSearchResult(
-            data=[
-                TicketCommentsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketCommentsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketCommentsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class AttachmentsQuery:
@@ -2067,12 +2062,12 @@ class TicketAuditsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketAuditsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketAuditsSearchResult with hits (list of AirbyteSearchHit[TicketAuditsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2088,18 +2083,17 @@ class TicketAuditsQuery:
         result = await self._connector.execute("ticket_audits", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketAuditsSearchResult(
-            data=[
-                TicketAuditsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketAuditsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketAuditsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class TicketMetricsQuery:
@@ -2189,12 +2183,12 @@ class TicketMetricsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketMetricsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketMetricsSearchResult with hits (list of AirbyteSearchHit[TicketMetricsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2210,18 +2204,17 @@ class TicketMetricsQuery:
         result = await self._connector.execute("ticket_metrics", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketMetricsSearchResult(
-            data=[
-                TicketMetricsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketMetricsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketMetricsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class TicketFieldsQuery:
@@ -2336,12 +2329,12 @@ class TicketFieldsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketFieldsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketFieldsSearchResult with hits (list of AirbyteSearchHit[TicketFieldsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2357,18 +2350,17 @@ class TicketFieldsQuery:
         result = await self._connector.execute("ticket_fields", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketFieldsSearchResult(
-            data=[
-                TicketFieldsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketFieldsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketFieldsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class BrandsQuery:
@@ -2469,12 +2461,12 @@ class BrandsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            BrandsSearchResult with typed records, pagination metadata, and optional search metadata
+            BrandsSearchResult with hits (list of AirbyteSearchHit[BrandsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2490,18 +2482,17 @@ class BrandsQuery:
         result = await self._connector.execute("brands", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return BrandsSearchResult(
-            data=[
-                BrandsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[BrandsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=BrandsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class ViewsQuery:
@@ -2866,12 +2857,12 @@ class TagsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TagsSearchResult with typed records, pagination metadata, and optional search metadata
+            TagsSearchResult with hits (list of AirbyteSearchHit[TagsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -2887,18 +2878,17 @@ class TagsQuery:
         result = await self._connector.execute("tags", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TagsSearchResult(
-            data=[
-                TagsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TagsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TagsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class SatisfactionRatingsQuery:
@@ -3004,12 +2994,12 @@ class SatisfactionRatingsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            SatisfactionRatingsSearchResult with typed records, pagination metadata, and optional search metadata
+            SatisfactionRatingsSearchResult with hits (list of AirbyteSearchHit[SatisfactionRatingsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -3025,18 +3015,17 @@ class SatisfactionRatingsQuery:
         result = await self._connector.execute("satisfaction_ratings", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return SatisfactionRatingsSearchResult(
-            data=[
-                SatisfactionRatingsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[SatisfactionRatingsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=SatisfactionRatingsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class GroupMembershipsQuery:
@@ -3283,12 +3272,12 @@ class TicketFormsQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TicketFormsSearchResult with typed records, pagination metadata, and optional search metadata
+            TicketFormsSearchResult with hits (list of AirbyteSearchHit[TicketFormsSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -3304,18 +3293,17 @@ class TicketFormsQuery:
         result = await self._connector.execute("ticket_forms", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TicketFormsSearchResult(
-            data=[
-                TicketFormsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TicketFormsSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TicketFormsSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class ArticlesQuery:
