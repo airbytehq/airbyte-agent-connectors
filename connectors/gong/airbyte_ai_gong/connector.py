@@ -21,6 +21,9 @@ from .types import (
     CallVideoDownloadParams,
     CallVideoDownloadParamsContentselector,
     CallVideoDownloadParamsFilter,
+    CallsAiContentListParams,
+    CallsAiContentListParamsContentselector,
+    CallsAiContentListParamsFilter,
     CallsExtensiveListParams,
     CallsExtensiveListParamsContentselector,
     CallsExtensiveListParamsFilter,
@@ -65,6 +68,7 @@ from .models import (
     SettingsTrackersListResult,
     LibraryFoldersListResult,
     LibraryFolderContentListResult,
+    CallsAiContentListResult,
     CoachingListResult,
     StatsActivityScorecardsListResult,
 )
@@ -101,6 +105,7 @@ class GongConnector:
         ("library_folder_content", "list"): True,
         ("coaching", "list"): True,
         ("stats_activity_scorecards", "list"): True,
+        ("calls_ai_content", "list"): True,
     }
 
     def __init__(
@@ -201,6 +206,7 @@ class GongConnector:
         self.library_folder_content = LibraryFolderContentQuery(self)
         self.coaching = CoachingQuery(self)
         self.stats_activity_scorecards = StatsActivityScorecardsQuery(self)
+        self.calls_ai_content = CallsAiContentQuery(self)
 
     @classmethod
     def get_default_config_path(cls) -> Path:
@@ -352,6 +358,14 @@ class GongConnector:
         action: Literal["list"],
         params: "StatsActivityScorecardsListParams"
     ) -> "StatsActivityScorecardsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["calls_ai_content"],
+        action: Literal["list"],
+        params: "CallsAiContentListParams"
+    ) -> "CallsAiContentListResult": ...
 
 
     @overload
@@ -1163,6 +1177,46 @@ class StatsActivityScorecardsQuery:
         result = await self._connector.execute("stats_activity_scorecards", "list", params)
         # Cast generic envelope to concrete typed result
         return StatsActivityScorecardsListResult(
+            data=result.data,
+            meta=result.meta        )
+
+class CallsAiContentQuery:
+    """
+    Query class for CallsAiContent entity operations.
+    """
+
+    def __init__(self, connector: GongConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        filter: CallsAiContentListParamsFilter | None = None,
+        content_selector: CallsAiContentListParamsContentselector | None = None,
+        cursor: str | None = None,
+        **kwargs
+    ) -> CallsAiContentListResult:
+        """
+        Retrieve AI content data for calls including brief, outline, highlights, and call outcome
+
+        Args:
+            filter: Parameter filter
+            content_selector: Select which AI content to include in the response
+            cursor: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            CallsAiContentListResult
+        """
+        params = {k: v for k, v in {
+            "filter": filter,
+            "contentSelector": content_selector,
+            "cursor": cursor,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("calls_ai_content", "list", params)
+        return CallsAiContentListResult(
             data=result.data,
             meta=result.meta        )
 

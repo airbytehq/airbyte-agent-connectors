@@ -596,6 +596,55 @@ class CoachingResponse(BaseModel):
     from_date_time: Union[str, Any] = Field(default=None, alias="fromDateTime")
     to_date_time: Union[str, Any] = Field(default=None, alias="toDateTime")
 
+class CallAiContentOutlineItemSubitem(BaseModel):
+    """Sub-item within a call outline section"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    text: Union[str | None, Any] = Field(default=None, description="Outline item text")
+    start_time: Union[float | None, Any] = Field(default=None, alias="startTime", description="Start time in seconds")
+
+class CallAiContentOutlineItem(BaseModel):
+    """An item in the call outline"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    section: Union[str | None, Any] = Field(default=None, description="Section title")
+    start_time: Union[float | None, Any] = Field(default=None, alias="startTime", description="Start time in seconds")
+    duration: Union[float | None, Any] = Field(default=None, description="Duration in seconds")
+    items: Union[list[CallAiContentOutlineItemSubitem], Any] = Field(default=None)
+
+class CallAiContentHighlightSubitem(BaseModel):
+    """Detail item within a highlight"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    text: Union[str | None, Any] = Field(default=None, description="Highlight item text")
+    speaker_name: Union[str | None, Any] = Field(default=None, alias="speakerName", description="Speaker name")
+    start_time: Union[float | None, Any] = Field(default=None, alias="startTime", description="Start time in seconds")
+
+class CallAiContentHighlightItem(BaseModel):
+    """A highlight from the call"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: Union[str | None, Any] = Field(default=None, description="Highlight title")
+    items: Union[list[CallAiContentHighlightSubitem], Any] = Field(default=None)
+
+class CallAiContent(BaseModel):
+    """AI-generated content for a call"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    call_id: Union[str, Any] = Field(default=None, alias="callId")
+    brief: Union[str | None, Any] = Field(default=None, description="AI-generated call brief/summary")
+    outline: Union[list[CallAiContentOutlineItem], Any] = Field(default=None)
+    highlights: Union[list[CallAiContentHighlightItem], Any] = Field(default=None)
+    call_outcome: Union[str | None, Any] = Field(default=None, alias="callOutcome", description="AI-determined call outcome")
+
+class CallsAiContentResponse(BaseModel):
+    """Response containing AI content data for calls"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    call_ai_contents: Union[list[CallAiContent], Any] = Field(default=None, alias="callAiContents")
+    records: Union[PaginationRecords, Any] = Field(default=None)
+    request_id: Union[str, Any] = Field(default=None, alias="requestId")
+
 class AnsweredScorecardAnswer(BaseModel):
     """An answer to a scorecard question"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -686,6 +735,12 @@ class StatsActivityScorecardsListResultMeta(BaseModel):
 
     pagination: Union[PaginationRecords, Any] = Field(default=None)
 
+class CallsAiContentListResultMeta(BaseModel):
+    """Metadata for calls_ai_content.list operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    pagination: Union[PaginationRecords, Any] = Field(default=None)
+
 # ===== RESPONSE ENVELOPE MODELS =====
 
 # Type variables for generic envelope models
@@ -765,4 +820,7 @@ CoachingListResult = GongExecuteResult[list[CoachingData]]
 
 StatsActivityScorecardsListResult = GongExecuteResultWithMeta[list[AnsweredScorecard], StatsActivityScorecardsListResultMeta]
 """Result type for stats_activity_scorecards.list operation with data and metadata."""
+
+CallsAiContentListResult = GongExecuteResultWithMeta[list[CallAiContent], CallsAiContentListResultMeta]
+"""Result type for calls_ai_content.list operation with data and metadata."""
 

@@ -108,6 +108,19 @@ class StatsInteractionListParamsFilter(TypedDict):
     toDate: NotRequired[str]
     userIds: NotRequired[list[str]]
 
+class CallsAiContentListParamsFilter(TypedDict):
+    """Nested schema for CallsAiContentListParams.filter"""
+    fromDateTime: NotRequired[str]
+    toDateTime: NotRequired[str]
+    callIds: NotRequired[list[str]]
+
+class CallsAiContentListParamsContentselector(TypedDict):
+    """Select which AI content to include in the response"""
+    brief: NotRequired[bool]
+    outline: NotRequired[bool]
+    highlights: NotRequired[bool]
+    callOutcome: NotRequired[bool]
+
 class StatsActivityScorecardsListParamsFilter(TypedDict):
     """Nested schema for StatsActivityScorecardsListParams.filter"""
     fromDateTime: NotRequired[str]
@@ -332,6 +345,12 @@ class CoachingListParams(TypedDict):
     manager_id: str
     from_: str
     to: str
+
+class CallsAiContentListParams(TypedDict):
+    """Parameters for calls_ai_content.list operation"""
+    filter: NotRequired[CallsAiContentListParamsFilter]
+    content_selector: NotRequired[CallsAiContentListParamsContentselector]
+    cursor: NotRequired[str]
 
 class StatsActivityScorecardsListParams(TypedDict):
     """Parameters for stats_activity_scorecards.list operation"""

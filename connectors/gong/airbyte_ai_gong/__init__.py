@@ -60,6 +60,12 @@ from .models import (
     CoachingMetrics,
     CoachingData,
     CoachingResponse,
+    CallAiContentOutlineItemSubitem,
+    CallAiContentOutlineItem,
+    CallAiContentHighlightSubitem,
+    CallAiContentHighlightItem,
+    CallAiContent,
+    CallsAiContentResponse,
     AnsweredScorecardAnswer,
     AnsweredScorecard,
     AnsweredScorecardsResponse,
@@ -72,6 +78,7 @@ from .models import (
     StatsInteractionListResultMeta,
     LibraryFolderContentListResultMeta,
     StatsActivityScorecardsListResultMeta,
+    CallsAiContentListResultMeta,
     GongExecuteResult,
     GongExecuteResultWithMeta,
     UsersListResult,
@@ -89,7 +96,8 @@ from .models import (
     LibraryFoldersListResult,
     LibraryFolderContentListResult,
     CoachingListResult,
-    StatsActivityScorecardsListResult
+    StatsActivityScorecardsListResult,
+    CallsAiContentListResult,
 )
 from .types import (
     CallsExtensiveListParamsFilter,
@@ -108,6 +116,8 @@ from .types import (
     StatsActivityAggregateListParamsFilter,
     StatsActivityDayByDayListParamsFilter,
     StatsInteractionListParamsFilter,
+    CallsAiContentListParamsFilter,
+    CallsAiContentListParamsContentselector,
     StatsActivityScorecardsListParamsFilter,
     UserSettings,
     UserSpokenlanguagesItem,
@@ -145,7 +155,8 @@ from .types import (
     LibraryFoldersListParams,
     LibraryFolderContentListParams,
     CoachingListParams,
-    StatsActivityScorecardsListParams
+    CallsAiContentListParams,
+    StatsActivityScorecardsListParams,
 )
 
-__all__ = ["GongConnector", "GongAuthConfig", "PaginationRecords", "UserSpokenlanguagesItem", "UserSettings", "User", "UsersResponse", "UserResponse", "Call", "CallsResponse", "CallResponse", "Workspace", "WorkspacesResponse", "CallTranscriptTranscriptItemSentencesItem", "CallTranscriptTranscriptItem", "CallTranscript", "TranscriptsResponse", "ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem", "ExtensiveCallPartiesItemContextItemObjectsItem", "ExtensiveCallPartiesItemContextItem", "ExtensiveCallPartiesItem", "ExtensiveCallCollaboration", "ExtensiveCallMetadata", "ExtensiveCallMedia", "ExtensiveCallInteractionInteractionstatsItem", "ExtensiveCallInteractionQuestions", "ExtensiveCallInteraction", "ExtensiveCallContentTopicsItem", "ExtensiveCallContentTrackersItem", "ExtensiveCallContent", "ExtensiveCall", "ExtensiveCallsResponse", "UserAggregateActivityStats", "UserAggregateActivity", "ActivityAggregateResponse", "DailyActivityStats", "UserDetailedActivity", "ActivityDayByDayResponse", "PersonInteractionStat", "UserInteractionStats", "InteractionStatsResponse", "ScorecardQuestionAnsweroptionsItem", "ScorecardQuestion", "Scorecard", "ScorecardsResponse", "TrackerKeywordsItem", "Tracker", "TrackersResponse", "LibraryFolder", "LibraryFoldersResponse", "FolderCall", "FolderContentResponse", "CoachingMetrics", "CoachingData", "CoachingResponse", "AnsweredScorecardAnswer", "AnsweredScorecard", "AnsweredScorecardsResponse", "UsersListResultMeta", "CallsListResultMeta", "CallsExtensiveListResultMeta", "CallTranscriptsListResultMeta", "StatsActivityAggregateListResultMeta", "StatsActivityDayByDayListResultMeta", "StatsInteractionListResultMeta", "LibraryFolderContentListResultMeta", "StatsActivityScorecardsListResultMeta", "GongExecuteResult", "GongExecuteResultWithMeta", "UsersListResult", "UsersGetResult", "CallsListResult", "CallsGetResult", "CallsExtensiveListResult", "WorkspacesListResult", "CallTranscriptsListResult", "StatsActivityAggregateListResult", "StatsActivityDayByDayListResult", "StatsInteractionListResult", "SettingsScorecardsListResult", "SettingsTrackersListResult", "LibraryFoldersListResult", "LibraryFolderContentListResult", "CoachingListResult", "StatsActivityScorecardsListResult", "CallsExtensiveListParamsFilter", "CallsExtensiveListParamsContentselectorExposedfieldsCollaboration", "CallsExtensiveListParamsContentselectorExposedfieldsContent", "CallsExtensiveListParamsContentselectorExposedfieldsInteraction", "CallsExtensiveListParamsContentselectorExposedfields", "CallsExtensiveListParamsContentselector", "CallAudioDownloadParamsFilter", "CallAudioDownloadParamsContentselectorExposedfields", "CallAudioDownloadParamsContentselector", "CallVideoDownloadParamsFilter", "CallVideoDownloadParamsContentselectorExposedfields", "CallVideoDownloadParamsContentselector", "CallTranscriptsListParamsFilter", "StatsActivityAggregateListParamsFilter", "StatsActivityDayByDayListParamsFilter", "StatsInteractionListParamsFilter", "StatsActivityScorecardsListParamsFilter", "UserSettings", "UserSpokenlanguagesItem", "CallTranscriptTranscriptItemSentencesItem", "CallTranscriptTranscriptItem", "ExtensiveCallMetadata", "ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem", "ExtensiveCallPartiesItemContextItemObjectsItem", "ExtensiveCallPartiesItemContextItem", "ExtensiveCallPartiesItem", "ExtensiveCallInteractionInteractionstatsItem", "ExtensiveCallInteractionQuestions", "ExtensiveCallInteraction", "ExtensiveCallCollaboration", "ExtensiveCallContentTopicsItem", "ExtensiveCallContentTrackersItem", "ExtensiveCallContent", "ExtensiveCallMedia", "ScorecardQuestionAnsweroptionsItem", "TrackerKeywordsItem", "UsersListParams", "UsersGetParams", "CallsListParams", "CallsGetParams", "CallsExtensiveListParams", "CallAudioDownloadParams", "CallVideoDownloadParams", "WorkspacesListParams", "CallTranscriptsListParams", "StatsActivityAggregateListParams", "StatsActivityDayByDayListParams", "StatsInteractionListParams", "SettingsScorecardsListParams", "SettingsTrackersListParams", "LibraryFoldersListParams", "LibraryFolderContentListParams", "CoachingListParams", "StatsActivityScorecardsListParams"]
+__all__ = ["GongConnector", "GongAuthConfig", "PaginationRecords", "UserSpokenlanguagesItem", "UserSettings", "User", "UsersResponse", "UserResponse", "Call", "CallsResponse", "CallResponse", "Workspace", "WorkspacesResponse", "CallTranscriptTranscriptItemSentencesItem", "CallTranscriptTranscriptItem", "CallTranscript", "TranscriptsResponse", "ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem", "ExtensiveCallPartiesItemContextItemObjectsItem", "ExtensiveCallPartiesItemContextItem", "ExtensiveCallPartiesItem", "ExtensiveCallCollaboration", "ExtensiveCallMetadata", "ExtensiveCallMedia", "ExtensiveCallInteractionInteractionstatsItem", "ExtensiveCallInteractionQuestions", "ExtensiveCallInteraction", "ExtensiveCallContentTopicsItem", "ExtensiveCallContentTrackersItem", "ExtensiveCallContent", "ExtensiveCall", "ExtensiveCallsResponse", "UserAggregateActivityStats", "UserAggregateActivity", "ActivityAggregateResponse", "DailyActivityStats", "UserDetailedActivity", "ActivityDayByDayResponse", "PersonInteractionStat", "UserInteractionStats", "InteractionStatsResponse", "ScorecardQuestionAnsweroptionsItem", "ScorecardQuestion", "Scorecard", "ScorecardsResponse", "TrackerKeywordsItem", "Tracker", "TrackersResponse", "LibraryFolder", "LibraryFoldersResponse", "FolderCall", "FolderContentResponse", "CoachingMetrics", "CoachingData", "CoachingResponse", "AnsweredScorecardAnswer", "AnsweredScorecard", "AnsweredScorecardsResponse", "UsersListResultMeta", "CallsListResultMeta", "CallsExtensiveListResultMeta", "CallTranscriptsListResultMeta", "StatsActivityAggregateListResultMeta", "StatsActivityDayByDayListResultMeta", "StatsInteractionListResultMeta", "LibraryFolderContentListResultMeta", "StatsActivityScorecardsListResultMeta", "GongExecuteResult", "GongExecuteResultWithMeta", "UsersListResult", "UsersGetResult", "CallsListResult", "CallsGetResult", "CallsExtensiveListResult", "WorkspacesListResult", "CallTranscriptsListResult", "StatsActivityAggregateListResult", "StatsActivityDayByDayListResult", "StatsInteractionListResult", "SettingsScorecardsListResult", "SettingsTrackersListResult", "LibraryFoldersListResult", "LibraryFolderContentListResult", "CoachingListResult", "StatsActivityScorecardsListResult", "CallsExtensiveListParamsFilter", "CallsExtensiveListParamsContentselectorExposedfieldsCollaboration", "CallsExtensiveListParamsContentselectorExposedfieldsContent", "CallsExtensiveListParamsContentselectorExposedfieldsInteraction", "CallsExtensiveListParamsContentselectorExposedfields", "CallsExtensiveListParamsContentselector", "CallAudioDownloadParamsFilter", "CallAudioDownloadParamsContentselectorExposedfields", "CallAudioDownloadParamsContentselector", "CallVideoDownloadParamsFilter", "CallVideoDownloadParamsContentselectorExposedfields", "CallVideoDownloadParamsContentselector", "CallTranscriptsListParamsFilter", "StatsActivityAggregateListParamsFilter", "StatsActivityDayByDayListParamsFilter", "StatsInteractionListParamsFilter", "StatsActivityScorecardsListParamsFilter", "UserSettings", "UserSpokenlanguagesItem", "CallTranscriptTranscriptItemSentencesItem", "CallTranscriptTranscriptItem", "ExtensiveCallMetadata", "ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem", "ExtensiveCallPartiesItemContextItemObjectsItem", "ExtensiveCallPartiesItemContextItem", "ExtensiveCallPartiesItem", "ExtensiveCallInteractionInteractionstatsItem", "ExtensiveCallInteractionQuestions", "ExtensiveCallInteraction", "ExtensiveCallCollaboration", "ExtensiveCallContentTopicsItem", "ExtensiveCallContentTrackersItem", "ExtensiveCallContent", "ExtensiveCallMedia", "ScorecardQuestionAnsweroptionsItem", "TrackerKeywordsItem", "UsersListParams", "UsersGetParams", "CallsListParams", "CallsGetParams", "CallsExtensiveListParams", "CallAudioDownloadParams", "CallVideoDownloadParams", "WorkspacesListParams", "CallTranscriptsListParams", "StatsActivityAggregateListParams", "StatsActivityDayByDayListParams", "StatsInteractionListParams", "SettingsScorecardsListParams", "SettingsTrackersListParams", "LibraryFoldersListParams", "LibraryFolderContentListParams", "CoachingListParams", "CallsAiContentListParams", "CallsAiContentListParamsFilter", "CallsAiContentListParamsContentselector", "StatsActivityScorecardsListParams"]

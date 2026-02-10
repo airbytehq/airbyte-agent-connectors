@@ -432,6 +432,68 @@ paths:
         "401":
           description: Unauthorized
 
+  "/v2/calls/ai-content":
+    post:
+      summary: Retrieve AI content data for calls
+      description: Returns AI-generated content for calls including brief, outline, highlights, and call outcome
+      operationId: getCallsAiContent
+      x-airbyte-entity: calls_ai_content
+      x-airbyte-action: list
+      x-airbyte-record-extractor: $.callAiContents
+      x-airbyte-meta-extractor:
+        pagination: $.records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                filter:
+                  type: object
+                  properties:
+                    fromDateTime:
+                      type: string
+                      format: date-time
+                      description: Start date in ISO 8601 format (optional if callIds provided)
+                    toDateTime:
+                      type: string
+                      format: date-time
+                      description: End date in ISO 8601 format (optional if callIds provided)
+                    callIds:
+                      type: array
+                      items:
+                        type: string
+                      description: List of specific call IDs to retrieve AI content for
+                contentSelector:
+                  type: object
+                  description: Select which AI content to include in the response
+                  properties:
+                    brief:
+                      type: boolean
+                      description: Include call brief
+                    outline:
+                      type: boolean
+                      description: Include call outline
+                    highlights:
+                      type: boolean
+                      description: Include call highlights
+                    callOutcome:
+                      type: boolean
+                      description: Include call outcome
+                cursor:
+                  type: string
+                  description: Cursor for pagination
+      responses:
+        "200":
+          description: AI content data for calls
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CallsAiContentResponse"
+        "401":
+          description: Unauthorized
+
   "/v2/stats/activity/aggregate":
     post:
       summary: Retrieve aggregated activity statistics
@@ -1795,6 +1857,92 @@ components:
           type: string
         toDateTime:
           type: string
+
+    CallAiContentOutlineItem:
+      type: object
+      description: An item in the call outline
+      properties:
+        section:
+          type: ["string", "null"]
+          description: Section title
+        startTime:
+          type: ["number", "null"]
+          description: Start time in seconds
+        duration:
+          type: ["number", "null"]
+          description: Duration in seconds
+        items:
+          type: array
+          description: Sub-items within this outline section
+          items:
+            type: object
+            properties:
+              text:
+                type: ["string", "null"]
+                description: Outline item text
+              startTime:
+                type: ["number", "null"]
+                description: Start time in seconds
+
+    CallAiContentHighlightItem:
+      type: object
+      description: A highlight from the call
+      properties:
+        title:
+          type: ["string", "null"]
+          description: Highlight title
+        items:
+          type: array
+          description: Highlight detail items
+          items:
+            type: object
+            properties:
+              text:
+                type: ["string", "null"]
+                description: Highlight item text
+              speakerName:
+                type: ["string", "null"]
+                description: Speaker name
+              startTime:
+                type: ["number", "null"]
+                description: Start time in seconds
+
+    CallAiContent:
+      type: object
+      x-airbyte-entity-name: calls_ai_content
+      description: AI-generated content for a call
+      properties:
+        callId:
+          type: string
+          description: Call identifier
+        brief:
+          type: ["string", "null"]
+          description: AI-generated call brief/summary
+        outline:
+          type: array
+          items:
+            $ref: "#/components/schemas/CallAiContentOutlineItem"
+        highlights:
+          type: array
+          items:
+            $ref: "#/components/schemas/CallAiContentHighlightItem"
+        callOutcome:
+          type: ["string", "null"]
+          description: AI-determined call outcome
+
+    CallsAiContentResponse:
+      type: object
+      description: Response containing AI content data for calls
+      properties:
+        callAiContents:
+          type: array
+          items:
+            $ref: "#/components/schemas/CallAiContent"
+        records:
+          $ref: "#/components/schemas/PaginationRecords"
+        requestId:
+          type: string
+          description: Request identifier
 
     AnsweredScorecardAnswer:
       type: object
