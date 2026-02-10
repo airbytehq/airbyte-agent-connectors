@@ -91,8 +91,8 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectOwner(BaseModel):
-    """Nested schema for Project.owner"""
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -106,31 +106,6 @@ class ProjectFollowersItem(BaseModel):
     gid: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectTeam(BaseModel):
-    """Nested schema for Project.team"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectCurrentStatusUpdate(BaseModel):
-    """Nested schema for Project.current_status_update"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-    resource_subtype: Union[str, Any] = Field(default=None)
-    title: Union[str, Any] = Field(default=None)
 
 class ProjectCurrentStatusAuthor(BaseModel):
     """Nested schema for ProjectCurrentStatus.author"""
@@ -161,6 +136,31 @@ class ProjectCurrentStatus(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
+
+class ProjectOwner(BaseModel):
+    """Nested schema for Project.owner"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectCurrentStatusUpdate(BaseModel):
+    """Nested schema for Project.current_status_update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+    resource_subtype: Union[str, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+
+class ProjectTeam(BaseModel):
+    """Nested schema for Project.team"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
 
 class ProjectMembersItem(BaseModel):
     """Nested schema for Project.members_item"""
@@ -936,26 +936,28 @@ class WorkspacesSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class AirbyteSearchMeta(BaseModel):
-    """Pagination metadata for search responses."""
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
     model_config = ConfigDict(extra="allow")
 
-    has_more: bool = False
-    """Whether more results are available."""
-    cursor: str | None = None
-    """Cursor for fetching the next page of results."""
-    took_ms: int | None = None
-    """Time taken to execute the search in milliseconds."""
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
 
 
 class AirbyteSearchResult(BaseModel, Generic[D]):
-    """Result from Airbyte cache search operations with typed records."""
+    """Result from Airbyte cache search operations with typed hits."""
     model_config = ConfigDict(extra="allow")
 
-    data: list[D] = Field(default_factory=list)
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
     """List of matching records."""
-    meta: AirbyteSearchMeta = Field(default_factory=AirbyteSearchMeta)
-    """Pagination metadata."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
 
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
