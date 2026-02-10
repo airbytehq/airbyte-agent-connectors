@@ -141,7 +141,10 @@ def validate_connector_definition_id(
     registry_id = registry_metadata.get("sourceDefinitionId", "")
 
     if connector_definition_id.lower() != registry_id.lower():
-        errors.append(f"Connector ID mismatch: connector.yaml has '{connector_definition_id}' but Airbyte registry has '{registry_id}' for '{connector_name}'.")
+        errors.append(
+            f"Connector ID mismatch: connector.yaml has '{connector_definition_id}'"
+            f" but Airbyte registry has '{registry_id}' for '{connector_name}'."
+        )
         return False, errors, warnings, True  # Invalid, skip remaining checks
 
     return True, errors, warnings, False  # Valid, continue with checks
