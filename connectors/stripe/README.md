@@ -120,7 +120,7 @@ See the official [Stripe API reference](https://docs.stripe.com/api).
 
 ## Version information
 
-- **Package version:** 0.5.95
+- **Package version:** 0.5.96
 - **Connector version:** 0.1.9
-- **Generated with Connector SDK commit SHA:** 04691d063af9e36703f1d2a66e2a1df8e9e52dbe
+- **Generated with Connector SDK commit SHA:** c148341811171ee60ceae3db633750c80f0e3fbd
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/CHANGELOG.md)
