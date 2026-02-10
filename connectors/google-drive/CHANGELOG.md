@@ -1,5 +1,10 @@
 # Google Drive changelog
 
+## [0.1.69] - 2026-02-10
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 7fa169bf
+- SDK version: 0.1.0
+
 ## [0.1.68] - 2026-02-10
 - Updated connector definition (YAML version 0.1.7)
 - Source commit: d6f8bda4
