@@ -54,6 +54,15 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
+
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -63,15 +72,6 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
-
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -1014,26 +1014,28 @@ class VideosSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class AirbyteSearchMeta(BaseModel):
-    """Pagination metadata for search responses."""
+class AirbyteSearchHit(BaseModel, Generic[D]):
+    """A single search result with typed data."""
     model_config = ConfigDict(extra="allow")
 
-    has_more: bool = False
-    """Whether more results are available."""
-    cursor: str | None = None
-    """Cursor for fetching the next page of results."""
-    took_ms: int | None = None
-    """Time taken to execute the search in milliseconds."""
+    id: str | None = None
+    """Unique identifier for the record."""
+    score: float | None = None
+    """Relevance score for the match."""
+    data: D
+    """The matched record data."""
 
 
 class AirbyteSearchResult(BaseModel, Generic[D]):
-    """Result from Airbyte cache search operations with typed records."""
+    """Result from Airbyte cache search operations with typed hits."""
     model_config = ConfigDict(extra="allow")
 
-    data: list[D] = Field(default_factory=list)
+    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
     """List of matching records."""
-    meta: AirbyteSearchMeta = Field(default_factory=AirbyteSearchMeta)
-    """Pagination metadata."""
+    next_cursor: str | None = None
+    """Cursor for fetching the next page of results."""
+    took_ms: int | None = None
+    """Time taken to execute the search in milliseconds."""
 
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
