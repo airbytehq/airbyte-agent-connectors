@@ -43,7 +43,7 @@ from .models import (
     Base,
     Record,
     Table,
-    AirbyteSearchMeta,
+    AirbyteSearchHit,
     AirbyteSearchResult,
     BasesSearchData,
     BasesSearchResult,
@@ -627,12 +627,12 @@ class BasesQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            BasesSearchResult with typed records, pagination metadata, and optional search metadata
+            BasesSearchResult with hits (list of AirbyteSearchHit[BasesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -648,18 +648,17 @@ class BasesQuery:
         result = await self._connector.execute("bases", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return BasesSearchResult(
-            data=[
-                BasesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[BasesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=BasesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class TablesQuery:
@@ -723,12 +722,12 @@ class TablesQuery:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
                    in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
             limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
+            cursor: Pagination cursor from previous response's next_cursor
             fields: Field paths to include in results. Each path is a list of keys for nested access.
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            TablesSearchResult with typed records, pagination metadata, and optional search metadata
+            TablesSearchResult with hits (list of AirbyteSearchHit[TablesSearchData]) and pagination info
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -744,18 +743,17 @@ class TablesQuery:
         result = await self._connector.execute("tables", "search", params)
 
         # Parse response into typed result
-        meta_data = result.get("meta")
         return TablesSearchResult(
-            data=[
-                TablesSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
+            hits=[
+                AirbyteSearchHit[TablesSearchData](
+                    id=hit.get("id"),
+                    score=hit.get("score"),
+                    data=TablesSearchData(**hit.get("data", {}))
+                )
+                for hit in result.get("hits", [])
             ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
+            next_cursor=result.get("next_cursor"),
+            took_ms=result.get("took_ms")
         )
 
 class RecordsQuery:
