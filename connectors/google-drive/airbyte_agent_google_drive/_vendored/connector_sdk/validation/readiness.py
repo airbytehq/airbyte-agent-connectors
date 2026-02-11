@@ -840,9 +840,8 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                         continue
 
                     # For non-download actions, validate response schema
-                    response_body = spec.captured_response.body
-
                     if response_schema:
+                        response_body = spec.captured_response.body
                         is_valid, errors = validate_response_against_schema(response_body, response_schema)
 
                         undeclared_fields = find_undeclared_fields(response_body, response_schema)
@@ -884,15 +883,26 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
                             }
                         )
                     else:
-                        total_errors += 1
-                        schema_validation.append(
-                            {
-                                "cassette": str(cassette_path.name),
-                                "valid": None,
-                                "errors": ["No response schema defined in connector.yaml"],
-                                "warnings": [],
-                            }
-                        )
+                        if endpoint.no_content_response:
+                            cassettes_valid += 1
+                            schema_validation.append(
+                                {
+                                    "cassette": str(cassette_path.name),
+                                    "valid": True,
+                                    "errors": [],
+                                    "warnings": [],
+                                }
+                            )
+                        else:
+                            total_errors += 1
+                            schema_validation.append(
+                                {
+                                    "cassette": str(cassette_path.name),
+                                    "valid": None,
+                                    "errors": ["No response schema defined in connector.yaml"],
+                                    "warnings": [],
+                                }
+                            )
 
                 except Exception as e:
                     cassettes_invalid += 1
