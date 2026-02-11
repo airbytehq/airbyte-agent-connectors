@@ -122,7 +122,7 @@ See the official [Salesforce API reference](https://developer.salesforce.com/doc
 
 ## Version information
 
-- **Package version:** 0.1.95
+- **Package version:** 0.1.96
 - **Connector version:** 1.0.13
-- **Generated with Connector SDK commit SHA:** 758ef9a5f9dcd907ccedffddb3b96358a265ffc5
+- **Generated with Connector SDK commit SHA:** 8c602f77c94fa829be7c1e10d063c5234b17dbef
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/CHANGELOG.md)
