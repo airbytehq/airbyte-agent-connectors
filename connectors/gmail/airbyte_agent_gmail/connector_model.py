@@ -26,7 +26,7 @@ from uuid import (
 GmailConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('f7833dac-fc18-4feb-a2a9-94b22001edc6'),
     name='gmail',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://gmail.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -68,6 +68,7 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
                 'credentials.client_secret': 'client_secret',
                 'credentials.refresh_token': 'refresh_token',
             },
+            replication_auth_key_constants={'credentials.auth_type': 'Client'},
         ),
     ),
     entities=[
