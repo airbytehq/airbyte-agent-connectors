@@ -117,7 +117,7 @@ See the official [Ashby API reference](https://developers.ashbyhq.com/reference)
 
 ## Version information
 
-- **Package version:** 0.1.2
+- **Package version:** 0.1.3
 - **Connector version:** 0.1.1
-- **Generated with Connector SDK commit SHA:** 114c9599ca659a35971df4cb65cfe47a90a23d70
+- **Generated with Connector SDK commit SHA:** 8c602f77c94fa829be7c1e10d063c5234b17dbef
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/ashby/CHANGELOG.md)
