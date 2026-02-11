@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-zendesk-support"
-version = "0.18.102"
+version = "0.18.103"
 description = "Airbyte Zendesk-Support Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
