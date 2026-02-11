@@ -34,7 +34,8 @@ from .models import (
     StargazersListResult,
     ViewerRepositoriesListResult,
     ProjectsListResult,
-    ProjectItemsListResult
+    ProjectItemsListResult,
+    DirectoryContentListResult
 )
 from .types import (
     RepositoriesGetParams,
@@ -76,7 +77,9 @@ from .types import (
     ViewerRepositoriesListParams,
     ProjectsListParams,
     ProjectsGetParams,
-    ProjectItemsListParams
+    ProjectItemsListParams,
+    FileContentGetParams,
+    DirectoryContentListParams
 )
 from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
 
@@ -112,6 +115,7 @@ __all__ = [
     "ViewerRepositoriesListResult",
     "ProjectsListResult",
     "ProjectItemsListResult",
+    "DirectoryContentListResult",
     "RepositoriesGetParams",
     "RepositoriesListParams",
     "RepositoriesApiSearchParams",
@@ -152,4 +156,6 @@ __all__ = [
     "ProjectsListParams",
     "ProjectsGetParams",
     "ProjectItemsListParams",
+    "FileContentGetParams",
+    "DirectoryContentListParams",
 ]
