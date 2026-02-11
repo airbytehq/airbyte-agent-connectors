@@ -296,6 +296,11 @@ class EndpointDefinition(BaseModel):
         description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
+    no_content_response: bool = Field(
+        False,
+        description="True when the operation defines a 204 No Content response, indicating no response body is expected",
+    )
+
 
 class EntityDefinition(BaseModel):
     """Definition of an API entity."""
