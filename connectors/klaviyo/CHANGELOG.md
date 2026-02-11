@@ -1,5 +1,10 @@
 # Klaviyo changelog
 
+## [0.1.28] - 2026-02-11
+- Updated connector definition (YAML version 1.0.2)
+- Source commit: 64ac3a66
+- SDK version: 0.1.0
+
 ## [0.1.27] - 2026-02-11
 - Updated connector definition (YAML version 1.0.2)
 - Source commit: 7ead0448
