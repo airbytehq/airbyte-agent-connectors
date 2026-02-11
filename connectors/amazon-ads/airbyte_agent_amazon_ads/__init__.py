@@ -21,7 +21,7 @@ from .models import (
     ProfilesListResult,
     PortfoliosListResult,
     SponsoredProductCampaignsListResult,
-    AirbyteSearchHit,
+    AirbyteSearchMeta,
     AirbyteSearchResult,
     ProfilesSearchData,
     ProfilesSearchResult
@@ -60,7 +60,7 @@ __all__ = [
     "ProfilesListResult",
     "PortfoliosListResult",
     "SponsoredProductCampaignsListResult",
-    "AirbyteSearchHit",
+    "AirbyteSearchMeta",
     "AirbyteSearchResult",
     "ProfilesSearchData",
     "ProfilesSearchResult",
