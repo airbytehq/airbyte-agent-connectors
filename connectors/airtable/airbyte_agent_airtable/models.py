@@ -169,28 +169,26 @@ class TablesSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class AirbyteSearchHit(BaseModel, Generic[D]):
-    """A single search result with typed data."""
+class AirbyteSearchMeta(BaseModel):
+    """Pagination metadata for search responses."""
     model_config = ConfigDict(extra="allow")
 
-    id: str | None = None
-    """Unique identifier for the record."""
-    score: float | None = None
-    """Relevance score for the match."""
-    data: D
-    """The matched record data."""
-
-
-class AirbyteSearchResult(BaseModel, Generic[D]):
-    """Result from Airbyte cache search operations with typed hits."""
-    model_config = ConfigDict(extra="allow")
-
-    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
-    """List of matching records."""
-    next_cursor: str | None = None
+    has_more: bool = False
+    """Whether more results are available."""
+    cursor: str | None = None
     """Cursor for fetching the next page of results."""
     took_ms: int | None = None
     """Time taken to execute the search in milliseconds."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed records."""
+    model_config = ConfigDict(extra="allow")
+
+    data: list[D] = Field(default_factory=list)
+    """List of matching records."""
+    meta: AirbyteSearchMeta = Field(default_factory=AirbyteSearchMeta)
+    """Pagination metadata."""
 
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
