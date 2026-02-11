@@ -481,14 +481,17 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
             # Extract response schema
             response_schema = None
-            if "200" in operation.responses:
-                response = operation.responses["200"]
-                if response.content and "application/json" in response.content:
-                    media_type = response.content["application/json"]
-                    schema = media_type.schema_ if media_type else {}
+            for code in ("200", "201"):
+                if code in operation.responses:
+                    response = operation.responses[code]
+                    if response.content and "application/json" in response.content:
+                        media_type = response.content["application/json"]
+                        schema = media_type.schema_ if media_type else {}
+                        response_schema = resolve_schema_refs(schema, spec_dict)
+                    break
 
-                    # Resolve all $refs in the response schema using jsonref
-                    response_schema = resolve_schema_refs(schema, spec_dict)
+            # Check for 204 No Content response (no response body expected)
+            has_no_content_response = "204" in operation.responses
 
             # Extract file_field for download operations
             file_field = getattr(operation, "x_airbyte_file_url", None)
@@ -524,6 +527,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 file_field=file_field,
                 untested=untested,
                 preferred_for_check=preferred_for_check,
+                no_content_response=has_no_content_response,
             )
 
             # Add to entities map
