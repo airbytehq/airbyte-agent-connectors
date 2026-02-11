@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-google-drive"
-version = "0.1.71"
+version = "0.1.72"
 description = "Airbyte Google-Drive Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
