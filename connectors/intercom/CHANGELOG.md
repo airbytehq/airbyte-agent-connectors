@@ -1,5 +1,10 @@
 # Intercom changelog
 
+## [0.1.73] - 2026-02-11
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 8c602f77
+- SDK version: 0.1.0
+
 ## [0.1.72] - 2026-02-11
 - Updated connector definition (YAML version 0.1.8)
 - Source commit: 114c9599
