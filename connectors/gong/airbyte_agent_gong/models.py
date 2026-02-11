@@ -197,30 +197,80 @@ class TranscriptsResponse(BaseModel):
     records: Union[PaginationRecords, Any] = Field(default=None)
     request_id: Union[str, Any] = Field(default=None, alias="requestId")
 
-class ExtensiveCallContentTopicsItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.topics_item"""
+class ExtensiveCallMedia(BaseModel):
+    """Media URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None)
-    duration: Union[float, Any] = Field(default=None)
+    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
+    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
 
-class ExtensiveCallContentTrackersItem(BaseModel):
-    """Nested schema for ExtensiveCallContent.trackers_item"""
+class ExtensiveCallInteractionQuestions(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.questions"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    count: Union[int, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
-    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
+    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
+    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
 
-class ExtensiveCallContent(BaseModel):
-    """Content data including topics and trackers"""
+class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
+    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
-    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
-    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
+    name: Union[str, Any] = Field(default=None, description="Stat name")
+    """Stat name"""
+    value: Union[float, Any] = Field(default=None, description="Stat value")
+    """Stat value"""
+
+class ExtensiveCallInteraction(BaseModel):
+    """Interaction statistics"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
+    questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
+
+class ExtensiveCallMetadata(BaseModel):
+    """Call metadata"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
+    """Unique call identifier"""
+    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
+    """URL to call in Gong"""
+    title: Union[str, Any] = Field(default=None, description="Call title")
+    """Call title"""
+    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
+    """Scheduled time"""
+    started: Union[str, Any] = Field(default=None, description="Call start time")
+    """Call start time"""
+    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
+    """Call duration in seconds"""
+    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
+    """Primary user ID"""
+    direction: Union[str, Any] = Field(default=None, description="Call direction")
+    """Call direction"""
+    system: Union[str, Any] = Field(default=None, description="System type")
+    """System type"""
+    scope: Union[str, Any] = Field(default=None, description="Call scope")
+    """Call scope"""
+    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
+    """Media type (Audio/Video)"""
+    language: Union[str, Any] = Field(default=None, description="Call language")
+    """Call language"""
+    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
+    """Workspace ID"""
+    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
+    """SDR disposition"""
+    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
+    """Client unique identifier"""
+    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
+    """Custom data"""
+    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
+    """Call purpose"""
+    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
+    """Whether call is private"""
+    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
+    """Meeting URL"""
+    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
+    """Calendar event ID"""
 
 class ExtensiveCallPartiesItemContextItemObjectsItemFieldsItem(BaseModel):
     """Nested schema for ExtensiveCallPartiesItemContextItemObjectsItem.fields_item"""
@@ -282,80 +332,30 @@ class ExtensiveCallCollaboration(BaseModel):
 
     public_comments: Union[list[dict[str, Any]], Any] = Field(default=None, alias="publicComments")
 
-class ExtensiveCallInteractionInteractionstatsItem(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.interactionStats_item"""
+class ExtensiveCallContentTopicsItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.topics_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    name: Union[str, Any] = Field(default=None, description="Stat name")
-    """Stat name"""
-    value: Union[float, Any] = Field(default=None, description="Stat value")
-    """Stat value"""
+    name: Union[str, Any] = Field(default=None)
+    duration: Union[float, Any] = Field(default=None)
 
-class ExtensiveCallInteractionQuestions(BaseModel):
-    """Nested schema for ExtensiveCallInteraction.questions"""
+class ExtensiveCallContentTrackersItem(BaseModel):
+    """Nested schema for ExtensiveCallContent.trackers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    company_count: Union[int, Any] = Field(default=None, alias="companyCount")
-    non_company_count: Union[int, Any] = Field(default=None, alias="nonCompanyCount")
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    count: Union[int, Any] = Field(default=None)
+    type: Union[str, Any] = Field(default=None)
+    occurrences: Union[list[dict[str, Any]], Any] = Field(default=None)
 
-class ExtensiveCallInteraction(BaseModel):
-    """Interaction statistics"""
+class ExtensiveCallContent(BaseModel):
+    """Content data including topics and trackers"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    interaction_stats: Union[list[ExtensiveCallInteractionInteractionstatsItem], Any] = Field(default=None, alias="interactionStats")
-    questions: Union[ExtensiveCallInteractionQuestions, Any] = Field(default=None)
-
-class ExtensiveCallMedia(BaseModel):
-    """Media URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    audio_url: Union[str, Any] = Field(default=None, alias="audioUrl")
-    video_url: Union[str, Any] = Field(default=None, alias="videoUrl")
-
-class ExtensiveCallMetadata(BaseModel):
-    """Call metadata"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Unique call identifier")
-    """Unique call identifier"""
-    url: Union[str, Any] = Field(default=None, description="URL to call in Gong")
-    """URL to call in Gong"""
-    title: Union[str, Any] = Field(default=None, description="Call title")
-    """Call title"""
-    scheduled: Union[str, Any] = Field(default=None, description="Scheduled time")
-    """Scheduled time"""
-    started: Union[str, Any] = Field(default=None, description="Call start time")
-    """Call start time"""
-    duration: Union[int, Any] = Field(default=None, description="Call duration in seconds")
-    """Call duration in seconds"""
-    primary_user_id: Union[str, Any] = Field(default=None, alias="primaryUserId", description="Primary user ID")
-    """Primary user ID"""
-    direction: Union[str, Any] = Field(default=None, description="Call direction")
-    """Call direction"""
-    system: Union[str, Any] = Field(default=None, description="System type")
-    """System type"""
-    scope: Union[str, Any] = Field(default=None, description="Call scope")
-    """Call scope"""
-    media: Union[str, Any] = Field(default=None, description="Media type (Audio/Video)")
-    """Media type (Audio/Video)"""
-    language: Union[str, Any] = Field(default=None, description="Call language")
-    """Call language"""
-    workspace_id: Union[str, Any] = Field(default=None, alias="workspaceId", description="Workspace ID")
-    """Workspace ID"""
-    sdr_disposition: Union[str | None, Any] = Field(default=None, alias="sdrDisposition", description="SDR disposition")
-    """SDR disposition"""
-    client_unique_id: Union[str | None, Any] = Field(default=None, alias="clientUniqueId", description="Client unique identifier")
-    """Client unique identifier"""
-    custom_data: Union[str | None, Any] = Field(default=None, alias="customData", description="Custom data")
-    """Custom data"""
-    purpose: Union[str | None, Any] = Field(default=None, description="Call purpose")
-    """Call purpose"""
-    is_private: Union[bool, Any] = Field(default=None, alias="isPrivate", description="Whether call is private")
-    """Whether call is private"""
-    meeting_url: Union[str, Any] = Field(default=None, alias="meetingUrl", description="Meeting URL")
-    """Meeting URL"""
-    calendar_event_id: Union[str | None, Any] = Field(default=None, alias="calendarEventId", description="Calendar event ID")
-    """Calendar event ID"""
+    topics: Union[list[ExtensiveCallContentTopicsItem], Any] = Field(default=None)
+    trackers: Union[list[ExtensiveCallContentTrackersItem], Any] = Field(default=None)
+    points_of_interest: Union[dict[str, Any], Any] = Field(default=None, alias="pointsOfInterest")
 
 class ExtensiveCall(BaseModel):
     """Detailed call object with extended information"""
@@ -940,28 +940,26 @@ class StatsActivityScorecardsSearchData(BaseModel):
 
 # ===== GENERIC SEARCH RESULT TYPES =====
 
-class AirbyteSearchHit(BaseModel, Generic[D]):
-    """A single search result with typed data."""
+class AirbyteSearchMeta(BaseModel):
+    """Pagination metadata for search responses."""
     model_config = ConfigDict(extra="allow")
 
-    id: str | None = None
-    """Unique identifier for the record."""
-    score: float | None = None
-    """Relevance score for the match."""
-    data: D
-    """The matched record data."""
-
-
-class AirbyteSearchResult(BaseModel, Generic[D]):
-    """Result from Airbyte cache search operations with typed hits."""
-    model_config = ConfigDict(extra="allow")
-
-    hits: list[AirbyteSearchHit[D]] = Field(default_factory=list)
-    """List of matching records."""
-    next_cursor: str | None = None
+    has_more: bool = False
+    """Whether more results are available."""
+    cursor: str | None = None
     """Cursor for fetching the next page of results."""
     took_ms: int | None = None
     """Time taken to execute the search in milliseconds."""
+
+
+class AirbyteSearchResult(BaseModel, Generic[D]):
+    """Result from Airbyte cache search operations with typed records."""
+    model_config = ConfigDict(extra="allow")
+
+    data: list[D] = Field(default_factory=list)
+    """List of matching records."""
+    meta: AirbyteSearchMeta = Field(default_factory=AirbyteSearchMeta)
+    """Pagination metadata."""
 
 
 # ===== ENTITY-SPECIFIC SEARCH RESULT TYPE ALIASES =====
