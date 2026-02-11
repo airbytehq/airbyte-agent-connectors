@@ -1,5 +1,10 @@
 # Gmail changelog
 
+## [0.1.2] - 2026-02-11
+- Updated connector definition (YAML version 0.1.0)
+- Source commit: 8c602f77
+- SDK version: 0.1.0
+
 ## [0.1.1] - 2026-02-11
 - Updated connector definition (YAML version 0.1.0)
 - Source commit: 114c9599

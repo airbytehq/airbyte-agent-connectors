@@ -1004,6 +1004,7 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
                     path_params_schema={
                         'labelId': {'type': 'string', 'required': True},
                     },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -1580,6 +1581,7 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
                     path_params_schema={
                         'draftId': {'type': 'string', 'required': True},
                     },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
