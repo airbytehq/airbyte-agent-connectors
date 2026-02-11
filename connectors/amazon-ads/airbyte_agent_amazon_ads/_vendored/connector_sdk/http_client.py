@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import random
 import time
 from collections import defaultdict
@@ -35,6 +36,8 @@ from .secrets import SecretStr
 from .auth_strategies import AuthStrategyFactory
 from .logging import NullLogger
 from .types import AuthConfig, AuthType
+
+_logger = logging.getLogger(__name__)
 
 # Type alias for token refresh callback
 # Supports both sync and async callbacks for flexibility
@@ -492,12 +495,27 @@ class HTTPClient:
                     response_data = {}
                 elif "application/json" in content_type or "+json" in content_type or not content_type:
                     response_data = await response.json()
-                else:
+                elif "application/xml" in content_type or "text/html" in content_type:
                     error_msg = f"Expected JSON response for {method.upper()} {url}, got content-type: {content_type}"
                     raise HTTPClientError(error_msg)
+                else:
+                    # Some APIs return JSON data with non-standard content-type headers
+                    # (e.g., application/octet-stream). Rather than rejecting these outright,
+                    # attempt JSON parsing since the body content matters more than the header.
+                    # If parsing fails, the ValueError handler below will catch it.
+                    response_data = await response.json()
+                    _logger.warning(
+                        "Unexpected content-type '%s' for %s %s was successfully parsed as JSON. "
+                        "The API may be returning an incorrect Content-Type header.",
+                        content_type,
+                        method.upper(),
+                        url,
+                    )
 
             except ValueError as e:
-                error_msg = f"Failed to parse JSON response for {method.upper()} {url}: {str(e)}"
+                error_msg = f"Failed to parse JSON response for {method.upper()} {url}: {str(e)}" + (
+                    f" (content-type was: {content_type})" if content_type else ""
+                )
                 raise HTTPClientError(error_msg)
 
             success = True
