@@ -66,6 +66,7 @@ class CommitsListParams(TypedDict):
     repo: str
     per_page: NotRequired[int]
     after: NotRequired[str]
+    path: NotRequired[str]
     fields: NotRequired[list[str]]
 
 class CommitsGetParams(TypedDict):
@@ -300,5 +301,21 @@ class ProjectItemsListParams(TypedDict):
     project_number: int
     per_page: NotRequired[int]
     after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class FileContentGetParams(TypedDict):
+    """Parameters for file_content.get operation"""
+    owner: str
+    repo: str
+    path: str
+    ref: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class DirectoryContentListParams(TypedDict):
+    """Parameters for directory_content.list operation"""
+    owner: str
+    repo: str
+    path: str
+    ref: NotRequired[str]
     fields: NotRequired[list[str]]
 

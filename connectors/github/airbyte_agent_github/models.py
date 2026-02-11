@@ -169,3 +169,6 @@ ProjectsListResult = GithubExecuteResult[list[dict[str, Any]]]
 ProjectItemsListResult = GithubExecuteResult[list[dict[str, Any]]]
 """Result type for project_items.list operation."""
 
+DirectoryContentListResult = GithubExecuteResult[list[dict[str, Any]]]
+"""Result type for directory_content.list operation."""
+

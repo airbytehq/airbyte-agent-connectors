@@ -26,6 +26,8 @@ from .types import (
     CommentsListParams,
     CommitsGetParams,
     CommitsListParams,
+    DirectoryContentListParams,
+    FileContentGetParams,
     IssuesApiSearchParams,
     IssuesGetParams,
     IssuesListParams,
@@ -95,6 +97,7 @@ from .models import (
     ViewerRepositoriesListResult,
     ProjectsListResult,
     ProjectItemsListResult,
+    DirectoryContentListResult,
 )
 
 # TypeVar for decorator type preservation
@@ -142,7 +145,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.12"
+    connector_version = "0.1.14"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -187,6 +190,8 @@ class GithubConnector:
         ("projects", "list"): True,
         ("projects", "get"): None,
         ("project_items", "list"): True,
+        ("file_content", "get"): None,
+        ("directory_content", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -198,7 +203,7 @@ class GithubConnector:
         ('org_repositories', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('branches', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('branches', 'get'): {'owner': 'owner', 'repo': 'repo', 'branch': 'branch', 'fields': 'fields'},
-        ('commits', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('commits', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'path': 'path', 'fields': 'fields'},
         ('commits', 'get'): {'owner': 'owner', 'repo': 'repo', 'sha': 'sha', 'fields': 'fields'},
         ('releases', 'list'): {'owner': 'owner', 'repo': 'repo', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('releases', 'get'): {'owner': 'owner', 'repo': 'repo', 'tag': 'tag', 'fields': 'fields'},
@@ -232,6 +237,8 @@ class GithubConnector:
         ('projects', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('projects', 'get'): {'org': 'org', 'project_number': 'project_number', 'fields': 'fields'},
         ('project_items', 'list'): {'org': 'org', 'project_number': 'project_number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('file_content', 'get'): {'owner': 'owner', 'repo': 'repo', 'path': 'path', 'ref': 'ref', 'fields': 'fields'},
+        ('directory_content', 'list'): {'owner': 'owner', 'repo': 'repo', 'path': 'path', 'ref': 'ref', 'fields': 'fields'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -354,6 +361,8 @@ class GithubConnector:
         self.viewer_repositories = ViewerRepositoriesQuery(self)
         self.projects = ProjectsQuery(self)
         self.project_items = ProjectItemsQuery(self)
+        self.file_content = FileContentQuery(self)
+        self.directory_content = DirectoryContentQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -676,6 +685,22 @@ class GithubConnector:
         action: Literal["list"],
         params: "ProjectItemsListParams"
     ) -> "ProjectItemsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["file_content"],
+        action: Literal["get"],
+        params: "FileContentGetParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["directory_content"],
+        action: Literal["list"],
+        params: "DirectoryContentListParams"
+    ) -> "DirectoryContentListResult": ...
 
 
     @overload
@@ -1378,6 +1403,7 @@ class CommitsQuery:
         repo: str,
         per_page: int | None = None,
         after: str | None = None,
+        path: str | None = None,
         fields: list[str] | None = None,
         **kwargs
     ) -> CommitsListResult:
@@ -1389,6 +1415,7 @@ class CommitsQuery:
             repo: The name of the repository
             per_page: The number of results per page
             after: Cursor for pagination
+            path: Only include commits that modified this file path (e.g. "airbyte-integrations/connectors/source-stripe/")
             fields: Optional array of field names to select
             **kwargs: Additional parameters
 
@@ -1400,6 +1427,7 @@ class CommitsQuery:
             "repo": repo,
             "per_page": per_page,
             "after": after,
+            "path": path,
             "fields": fields,
             **kwargs
         }.items() if v is not None}
@@ -2768,6 +2796,106 @@ Each item includes its field values like Status, Priority, etc.
         result = await self._connector.execute("project_items", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectItemsListResult(
+            data=result.data
+        )
+
+
+
+class FileContentQuery:
+    """
+    Query class for FileContent entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        owner: str,
+        repo: str,
+        path: str,
+        ref: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Returns the text content of a file at a specific path and git ref (branch, tag, or commit SHA).
+Only works for text files. Binary files will have text as null and isBinary as true.
+
+
+        Args:
+            owner: The account owner of the repository
+            repo: The name of the repository
+            path: The file path within the repository (e.g. 'README.md' or 'src/main.py')
+            ref: The git ref to read from — branch name, tag, or commit SHA. Defaults to 'HEAD' (default branch)
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "owner": owner,
+            "repo": repo,
+            "path": path,
+            "ref": ref,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("file_content", "get", params)
+        return result
+
+
+
+class DirectoryContentQuery:
+    """
+    Query class for DirectoryContent entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        owner: str,
+        repo: str,
+        path: str,
+        ref: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> DirectoryContentListResult:
+        """
+        Returns a list of files and subdirectories at a specific path in the repository.
+Each entry includes the name, type (blob for files, tree for directories), and object ID.
+Use this to explore repository structure before reading specific files.
+
+
+        Args:
+            owner: The account owner of the repository
+            repo: The name of the repository
+            path: The directory path within the repository (e.g. 'src' or 'airbyte-integrations/connectors/source-stripe')
+            ref: The git ref — branch name, tag, or commit SHA. Defaults to 'HEAD' (default branch)
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            DirectoryContentListResult
+        """
+        params = {k: v for k, v in {
+            "owner": owner,
+            "repo": repo,
+            "path": path,
+            "ref": ref,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("directory_content", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DirectoryContentListResult(
             data=result.data
         )
 

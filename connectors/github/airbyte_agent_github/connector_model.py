@@ -30,7 +30,7 @@ from uuid import (
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('ef69ef6e-aa7f-4af1-a01d-ef775033524e'),
     name='github',
-    version='0.1.12',
+    version='0.1.14',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
@@ -467,6 +467,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'repo',
                         'per_page',
                         'after',
+                        'path',
                         'fields',
                     ],
                     query_params_schema={
@@ -478,6 +479,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                             'default': 30,
                         },
                         'after': {'type': 'string', 'required': False},
+                        'path': {'type': 'string', 'required': False},
                         'fields': {'type': 'array', 'required': False},
                     },
                     response_schema={
@@ -525,12 +527,13 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={
                         'type': 'graphql',
-                        'query': 'query ListCommits($owner: String!, $name: String!, $first: Int!, $after: String) {\n  repository(owner: $owner, name: $name) {\n    defaultBranchRef {\n      target {\n        ... on Commit {\n          history(first: $first, after: $after) {\n            pageInfo {\n              hasNextPage\n              endCursor\n            }\n            nodes {\n              {{ fields }}\n            }\n          }\n        }\n      }\n    }\n  }\n}\n',
+                        'query': 'query ListCommits($owner: String!, $name: String!, $first: Int!, $after: String, $path: String) {\n  repository(owner: $owner, name: $name) {\n    defaultBranchRef {\n      target {\n        ... on Commit {\n          history(first: $first, after: $after, path: $path) {\n            pageInfo {\n              hasNextPage\n              endCursor\n            }\n            nodes {\n              {{ fields }}\n            }\n          }\n        }\n      }\n    }\n  }\n}\n',
                         'variables': {
                             'owner': '{{ owner }}',
                             'name': '{{ repo }}',
                             'first': '{{ per_page }}',
                             'after': '{{ after }}',
+                            'path': '{{ path }}',
                         },
                         'default_fields': 'oid message messageHeadline committedDate author { name email } additions deletions changedFiles parents(first: 5) { nodes { oid } }',
                     },
@@ -2565,6 +2568,134 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id\ntype\ncreatedAt\nupdatedAt\nisArchived\ncontent {\n  ... on Issue {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on PullRequest {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on DraftIssue {\n    id\n    title\n    body\n    createdAt\n    updatedAt\n    creator { login }\n  }\n}\nfieldValues(first: 20) {\n  nodes {\n    ... on ProjectV2ItemFieldSingleSelectValue {\n      name\n      field { ... on ProjectV2SingleSelectField { name } }\n    }\n    ... on ProjectV2ItemFieldTextValue {\n      text\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldDateValue {\n      date\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldNumberValue {\n      number\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldIterationValue {\n      title\n      startDate\n      duration\n      field { ... on ProjectV2IterationField { name } }\n    }\n    ... on ProjectV2ItemFieldLabelValue {\n      labels(first: 10) { nodes { name color } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldUserValue {\n      users(first: 5) { nodes { login } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldRepositoryValue {\n      repository { nameWithOwner }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldMilestoneValue {\n      milestone { title number }\n      field { ... on ProjectV2Field { name } }\n    }\n  }\n}\n',
                     },
                     record_extractor='$.data.organization.projectV2.items.nodes',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='file_content',
+            actions=[Action.GET],
+            endpoints={
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:file_content:get',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description='Returns the text content of a file at a specific path and git ref (branch, tag, or commit SHA).\nOnly works for text files. Binary files will have text as null and isBinary as true.\n',
+                    query_params=[
+                        'owner',
+                        'repo',
+                        'path',
+                        'ref',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'path': {'type': 'string', 'required': True},
+                        'ref': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'HEAD',
+                        },
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'repository': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'object': {'type': 'object'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query GetFileContent($owner: String!, $name: String!, $expression: String!) {\n  repository(owner: $owner, name: $name) {\n    object(expression: $expression) {\n      ... on Blob {\n        {{ fields }}\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'owner': '{{ owner }}',
+                            'name': '{{ repo }}',
+                            'expression': '{{ ref }}:{{ path }}',
+                        },
+                        'default_fields': 'text byteSize isBinary isTruncated oid abbreviatedOid',
+                    },
+                    record_extractor='$.data.repository.object',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='directory_content',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:directory_content:list',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of files and subdirectories at a specific path in the repository.\nEach entry includes the name, type (blob for files, tree for directories), and object ID.\nUse this to explore repository structure before reading specific files.\n',
+                    query_params=[
+                        'owner',
+                        'repo',
+                        'path',
+                        'ref',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'path': {'type': 'string', 'required': True},
+                        'ref': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'HEAD',
+                        },
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'repository': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'object': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'entries': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'object'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query ListDirectoryContent($owner: String!, $name: String!, $expression: String!) {\n  repository(owner: $owner, name: $name) {\n    object(expression: $expression) {\n      ... on Tree {\n        entries {\n          {{ fields }}\n        }\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'owner': '{{ owner }}',
+                            'name': '{{ repo }}',
+                            'expression': '{{ ref }}:{{ path }}',
+                        },
+                        'default_fields': 'name type oid path',
+                    },
+                    record_extractor='$.data.repository.object.entries',
                 ),
             },
         ),
