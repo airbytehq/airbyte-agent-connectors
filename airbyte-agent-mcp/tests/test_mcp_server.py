@@ -424,32 +424,27 @@ class TestEnvelopePreservation:
             "meta": {"has_more": True, "cursor": "abc123"},
         }
 
-    def test_search_action_preserves_envelope_and_hit_structure(self):
-        """For search action: extract hits, transform data inside each hit, preserve envelope."""
+    def test_search_action_preserves_envelope(self):
+        """For search action: extract data, transform records, and preserve meta."""
         api_response = {
-            "hits": [
-                {"data": {"id": 1, "name": "Alice", "bio": "long"}, "score": 0.95},
-                {"data": {"id": 2, "name": "Bob", "bio": "text"}, "score": 0.87},
+            "data": [
+                {"id": 1, "name": "Alice", "bio": "long"},
+                {"id": 2, "name": "Bob", "bio": "text"},
             ],
-            "meta": {"total": 100, "cursor": "xyz"},
+            "meta": {"has_more": True, "cursor": "xyz"},
         }
 
         # Simulate what execute does for search
-        hits = api_response.get("hits", [])
+        records = api_response.get("data", [])
         select_fields = ["id", "name"]
-        # Execute adds "data." prefix for search
-        prefixed_fields = [f"data.{f}" for f in select_fields]
-        hits = _select_fields(hits, prefixed_fields)
-        hits = _truncate_long_text(hits)
-        hits = _compact(hits)
-        result = {**api_response, "hits": hits}
+        records = _select_fields(records, select_fields)
+        records = _truncate_long_text(records)
+        records = _compact(records)
+        result = {**api_response, "data": records}
 
         assert result == {
-            "hits": [
-                {"data": {"id": 1, "name": "Alice"}},
-                {"data": {"id": 2, "name": "Bob"}},
-            ],
-            "meta": {"total": 100, "cursor": "xyz"},
+            "data": [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}],
+            "meta": {"has_more": True, "cursor": "xyz"},
         }
 
     def test_get_action_returns_transformed_record_directly(self):
@@ -562,28 +557,28 @@ class TestTransformResponse:
         assert transformed["data"] == [{"id": 1, "name": "Alice"}]
         assert transformed["meta"] == {"has_more": False}
 
-    def test_search_action_extracts_and_replaces_hits(self):
-        result = {"hits": [{"data": {"id": 1, "name": "Alice"}}], "meta": {"total": 1}}
+    def test_search_action_extracts_and_replaces_data(self):
+        result = {"data": [{"id": 1, "name": "Alice"}], "meta": {"has_more": False}}
         transformed = _transform_response(result, ACTION_SEARCH, None, None)
         assert ENVELOPE_DATA_FIELD[ACTION_SEARCH] in transformed
-        assert transformed["hits"] == [{"data": {"id": 1, "name": "Alice"}}]
-        assert transformed["meta"] == {"total": 1}
+        assert transformed["data"] == [{"id": 1, "name": "Alice"}]
+        assert transformed["meta"] == {"has_more": False}
 
-    def test_search_prefixes_select_fields_with_data(self):
+    def test_applies_select_fields_for_search(self):
         result = {
-            "hits": [{"data": {"id": 1, "name": "Alice", "bio": "long"}, "score": 0.9}],
+            "data": [{"id": 1, "name": "Alice", "bio": "long"}],
             "meta": {},
         }
         transformed = _transform_response(result, ACTION_SEARCH, ["id", "name"], None)
-        assert transformed["hits"] == [{"data": {"id": 1, "name": "Alice"}}]
+        assert transformed["data"] == [{"id": 1, "name": "Alice"}]
 
-    def test_search_prefixes_exclude_fields_with_data(self):
+    def test_applies_exclude_fields_for_search(self):
         result = {
-            "hits": [{"data": {"id": 1, "name": "Alice", "bio": "long"}, "score": 0.9}],
+            "data": [{"id": 1, "name": "Alice", "bio": "long"}],
             "meta": {},
         }
         transformed = _transform_response(result, ACTION_SEARCH, None, ["bio"])
-        assert transformed["hits"] == [{"data": {"id": 1, "name": "Alice"}, "score": 0.9}]
+        assert transformed["data"] == [{"id": 1, "name": "Alice"}]
 
     def test_get_action_returns_transformed_directly(self):
         result = {"id": 1, "name": "Alice", "bio": "long"}
@@ -614,9 +609,9 @@ class TestTransformResponse:
 
     def test_truncates_for_search(self):
         long_text = "x" * 500
-        result = {"hits": [{"data": {"id": 1, "text": long_text}}], "meta": {}}
+        result = {"data": [{"id": 1, "text": long_text}], "meta": {}}
         transformed = _transform_response(result, ACTION_SEARCH, None, None)
-        assert transformed["hits"][0]["data"]["text"].endswith(_TRUNCATION_SUFFIX)
+        assert transformed["data"][0]["text"].endswith(_TRUNCATION_SUFFIX)
 
     def test_does_not_truncate_for_get(self):
         long_text = "x" * 500
@@ -639,9 +634,9 @@ class TestTransformResponse:
         with pytest.raises(KeyError, match="List response missing 'data' envelope key"):
             _transform_response(result, ACTION_LIST, None, None)
 
-    def test_search_missing_hits_envelope_raises(self):
+    def test_search_missing_data_envelope_raises(self):
         result = {"results": [{"id": 1}], "meta": {}}
-        with pytest.raises(KeyError, match="Search response missing 'hits' envelope key"):
+        with pytest.raises(KeyError, match="Search response missing 'data' envelope key"):
             _transform_response(result, ACTION_SEARCH, None, None)
 
 
@@ -705,4 +700,4 @@ class TestConstants:
 
     def test_envelope_data_field_mapping(self):
         assert ENVELOPE_DATA_FIELD[ACTION_LIST] == "data"
-        assert ENVELOPE_DATA_FIELD[ACTION_SEARCH] == "hits"
+        assert ENVELOPE_DATA_FIELD[ACTION_SEARCH] == "data"

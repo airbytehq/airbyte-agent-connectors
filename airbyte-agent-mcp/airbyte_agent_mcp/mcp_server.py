@@ -24,7 +24,7 @@ COLLECTION_ACTIONS = {ACTION_LIST, ACTION_SEARCH}
 
 # Response envelope keys
 ENVELOPE_DATA_FIELD = {
-    ACTION_SEARCH: "hits",
+    ACTION_SEARCH: "data",
     ACTION_LIST: "data",
 }
 
@@ -314,18 +314,16 @@ def _transform_response(
         KeyError: If expected envelope key is missing from list/search response.
     """
     records = result
+    envelope_data_field = ENVELOPE_DATA_FIELD.get(action)
+
     # Determine envelope structure based on action type
     if action in COLLECTION_ACTIONS:
-        if ENVELOPE_DATA_FIELD[action] not in result:
-            raise KeyError(f"{action.capitalize()} response missing '{ENVELOPE_DATA_FIELD[action]}' envelope key. Got keys: {list(result.keys())}")
-        records = result[ENVELOPE_DATA_FIELD[action]]
+        if envelope_data_field is None:
+            raise KeyError(f"Unknown collection action: {action}")
 
-    # Search hits nest entity data under "data" key
-    if action == ACTION_SEARCH:
-        if select_fields:
-            select_fields = [f"data.{f}" for f in select_fields]
-        if exclude_fields:
-            exclude_fields = [f"data.{f}" for f in exclude_fields]
+        if envelope_data_field not in result:
+            raise KeyError(f"{action.capitalize()} response missing '{envelope_data_field}' envelope key. Got keys: {list(result.keys())}")
+        records = result[envelope_data_field]
 
     # Apply transformations
     if select_fields:
@@ -340,7 +338,9 @@ def _transform_response(
 
     # Reconstruct response
     if action in COLLECTION_ACTIONS:
-        result[ENVELOPE_DATA_FIELD[action]] = records
+        if envelope_data_field is None:
+            raise KeyError(f"Unknown collection action: {action}")
+        result[envelope_data_field] = records
         return result
 
     return records
