@@ -394,6 +394,19 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'required': ['fields'],
                     },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from creating an issue',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'The ID of the created issue'},
+                            'key': {'type': 'string', 'description': 'The key of the created issue (e.g., "PROJ-123")'},
+                            'self': {
+                                'type': 'string',
+                                'format': 'uri',
+                                'description': 'URL of the created issue',
+                            },
+                        },
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -864,6 +877,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'x-airbyte-entity-name': 'issues',
                     },
+                    no_content_response=True,
                 ),
                 Action.DELETE: EndpointDefinition(
                     method='DELETE',
@@ -882,6 +896,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                     path_params_schema={
                         'issueIdOrKey': {'type': 'string', 'required': True},
                     },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -2764,6 +2779,126 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         },
                         'required': ['body'],
                     },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Jira issue comment object',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Unique comment identifier'},
+                            'self': {
+                                'type': 'string',
+                                'format': 'uri',
+                                'description': 'URL of the comment',
+                            },
+                            'body': {
+                                'type': 'object',
+                                'description': 'Comment content in ADF (Atlassian Document Format)',
+                                'properties': {
+                                    'type': {'type': 'string', 'description': "Document type (always 'doc')"},
+                                    'version': {'type': 'integer', 'description': 'ADF version'},
+                                    'content': {
+                                        'type': 'array',
+                                        'description': 'Array of content blocks',
+                                        'items': {
+                                            'type': 'object',
+                                            'properties': {
+                                                'type': {'type': 'string', 'description': "Block type (e.g., 'paragraph')"},
+                                                'content': {
+                                                    'type': 'array',
+                                                    'description': 'Nested content items',
+                                                    'items': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'type': {'type': 'string', 'description': "Content type (e.g., 'text')"},
+                                                            'text': {'type': 'string', 'description': 'Text content'},
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                'additionalProperties': False,
+                            },
+                            'author': {
+                                'type': 'object',
+                                'description': 'Comment author user information',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'updateAuthor': {
+                                'type': 'object',
+                                'description': 'User who last updated the comment',
+                                'properties': {
+                                    'self': {'type': 'string', 'format': 'uri'},
+                                    'accountId': {'type': 'string'},
+                                    'emailAddress': {'type': 'string', 'format': 'email'},
+                                    'displayName': {'type': 'string'},
+                                    'active': {'type': 'boolean'},
+                                    'timeZone': {'type': 'string'},
+                                    'accountType': {'type': 'string'},
+                                    'avatarUrls': {
+                                        'type': 'object',
+                                        'description': 'URLs for user avatars in different sizes',
+                                        'properties': {
+                                            '16x16': {'type': 'string', 'format': 'uri'},
+                                            '24x24': {'type': 'string', 'format': 'uri'},
+                                            '32x32': {'type': 'string', 'format': 'uri'},
+                                            '48x48': {'type': 'string', 'format': 'uri'},
+                                        },
+                                    },
+                                },
+                            },
+                            'created': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Comment creation timestamp',
+                            },
+                            'updated': {
+                                'type': 'string',
+                                'format': 'date-time',
+                                'description': 'Comment last update timestamp',
+                            },
+                            'jsdPublic': {'type': 'boolean', 'description': 'Whether the comment is public in Jira Service Desk'},
+                            'visibility': {
+                                'type': ['object', 'null'],
+                                'description': 'Visibility restrictions for the comment',
+                                'properties': {
+                                    'type': {'type': 'string'},
+                                    'value': {'type': 'string'},
+                                    'identifier': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'renderedBody': {
+                                'type': ['string', 'null'],
+                                'description': 'Rendered comment body as HTML (available with expand=renderedBody)',
+                            },
+                            'properties': {
+                                'type': ['array', 'null'],
+                                'description': 'Comment properties (available with expand=properties)',
+                                'items': {'type': 'object', 'additionalProperties': True},
+                            },
+                        },
+                        'x-airbyte-entity-name': 'issue_comments',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3108,6 +3243,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                         'issueIdOrKey': {'type': 'string', 'required': True},
                         'commentId': {'type': 'string', 'required': True},
                     },
+                    no_content_response=True,
                 ),
             },
             entity_schema={
@@ -3566,6 +3702,7 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    no_content_response=True,
                 ),
             },
         ),
