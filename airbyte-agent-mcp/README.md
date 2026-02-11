@@ -14,6 +14,8 @@ This project provides an MCP server that exposes [Airbyte](https://airbyte.com/)
 
 ## Quick Start
 
+> **Note:** The examples below use `uv run adp` (run from a local clone). You can also use `uvx --prerelease=allow --from=airbyte-agent-mcp adp` to run without cloning — the `--prerelease=allow` flag is required until the `fastmcp` v3 dependency reaches GA.
+
 1. **List available connectors**:
 
 ```bash
