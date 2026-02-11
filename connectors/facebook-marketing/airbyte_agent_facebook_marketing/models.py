@@ -54,6 +54,15 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
+
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -63,15 +72,6 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
-
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
