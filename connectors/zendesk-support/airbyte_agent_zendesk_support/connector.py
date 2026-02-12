@@ -260,7 +260,7 @@ class ZendeskSupportConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort': 'sort'},
+        ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
         ('tickets', 'get'): {'ticket_id': 'ticket_id'},
         ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id'},
         ('users', 'get'): {'user_id': 'user_id'},
@@ -1187,7 +1187,8 @@ class TicketsQuery:
         self,
         page: int | None = None,
         external_id: str | None = None,
-        sort: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
         **kwargs
     ) -> TicketsListResult:
         """
@@ -1196,7 +1197,8 @@ class TicketsQuery:
         Args:
             page: Page number for pagination
             external_id: Lists tickets by external id
-            sort: Sort order
+            sort_by: Sort field for offset pagination
+            sort_order: Sort order for offset pagination
             **kwargs: Additional parameters
 
         Returns:
@@ -1205,7 +1207,8 @@ class TicketsQuery:
         params = {k: v for k, v in {
             "page": page,
             "external_id": external_id,
-            "sort": sort,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
             **kwargs
         }.items() if v is not None}
 

@@ -97,11 +97,12 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tickets.json',
                     action=Action.LIST,
                     description='Returns a list of all tickets in your account',
-                    query_params=['page', 'external_id', 'sort'],
+                    query_params=['page', 'external_id', 'sort_by', 'sort_order'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'external_id': {'type': 'string', 'required': False},
-                        'sort': {'type': 'string', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {'type': 'string', 'required': False, 'default': 'asc'},
                     },
                     response_schema={
                         'type': 'object',
