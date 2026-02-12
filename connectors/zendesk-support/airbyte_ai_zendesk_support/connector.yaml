@@ -1459,12 +1459,19 @@ paths:
           description: Lists tickets by external id
           schema:
             type: string
-        - name: sort
+        - name: sort_by
           in: query
-          description: Sort order
+          description: Sort field for offset pagination
           schema:
             type: string
-            enum: [id, status, updated_at, -id, -status, -updated_at]
+            enum: [assignee, assignee.name, created_at, group, id, requester, requester.name, status, subject, updated_at]
+        - name: sort_order
+          in: query
+          description: Sort order for offset pagination
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
       responses:
         "200":
           description: List of tickets

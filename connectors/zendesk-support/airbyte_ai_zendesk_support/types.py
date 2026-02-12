@@ -20,7 +20,8 @@ class TicketsListParams(TypedDict):
     """Parameters for tickets.list operation"""
     page: NotRequired[int]
     external_id: NotRequired[str]
-    sort: NotRequired[str]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
 
 class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""

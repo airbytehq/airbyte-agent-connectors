@@ -679,7 +679,8 @@ class TicketsQuery:
         self,
         page: int | None = None,
         external_id: str | None = None,
-        sort: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
         **kwargs
     ) -> TicketsListResult:
         """
@@ -688,7 +689,8 @@ class TicketsQuery:
         Args:
             page: Page number for pagination
             external_id: Lists tickets by external id
-            sort: Sort order
+            sort_by: Sort field for offset pagination
+            sort_order: Sort order for offset pagination
             **kwargs: Additional parameters
 
         Returns:
@@ -697,7 +699,8 @@ class TicketsQuery:
         params = {k: v for k, v in {
             "page": page,
             "external_id": external_id,
-            "sort": sort,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
             **kwargs
         }.items() if v is not None}
 
