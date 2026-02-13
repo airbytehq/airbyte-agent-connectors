@@ -29,7 +29,7 @@ from uuid import (
 NotionConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('6e00b415-b02e-4160-bf02-58176a0ae687'),
     name='notion',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://api.notion.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -73,7 +73,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -180,7 +180,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -318,7 +318,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     request_body_defaults={'page_size': 100},
@@ -421,6 +421,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                             'type': ['string', 'null'],
                                                             'description': 'Database parent ID',
                                                         },
+                                                        'data_source_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Data source parent ID',
+                                                        },
                                                         'page_id': {
                                                             'type': ['string', 'null'],
                                                             'description': 'Page parent ID',
@@ -486,7 +490,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': ['string', 'null'],
                                 'description': 'Type of results',
                             },
-                            'page_or_database': {
+                            'page_or_data_source': {
                                 'type': ['object', 'null'],
                             },
                             'request_id': {
@@ -512,7 +516,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -577,6 +581,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                             'database_id': {
                                                 'type': ['string', 'null'],
                                                 'description': 'Database parent ID',
+                                            },
+                                            'data_source_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Data source parent ID',
                                             },
                                             'page_id': {
                                                 'type': ['string', 'null'],
@@ -724,18 +732,18 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
         EntityDefinition(
-            name='databases',
-            stream_name='databases',
+            name='data_sources',
+            stream_name='data_sources',
             actions=[Action.LIST, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
-                    path='/v1/search:databases',
+                    path='/v1/search:data_sources',
                     path_override=PathOverrideConfig(
                         path='/v1/search',
                     ),
                     action=Action.LIST,
-                    description='Returns databases shared with the integration using the search endpoint',
+                    description='Returns data sources shared with the integration using the search endpoint',
                     body_fields=[
                         'filter',
                         'sort',
@@ -747,7 +755,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     request_body_defaults={'page_size': 100},
@@ -758,7 +766,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': 'object',
                                 'properties': {
                                     'property': {'type': 'string', 'default': 'object'},
-                                    'value': {'type': 'string', 'default': 'database'},
+                                    'value': {'type': 'string', 'default': 'data_source'},
                                 },
                             },
                             'sort': {
@@ -779,7 +787,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     response_schema={
                         'type': 'object',
-                        'description': 'Paginated list of databases',
+                        'description': 'Paginated list of data sources',
                         'properties': {
                             'object': {
                                 'type': ['string', 'null'],
@@ -789,24 +797,24 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': 'array',
                                 'items': {
                                     'type': 'object',
-                                    'description': 'A Notion database object',
+                                    'description': 'A Notion data source object',
                                     'properties': {
-                                        'id': {'type': 'string', 'description': 'Unique identifier for the database'},
+                                        'id': {'type': 'string', 'description': 'Unique identifier for the data source'},
                                         'object': {
                                             'type': ['string', 'null'],
-                                            'description': 'Always database',
+                                            'description': 'Always data_source',
                                         },
                                         'created_time': {
                                             'type': ['string', 'null'],
-                                            'description': 'Date and time when the database was created',
+                                            'description': 'Date and time when the data source was created',
                                         },
                                         'last_edited_time': {
                                             'type': ['string', 'null'],
-                                            'description': 'Date and time when the database was last edited',
+                                            'description': 'Date and time when the data source was last edited',
                                         },
                                         'created_by': {
                                             'type': ['object', 'null'],
-                                            'description': 'User who created the database',
+                                            'description': 'User who created the data source',
                                             'properties': {
                                                 'object': {
                                                     'type': ['string', 'null'],
@@ -818,7 +826,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'last_edited_by': {
                                             'type': ['object', 'null'],
-                                            'description': 'User who last edited the database',
+                                            'description': 'User who last edited the data source',
                                             'properties': {
                                                 'object': {
                                                     'type': ['string', 'null'],
@@ -830,7 +838,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'title': {
                                             'type': ['array', 'null'],
-                                            'description': 'Title of the database as rich text',
+                                            'description': 'Title of the data source as rich text',
                                             'items': {
                                                 'type': 'object',
                                                 'description': 'A rich text object',
@@ -890,7 +898,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'description': {
                                             'type': ['array', 'null'],
-                                            'description': 'Description of the database as rich text',
+                                            'description': 'Description of the data source as rich text',
                                             'items': {
                                                 'type': 'object',
                                                 'description': 'A rich text object',
@@ -950,15 +958,15 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'icon': {
                                             'type': ['object', 'null'],
-                                            'description': 'Database icon',
+                                            'description': 'Data source icon',
                                         },
                                         'cover': {
                                             'type': ['object', 'null'],
-                                            'description': 'Database cover image',
+                                            'description': 'Data source cover image',
                                         },
                                         'properties': {
                                             'type': ['object', 'null'],
-                                            'description': 'Schema of properties for the database',
+                                            'description': 'Schema of properties for the data source',
                                             'additionalProperties': True,
                                         },
                                         'parent': {
@@ -974,6 +982,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                         'database_id': {
                                                             'type': ['string', 'null'],
                                                             'description': 'Database parent ID',
+                                                        },
+                                                        'data_source_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Data source parent ID',
                                                         },
                                                         'page_id': {
                                                             'type': ['string', 'null'],
@@ -991,11 +1003,47 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                                 {'type': 'null'},
                                             ],
-                                            'description': 'Parent of the database',
+                                            'description': 'Parent database of the data source',
+                                        },
+                                        'database_parent': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Parent object reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of parent (database_id, page_id, block_id, workspace)',
+                                                        },
+                                                        'database_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Database parent ID',
+                                                        },
+                                                        'data_source_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Data source parent ID',
+                                                        },
+                                                        'page_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Page parent ID',
+                                                        },
+                                                        'block_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Block parent ID',
+                                                        },
+                                                        'workspace': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Whether parent is workspace',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                            'description': 'Grandparent of the data source (parent of the database)',
                                         },
                                         'url': {
                                             'type': ['string', 'null'],
-                                            'description': 'URL of the database',
+                                            'description': 'URL of the data source',
                                         },
                                         'public_url': {
                                             'type': ['string', 'null'],
@@ -1003,19 +1051,19 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'archived': {
                                             'type': ['boolean', 'null'],
-                                            'description': 'Whether the database is archived',
+                                            'description': 'Whether the data source is archived',
                                         },
                                         'in_trash': {
                                             'type': ['boolean', 'null'],
-                                            'description': 'Whether the database is in trash',
+                                            'description': 'Whether the data source is in trash',
                                         },
                                         'is_inline': {
                                             'type': ['boolean', 'null'],
-                                            'description': 'Whether the database is inline',
+                                            'description': 'Whether the data source is inline',
                                         },
                                         'is_locked': {
                                             'type': ['boolean', 'null'],
-                                            'description': 'Whether the database is locked',
+                                            'description': 'Whether the data source is locked',
                                         },
                                         'request_id': {
                                             'type': ['string', 'null'],
@@ -1023,8 +1071,8 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'required': ['id'],
-                                    'x-airbyte-entity-name': 'databases',
-                                    'x-airbyte-stream-name': 'databases',
+                                    'x-airbyte-entity-name': 'data_sources',
+                                    'x-airbyte-stream-name': 'data_sources',
                                 },
                             },
                             'next_cursor': {
@@ -1039,7 +1087,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': ['string', 'null'],
                                 'description': 'Type of results',
                             },
-                            'page_or_database': {
+                            'page_or_data_source': {
                                 'type': ['object', 'null'],
                             },
                             'request_id': {
@@ -1053,41 +1101,41 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
-                    path='/v1/databases/{database_id}',
+                    path='/v1/data_sources/{data_source_id}',
                     action=Action.GET,
-                    description='Retrieves a database object using the ID specified',
-                    path_params=['database_id'],
+                    description='Retrieves a data source object using the ID specified',
+                    path_params=['data_source_id'],
                     path_params_schema={
-                        'database_id': {'type': 'string', 'required': True},
+                        'data_source_id': {'type': 'string', 'required': True},
                     },
                     header_params=['Notion-Version'],
                     header_params_schema={
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
                         'type': 'object',
-                        'description': 'A Notion database object',
+                        'description': 'A Notion data source object',
                         'properties': {
-                            'id': {'type': 'string', 'description': 'Unique identifier for the database'},
+                            'id': {'type': 'string', 'description': 'Unique identifier for the data source'},
                             'object': {
                                 'type': ['string', 'null'],
-                                'description': 'Always database',
+                                'description': 'Always data_source',
                             },
                             'created_time': {
                                 'type': ['string', 'null'],
-                                'description': 'Date and time when the database was created',
+                                'description': 'Date and time when the data source was created',
                             },
                             'last_edited_time': {
                                 'type': ['string', 'null'],
-                                'description': 'Date and time when the database was last edited',
+                                'description': 'Date and time when the data source was last edited',
                             },
                             'created_by': {
                                 'type': ['object', 'null'],
-                                'description': 'User who created the database',
+                                'description': 'User who created the data source',
                                 'properties': {
                                     'object': {
                                         'type': ['string', 'null'],
@@ -1099,7 +1147,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'last_edited_by': {
                                 'type': ['object', 'null'],
-                                'description': 'User who last edited the database',
+                                'description': 'User who last edited the data source',
                                 'properties': {
                                     'object': {
                                         'type': ['string', 'null'],
@@ -1111,7 +1159,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'title': {
                                 'type': ['array', 'null'],
-                                'description': 'Title of the database as rich text',
+                                'description': 'Title of the data source as rich text',
                                 'items': {
                                     'type': 'object',
                                     'description': 'A rich text object',
@@ -1171,7 +1219,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'description': {
                                 'type': ['array', 'null'],
-                                'description': 'Description of the database as rich text',
+                                'description': 'Description of the data source as rich text',
                                 'items': {
                                     'type': 'object',
                                     'description': 'A rich text object',
@@ -1231,15 +1279,15 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'icon': {
                                 'type': ['object', 'null'],
-                                'description': 'Database icon',
+                                'description': 'Data source icon',
                             },
                             'cover': {
                                 'type': ['object', 'null'],
-                                'description': 'Database cover image',
+                                'description': 'Data source cover image',
                             },
                             'properties': {
                                 'type': ['object', 'null'],
-                                'description': 'Schema of properties for the database',
+                                'description': 'Schema of properties for the data source',
                                 'additionalProperties': True,
                             },
                             'parent': {
@@ -1255,6 +1303,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                             'database_id': {
                                                 'type': ['string', 'null'],
                                                 'description': 'Database parent ID',
+                                            },
+                                            'data_source_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Data source parent ID',
                                             },
                                             'page_id': {
                                                 'type': ['string', 'null'],
@@ -1272,11 +1324,47 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                     {'type': 'null'},
                                 ],
-                                'description': 'Parent of the database',
+                                'description': 'Parent database of the data source',
+                            },
+                            'database_parent': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Parent object reference',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of parent (database_id, page_id, block_id, workspace)',
+                                            },
+                                            'database_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Database parent ID',
+                                            },
+                                            'data_source_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Data source parent ID',
+                                            },
+                                            'page_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Page parent ID',
+                                            },
+                                            'block_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Block parent ID',
+                                            },
+                                            'workspace': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether parent is workspace',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'Grandparent of the data source (parent of the database)',
                             },
                             'url': {
                                 'type': ['string', 'null'],
-                                'description': 'URL of the database',
+                                'description': 'URL of the data source',
                             },
                             'public_url': {
                                 'type': ['string', 'null'],
@@ -1284,19 +1372,19 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                             'archived': {
                                 'type': ['boolean', 'null'],
-                                'description': 'Whether the database is archived',
+                                'description': 'Whether the data source is archived',
                             },
                             'in_trash': {
                                 'type': ['boolean', 'null'],
-                                'description': 'Whether the database is in trash',
+                                'description': 'Whether the data source is in trash',
                             },
                             'is_inline': {
                                 'type': ['boolean', 'null'],
-                                'description': 'Whether the database is inline',
+                                'description': 'Whether the data source is inline',
                             },
                             'is_locked': {
                                 'type': ['boolean', 'null'],
-                                'description': 'Whether the database is locked',
+                                'description': 'Whether the data source is locked',
                             },
                             'request_id': {
                                 'type': ['string', 'null'],
@@ -1304,31 +1392,31 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                         'required': ['id'],
-                        'x-airbyte-entity-name': 'databases',
-                        'x-airbyte-stream-name': 'databases',
+                        'x-airbyte-entity-name': 'data_sources',
+                        'x-airbyte-stream-name': 'data_sources',
                     },
                 ),
             },
             entity_schema={
                 'type': 'object',
-                'description': 'A Notion database object',
+                'description': 'A Notion data source object',
                 'properties': {
-                    'id': {'type': 'string', 'description': 'Unique identifier for the database'},
+                    'id': {'type': 'string', 'description': 'Unique identifier for the data source'},
                     'object': {
                         'type': ['string', 'null'],
-                        'description': 'Always database',
+                        'description': 'Always data_source',
                     },
                     'created_time': {
                         'type': ['string', 'null'],
-                        'description': 'Date and time when the database was created',
+                        'description': 'Date and time when the data source was created',
                     },
                     'last_edited_time': {
                         'type': ['string', 'null'],
-                        'description': 'Date and time when the database was last edited',
+                        'description': 'Date and time when the data source was last edited',
                     },
                     'created_by': {
                         'type': ['object', 'null'],
-                        'description': 'User who created the database',
+                        'description': 'User who created the data source',
                         'properties': {
                             'object': {
                                 'type': ['string', 'null'],
@@ -1340,7 +1428,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'last_edited_by': {
                         'type': ['object', 'null'],
-                        'description': 'User who last edited the database',
+                        'description': 'User who last edited the data source',
                         'properties': {
                             'object': {
                                 'type': ['string', 'null'],
@@ -1352,25 +1440,25 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'title': {
                         'type': ['array', 'null'],
-                        'description': 'Title of the database as rich text',
+                        'description': 'Title of the data source as rich text',
                         'items': {'$ref': '#/components/schemas/RichText'},
                     },
                     'description': {
                         'type': ['array', 'null'],
-                        'description': 'Description of the database as rich text',
+                        'description': 'Description of the data source as rich text',
                         'items': {'$ref': '#/components/schemas/RichText'},
                     },
                     'icon': {
                         'type': ['object', 'null'],
-                        'description': 'Database icon',
+                        'description': 'Data source icon',
                     },
                     'cover': {
                         'type': ['object', 'null'],
-                        'description': 'Database cover image',
+                        'description': 'Data source cover image',
                     },
                     'properties': {
                         'type': ['object', 'null'],
-                        'description': 'Schema of properties for the database',
+                        'description': 'Schema of properties for the data source',
                         'additionalProperties': True,
                     },
                     'parent': {
@@ -1378,11 +1466,18 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             {'$ref': '#/components/schemas/Parent'},
                             {'type': 'null'},
                         ],
-                        'description': 'Parent of the database',
+                        'description': 'Parent database of the data source',
+                    },
+                    'database_parent': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/Parent'},
+                            {'type': 'null'},
+                        ],
+                        'description': 'Grandparent of the data source (parent of the database)',
                     },
                     'url': {
                         'type': ['string', 'null'],
-                        'description': 'URL of the database',
+                        'description': 'URL of the data source',
                     },
                     'public_url': {
                         'type': ['string', 'null'],
@@ -1390,19 +1485,19 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     'archived': {
                         'type': ['boolean', 'null'],
-                        'description': 'Whether the database is archived',
+                        'description': 'Whether the data source is archived',
                     },
                     'in_trash': {
                         'type': ['boolean', 'null'],
-                        'description': 'Whether the database is in trash',
+                        'description': 'Whether the data source is in trash',
                     },
                     'is_inline': {
                         'type': ['boolean', 'null'],
-                        'description': 'Whether the database is inline',
+                        'description': 'Whether the data source is inline',
                     },
                     'is_locked': {
                         'type': ['boolean', 'null'],
-                        'description': 'Whether the database is locked',
+                        'description': 'Whether the data source is locked',
                     },
                     'request_id': {
                         'type': ['string', 'null'],
@@ -1410,8 +1505,8 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'required': ['id'],
-                'x-airbyte-entity-name': 'databases',
-                'x-airbyte-stream-name': 'databases',
+                'x-airbyte-entity-name': 'data_sources',
+                'x-airbyte-stream-name': 'data_sources',
             },
         ),
         EntityDefinition(
@@ -1442,7 +1537,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -1525,6 +1620,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                         'database_id': {
                                                             'type': ['string', 'null'],
                                                             'description': 'Database parent ID',
+                                                        },
+                                                        'data_source_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Data source parent ID',
                                                         },
                                                         'page_id': {
                                                             'type': ['string', 'null'],
@@ -2523,6 +2622,48 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                 },
                                             },
                                         },
+                                        'column': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Column block',
+                                            'properties': {
+                                                'width_ratio': {
+                                                    'type': ['number', 'null'],
+                                                },
+                                            },
+                                        },
+                                        'column_list': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Column list block',
+                                        },
+                                        'synced_block': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Synced block content',
+                                        },
+                                        'template': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Template block',
+                                        },
+                                        'link_preview': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Link preview block',
+                                            'properties': {
+                                                'url': {
+                                                    'type': ['string', 'null'],
+                                                },
+                                            },
+                                        },
+                                        'link_to_page': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Link to page block',
+                                        },
+                                        'breadcrumb': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Breadcrumb block',
+                                        },
+                                        'unsupported': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Unsupported block type',
+                                        },
                                         'request_id': {
                                             'type': ['string', 'null'],
                                             'description': 'Request ID for debugging',
@@ -2571,7 +2712,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -2644,6 +2785,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                             'database_id': {
                                                 'type': ['string', 'null'],
                                                 'description': 'Database parent ID',
+                                            },
+                                            'data_source_id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Data source parent ID',
                                             },
                                             'page_id': {
                                                 'type': ['string', 'null'],
@@ -3642,6 +3787,48 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                             },
+                            'column': {
+                                'type': ['object', 'null'],
+                                'description': 'Column block',
+                                'properties': {
+                                    'width_ratio': {
+                                        'type': ['number', 'null'],
+                                    },
+                                },
+                            },
+                            'column_list': {
+                                'type': ['object', 'null'],
+                                'description': 'Column list block',
+                            },
+                            'synced_block': {
+                                'type': ['object', 'null'],
+                                'description': 'Synced block content',
+                            },
+                            'template': {
+                                'type': ['object', 'null'],
+                                'description': 'Template block',
+                            },
+                            'link_preview': {
+                                'type': ['object', 'null'],
+                                'description': 'Link preview block',
+                                'properties': {
+                                    'url': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'link_to_page': {
+                                'type': ['object', 'null'],
+                                'description': 'Link to page block',
+                            },
+                            'breadcrumb': {
+                                'type': ['object', 'null'],
+                                'description': 'Breadcrumb block',
+                            },
+                            'unsupported': {
+                                'type': ['object', 'null'],
+                                'description': 'Unsupported block type',
+                            },
                             'request_id': {
                                 'type': ['string', 'null'],
                                 'description': 'Request ID for debugging',
@@ -3981,6 +4168,48 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                             },
                         },
                     },
+                    'column': {
+                        'type': ['object', 'null'],
+                        'description': 'Column block',
+                        'properties': {
+                            'width_ratio': {
+                                'type': ['number', 'null'],
+                            },
+                        },
+                    },
+                    'column_list': {
+                        'type': ['object', 'null'],
+                        'description': 'Column list block',
+                    },
+                    'synced_block': {
+                        'type': ['object', 'null'],
+                        'description': 'Synced block content',
+                    },
+                    'template': {
+                        'type': ['object', 'null'],
+                        'description': 'Template block',
+                    },
+                    'link_preview': {
+                        'type': ['object', 'null'],
+                        'description': 'Link preview block',
+                        'properties': {
+                            'url': {
+                                'type': ['string', 'null'],
+                            },
+                        },
+                    },
+                    'link_to_page': {
+                        'type': ['object', 'null'],
+                        'description': 'Link to page block',
+                    },
+                    'breadcrumb': {
+                        'type': ['object', 'null'],
+                        'description': 'Breadcrumb block',
+                    },
+                    'unsupported': {
+                        'type': ['object', 'null'],
+                        'description': 'Unsupported block type',
+                    },
                     'request_id': {
                         'type': ['string', 'null'],
                         'description': 'Request ID for debugging',
@@ -4016,7 +4245,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                         'Notion-Version': {
                             'type': 'string',
                             'required': True,
-                            'default': '2022-06-28',
+                            'default': '2025-09-03',
                         },
                     },
                     response_schema={
@@ -4051,6 +4280,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                                         'database_id': {
                                                             'type': ['string', 'null'],
                                                             'description': 'Database parent ID',
+                                                        },
+                                                        'data_source_id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Data source parent ID',
                                                         },
                                                         'page_id': {
                                                             'type': ['string', 'null'],
@@ -4264,11 +4497,12 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             'person',
             'type',
         ],
-        'databases': [
+        'data_sources': [
             'archived',
             'cover',
             'created_by',
             'created_time',
+            'database_parent',
             'description',
             'description[]',
             'icon',

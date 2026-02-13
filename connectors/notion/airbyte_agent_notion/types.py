@@ -27,13 +27,13 @@ class PagesListParamsSort(TypedDict):
     direction: NotRequired[str]
     timestamp: NotRequired[str]
 
-class DatabasesListParamsFilter(TypedDict):
-    """Nested schema for DatabasesListParams.filter"""
+class DataSourcesListParamsFilter(TypedDict):
+    """Nested schema for DataSourcesListParams.filter"""
     property: NotRequired[str]
     value: NotRequired[str]
 
-class DatabasesListParamsSort(TypedDict):
-    """Nested schema for DatabasesListParams.sort"""
+class DataSourcesListParamsSort(TypedDict):
+    """Nested schema for DataSourcesListParams.sort"""
     direction: NotRequired[str]
     timestamp: NotRequired[str]
 
@@ -59,16 +59,16 @@ class PagesGetParams(TypedDict):
     """Parameters for pages.get operation"""
     page_id: str
 
-class DatabasesListParams(TypedDict):
-    """Parameters for databases.list operation"""
-    filter: NotRequired[DatabasesListParamsFilter]
-    sort: NotRequired[DatabasesListParamsSort]
+class DataSourcesListParams(TypedDict):
+    """Parameters for data_sources.list operation"""
+    filter: NotRequired[DataSourcesListParamsFilter]
+    sort: NotRequired[DataSourcesListParamsSort]
     start_cursor: NotRequired[str]
     page_size: NotRequired[int]
 
-class DatabasesGetParams(TypedDict):
-    """Parameters for databases.get operation"""
-    database_id: str
+class DataSourcesGetParams(TypedDict):
+    """Parameters for data_sources.get operation"""
+    data_source_id: str
 
 class BlocksListParams(TypedDict):
     """Parameters for blocks.list operation"""
@@ -531,279 +531,289 @@ class UsersSearchQuery(TypedDict, total=False):
     sort: list[UsersSortFilter]
 
 
-# ===== DATABASES SEARCH TYPES =====
+# ===== DATA_SOURCES SEARCH TYPES =====
 
-class DatabasesSearchFilter(TypedDict, total=False):
-    """Available fields for filtering databases search queries."""
+class DataSourcesSearchFilter(TypedDict, total=False):
+    """Available fields for filtering data_sources search queries."""
     archived: bool | None
-    """Indicates if the data is archived or not."""
+    """Indicates if the data source is archived or not."""
     cover: dict[str, Any] | None
-    """URL or reference to the cover image of the database."""
+    """URL or reference to the cover image of the data source."""
     created_by: dict[str, Any] | None
-    """The user who created the database."""
+    """The user who created the data source."""
     created_time: str | None
-    """The timestamp when the database was created."""
+    """The timestamp when the data source was created."""
+    database_parent: dict[str, Any] | None
+    """The grandparent of the data source (parent of the database)."""
     description: list[Any] | None
-    """Description text associated with the database."""
+    """Description text associated with the data source."""
     icon: dict[str, Any] | None
-    """URL or reference to the icon of the database."""
+    """URL or reference to the icon of the data source."""
     id: str | None
-    """Unique identifier of the database."""
+    """Unique identifier of the data source."""
     is_inline: bool | None
-    """Indicates if the database is displayed inline."""
+    """Indicates if the data source is displayed inline."""
     last_edited_by: dict[str, Any] | None
-    """The user who last edited the database."""
+    """The user who last edited the data source."""
     last_edited_time: str | None
-    """The timestamp when the database was last edited."""
+    """The timestamp when the data source was last edited."""
     object: dict[str, Any] | None
-    """The type of object represented by the database."""
+    """The type of object (data_source)."""
     parent: dict[str, Any] | None
-    """Indicates the parent database if it exists."""
+    """The parent database of the data source."""
     properties: list[Any] | None
-    """List of key-value pairs defining additional properties of the database."""
+    """Schema of properties for the data source."""
     public_url: str | None
-    """Public URL to access the database."""
+    """Public URL to access the data source."""
     title: list[Any] | None
-    """Title or name of the database."""
+    """Title or name of the data source."""
     url: str | None
-    """URL or reference to access the database."""
+    """URL or reference to access the data source."""
 
 
-class DatabasesInFilter(TypedDict, total=False):
+class DataSourcesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     archived: list[bool]
-    """Indicates if the data is archived or not."""
+    """Indicates if the data source is archived or not."""
     cover: list[dict[str, Any]]
-    """URL or reference to the cover image of the database."""
+    """URL or reference to the cover image of the data source."""
     created_by: list[dict[str, Any]]
-    """The user who created the database."""
+    """The user who created the data source."""
     created_time: list[str]
-    """The timestamp when the database was created."""
+    """The timestamp when the data source was created."""
+    database_parent: list[dict[str, Any]]
+    """The grandparent of the data source (parent of the database)."""
     description: list[list[Any]]
-    """Description text associated with the database."""
+    """Description text associated with the data source."""
     icon: list[dict[str, Any]]
-    """URL or reference to the icon of the database."""
+    """URL or reference to the icon of the data source."""
     id: list[str]
-    """Unique identifier of the database."""
+    """Unique identifier of the data source."""
     is_inline: list[bool]
-    """Indicates if the database is displayed inline."""
+    """Indicates if the data source is displayed inline."""
     last_edited_by: list[dict[str, Any]]
-    """The user who last edited the database."""
+    """The user who last edited the data source."""
     last_edited_time: list[str]
-    """The timestamp when the database was last edited."""
+    """The timestamp when the data source was last edited."""
     object: list[dict[str, Any]]
-    """The type of object represented by the database."""
+    """The type of object (data_source)."""
     parent: list[dict[str, Any]]
-    """Indicates the parent database if it exists."""
+    """The parent database of the data source."""
     properties: list[list[Any]]
-    """List of key-value pairs defining additional properties of the database."""
+    """Schema of properties for the data source."""
     public_url: list[str]
-    """Public URL to access the database."""
+    """Public URL to access the data source."""
     title: list[list[Any]]
-    """Title or name of the database."""
+    """Title or name of the data source."""
     url: list[str]
-    """URL or reference to access the database."""
+    """URL or reference to access the data source."""
 
 
-class DatabasesAnyValueFilter(TypedDict, total=False):
+class DataSourcesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     archived: Any
-    """Indicates if the data is archived or not."""
+    """Indicates if the data source is archived or not."""
     cover: Any
-    """URL or reference to the cover image of the database."""
+    """URL or reference to the cover image of the data source."""
     created_by: Any
-    """The user who created the database."""
+    """The user who created the data source."""
     created_time: Any
-    """The timestamp when the database was created."""
+    """The timestamp when the data source was created."""
+    database_parent: Any
+    """The grandparent of the data source (parent of the database)."""
     description: Any
-    """Description text associated with the database."""
+    """Description text associated with the data source."""
     icon: Any
-    """URL or reference to the icon of the database."""
+    """URL or reference to the icon of the data source."""
     id: Any
-    """Unique identifier of the database."""
+    """Unique identifier of the data source."""
     is_inline: Any
-    """Indicates if the database is displayed inline."""
+    """Indicates if the data source is displayed inline."""
     last_edited_by: Any
-    """The user who last edited the database."""
+    """The user who last edited the data source."""
     last_edited_time: Any
-    """The timestamp when the database was last edited."""
+    """The timestamp when the data source was last edited."""
     object: Any
-    """The type of object represented by the database."""
+    """The type of object (data_source)."""
     parent: Any
-    """Indicates the parent database if it exists."""
+    """The parent database of the data source."""
     properties: Any
-    """List of key-value pairs defining additional properties of the database."""
+    """Schema of properties for the data source."""
     public_url: Any
-    """Public URL to access the database."""
+    """Public URL to access the data source."""
     title: Any
-    """Title or name of the database."""
+    """Title or name of the data source."""
     url: Any
-    """URL or reference to access the database."""
+    """URL or reference to access the data source."""
 
 
-class DatabasesStringFilter(TypedDict, total=False):
+class DataSourcesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     archived: str
-    """Indicates if the data is archived or not."""
+    """Indicates if the data source is archived or not."""
     cover: str
-    """URL or reference to the cover image of the database."""
+    """URL or reference to the cover image of the data source."""
     created_by: str
-    """The user who created the database."""
+    """The user who created the data source."""
     created_time: str
-    """The timestamp when the database was created."""
+    """The timestamp when the data source was created."""
+    database_parent: str
+    """The grandparent of the data source (parent of the database)."""
     description: str
-    """Description text associated with the database."""
+    """Description text associated with the data source."""
     icon: str
-    """URL or reference to the icon of the database."""
+    """URL or reference to the icon of the data source."""
     id: str
-    """Unique identifier of the database."""
+    """Unique identifier of the data source."""
     is_inline: str
-    """Indicates if the database is displayed inline."""
+    """Indicates if the data source is displayed inline."""
     last_edited_by: str
-    """The user who last edited the database."""
+    """The user who last edited the data source."""
     last_edited_time: str
-    """The timestamp when the database was last edited."""
+    """The timestamp when the data source was last edited."""
     object: str
-    """The type of object represented by the database."""
+    """The type of object (data_source)."""
     parent: str
-    """Indicates the parent database if it exists."""
+    """The parent database of the data source."""
     properties: str
-    """List of key-value pairs defining additional properties of the database."""
+    """Schema of properties for the data source."""
     public_url: str
-    """Public URL to access the database."""
+    """Public URL to access the data source."""
     title: str
-    """Title or name of the database."""
+    """Title or name of the data source."""
     url: str
-    """URL or reference to access the database."""
+    """URL or reference to access the data source."""
 
 
-class DatabasesSortFilter(TypedDict, total=False):
-    """Available fields for sorting databases search results."""
+class DataSourcesSortFilter(TypedDict, total=False):
+    """Available fields for sorting data_sources search results."""
     archived: AirbyteSortOrder
-    """Indicates if the data is archived or not."""
+    """Indicates if the data source is archived or not."""
     cover: AirbyteSortOrder
-    """URL or reference to the cover image of the database."""
+    """URL or reference to the cover image of the data source."""
     created_by: AirbyteSortOrder
-    """The user who created the database."""
+    """The user who created the data source."""
     created_time: AirbyteSortOrder
-    """The timestamp when the database was created."""
+    """The timestamp when the data source was created."""
+    database_parent: AirbyteSortOrder
+    """The grandparent of the data source (parent of the database)."""
     description: AirbyteSortOrder
-    """Description text associated with the database."""
+    """Description text associated with the data source."""
     icon: AirbyteSortOrder
-    """URL or reference to the icon of the database."""
+    """URL or reference to the icon of the data source."""
     id: AirbyteSortOrder
-    """Unique identifier of the database."""
+    """Unique identifier of the data source."""
     is_inline: AirbyteSortOrder
-    """Indicates if the database is displayed inline."""
+    """Indicates if the data source is displayed inline."""
     last_edited_by: AirbyteSortOrder
-    """The user who last edited the database."""
+    """The user who last edited the data source."""
     last_edited_time: AirbyteSortOrder
-    """The timestamp when the database was last edited."""
+    """The timestamp when the data source was last edited."""
     object: AirbyteSortOrder
-    """The type of object represented by the database."""
+    """The type of object (data_source)."""
     parent: AirbyteSortOrder
-    """Indicates the parent database if it exists."""
+    """The parent database of the data source."""
     properties: AirbyteSortOrder
-    """List of key-value pairs defining additional properties of the database."""
+    """Schema of properties for the data source."""
     public_url: AirbyteSortOrder
-    """Public URL to access the database."""
+    """Public URL to access the data source."""
     title: AirbyteSortOrder
-    """Title or name of the database."""
+    """Title or name of the data source."""
     url: AirbyteSortOrder
-    """URL or reference to access the database."""
+    """URL or reference to access the data source."""
 
 
-# Entity-specific condition types for databases
-class DatabasesEqCondition(TypedDict, total=False):
+# Entity-specific condition types for data_sources
+class DataSourcesEqCondition(TypedDict, total=False):
     """Equal to: field equals value."""
-    eq: DatabasesSearchFilter
+    eq: DataSourcesSearchFilter
 
 
-class DatabasesNeqCondition(TypedDict, total=False):
+class DataSourcesNeqCondition(TypedDict, total=False):
     """Not equal to: field does not equal value."""
-    neq: DatabasesSearchFilter
+    neq: DataSourcesSearchFilter
 
 
-class DatabasesGtCondition(TypedDict, total=False):
+class DataSourcesGtCondition(TypedDict, total=False):
     """Greater than: field > value."""
-    gt: DatabasesSearchFilter
+    gt: DataSourcesSearchFilter
 
 
-class DatabasesGteCondition(TypedDict, total=False):
+class DataSourcesGteCondition(TypedDict, total=False):
     """Greater than or equal: field >= value."""
-    gte: DatabasesSearchFilter
+    gte: DataSourcesSearchFilter
 
 
-class DatabasesLtCondition(TypedDict, total=False):
+class DataSourcesLtCondition(TypedDict, total=False):
     """Less than: field < value."""
-    lt: DatabasesSearchFilter
+    lt: DataSourcesSearchFilter
 
 
-class DatabasesLteCondition(TypedDict, total=False):
+class DataSourcesLteCondition(TypedDict, total=False):
     """Less than or equal: field <= value."""
-    lte: DatabasesSearchFilter
+    lte: DataSourcesSearchFilter
 
 
-class DatabasesLikeCondition(TypedDict, total=False):
+class DataSourcesLikeCondition(TypedDict, total=False):
     """Partial string match with % wildcards."""
-    like: DatabasesStringFilter
+    like: DataSourcesStringFilter
 
 
-class DatabasesFuzzyCondition(TypedDict, total=False):
+class DataSourcesFuzzyCondition(TypedDict, total=False):
     """Ordered word text match (case-insensitive)."""
-    fuzzy: DatabasesStringFilter
+    fuzzy: DataSourcesStringFilter
 
 
-class DatabasesKeywordCondition(TypedDict, total=False):
+class DataSourcesKeywordCondition(TypedDict, total=False):
     """Keyword text match (any word present)."""
-    keyword: DatabasesStringFilter
+    keyword: DataSourcesStringFilter
 
 
-class DatabasesContainsCondition(TypedDict, total=False):
+class DataSourcesContainsCondition(TypedDict, total=False):
     """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
-    contains: DatabasesAnyValueFilter
+    contains: DataSourcesAnyValueFilter
 
 
 # Reserved keyword conditions using functional TypedDict syntax
-DatabasesInCondition = TypedDict("DatabasesInCondition", {"in": DatabasesInFilter}, total=False)
+DataSourcesInCondition = TypedDict("DataSourcesInCondition", {"in": DataSourcesInFilter}, total=False)
 """In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
 
-DatabasesNotCondition = TypedDict("DatabasesNotCondition", {"not": "DatabasesCondition"}, total=False)
+DataSourcesNotCondition = TypedDict("DataSourcesNotCondition", {"not": "DataSourcesCondition"}, total=False)
 """Negates the nested condition."""
 
-DatabasesAndCondition = TypedDict("DatabasesAndCondition", {"and": "list[DatabasesCondition]"}, total=False)
+DataSourcesAndCondition = TypedDict("DataSourcesAndCondition", {"and": "list[DataSourcesCondition]"}, total=False)
 """True if all nested conditions are true."""
 
-DatabasesOrCondition = TypedDict("DatabasesOrCondition", {"or": "list[DatabasesCondition]"}, total=False)
+DataSourcesOrCondition = TypedDict("DataSourcesOrCondition", {"or": "list[DataSourcesCondition]"}, total=False)
 """True if any nested condition is true."""
 
-DatabasesAnyCondition = TypedDict("DatabasesAnyCondition", {"any": DatabasesAnyValueFilter}, total=False)
+DataSourcesAnyCondition = TypedDict("DataSourcesAnyCondition", {"any": DataSourcesAnyValueFilter}, total=False)
 """Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
 
-# Union of all databases condition types
-DatabasesCondition = (
-    DatabasesEqCondition
-    | DatabasesNeqCondition
-    | DatabasesGtCondition
-    | DatabasesGteCondition
-    | DatabasesLtCondition
-    | DatabasesLteCondition
-    | DatabasesInCondition
-    | DatabasesLikeCondition
-    | DatabasesFuzzyCondition
-    | DatabasesKeywordCondition
-    | DatabasesContainsCondition
-    | DatabasesNotCondition
-    | DatabasesAndCondition
-    | DatabasesOrCondition
-    | DatabasesAnyCondition
+# Union of all data_sources condition types
+DataSourcesCondition = (
+    DataSourcesEqCondition
+    | DataSourcesNeqCondition
+    | DataSourcesGtCondition
+    | DataSourcesGteCondition
+    | DataSourcesLtCondition
+    | DataSourcesLteCondition
+    | DataSourcesInCondition
+    | DataSourcesLikeCondition
+    | DataSourcesFuzzyCondition
+    | DataSourcesKeywordCondition
+    | DataSourcesContainsCondition
+    | DataSourcesNotCondition
+    | DataSourcesAndCondition
+    | DataSourcesOrCondition
+    | DataSourcesAnyCondition
 )
 
 
-class DatabasesSearchQuery(TypedDict, total=False):
-    """Search query for databases entity."""
-    filter: DatabasesCondition
-    sort: list[DatabasesSortFilter]
+class DataSourcesSearchQuery(TypedDict, total=False):
+    """Search query for data_sources entity."""
+    filter: DataSourcesCondition
+    sort: list[DataSourcesSortFilter]
 
 
 # ===== BLOCKS SEARCH TYPES =====

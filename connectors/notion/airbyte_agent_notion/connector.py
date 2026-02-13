@@ -23,10 +23,10 @@ from .types import (
     BlocksGetParams,
     BlocksListParams,
     CommentsListParams,
-    DatabasesGetParams,
-    DatabasesListParams,
-    DatabasesListParamsFilter,
-    DatabasesListParamsSort,
+    DataSourcesGetParams,
+    DataSourcesListParams,
+    DataSourcesListParamsFilter,
+    DataSourcesListParamsSort,
     PagesGetParams,
     PagesListParams,
     PagesListParamsFilter,
@@ -38,8 +38,8 @@ from .types import (
     PagesSearchQuery,
     UsersSearchFilter,
     UsersSearchQuery,
-    DatabasesSearchFilter,
-    DatabasesSearchQuery,
+    DataSourcesSearchFilter,
+    DataSourcesSearchQuery,
     BlocksSearchFilter,
     BlocksSearchQuery,
 )
@@ -52,12 +52,12 @@ from .models import (
     NotionExecuteResultWithMeta,
     UsersListResult,
     PagesListResult,
-    DatabasesListResult,
+    DataSourcesListResult,
     BlocksListResult,
     CommentsListResult,
     Block,
     Comment,
-    Database,
+    DataSource,
     Page,
     User,
     AirbyteSearchMeta,
@@ -66,8 +66,8 @@ from .models import (
     PagesSearchResult,
     UsersSearchData,
     UsersSearchResult,
-    DatabasesSearchData,
-    DatabasesSearchResult,
+    DataSourcesSearchData,
+    DataSourcesSearchResult,
     BlocksSearchData,
     BlocksSearchResult,
 )
@@ -117,7 +117,7 @@ class NotionConnector:
     """
 
     connector_name = "notion"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -126,8 +126,8 @@ class NotionConnector:
         ("users", "get"): None,
         ("pages", "list"): True,
         ("pages", "get"): None,
-        ("databases", "list"): True,
-        ("databases", "get"): None,
+        ("data_sources", "list"): True,
+        ("data_sources", "get"): None,
         ("blocks", "list"): True,
         ("blocks", "get"): None,
         ("comments", "list"): True,
@@ -140,8 +140,8 @@ class NotionConnector:
         ('users', 'get'): {'user_id': 'user_id'},
         ('pages', 'list'): {'filter': 'filter', 'sort': 'sort', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
         ('pages', 'get'): {'page_id': 'page_id'},
-        ('databases', 'list'): {'filter': 'filter', 'sort': 'sort', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
-        ('databases', 'get'): {'database_id': 'database_id'},
+        ('data_sources', 'list'): {'filter': 'filter', 'sort': 'sort', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
+        ('data_sources', 'get'): {'data_source_id': 'data_source_id'},
         ('blocks', 'list'): {'block_id': 'block_id', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
         ('blocks', 'get'): {'block_id': 'block_id'},
         ('comments', 'list'): {'block_id': 'block_id', 'start_cursor': 'start_cursor', 'page_size': 'page_size'},
@@ -239,7 +239,7 @@ class NotionConnector:
         # Initialize entity query objects
         self.users = UsersQuery(self)
         self.pages = PagesQuery(self)
-        self.databases = DatabasesQuery(self)
+        self.data_sources = DataSourcesQuery(self)
         self.blocks = BlocksQuery(self)
         self.comments = CommentsQuery(self)
 
@@ -280,18 +280,18 @@ class NotionConnector:
     @overload
     async def execute(
         self,
-        entity: Literal["databases"],
+        entity: Literal["data_sources"],
         action: Literal["list"],
-        params: "DatabasesListParams"
-    ) -> "DatabasesListResult": ...
+        params: "DataSourcesListParams"
+    ) -> "DataSourcesListResult": ...
 
     @overload
     async def execute(
         self,
-        entity: Literal["databases"],
+        entity: Literal["data_sources"],
         action: Literal["get"],
-        params: "DatabasesGetParams"
-    ) -> "Database": ...
+        params: "DataSourcesGetParams"
+    ) -> "DataSource": ...
 
     @overload
     async def execute(
@@ -908,9 +908,9 @@ class PagesQuery:
             ),
         )
 
-class DatabasesQuery:
+class DataSourcesQuery:
     """
-    Query class for Databases entity operations.
+    Query class for DataSources entity operations.
     """
 
     def __init__(self, connector: NotionConnector):
@@ -919,14 +919,14 @@ class DatabasesQuery:
 
     async def list(
         self,
-        filter: DatabasesListParamsFilter | None = None,
-        sort: DatabasesListParamsSort | None = None,
+        filter: DataSourcesListParamsFilter | None = None,
+        sort: DataSourcesListParamsSort | None = None,
         start_cursor: str | None = None,
         page_size: int | None = None,
         **kwargs
-    ) -> DatabasesListResult:
+    ) -> DataSourcesListResult:
         """
-        Returns databases shared with the integration using the search endpoint
+        Returns data sources shared with the integration using the search endpoint
 
         Args:
             filter: Parameter filter
@@ -936,7 +936,7 @@ class DatabasesQuery:
             **kwargs: Additional parameters
 
         Returns:
-            DatabasesListResult
+            DataSourcesListResult
         """
         params = {k: v for k, v in {
             "filter": filter,
@@ -946,9 +946,9 @@ class DatabasesQuery:
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("databases", "list", params)
+        result = await self._connector.execute("data_sources", "list", params)
         # Cast generic envelope to concrete typed result
-        return DatabasesListResult(
+        return DataSourcesListResult(
             data=result.data,
             meta=result.meta
         )
@@ -957,59 +957,60 @@ class DatabasesQuery:
 
     async def get(
         self,
-        database_id: str,
+        data_source_id: str,
         **kwargs
-    ) -> Database:
+    ) -> DataSource:
         """
-        Retrieves a database object using the ID specified
+        Retrieves a data source object using the ID specified
 
         Args:
-            database_id: Database ID
+            data_source_id: Data Source ID
             **kwargs: Additional parameters
 
         Returns:
-            Database
+            DataSource
         """
         params = {k: v for k, v in {
-            "database_id": database_id,
+            "data_source_id": data_source_id,
             **kwargs
         }.items() if v is not None}
 
-        result = await self._connector.execute("databases", "get", params)
+        result = await self._connector.execute("data_sources", "get", params)
         return result
 
 
 
     async def search(
         self,
-        query: DatabasesSearchQuery,
+        query: DataSourcesSearchQuery,
         limit: int | None = None,
         cursor: str | None = None,
         fields: list[list[str]] | None = None,
-    ) -> DatabasesSearchResult:
+    ) -> DataSourcesSearchResult:
         """
-        Search databases records from Airbyte cache.
+        Search data_sources records from Airbyte cache.
 
         This operation searches cached data from Airbyte syncs.
         Only available in hosted execution mode.
 
-        Available filter fields (DatabasesSearchFilter):
-        - archived: Indicates if the data is archived or not.
-        - cover: URL or reference to the cover image of the database.
-        - created_by: The user who created the database.
-        - created_time: The timestamp when the database was created.
-        - description: Description text associated with the database.
-        - icon: URL or reference to the icon of the database.
-        - id: Unique identifier of the database.
-        - is_inline: Indicates if the database is displayed inline.
-        - last_edited_by: The user who last edited the database.
-        - last_edited_time: The timestamp when the database was last edited.
-        - object: The type of object represented by the database.
-        - parent: Indicates the parent database if it exists.
-        - properties: List of key-value pairs defining additional properties of the database.
-        - public_url: Public URL to access the database.
-        - title: Title or name of the database.
-        - url: URL or reference to access the database.
+        Available filter fields (DataSourcesSearchFilter):
+        - archived: Indicates if the data source is archived or not.
+        - cover: URL or reference to the cover image of the data source.
+        - created_by: The user who created the data source.
+        - created_time: The timestamp when the data source was created.
+        - database_parent: The grandparent of the data source (parent of the database).
+        - description: Description text associated with the data source.
+        - icon: URL or reference to the icon of the data source.
+        - id: Unique identifier of the data source.
+        - is_inline: Indicates if the data source is displayed inline.
+        - last_edited_by: The user who last edited the data source.
+        - last_edited_time: The timestamp when the data source was last edited.
+        - object: The type of object (data_source).
+        - parent: The parent database of the data source.
+        - properties: Schema of properties for the data source.
+        - public_url: Public URL to access the data source.
+        - title: Title or name of the data source.
+        - url: URL or reference to access the data source.
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -1020,7 +1021,7 @@ class DatabasesQuery:
                     Example: [["id"], ["user", "name"]] returns id and user.name fields.
 
         Returns:
-            DatabasesSearchResult with typed records, pagination metadata, and optional search metadata
+            DataSourcesSearchResult with typed records, pagination metadata, and optional search metadata
 
         Raises:
             NotImplementedError: If called in local execution mode
@@ -1033,13 +1034,13 @@ class DatabasesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("databases", "search", params)
+        result = await self._connector.execute("data_sources", "search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
-        return DatabasesSearchResult(
+        return DataSourcesSearchResult(
             data=[
-                DatabasesSearchData(**row)
+                DataSourcesSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],
