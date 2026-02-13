@@ -6,6 +6,7 @@ import json
 from collections.abc import AsyncGenerator
 from typing import Any, Protocol, runtime_checkable
 
+from fastmcp import FastMCP
 from pydantic_ai import (
     Agent,
     AgentRunResultEvent,
@@ -18,8 +19,6 @@ from pydantic_ai import (
 )
 from pydantic_ai.messages import ModelMessage, RetryPromptPart, TextPart
 from pydantic_ai.toolsets.fastmcp import FastMCPToolset
-
-from .mcp_server import mcp
 
 
 def entity_name(entity: dict[str, Any]) -> str:
@@ -37,17 +36,37 @@ def tool_title(name: str, tool_input: dict[str, Any]) -> str:
     return name.replace("_", " ").replace("-", " ").title()
 
 
-def build_system_prompt(connector: Any) -> str:
+def _connector_names(connectors: list[Any]) -> str:
+    return ", ".join(connector.connector_name for connector in connectors)
+
+
+def _connector_versions(connectors: list[Any]) -> str:
+    return ", ".join(connector.connector_version for connector in connectors)
+
+
+def _connector_entities(connectors: list[Any]) -> list[dict[str, Any]]:
+    entities: list[dict[str, Any]] = []
+    for connector in connectors:
+        entities.extend(connector.list_entities())
+    return entities
+
+
+def build_system_prompt(connectors: list[Any]) -> str:
     """Build a system prompt that includes connector metadata."""
+    if not connectors:
+        raise ValueError("connectors cannot be empty")
+
+    connector_names = _connector_names(connectors)
+    connector_versions = _connector_versions(connectors)
     lines = []
-    for ent in connector.list_entities():
+    for ent in _connector_entities(connectors):
         actions = ent.get("available_actions") or ent.get("actions", [])
         action_names = [a.get("name", str(a)) if isinstance(a, dict) else str(a) for a in actions]
         lines.append(f"  - {entity_name(ent)}: {', '.join(action_names)}")
 
     return (
-        f"You are a helpful data assistant connected to the {connector.connector_name} connector "
-        f"(v{connector.connector_version}).\n\n"
+        f"You are a helpful data assistant connected to the {connector_names} connector "
+        f"(v{connector_versions}).\n\n"
         f"Available entities and their actions:\n" + "\n".join(lines) + "\n\n"
         "Use the provided tools to fetch data and answer the user's questions. "
         "When presenting data, format it clearly. "
@@ -68,24 +87,28 @@ def build_system_prompt(connector: Any) -> str:
         "5. PAGINATION: Use limit of 20-25. Do NOT paginate by default — the first page usually suffices. "
         "For 'how many' questions, say 'at least N' rather than exhaustively paginating. "
         "Never fetch more than 3 pages without checking if you have enough data.\n\n"
+        "6. TRUNCATION RECOVERY: If list/search contains '[truncated]', first try `get` with the record id. "
+        "If `get` is unavailable or still cannot return the full value, retry list/search with "
+        "`skip_truncation=true` and tighter `select_fields`/`limit`.\n\n"
         "For the full reference (filter syntax, date range handling, downloads), "
         "call the `get_instructions` tool."
     )
 
 
-def create_agent(connector: Any, model: str = "claude-opus-4-20250514") -> Agent:
+def create_agent(connectors: list[Any], mcp: FastMCP, model: str = "claude-opus-4-6") -> Agent:
     """Create a pydantic-ai Agent wired to the MCP server's tools.
 
     Args:
-        connector: Instantiated connector object (used for system prompt).
-        model: Model identifier (e.g. "claude-opus-4-20250514").
+        connectors: Instantiated connector objects (used for system prompt).
+        mcp: Instantiated FastMCP server with registered tools.
+        model: Model identifier (e.g. "claude-opus-4-6").
 
     Returns:
         A configured pydantic-ai Agent.
     """
     return Agent(
         f"anthropic:{model}",
-        instructions=build_system_prompt(connector),
+        instructions=build_system_prompt(connectors),
         toolsets=[FastMCPToolset(mcp)],
     )
 

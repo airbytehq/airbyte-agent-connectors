@@ -12,11 +12,11 @@ import logging
 import time
 from typing import Any
 
+from fastmcp import FastMCP
 from rich.console import Console
 from rich.markup import escape
 
 from .agent import AgentRunner, create_agent
-from .mcp_server import register_connector_tools
 
 
 def _format_arg_value(value: Any) -> str:
@@ -37,6 +37,14 @@ def _format_tool_args(args: dict[str, Any]) -> str:
     if parts:
         return "(" + ", ".join(parts) + ")"
     return ""
+
+
+def _connector_names(connectors: list[Any]) -> str:
+    return ", ".join(connector.connector_name for connector in connectors)
+
+
+def _connector_versions(connectors: list[Any]) -> str:
+    return ", ".join(connector.connector_version for connector in connectors)
 
 
 class TerminalStreamConsumer:
@@ -88,33 +96,33 @@ class TerminalStreamConsumer:
         self._stderr.print(f"\n[bold red]Error:[/bold red] {escape(error)}")
 
 
-def _setup(connector: Any, model: str) -> tuple[AgentRunner, Console]:
+def _setup(connectors: list[Any], mcp: FastMCP, model: str) -> tuple[AgentRunner, Console]:
     """Common setup for both one-shot and REPL modes."""
-    register_connector_tools(connector)
-    agent = create_agent(connector, model=model)
+    agent = create_agent(connectors, mcp, model=model)
     logging.getLogger("fastmcp").setLevel(logging.CRITICAL)
     return AgentRunner(agent), Console(stderr=True)
 
 
-async def run_ask(connector: Any, prompt: str, *, model: str = "claude-opus-4-20250514", quiet: bool = False) -> None:
+async def run_ask(connectors: list[Any], mcp: FastMCP, prompt: str, *, model: str = "claude-opus-4-6", quiet: bool = False) -> None:
     """Run a single prompt against the connector and stream the response.
 
     Tool call progress is rendered to stderr via Rich so that piping
     ``adp chat <config> "question" > out.md`` captures only the final answer.
 
     Args:
-        connector: Instantiated connector object.
+        connectors: Instantiated connector objects.
+        mcp: Instantiated FastMCP server with registered tools.
         prompt: The user's question.
         model: Anthropic model identifier.
         quiet: If True, suppress tool call display.
     """
-    runner, _ = _setup(connector, model)
+    runner, _ = _setup(connectors, mcp, model)
     consumer = TerminalStreamConsumer(quiet=quiet)
     async for _ in runner.run(prompt, consumer):
         pass
 
 
-async def run_chat(connector: Any, *, model: str = "claude-opus-4-20250514", quiet: bool = False) -> None:
+async def run_chat(connectors: list[Any], mcp: FastMCP, *, model: str = "claude-opus-4-6", quiet: bool = False) -> None:
     """Run an interactive REPL session against the connector.
 
     Reads user input in a loop and streams responses. Conversation history
@@ -123,14 +131,15 @@ async def run_chat(connector: Any, *, model: str = "claude-opus-4-20250514", qui
     Exit with Ctrl-C, Ctrl-D, or by typing ``exit`` / ``quit``.
 
     Args:
-        connector: Instantiated connector object.
+        connectors: Instantiated connector objects.
+        mcp: Instantiated FastMCP server with registered tools.
         model: Anthropic model identifier.
         quiet: If True, suppress tool call display.
     """
-    runner, stderr = _setup(connector, model)
+    runner, stderr = _setup(connectors, mcp, model)
     consumer = TerminalStreamConsumer(quiet=quiet)
 
-    stderr.print(f"[bold]Connected to {connector.connector_name} v{connector.connector_version}[/bold]")
+    stderr.print(f"[bold]Connected to {_connector_names(connectors)} v{_connector_versions(connectors)}[/bold]")
     stderr.print("[dim]Type your question, or 'exit' to quit.[/dim]\n")
 
     while True:

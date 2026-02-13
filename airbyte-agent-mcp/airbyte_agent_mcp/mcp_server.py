@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import inspect
+import json
 import uuid
 from collections.abc import Callable
 from datetime import UTC, datetime
@@ -112,9 +113,9 @@ DOWNLOADS:
 OTHER:
 - In `list` and `search` results, long text fields are truncated and marked with "[truncated]". \
 Use the `get` action with the record id to retrieve full values.
+- If `get` is unavailable for that entity or still cannot provide the full value, retry the original \
+`list`/`search` request with `skip_truncation=true` and tight `select_fields`/`limit`.
 """
-
-mcp = FastMCP("Airbyte Agent MCP", instructions=_INSTRUCTIONS)
 
 MAX_TEXT_FIELD_CHARS = 200
 _TRUNCATION_SUFFIX = "... [truncated — use `get` action with the record id to retrieve the full value]"
@@ -128,19 +129,23 @@ def _detect_extension(file_path: Path) -> str:
     return ""
 
 
-def _get_save_download() -> Any:
+def _get_save_download(connector: Any) -> Any:
     """Import save_download from the loaded connector's vendored SDK."""
-    package = type(_connector).__module__.split(".")[0]
+    package = type(connector).__module__.split(".")[0]
     vendored = importlib.import_module(f"{package}._vendored.connector_sdk")
     return vendored.save_download
 
 
-async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> dict[str, Any]:
+async def _handle_download(
+    entity: str,
+    action: str,
+    params: dict[str, Any],
+    connector: Any,
+) -> dict[str, Any]:
     """Handle download actions by saving streamed bytes to a file.
 
     Returns metadata about the saved file instead of raw bytes.
     """
-    connector = _require_connector()
     result = await connector.execute(entity, action, params)
 
     if not inspect.isasyncgen(result):
@@ -151,7 +156,7 @@ async def _handle_download(entity: str, action: str, params: dict[str, Any]) -> 
     base_name = f"{entity}_{uuid.uuid4().hex[:12]}"
     file_path = download_dir / base_name
 
-    save_download = _get_save_download()
+    save_download = _get_save_download(connector)
     saved_path: Path = await save_download(result, file_path)
 
     ext = _detect_extension(saved_path)
@@ -177,6 +182,33 @@ def _to_dict(obj: Any) -> Any:
     if hasattr(obj, "model_dump"):
         return obj.model_dump()
     return obj
+
+
+def _normalize_execute_params(params: dict[str, Any] | str | None) -> dict[str, Any]:
+    """Normalize execute params to a dictionary.
+
+    Accepts dict directly or JSON object string for compatibility with clients
+    that serialize nested args as strings.
+    """
+    if params is None:
+        return {}
+
+    if isinstance(params, dict):
+        return params
+
+    if isinstance(params, str):
+        stripped = params.strip()
+        if not stripped:
+            return {}
+        try:
+            parsed = json.loads(stripped)
+        except json.JSONDecodeError as exc:
+            raise ValueError("Invalid params: expected a dict or JSON object string") from exc
+        if not isinstance(parsed, dict):
+            raise ValueError(f"Invalid params: expected object/dict, got {type(parsed).__name__}")
+        return parsed
+
+    raise ValueError(f"Invalid params type: expected dict, string, or null; got {type(params).__name__}")
 
 
 def _compact(obj: Any) -> Any:
@@ -272,13 +304,11 @@ def _exclude_fields(obj: Any, fields: list[str]) -> Any:
     return _apply_to_records(obj, lambda r: _drop_fields_from_record(r, fields))
 
 
-@mcp.tool(name="current_datetime")
 def current_datetime() -> str:
     """Get the current date and time in ISO 8601 format (UTC)."""
     return datetime.now(UTC).isoformat()
 
 
-@mcp.tool(name="get_instructions")
 def get_instructions() -> str:
     """Get the instructions for using this MCP server effectively.
 
@@ -288,15 +318,15 @@ def get_instructions() -> str:
     return _INSTRUCTIONS
 
 
-# Global reference to loaded connector (set during server initialization)
-_connector: Any | None = None
+def _register_core_tools(mcp: FastMCP) -> None:
+    mcp.tool(name="current_datetime")(current_datetime)
+    mcp.tool(name="get_instructions")(get_instructions)
 
 
-def _require_connector() -> Any:
-    """Get the connector, raising if not initialized."""
-    if _connector is None:
-        raise RuntimeError("Connector not initialized")
-    return _connector
+def create_mcp_server(name: str = "Airbyte Agent MCP") -> FastMCP:
+    mcp = FastMCP(name, instructions=_INSTRUCTIONS)
+    _register_core_tools(mcp)
+    return mcp
 
 
 def _transform_response(
@@ -304,6 +334,7 @@ def _transform_response(
     action: str,
     select_fields: list[str] | None,
     exclude_fields: list[str] | None,
+    skip_truncation: bool = False,
 ) -> dict[str, Any]:
     """Transform API response with field selection, truncation, and compaction.
 
@@ -331,7 +362,7 @@ def _transform_response(
     elif exclude_fields:
         records = _exclude_fields(records, exclude_fields)
 
-    if action in COLLECTION_ACTIONS:
+    if action in COLLECTION_ACTIONS and not skip_truncation:
         records = _truncate_long_text(records)
 
     records = _compact(records)
@@ -346,7 +377,7 @@ def _transform_response(
     return records
 
 
-def register_connector_tools(connector: Any) -> None:
+def register_connector_tools(mcp: FastMCP, connector: Any, tool_prefix: str | None = None) -> None:
     """Register connector-specific MCP tools dynamically.
 
     This function creates and registers three tools:
@@ -358,11 +389,13 @@ def register_connector_tools(connector: Any) -> None:
         connector: Instantiated connector object with list_entities(), execute(),
                    entity_schema(), and tool_utils methods.
     """
-    global _connector
-    _connector = connector
+    effective_prefix = tool_prefix or "connector"
+
+    def tool_name(name: str) -> str:
+        return f"{effective_prefix}__{name}"
 
     # Tool 1: Connector info/metadata
-    @mcp.tool(name="connector_info")
+    @mcp.tool(name=tool_name("connector_info"))
     def connector_info() -> dict[str, Any]:
         """Get connector metadata including version and available entities/actions.
 
@@ -371,7 +404,6 @@ def register_connector_tools(connector: Any) -> None:
         - connector_version: Version string
         - entities: List of entity descriptions with available actions and parameters
         """
-        connector = _require_connector()
         return {
             "connector_name": connector.connector_name,
             "connector_version": connector.connector_version,
@@ -383,42 +415,46 @@ def register_connector_tools(connector: Any) -> None:
     async def _execute_impl(
         entity: str,
         action: str,
-        params: dict[str, Any] | None = None,
+        params: dict[str, Any] | str | None = None,
         select_fields: list[str] | None = None,
         exclude_fields: list[str] | None = None,
+        skip_truncation: bool = False,
     ) -> Any:
         """Execute an operation on a connector entity.
 
         Args:
             entity: Entity name (e.g., "users", "calls")
             action: Operation to perform (e.g., "list", "get", "search")
-            params: Operation parameters as a dict
+            params: Operation parameters as a dict.
+                A JSON object string is also accepted for compatibility.
             select_fields: Optional list of field names to include in the response (allowlist).
                 Supports dot notation for nested fields (e.g., "content.topics").
                 When provided, only the specified fields are returned per record.
             exclude_fields: Optional list of field names to remove from the response (blocklist).
                 Supports dot notation for nested fields (e.g., "content.brief").
                 Ignored if select_fields is provided.
+            skip_truncation: When true, disables long-text truncation for list/search responses.
+                Use this only when you need full long fields and have already narrowed the result set.
 
         Returns:
             Operation result (structure varies by entity/action)
         """
-        connector = _require_connector()
+        normalized_params = _normalize_execute_params(params)
 
         if action == ACTION_DOWNLOAD:
-            return await _handle_download(entity, action, params or {})
+            return await _handle_download(entity, action, normalized_params, connector=connector)
 
-        result = _to_dict(await connector.execute(entity, action, params or {}))
-        return _transform_response(result, action, select_fields, exclude_fields)
+        result = _to_dict(await connector.execute(entity, action, normalized_params))
+        return _transform_response(result, action, select_fields, exclude_fields, skip_truncation)
 
     # Apply tool_utils decorator for docstring augmentation and output limits
     decorated_execute = connector.tool_utils(max_output_chars=None)(_execute_impl)
 
     # Register with MCP
-    mcp.tool(name="execute")(decorated_execute)
+    mcp.tool(name=tool_name("execute"))(decorated_execute)
 
     # Tool 3: Entity schema lookup
-    @mcp.tool(name="entity_schema")
+    @mcp.tool(name=tool_name("entity_schema"))
     def entity_schema(entity: str) -> dict[str, Any] | None:
         """Get the JSON schema for a specific entity.
 
@@ -428,5 +464,4 @@ def register_connector_tools(connector: Any) -> None:
         Returns:
             JSON schema dict describing the entity structure, or None if not found.
         """
-        connector = _require_connector()
         return connector.entity_schema(entity)

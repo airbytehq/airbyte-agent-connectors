@@ -1,6 +1,7 @@
 """Tests for connector_config models and helpers."""
 
 import os
+from pathlib import Path
 from unittest.mock import patch
 
 import pytest
@@ -8,9 +9,12 @@ from pydantic import BaseModel, ValidationError
 
 from airbyte_agent_mcp.models.connector_config import (
     ConnectorConfig,
+    ConnectorConfigList,
     ConnectorSource,
     auth_config_to_env_template,
     connector_params_to_template,
+    resolve_aggregate_name,
+    resolve_connector_config,
     resolve_credentials,
     resolve_env_vars,
 )
@@ -337,3 +341,90 @@ class TestConnectorConfigLoadSave:
         path = tmp_path / "a" / "b" / "config.yaml"
         cfg.save(path)
         assert path.exists()
+
+
+class TestConnectorConfigList:
+    def test_load_aggregate_file(self, tmp_path):
+        aggregate_file = tmp_path / "aggregate.yaml"
+        aggregate_file.write_text("name: acme-data-hub\nconfigs:\n  - gong.yaml\n  - salesforce.yaml\n")
+
+        aggregate = ConnectorConfigList.load(aggregate_file)
+        assert aggregate.name == "acme-data-hub"
+        assert aggregate.configs == [tmp_path / "gong.yaml", tmp_path / "salesforce.yaml"]
+
+    def test_load_resolves_config_paths_relative_to_aggregate_file(self, tmp_path):
+        aggregate_file = tmp_path / "aggregate.yaml"
+        aggregate_file.write_text("name: acme-data-hub\nconfigs:\n  - connectors/gong.yaml\n")
+
+        aggregate = ConnectorConfigList.load(aggregate_file)
+        assert aggregate.configs == [tmp_path / "connectors" / "gong.yaml"]
+
+    def test_rejects_empty_configs(self):
+        with pytest.raises(ValidationError, match="must contain at least one"):
+            ConnectorConfigList(name="acme-data-hub", configs=[])
+
+    def test_accepts_name(self):
+        cfg = ConnectorConfigList(name="acme-data-hub", configs=[Path("gong.yaml")])
+        assert cfg.name == "acme-data-hub"
+
+    def test_rejects_missing_name(self):
+        with pytest.raises(ValidationError):
+            ConnectorConfigList.model_validate({"configs": ["gong.yaml"]})
+
+    def test_rejects_blank_name(self):
+        with pytest.raises(ValidationError, match="'name' cannot be empty"):
+            ConnectorConfigList(name="   ", configs=[Path("gong.yaml")])
+
+
+class TestResolveConnectorConfigPaths:
+    def test_single_config_returns_original_path(self, tmp_path):
+        config_file = tmp_path / "config.yaml"
+        config_file.write_text("connector: gong\n")
+
+        paths = resolve_connector_config(config_file)
+        assert paths == [config_file]
+
+    def test_aggregate_config_returns_resolved_paths(self, tmp_path):
+        config_a = tmp_path / "a.yaml"
+        config_b = tmp_path / "subdir" / "b.yaml"
+        config_b.parent.mkdir(parents=True, exist_ok=True)
+        config_a.write_text("connector: gong\n")
+        config_b.write_text("connector: salesforce\n")
+
+        aggregate = tmp_path / "aggregate.yaml"
+        aggregate.write_text("name: acme-data-hub\nconfigs:\n  - a.yaml\n  - subdir/b.yaml\n")
+
+        paths = resolve_connector_config(aggregate)
+        assert paths == [config_a, config_b]
+
+    def test_missing_file_raises(self, tmp_path):
+        with pytest.raises(FileNotFoundError):
+            resolve_connector_config(tmp_path / "missing.yaml")
+
+    def test_rejects_ambiguous_single_and_list_config(self, tmp_path):
+        config_file = tmp_path / "ambiguous.yaml"
+        config_file.write_text("connector: gong\nconfigs:\n  - other.yaml\n")
+
+        with pytest.raises(ValueError, match="both 'connector' and 'configs'"):
+            resolve_connector_config(config_file)
+
+
+class TestResolveAggregateName:
+    def test_returns_none_for_single_config(self, tmp_path):
+        config_file = tmp_path / "config.yaml"
+        config_file.write_text("connector: gong\n")
+
+        assert resolve_aggregate_name(config_file) is None
+
+    def test_returns_none_for_aggregate_without_name(self, tmp_path):
+        config_file = tmp_path / "aggregate.yaml"
+        config_file.write_text("configs:\n  - gong.yaml\n")
+
+        with pytest.raises(ValidationError):
+            resolve_aggregate_name(config_file)
+
+    def test_returns_name_for_aggregate_with_name(self, tmp_path):
+        config_file = tmp_path / "aggregate.yaml"
+        config_file.write_text("name: acme-data-hub\nconfigs:\n  - gong.yaml\n")
+
+        assert resolve_aggregate_name(config_file) == "acme-data-hub"
