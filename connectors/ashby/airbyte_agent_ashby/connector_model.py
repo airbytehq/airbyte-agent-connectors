@@ -26,7 +26,7 @@ from uuid import (
 AshbyConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('4e8c9fa0-3634-499b-b948-11581b5c3efa'),
     name='ashby',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://api.ashbyhq.com',
     auth=AuthConfig(
         type=AuthType.BASIC,
