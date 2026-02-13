@@ -210,7 +210,7 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "0.1.13"
+    connector_version = "0.1.14"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -260,43 +260,43 @@ class ZendeskSupportConnector:
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
-        ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort': 'sort'},
+        ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('tickets', 'get'): {'ticket_id': 'ticket_id'},
-        ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id'},
+        ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id', 'per_page': 'per_page'},
         ('users', 'get'): {'user_id': 'user_id'},
-        ('organizations', 'list'): {'page': 'page'},
+        ('organizations', 'list'): {'page': 'page', 'per_page': 'per_page'},
         ('organizations', 'get'): {'organization_id': 'organization_id'},
-        ('groups', 'list'): {'page': 'page', 'exclude_deleted': 'exclude_deleted'},
+        ('groups', 'list'): {'page': 'page', 'exclude_deleted': 'exclude_deleted', 'per_page': 'per_page'},
         ('groups', 'get'): {'group_id': 'group_id'},
-        ('ticket_comments', 'list'): {'ticket_id': 'ticket_id', 'page': 'page', 'include_inline_images': 'include_inline_images', 'sort': 'sort'},
+        ('ticket_comments', 'list'): {'ticket_id': 'ticket_id', 'page': 'page', 'include_inline_images': 'include_inline_images', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('attachments', 'get'): {'attachment_id': 'attachment_id'},
         ('attachments', 'download'): {'attachment_id': 'attachment_id', 'range_header': 'range_header'},
-        ('ticket_audits', 'list'): {'ticket_id': 'ticket_id', 'page': 'page'},
-        ('ticket_metrics', 'list'): {'page': 'page'},
-        ('ticket_fields', 'list'): {'page': 'page', 'locale': 'locale'},
+        ('ticket_audits', 'list'): {'ticket_id': 'ticket_id', 'page': 'page', 'per_page': 'per_page'},
+        ('ticket_metrics', 'list'): {'page': 'page', 'per_page': 'per_page'},
+        ('ticket_fields', 'list'): {'page': 'page', 'locale': 'locale', 'per_page': 'per_page'},
         ('ticket_fields', 'get'): {'ticket_field_id': 'ticket_field_id'},
-        ('brands', 'list'): {'page': 'page'},
+        ('brands', 'list'): {'page': 'page', 'per_page': 'per_page'},
         ('brands', 'get'): {'brand_id': 'brand_id'},
-        ('views', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'group_id': 'group_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('views', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'group_id': 'group_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('views', 'get'): {'view_id': 'view_id'},
-        ('macros', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'category': 'category', 'group_id': 'group_id', 'only_viewable': 'only_viewable', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('macros', 'list'): {'page': 'page', 'access': 'access', 'active': 'active', 'category': 'category', 'group_id': 'group_id', 'only_viewable': 'only_viewable', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('macros', 'get'): {'macro_id': 'macro_id'},
-        ('triggers', 'list'): {'page': 'page', 'active': 'active', 'category_id': 'category_id', 'sort': 'sort'},
+        ('triggers', 'list'): {'page': 'page', 'active': 'active', 'category_id': 'category_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('triggers', 'get'): {'trigger_id': 'trigger_id'},
-        ('automations', 'list'): {'page': 'page', 'active': 'active', 'sort': 'sort'},
+        ('automations', 'list'): {'page': 'page', 'active': 'active', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('automations', 'get'): {'automation_id': 'automation_id'},
-        ('tags', 'list'): {'page': 'page'},
-        ('satisfaction_ratings', 'list'): {'page': 'page', 'score': 'score', 'start_time': 'start_time', 'end_time': 'end_time'},
+        ('tags', 'list'): {'page': 'page', 'per_page': 'per_page'},
+        ('satisfaction_ratings', 'list'): {'page': 'page', 'score': 'score', 'start_time': 'start_time', 'end_time': 'end_time', 'per_page': 'per_page'},
         ('satisfaction_ratings', 'get'): {'satisfaction_rating_id': 'satisfaction_rating_id'},
-        ('group_memberships', 'list'): {'page': 'page'},
-        ('organization_memberships', 'list'): {'page': 'page'},
-        ('sla_policies', 'list'): {'page': 'page'},
+        ('group_memberships', 'list'): {'page': 'page', 'per_page': 'per_page'},
+        ('organization_memberships', 'list'): {'page': 'page', 'per_page': 'per_page'},
+        ('sla_policies', 'list'): {'page': 'page', 'per_page': 'per_page'},
         ('sla_policies', 'get'): {'sla_policy_id': 'sla_policy_id'},
-        ('ticket_forms', 'list'): {'page': 'page', 'active': 'active', 'end_user_visible': 'end_user_visible'},
+        ('ticket_forms', 'list'): {'page': 'page', 'active': 'active', 'end_user_visible': 'end_user_visible', 'per_page': 'per_page'},
         ('ticket_forms', 'get'): {'ticket_form_id': 'ticket_form_id'},
-        ('articles', 'list'): {'page': 'page', 'sort_by': 'sort_by', 'sort_order': 'sort_order'},
+        ('articles', 'list'): {'page': 'page', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('articles', 'get'): {'id': 'id'},
-        ('article_attachments', 'list'): {'article_id': 'article_id', 'page': 'page'},
+        ('article_attachments', 'list'): {'article_id': 'article_id', 'page': 'page', 'per_page': 'per_page'},
         ('article_attachments', 'get'): {'article_id': 'article_id', 'attachment_id': 'attachment_id'},
         ('article_attachments', 'download'): {'article_id': 'article_id', 'attachment_id': 'attachment_id', 'range_header': 'range_header'},
     }
@@ -1187,7 +1187,9 @@ class TicketsQuery:
         self,
         page: int | None = None,
         external_id: str | None = None,
-        sort: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketsListResult:
         """
@@ -1196,7 +1198,9 @@ class TicketsQuery:
         Args:
             page: Page number for pagination
             external_id: Lists tickets by external id
-            sort: Sort order
+            sort_by: Sort field for offset pagination
+            sort_order: Sort order for offset pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1205,7 +1209,9 @@ class TicketsQuery:
         params = {k: v for k, v in {
             "page": page,
             "external_id": external_id,
-            "sort": sort,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -1351,6 +1357,7 @@ class UsersQuery:
         page: int | None = None,
         role: str | None = None,
         external_id: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> UsersListResult:
         """
@@ -1360,6 +1367,7 @@ class UsersQuery:
             page: Page number for pagination
             role: Filter by role
             external_id: Filter by external id
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1369,6 +1377,7 @@ class UsersQuery:
             "page": page,
             "role": role,
             "external_id": external_id,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -1511,6 +1520,7 @@ class OrganizationsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> OrganizationsListResult:
         """
@@ -1518,6 +1528,7 @@ class OrganizationsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1525,6 +1536,7 @@ class OrganizationsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -1644,6 +1656,7 @@ class GroupsQuery:
         self,
         page: int | None = None,
         exclude_deleted: bool | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> GroupsListResult:
         """
@@ -1652,6 +1665,7 @@ class GroupsQuery:
         Args:
             page: Page number for pagination
             exclude_deleted: Exclude deleted groups
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1660,6 +1674,7 @@ class GroupsQuery:
         params = {k: v for k, v in {
             "page": page,
             "exclude_deleted": exclude_deleted,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -1774,7 +1789,8 @@ class TicketCommentsQuery:
         ticket_id: str,
         page: int | None = None,
         include_inline_images: bool | None = None,
-        sort: str | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketCommentsListResult:
         """
@@ -1784,7 +1800,8 @@ class TicketCommentsQuery:
             ticket_id: The ID of the ticket
             page: Page number for pagination
             include_inline_images: Include inline images in the response
-            sort: Sort order
+            sort_order: Sort order for comments (always sorted by created_at)
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1794,7 +1811,8 @@ class TicketCommentsQuery:
             "ticket_id": ticket_id,
             "page": page,
             "include_inline_images": include_inline_images,
-            "sort": sort,
+            "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -1982,6 +2000,7 @@ class TicketAuditsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketAuditsListResult:
         """
@@ -1989,6 +2008,7 @@ class TicketAuditsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -1996,6 +2016,7 @@ class TicketAuditsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2012,6 +2033,7 @@ class TicketAuditsQuery:
         self,
         ticket_id: str,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketAuditsListResult:
         """
@@ -2020,6 +2042,7 @@ class TicketAuditsQuery:
         Args:
             ticket_id: The ID of the ticket
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2028,6 +2051,7 @@ class TicketAuditsQuery:
         params = {k: v for k, v in {
             "ticket_id": ticket_id,
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2114,6 +2138,7 @@ class TicketMetricsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketMetricsListResult:
         """
@@ -2121,6 +2146,7 @@ class TicketMetricsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2128,6 +2154,7 @@ class TicketMetricsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2237,6 +2264,7 @@ class TicketFieldsQuery:
         self,
         page: int | None = None,
         locale: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketFieldsListResult:
         """
@@ -2245,6 +2273,7 @@ class TicketFieldsQuery:
         Args:
             page: Page number for pagination
             locale: Locale for the results
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2253,6 +2282,7 @@ class TicketFieldsQuery:
         params = {k: v for k, v in {
             "page": page,
             "locale": locale,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2383,6 +2413,7 @@ class BrandsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> BrandsListResult:
         """
@@ -2390,6 +2421,7 @@ class BrandsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2397,6 +2429,7 @@ class BrandsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2521,6 +2554,7 @@ class ViewsQuery:
         group_id: int | None = None,
         sort_by: str | None = None,
         sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> ViewsListResult:
         """
@@ -2533,6 +2567,7 @@ class ViewsQuery:
             group_id: Filter by group ID
             sort_by: Sort results
             sort_order: Sort order
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2545,6 +2580,7 @@ class ViewsQuery:
             "group_id": group_id,
             "sort_by": sort_by,
             "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2601,6 +2637,7 @@ class MacrosQuery:
         only_viewable: bool | None = None,
         sort_by: str | None = None,
         sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> MacrosListResult:
         """
@@ -2615,6 +2652,7 @@ class MacrosQuery:
             only_viewable: Return only viewable macros
             sort_by: Sort results
             sort_order: Sort order
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2629,6 +2667,7 @@ class MacrosQuery:
             "only_viewable": only_viewable,
             "sort_by": sort_by,
             "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2680,7 +2719,9 @@ class TriggersQuery:
         page: int | None = None,
         active: bool | None = None,
         category_id: str | None = None,
-        sort: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TriggersListResult:
         """
@@ -2690,7 +2731,9 @@ class TriggersQuery:
             page: Page number for pagination
             active: Filter by active status
             category_id: Filter by category ID
-            sort: Sort results
+            sort_by: Sort field for offset pagination
+            sort_order: Sort order for offset pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2700,7 +2743,9 @@ class TriggersQuery:
             "page": page,
             "active": active,
             "category_id": category_id,
-            "sort": sort,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2751,7 +2796,9 @@ class AutomationsQuery:
         self,
         page: int | None = None,
         active: bool | None = None,
-        sort: str | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> AutomationsListResult:
         """
@@ -2760,7 +2807,9 @@ class AutomationsQuery:
         Args:
             page: Page number for pagination
             active: Filter by active status
-            sort: Sort results
+            sort_by: Sort field for offset pagination
+            sort_order: Sort order for offset pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2769,7 +2818,9 @@ class AutomationsQuery:
         params = {k: v for k, v in {
             "page": page,
             "active": active,
-            "sort": sort,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2819,6 +2870,7 @@ class TagsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TagsListResult:
         """
@@ -2826,6 +2878,7 @@ class TagsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2833,6 +2886,7 @@ class TagsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -2916,6 +2970,7 @@ class SatisfactionRatingsQuery:
         score: str | None = None,
         start_time: int | None = None,
         end_time: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> SatisfactionRatingsListResult:
         """
@@ -2926,6 +2981,7 @@ class SatisfactionRatingsQuery:
             score: Filter by score
             start_time: Start time (Unix epoch)
             end_time: End time (Unix epoch)
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -2936,6 +2992,7 @@ class SatisfactionRatingsQuery:
             "score": score,
             "start_time": start_time,
             "end_time": end_time,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3051,6 +3108,7 @@ class GroupMembershipsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> GroupMembershipsListResult:
         """
@@ -3058,6 +3116,7 @@ class GroupMembershipsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3065,6 +3124,7 @@ class GroupMembershipsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3089,6 +3149,7 @@ class OrganizationMembershipsQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> OrganizationMembershipsListResult:
         """
@@ -3096,6 +3157,7 @@ class OrganizationMembershipsQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3103,6 +3165,7 @@ class OrganizationMembershipsQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3127,6 +3190,7 @@ class SlaPoliciesQuery:
     async def list(
         self,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> SlaPoliciesListResult:
         """
@@ -3134,6 +3198,7 @@ class SlaPoliciesQuery:
 
         Args:
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3141,6 +3206,7 @@ class SlaPoliciesQuery:
         """
         params = {k: v for k, v in {
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3192,6 +3258,7 @@ class TicketFormsQuery:
         page: int | None = None,
         active: bool | None = None,
         end_user_visible: bool | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> TicketFormsListResult:
         """
@@ -3201,6 +3268,7 @@ class TicketFormsQuery:
             page: Page number for pagination
             active: Filter by active status
             end_user_visible: Filter by end user visibility
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3210,6 +3278,7 @@ class TicketFormsQuery:
             "page": page,
             "active": active,
             "end_user_visible": end_user_visible,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3332,6 +3401,7 @@ class ArticlesQuery:
         page: int | None = None,
         sort_by: str | None = None,
         sort_order: str | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> ArticlesListResult:
         """
@@ -3341,6 +3411,7 @@ class ArticlesQuery:
             page: Page number for pagination
             sort_by: Sort articles by field
             sort_order: Sort order
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3350,6 +3421,7 @@ class ArticlesQuery:
             "page": page,
             "sort_by": sort_by,
             "sort_order": sort_order,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 
@@ -3400,6 +3472,7 @@ class ArticleAttachmentsQuery:
         self,
         article_id: str,
         page: int | None = None,
+        per_page: int | None = None,
         **kwargs
     ) -> ArticleAttachmentsListResult:
         """
@@ -3408,6 +3481,7 @@ class ArticleAttachmentsQuery:
         Args:
             article_id: The unique ID of the article
             page: Page number for pagination
+            per_page: Number of results per page
             **kwargs: Additional parameters
 
         Returns:
@@ -3416,6 +3490,7 @@ class ArticleAttachmentsQuery:
         params = {k: v for k, v in {
             "article_id": article_id,
             "page": page,
+            "per_page": per_page,
             **kwargs
         }.items() if v is not None}
 

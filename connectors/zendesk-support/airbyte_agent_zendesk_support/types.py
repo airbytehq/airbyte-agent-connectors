@@ -23,7 +23,9 @@ class TicketsListParams(TypedDict):
     """Parameters for tickets.list operation"""
     page: NotRequired[int]
     external_id: NotRequired[str]
-    sort: NotRequired[str]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""
@@ -34,6 +36,7 @@ class UsersListParams(TypedDict):
     page: NotRequired[int]
     role: NotRequired[str]
     external_id: NotRequired[str]
+    per_page: NotRequired[int]
 
 class UsersGetParams(TypedDict):
     """Parameters for users.get operation"""
@@ -42,6 +45,7 @@ class UsersGetParams(TypedDict):
 class OrganizationsListParams(TypedDict):
     """Parameters for organizations.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class OrganizationsGetParams(TypedDict):
     """Parameters for organizations.get operation"""
@@ -51,6 +55,7 @@ class GroupsListParams(TypedDict):
     """Parameters for groups.list operation"""
     page: NotRequired[int]
     exclude_deleted: NotRequired[bool]
+    per_page: NotRequired[int]
 
 class GroupsGetParams(TypedDict):
     """Parameters for groups.get operation"""
@@ -61,7 +66,8 @@ class TicketCommentsListParams(TypedDict):
     ticket_id: str
     page: NotRequired[int]
     include_inline_images: NotRequired[bool]
-    sort: NotRequired[str]
+    sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class AttachmentsGetParams(TypedDict):
     """Parameters for attachments.get operation"""
@@ -75,20 +81,24 @@ class AttachmentsDownloadParams(TypedDict):
 class TicketAuditsListParams(TypedDict):
     """Parameters for ticket_audits.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class TicketAuditsListParams(TypedDict):
     """Parameters for ticket_audits.list operation"""
     ticket_id: str
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class TicketMetricsListParams(TypedDict):
     """Parameters for ticket_metrics.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class TicketFieldsListParams(TypedDict):
     """Parameters for ticket_fields.list operation"""
     page: NotRequired[int]
     locale: NotRequired[str]
+    per_page: NotRequired[int]
 
 class TicketFieldsGetParams(TypedDict):
     """Parameters for ticket_fields.get operation"""
@@ -97,6 +107,7 @@ class TicketFieldsGetParams(TypedDict):
 class BrandsListParams(TypedDict):
     """Parameters for brands.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class BrandsGetParams(TypedDict):
     """Parameters for brands.get operation"""
@@ -110,6 +121,7 @@ class ViewsListParams(TypedDict):
     group_id: NotRequired[int]
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class ViewsGetParams(TypedDict):
     """Parameters for views.get operation"""
@@ -125,6 +137,7 @@ class MacrosListParams(TypedDict):
     only_viewable: NotRequired[bool]
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class MacrosGetParams(TypedDict):
     """Parameters for macros.get operation"""
@@ -135,7 +148,9 @@ class TriggersListParams(TypedDict):
     page: NotRequired[int]
     active: NotRequired[bool]
     category_id: NotRequired[str]
-    sort: NotRequired[str]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class TriggersGetParams(TypedDict):
     """Parameters for triggers.get operation"""
@@ -145,7 +160,9 @@ class AutomationsListParams(TypedDict):
     """Parameters for automations.list operation"""
     page: NotRequired[int]
     active: NotRequired[bool]
-    sort: NotRequired[str]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class AutomationsGetParams(TypedDict):
     """Parameters for automations.get operation"""
@@ -154,6 +171,7 @@ class AutomationsGetParams(TypedDict):
 class TagsListParams(TypedDict):
     """Parameters for tags.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class SatisfactionRatingsListParams(TypedDict):
     """Parameters for satisfaction_ratings.list operation"""
@@ -161,6 +179,7 @@ class SatisfactionRatingsListParams(TypedDict):
     score: NotRequired[str]
     start_time: NotRequired[int]
     end_time: NotRequired[int]
+    per_page: NotRequired[int]
 
 class SatisfactionRatingsGetParams(TypedDict):
     """Parameters for satisfaction_ratings.get operation"""
@@ -169,14 +188,17 @@ class SatisfactionRatingsGetParams(TypedDict):
 class GroupMembershipsListParams(TypedDict):
     """Parameters for group_memberships.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class OrganizationMembershipsListParams(TypedDict):
     """Parameters for organization_memberships.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class SlaPoliciesListParams(TypedDict):
     """Parameters for sla_policies.list operation"""
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class SlaPoliciesGetParams(TypedDict):
     """Parameters for sla_policies.get operation"""
@@ -187,6 +209,7 @@ class TicketFormsListParams(TypedDict):
     page: NotRequired[int]
     active: NotRequired[bool]
     end_user_visible: NotRequired[bool]
+    per_page: NotRequired[int]
 
 class TicketFormsGetParams(TypedDict):
     """Parameters for ticket_forms.get operation"""
@@ -197,6 +220,7 @@ class ArticlesListParams(TypedDict):
     page: NotRequired[int]
     sort_by: NotRequired[str]
     sort_order: NotRequired[str]
+    per_page: NotRequired[int]
 
 class ArticlesGetParams(TypedDict):
     """Parameters for articles.get operation"""
@@ -206,6 +230,7 @@ class ArticleAttachmentsListParams(TypedDict):
     """Parameters for article_attachments.list operation"""
     article_id: str
     page: NotRequired[int]
+    per_page: NotRequired[int]
 
 class ArticleAttachmentsGetParams(TypedDict):
     """Parameters for article_attachments.get operation"""
