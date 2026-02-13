@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.13',
+    version='0.1.14',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
@@ -97,11 +97,23 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tickets.json',
                     action=Action.LIST,
                     description='Returns a list of all tickets in your account',
-                    query_params=['page', 'external_id', 'sort'],
+                    query_params=[
+                        'page',
+                        'external_id',
+                        'sort_by',
+                        'sort_order',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'external_id': {'type': 'string', 'required': False},
-                        'sort': {'type': 'string', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'asc',
+                        },
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -560,11 +572,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/users.json',
                     action=Action.LIST,
                     description='Returns a list of all users in your account',
-                    query_params=['page', 'role', 'external_id'],
+                    query_params=[
+                        'page',
+                        'role',
+                        'external_id',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'role': {'type': 'string', 'required': False},
                         'external_id': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -950,9 +968,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/organizations.json',
                     action=Action.LIST,
                     description='Returns a list of all organizations in your account',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -1155,7 +1174,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/groups.json',
                     action=Action.LIST,
                     description='Returns a list of all groups in your account',
-                    query_params=['page', 'exclude_deleted'],
+                    query_params=['page', 'exclude_deleted', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'exclude_deleted': {
@@ -1163,6 +1182,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': False,
                         },
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -1290,7 +1310,12 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tickets/{ticket_id}/comments.json',
                     action=Action.LIST,
                     description='Returns a list of comments for a specific ticket',
-                    query_params=['page', 'include_inline_images', 'sort'],
+                    query_params=[
+                        'page',
+                        'include_inline_images',
+                        'sort_order',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'include_inline_images': {
@@ -1298,7 +1323,12 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': False,
                         },
-                        'sort': {'type': 'string', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'asc',
+                        },
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     path_params=['ticket_id'],
                     path_params_schema={
@@ -1495,9 +1525,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tickets/{ticket_id}/audits.json',
                     action=Action.LIST,
                     description='Returns a list of audits for a specific ticket',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     path_params=['ticket_id'],
                     path_params_schema={
@@ -1584,9 +1615,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/ticket_metrics.json',
                     action=Action.LIST,
                     description='Returns a list of all ticket metrics',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -1755,10 +1787,11 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/ticket_fields.json',
                     action=Action.LIST,
                     description='Returns a list of all ticket fields',
-                    query_params=['page', 'locale'],
+                    query_params=['page', 'locale', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'locale': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -1985,9 +2018,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/brands.json',
                     action=Action.LIST,
                     description='Returns a list of all brands for the account',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2173,6 +2207,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'group_id',
                         'sort_by',
                         'sort_order',
+                        'per_page',
                     ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
@@ -2181,6 +2216,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'group_id': {'type': 'integer', 'required': False},
                         'sort_by': {'type': 'string', 'required': False},
                         'sort_order': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2344,6 +2380,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'only_viewable',
                         'sort_by',
                         'sort_order',
+                        'per_page',
                     ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
@@ -2354,6 +2391,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'only_viewable': {'type': 'boolean', 'required': False},
                         'sort_by': {'type': 'string', 'required': False},
                         'sort_order': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2512,13 +2550,21 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'page',
                         'active',
                         'category_id',
-                        'sort',
+                        'sort_by',
+                        'sort_order',
+                        'per_page',
                     ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'active': {'type': 'boolean', 'required': False},
                         'category_id': {'type': 'string', 'required': False},
-                        'sort': {'type': 'string', 'required': False},
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'position',
+                        },
+                        'sort_order': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2676,11 +2722,23 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/automations.json',
                     action=Action.LIST,
                     description='Returns a list of all automations for the account',
-                    query_params=['page', 'active', 'sort'],
+                    query_params=[
+                        'page',
+                        'active',
+                        'sort_by',
+                        'sort_order',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'active': {'type': 'boolean', 'required': False},
-                        'sort': {'type': 'string', 'required': False},
+                        'sort_by': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'position',
+                        },
+                        'sort_order': {'type': 'string', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2823,9 +2881,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/tags.json',
                     action=Action.LIST,
                     description='Returns a list of all tags used in the account',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -2887,12 +2946,14 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'score',
                         'start_time',
                         'end_time',
+                        'per_page',
                     ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'score': {'type': 'string', 'required': False},
                         'start_time': {'type': 'integer', 'required': False},
                         'end_time': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3086,9 +3147,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/group_memberships.json',
                     action=Action.LIST,
                     description='Returns a list of all group memberships',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3171,9 +3233,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/organization_memberships.json',
                     action=Action.LIST,
                     description='Returns a list of all organization memberships',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3260,9 +3323,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/slas/policies.json',
                     action=Action.LIST,
                     description='Returns a list of all SLA policies',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3402,11 +3466,17 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/ticket_forms.json',
                     action=Action.LIST,
                     description='Returns a list of all ticket forms for the account',
-                    query_params=['page', 'active', 'end_user_visible'],
+                    query_params=[
+                        'page',
+                        'active',
+                        'end_user_visible',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'active': {'type': 'boolean', 'required': False},
                         'end_user_visible': {'type': 'boolean', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3606,7 +3676,12 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/help_center/articles.json',
                     action=Action.LIST,
                     description='Returns a list of all articles in the Help Center',
-                    query_params=['page', 'sort_by', 'sort_order'],
+                    query_params=[
+                        'page',
+                        'sort_by',
+                        'sort_order',
+                        'per_page',
+                    ],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
                         'sort_by': {'type': 'string', 'required': False},
@@ -3615,6 +3690,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                             'required': False,
                             'default': 'asc',
                         },
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     response_schema={
                         'type': 'object',
@@ -3775,9 +3851,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     path='/help_center/articles/{article_id}/attachments.json',
                     action=Action.LIST,
                     description='Returns a list of all attachments for a specific article',
-                    query_params=['page'],
+                    query_params=['page', 'per_page'],
                     query_params_schema={
                         'page': {'type': 'integer', 'required': False},
+                        'per_page': {'type': 'integer', 'required': False},
                     },
                     path_params=['article_id'],
                     path_params_schema={
