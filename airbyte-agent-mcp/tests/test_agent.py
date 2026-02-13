@@ -74,7 +74,7 @@ class TestBuildSystemPrompt:
         connector.connector_version = "1.2.3"
         connector.list_entities.return_value = []
 
-        prompt = build_system_prompt(connector)
+        prompt = build_system_prompt([connector])
         assert "Gong" in prompt
         assert "1.2.3" in prompt
 
@@ -87,9 +87,26 @@ class TestBuildSystemPrompt:
             {"entity_name": "calls", "available_actions": [{"name": "search"}]},
         ]
 
-        prompt = build_system_prompt(connector)
+        prompt = build_system_prompt([connector])
         assert "users: list, get" in prompt
         assert "calls: search" in prompt
+
+    def test_aggregates_multiple_connectors(self):
+        gong = MagicMock()
+        gong.connector_name = "Gong"
+        gong.connector_version = "1.0.0"
+        gong.list_entities.return_value = [{"entity_name": "calls", "available_actions": [{"name": "search"}]}]
+
+        salesforce = MagicMock()
+        salesforce.connector_name = "Salesforce"
+        salesforce.connector_version = "2.0.0"
+        salesforce.list_entities.return_value = [{"entity_name": "accounts", "available_actions": [{"name": "list"}]}]
+
+        prompt = build_system_prompt([gong, salesforce])
+        assert "Gong, Salesforce" in prompt
+        assert "1.0.0, 2.0.0" in prompt
+        assert "calls: search" in prompt
+        assert "accounts: list" in prompt
 
     def test_handles_string_actions(self):
         connector = MagicMock()
@@ -99,7 +116,7 @@ class TestBuildSystemPrompt:
             {"entity_name": "items", "actions": ["list", "get"]},
         ]
 
-        prompt = build_system_prompt(connector)
+        prompt = build_system_prompt([connector])
         assert "items: list, get" in prompt
 
     def test_embeds_critical_rules(self):
@@ -108,12 +125,13 @@ class TestBuildSystemPrompt:
         connector.connector_version = "0.1"
         connector.list_entities.return_value = []
 
-        prompt = build_system_prompt(connector)
+        prompt = build_system_prompt([connector])
         assert "current_datetime" in prompt
         assert "CROSS-ENTITY RESOLUTION" in prompt
         assert "entity_schema" in prompt
         assert "select_fields" in prompt
         assert "PAGINATION" in prompt
+        assert "skip_truncation=true" in prompt
 
     def test_does_not_require_get_instructions_first(self):
         connector = MagicMock()
@@ -121,7 +139,7 @@ class TestBuildSystemPrompt:
         connector.connector_version = "0.1"
         connector.list_entities.return_value = []
 
-        prompt = build_system_prompt(connector)
+        prompt = build_system_prompt([connector])
         assert "Before your first query, call the get_instructions" not in prompt
 
 
@@ -130,11 +148,12 @@ class TestCreateAgent:
     @patch("airbyte_agent_mcp.agent.FastMCPToolset")
     def test_creates_agent_with_correct_model(self, mock_toolset_cls, mock_agent_cls):
         connector = MagicMock()
+        mcp = MagicMock()
         connector.connector_name = "Test"
         connector.connector_version = "1.0"
         connector.list_entities.return_value = []
 
-        create_agent(connector, model="claude-opus-4-20250514")
+        create_agent([connector], mcp, model="claude-opus-4-20250514")
 
         mock_agent_cls.assert_called_once()
         call_args = mock_agent_cls.call_args
@@ -144,11 +163,12 @@ class TestCreateAgent:
     @patch("airbyte_agent_mcp.agent.FastMCPToolset")
     def test_passes_system_prompt_as_instructions(self, mock_toolset_cls, mock_agent_cls):
         connector = MagicMock()
+        mcp = MagicMock()
         connector.connector_name = "Gong"
         connector.connector_version = "2.0"
         connector.list_entities.return_value = []
 
-        create_agent(connector)
+        create_agent([connector], mcp)
 
         call_kwargs = mock_agent_cls.call_args[1]
         assert "Gong" in call_kwargs["instructions"]
@@ -158,13 +178,14 @@ class TestCreateAgent:
     @patch("airbyte_agent_mcp.agent.FastMCPToolset")
     def test_passes_fastmcp_toolset(self, mock_toolset_cls, mock_agent_cls):
         connector = MagicMock()
+        mcp = MagicMock()
         connector.connector_name = "Test"
         connector.connector_version = "1.0"
         connector.list_entities.return_value = []
 
-        create_agent(connector)
+        create_agent([connector], mcp)
 
-        mock_toolset_cls.assert_called_once()
+        mock_toolset_cls.assert_called_once_with(mcp)
         call_kwargs = mock_agent_cls.call_args[1]
         assert len(call_kwargs["toolsets"]) == 1
         assert call_kwargs["toolsets"][0] == mock_toolset_cls.return_value

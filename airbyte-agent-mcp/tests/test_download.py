@@ -25,10 +25,7 @@ def tmp_download_dir(tmp_path):
 @pytest.fixture()
 def mock_connector():
     connector = MagicMock()
-    original = mcp_mod._connector
-    mcp_mod._connector = connector
     yield connector
-    mcp_mod._connector = original
 
 
 async def _fake_save_download(iterator, path):
@@ -48,7 +45,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                result = asyncio.run(_handle_download("call_audio", "download", {}))
+                result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         download = result["download"]
         assert download["entity"] == "call_audio"
@@ -61,7 +58,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                result = asyncio.run(_handle_download("call_video", "download", {"filter": {"callIds": ["123"]}}))
+                result = asyncio.run(_handle_download("call_video", "download", {"filter": {"callIds": ["123"]}}, mock_connector))
 
         assert "download" in result
         download = result["download"]
@@ -76,7 +73,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=".mp3"):
-                result = asyncio.run(_handle_download("call_audio", "download", {}))
+                result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         file_path = result["download"]["file_path"]
         assert file_path.endswith(".mp3")
@@ -87,7 +84,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                result = asyncio.run(_handle_download("call_audio", "download", {}))
+                result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         file_path = result["download"]["file_path"]
         assert "." not in Path(file_path).name
@@ -96,17 +93,8 @@ class TestHandleDownload:
         dict_result = {"status": "ok", "url": "https://example.com/file.mp3"}
         mock_connector.execute = AsyncMock(return_value=dict_result)
 
-        result = asyncio.run(_handle_download("call_audio", "download", {}))
+        result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
         assert result == dict_result
-
-    def test_connector_not_initialized_raises(self, tmp_download_dir):
-        original = mcp_mod._connector
-        mcp_mod._connector = None
-        try:
-            with pytest.raises(RuntimeError, match="Connector not initialized"):
-                asyncio.run(_handle_download("call_audio", "download", {}))
-        finally:
-            mcp_mod._connector = original
 
     def test_multiple_chunks_concatenated(self, tmp_download_dir, mock_connector):
         chunks = [b"chunk1", b"chunk2", b"chunk3"]
@@ -114,7 +102,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                result = asyncio.run(_handle_download("call_audio", "download", {}))
+                result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         file_path = Path(result["download"]["file_path"])
         assert file_path.read_bytes() == b"chunk1chunk2chunk3"
@@ -125,7 +113,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
             with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                result = asyncio.run(_handle_download("call_audio", "download", {}))
+                result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         download_dir = tmp_download_dir / "downloads"
         assert download_dir.exists()
@@ -139,7 +127,7 @@ class TestHandleDownload:
 
         with patch.object(mcp_mod, "_get_save_download", return_value=failing_save):
             with pytest.raises(OSError, match="disk full"):
-                asyncio.run(_handle_download("call_audio", "download", {}))
+                asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
     def test_downloads_scoped_to_org(self, tmp_path, mock_connector):
         org_download_dir = tmp_path / "orgs" / "org-abc" / "downloads"
@@ -148,7 +136,7 @@ class TestHandleDownload:
         with patch.object(mcp_mod, "get_download_dir", return_value=org_download_dir):
             with patch.object(mcp_mod, "_get_save_download", return_value=_fake_save_download):
                 with patch.object(mcp_mod, "_detect_extension", return_value=""):
-                    result = asyncio.run(_handle_download("call_audio", "download", {}))
+                    result = asyncio.run(_handle_download("call_audio", "download", {}, mock_connector))
 
         assert org_download_dir.exists()
         assert Path(result["download"]["file_path"]).parent == org_download_dir

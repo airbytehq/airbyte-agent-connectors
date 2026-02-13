@@ -3,6 +3,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+from pydantic import ValidationError
 
 from airbyte_agent_mcp.cli.register_commands import _get_claude_desktop_config_path, _get_server_name
 
@@ -26,7 +27,7 @@ class TestGetServerName:
         mock_connector.connector_name = "gong"
         mock_load.return_value = mock_connector
         config_file = tmp_path / "config.yaml"
-        config_file.touch()
+        config_file.write_text("connector: gong\n")
         assert _get_server_name(config_file, None) == "airbyte-gong"
 
     @patch("airbyte_agent_mcp.cli.register_commands.ConnectorConfig.load")
@@ -36,7 +37,7 @@ class TestGetServerName:
         mock_connector.connector_name = "hubspot"
         mock_load.return_value = mock_connector
         config_file = tmp_path / "config.yaml"
-        config_file.touch()
+        config_file.write_text("connector: gong\n")
         assert _get_server_name(config_file, None) == "airbyte-hubspot"
 
     def test_raises_on_missing_config(self, tmp_path):
@@ -47,7 +48,7 @@ class TestGetServerName:
     @patch("airbyte_agent_mcp.cli.register_commands.ConnectorConfig.load", side_effect=Exception("fail"))
     def test_raises_on_load_error(self, mock_cfg_load, tmp_path):
         config_file = tmp_path / "config.yaml"
-        config_file.touch()
+        config_file.write_text("connector: gong\n")
         with pytest.raises(Exception, match="fail"):
             _get_server_name(config_file, None)
 
@@ -58,5 +59,16 @@ class TestGetServerName:
         mock_connector.connector_name = "zendesk-support"
         mock_load.return_value = mock_connector
         config_file = tmp_path / "config.yaml"
-        config_file.touch()
+        config_file.write_text("connector: gong\n")
         assert _get_server_name(config_file, None) == "airbyte-zendesk-support"
+
+    def test_raises_when_aggregate_name_missing(self, tmp_path):
+        config_file = tmp_path / "all-connectors.yaml"
+        config_file.write_text("configs:\n  - gong.yaml\n  - salesforce.yaml\n")
+        with pytest.raises(ValidationError):
+            _get_server_name(config_file, None)
+
+    def test_uses_aggregate_name_when_present(self, tmp_path):
+        config_file = tmp_path / "all-connectors.yaml"
+        config_file.write_text("name: acme-data-hub\nconfigs:\n  - gong.yaml\n  - salesforce.yaml\n")
+        assert _get_server_name(config_file, None) == "acme-data-hub"

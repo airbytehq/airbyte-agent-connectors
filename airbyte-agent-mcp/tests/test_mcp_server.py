@@ -1,12 +1,13 @@
 """Tests for mcp_server helper functions."""
 
+from collections.abc import Callable
 from datetime import UTC, datetime
+from typing import cast
 from unittest.mock import MagicMock, patch
 
 import pytest
 from pydantic import BaseModel
 
-import airbyte_agent_mcp.mcp_server as mcp_mod
 from airbyte_agent_mcp.mcp_server import (
     _INSTRUCTIONS,
     _TRUNCATION_SUFFIX,
@@ -20,8 +21,8 @@ from airbyte_agent_mcp.mcp_server import (
     _compact,
     _drop_fields_from_record,
     _exclude_fields,
+    _normalize_execute_params,
     _pick_fields_from_record,
-    _require_connector,
     _select_fields,
     _to_dict,
     _transform_response,
@@ -89,6 +90,36 @@ class TestToDict:
         model = Record(id=1, name="Alice", bio="long")
         result = _exclude_fields(_to_dict(model), ["bio"])
         assert result == {"id": 1, "name": "Alice"}
+
+
+# --- _normalize_execute_params ---
+
+
+class TestNormalizeExecuteParams:
+    def test_dict_passthrough(self):
+        params = {"query": {"filter": {"eq": {"id": "123"}}}}
+        assert _normalize_execute_params(params) == params
+
+    def test_none_to_empty_dict(self):
+        assert _normalize_execute_params(None) == {}
+
+    def test_empty_string_to_empty_dict(self):
+        assert _normalize_execute_params("   ") == {}
+
+    def test_json_object_string_parsed(self):
+        params = '{"query":{"filter":{"like":{"Email":"%graham%"}}},"limit":10}'
+        assert _normalize_execute_params(params) == {
+            "query": {"filter": {"like": {"Email": "%graham%"}}},
+            "limit": 10,
+        }
+
+    def test_invalid_json_string_raises(self):
+        with pytest.raises(ValueError, match="Invalid params"):
+            _normalize_execute_params("{bad")
+
+    def test_non_object_json_raises(self):
+        with pytest.raises(ValueError, match="expected object/dict"):
+            _normalize_execute_params('["a", "b"]')
 
 
 # --- _compact ---
@@ -483,18 +514,21 @@ class TestEnvelopePreservation:
 class TestCurrentDatetime:
     def test_returns_iso_format(self):
         fixed_time = datetime(2024, 6, 15, 14, 30, 45, tzinfo=UTC)
+        current_datetime_fn = cast(Callable[[], str], current_datetime)
         with patch("airbyte_agent_mcp.mcp_server.datetime") as mock_dt:
             mock_dt.now.return_value = fixed_time
-            result = current_datetime()
+            result = current_datetime_fn()
 
         assert result == "2024-06-15T14:30:45+00:00"
 
     def test_uses_utc_timezone(self):
-        result = current_datetime()
+        current_datetime_fn = cast(Callable[[], str], current_datetime)
+        result = current_datetime_fn()
         assert result.endswith("+00:00")
 
     def test_returns_string(self):
-        result = current_datetime()
+        current_datetime_fn = cast(Callable[[], str], current_datetime)
+        result = current_datetime_fn()
         assert isinstance(result, str)
         datetime.fromisoformat(result)
 
@@ -504,12 +538,14 @@ class TestCurrentDatetime:
 
 class TestGetInstructions:
     def test_returns_non_empty_string(self):
-        result = get_instructions()
+        get_instructions_fn = cast(Callable[[], str], get_instructions)
+        result = get_instructions_fn()
         assert isinstance(result, str)
         assert len(result) > 0
 
     def test_contains_key_sections(self):
-        result = get_instructions()
+        get_instructions_fn = cast(Callable[[], str], get_instructions)
+        result = get_instructions_fn()
         assert "QUERY PLANNING" in result
         assert "ACTION SELECTION" in result
         assert "FIELD SELECTION" in result
@@ -518,32 +554,14 @@ class TestGetInstructions:
         assert "DOWNLOADS" in result
 
     def test_returns_same_as_constant(self):
-        result = get_instructions()
+        get_instructions_fn = cast(Callable[[], str], get_instructions)
+        result = get_instructions_fn()
         assert result == _INSTRUCTIONS
 
-
-# --- _require_connector ---
-
-
-class TestRequireConnector:
-    def test_returns_connector_when_initialized(self):
-        mock_connector = MagicMock()
-        original = mcp_mod._connector
-        mcp_mod._connector = mock_connector
-        try:
-            result = _require_connector()
-            assert result is mock_connector
-        finally:
-            mcp_mod._connector = original
-
-    def test_raises_when_not_initialized(self):
-        original = mcp_mod._connector
-        mcp_mod._connector = None
-        try:
-            with pytest.raises(RuntimeError, match="Connector not initialized"):
-                _require_connector()
-        finally:
-            mcp_mod._connector = original
+    def test_mentions_skip_truncation_fallback(self):
+        get_instructions_fn = cast(Callable[[], str], get_instructions)
+        result = get_instructions_fn()
+        assert "skip_truncation=true" in result
 
 
 # --- _transform_response ---
@@ -619,6 +637,18 @@ class TestTransformResponse:
         transformed = _transform_response(result, "get", None, None)
         assert transformed["text"] == long_text
 
+    def test_skip_truncation_for_list(self):
+        long_text = "x" * 500
+        result = {"data": [{"id": 1, "text": long_text}], "meta": {}}
+        transformed = _transform_response(result, ACTION_LIST, None, None, skip_truncation=True)
+        assert transformed["data"][0]["text"] == long_text
+
+    def test_skip_truncation_for_search(self):
+        long_text = "x" * 500
+        result = {"data": [{"id": 1, "text": long_text}], "meta": {}}
+        transformed = _transform_response(result, ACTION_SEARCH, None, None, skip_truncation=True)
+        assert transformed["data"][0]["text"] == long_text
+
     def test_compacts_result(self):
         result = {"data": [{"id": 1, "empty": None, "blank": ""}], "meta": {}}
         transformed = _transform_response(result, ACTION_LIST, None, None)
@@ -652,17 +682,12 @@ class TestGetSaveDownload:
         mock_module = MagicMock()
         mock_module.save_download = lambda: "saved"
 
-        original = mcp_mod._connector
-        mcp_mod._connector = mock_connector
-        try:
-            with patch("importlib.import_module", return_value=mock_module) as mock_import:
-                from airbyte_agent_mcp.mcp_server import _get_save_download
+        with patch("importlib.import_module", return_value=mock_module) as mock_import:
+            from airbyte_agent_mcp.mcp_server import _get_save_download
 
-                result = _get_save_download()
-                mock_import.assert_called_once_with("airbyte_agent_gong._vendored.connector_sdk")
-                assert result == mock_module.save_download
-        finally:
-            mcp_mod._connector = original
+            result = _get_save_download(mock_connector)
+            mock_import.assert_called_once_with("airbyte_agent_gong._vendored.connector_sdk")
+            assert result == mock_module.save_download
 
     def test_returns_save_download_function(self):
         mock_connector = MagicMock()
@@ -672,16 +697,11 @@ class TestGetSaveDownload:
         mock_module = MagicMock()
         mock_module.save_download = mock_save_download
 
-        original = mcp_mod._connector
-        mcp_mod._connector = mock_connector
-        try:
-            with patch("importlib.import_module", return_value=mock_module):
-                from airbyte_agent_mcp.mcp_server import _get_save_download
+        with patch("importlib.import_module", return_value=mock_module):
+            from airbyte_agent_mcp.mcp_server import _get_save_download
 
-                result = _get_save_download()
-                assert result is mock_save_download
-        finally:
-            mcp_mod._connector = original
+            result = _get_save_download(mock_connector)
+            assert result is mock_save_download
 
 
 # --- Constants ---

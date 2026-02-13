@@ -84,6 +84,17 @@ Credentials use `${env.VAR_NAME}` syntax and are resolved from `.env` files, whi
 
 You can also point the connector to a local path or a git repository — run `uv run adp connectors configure --help` for all options.
 
+### Aggregate Config (Multiple Connectors)
+
+You can run one MCP server with multiple connector configs:
+
+```yaml
+name: airbyte-crm-suite
+configs:
+  - connector-gong-package.yaml
+  - connector-salesforce-cloud.yaml
+```
+
 ## CLI Commands
 
 All commands are run with `uv run adp <command>`. Use `--help` on any command for full options.
@@ -128,11 +139,17 @@ uv run adp connectors configure --connector-id <id>
 # Start with stdio transport (default)
 uv run adp mcp serve connector-gong-package.yaml
 
+# Start with an aggregate config (multiple connectors)
+uv run adp mcp serve connectors.yaml
+
 # Start with HTTP transport
 uv run adp mcp serve connector-gong-package.yaml --transport http --port 8080
 
 # Register with an AI tool
 uv run adp mcp add-to claude-code connector-gong-package.yaml
+
+# Register aggregate config with an AI tool
+uv run adp mcp add-to codex connectors.yaml
 ```
 
 ### Chat
@@ -142,6 +159,9 @@ Chat with your connector data using natural language, powered by Claude. Require
 ```bash
 # One-shot mode (great for piping)
 uv run adp chat connector-gong-package.yaml "show me 5 users"
+
+# Chat with an aggregate config
+uv run adp chat connectors.yaml "show me 5 users from each system"
 
 # Interactive REPL
 uv run adp chat connector-gong-package.yaml

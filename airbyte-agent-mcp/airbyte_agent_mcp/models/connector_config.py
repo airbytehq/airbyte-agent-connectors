@@ -142,6 +142,13 @@ def connector_params_to_template(params: list) -> dict[str, str]:
 _PACKAGE_PREFIX = "airbyte-agent-"
 
 
+def _load_yaml(config_path: Path) -> dict:
+    if not config_path.exists():
+        raise FileNotFoundError(f"Connector config file not found: {config_path}")
+    with open(config_path) as f:
+        return yaml.safe_load(f) or {}
+
+
 class ConnectorConfig(BaseModel):
     """Configuration for a single connector."""
 
@@ -173,12 +180,7 @@ class ConnectorConfig(BaseModel):
         Raises:
             FileNotFoundError: If config file doesn't exist.
         """
-        if not config_path.exists():
-            raise FileNotFoundError(f"Connector config file not found: {config_path}")
-
-        with open(config_path) as f:
-            data = yaml.safe_load(f) or {}
-            return cls(**data)
+        return cls(**_load_yaml(config_path))
 
     def to_dict(self) -> dict:
         """Convert to dict, excluding None values and empty dicts.
@@ -199,3 +201,59 @@ class ConnectorConfig(BaseModel):
 
         with open(config_path, "w") as f:
             yaml.safe_dump(self.to_dict(), f, default_flow_style=False, sort_keys=False)
+
+
+class ConnectorConfigList(BaseModel):
+    """Configuration that references multiple connector config files."""
+
+    name: str
+    configs: list[Path]
+
+    @model_validator(mode="after")
+    def validate_configs(self) -> "ConnectorConfigList":
+        if not self.configs:
+            raise ValueError("'configs' must contain at least one config file path")
+        if not self.name.strip():
+            raise ValueError("'name' cannot be empty")
+        return self
+
+    @classmethod
+    def load(cls, config_path: Path) -> "ConnectorConfigList":
+        """Load aggregate connector configuration from file."""
+        aggregate = cls(**_load_yaml(config_path))
+
+        base_dir = config_path.parent
+        resolved_configs = [p if p.is_absolute() else base_dir / p for p in aggregate.configs]
+        return cls(name=aggregate.name, configs=resolved_configs)
+
+
+def resolve_connector_config(config_path: Path) -> list[Path]:
+    """Resolve config path(s) from a single or aggregate config file."""
+    data = _load_yaml(config_path)
+    has_connector = "connector" in data
+    has_configs = "configs" in data
+
+    if has_connector and has_configs:
+        raise ValueError("Config cannot contain both 'connector' and 'configs'")
+
+    if has_configs:
+        return ConnectorConfigList.load(config_path).configs
+
+    ConnectorConfig.load(config_path)
+    return [config_path]
+
+
+def resolve_aggregate_name(config_path: Path) -> str | None:
+    """Resolve aggregate config name if present, otherwise return None."""
+    data = _load_yaml(config_path)
+    has_connector = "connector" in data
+    has_configs = "configs" in data
+
+    if has_connector and has_configs:
+        raise ValueError("Config cannot contain both 'connector' and 'configs'")
+
+    if not has_configs:
+        return None
+
+    aggregate = ConnectorConfigList.load(config_path)
+    return aggregate.name

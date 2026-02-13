@@ -10,7 +10,7 @@ import typer
 from rich.console import Console
 
 from ..connector_utils import load_connector
-from ..models.connector_config import ConnectorConfig
+from ..models.connector_config import ConnectorConfig, resolve_aggregate_name, resolve_connector_config
 from ..shell_utils import find_executable
 
 
@@ -59,13 +59,29 @@ def _get_server_name(config: Path, name: str | None) -> str:
     """
     if name is not None:
         return name
-
     if not config.exists():
         raise FileNotFoundError(f"Config file not found: {config}")
+    config_paths = resolve_connector_config(config)
+    if len(config_paths) > 1:
+        aggregate_name = resolve_aggregate_name(config)
+        if aggregate_name is None:
+            raise ValueError("Aggregate config must include 'name'")
+        return aggregate_name
+    return _default_server_name_from_connector_config(config_paths[0])
 
-    connector_config = ConnectorConfig.load(config)
+
+def _default_server_name_from_connector_config(config_path: Path) -> str:
+    connector_config = ConnectorConfig.load(config_path)
     connector = load_connector(connector_config)
     return f"airbyte-{connector.connector_name}"
+
+
+def _resolve_server_name(config: Path, name: str | None, console: Console) -> str:
+    try:
+        return _get_server_name(config, name)
+    except Exception as e:
+        console.print(f"[red]Error: {e}[/red]")
+        raise typer.Exit(1) from None
 
 
 def _uv_serve_args(config: Path) -> list[str]:
@@ -132,7 +148,7 @@ register_app = typer.Typer(help="Register the MCP server with an AI coding tool"
 def claude_code(
     config: Annotated[
         Path,
-        typer.Argument(help="Path to connector config YAML file"),
+        typer.Argument(help="Path to connector config YAML file (single or aggregate)"),
     ],
     name: Annotated[
         str | None,
@@ -159,11 +175,7 @@ def claude_code(
         console.print("[red]Error: 'claude' CLI not found in PATH[/red]")
         raise typer.Exit(1) from None
 
-    try:
-        server_name = _get_server_name(config, name)
-    except Exception as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1) from None
+    server_name = _resolve_server_name(config, name, console)
 
     subprocess.run([claude_cmd, "mcp", "remove", "--scope", scope, server_name], capture_output=True, text=True)
 
@@ -190,7 +202,7 @@ def claude_code(
 def codex(
     config: Annotated[
         Path,
-        typer.Argument(help="Path to connector config YAML file"),
+        typer.Argument(help="Path to connector config YAML file (single or aggregate)"),
     ],
     name: Annotated[
         str | None,
@@ -212,11 +224,7 @@ def codex(
         console.print("[red]Error: 'codex' CLI not found in PATH[/red]")
         raise typer.Exit(1) from None
 
-    try:
-        server_name = _get_server_name(config, name)
-    except Exception as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1) from None
+    server_name = _resolve_server_name(config, name, console)
 
     _run_cli_add(
         [
@@ -237,7 +245,7 @@ def codex(
 def claude_desktop(
     config: Annotated[
         Path,
-        typer.Argument(help="Path to connector config YAML file"),
+        typer.Argument(help="Path to connector config YAML file (single or aggregate)"),
     ],
     name: Annotated[
         str | None,
@@ -253,11 +261,7 @@ def claude_desktop(
         adp mcp add-to claude-desktop connector-config-gong.yaml --name my-gong-server
     """
     console = Console(stderr=True)
-    try:
-        server_name = _get_server_name(config, name)
-    except Exception as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1) from None
+    server_name = _resolve_server_name(config, name, console)
     _add_to_json_config(
         _get_claude_desktop_config_path(),
         server_name,
@@ -271,7 +275,7 @@ def claude_desktop(
 def cursor(
     config: Annotated[
         Path,
-        typer.Argument(help="Path to connector config YAML file"),
+        typer.Argument(help="Path to connector config YAML file (single or aggregate)"),
     ],
     name: Annotated[
         str | None,
@@ -292,11 +296,7 @@ def cursor(
         adp mcp add-to cursor connector-config-gong.yaml --scope project
     """
     console = Console(stderr=True)
-    try:
-        server_name = _get_server_name(config, name)
-    except Exception as e:
-        console.print(f"[red]Error: {e}[/red]")
-        raise typer.Exit(1) from None
+    server_name = _resolve_server_name(config, name, console)
     scope_label = "project" if scope == "project" else "user"
     _add_to_json_config(
         _get_cursor_config_path(scope),
