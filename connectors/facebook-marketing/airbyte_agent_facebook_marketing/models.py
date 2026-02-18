@@ -54,6 +54,15 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
+
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -63,15 +72,6 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
-
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -467,6 +467,85 @@ class VideosList(BaseModel):
     data: Union[list[Video], Any] = Field(default=None)
     paging: Union[Paging, Any] = Field(default=None)
 
+class PixelOwnerBusiness(BaseModel):
+    """Business that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="Owner business ID")
+    """Owner business ID"""
+    name: Union[str | None, Any] = Field(default=None, description="Owner business name")
+    """Owner business name"""
+
+class PixelCreator(BaseModel):
+    """User who created the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="Creator user ID")
+    """Creator user ID"""
+    name: Union[str | None, Any] = Field(default=None, description="Creator user name")
+    """Creator user name"""
+
+class PixelOwnerAdAccount(BaseModel):
+    """Ad account that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
+    """Owner ad account ID"""
+    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
+    """Owner ad account ID (with act_ prefix)"""
+
+class Pixel(BaseModel):
+    """Facebook Ads Pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    creation_time: Union[str | None, Any] = Field(default=None)
+    creator: Union[PixelCreator | None, Any] = Field(default=None)
+    data_use_setting: Union[str | None, Any] = Field(default=None)
+    enable_automatic_matching: Union[bool | None, Any] = Field(default=None)
+    first_party_cookie_status: Union[str | None, Any] = Field(default=None)
+    is_created_by_app: Union[bool | None, Any] = Field(default=None)
+    is_crm: Union[bool | None, Any] = Field(default=None)
+    is_unavailable: Union[bool | None, Any] = Field(default=None)
+    last_fired_time: Union[str | None, Any] = Field(default=None)
+    owner_ad_account: Union[PixelOwnerAdAccount | None, Any] = Field(default=None)
+    owner_business: Union[PixelOwnerBusiness | None, Any] = Field(default=None)
+
+class PixelsList(BaseModel):
+    """PixelsList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[Pixel], Any] = Field(default=None)
+    paging: Union[Paging, Any] = Field(default=None)
+
+class PixelStatDataItem(BaseModel):
+    """Nested schema for PixelStat.data_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    timestamp: Union[str | None, Any] = Field(default=None, description="Timestamp for the data point")
+    """Timestamp for the data point"""
+    value: Union[int | None, Any] = Field(default=None, description="Event count at the timestamp")
+    """Event count at the timestamp"""
+
+class PixelStat(BaseModel):
+    """Facebook Pixel event stat entry showing event counts and quality metrics"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[PixelStatDataItem] | None, Any] = Field(default=None)
+    event: Union[str | None, Any] = Field(default=None)
+    event_source: Union[str | None, Any] = Field(default=None)
+    total_count: Union[int | None, Any] = Field(default=None)
+    total_matched_count: Union[int | None, Any] = Field(default=None)
+    total_deduped_count: Union[int | None, Any] = Field(default=None)
+    test_events_count: Union[int | None, Any] = Field(default=None)
+
+class PixelStatsList(BaseModel):
+    """PixelStatsList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[PixelStat], Any] = Field(default=None)
+
 class BidInfo(BaseModel):
     """BidInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -663,6 +742,12 @@ class ImagesListResultMeta(BaseModel):
 
 class VideosListResultMeta(BaseModel):
     """Metadata for videos.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    after: Union[str | None, Any] = Field(default=None)
+
+class PixelsListResultMeta(BaseModel):
+    """Metadata for pixels.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     after: Union[str | None, Any] = Field(default=None)
@@ -1101,4 +1186,10 @@ ImagesListResult = FacebookMarketingExecuteResultWithMeta[list[Image], ImagesLis
 
 VideosListResult = FacebookMarketingExecuteResultWithMeta[list[Video], VideosListResultMeta]
 """Result type for videos.list operation with data and metadata."""
+
+PixelsListResult = FacebookMarketingExecuteResultWithMeta[list[Pixel], PixelsListResultMeta]
+"""Result type for pixels.list operation with data and metadata."""
+
+PixelStatsListResult = FacebookMarketingExecuteResult[list[PixelStat]]
+"""Result type for pixel_stats.list operation."""
 

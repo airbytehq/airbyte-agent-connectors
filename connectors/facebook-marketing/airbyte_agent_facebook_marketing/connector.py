@@ -39,6 +39,9 @@ from .types import (
     CurrentUserGetParams,
     CustomConversionsListParams,
     ImagesListParams,
+    PixelStatsListParams,
+    PixelsGetParams,
+    PixelsListParams,
     VideosListParams,
     AirbyteSearchParams,
     CampaignsSearchFilter,
@@ -81,6 +84,8 @@ from .models import (
     CustomConversionsListResult,
     ImagesListResult,
     VideosListResult,
+    PixelsListResult,
+    PixelStatsListResult,
     Ad,
     AdAccount,
     AdAccountListItem,
@@ -94,6 +99,8 @@ from .models import (
     CurrentUser,
     CustomConversion,
     Image,
+    Pixel,
+    PixelStat,
     UpdateResponse,
     Video,
     AirbyteSearchMeta,
@@ -165,7 +172,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.16"
+    connector_version = "1.0.17"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -184,6 +191,9 @@ class FacebookMarketingConnector:
         ("custom_conversions", "list"): True,
         ("images", "list"): True,
         ("videos", "list"): True,
+        ("pixels", "list"): True,
+        ("pixels", "get"): None,
+        ("pixel_stats", "list"): True,
         ("campaigns", "get"): None,
         ("campaigns", "update"): None,
         ("ad_sets", "get"): None,
@@ -209,6 +219,9 @@ class FacebookMarketingConnector:
         ('custom_conversions', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('images', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
         ('videos', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('pixels', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('pixels', 'get'): {'pixel_id': 'pixel_id', 'fields': 'fields'},
+        ('pixel_stats', 'list'): {'pixel_id': 'pixel_id', 'start_time': 'start_time', 'end_time': 'end_time', 'aggregation': 'aggregation'},
         ('campaigns', 'get'): {'campaign_id': 'campaign_id', 'fields': 'fields'},
         ('campaigns', 'update'): {'campaign_id': 'campaign_id'},
         ('ad_sets', 'get'): {'adset_id': 'adset_id', 'fields': 'fields'},
@@ -327,6 +340,8 @@ class FacebookMarketingConnector:
         self.custom_conversions = CustomConversionsQuery(self)
         self.images = ImagesQuery(self)
         self.videos = VideosQuery(self)
+        self.pixels = PixelsQuery(self)
+        self.pixel_stats = PixelStatsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -441,6 +456,30 @@ class FacebookMarketingConnector:
         action: Literal["list"],
         params: "VideosListParams"
     ) -> "VideosListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixels"],
+        action: Literal["list"],
+        params: "PixelsListParams"
+    ) -> "PixelsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixels"],
+        action: Literal["get"],
+        params: "PixelsGetParams"
+    ) -> "Pixel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixel_stats"],
+        action: Literal["list"],
+        params: "PixelStatsListParams"
+    ) -> "PixelStatsListResult": ...
 
     @overload
     async def execute(
@@ -2318,3 +2357,124 @@ class VideosQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class PixelsQuery:
+    """
+    Query class for Pixels entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> PixelsListResult:
+        """
+        Returns a list of Facebook pixels for the specified ad account, including pixel configuration and event quality data
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            PixelsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixels", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PixelsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def get(
+        self,
+        pixel_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> Pixel:
+        """
+        Returns details about a single Facebook pixel by ID
+
+        Args:
+            pixel_id: The Facebook pixel ID
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            Pixel
+        """
+        params = {k: v for k, v in {
+            "pixel_id": pixel_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixels", "get", params)
+        return result
+
+
+
+class PixelStatsQuery:
+    """
+    Query class for PixelStats entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        pixel_id: str,
+        start_time: str | None = None,
+        end_time: str | None = None,
+        aggregation: str | None = None,
+        **kwargs
+    ) -> PixelStatsListResult:
+        """
+        Returns event quality and stats data for a Facebook pixel, including event counts, match quality scores, and deduplication metrics
+
+        Args:
+            pixel_id: The Facebook pixel ID
+            start_time: Start time for stats period as Unix timestamp
+            end_time: End time for stats period as Unix timestamp
+            aggregation: Aggregation level for stats
+            **kwargs: Additional parameters
+
+        Returns:
+            PixelStatsListResult
+        """
+        params = {k: v for k, v in {
+            "pixel_id": pixel_id,
+            "start_time": start_time,
+            "end_time": end_time,
+            "aggregation": aggregation,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixel_stats", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PixelStatsListResult(
+            data=result.data
+        )
+
+

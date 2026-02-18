@@ -106,6 +106,25 @@ class VideosListParams(TypedDict):
     limit: NotRequired[int]
     after: NotRequired[str]
 
+class PixelsListParams(TypedDict):
+    """Parameters for pixels.list operation"""
+    account_id: str
+    fields: NotRequired[str]
+    limit: NotRequired[int]
+    after: NotRequired[str]
+
+class PixelsGetParams(TypedDict):
+    """Parameters for pixels.get operation"""
+    pixel_id: str
+    fields: NotRequired[str]
+
+class PixelStatsListParams(TypedDict):
+    """Parameters for pixel_stats.list operation"""
+    pixel_id: str
+    start_time: NotRequired[str]
+    end_time: NotRequired[str]
+    aggregation: NotRequired[str]
+
 class CampaignsGetParams(TypedDict):
     """Parameters for campaigns.get operation"""
     campaign_id: str

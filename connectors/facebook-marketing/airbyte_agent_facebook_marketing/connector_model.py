@@ -28,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.16',
+    version='1.0.17',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -4184,6 +4184,488 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                 'required': ['id'],
                 'x-airbyte-entity-name': 'videos',
                 'x-airbyte-stream-name': 'videos',
+            },
+        ),
+        EntityDefinition(
+            name='pixels',
+            actions=[Action.LIST, Action.GET],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/act_{account_id}/adspixels',
+                    action=Action.LIST,
+                    description='Returns a list of Facebook pixels for the specified ad account, including pixel configuration and event quality data',
+                    query_params=['fields', 'limit', 'after'],
+                    query_params_schema={
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,name,creation_time,creator,data_use_setting,enable_automatic_matching,first_party_cookie_status,is_created_by_app,is_crm,is_unavailable,last_fired_time,owner_ad_account,owner_business',
+                        },
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    path_params=['account_id'],
+                    path_params_schema={
+                        'account_id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Facebook Ads Pixel',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'Pixel ID'},
+                                        'name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Pixel name',
+                                        },
+                                        'creation_time': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Time the pixel was created',
+                                        },
+                                        'creator': {
+                                            'type': ['object', 'null'],
+                                            'description': 'User who created the pixel',
+                                            'properties': {
+                                                'id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Creator user ID',
+                                                },
+                                                'name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Creator user name',
+                                                },
+                                            },
+                                        },
+                                        'data_use_setting': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Data use setting (e.g., EMPTY, ADVERTISING_AND_ANALYTICS)',
+                                        },
+                                        'enable_automatic_matching': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether automatic advanced matching is enabled',
+                                        },
+                                        'first_party_cookie_status': {
+                                            'type': ['string', 'null'],
+                                            'description': 'First-party cookie status (e.g., EMPTY, FIRST_PARTY_COOKIE_ENABLED)',
+                                        },
+                                        'is_created_by_app': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether the pixel was created by an app',
+                                        },
+                                        'is_crm': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether this is a CRM pixel',
+                                        },
+                                        'is_unavailable': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether the pixel is unavailable',
+                                        },
+                                        'last_fired_time': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Last time the pixel fired an event',
+                                        },
+                                        'owner_ad_account': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Ad account that owns the pixel',
+                                            'properties': {
+                                                'account_id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Owner ad account ID',
+                                                },
+                                                'id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Owner ad account ID (with act_ prefix)',
+                                                },
+                                            },
+                                        },
+                                        'owner_business': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Business that owns the pixel',
+                                            'properties': {
+                                                'id': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Owner business ID',
+                                                },
+                                                'name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'Owner business name',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'pixels',
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'cursors': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'before': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for previous page',
+                                            },
+                                            'after': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for next page',
+                                            },
+                                        },
+                                    },
+                                    'next': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for next page',
+                                    },
+                                    'previous': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for previous page',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'after': '$.paging.cursors.after'},
+                ),
+                Action.GET: EndpointDefinition(
+                    method='GET',
+                    path='/{pixel_id}',
+                    action=Action.GET,
+                    description='Returns details about a single Facebook pixel by ID',
+                    query_params=['fields'],
+                    query_params_schema={
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,name,creation_time,creator,data_use_setting,enable_automatic_matching,first_party_cookie_status,is_created_by_app,is_crm,is_unavailable,last_fired_time,owner_ad_account,owner_business',
+                        },
+                    },
+                    path_params=['pixel_id'],
+                    path_params_schema={
+                        'pixel_id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Facebook Ads Pixel',
+                        'properties': {
+                            'id': {'type': 'string', 'description': 'Pixel ID'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Pixel name',
+                            },
+                            'creation_time': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Time the pixel was created',
+                            },
+                            'creator': {
+                                'type': ['object', 'null'],
+                                'description': 'User who created the pixel',
+                                'properties': {
+                                    'id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Creator user ID',
+                                    },
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Creator user name',
+                                    },
+                                },
+                            },
+                            'data_use_setting': {
+                                'type': ['string', 'null'],
+                                'description': 'Data use setting (e.g., EMPTY, ADVERTISING_AND_ANALYTICS)',
+                            },
+                            'enable_automatic_matching': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether automatic advanced matching is enabled',
+                            },
+                            'first_party_cookie_status': {
+                                'type': ['string', 'null'],
+                                'description': 'First-party cookie status (e.g., EMPTY, FIRST_PARTY_COOKIE_ENABLED)',
+                            },
+                            'is_created_by_app': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the pixel was created by an app',
+                            },
+                            'is_crm': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this is a CRM pixel',
+                            },
+                            'is_unavailable': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the pixel is unavailable',
+                            },
+                            'last_fired_time': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Last time the pixel fired an event',
+                            },
+                            'owner_ad_account': {
+                                'type': ['object', 'null'],
+                                'description': 'Ad account that owns the pixel',
+                                'properties': {
+                                    'account_id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Owner ad account ID',
+                                    },
+                                    'id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Owner ad account ID (with act_ prefix)',
+                                    },
+                                },
+                            },
+                            'owner_business': {
+                                'type': ['object', 'null'],
+                                'description': 'Business that owns the pixel',
+                                'properties': {
+                                    'id': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Owner business ID',
+                                    },
+                                    'name': {
+                                        'type': ['string', 'null'],
+                                        'description': 'Owner business name',
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['id'],
+                        'x-airbyte-entity-name': 'pixels',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Facebook Ads Pixel',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'Pixel ID'},
+                    'name': {
+                        'type': ['string', 'null'],
+                        'description': 'Pixel name',
+                    },
+                    'creation_time': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Time the pixel was created',
+                    },
+                    'creator': {
+                        'type': ['object', 'null'],
+                        'description': 'User who created the pixel',
+                        'properties': {
+                            'id': {
+                                'type': ['string', 'null'],
+                                'description': 'Creator user ID',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Creator user name',
+                            },
+                        },
+                    },
+                    'data_use_setting': {
+                        'type': ['string', 'null'],
+                        'description': 'Data use setting (e.g., EMPTY, ADVERTISING_AND_ANALYTICS)',
+                    },
+                    'enable_automatic_matching': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether automatic advanced matching is enabled',
+                    },
+                    'first_party_cookie_status': {
+                        'type': ['string', 'null'],
+                        'description': 'First-party cookie status (e.g., EMPTY, FIRST_PARTY_COOKIE_ENABLED)',
+                    },
+                    'is_created_by_app': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the pixel was created by an app',
+                    },
+                    'is_crm': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether this is a CRM pixel',
+                    },
+                    'is_unavailable': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the pixel is unavailable',
+                    },
+                    'last_fired_time': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Last time the pixel fired an event',
+                    },
+                    'owner_ad_account': {
+                        'type': ['object', 'null'],
+                        'description': 'Ad account that owns the pixel',
+                        'properties': {
+                            'account_id': {
+                                'type': ['string', 'null'],
+                                'description': 'Owner ad account ID',
+                            },
+                            'id': {
+                                'type': ['string', 'null'],
+                                'description': 'Owner ad account ID (with act_ prefix)',
+                            },
+                        },
+                    },
+                    'owner_business': {
+                        'type': ['object', 'null'],
+                        'description': 'Business that owns the pixel',
+                        'properties': {
+                            'id': {
+                                'type': ['string', 'null'],
+                                'description': 'Owner business ID',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Owner business name',
+                            },
+                        },
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'pixels',
+            },
+        ),
+        EntityDefinition(
+            name='pixel_stats',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/{pixel_id}/stats',
+                    action=Action.LIST,
+                    description='Returns event quality and stats data for a Facebook pixel, including event counts, match quality scores, and deduplication metrics',
+                    query_params=['start_time', 'end_time', 'aggregation'],
+                    query_params_schema={
+                        'start_time': {'type': 'string', 'required': False},
+                        'end_time': {'type': 'string', 'required': False},
+                        'aggregation': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'event',
+                        },
+                    },
+                    path_params=['pixel_id'],
+                    path_params_schema={
+                        'pixel_id': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Facebook Pixel event stat entry showing event counts and quality metrics',
+                                    'properties': {
+                                        'data': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Array of timestamp-value pairs for event counts',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'timestamp': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Timestamp for the data point',
+                                                    },
+                                                    'value': {
+                                                        'type': ['integer', 'null'],
+                                                        'description': 'Event count at the timestamp',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'event': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Event name (e.g., PageView, Purchase, AddToCart, Lead)',
+                                        },
+                                        'event_source': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Source of the event (e.g., pixel, app, conversions_api)',
+                                        },
+                                        'total_count': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Total count of events in the period',
+                                        },
+                                        'total_matched_count': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Total count of events that were matched',
+                                        },
+                                        'total_deduped_count': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Total count of events after deduplication',
+                                        },
+                                        'test_events_count': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Count of test events',
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'pixel_stats',
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Facebook Pixel event stat entry showing event counts and quality metrics',
+                'properties': {
+                    'data': {
+                        'type': ['array', 'null'],
+                        'description': 'Array of timestamp-value pairs for event counts',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'timestamp': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Timestamp for the data point',
+                                },
+                                'value': {
+                                    'type': ['integer', 'null'],
+                                    'description': 'Event count at the timestamp',
+                                },
+                            },
+                        },
+                    },
+                    'event': {
+                        'type': ['string', 'null'],
+                        'description': 'Event name (e.g., PageView, Purchase, AddToCart, Lead)',
+                    },
+                    'event_source': {
+                        'type': ['string', 'null'],
+                        'description': 'Source of the event (e.g., pixel, app, conversions_api)',
+                    },
+                    'total_count': {
+                        'type': ['integer', 'null'],
+                        'description': 'Total count of events in the period',
+                    },
+                    'total_matched_count': {
+                        'type': ['integer', 'null'],
+                        'description': 'Total count of events that were matched',
+                    },
+                    'total_deduped_count': {
+                        'type': ['integer', 'null'],
+                        'description': 'Total count of events after deduplication',
+                    },
+                    'test_events_count': {
+                        'type': ['integer', 'null'],
+                        'description': 'Count of test events',
+                    },
+                },
+                'x-airbyte-entity-name': 'pixel_stats',
             },
         ),
     ],
