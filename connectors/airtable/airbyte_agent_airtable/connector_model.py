@@ -26,7 +26,7 @@ from uuid import (
 AirtableConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('14c6e7ea-97ed-4f5e-a7b5-25e9a80b8212'),
     name='airtable',
-    version='1.0.4',
+    version='1.0.5',
     base_url='https://api.airtable.com/v0',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -43,6 +43,7 @@ AirtableConnectorModel: ConnectorModel = ConnectorModel(
             },
             auth_mapping={'token': '${personal_access_token}'},
             replication_auth_key_mapping={'credentials.api_key': 'personal_access_token'},
+            replication_auth_key_constants={'credentials.auth_method': 'api_key'},
         ),
     ),
     entities=[
