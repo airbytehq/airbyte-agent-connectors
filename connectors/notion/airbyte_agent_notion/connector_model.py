@@ -29,7 +29,7 @@ from uuid import (
 NotionConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('6e00b415-b02e-4160-bf02-58176a0ae687'),
     name='notion',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.notion.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -45,7 +45,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                 ),
             },
             auth_mapping={'token': '${token}'},
-            replication_auth_key_mapping={'credentials.access_token': 'token'},
+            replication_auth_key_mapping={'credentials.token': 'token'},
             replication_auth_key_constants={'credentials.auth_type': 'token'},
         ),
     ),
