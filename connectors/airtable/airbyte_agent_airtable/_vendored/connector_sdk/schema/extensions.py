@@ -1,73 +1,15 @@
 """
-Extension models for future features.
+Extension models for connector configuration.
 
-These models are defined but NOT yet added to the main schema models.
-They serve as:
-1. Type hints for future use
-2. Documentation of planned extensions
-3. Ready-to-use structures when features are implemented
-
-NOTE: These are not currently active in the schema. They will be added
-to Operation, Schema, or other models when their respective features
-are implemented.
+Provides Pydantic models for OpenAPI x-airbyte-* extensions:
+- RetryConfig: retry strategy with exponential backoff
+- CacheConfig / CacheEntityConfig / CacheFieldConfig: cache mapping for api_search
+- ReplicationConfig: replication settings for MULTI mode connectors
 """
 
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
-
-
-class PaginationConfig(BaseModel):
-    """
-    Configuration for pagination support.
-
-    NOT YET USED - Defined for future implementation.
-
-    When active, will be added to Operation model as:
-        x_pagination: Optional[PaginationConfig] = Field(None, alias="x-pagination")
-    """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
-
-    style: Literal["cursor", "offset", "page", "link"]
-    limit_param: str = "limit"
-
-    # Cursor-based pagination
-    cursor_param: str | None = None
-    cursor_source: Literal["body", "headers"] | None = "body"
-    cursor_path: str | None = None
-
-    # Offset-based pagination
-    offset_param: str | None = None
-
-    # Page-based pagination
-    page_param: str | None = None
-
-    # Response parsing
-    data_path: str = "data"
-    has_more_path: str | None = None
-
-    # Limits
-    max_page_size: int | None = None
-    default_page_size: int = 100
-
-
-class RateLimitConfig(BaseModel):
-    """
-    Configuration for rate limiting.
-
-    NOT YET USED - Defined for future implementation.
-
-    When active, might be added to Server or root OpenAPIConnector as:
-        x_rate_limit: Optional[RateLimitConfig] = Field(None, alias="x-rate-limit")
-    """
-
-    model_config = ConfigDict(populate_by_name=True, extra="forbid")
-
-    max_requests: int
-    time_window_seconds: int
-    retry_after_header: str | None = "Retry-After"
-    respect_retry_after: bool = True
 
 
 class RetryConfig(BaseModel):
