@@ -23,6 +23,7 @@ from .types import (
     AdAccountGetParams,
     AdAccountsListParams,
     AdCreativesListParams,
+    AdLibraryListParams,
     AdSetsCreateParams,
     AdSetsGetParams,
     AdSetsListParams,
@@ -86,11 +87,13 @@ from .models import (
     VideosListResult,
     PixelsListResult,
     PixelStatsListResult,
+    AdLibraryListResult,
     Ad,
     AdAccount,
     AdAccountListItem,
     AdCreateResponse,
     AdCreative,
+    AdLibraryAd,
     AdSet,
     AdSetCreateResponse,
     AdsInsight,
@@ -172,7 +175,7 @@ class FacebookMarketingConnector:
     """
 
     connector_name = "facebook-marketing"
-    connector_version = "1.0.17"
+    connector_version = "1.0.18"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -200,6 +203,7 @@ class FacebookMarketingConnector:
         ("ad_sets", "update"): None,
         ("ads", "get"): None,
         ("ads", "update"): None,
+        ("ad_library", "list"): True,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -228,6 +232,7 @@ class FacebookMarketingConnector:
         ('ad_sets', 'update'): {'adset_id': 'adset_id'},
         ('ads', 'get'): {'ad_id': 'ad_id', 'fields': 'fields'},
         ('ads', 'update'): {'ad_id': 'ad_id'},
+        ('ad_library', 'list'): {'ad_reached_countries': 'ad_reached_countries', 'search_terms': 'search_terms', 'search_page_ids': 'search_page_ids', 'ad_type': 'ad_type', 'ad_active_status': 'ad_active_status', 'ad_delivery_date_min': 'ad_delivery_date_min', 'ad_delivery_date_max': 'ad_delivery_date_max', 'bylines': 'bylines', 'languages': 'languages', 'media_type': 'media_type', 'publisher_platforms': 'publisher_platforms', 'search_type': 'search_type', 'unmask_removed_content': 'unmask_removed_content', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -342,6 +347,7 @@ class FacebookMarketingConnector:
         self.videos = VideosQuery(self)
         self.pixels = PixelsQuery(self)
         self.pixel_stats = PixelStatsQuery(self)
+        self.ad_library = AdLibraryQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -528,6 +534,14 @@ class FacebookMarketingConnector:
         action: Literal["update"],
         params: "AdsUpdateParams"
     ) -> "UpdateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_library"],
+        action: Literal["list"],
+        params: "AdLibraryListParams"
+    ) -> "AdLibraryListResult": ...
 
 
     @overload
@@ -2475,6 +2489,89 @@ class PixelStatsQuery:
         # Cast generic envelope to concrete typed result
         return PixelStatsListResult(
             data=result.data
+        )
+
+
+
+class AdLibraryQuery:
+    """
+    Query class for AdLibrary entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        ad_reached_countries: str,
+        search_terms: str | None = None,
+        search_page_ids: str | None = None,
+        ad_type: str | None = None,
+        ad_active_status: str | None = None,
+        ad_delivery_date_min: str | None = None,
+        ad_delivery_date_max: str | None = None,
+        bylines: str | None = None,
+        languages: str | None = None,
+        media_type: str | None = None,
+        publisher_platforms: str | None = None,
+        search_type: str | None = None,
+        unmask_removed_content: bool | None = None,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdLibraryListResult:
+        """
+        Search the Facebook Ad Library for ads about social issues, elections or politics, and ads delivered to the UK or EU. Returns archived ads matching the specified search criteria including ad creative content, delivery dates, spend ranges, and demographic reach data.
+
+        Args:
+            ad_reached_countries: Search by ISO country code to return ads that reached specific countries. Use ALL to search all countries.
+            search_terms: The terms to search for. Blank space is treated as logical AND. Limit of 100 characters.
+            search_page_ids: Search for ads by specific Facebook Page IDs (comma-separated, up to 10)
+            ad_type: Filter by ad type category
+            ad_active_status: Filter by ad active status
+            ad_delivery_date_min: Search for ads delivered after this date (inclusive, YYYY-MM-DD)
+            ad_delivery_date_max: Search for ads delivered before this date (inclusive, YYYY-MM-DD)
+            bylines: Filter by paid-for-by disclaimer byline (JSON array of strings). Available only for POLITICAL_AND_ISSUE_ADS.
+            languages: Filter by language codes (ISO 639-1 JSON array, e.g. "['en','es']")
+            media_type: Filter by media type in the ad
+            publisher_platforms: Filter by Meta platform where the ad appeared (JSON array)
+            search_type: Type of search to use for search_terms
+            unmask_removed_content: Whether to reveal content removed for violating standards
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdLibraryListResult
+        """
+        params = {k: v for k, v in {
+            "ad_reached_countries": ad_reached_countries,
+            "search_terms": search_terms,
+            "search_page_ids": search_page_ids,
+            "ad_type": ad_type,
+            "ad_active_status": ad_active_status,
+            "ad_delivery_date_min": ad_delivery_date_min,
+            "ad_delivery_date_max": ad_delivery_date_max,
+            "bylines": bylines,
+            "languages": languages,
+            "media_type": media_type,
+            "publisher_platforms": publisher_platforms,
+            "search_type": search_type,
+            "unmask_removed_content": unmask_removed_content,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_library", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdLibraryListResult(
+            data=result.data,
+            meta=result.meta
         )
 
 

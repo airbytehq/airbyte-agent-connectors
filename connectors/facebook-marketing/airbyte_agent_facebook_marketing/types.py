@@ -152,6 +152,25 @@ class AdsUpdateParams(TypedDict):
     """Parameters for ads.update operation"""
     ad_id: str
 
+class AdLibraryListParams(TypedDict):
+    """Parameters for ad_library.list operation"""
+    ad_reached_countries: str
+    search_terms: NotRequired[str]
+    search_page_ids: NotRequired[str]
+    ad_type: NotRequired[str]
+    ad_active_status: NotRequired[str]
+    ad_delivery_date_min: NotRequired[str]
+    ad_delivery_date_max: NotRequired[str]
+    bylines: NotRequired[str]
+    languages: NotRequired[str]
+    media_type: NotRequired[str]
+    publisher_platforms: NotRequired[str]
+    search_type: NotRequired[str]
+    unmask_removed_content: NotRequired[bool]
+    fields: NotRequired[str]
+    limit: NotRequired[int]
+    after: NotRequired[str]
+
 # ===== SEARCH TYPES =====
 
 # Sort specification
