@@ -54,15 +54,6 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
-
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -72,6 +63,15 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
+
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -467,14 +467,14 @@ class VideosList(BaseModel):
     data: Union[list[Video], Any] = Field(default=None)
     paging: Union[Paging, Any] = Field(default=None)
 
-class PixelOwnerBusiness(BaseModel):
-    """Business that owns the pixel"""
+class PixelOwnerAdAccount(BaseModel):
+    """Ad account that owns the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    id: Union[str | None, Any] = Field(default=None, description="Owner business ID")
-    """Owner business ID"""
-    name: Union[str | None, Any] = Field(default=None, description="Owner business name")
-    """Owner business name"""
+    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
+    """Owner ad account ID"""
+    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
+    """Owner ad account ID (with act_ prefix)"""
 
 class PixelCreator(BaseModel):
     """User who created the pixel"""
@@ -485,14 +485,14 @@ class PixelCreator(BaseModel):
     name: Union[str | None, Any] = Field(default=None, description="Creator user name")
     """Creator user name"""
 
-class PixelOwnerAdAccount(BaseModel):
-    """Ad account that owns the pixel"""
+class PixelOwnerBusiness(BaseModel):
+    """Business that owns the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
-    """Owner ad account ID"""
-    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
-    """Owner ad account ID (with act_ prefix)"""
+    id: Union[str | None, Any] = Field(default=None, description="Owner business ID")
+    """Owner business ID"""
+    name: Union[str | None, Any] = Field(default=None, description="Owner business name")
+    """Owner business name"""
 
 class Pixel(BaseModel):
     """Facebook Ads Pixel"""
@@ -689,6 +689,93 @@ class AdUpdateParams(BaseModel):
     tracking_specs: Union[str | None, Any] = Field(default=None)
     bid_amount: Union[str | None, Any] = Field(default=None)
 
+class AdLibraryAdDeliveryByRegionItem(BaseModel):
+    """Nested schema for AdLibraryAd.delivery_by_region_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    region: Union[str | None, Any] = Field(default=None, description="Region name")
+    """Region name"""
+    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this region")
+    """Percentage of audience in this region"""
+
+class AdLibraryAdEstimatedAudienceSize(BaseModel):
+    """Estimated audience size range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of the estimated audience size")
+    """Lower bound of the estimated audience size"""
+    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of the estimated audience size")
+    """Upper bound of the estimated audience size"""
+
+class AdLibraryAdImpressions(BaseModel):
+    """Number of impressions as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
+    """Lower bound of impressions"""
+    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
+    """Upper bound of impressions"""
+
+class AdLibraryAdDemographicDistributionItem(BaseModel):
+    """Nested schema for AdLibraryAd.demographic_distribution_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    age: Union[str | None, Any] = Field(default=None, description="Age range")
+    """Age range"""
+    gender: Union[str | None, Any] = Field(default=None, description="Gender category")
+    """Gender category"""
+    percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this demographic")
+    """Percentage of audience in this demographic"""
+
+class AdLibraryAdSpend(BaseModel):
+    """Amount spent on the ad as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of spend")
+    """Lower bound of spend"""
+    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of spend")
+    """Upper bound of spend"""
+
+class AdLibraryAd(BaseModel):
+    """An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+    ad_creation_time: Union[str | None, Any] = Field(default=None)
+    ad_creative_bodies: Union[list[str] | None, Any] = Field(default=None)
+    ad_creative_link_captions: Union[list[str] | None, Any] = Field(default=None)
+    ad_creative_link_descriptions: Union[list[str] | None, Any] = Field(default=None)
+    ad_creative_link_titles: Union[list[str] | None, Any] = Field(default=None)
+    ad_delivery_start_time: Union[str | None, Any] = Field(default=None)
+    ad_delivery_stop_time: Union[str | None, Any] = Field(default=None)
+    ad_snapshot_url: Union[str | None, Any] = Field(default=None)
+    age_country_gender_reach_breakdown: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    beneficiary_payers: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    br_total_reach: Union[int | None, Any] = Field(default=None)
+    bylines: Union[str | None, Any] = Field(default=None)
+    currency: Union[str | None, Any] = Field(default=None)
+    delivery_by_region: Union[list[AdLibraryAdDeliveryByRegionItem] | None, Any] = Field(default=None)
+    demographic_distribution: Union[list[AdLibraryAdDemographicDistributionItem] | None, Any] = Field(default=None)
+    estimated_audience_size: Union[AdLibraryAdEstimatedAudienceSize | None, Any] = Field(default=None)
+    eu_total_reach: Union[int | None, Any] = Field(default=None)
+    impressions: Union[AdLibraryAdImpressions | None, Any] = Field(default=None)
+    languages: Union[list[str] | None, Any] = Field(default=None)
+    page_id: Union[str | None, Any] = Field(default=None)
+    page_name: Union[str | None, Any] = Field(default=None)
+    publisher_platforms: Union[list[str] | None, Any] = Field(default=None)
+    spend: Union[AdLibraryAdSpend | None, Any] = Field(default=None)
+    target_ages: Union[list[str] | None, Any] = Field(default=None)
+    target_gender: Union[str | None, Any] = Field(default=None)
+    target_locations: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    total_reach_by_location: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+
+class AdLibraryList(BaseModel):
+    """AdLibraryList type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[list[AdLibraryAd], Any] = Field(default=None)
+    paging: Union[Paging, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 
@@ -748,6 +835,12 @@ class VideosListResultMeta(BaseModel):
 
 class PixelsListResultMeta(BaseModel):
     """Metadata for pixels.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    after: Union[str | None, Any] = Field(default=None)
+
+class AdLibraryListResultMeta(BaseModel):
+    """Metadata for ad_library.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     after: Union[str | None, Any] = Field(default=None)
@@ -1192,4 +1285,7 @@ PixelsListResult = FacebookMarketingExecuteResultWithMeta[list[Pixel], PixelsLis
 
 PixelStatsListResult = FacebookMarketingExecuteResult[list[PixelStat]]
 """Result type for pixel_stats.list operation."""
+
+AdLibraryListResult = FacebookMarketingExecuteResultWithMeta[list[AdLibraryAd], AdLibraryListResultMeta]
+"""Result type for ad_library.list operation with data and metadata."""
 

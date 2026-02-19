@@ -28,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.17',
+    version='1.0.18',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -4666,6 +4666,495 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'pixel_stats',
+            },
+        ),
+        EntityDefinition(
+            name='ad_library',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/ads_archive',
+                    action=Action.LIST,
+                    description='Search the Facebook Ad Library for ads about social issues, elections or politics, and ads delivered to the UK or EU. Returns archived ads matching the specified search criteria including ad creative content, delivery dates, spend ranges, and demographic reach data.',
+                    query_params=[
+                        'ad_reached_countries',
+                        'search_terms',
+                        'search_page_ids',
+                        'ad_type',
+                        'ad_active_status',
+                        'ad_delivery_date_min',
+                        'ad_delivery_date_max',
+                        'bylines',
+                        'languages',
+                        'media_type',
+                        'publisher_platforms',
+                        'search_type',
+                        'unmask_removed_content',
+                        'fields',
+                        'limit',
+                        'after',
+                    ],
+                    query_params_schema={
+                        'ad_reached_countries': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'ALL',
+                        },
+                        'search_terms': {'type': 'string', 'required': False},
+                        'search_page_ids': {'type': 'string', 'required': False},
+                        'ad_type': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'ALL',
+                        },
+                        'ad_active_status': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'ACTIVE',
+                        },
+                        'ad_delivery_date_min': {'type': 'string', 'required': False},
+                        'ad_delivery_date_max': {'type': 'string', 'required': False},
+                        'bylines': {'type': 'string', 'required': False},
+                        'languages': {'type': 'string', 'required': False},
+                        'media_type': {'type': 'string', 'required': False},
+                        'publisher_platforms': {'type': 'string', 'required': False},
+                        'search_type': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'KEYWORD_UNORDERED',
+                        },
+                        'unmask_removed_content': {
+                            'type': 'boolean',
+                            'required': False,
+                            'default': False,
+                        },
+                        'fields': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'id,ad_creation_time,ad_creative_bodies,ad_creative_link_captions,ad_creative_link_descriptions,ad_creative_link_titles,ad_delivery_start_time,ad_delivery_stop_time,ad_snapshot_url,bylines,currency,languages,page_id,page_name,publisher_platforms,spend,impressions,demographic_distribution,delivery_by_region,estimated_audience_size',
+                        },
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 25,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns.',
+                                    'properties': {
+                                        'id': {'type': 'string', 'description': 'The Library ID of the ad'},
+                                        'ad_creation_time': {
+                                            'type': ['string', 'null'],
+                                            'description': 'UTC date and time when the ad was created',
+                                        },
+                                        'ad_creative_bodies': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Text content displayed in each ad card',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'ad_creative_link_captions': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Captions in the call-to-action section of each ad card',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'ad_creative_link_descriptions': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Text descriptions in the call-to-action section of each ad card',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'ad_creative_link_titles': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Titles in the call-to-action section of each ad card',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'ad_delivery_start_time': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Date and time when ad delivery started (UTC)',
+                                        },
+                                        'ad_delivery_stop_time': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Date and time when ad delivery stopped (UTC)',
+                                        },
+                                        'ad_snapshot_url': {
+                                            'type': ['string', 'null'],
+                                            'description': 'URL to view the archived ad snapshot',
+                                        },
+                                        'age_country_gender_reach_breakdown': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Demographic distribution of accounts reached in UK and EU',
+                                            'items': {'type': 'object'},
+                                        },
+                                        'beneficiary_payers': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Reported beneficiaries and payers for the ad (EU only)',
+                                            'items': {'type': 'object'},
+                                        },
+                                        'br_total_reach': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Estimated ad reach for Brazil',
+                                        },
+                                        'bylines': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Name of person, company, or entity that funded the ad',
+                                        },
+                                        'currency': {
+                                            'type': ['string', 'null'],
+                                            'description': 'ISO currency code used to pay for the ad',
+                                        },
+                                        'delivery_by_region': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Regional distribution of accounts reached by the ad (percentage)',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'region': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Region name',
+                                                    },
+                                                    'percentage': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Percentage of audience in this region',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'demographic_distribution': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Demographic distribution of accounts reached (age and gender)',
+                                            'items': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'age': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Age range',
+                                                    },
+                                                    'gender': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Gender category',
+                                                    },
+                                                    'percentage': {
+                                                        'type': ['string', 'null'],
+                                                        'description': 'Percentage of audience in this demographic',
+                                                    },
+                                                },
+                                            },
+                                        },
+                                        'estimated_audience_size': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Estimated audience size range',
+                                            'properties': {
+                                                'lower_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Lower bound of the estimated audience size',
+                                                },
+                                                'upper_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Upper bound of the estimated audience size',
+                                                },
+                                            },
+                                        },
+                                        'eu_total_reach': {
+                                            'type': ['integer', 'null'],
+                                            'description': 'Estimated combined ad reach in the European Union',
+                                        },
+                                        'impressions': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Number of impressions as a range',
+                                            'properties': {
+                                                'lower_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Lower bound of impressions',
+                                                },
+                                                'upper_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Upper bound of impressions',
+                                                },
+                                            },
+                                        },
+                                        'languages': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Languages contained in the ad (ISO 639-1 codes)',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'page_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'ID of the Facebook Page that ran the ad',
+                                        },
+                                        'page_name': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Name of the Facebook Page that ran the ad',
+                                        },
+                                        'publisher_platforms': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Meta platforms where the ad appeared',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'spend': {
+                                            'type': ['object', 'null'],
+                                            'description': 'Amount spent on the ad as a range',
+                                            'properties': {
+                                                'lower_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Lower bound of spend',
+                                                },
+                                                'upper_bound': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'Upper bound of spend',
+                                                },
+                                            },
+                                        },
+                                        'target_ages': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Age ranges selected for ad targeting (UK and EU)',
+                                            'items': {'type': 'string'},
+                                        },
+                                        'target_gender': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Gender selected for ad targeting (Women, Men, or All)',
+                                        },
+                                        'target_locations': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Locations included or excluded for ad targeting (UK and EU)',
+                                            'items': {'type': 'object'},
+                                        },
+                                        'total_reach_by_location': {
+                                            'type': ['array', 'null'],
+                                            'description': 'Estimated combined ad reach broken down by location',
+                                            'items': {'type': 'object'},
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'ad_library',
+                                },
+                            },
+                            'paging': {
+                                'type': 'object',
+                                'properties': {
+                                    'cursors': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'before': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for previous page',
+                                            },
+                                            'after': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Cursor for next page',
+                                            },
+                                        },
+                                    },
+                                    'next': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for next page',
+                                    },
+                                    'previous': {
+                                        'type': ['string', 'null'],
+                                        'description': 'URL for previous page',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'after': '$.paging.cursors.after'},
+                    untested=True,
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'An archived ad from the Facebook Ad Library, containing ad creative content, delivery information, spend data, and demographic reach breakdowns.',
+                'properties': {
+                    'id': {'type': 'string', 'description': 'The Library ID of the ad'},
+                    'ad_creation_time': {
+                        'type': ['string', 'null'],
+                        'description': 'UTC date and time when the ad was created',
+                    },
+                    'ad_creative_bodies': {
+                        'type': ['array', 'null'],
+                        'description': 'Text content displayed in each ad card',
+                        'items': {'type': 'string'},
+                    },
+                    'ad_creative_link_captions': {
+                        'type': ['array', 'null'],
+                        'description': 'Captions in the call-to-action section of each ad card',
+                        'items': {'type': 'string'},
+                    },
+                    'ad_creative_link_descriptions': {
+                        'type': ['array', 'null'],
+                        'description': 'Text descriptions in the call-to-action section of each ad card',
+                        'items': {'type': 'string'},
+                    },
+                    'ad_creative_link_titles': {
+                        'type': ['array', 'null'],
+                        'description': 'Titles in the call-to-action section of each ad card',
+                        'items': {'type': 'string'},
+                    },
+                    'ad_delivery_start_time': {
+                        'type': ['string', 'null'],
+                        'description': 'Date and time when ad delivery started (UTC)',
+                    },
+                    'ad_delivery_stop_time': {
+                        'type': ['string', 'null'],
+                        'description': 'Date and time when ad delivery stopped (UTC)',
+                    },
+                    'ad_snapshot_url': {
+                        'type': ['string', 'null'],
+                        'description': 'URL to view the archived ad snapshot',
+                    },
+                    'age_country_gender_reach_breakdown': {
+                        'type': ['array', 'null'],
+                        'description': 'Demographic distribution of accounts reached in UK and EU',
+                        'items': {'type': 'object'},
+                    },
+                    'beneficiary_payers': {
+                        'type': ['array', 'null'],
+                        'description': 'Reported beneficiaries and payers for the ad (EU only)',
+                        'items': {'type': 'object'},
+                    },
+                    'br_total_reach': {
+                        'type': ['integer', 'null'],
+                        'description': 'Estimated ad reach for Brazil',
+                    },
+                    'bylines': {
+                        'type': ['string', 'null'],
+                        'description': 'Name of person, company, or entity that funded the ad',
+                    },
+                    'currency': {
+                        'type': ['string', 'null'],
+                        'description': 'ISO currency code used to pay for the ad',
+                    },
+                    'delivery_by_region': {
+                        'type': ['array', 'null'],
+                        'description': 'Regional distribution of accounts reached by the ad (percentage)',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'region': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Region name',
+                                },
+                                'percentage': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Percentage of audience in this region',
+                                },
+                            },
+                        },
+                    },
+                    'demographic_distribution': {
+                        'type': ['array', 'null'],
+                        'description': 'Demographic distribution of accounts reached (age and gender)',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'age': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Age range',
+                                },
+                                'gender': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Gender category',
+                                },
+                                'percentage': {
+                                    'type': ['string', 'null'],
+                                    'description': 'Percentage of audience in this demographic',
+                                },
+                            },
+                        },
+                    },
+                    'estimated_audience_size': {
+                        'type': ['object', 'null'],
+                        'description': 'Estimated audience size range',
+                        'properties': {
+                            'lower_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Lower bound of the estimated audience size',
+                            },
+                            'upper_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Upper bound of the estimated audience size',
+                            },
+                        },
+                    },
+                    'eu_total_reach': {
+                        'type': ['integer', 'null'],
+                        'description': 'Estimated combined ad reach in the European Union',
+                    },
+                    'impressions': {
+                        'type': ['object', 'null'],
+                        'description': 'Number of impressions as a range',
+                        'properties': {
+                            'lower_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Lower bound of impressions',
+                            },
+                            'upper_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Upper bound of impressions',
+                            },
+                        },
+                    },
+                    'languages': {
+                        'type': ['array', 'null'],
+                        'description': 'Languages contained in the ad (ISO 639-1 codes)',
+                        'items': {'type': 'string'},
+                    },
+                    'page_id': {
+                        'type': ['string', 'null'],
+                        'description': 'ID of the Facebook Page that ran the ad',
+                    },
+                    'page_name': {
+                        'type': ['string', 'null'],
+                        'description': 'Name of the Facebook Page that ran the ad',
+                    },
+                    'publisher_platforms': {
+                        'type': ['array', 'null'],
+                        'description': 'Meta platforms where the ad appeared',
+                        'items': {'type': 'string'},
+                    },
+                    'spend': {
+                        'type': ['object', 'null'],
+                        'description': 'Amount spent on the ad as a range',
+                        'properties': {
+                            'lower_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Lower bound of spend',
+                            },
+                            'upper_bound': {
+                                'type': ['integer', 'null'],
+                                'description': 'Upper bound of spend',
+                            },
+                        },
+                    },
+                    'target_ages': {
+                        'type': ['array', 'null'],
+                        'description': 'Age ranges selected for ad targeting (UK and EU)',
+                        'items': {'type': 'string'},
+                    },
+                    'target_gender': {
+                        'type': ['string', 'null'],
+                        'description': 'Gender selected for ad targeting (Women, Men, or All)',
+                    },
+                    'target_locations': {
+                        'type': ['array', 'null'],
+                        'description': 'Locations included or excluded for ad targeting (UK and EU)',
+                        'items': {'type': 'object'},
+                    },
+                    'total_reach_by_location': {
+                        'type': ['array', 'null'],
+                        'description': 'Estimated combined ad reach broken down by location',
+                        'items': {'type': 'object'},
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'ad_library',
             },
         ),
     ],
