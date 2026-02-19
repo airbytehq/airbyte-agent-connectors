@@ -32,14 +32,6 @@ class AshbyReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
-class CandidatePhonenumbersItem(BaseModel):
-    """Nested schema for Candidate.phoneNumbers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    value: Union[str | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
-    is_primary: Union[bool | None, Any] = Field(default=None, alias="isPrimary")
-
 class CandidateEmailaddressesItem(BaseModel):
     """Nested schema for Candidate.emailAddresses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -48,12 +40,13 @@ class CandidateEmailaddressesItem(BaseModel):
     type: Union[str | None, Any] = Field(default=None)
     is_primary: Union[bool | None, Any] = Field(default=None, alias="isPrimary")
 
-class CandidateSociallinksItem(BaseModel):
-    """Nested schema for Candidate.socialLinks_item"""
+class CandidatePhonenumbersItem(BaseModel):
+    """Nested schema for Candidate.phoneNumbers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
+    value: Union[str | None, Any] = Field(default=None)
     type: Union[str | None, Any] = Field(default=None)
-    url: Union[str | None, Any] = Field(default=None)
+    is_primary: Union[bool | None, Any] = Field(default=None, alias="isPrimary")
 
 class CandidateTagsItem(BaseModel):
     """Nested schema for Candidate.tags_item"""
@@ -62,6 +55,13 @@ class CandidateTagsItem(BaseModel):
     id: Union[str | None, Any] = Field(default=None)
     title: Union[str | None, Any] = Field(default=None)
     is_archived: Union[bool | None, Any] = Field(default=None, alias="isArchived")
+
+class CandidateSociallinksItem(BaseModel):
+    """Nested schema for Candidate.socialLinks_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type: Union[str | None, Any] = Field(default=None)
+    url: Union[str | None, Any] = Field(default=None)
 
 class Candidate(BaseModel):
     """Candidate object"""
