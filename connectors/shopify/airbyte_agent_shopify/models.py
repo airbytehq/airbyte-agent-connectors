@@ -151,29 +151,6 @@ class LineItem(BaseModel):
     duties: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
     discount_allocations: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
 
-class Fulfillment(BaseModel):
-    """A fulfillment"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    order_id: Union[int | None, Any] = Field(default=None)
-    status: Union[str | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    service: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    tracking_company: Union[str | None, Any] = Field(default=None)
-    shipment_status: Union[str | None, Any] = Field(default=None)
-    location_id: Union[int | None, Any] = Field(default=None)
-    origin_address: Union[dict[str, Any] | None, Any] = Field(default=None)
-    line_items: Union[list[LineItem] | None, Any] = Field(default=None)
-    tracking_number: Union[str | None, Any] = Field(default=None)
-    tracking_numbers: Union[list[str] | None, Any] = Field(default=None)
-    tracking_url: Union[str | None, Any] = Field(default=None)
-    tracking_urls: Union[list[str] | None, Any] = Field(default=None)
-    receipt: Union[dict[str, Any] | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
-
 class Transaction(BaseModel):
     """An order transaction"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -222,6 +199,29 @@ class Refund(BaseModel):
     order_adjustments: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
     admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
     refund_shipping_lines: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+
+class Fulfillment(BaseModel):
+    """A fulfillment"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    order_id: Union[int | None, Any] = Field(default=None)
+    status: Union[str | None, Any] = Field(default=None)
+    created_at: Union[str | None, Any] = Field(default=None)
+    service: Union[str | None, Any] = Field(default=None)
+    updated_at: Union[str | None, Any] = Field(default=None)
+    tracking_company: Union[str | None, Any] = Field(default=None)
+    shipment_status: Union[str | None, Any] = Field(default=None)
+    location_id: Union[int | None, Any] = Field(default=None)
+    origin_address: Union[dict[str, Any] | None, Any] = Field(default=None)
+    line_items: Union[list[LineItem] | None, Any] = Field(default=None)
+    tracking_number: Union[str | None, Any] = Field(default=None)
+    tracking_numbers: Union[list[str] | None, Any] = Field(default=None)
+    tracking_url: Union[str | None, Any] = Field(default=None)
+    tracking_urls: Union[list[str] | None, Any] = Field(default=None)
+    receipt: Union[dict[str, Any] | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
 
 class Order(BaseModel):
     """A Shopify order"""
@@ -327,6 +327,22 @@ class OrderList(BaseModel):
 
     orders: Union[list[Order], Any] = Field(default=None)
 
+class ProductImage(BaseModel):
+    """A product image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    product_id: Union[int | None, Any] = Field(default=None)
+    position: Union[int | None, Any] = Field(default=None)
+    created_at: Union[str | None, Any] = Field(default=None)
+    updated_at: Union[str | None, Any] = Field(default=None)
+    alt: Union[str | None, Any] = Field(default=None)
+    width: Union[int | None, Any] = Field(default=None)
+    height: Union[int | None, Any] = Field(default=None)
+    src: Union[str | None, Any] = Field(default=None)
+    variant_ids: Union[list[int] | None, Any] = Field(default=None)
+    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
+
 class ProductVariant(BaseModel):
     """A product variant"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -356,22 +372,6 @@ class ProductVariant(BaseModel):
     inventory_quantity: Union[int | None, Any] = Field(default=None)
     old_inventory_quantity: Union[int | None, Any] = Field(default=None)
     requires_shipping: Union[bool | None, Any] = Field(default=None)
-    admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
-
-class ProductImage(BaseModel):
-    """A product image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None)
-    product_id: Union[int | None, Any] = Field(default=None)
-    position: Union[int | None, Any] = Field(default=None)
-    created_at: Union[str | None, Any] = Field(default=None)
-    updated_at: Union[str | None, Any] = Field(default=None)
-    alt: Union[str | None, Any] = Field(default=None)
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    src: Union[str | None, Any] = Field(default=None)
-    variant_ids: Union[list[int] | None, Any] = Field(default=None)
     admin_graphql_api_id: Union[str | None, Any] = Field(default=None)
 
 class Product(BaseModel):
