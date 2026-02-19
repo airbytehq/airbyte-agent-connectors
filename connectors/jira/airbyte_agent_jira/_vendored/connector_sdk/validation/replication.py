@@ -519,18 +519,32 @@ def validate_required_config_fields(
     - Top-level required fields
     - Nested required fields within required objects
     - oneOf structures with const discriminators
+    - Non-required properties that have mapped child paths (e.g., credentials
+      not in top-level required but connector maps credentials.api_password)
 
     Args:
         connector_def: Our connector.yaml as dict
         connection_spec: connectionSpecification from registry
     """
-    # Get all constants for discriminator matching (combine from all schemes)
     all_constants: dict[str, Any] = {}
     for constants in _extract_auth_constants_from_connector_def(connector_def).values():
         all_constants.update(constants)
 
     required_paths = _collect_required_paths(connection_spec, "", all_constants)
     mapped_paths = _extract_all_mapped_paths(connector_def)
+
+    already_collected = {path for path, _ in required_paths}
+    spec_properties = connection_spec.get("properties", {})
+    for parent_name, parent_schema in spec_properties.items():
+        if parent_name in already_collected:
+            continue
+        if not any(mp.startswith(parent_name + ".") for mp in mapped_paths):
+            continue
+        extra_paths = _collect_required_paths(parent_schema, parent_name, all_constants)
+        for path, has_default in extra_paths:
+            if path not in already_collected:
+                required_paths.append((path, has_default))
+                already_collected.add(path)
 
     missing_paths = []
     for path, has_default in required_paths:
@@ -540,7 +554,6 @@ def validate_required_config_fields(
         if path in mapped_paths:
             continue
 
-        # Check if any child paths are mapped (parent is implicitly satisfied)
         path_prefix = path + "."
         if any(mp.startswith(path_prefix) for mp in mapped_paths):
             continue
@@ -554,6 +567,87 @@ def validate_required_config_fields(
             f"Add mappings via replication_config_key_mapping, replication_auth_key_mapping, "
             f"replication_auth_key_constants, or x-airbyte-replication-environment-mapping, as appropriate."
         )
+
+    return ValidationResult(len(errors) == 0, errors, [])
+
+
+def _find_oneof_discriminator_fields(
+    schema: dict[str, Any],
+) -> list[tuple[str, list[Any]]]:
+    """Find const discriminator fields across oneOf variants.
+
+    Returns:
+        List of (field_name, [const_values]) tuples for fields that have const
+        values defined across the oneOf variants.
+    """
+    one_of = schema.get("oneOf", [])
+    if not one_of:
+        return []
+
+    const_fields: dict[str, list[Any]] = {}
+    for variant in one_of:
+        for prop_name, prop_def in variant.get("properties", {}).items():
+            if "const" in prop_def:
+                if prop_name not in const_fields:
+                    const_fields[prop_name] = []
+                const_fields[prop_name].append(prop_def["const"])
+
+    return [(k, v) for k, v in const_fields.items()]
+
+
+def validate_oneof_discriminators_mapped(
+    connector_def: dict[str, Any],
+    connection_spec: dict[str, Any],
+) -> ValidationResult:
+    """Validate that oneOf discriminator constants are declared when mapping paths inside oneOf.
+
+    When a connector maps paths inside a spec property that uses oneOf
+    (e.g., mapping credentials.api_password), the const discriminator field
+    (e.g., credentials.auth_method) must be declared in replication_auth_key_constants
+    so that the Airbyte source connector knows which oneOf variant to use.
+
+    Args:
+        connector_def: Our connector.yaml as dict
+        connection_spec: connectionSpecification from registry
+    """
+    errors: list[str] = []
+    mapped_paths = _extract_all_mapped_paths(connector_def)
+
+    all_constants: dict[str, Any] = {}
+    for constants in _extract_auth_constants_from_connector_def(connector_def).values():
+        all_constants.update(constants)
+
+    mapped_parents: dict[str, set[str]] = {}
+    for path in mapped_paths:
+        if "." in path:
+            parts = path.split(".", 1)
+            parent = parts[0]
+            if parent not in mapped_parents:
+                mapped_parents[parent] = set()
+            mapped_parents[parent].add(path)
+
+    spec_properties = connection_spec.get("properties", {})
+    for parent_name, child_paths in mapped_parents.items():
+        if parent_name not in spec_properties:
+            continue
+
+        parent_schema = spec_properties[parent_name]
+        discriminator_fields = _find_oneof_discriminator_fields(parent_schema)
+        if not discriminator_fields:
+            continue
+
+        for disc_field_name, valid_values in discriminator_fields:
+            disc_path = f"{parent_name}.{disc_field_name}"
+            if disc_path not in mapped_paths:
+                non_disc_mapped = [p for p in child_paths if p != disc_path]
+                if non_disc_mapped:
+                    errors.append(
+                        f"Property '{parent_name}' uses oneOf with discriminator "
+                        f"'{disc_field_name}' (valid values: {valid_values}), "
+                        f"but '{disc_path}' is not declared in "
+                        f"replication_auth_key_constants. Mapped paths inside "
+                        f"'{parent_name}': {', '.join(sorted(non_disc_mapped))}."
+                    )
 
     return ValidationResult(len(errors) == 0, errors, [])
 
@@ -1332,6 +1426,20 @@ def validate_replication_compatibility(
             "messages": props_errors + props_warnings
             if (props_errors or props_warnings)
             else ["All auth config properties have replication mappings"],
+        }
+    )
+
+    # Check 10: oneOf discriminator constants validation
+    disc_valid, disc_errors, disc_warnings = validate_oneof_discriminators_mapped(connector_def, connection_spec)
+    all_errors.extend(disc_errors)
+    all_warnings.extend(disc_warnings)
+    checks.append(
+        {
+            "name": "oneof_discriminators",
+            "status": "pass" if disc_valid else "fail",
+            "messages": disc_errors + disc_warnings
+            if (disc_errors or disc_warnings)
+            else ["All oneOf discriminator constants are properly declared"],
         }
     )
 

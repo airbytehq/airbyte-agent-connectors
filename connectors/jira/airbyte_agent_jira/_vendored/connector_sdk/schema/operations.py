@@ -27,8 +27,6 @@ class Operation(BaseModel):
     - x-airbyte-path-override: Path override (Airbyte extension)
     - x-airbyte-record-extractor: JSONPath to extract records from response (Airbyte extension)
 
-    Future extensions (not yet active):
-    - x-airbyte-pagination: Pagination configuration for list operations
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -97,10 +95,6 @@ class Operation(BaseModel):
             "always-available endpoint (e.g., users, accounts)."
         ),
     )
-
-    # Future extensions (commented out, defined for future use)
-    # from .extensions import PaginationConfig
-    # x_pagination: Optional[PaginationConfig] = Field(None, alias="x-airbyte-pagination")
 
     @model_validator(mode="after")
     def validate_download_action_requirements(self) -> "Operation":
