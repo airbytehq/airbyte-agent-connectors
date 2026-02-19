@@ -39,6 +39,7 @@ class HostedExecutor:
             airbyte_client_id="client_abc123",
             airbyte_client_secret="secret_xyz789",
             external_user_id="user-123",
+            organization_id="00000000-0000-0000-0000-000000000123",
             connector_definition_id="abc123-def456-ghi789",
         )
 
@@ -63,6 +64,7 @@ class HostedExecutor:
         connector_id: str | None = None,
         external_user_id: str | None = None,
         connector_definition_id: str | None = None,
+        organization_id: str | None = None,
     ):
         """Initialize hosted executor.
 
@@ -75,6 +77,7 @@ class HostedExecutor:
             connector_id: Direct connector/source ID (skips lookup if provided)
             external_user_id: User identifier in the Airbyte system (for lookup)
             connector_definition_id: Connector definition ID (for lookup)
+            organization_id: Optional Airbyte organization ID for multi-org request routing
 
         Raises:
             ValueError: If neither connector_id nor (external_user_id + connector_definition_id) provided
@@ -92,6 +95,7 @@ class HostedExecutor:
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789",
                 external_user_id="user-123",
+                organization_id="00000000-0000-0000-0000-000000000123",
                 connector_definition_id="abc123-def456-ghi789",
             )
         """
@@ -101,12 +105,14 @@ class HostedExecutor:
 
         self._connector_id = connector_id
         self._external_user_id = external_user_id
+        self._organization_id = organization_id
         self._connector_definition_id = connector_definition_id
 
         # Create AirbyteCloudClient for API interactions
         self._cloud_client = AirbyteCloudClient(
             client_id=airbyte_client_id,
             client_secret=airbyte_client_secret,
+            organization_id=organization_id,
         )
 
     async def execute(self, config: ExecutionConfig) -> ExecutionResult:
@@ -146,6 +152,8 @@ class HostedExecutor:
             span.set_attribute("connector.action", config.action)
             if self._external_user_id:
                 span.set_attribute("user.external_id", self._external_user_id)
+            if self._organization_id:
+                span.set_attribute("organization.id", self._organization_id)
             if config.params:
                 # Only add non-sensitive param keys
                 span.set_attribute("connector.param_keys", list(config.params.keys()))
