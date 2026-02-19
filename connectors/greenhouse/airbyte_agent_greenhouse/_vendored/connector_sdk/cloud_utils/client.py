@@ -38,7 +38,8 @@ class AirbyteCloudClient:
     Example:
         client = AirbyteCloudClient(
             client_id="your-client-id",
-            client_secret="your-client-secret"
+            client_secret="your-client-secret",
+            organization_id="00000000-0000-0000-0000-000000000123",
         )
 
         # Get a connector ID
@@ -57,16 +58,25 @@ class AirbyteCloudClient:
     """
 
     API_BASE_URL = "https://api.airbyte.ai"  # For all API calls including token endpoint
+    AUTHORIZATION_HEADER = "Authorization"
+    ORGANIZATION_ID_HEADER = "X-Organization-Id"
 
-    def __init__(self, client_id: str, client_secret: str):
+    def __init__(
+        self,
+        client_id: str,
+        client_secret: str,
+        organization_id: str | None = None,
+    ):
         """Initialize AirbyteCloudClient.
 
         Args:
             client_id: Airbyte client ID for authentication
             client_secret: Airbyte client secret for authentication
+            organization_id: Optional Airbyte organization ID for multi-org request routing
         """
         self._client_id = client_id
         self._client_secret = client_secret
+        self._organization_id = organization_id
 
         # Token cache (instance-level)
         self._cached_token: str | None = None
@@ -75,6 +85,15 @@ class AirbyteCloudClient:
             timeout=httpx.Timeout(300.0),  # 5 minute timeout
             follow_redirects=True,
         )
+
+    def _build_headers(self, token: str | None = None) -> dict[str, str]:
+        """Build request headers for Airbyte API calls."""
+        headers: dict[str, str] = {}
+        if token is not None:
+            headers[self.AUTHORIZATION_HEADER] = f"Bearer {token}"
+        if self._organization_id:
+            headers[self.ORGANIZATION_ID_HEADER] = self._organization_id
+        return headers
 
     async def get_bearer_token(self) -> str:
         """Get bearer token for API authentication.
@@ -109,7 +128,12 @@ class AirbyteCloudClient:
             "client_secret": self._client_secret,
         }
 
-        response = await self._http_client.post(url, json=request_body)
+        request_kwargs: dict[str, Any] = {"json": request_body}
+        headers = self._build_headers()
+        if headers:
+            request_kwargs["headers"] = headers
+
+        response = await self._http_client.post(url, **request_kwargs)
         _raise_with_body(response)
 
         data = response.json()
@@ -159,7 +183,7 @@ class AirbyteCloudClient:
             "definition_id": connector_definition_id,
         }
 
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = self._build_headers(token=token)
         response = await self._http_client.get(url, params=params, headers=headers)
         _raise_with_body(response)
 
@@ -225,7 +249,7 @@ class AirbyteCloudClient:
         """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/oauth/initiate"
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = self._build_headers(token=token)
         request_body: dict[str, Any] = {
             "external_user_id": external_user_id,
             "definition_id": definition_id,
@@ -299,7 +323,7 @@ class AirbyteCloudClient:
         """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/v1/integrations/connectors"
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = self._build_headers(token=token)
 
         request_body: dict[str, Any] = {
             "name": name,
@@ -354,7 +378,7 @@ class AirbyteCloudClient:
         """
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/{connector_id}/execute"
-        headers = {"Authorization": f"Bearer {token}"}
+        headers = self._build_headers(token=token)
         request_body = {
             "entity": entity,
             "action": action,
