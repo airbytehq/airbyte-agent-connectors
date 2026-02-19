@@ -971,6 +971,14 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "to enable reliable health checks."
         )
 
+    if total_cassettes > 0:
+        readiness_warnings.append(
+            "IMPORTANT: Review cassette files for PII (names, emails, phone numbers, addresses) "
+            "before committing. Cassette response bodies are not automatically sanitized and may "
+            "contain personally identifiable information from real API responses. Replace any PII "
+            "with anonymized/fake values before pushing to the repository."
+        )
+
     # Build auth scheme validation result
     options = config.auth.options or []
     tested_schemes = [opt.scheme_name for opt in options if not opt.untested]

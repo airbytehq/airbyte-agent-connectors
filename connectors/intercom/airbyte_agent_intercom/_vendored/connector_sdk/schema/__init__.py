@@ -26,7 +26,7 @@ from .components import (
     Schema,
 )
 from .connector import ExternalDocs, OpenAPIConnector, Tag
-from .extensions import PaginationConfig, RateLimitConfig, RetryConfig
+from .extensions import RetryConfig
 from .operations import Operation, PathItem
 from .security import (
     AirbyteAuthConfig,
@@ -66,8 +66,6 @@ __all__ = [
     # Operation models
     "PathItem",
     "Operation",
-    # Extension models (for future use)
-    "PaginationConfig",
-    "RateLimitConfig",
+    # Extension models
     "RetryConfig",
 ]
