@@ -3,17 +3,14 @@
 from __future__ import annotations
 
 import logging
-import re
 from pathlib import Path
 from typing import Any
-from uuid import UUID
 
 import jsonref
 import yaml
 from pydantic import ValidationError
 
 from .constants import (
-    OPENAPI_DEFAULT_VERSION,
     OPENAPI_VERSION_PREFIX,
 )
 
@@ -107,14 +104,6 @@ def _validate_auth_mapping_keys(
             f"Note: auth_mapping keys must be the auth parameters (e.g., 'token' for bearer), "
             f'not your credential field names. Use template syntax to map: token: "${{your_field}}"'
         )
-
-
-def extract_path_params(path: str) -> list[str]:
-    """Extract parameter names from path template.
-
-    Example: '/v1/customers/{id}/invoices/{invoice_id}' -> ['id', 'invoice_id']
-    """
-    return re.findall(r"\{(\w+)\}", path)
 
 
 def resolve_schema_refs(schema: Any, spec_dict: dict) -> dict[str, Any]:
@@ -1020,7 +1009,7 @@ def _parse_security_scheme_to_option(scheme_name: str, scheme: Any) -> AuthOptio
 def load_connector_model(definition_path: str | Path) -> ConnectorModel:
     """Load connector model from YAML definition file.
 
-    Supports both OpenAPI 3.1 format and legacy format.
+    Loads an OpenAPI 3.1 connector definition from a YAML file.
 
     Args:
         definition_path: Path to connector.yaml file
@@ -1049,72 +1038,10 @@ def load_connector_model(definition_path: str | Path) -> ConnectorModel:
     if not raw_definition:
         raise ValueError("Invalid connector.yaml: empty file")
 
-    # Detect format: OpenAPI if 'openapi' key exists
-    if "openapi" in raw_definition:
-        spec = parse_openapi_spec(raw_definition)
-        return convert_openapi_to_connector_model(spec)
-
-    # Legacy format
-    if "connector" not in raw_definition:
-        raise ValueError("Invalid connector.yaml: missing 'connector' or 'openapi' key")
-
-    # Parse connector metadata
-    connector_meta = raw_definition["connector"]
-
-    # Parse auth config
-    auth_config = raw_definition.get("auth", {})
-
-    # Parse entities
-    entities = []
-    for entity_data in raw_definition.get("entities", []):
-        # Parse endpoints for each action
-        endpoints_dict = {}
-        for action_str in entity_data.get("actions", []):
-            action = Action(action_str)
-            endpoint_data = entity_data["endpoints"].get(action_str)
-
-            if endpoint_data:
-                # Extract path parameters from the path template
-                path_params = extract_path_params(endpoint_data["path"])
-
-                endpoint = EndpointDefinition(
-                    method=endpoint_data["method"],
-                    path=endpoint_data["path"],
-                    description=endpoint_data.get("description"),
-                    body_fields=endpoint_data.get("body_fields", []),
-                    query_params=endpoint_data.get("query_params", []),
-                    path_params=path_params,
-                    graphql_body=None,  # GraphQL only supported in OpenAPI format (via x-airbyte-body-type)
-                )
-                endpoints_dict[action] = endpoint
-
-        entity = EntityDefinition(
-            name=entity_data["name"],
-            actions=[Action(a) for a in entity_data["actions"]],
-            endpoints=endpoints_dict,
-            schema=entity_data.get("schema"),
+    if "openapi" not in raw_definition:
+        raise ValueError(
+            "Invalid connector.yaml: missing 'openapi' key. Only OpenAPI 3.1 format is supported."
         )
-        entities.append(entity)
 
-    # Get connector definition ID
-    connector_definition_id_value = connector_meta.get("id")
-    if connector_definition_id_value:
-        # Try to parse as UUID (handles string UUIDs)
-        if isinstance(connector_definition_id_value, str):
-            connector_definition_id = UUID(connector_definition_id_value)
-        else:
-            connector_definition_id = connector_definition_id_value
-    else:
-        raise ValueError
-
-    # Build ConnectorModel
-    model = ConnectorModel(
-        id=connector_definition_id,
-        name=connector_meta["name"],
-        version=connector_meta.get("version", OPENAPI_DEFAULT_VERSION),
-        base_url=raw_definition.get("base_url", connector_meta.get("base_url", "")),
-        auth=auth_config,
-        entities=entities,
-    )
-
-    return model
+    spec = parse_openapi_spec(raw_definition)
+    return convert_openapi_to_connector_model(spec)
