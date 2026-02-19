@@ -21,7 +21,8 @@ from airbyte_agent_mcp.mcp_server import (
     _compact,
     _drop_fields_from_record,
     _exclude_fields,
-    _normalize_execute_params,
+    _normalize_dict,
+    _normalize_list,
     _pick_fields_from_record,
     _select_fields,
     _to_dict,
@@ -92,34 +93,60 @@ class TestToDict:
         assert result == {"id": 1, "name": "Alice"}
 
 
-# --- _normalize_execute_params ---
+# --- _normalize_dict ---
 
 
 class TestNormalizeExecuteParams:
     def test_dict_passthrough(self):
         params = {"query": {"filter": {"eq": {"id": "123"}}}}
-        assert _normalize_execute_params(params) == params
+        assert _normalize_dict(params) == params
 
     def test_none_to_empty_dict(self):
-        assert _normalize_execute_params(None) == {}
+        assert _normalize_dict(None) == {}
 
     def test_empty_string_to_empty_dict(self):
-        assert _normalize_execute_params("   ") == {}
+        assert _normalize_dict("   ") == {}
 
     def test_json_object_string_parsed(self):
         params = '{"query":{"filter":{"like":{"Email":"%graham%"}}},"limit":10}'
-        assert _normalize_execute_params(params) == {
+        assert _normalize_dict(params) == {
             "query": {"filter": {"like": {"Email": "%graham%"}}},
             "limit": 10,
         }
 
     def test_invalid_json_string_raises(self):
         with pytest.raises(ValueError, match="Invalid params"):
-            _normalize_execute_params("{bad")
+            _normalize_dict("{bad")
 
     def test_non_object_json_raises(self):
         with pytest.raises(ValueError, match="expected object/dict"):
-            _normalize_execute_params('["a", "b"]')
+            _normalize_dict('["a", "b"]')
+
+
+class TestNormalizeList:
+    def test_none_passthrough(self):
+        assert _normalize_list(None) is None
+
+    def test_list_passthrough(self):
+        assert _normalize_list(["id", "name"]) == ["id", "name"]
+
+    def test_empty_string_to_none(self):
+        assert _normalize_list("   ") is None
+
+    def test_json_array_string_parsed(self):
+        assert _normalize_list('["id","name"]') == ["id", "name"]
+
+    def test_invalid_json_string_raises(self):
+        with pytest.raises(ValueError, match="expected a list of strings or JSON array string"):
+            _normalize_list("[bad")
+
+    def test_non_list_raises(self):
+        with pytest.raises(ValueError, match="expected a list of strings"):
+            _normalize_list('{"id":1}')
+
+    def test_list_with_non_string_values_raises(self):
+        with pytest.raises(ValueError, match="expected a list of strings"):
+            _normalize_list(["id", 1])  # type: ignore[list-item]
 
 
 # --- _compact ---

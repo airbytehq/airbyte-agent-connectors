@@ -184,7 +184,7 @@ def _to_dict(obj: Any) -> Any:
     return obj
 
 
-def _normalize_execute_params(params: dict[str, Any] | str | None) -> dict[str, Any]:
+def _normalize_dict(params: dict[str, Any] | str | None) -> dict[str, Any]:
     """Normalize execute params to a dictionary.
 
     Accepts dict directly or JSON object string for compatibility with clients
@@ -209,6 +209,26 @@ def _normalize_execute_params(params: dict[str, Any] | str | None) -> dict[str, 
         return parsed
 
     raise ValueError(f"Invalid params type: expected dict, string, or null; got {type(params).__name__}")
+
+
+def _normalize_list(value: list[str] | str | None) -> list[str] | None:
+    if value is None:
+        return None
+
+    parsed: Any = value
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return None
+        try:
+            parsed = json.loads(stripped)
+        except json.JSONDecodeError as exc:
+            raise ValueError("Invalid list: expected a list of strings or JSON array string") from exc
+
+    if not isinstance(parsed, list) or not all(isinstance(item, str) for item in parsed):
+        raise ValueError("Invalid list: expected a list of strings")
+
+    return parsed
 
 
 def _compact(obj: Any) -> Any:
@@ -416,8 +436,8 @@ def register_connector_tools(mcp: FastMCP, connector: Any, tool_prefix: str | No
         entity: str,
         action: str,
         params: dict[str, Any] | str | None = None,
-        select_fields: list[str] | None = None,
-        exclude_fields: list[str] | None = None,
+        select_fields: list[str] | str | None = None,
+        exclude_fields: list[str] | str | None = None,
         skip_truncation: bool = False,
     ) -> Any:
         """Execute an operation on a connector entity.
@@ -439,13 +459,15 @@ def register_connector_tools(mcp: FastMCP, connector: Any, tool_prefix: str | No
         Returns:
             Operation result (structure varies by entity/action)
         """
-        normalized_params = _normalize_execute_params(params)
+        normalized_params = _normalize_dict(params)
+        normalized_select_fields = _normalize_list(select_fields)
+        normalized_exclude_fields = _normalize_list(exclude_fields)
 
         if action == ACTION_DOWNLOAD:
             return await _handle_download(entity, action, normalized_params, connector=connector)
 
         result = _to_dict(await connector.execute(entity, action, normalized_params))
-        return _transform_response(result, action, select_fields, exclude_fields, skip_truncation)
+        return _transform_response(result, action, normalized_select_fields, normalized_exclude_fields, skip_truncation)
 
     # Apply tool_utils decorator for docstring augmentation and output limits
     decorated_execute = connector.tool_utils(max_output_chars=None)(_execute_impl)
