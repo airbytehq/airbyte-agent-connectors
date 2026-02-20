@@ -186,7 +186,7 @@ class HubspotConnector:
 
         Supports both local and hosted execution modes:
         - Local mode: Provide connector-specific auth config (e.g., HubspotAuthConfig)
-        - Hosted mode: Provide `AirbyteAuthConfig` with client credentials and either `connector_id` or `external_user_id`
+        - Hosted mode: Provide `AirbyteAuthConfig` with client credentials and either `connector_id` or `customer_name`
 
         Args:
             auth_config: Either connector-specific auth config for local mode, or AirbyteAuthConfig for hosted mode
@@ -205,10 +205,10 @@ class HubspotConnector:
                 )
             )
 
-            # Hosted mode with lookup by external_user_id
+            # Hosted mode with lookup by customer_name
             connector = HubspotConnector(
                 auth_config=AirbyteAuthConfig(
-                    external_user_id="user-123",
+                    customer_name="user-123",
                     organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc123",
                     airbyte_client_secret="secret_xyz789"
@@ -239,7 +239,7 @@ class HubspotConnector:
                 airbyte_client_id=auth_config.airbyte_client_id,
                 airbyte_client_secret=auth_config.airbyte_client_secret,
                 connector_id=auth_config.connector_id,
-                external_user_id=auth_config.external_user_id,
+                customer_name=auth_config.customer_name,
                 organization_id=auth_config.organization_id,
                 connector_definition_id=str(HubspotConnectorModel.id),
             )
@@ -660,11 +660,11 @@ class HubspotConnector:
         redirected to your redirect_url with a `connector_id` query parameter.
 
         Args:
-            airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
+            airbyte_config: Airbyte hosted auth config with client credentials and customer_name.
                 Optionally include organization_id for multi-org request routing.
             redirect_url: URL where users will be redirected after OAuth consent.
                 After consent, user arrives at: redirect_url?connector_id=...
-            name: Optional name for the source. Defaults to connector name + external_user_id.
+            name: Optional name for the source. Defaults to connector name + customer_name.
             replication_config: Optional replication settings dict. Merged with OAuth credentials.
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
@@ -675,7 +675,7 @@ class HubspotConnector:
         Example:
             consent_url = await HubspotConnector.get_consent_url(
                 airbyte_config=AirbyteAuthConfig(
-                    external_user_id="my-workspace",
+                    customer_name="my-workspace",
                     organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
@@ -686,8 +686,8 @@ class HubspotConnector:
             # Redirect user to: consent_url
             # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
         """
-        if not airbyte_config.external_user_id:
-            raise ValueError("airbyte_config.external_user_id is required for get_consent_url()")
+        if not airbyte_config.customer_name:
+            raise ValueError("airbyte_config.customer_name is required for get_consent_url()")
 
         from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
 
@@ -702,7 +702,7 @@ class HubspotConnector:
 
             consent_url = await client.initiate_oauth(
                 definition_id=str(HubspotConnectorModel.id),
-                external_user_id=airbyte_config.external_user_id,
+                customer_name=airbyte_config.customer_name,
                 redirect_url=redirect_url,
                 name=name,
                 replication_config=replication_config_dict,
@@ -736,12 +736,12 @@ class HubspotConnector:
         2. Server-side OAuth: Provide `server_side_oauth_secret_id` from OAuth flow
 
         Args:
-            airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
+            airbyte_config: Airbyte hosted auth config with client credentials and customer_name.
                 Optionally include organization_id for multi-org request routing.
             auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
             server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
-            name: Optional source name (defaults to connector name + external_user_id)
+            name: Optional source name (defaults to connector name + customer_name)
             replication_config: Optional replication settings dict.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
             source_template_id: Source template ID. Required when organization has
@@ -757,7 +757,7 @@ class HubspotConnector:
             # Create a new hosted connector with API key auth
             connector = await HubspotConnector.create(
                 airbyte_config=AirbyteAuthConfig(
-                    external_user_id="my-workspace",
+                    customer_name="my-workspace",
                     organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
@@ -768,7 +768,7 @@ class HubspotConnector:
             # With server-side OAuth:
             connector = await HubspotConnector.create(
                 airbyte_config=AirbyteAuthConfig(
-                    external_user_id="my-workspace",
+                    customer_name="my-workspace",
                     organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
@@ -779,8 +779,8 @@ class HubspotConnector:
             # Use the connector
             result = await connector.execute("entity", "list", {})
         """
-        if not airbyte_config.external_user_id:
-            raise ValueError("airbyte_config.external_user_id is required for create()")
+        if not airbyte_config.customer_name:
+            raise ValueError("airbyte_config.customer_name is required for create()")
 
         # Validate: exactly one of auth_config or server_side_oauth_secret_id required
         if auth_config is None and server_side_oauth_secret_id is None:
@@ -807,11 +807,11 @@ class HubspotConnector:
             replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
 
             # Create source on Airbyte Cloud
-            source_name = name or f"{cls.connector_name} - {airbyte_config.external_user_id}"
+            source_name = name or f"{cls.connector_name} - {airbyte_config.customer_name}"
             source_id = await client.create_source(
                 name=source_name,
                 connector_definition_id=str(HubspotConnectorModel.id),
-                external_user_id=airbyte_config.external_user_id,
+                customer_name=airbyte_config.customer_name,
                 credentials=credentials,
                 replication_config=replication_config_dict,
                 server_side_oauth_secret_id=server_side_oauth_secret_id,
