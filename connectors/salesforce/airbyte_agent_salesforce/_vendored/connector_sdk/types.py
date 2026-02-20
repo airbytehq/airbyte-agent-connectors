@@ -6,7 +6,7 @@ from enum import Enum
 from typing import Any
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from .constants import OPENAPI_DEFAULT_VERSION
 from .schema.components import PathOverrideConfig
@@ -22,10 +22,10 @@ class AirbyteHostedAuthConfig(BaseModel):
 
     For hosted mode execution, provide client credentials with either:
     - `connector_id`: Direct connector/source ID (skips lookup)
-    - `external_user_id`: User ID for connector lookup
+    - `customer_name`: Customer name for connector lookup
 
     Attributes:
-        external_user_id: External user ID for hosted mode connector lookup
+        customer_name: Customer name for hosted mode connector lookup
         organization_id: Optional Airbyte organization ID for multi-org selection
         airbyte_client_id: Airbyte OAuth client ID (required for hosted mode)
         airbyte_client_secret: Airbyte OAuth client secret (required for hosted mode)
@@ -41,10 +41,10 @@ class AirbyteHostedAuthConfig(BaseModel):
             )
         )
 
-        # Hosted mode with external_user_id (lookup by user)
+        # Hosted mode with customer_name (lookup by customer)
         connector = GongConnector(
             auth_config=AirbyteHostedAuthConfig(
-                external_user_id="user-123",
+                customer_name="user-123",
                 organization_id="00000000-0000-0000-0000-000000000123",
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789"
@@ -52,9 +52,10 @@ class AirbyteHostedAuthConfig(BaseModel):
         )
     """
 
-    external_user_id: str | None = Field(
+    customer_name: str | None = Field(
         None,
-        description="External user ID for hosted mode connector lookup",
+        description="Customer name for hosted mode connector lookup. Previously named external_user_id.",
+        validation_alias=AliasChoices("customer_name", "external_user_id"),
     )
     organization_id: str | None = Field(
         None,
