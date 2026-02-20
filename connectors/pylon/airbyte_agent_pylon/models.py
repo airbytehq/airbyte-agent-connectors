@@ -20,16 +20,6 @@ class PylonAuthConfig(BaseModel):
     api_token: str
     """Your Pylon API token. Only admin users can create API tokens."""
 
-# Replication configuration
-
-class PylonReplicationConfig(BaseModel):
-    """Replication Configuration - Settings for data replication from Pylon."""
-
-    model_config = ConfigDict(extra="forbid")
-
-    start_date: str
-    """UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data."""
-
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
 class Pagination(BaseModel):

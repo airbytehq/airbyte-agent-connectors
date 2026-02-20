@@ -8,7 +8,7 @@ import inspect
 import json
 import logging
 from functools import wraps
-from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
+from typing import Any, Callable, Mapping, TypeVar, overload
 try:
     from typing import Literal
 except ImportError:
@@ -61,8 +61,6 @@ from .types import (
     UsersListParams,
 )
 from .models import PylonAuthConfig
-if TYPE_CHECKING:
-    from .models import PylonReplicationConfig
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -148,7 +146,7 @@ class PylonConnector:
     """
 
     connector_name = "pylon"
-    connector_version = "0.1.1"
+    connector_version = "0.1.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -908,7 +906,7 @@ class PylonConnector:
         airbyte_config: AirbyteAuthConfig,
         auth_config: "PylonAuthConfig",
         name: str | None = None,
-        replication_config: "PylonReplicationConfig" | None = None,
+        replication_config: dict[str, Any] | None = None,
         source_template_id: str | None = None,
     ) -> "PylonConnector":
         """
@@ -923,7 +921,7 @@ class PylonConnector:
                 Optionally include organization_id for multi-org request routing.
             auth_config: Typed auth config (same as local mode)
             name: Optional source name (defaults to connector name + customer_name)
-            replication_config: Typed replication settings.
+            replication_config: Optional replication settings dict.
                 Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
@@ -941,18 +939,6 @@ class PylonConnector:
                     airbyte_client_secret="secret_xyz",
                 ),
                 auth_config=PylonAuthConfig(api_token="..."),
-            )
-
-            # With replication config (required for this connector):
-            connector = await PylonConnector.create(
-                airbyte_config=AirbyteAuthConfig(
-                    customer_name="my-workspace",
-                    organization_id="00000000-0000-0000-0000-000000000123",
-                    airbyte_client_id="client_abc",
-                    airbyte_client_secret="secret_xyz",
-                ),
-                auth_config=PylonAuthConfig(api_token="..."),
-                replication_config=PylonReplicationConfig(start_date="..."),
             )
 
             # Use the connector

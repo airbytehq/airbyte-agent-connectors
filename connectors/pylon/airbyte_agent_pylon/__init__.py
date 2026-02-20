@@ -7,7 +7,6 @@ Auto-generated from OpenAPI specification.
 from .connector import PylonConnector
 from .models import (
     PylonAuthConfig,
-    PylonReplicationConfig,
     Pagination,
     MiniAccount,
     MiniUser,
@@ -160,7 +159,6 @@ __all__ = [
     "PylonConnector",
     "AirbyteAuthConfig",
     "PylonAuthConfig",
-    "PylonReplicationConfig",
     "Pagination",
     "MiniAccount",
     "MiniUser",
