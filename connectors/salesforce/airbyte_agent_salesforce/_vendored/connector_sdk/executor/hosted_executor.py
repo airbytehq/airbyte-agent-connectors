@@ -34,11 +34,11 @@ class HostedExecutor:
             connector_id="existing-source-uuid",
         )
 
-        # Or create executor with user ID for lookup
+        # Or create executor with customer_name for lookup
         executor = HostedExecutor(
             airbyte_client_id="client_abc123",
             airbyte_client_secret="secret_xyz789",
-            external_user_id="user-123",
+            customer_name="user-123",
             organization_id="00000000-0000-0000-0000-000000000123",
             connector_definition_id="abc123-def456-ghi789",
         )
@@ -62,25 +62,27 @@ class HostedExecutor:
         airbyte_client_id: str,
         airbyte_client_secret: str,
         connector_id: str | None = None,
-        external_user_id: str | None = None,
+        customer_name: str | None = None,
         connector_definition_id: str | None = None,
         organization_id: str | None = None,
+        external_user_id: str | None = None,
     ):
         """Initialize hosted executor.
 
-        Either provide connector_id directly OR (external_user_id + connector_definition_id)
+        Either provide connector_id directly OR (customer_name + connector_definition_id)
         for lookup.
 
         Args:
             airbyte_client_id: Airbyte client ID for authentication
             airbyte_client_secret: Airbyte client secret for authentication
             connector_id: Direct connector/source ID (skips lookup if provided)
-            external_user_id: User identifier in the Airbyte system (for lookup)
+            customer_name: Customer name for connector lookup
             connector_definition_id: Connector definition ID (for lookup)
             organization_id: Optional Airbyte organization ID for multi-org request routing
+            external_user_id: Deprecated alias for customer_name
 
         Raises:
-            ValueError: If neither connector_id nor (external_user_id + connector_definition_id) provided
+            ValueError: If neither connector_id nor (customer_name + connector_definition_id) provided
 
         Example:
             # With explicit connector_id (no lookup)
@@ -90,21 +92,23 @@ class HostedExecutor:
                 connector_id="existing-source-uuid",
             )
 
-            # With lookup by user + definition
+            # With lookup by customer_name + definition
             executor = HostedExecutor(
                 airbyte_client_id="client_abc123",
                 airbyte_client_secret="secret_xyz789",
-                external_user_id="user-123",
+                customer_name="user-123",
                 organization_id="00000000-0000-0000-0000-000000000123",
                 connector_definition_id="abc123-def456-ghi789",
             )
         """
-        # Validate: either connector_id OR (external_user_id + connector_definition_id) required
-        if not connector_id and not (external_user_id and connector_definition_id):
-            raise ValueError("Either connector_id OR (external_user_id + connector_definition_id) must be provided")
+        resolved_customer_name = customer_name or external_user_id
+
+        # Validate: either connector_id OR (customer_name + connector_definition_id) required
+        if not connector_id and not (resolved_customer_name and connector_definition_id):
+            raise ValueError("Either connector_id OR (customer_name + connector_definition_id) must be provided")
 
         self._connector_id = connector_id
-        self._external_user_id = external_user_id
+        self._customer_name = resolved_customer_name
         self._organization_id = organization_id
         self._connector_definition_id = connector_definition_id
 
@@ -119,7 +123,7 @@ class HostedExecutor:
         """Execute connector via cloud API (ExecutorProtocol implementation).
 
         Flow:
-        1. Use provided connector_id or look up from external_user_id + definition_id
+        1. Use provided connector_id or look up from customer_name + definition_id
         2. Execute the connector operation via the cloud API
         3. Parse the response into ExecutionResult
 
@@ -150,8 +154,8 @@ class HostedExecutor:
                 span.set_attribute("connector.definition_id", self._connector_definition_id)
             span.set_attribute("connector.entity", config.entity)
             span.set_attribute("connector.action", config.action)
-            if self._external_user_id:
-                span.set_attribute("user.external_id", self._external_user_id)
+            if self._customer_name:
+                span.set_attribute("customer.name", self._customer_name)
             if self._organization_id:
                 span.set_attribute("organization.id", self._organization_id)
             if config.params:
@@ -163,9 +167,9 @@ class HostedExecutor:
                 if self._connector_id:
                     connector_id = self._connector_id
                 else:
-                    # Look up connector by external_user_id + definition_id
+                    # Look up connector by customer_name + definition_id
                     connector_id = await self._cloud_client.get_connector_id(
-                        external_user_id=self._external_user_id,  # type: ignore[arg-type]
+                        customer_name=self._customer_name,  # type: ignore[arg-type]
                         connector_definition_id=self._connector_definition_id,  # type: ignore[arg-type]
                     )
 
