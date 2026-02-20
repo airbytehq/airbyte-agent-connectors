@@ -44,7 +44,7 @@ class AirbyteCloudClient:
 
         # Get a connector ID
         connector_id = await client.get_connector_id(
-            external_user_id="user-123",
+            customer_name="user-123",
             connector_definition_id="550e8400-e29b-41d4-a716-446655440000"
         )
 
@@ -149,16 +149,16 @@ class AirbyteCloudClient:
 
     async def get_connector_id(
         self,
-        external_user_id: str,
+        customer_name: str,
         connector_definition_id: str,
     ) -> str:
-        """Get connector ID for a user.
+        """Get connector ID for a customer.
 
-        Looks up the connector that belongs to the specified user
+        Looks up the connector that belongs to the specified customer
         and connector definition. Validates that exactly one connector exists.
 
         Args:
-            external_user_id: User identifier in the Airbyte system
+            customer_name: Customer name in the Airbyte system
             connector_definition_id: UUID of the connector definition
 
         Returns:
@@ -171,7 +171,7 @@ class AirbyteCloudClient:
 
         Example:
             connector_id = await client.get_connector_id(
-                external_user_id="user-123",
+                customer_name="user-123",
                 connector_definition_id="550e8400-e29b-41d4-a716-446655440000"
             )
         """
@@ -179,7 +179,7 @@ class AirbyteCloudClient:
         token = await self.get_bearer_token()
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors"
         params = {
-            "external_user_id": external_user_id,
+            "customer_name": customer_name,
             "definition_id": connector_definition_id,
         }
 
@@ -191,11 +191,11 @@ class AirbyteCloudClient:
         connectors = data["data"]
 
         if len(connectors) == 0:
-            raise ValueError(f"No connector found for user '{external_user_id}' and connector definition '{connector_definition_id}'")
+            raise ValueError(f"No connector found for customer_name '{customer_name}' and connector definition '{connector_definition_id}'")
 
         if len(connectors) > 1:
             raise ValueError(
-                f"Multiple connectors found for user '{external_user_id}' "
+                f"Multiple connectors found for customer_name '{customer_name}' "
                 f"and connector definition '{connector_definition_id}'. Expected exactly 1, "
                 f"found {len(connectors)}"
             )
@@ -206,7 +206,7 @@ class AirbyteCloudClient:
     async def initiate_oauth(
         self,
         definition_id: str,
-        external_user_id: str,
+        customer_name: str,
         redirect_url: str,
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
@@ -221,10 +221,10 @@ class AirbyteCloudClient:
 
         Args:
             definition_id: Connector definition UUID
-            external_user_id: Workspace identifier
+            customer_name: Customer name identifier
             redirect_url: URL where users will be redirected after OAuth consent.
                 After consent, user arrives at: redirect_url?connector_id=...
-            name: Optional name for the source. Defaults to connector name + external_user_id.
+            name: Optional name for the source. Defaults to connector name + customer_name.
             replication_config: Optional replication settings (e.g., start_date).
                 Merged with OAuth credentials during source creation.
             source_template_id: Source template ID. Required when organization has
@@ -239,7 +239,7 @@ class AirbyteCloudClient:
         Example:
             consent_url = await client.initiate_oauth(
                 definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
-                external_user_id="my-workspace",
+                customer_name="my-workspace",
                 redirect_url="https://myapp.com/oauth/callback",
                 name="My HubSpot Source",
                 replication_config={"start_date": "2024-01-01"},
@@ -251,7 +251,7 @@ class AirbyteCloudClient:
         url = f"{self.API_BASE_URL}/api/v1/integrations/connectors/oauth/initiate"
         headers = self._build_headers(token=token)
         request_body: dict[str, Any] = {
-            "external_user_id": external_user_id,
+            "customer_name": customer_name,
             "definition_id": definition_id,
             "redirect_url": redirect_url,
         }
@@ -271,7 +271,7 @@ class AirbyteCloudClient:
         self,
         name: str,
         connector_definition_id: str,
-        external_user_id: str,
+        customer_name: str,
         credentials: dict[str, Any] | None = None,
         replication_config: dict[str, Any] | None = None,
         server_side_oauth_secret_id: str | None = None,
@@ -286,7 +286,7 @@ class AirbyteCloudClient:
         Args:
             name: Source name
             connector_definition_id: UUID of the connector definition
-            external_user_id: User identifier
+            customer_name: Customer name identifier
             credentials: Connector auth config dict. Required unless using OAuth.
             replication_config: Optional replication settings (e.g., start_date for
                 connectors with x-airbyte-replication-config). Required for REPLICATION
@@ -307,7 +307,7 @@ class AirbyteCloudClient:
             source_id = await client.create_source(
                 name="My Intercom Source",
                 connector_definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
-                external_user_id="my-workspace",
+                customer_name="my-workspace",
                 credentials={"access_token": "..."},
                 replication_config={"start_date": "2024-01-01T00:00:00Z"}
             )
@@ -316,7 +316,7 @@ class AirbyteCloudClient:
             source_id = await client.create_source(
                 name="My Intercom Source",
                 connector_definition_id="d8313939-3782-41b0-be29-b3ca20d8dd3a",
-                external_user_id="my-workspace",
+                customer_name="my-workspace",
                 server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
                 replication_config={"start_date": "2024-01-01T00:00:00Z"}
             )
@@ -328,7 +328,7 @@ class AirbyteCloudClient:
         request_body: dict[str, Any] = {
             "name": name,
             "definition_id": connector_definition_id,
-            "external_user_id": external_user_id,
+            "customer_name": customer_name,
         }
 
         if credentials is not None:
