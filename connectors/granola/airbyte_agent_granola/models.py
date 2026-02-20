@@ -85,6 +85,7 @@ class Note(BaseModel):
     title: Union[str | None, Any] = Field(default=None)
     owner: Union[Any, Any] = Field(default=None)
     created_at: Union[str | None, Any] = Field(default=None)
+    updated_at: Union[str | None, Any] = Field(default=None)
     calendar_event: Union[Any, Any] = Field(default=None)
     attendees: Union[list[Attendee] | None, Any] = Field(default=None)
     folder_membership: Union[list[FolderMembership] | None, Any] = Field(default=None)

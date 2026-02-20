@@ -26,7 +26,7 @@ from uuid import (
 GranolaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9023923c-002f-4131-9554-3ebdf56540a4'),
     name='granola',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://public-api.granola.ai',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -114,6 +114,11 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['string', 'null'],
                                             'format': 'date-time',
                                             'description': 'Creation timestamp of the note',
+                                        },
+                                        'updated_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'Last updated timestamp of the note',
                                         },
                                         'calendar_event': {
                                             'oneOf': [
@@ -313,6 +318,11 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                                 'format': 'date-time',
                                 'description': 'Creation timestamp of the note',
                             },
+                            'updated_at': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'Last updated timestamp of the note',
+                            },
                             'calendar_event': {
                                 'oneOf': [
                                     {
@@ -474,6 +484,11 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                         'type': ['string', 'null'],
                         'format': 'date-time',
                         'description': 'Creation timestamp of the note',
+                    },
+                    'updated_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'Last updated timestamp of the note',
                     },
                     'calendar_event': {
                         'oneOf': [
