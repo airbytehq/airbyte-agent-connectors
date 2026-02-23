@@ -26,6 +26,7 @@ from ..http_client import HTTPClient, TokenRefreshCallback
 from ..logging import NullLogger, RequestLogger
 from ..observability import ObservabilitySession
 from ..schema.extensions import RetryConfig
+from ..schema.security import AirbyteAuthConfig
 from ..secrets import SecretStr
 from ..telemetry import SegmentTracker
 from ..types import (
@@ -240,52 +241,74 @@ class LocalExecutor:
             _StandardOperationHandler(op_context),
         ]
 
-    def _apply_auth_config_mapping(self, user_secrets: dict[str, SecretStr]) -> dict[str, SecretStr]:
+    @staticmethod
+    def _get_additional_headers_only_fields(
+        user_config_spec: AirbyteAuthConfig,
+    ) -> set[str]:
+        """Get property names referenced only in additional_headers, not in auth_mapping.
+
+        These fields need to be passed through to secrets so they're available
+        for Jinja2 template resolution in additional_headers (e.g., developer_token
+        for Google Ads).
+        """
+        if not user_config_spec.additional_headers or not user_config_spec.auth_mapping:
+            return set()
+
+        auth_mapping_fields: set[str] = set()
+        for template_value in user_config_spec.auth_mapping.values():
+            auth_mapping_fields.update(re.findall(r"\$\{(\w+)\}", template_value))
+
+        additional_headers_fields: set[str] = set()
+        for template_value in user_config_spec.additional_headers.values():
+            additional_headers_fields.update(re.findall(r"\{\{\s*(\w+)\s*\}\}", template_value))
+
+        return additional_headers_fields - auth_mapping_fields
+
+    @staticmethod
+    def _apply_auth_config_mapping(
+        user_secrets: dict[str, SecretStr],
+        user_config_spec: AirbyteAuthConfig | None,
+    ) -> dict[str, SecretStr]:
         """Apply auth_mapping from x-airbyte-auth-config to transform user secrets.
 
         This method takes user-provided secrets (e.g., {"api_token": "abc123"}) and
         transforms them into the auth scheme format (e.g., {"username": "abc123", "password": "api_token"})
         using the template mappings defined in x-airbyte-auth-config.
 
+        Properties referenced only in additional_headers (not in auth_mapping) are
+        passed through to secrets so they're available for Jinja2 template resolution.
+
         Args:
             user_secrets: User-provided secrets from config
+            user_config_spec: Auth config spec with auth_mapping and optional additional_headers
 
         Returns:
             Transformed secrets matching the auth scheme requirements
         """
-        if not self.model.auth.user_config_spec:
-            # No x-airbyte-auth-config defined, use secrets as-is
+        if not user_config_spec:
             return user_secrets
 
-        user_config_spec = self.model.auth.user_config_spec
-        auth_mapping = None
-        required_fields: list[str] | None = None
-
-        # Get auth_mapping from the config
-        if user_config_spec.auth_mapping:
-            auth_mapping = user_config_spec.auth_mapping
-            required_fields = user_config_spec.required
+        auth_mapping = user_config_spec.auth_mapping
+        required_fields = user_config_spec.required
 
         if not auth_mapping:
-            # No matching auth_mapping found, use secrets as-is
             return user_secrets
 
-        # If required fields are missing and user provided no credentials,
-        # return as-is (allows empty auth for testing or optional auth)
         if required_fields and not user_secrets:
             return user_secrets
 
-        # Convert SecretStr values to plain strings for template processing
         user_config_values = {
             key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value)) for key, value in user_secrets.items()
         }
 
-        # Apply the auth_mapping templates, passing required_fields so optional
-        # fields that are not provided can be skipped
         mapped_values = apply_auth_mapping(auth_mapping, user_config_values, required_fields=required_fields)
 
-        # Convert back to SecretStr
         mapped_secrets = {key: SecretStr(value) for key, value in mapped_values.items()}
+
+        for field_name in LocalExecutor._get_additional_headers_only_fields(user_config_spec):
+            if field_name in user_secrets and field_name not in mapped_secrets:
+                value = user_secrets[field_name]
+                mapped_secrets[field_name] = value if isinstance(value, SecretStr) else SecretStr(str(value))
 
         return mapped_secrets
 
@@ -335,8 +358,7 @@ class LocalExecutor:
 
         # Single-auth: use existing logic
         if user_credentials is not None:
-            # Apply mapping if this is auth_config (not legacy secrets)
-            transformed_secrets = self._apply_auth_config_mapping(user_credentials)
+            transformed_secrets = self._apply_auth_config_mapping(user_credentials, self.model.auth.user_config_spec)
         else:
             transformed_secrets = None
 
@@ -392,7 +414,7 @@ class LocalExecutor:
 
         # Exactly one match - use it
         selected_option = matching_options[0]
-        transformed_secrets = self._apply_auth_mapping_for_option(user_credentials, selected_option)
+        transformed_secrets = self._apply_auth_config_mapping(user_credentials, selected_option.user_config_spec)
         return (selected_option, transformed_secrets)
 
     def _select_auth_option(
@@ -419,54 +441,12 @@ class LocalExecutor:
         # Find matching scheme
         for option in options:
             if option.scheme_name == scheme_name:
-                transformed_secrets = self._apply_auth_mapping_for_option(user_credentials, option)
+                transformed_secrets = self._apply_auth_config_mapping(user_credentials, option.user_config_spec)
                 return (option, transformed_secrets)
 
         # Scheme not found
         available = [opt.scheme_name for opt in options]
         raise ValueError(f"Auth scheme '{scheme_name}' not found. Available schemes: {available}")
-
-    def _apply_auth_mapping_for_option(
-        self,
-        user_credentials: dict[str, SecretStr],
-        option: AuthOption,
-    ) -> dict[str, SecretStr]:
-        """Apply auth mapping for a specific auth option.
-
-        Transforms user credentials using the option's auth_mapping templates.
-
-        Args:
-            user_credentials: User-provided credentials
-            option: AuthOption to apply
-
-        Returns:
-            Transformed secrets after applying auth_mapping
-
-        Raises:
-            ValueError: If required fields are missing or mapping fails
-        """
-        if not option.user_config_spec:
-            # No mapping defined, use credentials as-is
-            return user_credentials
-
-        # Extract auth_mapping and required fields
-        user_config_spec = option.user_config_spec
-        auth_mapping = user_config_spec.auth_mapping
-        required_fields = user_config_spec.required
-
-        if not auth_mapping:
-            raise ValueError(f"No auth_mapping found for scheme '{option.scheme_name}'")
-
-        # Convert SecretStr to plain strings for template processing
-        user_config_values = {
-            key: (value.get_secret_value() if hasattr(value, "get_secret_value") else str(value)) for key, value in user_credentials.items()
-        }
-
-        # Apply the auth_mapping templates
-        mapped_values = apply_auth_mapping(auth_mapping, user_config_values, required_fields=required_fields)
-
-        # Convert back to SecretStr
-        return {key: SecretStr(value) for key, value in mapped_values.items()}
 
     async def execute(self, config: ExecutionConfig) -> ExecutionResult:
         """Execute connector operation using handler pattern.
@@ -491,7 +471,7 @@ class LocalExecutor:
             # Check for hosted-only actions before converting to Action enum
             if config.action == "search":
                 raise NotImplementedError(
-                    "search is only available in hosted execution mode. " "Initialize the connector with an AirbyteAuthConfig to use this feature."
+                    "search is only available in hosted execution mode. Initialize the connector with an AirbyteAuthConfig to use this feature."
                 )
 
             # Convert config to internal format
