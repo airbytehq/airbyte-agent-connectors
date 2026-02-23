@@ -120,9 +120,14 @@ class AirbyteAuthConfig(BaseModel):
         if self.replication_auth_key_mapping and self.properties:
             self._validate_replication_auth_key_mapping(self.replication_auth_key_mapping, self.properties, context="x-airbyte-auth-config")
 
-        # Validate all properties are used in auth_mapping
+        # Validate all properties are used in auth_mapping or additional_headers
         if self.properties and self.auth_mapping:
-            self._validate_properties_used_in_auth_mapping(self.properties, self.auth_mapping, context="x-airbyte-auth-config")
+            self._validate_properties_used_in_auth_mapping(
+                self.properties,
+                self.auth_mapping,
+                context="x-airbyte-auth-config",
+                additional_headers=self.additional_headers,
+            )
 
         return self
 
@@ -145,32 +150,44 @@ class AirbyteAuthConfig(BaseModel):
                 )
 
     @staticmethod
-    def _validate_properties_used_in_auth_mapping(properties: Dict[str, AuthConfigFieldSpec], auth_mapping: Dict[str, str], context: str) -> None:
-        """Validate that all properties are referenced in auth_mapping.
+    def _validate_properties_used_in_auth_mapping(
+        properties: Dict[str, AuthConfigFieldSpec],
+        auth_mapping: Dict[str, str],
+        context: str,
+        additional_headers: Dict[str, str] | None = None,
+    ) -> None:
+        """Validate that all properties are referenced in auth_mapping or additional_headers.
 
         Auth mapping values use ${field_name} syntax to reference properties.
-        All defined properties must be used somewhere in auth_mapping.
+        Additional headers values use {{ field_name }} Jinja2 syntax.
+        All defined properties must be used somewhere in auth_mapping or additional_headers.
 
         Args:
             properties: The properties dict from x-airbyte-auth-config
             auth_mapping: The auth_mapping dict (param_name -> template string)
             context: Context string for error messages
+            additional_headers: Optional additional_headers dict with Jinja2 templates
         """
         # Extract all ${field_name} references from auth_mapping values
         referenced_fields: Set[str] = set()
         for template_value in auth_mapping.values():
-            # Match ${field_name} pattern
             matches = re.findall(r"\$\{(\w+)\}", template_value)
             referenced_fields.update(matches)
 
-        # Check all properties are referenced
+        # Extract {{ field_name }} references from additional_headers values
+        if additional_headers:
+            for template_value in additional_headers.values():
+                matches = re.findall(r"\{\{\s*(\w+)\s*\}\}", template_value)
+                referenced_fields.update(matches)
+
         property_names: Set[str] = set(properties.keys())
         unused_properties = property_names - referenced_fields
 
         if unused_properties:
             raise ValueError(
-                f"Properties in {context} not used in auth_mapping: {', '.join(sorted(unused_properties))}. "
-                f"All properties must be referenced in auth_mapping using ${{field_name}} syntax."
+                f"Properties in {context} not used in auth_mapping or additional_headers: {', '.join(sorted(unused_properties))}. "
+                f"All properties must be referenced in auth_mapping using ${{field_name}} syntax "
+                f"or in additional_headers using {{{{ field_name }}}} syntax."
             )
 
 
