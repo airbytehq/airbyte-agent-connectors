@@ -53,6 +53,7 @@ from .types import (
     DealsSearchQuery,
 )
 from .models import HubspotAuthConfig
+from .models import HubspotOAuthCredentials
 
 # Import response models and envelope models at runtime
 from .models import (
@@ -130,7 +131,7 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "0.1.12"
+    connector_version = "0.1.13"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -712,6 +713,62 @@ class HubspotConnector:
             await client.close()
 
         return consent_url
+
+    @classmethod
+    async def configure_oauth_app_parameters(
+        cls,
+        *,
+        airbyte_config: AirbyteAuthConfig,
+        credentials: HubspotOAuthCredentials | None,
+    ) -> None:
+        """
+        Configure or remove OAuth app credentials for your organization.
+
+        When credentials are provided, replaces the default Airbyte-managed OAuth
+        app credentials with your own. After calling this, all OAuth flows for
+        this connector in your organization will use the provided credentials.
+
+        When credentials are None, removes any existing override so the
+        organization reverts to the default Airbyte-managed OAuth app.
+
+        Args:
+            airbyte_config: Airbyte hosted auth config with client credentials.
+            credentials: Your OAuth app credentials (HubspotOAuthCredentials), or None to remove the override.
+
+        Example:
+            await HubspotConnector.configure_oauth_app_parameters(
+                airbyte_config=AirbyteAuthConfig(
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                credentials=HubspotOAuthCredentials(
+                    client_id="...",
+                    client_secret="...",
+                ),
+            )
+
+            await HubspotConnector.configure_oauth_app_parameters(
+                airbyte_config=AirbyteAuthConfig(
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                credentials=None,
+            )
+        """
+        from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+
+        client = AirbyteCloudClient(
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
+        )
+
+        try:
+            await client.configure_oauth_app_parameters(
+                connector_type="hubspot",
+                credentials=credentials.model_dump() if credentials is not None else None,
+            )
+        finally:
+            await client.close()
 
     @classmethod
     async def create(
