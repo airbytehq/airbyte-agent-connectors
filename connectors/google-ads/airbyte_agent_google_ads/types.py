@@ -17,6 +17,62 @@ from typing import Any, Literal
 # ===== NESTED PARAM TYPE DEFINITIONS =====
 # Nested parameter schemas discovered during parameter extraction
 
+class CampaignsUpdateParamsOperationsItemUpdate(TypedDict):
+    """Campaign fields to update"""
+    resourceName: str
+    name: NotRequired[str]
+    status: NotRequired[str]
+
+class CampaignsUpdateParamsOperationsItem(TypedDict):
+    """Nested schema for CampaignsUpdateParams.operations_item"""
+    updateMask: NotRequired[str]
+    update: NotRequired[CampaignsUpdateParamsOperationsItemUpdate]
+
+class AdGroupsUpdateParamsOperationsItemUpdate(TypedDict):
+    """Ad group fields to update"""
+    resourceName: str
+    name: NotRequired[str]
+    status: NotRequired[str]
+    cpcBidMicros: NotRequired[str]
+
+class AdGroupsUpdateParamsOperationsItem(TypedDict):
+    """Nested schema for AdGroupsUpdateParams.operations_item"""
+    updateMask: NotRequired[str]
+    update: NotRequired[AdGroupsUpdateParamsOperationsItemUpdate]
+
+class LabelsCreateParamsOperationsItemCreateTextlabel(TypedDict):
+    """Text label styling"""
+    backgroundColor: NotRequired[str]
+    description: NotRequired[str]
+
+class LabelsCreateParamsOperationsItemCreate(TypedDict):
+    """Label to create"""
+    name: str
+    description: NotRequired[str]
+    textLabel: NotRequired[LabelsCreateParamsOperationsItemCreateTextlabel]
+
+class LabelsCreateParamsOperationsItem(TypedDict):
+    """Nested schema for LabelsCreateParams.operations_item"""
+    create: NotRequired[LabelsCreateParamsOperationsItemCreate]
+
+class CampaignLabelsCreateParamsOperationsItemCreate(TypedDict):
+    """Campaign label association to create"""
+    campaign: str
+    label: str
+
+class CampaignLabelsCreateParamsOperationsItem(TypedDict):
+    """Nested schema for CampaignLabelsCreateParams.operations_item"""
+    create: NotRequired[CampaignLabelsCreateParamsOperationsItemCreate]
+
+class AdGroupLabelsCreateParamsOperationsItemCreate(TypedDict):
+    """Ad group label association to create"""
+    adGroup: str
+    label: str
+
+class AdGroupLabelsCreateParamsOperationsItem(TypedDict):
+    """Nested schema for AdGroupLabelsCreateParams.operations_item"""
+    create: NotRequired[AdGroupLabelsCreateParamsOperationsItemCreate]
+
 # ===== OPERATION PARAMS TYPE DEFINITIONS =====
 
 class AccessibleCustomersListParams(TypedDict):
@@ -70,6 +126,31 @@ class AdGroupAdLabelsListParams(TypedDict):
     query: NotRequired[str]
     page_token: NotRequired[str]
     page_size: NotRequired[int]
+    customer_id: str
+
+class CampaignsUpdateParams(TypedDict):
+    """Parameters for campaigns.update operation"""
+    operations: list[CampaignsUpdateParamsOperationsItem]
+    customer_id: str
+
+class AdGroupsUpdateParams(TypedDict):
+    """Parameters for ad_groups.update operation"""
+    operations: list[AdGroupsUpdateParamsOperationsItem]
+    customer_id: str
+
+class LabelsCreateParams(TypedDict):
+    """Parameters for labels.create operation"""
+    operations: list[LabelsCreateParamsOperationsItem]
+    customer_id: str
+
+class CampaignLabelsCreateParams(TypedDict):
+    """Parameters for campaign_labels.create operation"""
+    operations: list[CampaignLabelsCreateParamsOperationsItem]
+    customer_id: str
+
+class AdGroupLabelsCreateParams(TypedDict):
+    """Parameters for ad_group_labels.create operation"""
+    operations: list[AdGroupLabelsCreateParamsOperationsItem]
     customer_id: str
 
 # ===== SEARCH TYPES =====

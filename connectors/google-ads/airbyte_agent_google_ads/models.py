@@ -119,19 +119,12 @@ class AccountSearchResponse(BaseModel):
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
 
-class CampaignMetrics(BaseModel):
-    """Nested schema for Campaign.metrics"""
+class CampaignSegments(BaseModel):
+    """Nested schema for Campaign.segments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    clicks: Union[str, Any] = Field(default=None)
-    ctr: Union[float, Any] = Field(default=None)
-    conversions: Union[float, Any] = Field(default=None)
-    conversions_value: Union[float, Any] = Field(default=None, alias="conversionsValue")
-    cost_micros: Union[str, Any] = Field(default=None, alias="costMicros")
-    impressions: Union[str, Any] = Field(default=None)
-    average_cpc: Union[float, Any] = Field(default=None, alias="averageCpc")
-    average_cpm: Union[float, Any] = Field(default=None, alias="averageCpm")
-    interactions: Union[str, Any] = Field(default=None)
+    date: Union[str, Any] = Field(default=None, description="Date in YYYY-MM-DD format")
+    """Date in YYYY-MM-DD format"""
 
 class CampaignCampaignbudget(BaseModel):
     """Nested schema for Campaign.campaignBudget"""
@@ -141,13 +134,6 @@ class CampaignCampaignbudget(BaseModel):
     """Resource name of the campaign budget"""
     amount_micros: Union[str, Any] = Field(default=None, alias="amountMicros", description="Budget amount in micros")
     """Budget amount in micros"""
-
-class CampaignSegments(BaseModel):
-    """Nested schema for Campaign.segments"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    date: Union[str, Any] = Field(default=None, description="Date in YYYY-MM-DD format")
-    """Date in YYYY-MM-DD format"""
 
 class CampaignCampaignNetworksettings(BaseModel):
     """Nested schema for CampaignCampaign.networkSettings"""
@@ -184,6 +170,20 @@ class CampaignCampaign(BaseModel):
     labels: Union[list[str], Any] = Field(default=None)
     network_settings: Union[CampaignCampaignNetworksettings, Any] = Field(default=None, alias="networkSettings")
 
+class CampaignMetrics(BaseModel):
+    """Nested schema for Campaign.metrics"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    clicks: Union[str, Any] = Field(default=None)
+    ctr: Union[float, Any] = Field(default=None)
+    conversions: Union[float, Any] = Field(default=None)
+    conversions_value: Union[float, Any] = Field(default=None, alias="conversionsValue")
+    cost_micros: Union[str, Any] = Field(default=None, alias="costMicros")
+    impressions: Union[str, Any] = Field(default=None)
+    average_cpc: Union[float, Any] = Field(default=None, alias="averageCpc")
+    average_cpm: Union[float, Any] = Field(default=None, alias="averageCpm")
+    interactions: Union[str, Any] = Field(default=None)
+
 class Campaign(BaseModel):
     """Google Ads campaign"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -201,12 +201,6 @@ class CampaignSearchResponse(BaseModel):
     next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
-
-class AdGroupMetrics(BaseModel):
-    """Nested schema for AdGroup.metrics"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    cost_micros: Union[str, Any] = Field(default=None, alias="costMicros")
 
 class AdGroupAdgroup(BaseModel):
     """Nested schema for AdGroup.adGroup"""
@@ -234,6 +228,12 @@ class AdGroupAdgroup(BaseModel):
     target_cpa_micros: Union[str, Any] = Field(default=None, alias="targetCpaMicros")
     target_roas: Union[float, Any] = Field(default=None, alias="targetRoas")
     tracking_url_template: Union[str, Any] = Field(default=None, alias="trackingUrlTemplate")
+
+class AdGroupMetrics(BaseModel):
+    """Nested schema for AdGroup.metrics"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    cost_micros: Union[str, Any] = Field(default=None, alias="costMicros")
 
 class AdGroupCampaign(BaseModel):
     """Nested schema for AdGroup.campaign"""
@@ -268,13 +268,6 @@ class AdGroupSearchResponse(BaseModel):
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
 
-class AdGroupAdAdgroupadPolicysummary(BaseModel):
-    """Nested schema for AdGroupAdAdgroupad.policySummary"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    approval_status: Union[str, Any] = Field(default=None, alias="approvalStatus")
-    review_status: Union[str, Any] = Field(default=None, alias="reviewStatus")
-
 class AdGroupAdAdgroupadAd(BaseModel):
     """Nested schema for AdGroupAdAdgroupad.ad"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -289,6 +282,13 @@ class AdGroupAdAdgroupadAd(BaseModel):
     final_url_suffix: Union[str, Any] = Field(default=None, alias="finalUrlSuffix")
     tracking_url_template: Union[str, Any] = Field(default=None, alias="trackingUrlTemplate")
     resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
+
+class AdGroupAdAdgroupadPolicysummary(BaseModel):
+    """Nested schema for AdGroupAdAdgroupad.policySummary"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    approval_status: Union[str, Any] = Field(default=None, alias="approvalStatus")
+    review_status: Union[str, Any] = Field(default=None, alias="reviewStatus")
 
 class AdGroupAdAdgroupad(BaseModel):
     """Nested schema for AdGroupAd.adGroupAd"""
@@ -334,20 +334,20 @@ class AdGroupAdSearchResponse(BaseModel):
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
 
-class CampaignLabelCampaignlabel(BaseModel):
-    """Nested schema for CampaignLabel.campaignLabel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    campaign: Union[str, Any] = Field(default=None)
-    label: Union[str, Any] = Field(default=None)
-    resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
-
 class CampaignLabelLabel(BaseModel):
     """Nested schema for CampaignLabel.label"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
+
+class CampaignLabelCampaignlabel(BaseModel):
+    """Nested schema for CampaignLabel.campaignLabel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    campaign: Union[str, Any] = Field(default=None)
+    label: Union[str, Any] = Field(default=None)
     resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
 
 class CampaignLabelCampaign(BaseModel):
@@ -373,6 +373,12 @@ class CampaignLabelSearchResponse(BaseModel):
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
 
+class AdGroupLabelAdgroup(BaseModel):
+    """Nested schema for AdGroupLabel.adGroup"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None)
+
 class AdGroupLabelAdgrouplabel(BaseModel):
     """Nested schema for AdGroupLabel.adGroupLabel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -380,12 +386,6 @@ class AdGroupLabelAdgrouplabel(BaseModel):
     ad_group: Union[str, Any] = Field(default=None, alias="adGroup")
     label: Union[str, Any] = Field(default=None)
     resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
-
-class AdGroupLabelAdgroup(BaseModel):
-    """Nested schema for AdGroupLabel.adGroup"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None)
 
 class AdGroupLabelLabel(BaseModel):
     """Nested schema for AdGroupLabel.label"""
@@ -420,14 +420,6 @@ class AdGroupAdLabelLabel(BaseModel):
     name: Union[str, Any] = Field(default=None)
     resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
 
-class AdGroupAdLabelAdgroupadlabel(BaseModel):
-    """Nested schema for AdGroupAdLabel.adGroupAdLabel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    ad_group_ad: Union[str, Any] = Field(default=None, alias="adGroupAd")
-    label: Union[str, Any] = Field(default=None)
-    resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
-
 class AdGroupAdLabelAdgroupadAd(BaseModel):
     """Nested schema for AdGroupAdLabelAdgroupad.ad"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -439,6 +431,14 @@ class AdGroupAdLabelAdgroupad(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     ad: Union[AdGroupAdLabelAdgroupadAd, Any] = Field(default=None)
+
+class AdGroupAdLabelAdgroupadlabel(BaseModel):
+    """Nested schema for AdGroupAdLabel.adGroupAdLabel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ad_group_ad: Union[str, Any] = Field(default=None, alias="adGroupAd")
+    label: Union[str, Any] = Field(default=None)
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName")
 
 class AdGroupAdLabel(BaseModel):
     """Ad group ad label association"""
@@ -456,6 +456,202 @@ class AdGroupAdLabelSearchResponse(BaseModel):
     next_page_token: Union[str, Any] = Field(default=None, alias="nextPageToken")
     field_mask: Union[str, Any] = Field(default=None, alias="fieldMask")
     query_resource_consumption: Union[str, Any] = Field(default=None, alias="queryResourceConsumption")
+
+class CampaignMutateRequestOperationsItemUpdate(BaseModel):
+    """Campaign fields to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the campaign to update (e.g., customers/1234567890/campaigns/111222333)")
+    """Resource name of the campaign to update (e.g., customers/1234567890/campaigns/111222333)"""
+    name: Union[str, Any] = Field(default=None, description="New campaign name")
+    """New campaign name"""
+    status: Union[str, Any] = Field(default=None, description="Campaign status (ENABLED or PAUSED)")
+    """Campaign status (ENABLED or PAUSED)"""
+
+class CampaignMutateRequestOperationsItem(BaseModel):
+    """Nested schema for CampaignMutateRequest.operations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    update_mask: Union[str, Any] = Field(default=None, alias="updateMask", description="Comma-separated list of field paths to update (e.g., name,status)")
+    """Comma-separated list of field paths to update (e.g., name,status)"""
+    update: Union[CampaignMutateRequestOperationsItemUpdate, Any] = Field(default=None, description="Campaign fields to update")
+    """Campaign fields to update"""
+
+class CampaignMutateRequest(BaseModel):
+    """Request to mutate (update) campaigns"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    operations: Union[list[CampaignMutateRequestOperationsItem], Any] = Field(default=None)
+
+class CampaignMutateResponseResultsItem(BaseModel):
+    """Nested schema for CampaignMutateResponse.results_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the mutated campaign")
+    """Resource name of the mutated campaign"""
+
+class CampaignMutateResponse(BaseModel):
+    """Response from campaign mutate operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    results: Union[list[CampaignMutateResponseResultsItem], Any] = Field(default=None)
+
+class AdGroupMutateRequestOperationsItemUpdate(BaseModel):
+    """Ad group fields to update"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the ad group to update (e.g., customers/1234567890/adGroups/111222333)")
+    """Resource name of the ad group to update (e.g., customers/1234567890/adGroups/111222333)"""
+    name: Union[str, Any] = Field(default=None, description="New ad group name")
+    """New ad group name"""
+    status: Union[str, Any] = Field(default=None, description="Ad group status (ENABLED or PAUSED)")
+    """Ad group status (ENABLED or PAUSED)"""
+    cpc_bid_micros: Union[str, Any] = Field(default=None, alias="cpcBidMicros", description="CPC bid amount in micros (1,000,000 micros = 1 currency unit)")
+    """CPC bid amount in micros (1,000,000 micros = 1 currency unit)"""
+
+class AdGroupMutateRequestOperationsItem(BaseModel):
+    """Nested schema for AdGroupMutateRequest.operations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    update_mask: Union[str, Any] = Field(default=None, alias="updateMask", description="Comma-separated list of field paths to update (e.g., name,status,cpcBidMicros)")
+    """Comma-separated list of field paths to update (e.g., name,status,cpcBidMicros)"""
+    update: Union[AdGroupMutateRequestOperationsItemUpdate, Any] = Field(default=None, description="Ad group fields to update")
+    """Ad group fields to update"""
+
+class AdGroupMutateRequest(BaseModel):
+    """Request to mutate (update) ad groups"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    operations: Union[list[AdGroupMutateRequestOperationsItem], Any] = Field(default=None)
+
+class AdGroupMutateResponseResultsItem(BaseModel):
+    """Nested schema for AdGroupMutateResponse.results_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the mutated ad group")
+    """Resource name of the mutated ad group"""
+
+class AdGroupMutateResponse(BaseModel):
+    """Response from ad group mutate operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    results: Union[list[AdGroupMutateResponseResultsItem], Any] = Field(default=None)
+
+class LabelMutateRequestOperationsItemCreateTextlabel(BaseModel):
+    """Text label styling"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    background_color: Union[str, Any] = Field(default=None, alias="backgroundColor", description="Background color in hex format (e.g., #FF0000)")
+    """Background color in hex format (e.g., #FF0000)"""
+    description: Union[str, Any] = Field(default=None, description="Description of the text label")
+    """Description of the text label"""
+
+class LabelMutateRequestOperationsItemCreate(BaseModel):
+    """Label to create"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Name for the new label")
+    """Name for the new label"""
+    description: Union[str, Any] = Field(default=None, description="Description for the label")
+    """Description for the label"""
+    text_label: Union[LabelMutateRequestOperationsItemCreateTextlabel, Any] = Field(default=None, alias="textLabel", description="Text label styling")
+    """Text label styling"""
+
+class LabelMutateRequestOperationsItem(BaseModel):
+    """Nested schema for LabelMutateRequest.operations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    create: Union[LabelMutateRequestOperationsItemCreate, Any] = Field(default=None, description="Label to create")
+    """Label to create"""
+
+class LabelMutateRequest(BaseModel):
+    """Request to create labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    operations: Union[list[LabelMutateRequestOperationsItem], Any] = Field(default=None)
+
+class LabelMutateResponseResultsItem(BaseModel):
+    """Nested schema for LabelMutateResponse.results_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the created label")
+    """Resource name of the created label"""
+
+class LabelMutateResponse(BaseModel):
+    """Response from label mutate operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    results: Union[list[LabelMutateResponseResultsItem], Any] = Field(default=None)
+
+class CampaignLabelMutateRequestOperationsItemCreate(BaseModel):
+    """Campaign label association to create"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    campaign: Union[str, Any] = Field(default=None, description="Resource name of the campaign (e.g., customers/1234567890/campaigns/111222333)")
+    """Resource name of the campaign (e.g., customers/1234567890/campaigns/111222333)"""
+    label: Union[str, Any] = Field(default=None, description="Resource name of the label (e.g., customers/1234567890/labels/444555666)")
+    """Resource name of the label (e.g., customers/1234567890/labels/444555666)"""
+
+class CampaignLabelMutateRequestOperationsItem(BaseModel):
+    """Nested schema for CampaignLabelMutateRequest.operations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    create: Union[CampaignLabelMutateRequestOperationsItemCreate, Any] = Field(default=None, description="Campaign label association to create")
+    """Campaign label association to create"""
+
+class CampaignLabelMutateRequest(BaseModel):
+    """Request to create campaign-label associations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    operations: Union[list[CampaignLabelMutateRequestOperationsItem], Any] = Field(default=None)
+
+class CampaignLabelMutateResponseResultsItem(BaseModel):
+    """Nested schema for CampaignLabelMutateResponse.results_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the created campaign label association")
+    """Resource name of the created campaign label association"""
+
+class CampaignLabelMutateResponse(BaseModel):
+    """Response from campaign label mutate operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    results: Union[list[CampaignLabelMutateResponseResultsItem], Any] = Field(default=None)
+
+class AdGroupLabelMutateRequestOperationsItemCreate(BaseModel):
+    """Ad group label association to create"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ad_group: Union[str, Any] = Field(default=None, alias="adGroup", description="Resource name of the ad group (e.g., customers/1234567890/adGroups/111222333)")
+    """Resource name of the ad group (e.g., customers/1234567890/adGroups/111222333)"""
+    label: Union[str, Any] = Field(default=None, description="Resource name of the label (e.g., customers/1234567890/labels/444555666)")
+    """Resource name of the label (e.g., customers/1234567890/labels/444555666)"""
+
+class AdGroupLabelMutateRequestOperationsItem(BaseModel):
+    """Nested schema for AdGroupLabelMutateRequest.operations_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    create: Union[AdGroupLabelMutateRequestOperationsItemCreate, Any] = Field(default=None, description="Ad group label association to create")
+    """Ad group label association to create"""
+
+class AdGroupLabelMutateRequest(BaseModel):
+    """Request to create ad group-label associations"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    operations: Union[list[AdGroupLabelMutateRequestOperationsItem], Any] = Field(default=None)
+
+class AdGroupLabelMutateResponseResultsItem(BaseModel):
+    """Nested schema for AdGroupLabelMutateResponse.results_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    resource_name: Union[str, Any] = Field(default=None, alias="resourceName", description="Resource name of the created ad group label association")
+    """Resource name of the created ad group label association"""
+
+class AdGroupLabelMutateResponse(BaseModel):
+    """Response from ad group label mutate operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    results: Union[list[AdGroupLabelMutateResponseResultsItem], Any] = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
