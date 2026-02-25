@@ -24,10 +24,20 @@ from .types import (
     AccountsListParams,
     AdGroupAdLabelsListParams,
     AdGroupAdsListParams,
+    AdGroupLabelsCreateParams,
+    AdGroupLabelsCreateParamsOperationsItem,
     AdGroupLabelsListParams,
     AdGroupsListParams,
+    AdGroupsUpdateParams,
+    AdGroupsUpdateParamsOperationsItem,
+    CampaignLabelsCreateParams,
+    CampaignLabelsCreateParamsOperationsItem,
     CampaignLabelsListParams,
     CampaignsListParams,
+    CampaignsUpdateParams,
+    CampaignsUpdateParamsOperationsItem,
+    LabelsCreateParams,
+    LabelsCreateParamsOperationsItem,
     AirbyteSearchParams,
     AccountsSearchFilter,
     AccountsSearchQuery,
@@ -67,8 +77,13 @@ from .models import (
     AdGroupAd,
     AdGroupAdLabel,
     AdGroupLabel,
+    AdGroupLabelMutateResponse,
+    AdGroupMutateResponse,
     Campaign,
     CampaignLabel,
+    CampaignLabelMutateResponse,
+    CampaignMutateResponse,
+    LabelMutateResponse,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     AccountsSearchData,
@@ -132,7 +147,7 @@ class GoogleAdsConnector:
     """
 
     connector_name = "google-ads"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -145,6 +160,11 @@ class GoogleAdsConnector:
         ("campaign_labels", "list"): True,
         ("ad_group_labels", "list"): True,
         ("ad_group_ad_labels", "list"): True,
+        ("campaigns", "update"): None,
+        ("ad_groups", "update"): None,
+        ("labels", "create"): None,
+        ("campaign_labels", "create"): None,
+        ("ad_group_labels", "create"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
@@ -157,6 +177,11 @@ class GoogleAdsConnector:
         ('campaign_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
         ('ad_group_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
         ('ad_group_ad_labels', 'list'): {'query': 'query', 'page_token': 'pageToken', 'page_size': 'pageSize', 'customer_id': 'customer_id'},
+        ('campaigns', 'update'): {'operations': 'operations', 'customer_id': 'customer_id'},
+        ('ad_groups', 'update'): {'operations': 'operations', 'customer_id': 'customer_id'},
+        ('labels', 'create'): {'operations': 'operations', 'customer_id': 'customer_id'},
+        ('campaign_labels', 'create'): {'operations': 'operations', 'customer_id': 'customer_id'},
+        ('ad_group_labels', 'create'): {'operations': 'operations', 'customer_id': 'customer_id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -259,6 +284,7 @@ class GoogleAdsConnector:
         self.campaign_labels = CampaignLabelsQuery(self)
         self.ad_group_labels = AdGroupLabelsQuery(self)
         self.ad_group_ad_labels = AdGroupAdLabelsQuery(self)
+        self.labels = LabelsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -326,19 +352,59 @@ class GoogleAdsConnector:
         params: "AdGroupAdLabelsListParams"
     ) -> "AdGroupAdLabelsListResult": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["update"],
+        params: "CampaignsUpdateParams"
+    ) -> "CampaignMutateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_groups"],
+        action: Literal["update"],
+        params: "AdGroupsUpdateParams"
+    ) -> "AdGroupMutateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["labels"],
+        action: Literal["create"],
+        params: "LabelsCreateParams"
+    ) -> "LabelMutateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaign_labels"],
+        action: Literal["create"],
+        params: "CampaignLabelsCreateParams"
+    ) -> "CampaignLabelMutateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_group_labels"],
+        action: Literal["create"],
+        params: "AdGroupLabelsCreateParams"
+    ) -> "AdGroupLabelMutateResponse": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "search"],
+        action: Literal["list", "update", "create", "search"],
         params: Mapping[str, Any]
     ) -> GoogleAdsExecuteResult[Any] | GoogleAdsExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "search"],
+        action: Literal["list", "update", "create", "search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -970,6 +1036,34 @@ class CampaignsQuery:
 
 
 
+    async def update(
+        self,
+        operations: list[CampaignsUpdateParamsOperationsItem],
+        customer_id: str,
+        **kwargs
+    ) -> CampaignMutateResponse:
+        """
+        Updates campaign properties such as status (enable/pause), name, or other mutable fields using the Google Ads CampaignService mutate endpoint.
+
+        Args:
+            operations: List of campaign operations to perform
+            customer_id: Google Ads customer ID (10 digits, no dashes)
+            **kwargs: Additional parameters
+
+        Returns:
+            CampaignMutateResponse
+        """
+        params = {k: v for k, v in {
+            "operations": operations,
+            "customer_id": customer_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "update", params)
+        return result
+
+
+
     async def search(
         self,
         query: CampaignsSearchQuery,
@@ -1098,6 +1192,34 @@ class AdGroupsQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+    async def update(
+        self,
+        operations: list[AdGroupsUpdateParamsOperationsItem],
+        customer_id: str,
+        **kwargs
+    ) -> AdGroupMutateResponse:
+        """
+        Updates ad group properties such as status (enable/pause), name, or bid amounts using the Google Ads AdGroupService mutate endpoint.
+
+        Args:
+            operations: List of ad group operations to perform
+            customer_id: Google Ads customer ID (10 digits, no dashes)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdGroupMutateResponse
+        """
+        params = {k: v for k, v in {
+            "operations": operations,
+            "customer_id": customer_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_groups", "update", params)
+        return result
 
 
 
@@ -1343,6 +1465,34 @@ class CampaignLabelsQuery:
 
 
 
+    async def create(
+        self,
+        operations: list[CampaignLabelsCreateParamsOperationsItem],
+        customer_id: str,
+        **kwargs
+    ) -> CampaignLabelMutateResponse:
+        """
+        Creates a campaign-label association, applying an existing label to a campaign for organization and filtering.
+
+        Args:
+            operations: List of campaign label operations to perform
+            customer_id: Google Ads customer ID (10 digits, no dashes)
+            **kwargs: Additional parameters
+
+        Returns:
+            CampaignLabelMutateResponse
+        """
+        params = {k: v for k, v in {
+            "operations": operations,
+            "customer_id": customer_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaign_labels", "create", params)
+        return result
+
+
+
     async def search(
         self,
         query: CampaignLabelsSearchQuery,
@@ -1448,6 +1598,34 @@ class AdGroupLabelsQuery:
             data=result.data,
             meta=result.meta
         )
+
+
+
+    async def create(
+        self,
+        operations: list[AdGroupLabelsCreateParamsOperationsItem],
+        customer_id: str,
+        **kwargs
+    ) -> AdGroupLabelMutateResponse:
+        """
+        Creates an ad group-label association, applying an existing label to an ad group for organization and filtering.
+
+        Args:
+            operations: List of ad group label operations to perform
+            customer_id: Google Ads customer ID (10 digits, no dashes)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdGroupLabelMutateResponse
+        """
+        params = {k: v for k, v in {
+            "operations": operations,
+            "customer_id": customer_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_group_labels", "create", params)
+        return result
 
 
 
@@ -1619,3 +1797,40 @@ class AdGroupAdLabelsQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class LabelsQuery:
+    """
+    Query class for Labels entity operations.
+    """
+
+    def __init__(self, connector: GoogleAdsConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        operations: list[LabelsCreateParamsOperationsItem],
+        customer_id: str,
+        **kwargs
+    ) -> LabelMutateResponse:
+        """
+        Creates a new label that can be applied to campaigns, ad groups, or ads for organization and reporting purposes.
+
+        Args:
+            operations: List of label operations to perform
+            customer_id: Google Ads customer ID (10 digits, no dashes)
+            **kwargs: Additional parameters
+
+        Returns:
+            LabelMutateResponse
+        """
+        params = {k: v for k, v in {
+            "operations": operations,
+            "customer_id": customer_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("labels", "create", params)
+        return result
+
+

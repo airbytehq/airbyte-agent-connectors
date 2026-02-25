@@ -29,7 +29,7 @@ from uuid import (
 GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('253487c0-2246-43ba-a21f-5116b20a2c50'),
     name='google-ads',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://googleads.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -257,7 +257,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='campaigns',
             stream_name='campaigns',
-            actions=[Action.LIST],
+            actions=[Action.LIST, Action.UPDATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -375,6 +375,64 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.results',
                     meta_extractor={'next_page_token': '$.nextPageToken'},
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/v20/customers/{customer_id}/campaigns:mutate',
+                    action=Action.UPDATE,
+                    description='Updates campaign properties such as status (enable/pause), name, or other mutable fields using the Google Ads CampaignService mutate endpoint.',
+                    body_fields=['operations'],
+                    path_params=['customer_id'],
+                    path_params_schema={
+                        'customer_id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Request to mutate (update) campaigns',
+                        'properties': {
+                            'operations': {
+                                'type': 'array',
+                                'description': 'List of campaign operations to perform',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'updateMask': {'type': 'string', 'description': 'Comma-separated list of field paths to update (e.g., name,status)'},
+                                        'update': {
+                                            'type': 'object',
+                                            'description': 'Campaign fields to update',
+                                            'properties': {
+                                                'resourceName': {'type': 'string', 'description': 'Resource name of the campaign to update (e.g., customers/1234567890/campaigns/111222333)'},
+                                                'name': {'type': 'string', 'description': 'New campaign name'},
+                                                'status': {
+                                                    'type': 'string',
+                                                    'enum': ['ENABLED', 'PAUSED'],
+                                                    'description': 'Campaign status (ENABLED or PAUSED)',
+                                                },
+                                            },
+                                            'required': ['resourceName'],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['operations'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from campaign mutate operation',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'resourceName': {'type': 'string', 'description': 'Resource name of the mutated campaign'},
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'campaigns',
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -455,7 +513,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='ad_groups',
             stream_name='ad_groups',
-            actions=[Action.LIST],
+            actions=[Action.LIST, Action.UPDATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -560,6 +618,65 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={'next_page_token': '$.nextPageToken'},
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='POST',
+                    path='/v20/customers/{customer_id}/adGroups:mutate',
+                    action=Action.UPDATE,
+                    description='Updates ad group properties such as status (enable/pause), name, or bid amounts using the Google Ads AdGroupService mutate endpoint.',
+                    body_fields=['operations'],
+                    path_params=['customer_id'],
+                    path_params_schema={
+                        'customer_id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Request to mutate (update) ad groups',
+                        'properties': {
+                            'operations': {
+                                'type': 'array',
+                                'description': 'List of ad group operations to perform',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'updateMask': {'type': 'string', 'description': 'Comma-separated list of field paths to update (e.g., name,status,cpcBidMicros)'},
+                                        'update': {
+                                            'type': 'object',
+                                            'description': 'Ad group fields to update',
+                                            'properties': {
+                                                'resourceName': {'type': 'string', 'description': 'Resource name of the ad group to update (e.g., customers/1234567890/adGroups/111222333)'},
+                                                'name': {'type': 'string', 'description': 'New ad group name'},
+                                                'status': {
+                                                    'type': 'string',
+                                                    'enum': ['ENABLED', 'PAUSED'],
+                                                    'description': 'Ad group status (ENABLED or PAUSED)',
+                                                },
+                                                'cpcBidMicros': {'type': 'string', 'description': 'CPC bid amount in micros (1,000,000 micros = 1 currency unit)'},
+                                            },
+                                            'required': ['resourceName'],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['operations'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from ad group mutate operation',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'resourceName': {'type': 'string', 'description': 'Resource name of the mutated ad group'},
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'ad_groups',
+                    },
                 ),
             },
             entity_schema={
@@ -817,7 +934,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='campaign_labels',
             stream_name='campaign_labels',
-            actions=[Action.LIST],
+            actions=[Action.LIST, Action.CREATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -890,6 +1007,58 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.results',
                     meta_extractor={'next_page_token': '$.nextPageToken'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v20/customers/{customer_id}/campaignLabels:mutate',
+                    action=Action.CREATE,
+                    description='Creates a campaign-label association, applying an existing label to a campaign for organization and filtering.',
+                    body_fields=['operations'],
+                    path_params=['customer_id'],
+                    path_params_schema={
+                        'customer_id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Request to create campaign-label associations',
+                        'properties': {
+                            'operations': {
+                                'type': 'array',
+                                'description': 'List of campaign label operations to perform',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'create': {
+                                            'type': 'object',
+                                            'description': 'Campaign label association to create',
+                                            'properties': {
+                                                'campaign': {'type': 'string', 'description': 'Resource name of the campaign (e.g., customers/1234567890/campaigns/111222333)'},
+                                                'label': {'type': 'string', 'description': 'Resource name of the label (e.g., customers/1234567890/labels/444555666)'},
+                                            },
+                                            'required': ['campaign', 'label'],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['operations'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from campaign label mutate operation',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'resourceName': {'type': 'string', 'description': 'Resource name of the created campaign label association'},
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'campaign_labels',
+                    },
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -925,7 +1094,7 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         EntityDefinition(
             name='ad_group_labels',
             stream_name='ad_group_labels',
-            actions=[Action.LIST],
+            actions=[Action.LIST, Action.CREATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='POST',
@@ -997,6 +1166,58 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={'next_page_token': '$.nextPageToken'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v20/customers/{customer_id}/adGroupLabels:mutate',
+                    action=Action.CREATE,
+                    description='Creates an ad group-label association, applying an existing label to an ad group for organization and filtering.',
+                    body_fields=['operations'],
+                    path_params=['customer_id'],
+                    path_params_schema={
+                        'customer_id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Request to create ad group-label associations',
+                        'properties': {
+                            'operations': {
+                                'type': 'array',
+                                'description': 'List of ad group label operations to perform',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'create': {
+                                            'type': 'object',
+                                            'description': 'Ad group label association to create',
+                                            'properties': {
+                                                'adGroup': {'type': 'string', 'description': 'Resource name of the ad group (e.g., customers/1234567890/adGroups/111222333)'},
+                                                'label': {'type': 'string', 'description': 'Resource name of the label (e.g., customers/1234567890/labels/444555666)'},
+                                            },
+                                            'required': ['adGroup', 'label'],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['operations'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from ad group label mutate operation',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'resourceName': {'type': 'string', 'description': 'Resource name of the created ad group label association'},
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'ad_group_labels',
+                    },
                 ),
             },
             entity_schema={
@@ -1146,6 +1367,88 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'ad_group_ad_labels',
                 'x-airbyte-stream-name': 'ad_group_ad_labels',
+            },
+        ),
+        EntityDefinition(
+            name='labels',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/v20/customers/{customer_id}/labels:mutate',
+                    action=Action.CREATE,
+                    description='Creates a new label that can be applied to campaigns, ad groups, or ads for organization and reporting purposes.',
+                    body_fields=['operations'],
+                    path_params=['customer_id'],
+                    path_params_schema={
+                        'customer_id': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Request to create labels',
+                        'properties': {
+                            'operations': {
+                                'type': 'array',
+                                'description': 'List of label operations to perform',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'create': {
+                                            'type': 'object',
+                                            'description': 'Label to create',
+                                            'properties': {
+                                                'name': {'type': 'string', 'description': 'Name for the new label'},
+                                                'description': {'type': 'string', 'description': 'Description for the label'},
+                                                'textLabel': {
+                                                    'type': 'object',
+                                                    'description': 'Text label styling',
+                                                    'properties': {
+                                                        'backgroundColor': {'type': 'string', 'description': 'Background color in hex format (e.g., #FF0000)'},
+                                                        'description': {'type': 'string', 'description': 'Description of the text label'},
+                                                    },
+                                                },
+                                            },
+                                            'required': ['name'],
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                        'required': ['operations'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Response from label mutate operation',
+                        'properties': {
+                            'results': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'resourceName': {'type': 'string', 'description': 'Resource name of the created label'},
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'labels',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Response from label mutate operation',
+                'properties': {
+                    'results': {
+                        'type': 'array',
+                        'items': {
+                            'type': 'object',
+                            'properties': {
+                                'resourceName': {'type': 'string', 'description': 'Resource name of the created label'},
+                            },
+                        },
+                    },
+                },
+                'x-airbyte-entity-name': 'labels',
             },
         ),
     ],
