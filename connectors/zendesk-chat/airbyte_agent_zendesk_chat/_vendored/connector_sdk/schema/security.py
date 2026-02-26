@@ -191,6 +191,22 @@ class AirbyteAuthConfig(BaseModel):
             )
 
 
+class AirbyteOAuthCredentials(BaseModel):
+    """
+    Airbyte OAuth credentials extension (x-airbyte-oauth-credentials).
+
+    Describes what OAuth app credentials an organization needs to provide
+    to override the default Airbyte-managed OAuth app credentials.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    title: str | None = None
+    description: str | None = None
+    properties: Dict[str, AuthConfigFieldSpec] | None = None
+    required: List[str] | None = None
+
+
 class SecurityScheme(BaseModel):
     """
     Security scheme definition.
@@ -206,6 +222,7 @@ class SecurityScheme(BaseModel):
     - x-airbyte-token-path: JSON path to extract token from auth response (Airbyte extension)
     - x-airbyte-token-refresh: OAuth2 token refresh configuration (dict with auth_style, body_format)
     - x-airbyte-auth-config: User-facing authentication configuration (Airbyte extension)
+    - x-airbyte-oauth-credentials: OAuth app credential override specification (Airbyte extension)
 
     Future extensions (not yet active):
     - x-grant-type: OAuth grant type for refresh tokens
@@ -240,6 +257,11 @@ class SecurityScheme(BaseModel):
         None,
         alias="x-airbyte-token-extract",
         description="List of fields to extract from OAuth2 token responses and use as server variables",
+    )
+    x_airbyte_oauth_credentials: AirbyteOAuthCredentials | None = Field(
+        None,
+        alias="x-airbyte-oauth-credentials",
+        description="Describes what OAuth app credentials an organization needs to provide for credential override",
     )
     x_airbyte_untested: bool = Field(
         False,
