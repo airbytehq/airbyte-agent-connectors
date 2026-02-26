@@ -346,6 +346,55 @@ class AirbyteCloudClient:
         data = response.json()
         return data["id"]
 
+    async def configure_oauth_app_parameters(
+        self,
+        connector_type: str,
+        credentials: dict[str, Any] | None,
+    ) -> None:
+        """Configure or remove OAuth app credentials for the authenticated organization.
+
+        When credentials are provided, sends flat key/value pairs
+        (e.g., {"client_id": "...", "client_secret": "..."}) to the Sonar API,
+        which handles expansion to the nested format required by the downstream
+        Airbyte platform.
+
+        When credentials are None, removes any existing override so the
+        organization reverts to the default Airbyte-managed OAuth app.
+
+        Args:
+            connector_type: Connector type identifier (e.g., "hubspot")
+            credentials: Flat OAuth app credentials dict, or None to remove the override
+
+        Raises:
+            httpx.HTTPStatusError: If the request fails
+
+        Example:
+            await client.configure_oauth_app_parameters(
+                connector_type="hubspot",
+                credentials={"client_id": "my-id", "client_secret": "my-secret"},
+            )
+
+            await client.configure_oauth_app_parameters(
+                connector_type="hubspot",
+                credentials=None,
+            )
+        """
+        token = await self.get_bearer_token()
+        headers = {"Authorization": f"Bearer {token}"}
+
+        if credentials is None:
+            url = f"{self.API_BASE_URL}/api/v1/oauth/credentials/connector_type/{connector_type}"
+            response = await self._http_client.delete(url, headers=headers)
+        else:
+            url = f"{self.API_BASE_URL}/api/v1/oauth/credentials"
+            request_body: dict[str, Any] = {
+                "connector_type": connector_type,
+                "configuration": credentials,
+            }
+            response = await self._http_client.put(url, json=request_body, headers=headers)
+
+        _raise_with_body(response)
+
     async def execute_connector(
         self,
         connector_id: str,

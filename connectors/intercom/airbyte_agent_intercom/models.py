@@ -426,6 +426,7 @@ class Company(BaseModel):
 
     type: Union[str | None, Any] = Field(default=None)
     id: Union[str, Any] = Field(default=None)
+    app_id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     company_id: Union[str | None, Any] = Field(default=None)
     plan: Union[Any, Any] = Field(default=None)
@@ -577,6 +578,109 @@ class SegmentsList(BaseModel):
 
     type: Union[str | None, Any] = Field(default=None)
     segments: Union[list[Segment], Any] = Field(default=None)
+
+class ContactCreateParams(BaseModel):
+    """ContactCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    role: Union[str, Any] = Field(default=None)
+    external_id: Union[str, Any] = Field(default=None)
+    email: Union[str, Any] = Field(default=None)
+    phone: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    avatar: Union[str, Any] = Field(default=None)
+    signed_up_at: Union[int, Any] = Field(default=None)
+    last_seen_at: Union[int, Any] = Field(default=None)
+    owner_id: Union[int, Any] = Field(default=None)
+    unsubscribed_from_emails: Union[bool, Any] = Field(default=None)
+    custom_attributes: Union[dict[str, Any], Any] = Field(default=None)
+
+class ContactUpdateParams(BaseModel):
+    """ContactUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    role: Union[str, Any] = Field(default=None)
+    external_id: Union[str, Any] = Field(default=None)
+    email: Union[str, Any] = Field(default=None)
+    phone: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    avatar: Union[str, Any] = Field(default=None)
+    signed_up_at: Union[int, Any] = Field(default=None)
+    last_seen_at: Union[int, Any] = Field(default=None)
+    owner_id: Union[int, Any] = Field(default=None)
+    unsubscribed_from_emails: Union[bool, Any] = Field(default=None)
+    custom_attributes: Union[dict[str, Any], Any] = Field(default=None)
+
+class CompanyCreateParams(BaseModel):
+    """CompanyCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    company_id: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    plan: Union[str, Any] = Field(default=None)
+    monthly_spend: Union[float, Any] = Field(default=None)
+    size: Union[int, Any] = Field(default=None)
+    website: Union[str, Any] = Field(default=None)
+    industry: Union[str, Any] = Field(default=None)
+    custom_attributes: Union[dict[str, Any], Any] = Field(default=None)
+
+class CompanyUpdateParams(BaseModel):
+    """CompanyUpdateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    plan: Union[str, Any] = Field(default=None)
+    monthly_spend: Union[float, Any] = Field(default=None)
+    size: Union[int, Any] = Field(default=None)
+    website: Union[str, Any] = Field(default=None)
+    industry: Union[str, Any] = Field(default=None)
+    custom_attributes: Union[dict[str, Any], Any] = Field(default=None)
+
+class TagCreateParams(BaseModel):
+    """TagCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+
+class NoteCreateParams(BaseModel):
+    """NoteCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    body: Union[str, Any] = Field(default=None)
+    admin_id: Union[str, Any] = Field(default=None)
+
+class Note(BaseModel):
+    """Note object on a contact"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    type: Union[str | None, Any] = Field(default=None)
+    id: Union[str, Any] = Field(default=None)
+    created_at: Union[int | None, Any] = Field(default=None)
+    contact: Union[Any, Any] = Field(default=None)
+    author: Union[Any, Any] = Field(default=None)
+    body: Union[str | None, Any] = Field(default=None)
+
+class InternalArticleCreateParams(BaseModel):
+    """InternalArticleCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: Union[str, Any] = Field(default=None)
+    body: Union[str, Any] = Field(default=None)
+    owner_id: Union[int, Any] = Field(default=None)
+    author_id: Union[int, Any] = Field(default=None)
+
+class InternalArticle(BaseModel):
+    """Internal article object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[Any, Any] = Field(default=None)
+    title: Union[str | None, Any] = Field(default=None)
+    body: Union[str | None, Any] = Field(default=None)
+    owner_id: Union[int | None, Any] = Field(default=None)
+    author_id: Union[int | None, Any] = Field(default=None)
+    created_at: Union[int | None, Any] = Field(default=None)
+    updated_at: Union[int | None, Any] = Field(default=None)
+    locale: Union[str | None, Any] = Field(default=None)
 
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)

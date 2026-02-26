@@ -24,8 +24,37 @@ class ContactsListParams(TypedDict):
     per_page: NotRequired[int]
     starting_after: NotRequired[str]
 
+class ContactsCreateParams(TypedDict):
+    """Parameters for contacts.create operation"""
+    role: str
+    external_id: NotRequired[str]
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    name: NotRequired[str]
+    avatar: NotRequired[str]
+    signed_up_at: NotRequired[int]
+    last_seen_at: NotRequired[int]
+    owner_id: NotRequired[int]
+    unsubscribed_from_emails: NotRequired[bool]
+    custom_attributes: NotRequired[dict[str, Any]]
+
 class ContactsGetParams(TypedDict):
     """Parameters for contacts.get operation"""
+    id: str
+
+class ContactsUpdateParams(TypedDict):
+    """Parameters for contacts.update operation"""
+    role: NotRequired[str]
+    external_id: NotRequired[str]
+    email: NotRequired[str]
+    phone: NotRequired[str]
+    name: NotRequired[str]
+    avatar: NotRequired[str]
+    signed_up_at: NotRequired[int]
+    last_seen_at: NotRequired[int]
+    owner_id: NotRequired[int]
+    unsubscribed_from_emails: NotRequired[bool]
+    custom_attributes: NotRequired[dict[str, Any]]
     id: str
 
 class ConversationsListParams(TypedDict):
@@ -42,8 +71,30 @@ class CompaniesListParams(TypedDict):
     per_page: NotRequired[int]
     starting_after: NotRequired[str]
 
+class CompaniesCreateParams(TypedDict):
+    """Parameters for companies.create operation"""
+    company_id: str
+    name: NotRequired[str]
+    plan: NotRequired[str]
+    monthly_spend: NotRequired[float]
+    size: NotRequired[int]
+    website: NotRequired[str]
+    industry: NotRequired[str]
+    custom_attributes: NotRequired[dict[str, Any]]
+
 class CompaniesGetParams(TypedDict):
     """Parameters for companies.get operation"""
+    id: str
+
+class CompaniesUpdateParams(TypedDict):
+    """Parameters for companies.update operation"""
+    name: NotRequired[str]
+    plan: NotRequired[str]
+    monthly_spend: NotRequired[float]
+    size: NotRequired[int]
+    website: NotRequired[str]
+    industry: NotRequired[str]
+    custom_attributes: NotRequired[dict[str, Any]]
     id: str
 
 class TeamsListParams(TypedDict):
@@ -66,9 +117,19 @@ class TagsListParams(TypedDict):
     """Parameters for tags.list operation"""
     pass
 
+class TagsCreateParams(TypedDict):
+    """Parameters for tags.create operation"""
+    name: str
+
 class TagsGetParams(TypedDict):
     """Parameters for tags.get operation"""
     id: str
+
+class NotesCreateParams(TypedDict):
+    """Parameters for notes.create operation"""
+    body: str
+    admin_id: NotRequired[str]
+    contact_id: str
 
 class SegmentsListParams(TypedDict):
     """Parameters for segments.list operation"""
@@ -77,6 +138,13 @@ class SegmentsListParams(TypedDict):
 class SegmentsGetParams(TypedDict):
     """Parameters for segments.get operation"""
     id: str
+
+class InternalArticlesCreateParams(TypedDict):
+    """Parameters for internal_articles.create operation"""
+    title: str
+    body: NotRequired[str]
+    owner_id: int
+    author_id: int
 
 # ===== SEARCH TYPES =====
 
