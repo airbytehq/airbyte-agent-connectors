@@ -120,7 +120,7 @@ See the official [Tiktok-Marketing API reference](https://business-api.tiktok.co
 
 ## Version information
 
-- **Package version:** 0.1.7
+- **Package version:** 0.1.8
 - **Connector version:** 1.1.2
-- **Generated with Connector SDK commit SHA:** 62fbfc1f7b4889639e5a0245203b250cbd0315ae
+- **Generated with Connector SDK commit SHA:** 9072a725853114e466154114543292f4c8efe9f3
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/tiktok-marketing/CHANGELOG.md)

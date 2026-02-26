@@ -130,6 +130,16 @@ class Info(BaseModel):
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
     x_airbyte_cache: CacheConfig | None = Field(None, alias="x-airbyte-cache")
     x_airbyte_replication_config: ReplicationConfig | None = Field(None, alias="x-airbyte-replication-config")
+    x_airbyte_replication_version: str | None = Field(
+        default=None,
+        alias="x-airbyte-replication-version",
+        description="Airbyte replication connector version this connector was validated against",
+    )
+    x_airbyte_replication_compatibility: str | None = Field(
+        default=None,
+        alias="x-airbyte-replication-compatibility",
+        description="Semver range of compatible replication connector versions",
+    )
     x_airbyte_skip_suggested_streams: list[str] = Field(
         default_factory=list,
         alias="x-airbyte-skip-suggested-streams",

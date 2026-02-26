@@ -5,11 +5,13 @@ Validates that connector.yaml replication mappings reference valid fields
 in the Airbyte source connector's spec from the registry.
 """
 
+import re
 from pathlib import Path
 from typing import Any
 
 import httpx
 import yaml
+from packaging.version import InvalidVersion, Version
 
 from .models import ValidationResult
 
@@ -34,6 +36,21 @@ def fetch_airbyte_registry_metadata(connector_name: str) -> dict[str, Any] | Non
     except (httpx.HTTPError, ValueError):
         pass
     return None
+
+
+def get_replication_version(registry_metadata: dict[str, Any] | None) -> str | None:
+    """Extract the replication connector version from registry metadata.
+
+    Args:
+        registry_metadata: Registry metadata dict from fetch_airbyte_registry_metadata,
+            or None if connector was not found.
+
+    Returns:
+        Version string (e.g., "5.15.19") or None if not available.
+    """
+    if registry_metadata is None:
+        return None
+    return registry_metadata.get("dockerImageTag")
 
 
 def _get_available_paths_at_level(spec: dict[str, Any], prefix: str = "") -> list[str]:
@@ -1165,6 +1182,7 @@ def validate_replication_compatibility(
                 "checks": [],
                 "errors": [f"Failed to load connector.yaml: {str(e)}"],
                 "warnings": [],
+                "replication_version": None,
             }
 
     # Extract connector info
@@ -1179,6 +1197,7 @@ def validate_replication_compatibility(
             "checks": [],
             "errors": ["Missing x-airbyte-connector-definition-id or x-airbyte-connector-name in connector.yaml"],
             "warnings": [],
+            "replication_version": None,
         }
 
     # Fetch registry metadata
@@ -1217,6 +1236,7 @@ def validate_replication_compatibility(
             "checks": checks,
             "errors": all_errors,
             "warnings": all_warnings,
+            "replication_version": get_replication_version(registry_metadata),
         }
 
     # Get the connection spec from registry
@@ -1449,4 +1469,120 @@ def validate_replication_compatibility(
         "checks": checks,
         "errors": all_errors,
         "warnings": all_warnings,
+        "replication_version": get_replication_version(registry_metadata),
     }
+
+
+def compute_compatibility_range(version_str: str) -> str:
+    """Compute semver compatibility range from version string.
+
+    Uses simple major version ceiling: >=X.Y.Z, <{major+1}.0.0
+
+    Args:
+        version_str: Version string like "5.15.19"
+
+    Returns:
+        Semver range like ">=5.15.19, <6.0.0"
+    """
+    version = Version(version_str)
+    return f">={version_str}, <{version.major + 1}.0.0"
+
+
+def annotate_replication_version(
+    connector_yaml_path: str | Path,
+    dry_run: bool = False,
+) -> dict[str, Any]:
+    """Annotate connector.yaml with replication version metadata.
+
+    Runs replication compatibility validation against the current Airbyte registry.
+    If validation passes, writes x-airbyte-replication-version and
+    x-airbyte-replication-compatibility to the connector.yaml info section.
+    If validation fails, does NOT update the annotation (preserves last known-good version).
+
+    Uses regex substitution to preserve YAML formatting.
+
+    Args:
+        connector_yaml_path: Path to connector.yaml file
+        dry_run: If True, don't modify file, just return what would change
+
+    Returns:
+        Dict with version, compatibility, or error/skipped info
+    """
+    connector_yaml_path = Path(connector_yaml_path)
+
+    # Load connector.yaml to extract connector name and run validation
+    content = connector_yaml_path.read_text()
+
+    # Extract connector name from x-airbyte-connector-name
+    name_match = re.search(r"x-airbyte-connector-name:\s*(\S+)", content)
+    if not name_match:
+        return {"error": "x-airbyte-connector-name not found in connector.yaml"}
+
+    connector_name = name_match.group(1)
+
+    # Run validation to verify compatibility before annotating
+    connector_def = yaml.safe_load(content)
+    validation_result = validate_replication_compatibility(
+        connector_yaml_path=connector_yaml_path,
+        connector_def=connector_def,
+    )
+
+    # Check if connector was found in registry
+    if not validation_result.get("registry_found", False):
+        return {"skipped": True, "reason": f"Connector '{connector_name}' not found in Airbyte registry"}
+
+    version = validation_result.get("replication_version")
+    if not version:
+        return {"skipped": True, "reason": f"No dockerImageTag in registry metadata for '{connector_name}'"}
+
+    # Validate version format
+    try:
+        Version(version)
+    except InvalidVersion:
+        return {"error": f"Invalid version format '{version}'"}
+
+    # Only annotate if validation passed (no errors)
+    validation_errors = validation_result.get("errors", [])
+    if validation_errors:
+        return {
+            "skipped": True,
+            "reason": (
+                f"Validation failed against v{version} with {len(validation_errors)} error(s). "
+                f"Annotation not updated to preserve last known-good version."
+            ),
+            "validation_errors": validation_errors,
+        }
+
+    compatibility = compute_compatibility_range(version)
+
+    if dry_run:
+        return {"version": version, "compatibility": compatibility}
+
+    # Remove existing annotations if present (using regex to preserve formatting)
+    content = re.sub(r"\n\s*x-airbyte-replication-version:.*", "", content)
+    content = re.sub(r"\n\s*x-airbyte-replication-compatibility:.*", "", content)
+
+    # Insert new annotations after x-airbyte-connector-definition-id
+    # This preserves the YAML structure and formatting
+    def insert_annotations(match: re.Match[str]) -> str:
+        original = match.group(0)
+        indent = "  "  # Standard 2-space indent for info section
+        annotations = (
+            f'\n{indent}x-airbyte-replication-version: "{version}"'
+            f'\n{indent}x-airbyte-replication-compatibility: "{compatibility}"'
+        )
+        return original + annotations
+
+    new_content, count = re.subn(
+        r"(x-airbyte-connector-definition-id:\s*\S+)",
+        insert_annotations,
+        content,
+        count=1,
+    )
+
+    if count == 0:
+        return {"error": "x-airbyte-connector-definition-id not found in connector.yaml"}
+
+    connector_yaml_path.write_text(new_content)
+
+    return {"version": version, "compatibility": compatibility}
