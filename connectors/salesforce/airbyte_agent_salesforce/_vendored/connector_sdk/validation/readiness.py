@@ -935,15 +935,30 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     )
 
     # Merge replication errors/warnings into totals
-    # Note: If connector is not in registry, we don't count warnings since this is expected for test connectors
     replication_errors = replication_result.get("errors", [])
     replication_warnings = replication_result.get("warnings", [])
-    total_errors += len(replication_errors)
 
-    # Only count replication warnings if the connector was found in the registry
-    # (i.e., there are actual validation issues, not just "not found in registry")
-    if replication_result.get("registry_found", False):
-        total_warnings += len(replication_warnings)
+    # All agent connectors must have a replication counterpart in the Airbyte registry
+    if not replication_result.get("registry_found", False):
+        replication_errors.append(
+            "No replication connector found in Airbyte registry. "
+            "All agent connectors must have a corresponding replication connector."
+        )
+
+    total_errors += len(replication_errors)
+    total_warnings += len(replication_warnings)
+
+    # Check for replication version drift (annotated version vs current registry latest)
+    registry_version = replication_result.get("replication_version")
+    annotated_version = raw_spec.get("info", {}).get("x-airbyte-replication-version")
+    if annotated_version and registry_version and annotated_version != registry_version:
+        drift_warning = (
+            f"Replication version drift: connector annotated with v{annotated_version}, "
+            f"but registry latest is v{registry_version}. "
+            f"Run 'connector-sdk annotate replication-version' to update."
+        )
+        replication_warnings.append(drift_warning)
+        total_warnings += 1
 
     # Merge auth scheme validation errors/warnings into totals
     total_errors += len(auth_errors)
