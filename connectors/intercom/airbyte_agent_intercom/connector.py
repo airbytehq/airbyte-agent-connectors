@@ -22,14 +22,21 @@ from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAut
 from .types import (
     AdminsGetParams,
     AdminsListParams,
+    CompaniesCreateParams,
     CompaniesGetParams,
     CompaniesListParams,
+    CompaniesUpdateParams,
+    ContactsCreateParams,
     ContactsGetParams,
     ContactsListParams,
+    ContactsUpdateParams,
     ConversationsGetParams,
     ConversationsListParams,
+    InternalArticlesCreateParams,
+    NotesCreateParams,
     SegmentsGetParams,
     SegmentsListParams,
+    TagsCreateParams,
     TagsGetParams,
     TagsListParams,
     TeamsGetParams,
@@ -64,6 +71,8 @@ from .models import (
     Company,
     Contact,
     Conversation,
+    InternalArticle,
+    Note,
     Segment,
     Tag,
     Team,
@@ -130,35 +139,49 @@ class IntercomConnector:
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("contacts", "list"): True,
+        ("contacts", "create"): None,
         ("contacts", "get"): None,
+        ("contacts", "update"): None,
         ("conversations", "list"): True,
         ("conversations", "get"): None,
         ("companies", "list"): True,
+        ("companies", "create"): None,
         ("companies", "get"): None,
+        ("companies", "update"): None,
         ("teams", "list"): True,
         ("teams", "get"): None,
         ("admins", "list"): True,
         ("admins", "get"): None,
         ("tags", "list"): True,
+        ("tags", "create"): None,
         ("tags", "get"): None,
+        ("notes", "create"): None,
         ("segments", "list"): True,
         ("segments", "get"): None,
+        ("internal_articles", "create"): None,
     }
 
     # Map of (entity, action) -> {python_param_name: api_param_name}
     # Used to convert snake_case TypedDict keys to API parameter names in execute()
     _PARAM_MAP = {
         ('contacts', 'list'): {'per_page': 'per_page', 'starting_after': 'starting_after'},
+        ('contacts', 'create'): {'role': 'role', 'external_id': 'external_id', 'email': 'email', 'phone': 'phone', 'name': 'name', 'avatar': 'avatar', 'signed_up_at': 'signed_up_at', 'last_seen_at': 'last_seen_at', 'owner_id': 'owner_id', 'unsubscribed_from_emails': 'unsubscribed_from_emails', 'custom_attributes': 'custom_attributes'},
         ('contacts', 'get'): {'id': 'id'},
+        ('contacts', 'update'): {'role': 'role', 'external_id': 'external_id', 'email': 'email', 'phone': 'phone', 'name': 'name', 'avatar': 'avatar', 'signed_up_at': 'signed_up_at', 'last_seen_at': 'last_seen_at', 'owner_id': 'owner_id', 'unsubscribed_from_emails': 'unsubscribed_from_emails', 'custom_attributes': 'custom_attributes', 'id': 'id'},
         ('conversations', 'list'): {'per_page': 'per_page', 'starting_after': 'starting_after'},
         ('conversations', 'get'): {'id': 'id'},
         ('companies', 'list'): {'per_page': 'per_page', 'starting_after': 'starting_after'},
+        ('companies', 'create'): {'company_id': 'company_id', 'name': 'name', 'plan': 'plan', 'monthly_spend': 'monthly_spend', 'size': 'size', 'website': 'website', 'industry': 'industry', 'custom_attributes': 'custom_attributes'},
         ('companies', 'get'): {'id': 'id'},
+        ('companies', 'update'): {'name': 'name', 'plan': 'plan', 'monthly_spend': 'monthly_spend', 'size': 'size', 'website': 'website', 'industry': 'industry', 'custom_attributes': 'custom_attributes', 'id': 'id'},
         ('teams', 'get'): {'id': 'id'},
         ('admins', 'get'): {'id': 'id'},
+        ('tags', 'create'): {'name': 'name'},
         ('tags', 'get'): {'id': 'id'},
+        ('notes', 'create'): {'body': 'body', 'admin_id': 'admin_id', 'contact_id': 'contact_id'},
         ('segments', 'list'): {'include_count': 'include_count'},
         ('segments', 'get'): {'id': 'id'},
+        ('internal_articles', 'create'): {'title': 'title', 'body': 'body', 'owner_id': 'owner_id', 'author_id': 'author_id'},
     }
 
     # Accepted auth_config types for isinstance validation
@@ -259,7 +282,9 @@ class IntercomConnector:
         self.teams = TeamsQuery(self)
         self.admins = AdminsQuery(self)
         self.tags = TagsQuery(self)
+        self.notes = NotesQuery(self)
         self.segments = SegmentsQuery(self)
+        self.internal_articles = InternalArticlesQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
 
@@ -275,8 +300,24 @@ class IntercomConnector:
     async def execute(
         self,
         entity: Literal["contacts"],
+        action: Literal["create"],
+        params: "ContactsCreateParams"
+    ) -> "Contact": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
         action: Literal["get"],
         params: "ContactsGetParams"
+    ) -> "Contact": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["contacts"],
+        action: Literal["update"],
+        params: "ContactsUpdateParams"
     ) -> "Contact": ...
 
     @overload
@@ -307,8 +348,24 @@ class IntercomConnector:
     async def execute(
         self,
         entity: Literal["companies"],
+        action: Literal["create"],
+        params: "CompaniesCreateParams"
+    ) -> "Company": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["companies"],
         action: Literal["get"],
         params: "CompaniesGetParams"
+    ) -> "Company": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["companies"],
+        action: Literal["update"],
+        params: "CompaniesUpdateParams"
     ) -> "Company": ...
 
     @overload
@@ -355,9 +412,25 @@ class IntercomConnector:
     async def execute(
         self,
         entity: Literal["tags"],
+        action: Literal["create"],
+        params: "TagsCreateParams"
+    ) -> "Tag": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tags"],
         action: Literal["get"],
         params: "TagsGetParams"
     ) -> "Tag": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["notes"],
+        action: Literal["create"],
+        params: "NotesCreateParams"
+    ) -> "Note": ...
 
     @overload
     async def execute(
@@ -375,19 +448,27 @@ class IntercomConnector:
         params: "SegmentsGetParams"
     ) -> "Segment": ...
 
+    @overload
+    async def execute(
+        self,
+        entity: Literal["internal_articles"],
+        action: Literal["create"],
+        params: "InternalArticlesCreateParams"
+    ) -> "InternalArticle": ...
+
 
     @overload
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "create", "get", "update", "search"],
         params: Mapping[str, Any]
     ) -> IntercomExecuteResult[Any] | IntercomExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "create", "get", "update", "search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -756,6 +837,61 @@ class ContactsQuery:
 
 
 
+    async def create(
+        self,
+        role: str,
+        external_id: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        name: str | None = None,
+        avatar: str | None = None,
+        signed_up_at: int | None = None,
+        last_seen_at: int | None = None,
+        owner_id: int | None = None,
+        unsubscribed_from_emails: bool | None = None,
+        custom_attributes: dict[str, Any] | None = None,
+        **kwargs
+    ) -> Contact:
+        """
+        Create a new contact (user or lead)
+
+        Args:
+            role: The role of the contact (user or lead)
+            external_id: A unique identifier for the contact from your system
+            email: The contact's email address
+            phone: The contact's phone number
+            name: The contact's full name
+            avatar: An image URL for the contact's avatar
+            signed_up_at: Sign up timestamp (Unix)
+            last_seen_at: Last seen timestamp (Unix)
+            owner_id: The ID of the admin assigned as owner
+            unsubscribed_from_emails: Whether the contact is unsubscribed from emails
+            custom_attributes: Custom attributes for the contact
+            **kwargs: Additional parameters
+
+        Returns:
+            Contact
+        """
+        params = {k: v for k, v in {
+            "role": role,
+            "external_id": external_id,
+            "email": email,
+            "phone": phone,
+            "name": name,
+            "avatar": avatar,
+            "signed_up_at": signed_up_at,
+            "last_seen_at": last_seen_at,
+            "owner_id": owner_id,
+            "unsubscribed_from_emails": unsubscribed_from_emails,
+            "custom_attributes": custom_attributes,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -777,6 +913,64 @@ class ContactsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("contacts", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        role: str | None = None,
+        external_id: str | None = None,
+        email: str | None = None,
+        phone: str | None = None,
+        name: str | None = None,
+        avatar: str | None = None,
+        signed_up_at: int | None = None,
+        last_seen_at: int | None = None,
+        owner_id: int | None = None,
+        unsubscribed_from_emails: bool | None = None,
+        custom_attributes: dict[str, Any] | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> Contact:
+        """
+        Update an existing contact by ID
+
+        Args:
+            role: The role of the contact (user or lead)
+            external_id: A unique identifier for the contact from your system
+            email: The contact's email address
+            phone: The contact's phone number
+            name: The contact's full name
+            avatar: An image URL for the contact's avatar
+            signed_up_at: Sign up timestamp (Unix)
+            last_seen_at: Last seen timestamp (Unix)
+            owner_id: The ID of the admin assigned as owner
+            unsubscribed_from_emails: Whether the contact is unsubscribed from emails
+            custom_attributes: Custom attributes for the contact
+            id: Contact ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Contact
+        """
+        params = {k: v for k, v in {
+            "role": role,
+            "external_id": external_id,
+            "email": email,
+            "phone": phone,
+            "name": name,
+            "avatar": avatar,
+            "signed_up_at": signed_up_at,
+            "last_seen_at": last_seen_at,
+            "owner_id": owner_id,
+            "unsubscribed_from_emails": unsubscribed_from_emails,
+            "custom_attributes": custom_attributes,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("contacts", "update", params)
         return result
 
 
@@ -1083,6 +1277,52 @@ class CompaniesQuery:
 
 
 
+    async def create(
+        self,
+        company_id: str,
+        name: str | None = None,
+        plan: str | None = None,
+        monthly_spend: float | None = None,
+        size: int | None = None,
+        website: str | None = None,
+        industry: str | None = None,
+        custom_attributes: dict[str, Any] | None = None,
+        **kwargs
+    ) -> Company:
+        """
+        Create a new company or update an existing one by company_id
+
+        Args:
+            company_id: A unique identifier for the company from your system
+            name: The name of the company
+            plan: The name of the plan the company is on
+            monthly_spend: The monthly spend of the company
+            size: The number of employees in the company
+            website: The URL of the company website
+            industry: The industry the company operates in
+            custom_attributes: Custom attributes for the company
+            **kwargs: Additional parameters
+
+        Returns:
+            Company
+        """
+        params = {k: v for k, v in {
+            "company_id": company_id,
+            "name": name,
+            "plan": plan,
+            "monthly_spend": monthly_spend,
+            "size": size,
+            "website": website,
+            "industry": industry,
+            "custom_attributes": custom_attributes,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1104,6 +1344,52 @@ class CompaniesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("companies", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        name: str | None = None,
+        plan: str | None = None,
+        monthly_spend: float | None = None,
+        size: int | None = None,
+        website: str | None = None,
+        industry: str | None = None,
+        custom_attributes: dict[str, Any] | None = None,
+        id: str | None = None,
+        **kwargs
+    ) -> Company:
+        """
+        Update an existing company by ID
+
+        Args:
+            name: The name of the company
+            plan: The name of the plan the company is on
+            monthly_spend: The monthly spend of the company
+            size: The number of employees in the company
+            website: The URL of the company website
+            industry: The industry the company operates in
+            custom_attributes: Custom attributes for the company
+            id: Company ID
+            **kwargs: Additional parameters
+
+        Returns:
+            Company
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            "plan": plan,
+            "monthly_spend": monthly_spend,
+            "size": size,
+            "website": website,
+            "industry": industry,
+            "custom_attributes": custom_attributes,
+            "id": id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("companies", "update", params)
         return result
 
 
@@ -1381,6 +1667,31 @@ class TagsQuery:
 
 
 
+    async def create(
+        self,
+        name: str,
+        **kwargs
+    ) -> Tag:
+        """
+        Create a new tag or update an existing one
+
+        Args:
+            name: The name of the tag
+            **kwargs: Additional parameters
+
+        Returns:
+            Tag
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tags", "create", params)
+        return result
+
+
+
     async def get(
         self,
         id: str | None = None,
@@ -1402,6 +1713,46 @@ class TagsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tags", "get", params)
+        return result
+
+
+
+class NotesQuery:
+    """
+    Query class for Notes entity operations.
+    """
+
+    def __init__(self, connector: IntercomConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        body: str,
+        contact_id: str,
+        admin_id: str | None = None,
+        **kwargs
+    ) -> Note:
+        """
+        Create a note on an existing contact
+
+        Args:
+            body: The body of the note in HTML format
+            admin_id: The ID of the admin creating the note
+            contact_id: Contact ID to add note to
+            **kwargs: Additional parameters
+
+        Returns:
+            Note
+        """
+        params = {k: v for k, v in {
+            "body": body,
+            "admin_id": admin_id,
+            "contact_id": contact_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("notes", "create", params)
         return result
 
 
@@ -1464,6 +1815,49 @@ class SegmentsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("segments", "get", params)
+        return result
+
+
+
+class InternalArticlesQuery:
+    """
+    Query class for InternalArticles entity operations.
+    """
+
+    def __init__(self, connector: IntercomConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        title: str,
+        owner_id: int,
+        author_id: int,
+        body: str | None = None,
+        **kwargs
+    ) -> InternalArticle:
+        """
+        Create a new internal article in the workspace
+
+        Args:
+            title: The title of the article
+            body: The content of the article in HTML
+            owner_id: The ID of the owner of the article
+            author_id: The ID of the author of the article
+            **kwargs: Additional parameters
+
+        Returns:
+            InternalArticle
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "body": body,
+            "owner_id": owner_id,
+            "author_id": author_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("internal_articles", "create", params)
         return result
 
 

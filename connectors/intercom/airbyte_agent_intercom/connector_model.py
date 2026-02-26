@@ -48,7 +48,12 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='contacts',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -469,6 +474,394 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     meta_extractor={'next_page': '$.pages.next.starting_after'},
                     preferred_for_check=True,
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/contacts',
+                    action=Action.CREATE,
+                    description='Create a new contact (user or lead)',
+                    body_fields=[
+                        'role',
+                        'external_id',
+                        'email',
+                        'phone',
+                        'name',
+                        'avatar',
+                        'signed_up_at',
+                        'last_seen_at',
+                        'owner_id',
+                        'unsubscribed_from_emails',
+                        'custom_attributes',
+                    ],
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'role': {'type': 'string', 'description': 'The role of the contact (user or lead)'},
+                            'external_id': {'type': 'string', 'description': 'A unique identifier for the contact from your system'},
+                            'email': {'type': 'string', 'description': "The contact's email address"},
+                            'phone': {'type': 'string', 'description': "The contact's phone number"},
+                            'name': {'type': 'string', 'description': "The contact's full name"},
+                            'avatar': {'type': 'string', 'description': "An image URL for the contact's avatar"},
+                            'signed_up_at': {'type': 'integer', 'description': 'Sign up timestamp (Unix)'},
+                            'last_seen_at': {'type': 'integer', 'description': 'Last seen timestamp (Unix)'},
+                            'owner_id': {'type': 'integer', 'description': 'The ID of the admin assigned as owner'},
+                            'unsubscribed_from_emails': {'type': 'boolean', 'description': 'Whether the contact is unsubscribed from emails'},
+                            'custom_attributes': {
+                                'type': 'object',
+                                'description': 'Custom attributes for the contact',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['role'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Contact object representing a user or lead',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (contact)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique contact identifier'},
+                            'workspace_id': {
+                                'type': ['string', 'null'],
+                                'description': 'Workspace ID',
+                            },
+                            'external_id': {
+                                'type': ['string', 'null'],
+                                'description': 'External ID from your system',
+                            },
+                            'role': {
+                                'type': ['string', 'null'],
+                                'description': 'Role of the contact (user or lead)',
+                            },
+                            'email': {
+                                'type': ['string', 'null'],
+                                'description': 'Email address',
+                            },
+                            'phone': {
+                                'type': ['string', 'null'],
+                                'description': 'Phone number',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Full name',
+                            },
+                            'avatar': {
+                                'type': ['string', 'null'],
+                                'description': 'Avatar URL',
+                            },
+                            'owner_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'Owner admin ID',
+                            },
+                            'social_profiles': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Social profiles',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Social profile',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of social profile',
+                                                        },
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Social network name',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Profile URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'has_hard_bounced': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether email has hard bounced',
+                            },
+                            'marked_email_as_spam': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether contact marked email as spam',
+                            },
+                            'unsubscribed_from_emails': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether contact unsubscribed from emails',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'signed_up_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Sign up timestamp (Unix)',
+                            },
+                            'last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last seen timestamp (Unix)',
+                            },
+                            'last_replied_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last reply timestamp (Unix)',
+                            },
+                            'last_contacted_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last contacted timestamp (Unix)',
+                            },
+                            'last_email_opened_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last email opened timestamp (Unix)',
+                            },
+                            'last_email_clicked_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last email clicked timestamp (Unix)',
+                            },
+                            'language_override': {
+                                'type': ['string', 'null'],
+                                'description': 'Language override',
+                            },
+                            'browser': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser used',
+                            },
+                            'browser_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser version',
+                            },
+                            'browser_language': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser language',
+                            },
+                            'os': {
+                                'type': ['string', 'null'],
+                                'description': 'Operating system',
+                            },
+                            'location': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Location information',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of location',
+                                            },
+                                            'country': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Country',
+                                            },
+                                            'region': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Region/state',
+                                            },
+                                            'city': {
+                                                'type': ['string', 'null'],
+                                                'description': 'City',
+                                            },
+                                            'country_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Country code',
+                                            },
+                                            'continent_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Continent code',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'android_app_name': {
+                                'type': ['string', 'null'],
+                                'description': 'Android app name',
+                            },
+                            'android_app_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android app version',
+                            },
+                            'android_device': {
+                                'type': ['string', 'null'],
+                                'description': 'Android device',
+                            },
+                            'android_os_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android OS version',
+                            },
+                            'android_sdk_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android SDK version',
+                            },
+                            'android_last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Android last seen timestamp',
+                            },
+                            'ios_app_name': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS app name',
+                            },
+                            'ios_app_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS app version',
+                            },
+                            'ios_device': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS device',
+                            },
+                            'ios_os_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS OS version',
+                            },
+                            'ios_sdk_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS SDK version',
+                            },
+                            'ios_last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'iOS last seen timestamp',
+                            },
+                            'custom_attributes': {
+                                'type': ['object', 'null'],
+                                'description': 'Custom attributes',
+                                'additionalProperties': True,
+                            },
+                            'tags': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Tags associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Tag reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'notes': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Notes associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Note reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Note ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Note URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'companies': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Companies associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Company reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Company ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Company URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                        },
+                        'x-airbyte-entity-name': 'contacts',
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/contacts/{id}',
@@ -484,6 +877,397 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                             'type': 'string',
                             'required': False,
                             'default': '2.11',
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Contact object representing a user or lead',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (contact)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique contact identifier'},
+                            'workspace_id': {
+                                'type': ['string', 'null'],
+                                'description': 'Workspace ID',
+                            },
+                            'external_id': {
+                                'type': ['string', 'null'],
+                                'description': 'External ID from your system',
+                            },
+                            'role': {
+                                'type': ['string', 'null'],
+                                'description': 'Role of the contact (user or lead)',
+                            },
+                            'email': {
+                                'type': ['string', 'null'],
+                                'description': 'Email address',
+                            },
+                            'phone': {
+                                'type': ['string', 'null'],
+                                'description': 'Phone number',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Full name',
+                            },
+                            'avatar': {
+                                'type': ['string', 'null'],
+                                'description': 'Avatar URL',
+                            },
+                            'owner_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'Owner admin ID',
+                            },
+                            'social_profiles': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Social profiles',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Social profile',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of social profile',
+                                                        },
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Social network name',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Profile URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'has_hard_bounced': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether email has hard bounced',
+                            },
+                            'marked_email_as_spam': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether contact marked email as spam',
+                            },
+                            'unsubscribed_from_emails': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether contact unsubscribed from emails',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'signed_up_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Sign up timestamp (Unix)',
+                            },
+                            'last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last seen timestamp (Unix)',
+                            },
+                            'last_replied_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last reply timestamp (Unix)',
+                            },
+                            'last_contacted_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last contacted timestamp (Unix)',
+                            },
+                            'last_email_opened_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last email opened timestamp (Unix)',
+                            },
+                            'last_email_clicked_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last email clicked timestamp (Unix)',
+                            },
+                            'language_override': {
+                                'type': ['string', 'null'],
+                                'description': 'Language override',
+                            },
+                            'browser': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser used',
+                            },
+                            'browser_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser version',
+                            },
+                            'browser_language': {
+                                'type': ['string', 'null'],
+                                'description': 'Browser language',
+                            },
+                            'os': {
+                                'type': ['string', 'null'],
+                                'description': 'Operating system',
+                            },
+                            'location': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Location information',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of location',
+                                            },
+                                            'country': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Country',
+                                            },
+                                            'region': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Region/state',
+                                            },
+                                            'city': {
+                                                'type': ['string', 'null'],
+                                                'description': 'City',
+                                            },
+                                            'country_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Country code',
+                                            },
+                                            'continent_code': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Continent code',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'android_app_name': {
+                                'type': ['string', 'null'],
+                                'description': 'Android app name',
+                            },
+                            'android_app_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android app version',
+                            },
+                            'android_device': {
+                                'type': ['string', 'null'],
+                                'description': 'Android device',
+                            },
+                            'android_os_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android OS version',
+                            },
+                            'android_sdk_version': {
+                                'type': ['string', 'null'],
+                                'description': 'Android SDK version',
+                            },
+                            'android_last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Android last seen timestamp',
+                            },
+                            'ios_app_name': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS app name',
+                            },
+                            'ios_app_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS app version',
+                            },
+                            'ios_device': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS device',
+                            },
+                            'ios_os_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS OS version',
+                            },
+                            'ios_sdk_version': {
+                                'type': ['string', 'null'],
+                                'description': 'iOS SDK version',
+                            },
+                            'ios_last_seen_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'iOS last seen timestamp',
+                            },
+                            'custom_attributes': {
+                                'type': ['object', 'null'],
+                                'description': 'Custom attributes',
+                                'additionalProperties': True,
+                            },
+                            'tags': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Tags associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Tag reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'notes': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Notes associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Note reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Note ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Note URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'companies': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Companies associated with contact',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'data': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Company reference',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object',
+                                                        },
+                                                        'id': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Company ID',
+                                                        },
+                                                        'url': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Company URL',
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                        },
+                        'x-airbyte-entity-name': 'contacts',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/contacts/{id}',
+                    action=Action.UPDATE,
+                    description='Update an existing contact by ID',
+                    body_fields=[
+                        'role',
+                        'external_id',
+                        'email',
+                        'phone',
+                        'name',
+                        'avatar',
+                        'signed_up_at',
+                        'last_seen_at',
+                        'owner_id',
+                        'unsubscribed_from_emails',
+                        'custom_attributes',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'role': {'type': 'string', 'description': 'The role of the contact (user or lead)'},
+                            'external_id': {'type': 'string', 'description': 'A unique identifier for the contact from your system'},
+                            'email': {'type': 'string', 'description': "The contact's email address"},
+                            'phone': {'type': 'string', 'description': "The contact's phone number"},
+                            'name': {'type': 'string', 'description': "The contact's full name"},
+                            'avatar': {'type': 'string', 'description': "An image URL for the contact's avatar"},
+                            'signed_up_at': {'type': 'integer', 'description': 'Sign up timestamp (Unix)'},
+                            'last_seen_at': {'type': 'integer', 'description': 'Last seen timestamp (Unix)'},
+                            'owner_id': {'type': 'integer', 'description': 'The ID of the admin assigned as owner'},
+                            'unsubscribed_from_emails': {'type': 'boolean', 'description': 'Whether the contact is unsubscribed from emails'},
+                            'custom_attributes': {
+                                'type': 'object',
+                                'description': 'Custom attributes for the contact',
+                                'additionalProperties': True,
+                            },
                         },
                     },
                     response_schema={
@@ -2487,7 +3271,12 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='companies',
-            actions=[Action.LIST, Action.GET],
+            actions=[
+                Action.LIST,
+                Action.CREATE,
+                Action.GET,
+                Action.UPDATE,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2530,6 +3319,10 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                                             'description': 'Type of object (company)',
                                         },
                                         'id': {'type': 'string', 'description': 'Unique company identifier'},
+                                        'app_id': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The ID of the application associated with the company',
+                                        },
                                         'name': {
                                             'type': ['string', 'null'],
                                             'description': 'Company name',
@@ -2762,6 +3555,247 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.pages.next.starting_after'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/companies',
+                    action=Action.CREATE,
+                    description='Create a new company or update an existing one by company_id',
+                    body_fields=[
+                        'company_id',
+                        'name',
+                        'plan',
+                        'monthly_spend',
+                        'size',
+                        'website',
+                        'industry',
+                        'custom_attributes',
+                    ],
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'company_id': {'type': 'string', 'description': 'A unique identifier for the company from your system'},
+                            'name': {'type': 'string', 'description': 'The name of the company'},
+                            'plan': {'type': 'string', 'description': 'The name of the plan the company is on'},
+                            'monthly_spend': {'type': 'number', 'description': 'The monthly spend of the company'},
+                            'size': {'type': 'integer', 'description': 'The number of employees in the company'},
+                            'website': {'type': 'string', 'description': 'The URL of the company website'},
+                            'industry': {'type': 'string', 'description': 'The industry the company operates in'},
+                            'custom_attributes': {
+                                'type': 'object',
+                                'description': 'Custom attributes for the company',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'required': ['company_id'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Company object',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (company)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique company identifier'},
+                            'app_id': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the application associated with the company',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Company name',
+                            },
+                            'company_id': {
+                                'type': ['string', 'null'],
+                                'description': 'External company ID',
+                            },
+                            'plan': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Company plan',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Plan ID',
+                                            },
+                                            'name': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Plan name',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'size': {
+                                'type': ['integer', 'null'],
+                                'description': 'Company size',
+                            },
+                            'industry': {
+                                'type': ['string', 'null'],
+                                'description': 'Industry',
+                            },
+                            'website': {
+                                'type': ['string', 'null'],
+                                'description': 'Website URL',
+                            },
+                            'remote_created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Remote creation timestamp',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'last_request_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last request timestamp (Unix)',
+                            },
+                            'session_count': {
+                                'type': ['integer', 'null'],
+                                'description': 'Number of sessions',
+                            },
+                            'monthly_spend': {
+                                'type': ['number', 'null'],
+                                'description': 'Monthly spend',
+                            },
+                            'user_count': {
+                                'type': ['integer', 'null'],
+                                'description': 'Number of users',
+                            },
+                            'tags': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Tags on company',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'tags': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Tag object',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object (tag)',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique tag identifier'},
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag name',
+                                                        },
+                                                        'applied_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Applied timestamp (Unix)',
+                                                        },
+                                                        'applied_by': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'description': 'Admin reference',
+                                                                    'properties': {
+                                                                        'type': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Type of object',
+                                                                        },
+                                                                        'id': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Admin ID',
+                                                                        },
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'tags',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'segments': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Segments for company',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'segments': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Segment object',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object (segment)',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique segment identifier'},
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Segment name',
+                                                        },
+                                                        'created_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Creation timestamp (Unix)',
+                                                        },
+                                                        'updated_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Last update timestamp (Unix)',
+                                                        },
+                                                        'person_type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Person type (user, lead, contact)',
+                                                        },
+                                                        'count': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Number of contacts in segment',
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'segments',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'custom_attributes': {
+                                'type': ['object', 'null'],
+                                'description': 'Custom attributes',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'companies',
+                    },
+                ),
                 Action.GET: EndpointDefinition(
                     method='GET',
                     path='/companies/{id}',
@@ -2788,6 +3822,252 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                                 'description': 'Type of object (company)',
                             },
                             'id': {'type': 'string', 'description': 'Unique company identifier'},
+                            'app_id': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the application associated with the company',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Company name',
+                            },
+                            'company_id': {
+                                'type': ['string', 'null'],
+                                'description': 'External company ID',
+                            },
+                            'plan': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Company plan',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Plan ID',
+                                            },
+                                            'name': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Plan name',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'size': {
+                                'type': ['integer', 'null'],
+                                'description': 'Company size',
+                            },
+                            'industry': {
+                                'type': ['string', 'null'],
+                                'description': 'Industry',
+                            },
+                            'website': {
+                                'type': ['string', 'null'],
+                                'description': 'Website URL',
+                            },
+                            'remote_created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Remote creation timestamp',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'last_request_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last request timestamp (Unix)',
+                            },
+                            'session_count': {
+                                'type': ['integer', 'null'],
+                                'description': 'Number of sessions',
+                            },
+                            'monthly_spend': {
+                                'type': ['number', 'null'],
+                                'description': 'Monthly spend',
+                            },
+                            'user_count': {
+                                'type': ['integer', 'null'],
+                                'description': 'Number of users',
+                            },
+                            'tags': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Tags on company',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'tags': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Tag object',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object (tag)',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique tag identifier'},
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Tag name',
+                                                        },
+                                                        'applied_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Applied timestamp (Unix)',
+                                                        },
+                                                        'applied_by': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'description': 'Admin reference',
+                                                                    'properties': {
+                                                                        'type': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Type of object',
+                                                                        },
+                                                                        'id': {
+                                                                            'type': ['string', 'null'],
+                                                                            'description': 'Admin ID',
+                                                                        },
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'tags',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'segments': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Segments for company',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of list',
+                                            },
+                                            'segments': {
+                                                'type': 'array',
+                                                'items': {
+                                                    'type': 'object',
+                                                    'description': 'Segment object',
+                                                    'properties': {
+                                                        'type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Type of object (segment)',
+                                                        },
+                                                        'id': {'type': 'string', 'description': 'Unique segment identifier'},
+                                                        'name': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Segment name',
+                                                        },
+                                                        'created_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Creation timestamp (Unix)',
+                                                        },
+                                                        'updated_at': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Last update timestamp (Unix)',
+                                                        },
+                                                        'person_type': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Person type (user, lead, contact)',
+                                                        },
+                                                        'count': {
+                                                            'type': ['integer', 'null'],
+                                                            'description': 'Number of contacts in segment',
+                                                        },
+                                                    },
+                                                    'x-airbyte-entity-name': 'segments',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'custom_attributes': {
+                                'type': ['object', 'null'],
+                                'description': 'Custom attributes',
+                                'additionalProperties': True,
+                            },
+                        },
+                        'x-airbyte-entity-name': 'companies',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/companies/{id}',
+                    action=Action.UPDATE,
+                    description='Update an existing company by ID',
+                    body_fields=[
+                        'name',
+                        'plan',
+                        'monthly_spend',
+                        'size',
+                        'website',
+                        'industry',
+                        'custom_attributes',
+                    ],
+                    path_params=['id'],
+                    path_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the company'},
+                            'plan': {'type': 'string', 'description': 'The name of the plan the company is on'},
+                            'monthly_spend': {'type': 'number', 'description': 'The monthly spend of the company'},
+                            'size': {'type': 'integer', 'description': 'The number of employees in the company'},
+                            'website': {'type': 'string', 'description': 'The URL of the company website'},
+                            'industry': {'type': 'string', 'description': 'The industry the company operates in'},
+                            'custom_attributes': {
+                                'type': 'object',
+                                'description': 'Custom attributes for the company',
+                                'additionalProperties': True,
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Company object',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (company)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique company identifier'},
+                            'app_id': {
+                                'type': ['string', 'null'],
+                                'description': 'The ID of the application associated with the company',
+                            },
                             'name': {
                                 'type': ['string', 'null'],
                                 'description': 'Company name',
@@ -2985,6 +4265,10 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         'description': 'Type of object (company)',
                     },
                     'id': {'type': 'string', 'description': 'Unique company identifier'},
+                    'app_id': {
+                        'type': ['string', 'null'],
+                        'description': 'The ID of the application associated with the company',
+                    },
                     'name': {
                         'type': ['string', 'null'],
                         'description': 'Company name',
@@ -3456,7 +4740,7 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='tags',
-            actions=[Action.LIST, Action.GET],
+            actions=[Action.LIST, Action.CREATE, Action.GET],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -3524,6 +4808,67 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/tags',
+                    action=Action.CREATE,
+                    description='Create a new tag or update an existing one',
+                    body_fields=['name'],
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the tag'},
+                        },
+                        'required': ['name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Tag object',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (tag)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique tag identifier'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'Tag name',
+                            },
+                            'applied_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Applied timestamp (Unix)',
+                            },
+                            'applied_by': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Admin reference',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Admin ID',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                        },
+                        'x-airbyte-entity-name': 'tags',
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3608,6 +4953,137 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'tags',
+            },
+        ),
+        EntityDefinition(
+            name='notes',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/contacts/{contact_id}/notes',
+                    action=Action.CREATE,
+                    description='Create a note on an existing contact',
+                    body_fields=['body', 'admin_id'],
+                    path_params=['contact_id'],
+                    path_params_schema={
+                        'contact_id': {'type': 'string', 'required': True},
+                    },
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': '2.11',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'body': {'type': 'string', 'description': 'The body of the note in HTML format'},
+                            'admin_id': {'type': 'string', 'description': 'The ID of the admin creating the note'},
+                        },
+                        'required': ['body'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Note object on a contact',
+                        'properties': {
+                            'type': {
+                                'type': ['string', 'null'],
+                                'description': 'Type of object (note)',
+                            },
+                            'id': {'type': 'string', 'description': 'Unique note identifier'},
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'contact': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Contact reference',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Type of object',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Contact ID',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'author': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Message author',
+                                        'properties': {
+                                            'type': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Author type (admin, user, bot)',
+                                            },
+                                            'id': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Author ID',
+                                            },
+                                            'name': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Author name',
+                                            },
+                                            'email': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Author email',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                            },
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'The body of the note',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'notes',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Note object on a contact',
+                'properties': {
+                    'type': {
+                        'type': ['string', 'null'],
+                        'description': 'Type of object (note)',
+                    },
+                    'id': {'type': 'string', 'description': 'Unique note identifier'},
+                    'created_at': {
+                        'type': ['integer', 'null'],
+                        'description': 'Creation timestamp (Unix)',
+                    },
+                    'contact': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/ContactReference'},
+                            {'type': 'null'},
+                        ],
+                    },
+                    'author': {
+                        'oneOf': [
+                            {'$ref': '#/components/schemas/Author'},
+                            {'type': 'null'},
+                        ],
+                    },
+                    'body': {
+                        'type': ['string', 'null'],
+                        'description': 'The body of the note',
+                    },
+                },
+                'x-airbyte-entity-name': 'notes',
             },
         ),
         EntityDefinition(
@@ -3764,6 +5240,120 @@ IntercomConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'segments',
+            },
+        ),
+        EntityDefinition(
+            name='internal_articles',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/internal_articles',
+                    action=Action.CREATE,
+                    description='Create a new internal article in the workspace',
+                    body_fields=[
+                        'title',
+                        'body',
+                        'owner_id',
+                        'author_id',
+                    ],
+                    header_params=['Intercom-Version'],
+                    header_params_schema={
+                        'Intercom-Version': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'Unstable',
+                        },
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string', 'description': 'The title of the article'},
+                            'body': {'type': 'string', 'description': 'The content of the article in HTML'},
+                            'owner_id': {'type': 'integer', 'description': 'The ID of the owner of the article'},
+                            'author_id': {'type': 'integer', 'description': 'The ID of the author of the article'},
+                        },
+                        'required': ['title', 'owner_id', 'author_id'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Internal article object',
+                        'properties': {
+                            'id': {
+                                'type': ['integer', 'string'],
+                                'description': 'The unique identifier for the article',
+                            },
+                            'title': {
+                                'type': ['string', 'null'],
+                                'description': 'The title of the article',
+                            },
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'The body of the article in HTML',
+                            },
+                            'owner_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'The ID of the owner of the article',
+                            },
+                            'author_id': {
+                                'type': ['integer', 'null'],
+                                'description': 'The ID of the author of the article',
+                            },
+                            'created_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Creation timestamp (Unix)',
+                            },
+                            'updated_at': {
+                                'type': ['integer', 'null'],
+                                'description': 'Last update timestamp (Unix)',
+                            },
+                            'locale': {
+                                'type': ['string', 'null'],
+                                'description': 'The default locale of the article',
+                            },
+                        },
+                        'x-airbyte-entity-name': 'internal_articles',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Internal article object',
+                'properties': {
+                    'id': {
+                        'type': ['integer', 'string'],
+                        'description': 'The unique identifier for the article',
+                    },
+                    'title': {
+                        'type': ['string', 'null'],
+                        'description': 'The title of the article',
+                    },
+                    'body': {
+                        'type': ['string', 'null'],
+                        'description': 'The body of the article in HTML',
+                    },
+                    'owner_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The ID of the owner of the article',
+                    },
+                    'author_id': {
+                        'type': ['integer', 'null'],
+                        'description': 'The ID of the author of the article',
+                    },
+                    'created_at': {
+                        'type': ['integer', 'null'],
+                        'description': 'Creation timestamp (Unix)',
+                    },
+                    'updated_at': {
+                        'type': ['integer', 'null'],
+                        'description': 'Last update timestamp (Unix)',
+                    },
+                    'locale': {
+                        'type': ['string', 'null'],
+                        'description': 'The default locale of the article',
+                    },
+                },
+                'x-airbyte-entity-name': 'internal_articles',
             },
         ),
     ],
