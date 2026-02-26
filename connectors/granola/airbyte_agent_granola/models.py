@@ -166,16 +166,30 @@ class NotesSearchData(BaseModel):
     """Search result data for notes entity."""
     model_config = ConfigDict(extra="allow")
 
-    created_at: str | None = None
-    """The creation time of the note in ISO 8601 format."""
     id: str | None = None
     """The unique identifier of the note."""
     object: str | None = None
     """The object type, always "note"."""
-    owner: dict[str, Any] | None = None
-    """The owner of the note."""
     title: str | None = None
     """The title of the note."""
+    owner: dict[str, Any] | None = None
+    """The owner of the note."""
+    created_at: str | None = None
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: str | None = None
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: str | None = None
+    """Plain text summary of the note."""
+    summary_markdown: str | None = None
+    """Markdown formatted summary of the note."""
+    attendees: list[Any] | None = None
+    """The attendees of the meeting."""
+    calendar_event: dict[str, Any] | None = None
+    """Associated calendar event details."""
+    folder_membership: list[Any] | None = None
+    """The folder membership of the note."""
+    transcript: list[Any] | None = None
+    """Transcript of the meeting."""
 
 
 # ===== GENERIC SEARCH RESULT TYPES =====

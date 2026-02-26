@@ -631,11 +631,18 @@ class NotesQuery:
         Only available in hosted execution mode.
 
         Available filter fields (NotesSearchFilter):
-        - created_at: The creation time of the note in ISO 8601 format.
         - id: The unique identifier of the note.
         - object: The object type, always "note".
-        - owner: The owner of the note.
         - title: The title of the note.
+        - owner: The owner of the note.
+        - created_at: The creation time of the note in ISO 8601 format.
+        - updated_at: The last update time of the note in ISO 8601 format.
+        - summary_text: Plain text summary of the note.
+        - summary_markdown: Markdown formatted summary of the note.
+        - attendees: The attendees of the meeting.
+        - calendar_event: Associated calendar event details.
+        - folder_membership: The folder membership of the note.
+        - transcript: Transcript of the meeting.
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,

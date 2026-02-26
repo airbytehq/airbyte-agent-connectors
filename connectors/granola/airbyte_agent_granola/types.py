@@ -40,72 +40,142 @@ AirbyteSortOrder = Literal["asc", "desc"]
 
 class NotesSearchFilter(TypedDict, total=False):
     """Available fields for filtering notes search queries."""
-    created_at: str | None
-    """The creation time of the note in ISO 8601 format."""
     id: str | None
     """The unique identifier of the note."""
     object: str | None
     """The object type, always "note"."""
-    owner: dict[str, Any] | None
-    """The owner of the note."""
     title: str | None
     """The title of the note."""
+    owner: dict[str, Any] | None
+    """The owner of the note."""
+    created_at: str | None
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: str | None
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: str | None
+    """Plain text summary of the note."""
+    summary_markdown: str | None
+    """Markdown formatted summary of the note."""
+    attendees: list[Any] | None
+    """The attendees of the meeting."""
+    calendar_event: dict[str, Any] | None
+    """Associated calendar event details."""
+    folder_membership: list[Any] | None
+    """The folder membership of the note."""
+    transcript: list[Any] | None
+    """Transcript of the meeting."""
 
 
 class NotesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    created_at: list[str]
-    """The creation time of the note in ISO 8601 format."""
     id: list[str]
     """The unique identifier of the note."""
     object: list[str]
     """The object type, always "note"."""
-    owner: list[dict[str, Any]]
-    """The owner of the note."""
     title: list[str]
     """The title of the note."""
+    owner: list[dict[str, Any]]
+    """The owner of the note."""
+    created_at: list[str]
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: list[str]
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: list[str]
+    """Plain text summary of the note."""
+    summary_markdown: list[str]
+    """Markdown formatted summary of the note."""
+    attendees: list[list[Any]]
+    """The attendees of the meeting."""
+    calendar_event: list[dict[str, Any]]
+    """Associated calendar event details."""
+    folder_membership: list[list[Any]]
+    """The folder membership of the note."""
+    transcript: list[list[Any]]
+    """Transcript of the meeting."""
 
 
 class NotesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    created_at: Any
-    """The creation time of the note in ISO 8601 format."""
     id: Any
     """The unique identifier of the note."""
     object: Any
     """The object type, always "note"."""
-    owner: Any
-    """The owner of the note."""
     title: Any
     """The title of the note."""
+    owner: Any
+    """The owner of the note."""
+    created_at: Any
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: Any
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: Any
+    """Plain text summary of the note."""
+    summary_markdown: Any
+    """Markdown formatted summary of the note."""
+    attendees: Any
+    """The attendees of the meeting."""
+    calendar_event: Any
+    """Associated calendar event details."""
+    folder_membership: Any
+    """The folder membership of the note."""
+    transcript: Any
+    """Transcript of the meeting."""
 
 
 class NotesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
-    created_at: str
-    """The creation time of the note in ISO 8601 format."""
     id: str
     """The unique identifier of the note."""
     object: str
     """The object type, always "note"."""
-    owner: str
-    """The owner of the note."""
     title: str
     """The title of the note."""
+    owner: str
+    """The owner of the note."""
+    created_at: str
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: str
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: str
+    """Plain text summary of the note."""
+    summary_markdown: str
+    """Markdown formatted summary of the note."""
+    attendees: str
+    """The attendees of the meeting."""
+    calendar_event: str
+    """Associated calendar event details."""
+    folder_membership: str
+    """The folder membership of the note."""
+    transcript: str
+    """Transcript of the meeting."""
 
 
 class NotesSortFilter(TypedDict, total=False):
     """Available fields for sorting notes search results."""
-    created_at: AirbyteSortOrder
-    """The creation time of the note in ISO 8601 format."""
     id: AirbyteSortOrder
     """The unique identifier of the note."""
     object: AirbyteSortOrder
     """The object type, always "note"."""
-    owner: AirbyteSortOrder
-    """The owner of the note."""
     title: AirbyteSortOrder
     """The title of the note."""
+    owner: AirbyteSortOrder
+    """The owner of the note."""
+    created_at: AirbyteSortOrder
+    """The creation time of the note in ISO 8601 format."""
+    updated_at: AirbyteSortOrder
+    """The last update time of the note in ISO 8601 format."""
+    summary_text: AirbyteSortOrder
+    """Plain text summary of the note."""
+    summary_markdown: AirbyteSortOrder
+    """Markdown formatted summary of the note."""
+    attendees: AirbyteSortOrder
+    """The attendees of the meeting."""
+    calendar_event: AirbyteSortOrder
+    """Associated calendar event details."""
+    folder_membership: AirbyteSortOrder
+    """The folder membership of the note."""
+    transcript: AirbyteSortOrder
+    """Transcript of the meeting."""
 
 
 # Entity-specific condition types for notes
