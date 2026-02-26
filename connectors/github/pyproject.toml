@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-github"
-version = "0.18.110"
+version = "0.18.111"
 description = "Airbyte Github Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"
