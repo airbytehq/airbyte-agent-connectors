@@ -114,7 +114,7 @@ See the official [Monday API reference](https://developer.monday.com/api-referen
 
 ## Version information
 
-- **Package version:** 0.1.0
+- **Package version:** 0.1.1
 - **Connector version:** 1.0.0
-- **Generated with Connector SDK commit SHA:** 9072a725853114e466154114543292f4c8efe9f3
+- **Generated with Connector SDK commit SHA:** 39690c8e4097a393e4f6a8df586af5002bc93095
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/monday/CHANGELOG.md)
