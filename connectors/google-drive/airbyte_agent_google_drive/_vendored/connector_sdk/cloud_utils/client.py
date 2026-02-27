@@ -211,6 +211,7 @@ class AirbyteCloudClient:
         name: str | None = None,
         replication_config: dict[str, Any] | None = None,
         source_template_id: str | None = None,
+        environment: dict[str, Any] | None = None,
     ) -> str:
         """Initiate a server-side OAuth flow with auto-source creation.
 
@@ -229,6 +230,9 @@ class AirbyteCloudClient:
                 Merged with OAuth credentials during source creation.
             source_template_id: Source template ID. Required when organization has
                 multiple source templates for this connector type.
+            environment: Optional environment configuration (e.g., subdomain).
+                Required for connectors whose OAuth URLs contain environment
+                variables (e.g., Zendesk uses subdomain in OAuth URLs).
 
         Returns:
             The OAuth consent URL
@@ -243,6 +247,7 @@ class AirbyteCloudClient:
                 redirect_url="https://myapp.com/oauth/callback",
                 name="My HubSpot Source",
                 replication_config={"start_date": "2024-01-01"},
+                environment={"subdomain": "my-company"},
             )
             # Redirect user to: consent_url
             # After consent: https://myapp.com/oauth/callback?connector_id=...
@@ -262,6 +267,8 @@ class AirbyteCloudClient:
             request_body["replication_config"] = replication_config
         if source_template_id is not None:
             request_body["source_template_id"] = source_template_id
+        if environment is not None:
+            request_body["environment"] = environment
 
         response = await self._http_client.post(url, json=request_body, headers=headers)
         _raise_with_body(response)
