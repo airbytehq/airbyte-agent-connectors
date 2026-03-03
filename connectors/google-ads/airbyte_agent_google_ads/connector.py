@@ -147,7 +147,7 @@ class GoogleAdsConnector:
     """
 
     connector_name = "google-ads"
-    connector_version = "1.0.2"
+    connector_version = "1.0.3"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -1508,8 +1508,6 @@ class CampaignLabelsQuery:
 
         Available filter fields (CampaignLabelsSearchFilter):
         - campaign_id: Campaign ID
-        - campaign_label_campaign: Campaign resource name
-        - campaign_label_label: Label resource name
         - campaign_label_resource_name: Resource name of the campaign label
         - label_id: Label ID
         - label_name: Label name
@@ -1644,8 +1642,6 @@ class AdGroupLabelsQuery:
 
         Available filter fields (AdGroupLabelsSearchFilter):
         - ad_group_id: Ad group ID
-        - ad_group_label_ad_group: Ad group resource name
-        - ad_group_label_label: Label resource name
         - ad_group_label_resource_name: Resource name of the ad group label
         - label_id: Label ID
         - label_name: Label name
@@ -1752,8 +1748,6 @@ class AdGroupAdLabelsQuery:
 
         Available filter fields (AdGroupAdLabelsSearchFilter):
         - ad_group_ad_ad_id: Ad ID
-        - ad_group_ad_label_ad_group_ad: Ad group ad resource name
-        - ad_group_ad_label_label: Label resource name
         - ad_group_ad_label_resource_name: Resource name of the ad group ad label
         - label_id: Label ID
         - label_name: Label name

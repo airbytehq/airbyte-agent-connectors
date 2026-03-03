@@ -23,6 +23,7 @@ from ..connector_model_loader import (
 from ..testing.spec_loader import load_test_spec
 from ..types import Action, ConnectorModel, EndpointDefinition
 from ..utils import infer_auth_scheme_name
+from .cache import validate_cache_against_manifest
 from .replication import validate_replication_compatibility
 
 
@@ -960,12 +961,29 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         replication_warnings.append(drift_warning)
         total_warnings += 1
 
+    # Validate x-airbyte-cache entities against manifest
+    cache_result = validate_cache_against_manifest(
+        connector_yaml_path=config_file,
+        connector_def=raw_spec,
+    )
+    cache_errors = cache_result.get("errors", [])
+    cache_warnings = cache_result.get("warnings", [])
+    total_errors += len(cache_errors)
+    total_warnings += len(cache_warnings)
+
     # Merge auth scheme validation errors/warnings into totals
     total_errors += len(auth_errors)
     total_warnings += len(auth_warnings)
 
-    # Update success criteria to include replication and auth scheme validation
-    success = operations_missing_cassettes == 0 and cassettes_invalid == 0 and total_operations > 0 and len(replication_errors) == 0 and auth_valid
+    # Update success criteria to include replication, cache, and auth scheme validation
+    success = (
+        operations_missing_cassettes == 0
+        and cassettes_invalid == 0
+        and total_operations > 0
+        and len(replication_errors) == 0
+        and len(cache_errors) == 0
+        and auth_valid
+    )
 
     # Check for preferred_for_check on at least one list operation
     has_preferred_check = False
@@ -1006,6 +1024,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         "connector_path": str(connector_path),
         "validation_results": validation_results,
         "replication_validation": replication_result,
+        "cache_validation": cache_result,
         "auth_scheme_validation": {
             "valid": auth_valid,
             "errors": auth_errors,

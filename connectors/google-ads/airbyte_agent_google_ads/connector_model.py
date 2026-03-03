@@ -29,7 +29,7 @@ from uuid import (
 GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('253487c0-2246-43ba-a21f-5116b20a2c50'),
     name='google-ads',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://googleads.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -1560,8 +1560,6 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'campaign_labels': [
             'campaign.id',
-            'campaign_label.campaign',
-            'campaign_label.label',
             'campaign_label.resource_name',
             'label.id',
             'label.name',
@@ -1569,8 +1567,6 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'ad_group_labels': [
             'ad_group.id',
-            'ad_group_label.ad_group',
-            'ad_group_label.label',
             'ad_group_label.resource_name',
             'label.id',
             'label.name',
@@ -1578,8 +1574,6 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'ad_group_ad_labels': [
             'ad_group_ad.ad.id',
-            'ad_group_ad_label.ad_group_ad',
-            'ad_group_ad_label.label',
             'ad_group_ad_label.resource_name',
             'label.id',
             'label.name',

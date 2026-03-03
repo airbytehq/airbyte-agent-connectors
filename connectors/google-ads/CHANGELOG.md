@@ -1,5 +1,10 @@
 # Google Ads changelog
 
+## [0.1.7] - 2026-03-03
+- Updated connector definition (YAML version 1.0.3)
+- Source commit: b90b5edf
+- SDK version: 0.1.0
+
 ## [0.1.6] - 2026-03-03
 - Updated connector definition (YAML version 1.0.2)
 - Source commit: 258f32e0

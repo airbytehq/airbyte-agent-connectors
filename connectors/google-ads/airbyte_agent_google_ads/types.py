@@ -1534,10 +1534,6 @@ class CampaignLabelsSearchFilter(TypedDict, total=False):
     """Available fields for filtering campaign_labels search queries."""
     campaign_id: int | None
     """Campaign ID"""
-    campaign_label_campaign: str | None
-    """Campaign resource name"""
-    campaign_label_label: str | None
-    """Label resource name"""
     campaign_label_resource_name: str | None
     """Resource name of the campaign label"""
     label_id: int | None
@@ -1552,10 +1548,6 @@ class CampaignLabelsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     campaign_id: list[int]
     """Campaign ID"""
-    campaign_label_campaign: list[str]
-    """Campaign resource name"""
-    campaign_label_label: list[str]
-    """Label resource name"""
     campaign_label_resource_name: list[str]
     """Resource name of the campaign label"""
     label_id: list[int]
@@ -1570,10 +1562,6 @@ class CampaignLabelsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     campaign_id: Any
     """Campaign ID"""
-    campaign_label_campaign: Any
-    """Campaign resource name"""
-    campaign_label_label: Any
-    """Label resource name"""
     campaign_label_resource_name: Any
     """Resource name of the campaign label"""
     label_id: Any
@@ -1588,10 +1576,6 @@ class CampaignLabelsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     campaign_id: str
     """Campaign ID"""
-    campaign_label_campaign: str
-    """Campaign resource name"""
-    campaign_label_label: str
-    """Label resource name"""
     campaign_label_resource_name: str
     """Resource name of the campaign label"""
     label_id: str
@@ -1606,10 +1590,6 @@ class CampaignLabelsSortFilter(TypedDict, total=False):
     """Available fields for sorting campaign_labels search results."""
     campaign_id: AirbyteSortOrder
     """Campaign ID"""
-    campaign_label_campaign: AirbyteSortOrder
-    """Campaign resource name"""
-    campaign_label_label: AirbyteSortOrder
-    """Label resource name"""
     campaign_label_resource_name: AirbyteSortOrder
     """Resource name of the campaign label"""
     label_id: AirbyteSortOrder
@@ -1719,10 +1699,6 @@ class AdGroupLabelsSearchFilter(TypedDict, total=False):
     """Available fields for filtering ad_group_labels search queries."""
     ad_group_id: int | None
     """Ad group ID"""
-    ad_group_label_ad_group: str | None
-    """Ad group resource name"""
-    ad_group_label_label: str | None
-    """Label resource name"""
     ad_group_label_resource_name: str | None
     """Resource name of the ad group label"""
     label_id: int | None
@@ -1737,10 +1713,6 @@ class AdGroupLabelsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     ad_group_id: list[int]
     """Ad group ID"""
-    ad_group_label_ad_group: list[str]
-    """Ad group resource name"""
-    ad_group_label_label: list[str]
-    """Label resource name"""
     ad_group_label_resource_name: list[str]
     """Resource name of the ad group label"""
     label_id: list[int]
@@ -1755,10 +1727,6 @@ class AdGroupLabelsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     ad_group_id: Any
     """Ad group ID"""
-    ad_group_label_ad_group: Any
-    """Ad group resource name"""
-    ad_group_label_label: Any
-    """Label resource name"""
     ad_group_label_resource_name: Any
     """Resource name of the ad group label"""
     label_id: Any
@@ -1773,10 +1741,6 @@ class AdGroupLabelsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     ad_group_id: str
     """Ad group ID"""
-    ad_group_label_ad_group: str
-    """Ad group resource name"""
-    ad_group_label_label: str
-    """Label resource name"""
     ad_group_label_resource_name: str
     """Resource name of the ad group label"""
     label_id: str
@@ -1791,10 +1755,6 @@ class AdGroupLabelsSortFilter(TypedDict, total=False):
     """Available fields for sorting ad_group_labels search results."""
     ad_group_id: AirbyteSortOrder
     """Ad group ID"""
-    ad_group_label_ad_group: AirbyteSortOrder
-    """Ad group resource name"""
-    ad_group_label_label: AirbyteSortOrder
-    """Label resource name"""
     ad_group_label_resource_name: AirbyteSortOrder
     """Resource name of the ad group label"""
     label_id: AirbyteSortOrder
@@ -1904,10 +1864,6 @@ class AdGroupAdLabelsSearchFilter(TypedDict, total=False):
     """Available fields for filtering ad_group_ad_labels search queries."""
     ad_group_ad_ad_id: int | None
     """Ad ID"""
-    ad_group_ad_label_ad_group_ad: str | None
-    """Ad group ad resource name"""
-    ad_group_ad_label_label: str | None
-    """Label resource name"""
     ad_group_ad_label_resource_name: str | None
     """Resource name of the ad group ad label"""
     label_id: int | None
@@ -1922,10 +1878,6 @@ class AdGroupAdLabelsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     ad_group_ad_ad_id: list[int]
     """Ad ID"""
-    ad_group_ad_label_ad_group_ad: list[str]
-    """Ad group ad resource name"""
-    ad_group_ad_label_label: list[str]
-    """Label resource name"""
     ad_group_ad_label_resource_name: list[str]
     """Resource name of the ad group ad label"""
     label_id: list[int]
@@ -1940,10 +1892,6 @@ class AdGroupAdLabelsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     ad_group_ad_ad_id: Any
     """Ad ID"""
-    ad_group_ad_label_ad_group_ad: Any
-    """Ad group ad resource name"""
-    ad_group_ad_label_label: Any
-    """Label resource name"""
     ad_group_ad_label_resource_name: Any
     """Resource name of the ad group ad label"""
     label_id: Any
@@ -1958,10 +1906,6 @@ class AdGroupAdLabelsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     ad_group_ad_ad_id: str
     """Ad ID"""
-    ad_group_ad_label_ad_group_ad: str
-    """Ad group ad resource name"""
-    ad_group_ad_label_label: str
-    """Label resource name"""
     ad_group_ad_label_resource_name: str
     """Resource name of the ad group ad label"""
     label_id: str
@@ -1976,10 +1920,6 @@ class AdGroupAdLabelsSortFilter(TypedDict, total=False):
     """Available fields for sorting ad_group_ad_labels search results."""
     ad_group_ad_ad_id: AirbyteSortOrder
     """Ad ID"""
-    ad_group_ad_label_ad_group_ad: AirbyteSortOrder
-    """Ad group ad resource name"""
-    ad_group_ad_label_label: AirbyteSortOrder
-    """Label resource name"""
     ad_group_ad_label_resource_name: AirbyteSortOrder
     """Resource name of the ad group ad label"""
     label_id: AirbyteSortOrder
