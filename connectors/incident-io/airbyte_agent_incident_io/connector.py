@@ -173,7 +173,7 @@ class IncidentIoConnector:
     """
 
     connector_name = "incident-io"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -924,7 +924,6 @@ class IncidentsQuery:
         Only available in hosted execution mode.
 
         Available filter fields (IncidentsSearchFilter):
-        - call_url: URL of the call associated with the incident
         - created_at: When the incident was created
         - creator: The user who created the incident
         - custom_field_entries: Custom field values for the incident
@@ -2016,7 +2015,6 @@ class CustomFieldsQuery:
         Only available in hosted execution mode.
 
         Available filter fields (CustomFieldsSearchFilter):
-        - catalog_type_id: ID of the catalog type associated with this custom field
         - created_at: When the custom field was created
         - description: Description of the custom field
         - field_type: Type of field
@@ -2274,10 +2272,8 @@ class SchedulesQuery:
         - config: Schedule configuration with rotations
         - created_at: When the schedule was created
         - current_shifts: Currently active shifts
-        - holidays_public_config: Public holiday configuration for the schedule
         - id: Unique identifier for the schedule
         - name: Name of the schedule
-        - team_ids: IDs of teams associated with this schedule
         - timezone: Timezone for the schedule
         - updated_at: When the schedule was last updated
 

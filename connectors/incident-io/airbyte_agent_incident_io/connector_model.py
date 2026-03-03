@@ -26,7 +26,7 @@ from uuid import (
 IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('7926da90-399e-4f9f-9833-52d8dc3fcb29'),
     name='incident-io',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://api.incident.io',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -4033,7 +4033,6 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
     ],
     search_field_paths={
         'incidents': [
-            'call_url',
             'created_at',
             'creator',
             'creator.user',
@@ -4177,7 +4176,6 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
             'updated_at',
         ],
         'custom_fields': [
-            'catalog_type_id',
             'created_at',
             'description',
             'field_type',
@@ -4217,11 +4215,8 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
             'created_at',
             'current_shifts',
             'current_shifts[]',
-            'holidays_public_config',
             'id',
             'name',
-            'team_ids',
-            'team_ids[]',
             'timezone',
             'updated_at',
         ],
