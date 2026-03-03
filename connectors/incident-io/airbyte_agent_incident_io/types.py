@@ -126,8 +126,6 @@ AirbyteSortOrder = Literal["asc", "desc"]
 
 class IncidentsSearchFilter(TypedDict, total=False):
     """Available fields for filtering incidents search queries."""
-    call_url: str | None
-    """URL of the call associated with the incident"""
     created_at: str | None
     """When the incident was created"""
     creator: dict[str, Any] | None
@@ -182,8 +180,6 @@ class IncidentsSearchFilter(TypedDict, total=False):
 
 class IncidentsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    call_url: list[str]
-    """URL of the call associated with the incident"""
     created_at: list[str]
     """When the incident was created"""
     creator: list[dict[str, Any]]
@@ -238,8 +234,6 @@ class IncidentsInFilter(TypedDict, total=False):
 
 class IncidentsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    call_url: Any
-    """URL of the call associated with the incident"""
     created_at: Any
     """When the incident was created"""
     creator: Any
@@ -294,8 +288,6 @@ class IncidentsAnyValueFilter(TypedDict, total=False):
 
 class IncidentsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
-    call_url: str
-    """URL of the call associated with the incident"""
     created_at: str
     """When the incident was created"""
     creator: str
@@ -350,8 +342,6 @@ class IncidentsStringFilter(TypedDict, total=False):
 
 class IncidentsSortFilter(TypedDict, total=False):
     """Available fields for sorting incidents search results."""
-    call_url: AirbyteSortOrder
-    """URL of the call associated with the incident"""
     created_at: AirbyteSortOrder
     """When the incident was created"""
     creator: AirbyteSortOrder
@@ -1806,8 +1796,6 @@ class SeveritiesSearchQuery(TypedDict, total=False):
 
 class CustomFieldsSearchFilter(TypedDict, total=False):
     """Available fields for filtering custom_fields search queries."""
-    catalog_type_id: str | None
-    """ID of the catalog type associated with this custom field"""
     created_at: str | None
     """When the custom field was created"""
     description: str | None
@@ -1824,8 +1812,6 @@ class CustomFieldsSearchFilter(TypedDict, total=False):
 
 class CustomFieldsInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
-    catalog_type_id: list[str]
-    """ID of the catalog type associated with this custom field"""
     created_at: list[str]
     """When the custom field was created"""
     description: list[str]
@@ -1842,8 +1828,6 @@ class CustomFieldsInFilter(TypedDict, total=False):
 
 class CustomFieldsAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
-    catalog_type_id: Any
-    """ID of the catalog type associated with this custom field"""
     created_at: Any
     """When the custom field was created"""
     description: Any
@@ -1860,8 +1844,6 @@ class CustomFieldsAnyValueFilter(TypedDict, total=False):
 
 class CustomFieldsStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
-    catalog_type_id: str
-    """ID of the catalog type associated with this custom field"""
     created_at: str
     """When the custom field was created"""
     description: str
@@ -1878,8 +1860,6 @@ class CustomFieldsStringFilter(TypedDict, total=False):
 
 class CustomFieldsSortFilter(TypedDict, total=False):
     """Available fields for sorting custom_fields search results."""
-    catalog_type_id: AirbyteSortOrder
-    """ID of the catalog type associated with this custom field"""
     created_at: AirbyteSortOrder
     """When the custom field was created"""
     description: AirbyteSortOrder
@@ -2284,14 +2264,10 @@ class SchedulesSearchFilter(TypedDict, total=False):
     """When the schedule was created"""
     current_shifts: list[Any] | None
     """Currently active shifts"""
-    holidays_public_config: dict[str, Any] | None
-    """Public holiday configuration for the schedule"""
     id: str | None
     """Unique identifier for the schedule"""
     name: str | None
     """Name of the schedule"""
-    team_ids: list[Any] | None
-    """IDs of teams associated with this schedule"""
     timezone: str | None
     """Timezone for the schedule"""
     updated_at: str | None
@@ -2308,14 +2284,10 @@ class SchedulesInFilter(TypedDict, total=False):
     """When the schedule was created"""
     current_shifts: list[list[Any]]
     """Currently active shifts"""
-    holidays_public_config: list[dict[str, Any]]
-    """Public holiday configuration for the schedule"""
     id: list[str]
     """Unique identifier for the schedule"""
     name: list[str]
     """Name of the schedule"""
-    team_ids: list[list[Any]]
-    """IDs of teams associated with this schedule"""
     timezone: list[str]
     """Timezone for the schedule"""
     updated_at: list[str]
@@ -2332,14 +2304,10 @@ class SchedulesAnyValueFilter(TypedDict, total=False):
     """When the schedule was created"""
     current_shifts: Any
     """Currently active shifts"""
-    holidays_public_config: Any
-    """Public holiday configuration for the schedule"""
     id: Any
     """Unique identifier for the schedule"""
     name: Any
     """Name of the schedule"""
-    team_ids: Any
-    """IDs of teams associated with this schedule"""
     timezone: Any
     """Timezone for the schedule"""
     updated_at: Any
@@ -2356,14 +2324,10 @@ class SchedulesStringFilter(TypedDict, total=False):
     """When the schedule was created"""
     current_shifts: str
     """Currently active shifts"""
-    holidays_public_config: str
-    """Public holiday configuration for the schedule"""
     id: str
     """Unique identifier for the schedule"""
     name: str
     """Name of the schedule"""
-    team_ids: str
-    """IDs of teams associated with this schedule"""
     timezone: str
     """Timezone for the schedule"""
     updated_at: str
@@ -2380,14 +2344,10 @@ class SchedulesSortFilter(TypedDict, total=False):
     """When the schedule was created"""
     current_shifts: AirbyteSortOrder
     """Currently active shifts"""
-    holidays_public_config: AirbyteSortOrder
-    """Public holiday configuration for the schedule"""
     id: AirbyteSortOrder
     """Unique identifier for the schedule"""
     name: AirbyteSortOrder
     """Name of the schedule"""
-    team_ids: AirbyteSortOrder
-    """IDs of teams associated with this schedule"""
     timezone: AirbyteSortOrder
     """Timezone for the schedule"""
     updated_at: AirbyteSortOrder
