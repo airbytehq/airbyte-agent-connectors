@@ -112,7 +112,7 @@ class OrbConnector:
     """
 
     connector_name = "orb"
-    connector_version = "0.1.4"
+    connector_version = "0.1.5"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -733,10 +733,6 @@ class CustomersQuery:
         - timezone: The timezone setting of the customer
         - shipping_address: The shipping address of the customer
         - billing_address: The billing address of the customer
-        - balance: The current balance of the customer
-        - currency: The currency of the customer
-        - auto_collection: Whether auto collection is enabled
-        - metadata: Additional metadata for the customer
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -871,13 +867,6 @@ class SubscriptionsQuery:
         - start_date: The date and time when the subscription starts
         - end_date: The date and time when the subscription ends
         - status: The current status of the subscription
-        - customer: The customer associated with the subscription
-        - plan: The plan associated with the subscription
-        - current_billing_period_start_date: The start date of the current billing period
-        - current_billing_period_end_date: The end date of the current billing period
-        - auto_collection: Whether auto collection is enabled
-        - net_terms: The net terms for the subscription
-        - metadata: Additional metadata for the subscription
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -1002,12 +991,8 @@ class PlansQuery:
         - created_at: The date and time when the plan was created
         - name: The name of the plan
         - description: A description of the plan
-        - status: The status of the plan
-        - currency: The currency of the plan
         - prices: The pricing options for the plan
         - product: The product associated with the plan
-        - external_plan_id: The external plan ID
-        - metadata: Additional metadata for the plan
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -1167,10 +1152,6 @@ class InvoicesQuery:
         - hosted_invoice_url: The URL to view the hosted invoice
         - line_items: The line items on the invoice
         - subscription: The subscription associated with the invoice
-        - customer: The customer associated with the invoice
-        - currency: The currency of the invoice
-        - invoice_number: The invoice number
-        - metadata: Additional metadata for the invoice
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,

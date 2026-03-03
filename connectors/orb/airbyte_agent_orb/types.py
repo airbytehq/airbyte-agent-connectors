@@ -95,14 +95,6 @@ class CustomersSearchFilter(TypedDict, total=False):
     """The shipping address of the customer"""
     billing_address: dict[str, Any] | None
     """The billing address of the customer"""
-    balance: str | None
-    """The current balance of the customer"""
-    currency: str | None
-    """The currency of the customer"""
-    auto_collection: bool | None
-    """Whether auto collection is enabled"""
-    metadata: dict[str, Any] | None
-    """Additional metadata for the customer"""
 
 
 class CustomersInFilter(TypedDict, total=False):
@@ -127,14 +119,6 @@ class CustomersInFilter(TypedDict, total=False):
     """The shipping address of the customer"""
     billing_address: list[dict[str, Any]]
     """The billing address of the customer"""
-    balance: list[str]
-    """The current balance of the customer"""
-    currency: list[str]
-    """The currency of the customer"""
-    auto_collection: list[bool]
-    """Whether auto collection is enabled"""
-    metadata: list[dict[str, Any]]
-    """Additional metadata for the customer"""
 
 
 class CustomersAnyValueFilter(TypedDict, total=False):
@@ -159,14 +143,6 @@ class CustomersAnyValueFilter(TypedDict, total=False):
     """The shipping address of the customer"""
     billing_address: Any
     """The billing address of the customer"""
-    balance: Any
-    """The current balance of the customer"""
-    currency: Any
-    """The currency of the customer"""
-    auto_collection: Any
-    """Whether auto collection is enabled"""
-    metadata: Any
-    """Additional metadata for the customer"""
 
 
 class CustomersStringFilter(TypedDict, total=False):
@@ -191,14 +167,6 @@ class CustomersStringFilter(TypedDict, total=False):
     """The shipping address of the customer"""
     billing_address: str
     """The billing address of the customer"""
-    balance: str
-    """The current balance of the customer"""
-    currency: str
-    """The currency of the customer"""
-    auto_collection: str
-    """Whether auto collection is enabled"""
-    metadata: str
-    """Additional metadata for the customer"""
 
 
 class CustomersSortFilter(TypedDict, total=False):
@@ -223,14 +191,6 @@ class CustomersSortFilter(TypedDict, total=False):
     """The shipping address of the customer"""
     billing_address: AirbyteSortOrder
     """The billing address of the customer"""
-    balance: AirbyteSortOrder
-    """The current balance of the customer"""
-    currency: AirbyteSortOrder
-    """The currency of the customer"""
-    auto_collection: AirbyteSortOrder
-    """Whether auto collection is enabled"""
-    metadata: AirbyteSortOrder
-    """Additional metadata for the customer"""
 
 
 # Entity-specific condition types for customers
@@ -340,20 +300,6 @@ class SubscriptionsSearchFilter(TypedDict, total=False):
     """The date and time when the subscription ends"""
     status: str | None
     """The current status of the subscription"""
-    customer: dict[str, Any] | None
-    """The customer associated with the subscription"""
-    plan: dict[str, Any] | None
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: str | None
-    """The start date of the current billing period"""
-    current_billing_period_end_date: str | None
-    """The end date of the current billing period"""
-    auto_collection: bool | None
-    """Whether auto collection is enabled"""
-    net_terms: int | None
-    """The net terms for the subscription"""
-    metadata: dict[str, Any] | None
-    """Additional metadata for the subscription"""
 
 
 class SubscriptionsInFilter(TypedDict, total=False):
@@ -368,20 +314,6 @@ class SubscriptionsInFilter(TypedDict, total=False):
     """The date and time when the subscription ends"""
     status: list[str]
     """The current status of the subscription"""
-    customer: list[dict[str, Any]]
-    """The customer associated with the subscription"""
-    plan: list[dict[str, Any]]
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: list[str]
-    """The start date of the current billing period"""
-    current_billing_period_end_date: list[str]
-    """The end date of the current billing period"""
-    auto_collection: list[bool]
-    """Whether auto collection is enabled"""
-    net_terms: list[int]
-    """The net terms for the subscription"""
-    metadata: list[dict[str, Any]]
-    """Additional metadata for the subscription"""
 
 
 class SubscriptionsAnyValueFilter(TypedDict, total=False):
@@ -396,20 +328,6 @@ class SubscriptionsAnyValueFilter(TypedDict, total=False):
     """The date and time when the subscription ends"""
     status: Any
     """The current status of the subscription"""
-    customer: Any
-    """The customer associated with the subscription"""
-    plan: Any
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: Any
-    """The start date of the current billing period"""
-    current_billing_period_end_date: Any
-    """The end date of the current billing period"""
-    auto_collection: Any
-    """Whether auto collection is enabled"""
-    net_terms: Any
-    """The net terms for the subscription"""
-    metadata: Any
-    """Additional metadata for the subscription"""
 
 
 class SubscriptionsStringFilter(TypedDict, total=False):
@@ -424,20 +342,6 @@ class SubscriptionsStringFilter(TypedDict, total=False):
     """The date and time when the subscription ends"""
     status: str
     """The current status of the subscription"""
-    customer: str
-    """The customer associated with the subscription"""
-    plan: str
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: str
-    """The start date of the current billing period"""
-    current_billing_period_end_date: str
-    """The end date of the current billing period"""
-    auto_collection: str
-    """Whether auto collection is enabled"""
-    net_terms: str
-    """The net terms for the subscription"""
-    metadata: str
-    """Additional metadata for the subscription"""
 
 
 class SubscriptionsSortFilter(TypedDict, total=False):
@@ -452,20 +356,6 @@ class SubscriptionsSortFilter(TypedDict, total=False):
     """The date and time when the subscription ends"""
     status: AirbyteSortOrder
     """The current status of the subscription"""
-    customer: AirbyteSortOrder
-    """The customer associated with the subscription"""
-    plan: AirbyteSortOrder
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: AirbyteSortOrder
-    """The start date of the current billing period"""
-    current_billing_period_end_date: AirbyteSortOrder
-    """The end date of the current billing period"""
-    auto_collection: AirbyteSortOrder
-    """Whether auto collection is enabled"""
-    net_terms: AirbyteSortOrder
-    """The net terms for the subscription"""
-    metadata: AirbyteSortOrder
-    """Additional metadata for the subscription"""
 
 
 # Entity-specific condition types for subscriptions
@@ -573,18 +463,10 @@ class PlansSearchFilter(TypedDict, total=False):
     """The name of the plan"""
     description: str | None
     """A description of the plan"""
-    status: str | None
-    """The status of the plan"""
-    currency: str | None
-    """The currency of the plan"""
     prices: list[Any] | None
     """The pricing options for the plan"""
     product: dict[str, Any] | None
     """The product associated with the plan"""
-    external_plan_id: str | None
-    """The external plan ID"""
-    metadata: dict[str, Any] | None
-    """Additional metadata for the plan"""
 
 
 class PlansInFilter(TypedDict, total=False):
@@ -597,18 +479,10 @@ class PlansInFilter(TypedDict, total=False):
     """The name of the plan"""
     description: list[str]
     """A description of the plan"""
-    status: list[str]
-    """The status of the plan"""
-    currency: list[str]
-    """The currency of the plan"""
     prices: list[list[Any]]
     """The pricing options for the plan"""
     product: list[dict[str, Any]]
     """The product associated with the plan"""
-    external_plan_id: list[str]
-    """The external plan ID"""
-    metadata: list[dict[str, Any]]
-    """Additional metadata for the plan"""
 
 
 class PlansAnyValueFilter(TypedDict, total=False):
@@ -621,18 +495,10 @@ class PlansAnyValueFilter(TypedDict, total=False):
     """The name of the plan"""
     description: Any
     """A description of the plan"""
-    status: Any
-    """The status of the plan"""
-    currency: Any
-    """The currency of the plan"""
     prices: Any
     """The pricing options for the plan"""
     product: Any
     """The product associated with the plan"""
-    external_plan_id: Any
-    """The external plan ID"""
-    metadata: Any
-    """Additional metadata for the plan"""
 
 
 class PlansStringFilter(TypedDict, total=False):
@@ -645,18 +511,10 @@ class PlansStringFilter(TypedDict, total=False):
     """The name of the plan"""
     description: str
     """A description of the plan"""
-    status: str
-    """The status of the plan"""
-    currency: str
-    """The currency of the plan"""
     prices: str
     """The pricing options for the plan"""
     product: str
     """The product associated with the plan"""
-    external_plan_id: str
-    """The external plan ID"""
-    metadata: str
-    """Additional metadata for the plan"""
 
 
 class PlansSortFilter(TypedDict, total=False):
@@ -669,18 +527,10 @@ class PlansSortFilter(TypedDict, total=False):
     """The name of the plan"""
     description: AirbyteSortOrder
     """A description of the plan"""
-    status: AirbyteSortOrder
-    """The status of the plan"""
-    currency: AirbyteSortOrder
-    """The currency of the plan"""
     prices: AirbyteSortOrder
     """The pricing options for the plan"""
     product: AirbyteSortOrder
     """The product associated with the plan"""
-    external_plan_id: AirbyteSortOrder
-    """The external plan ID"""
-    metadata: AirbyteSortOrder
-    """Additional metadata for the plan"""
 
 
 # Entity-specific condition types for plans
@@ -810,14 +660,6 @@ class InvoicesSearchFilter(TypedDict, total=False):
     """The line items on the invoice"""
     subscription: dict[str, Any] | None
     """The subscription associated with the invoice"""
-    customer: dict[str, Any] | None
-    """The customer associated with the invoice"""
-    currency: str | None
-    """The currency of the invoice"""
-    invoice_number: str | None
-    """The invoice number"""
-    metadata: dict[str, Any] | None
-    """Additional metadata for the invoice"""
 
 
 class InvoicesInFilter(TypedDict, total=False):
@@ -852,14 +694,6 @@ class InvoicesInFilter(TypedDict, total=False):
     """The line items on the invoice"""
     subscription: list[dict[str, Any]]
     """The subscription associated with the invoice"""
-    customer: list[dict[str, Any]]
-    """The customer associated with the invoice"""
-    currency: list[str]
-    """The currency of the invoice"""
-    invoice_number: list[str]
-    """The invoice number"""
-    metadata: list[dict[str, Any]]
-    """Additional metadata for the invoice"""
 
 
 class InvoicesAnyValueFilter(TypedDict, total=False):
@@ -894,14 +728,6 @@ class InvoicesAnyValueFilter(TypedDict, total=False):
     """The line items on the invoice"""
     subscription: Any
     """The subscription associated with the invoice"""
-    customer: Any
-    """The customer associated with the invoice"""
-    currency: Any
-    """The currency of the invoice"""
-    invoice_number: Any
-    """The invoice number"""
-    metadata: Any
-    """Additional metadata for the invoice"""
 
 
 class InvoicesStringFilter(TypedDict, total=False):
@@ -936,14 +762,6 @@ class InvoicesStringFilter(TypedDict, total=False):
     """The line items on the invoice"""
     subscription: str
     """The subscription associated with the invoice"""
-    customer: str
-    """The customer associated with the invoice"""
-    currency: str
-    """The currency of the invoice"""
-    invoice_number: str
-    """The invoice number"""
-    metadata: str
-    """Additional metadata for the invoice"""
 
 
 class InvoicesSortFilter(TypedDict, total=False):
@@ -978,14 +796,6 @@ class InvoicesSortFilter(TypedDict, total=False):
     """The line items on the invoice"""
     subscription: AirbyteSortOrder
     """The subscription associated with the invoice"""
-    customer: AirbyteSortOrder
-    """The customer associated with the invoice"""
-    currency: AirbyteSortOrder
-    """The currency of the invoice"""
-    invoice_number: AirbyteSortOrder
-    """The invoice number"""
-    metadata: AirbyteSortOrder
-    """Additional metadata for the invoice"""
 
 
 # Entity-specific condition types for invoices

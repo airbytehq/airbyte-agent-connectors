@@ -136,6 +136,15 @@ class SubscriptionsList(BaseModel):
     data: Union[list[Subscription], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
+class PlanProduct(BaseModel):
+    """The product associated with the plan"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The product ID")
+    """The product ID"""
+    name: Union[str | None, Any] = Field(default=None, description="The product name")
+    """The product name"""
+
 class PlanPricesItem(BaseModel):
     """Nested schema for Plan.prices_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -150,15 +159,6 @@ class PlanPricesItem(BaseModel):
     """The model type of the price"""
     currency: Union[str | None, Any] = Field(default=None, description="The currency of the price")
     """The currency of the price"""
-
-class PlanProduct(BaseModel):
-    """The product associated with the plan"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The product ID")
-    """The product ID"""
-    name: Union[str | None, Any] = Field(default=None, description="The product name")
-    """The product name"""
 
 class Plan(BaseModel):
     """Plan object"""
@@ -190,6 +190,15 @@ class PlansList(BaseModel):
     data: Union[list[Plan], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
+class InvoiceCustomer(BaseModel):
+    """The customer associated with the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
+    """The customer ID"""
+    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
+    """The external customer ID"""
+
 class InvoiceLineItemsItem(BaseModel):
     """Nested schema for Invoice.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -213,15 +222,6 @@ class InvoiceSubscription(BaseModel):
 
     id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
     """The subscription ID"""
-
-class InvoiceCustomer(BaseModel):
-    """The customer associated with the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
-    """The customer ID"""
-    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
-    """The external customer ID"""
 
 class Invoice(BaseModel):
     """Invoice object"""
@@ -371,14 +371,6 @@ class CustomersSearchData(BaseModel):
     """The shipping address of the customer"""
     billing_address: dict[str, Any] | None = None
     """The billing address of the customer"""
-    balance: str | None = None
-    """The current balance of the customer"""
-    currency: str | None = None
-    """The currency of the customer"""
-    auto_collection: bool | None = None
-    """Whether auto collection is enabled"""
-    metadata: dict[str, Any] | None = None
-    """Additional metadata for the customer"""
 
 
 class SubscriptionsSearchData(BaseModel):
@@ -395,20 +387,6 @@ class SubscriptionsSearchData(BaseModel):
     """The date and time when the subscription ends"""
     status: str | None = None
     """The current status of the subscription"""
-    customer: dict[str, Any] | None = None
-    """The customer associated with the subscription"""
-    plan: dict[str, Any] | None = None
-    """The plan associated with the subscription"""
-    current_billing_period_start_date: str | None = None
-    """The start date of the current billing period"""
-    current_billing_period_end_date: str | None = None
-    """The end date of the current billing period"""
-    auto_collection: bool | None = None
-    """Whether auto collection is enabled"""
-    net_terms: int | None = None
-    """The net terms for the subscription"""
-    metadata: dict[str, Any] | None = None
-    """Additional metadata for the subscription"""
 
 
 class PlansSearchData(BaseModel):
@@ -423,18 +401,10 @@ class PlansSearchData(BaseModel):
     """The name of the plan"""
     description: str | None = None
     """A description of the plan"""
-    status: str | None = None
-    """The status of the plan"""
-    currency: str | None = None
-    """The currency of the plan"""
     prices: list[Any] | None = None
     """The pricing options for the plan"""
     product: dict[str, Any] | None = None
     """The product associated with the plan"""
-    external_plan_id: str | None = None
-    """The external plan ID"""
-    metadata: dict[str, Any] | None = None
-    """Additional metadata for the plan"""
 
 
 class InvoicesSearchData(BaseModel):
@@ -471,14 +441,6 @@ class InvoicesSearchData(BaseModel):
     """The line items on the invoice"""
     subscription: dict[str, Any] | None = None
     """The subscription associated with the invoice"""
-    customer: dict[str, Any] | None = None
-    """The customer associated with the invoice"""
-    currency: str | None = None
-    """The currency of the invoice"""
-    invoice_number: str | None = None
-    """The invoice number"""
-    metadata: dict[str, Any] | None = None
-    """Additional metadata for the invoice"""
 
 
 # ===== GENERIC SEARCH RESULT TYPES =====
