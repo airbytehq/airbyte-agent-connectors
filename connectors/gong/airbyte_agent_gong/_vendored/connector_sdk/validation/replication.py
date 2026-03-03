@@ -13,6 +13,7 @@ import httpx
 import yaml
 from packaging.version import InvalidVersion, Version
 
+from .manifest import fetch_manifest_resolved
 from .models import ValidationResult
 
 REGISTRY_URL = "https://connectors.airbyte.com/files/metadata/airbyte/source-{name}/latest/cloud.json"
@@ -848,40 +849,11 @@ def _extract_skip_auth_methods_from_connector_def(connector_def: dict[str, Any])
 # AUTH METHOD VALIDATION
 # ============================================
 
-MANIFEST_URL = "https://raw.githubusercontent.com/airbytehq/airbyte/refs/heads/master/airbyte-integrations/connectors/source-{name}/manifest.yaml"
-
-
-def _resolve_manifest_refs(obj: Any, root: dict[str, Any]) -> Any:
-    """Recursively resolve $ref and string references in a manifest.
-
-    Handles both:
-    - Dict refs: {"$ref": "#/definitions/foo"}
-    - String refs: "#/definitions/foo"
-    """
-    if isinstance(obj, dict):
-        if "$ref" in obj and len(obj) == 1:
-            ref_path = obj["$ref"]
-            if ref_path.startswith("#/"):
-                parts = ref_path[2:].split("/")
-                resolved = root
-                for part in parts:
-                    resolved = resolved.get(part, {})
-                return _resolve_manifest_refs(resolved, root)
-            return obj
-        return {k: _resolve_manifest_refs(v, root) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [_resolve_manifest_refs(item, root) for item in obj]
-    elif isinstance(obj, str) and obj.startswith("#/definitions/"):
-        parts = obj[2:].split("/")
-        resolved = root
-        for part in parts:
-            resolved = resolved.get(part, {})
-        return _resolve_manifest_refs(resolved, root)
-    return obj
-
-
 def fetch_airbyte_manifest(connector_name: str) -> dict[str, Any] | None:
     """Fetch connector manifest from Airbyte GitHub repo.
+
+    Delegates to :func:`connector_sdk.validation.manifest.fetch_manifest_resolved`
+    which tries multiple URL patterns and recursively resolves all ``$ref`` references.
 
     Args:
         connector_name: Name like "gong" or "hubspot"
@@ -889,18 +861,7 @@ def fetch_airbyte_manifest(connector_name: str) -> dict[str, Any] | None:
     Returns:
         Parsed manifest dict with refs resolved, or None if not found
     """
-    name = connector_name.lower().replace("_", "-").replace(" ", "-")
-    url = MANIFEST_URL.format(name=name)
-
-    try:
-        response = httpx.get(url, timeout=15.0)
-        if response.status_code == 200:
-            manifest = yaml.safe_load(response.text)
-            # Resolve all refs
-            return _resolve_manifest_refs(manifest, manifest)
-    except (httpx.HTTPError, ValueError, yaml.YAMLError):
-        pass
-    return None
+    return fetch_manifest_resolved(connector_name)
 
 
 def _normalize_auth_type(auth_type: str) -> str:
