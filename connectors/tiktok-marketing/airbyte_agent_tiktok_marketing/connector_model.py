@@ -29,7 +29,7 @@ from uuid import (
 TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('4bfac00d-ce15-44ff-95b9-9e3c3e8fbd35'),
     name='tiktok-marketing',
-    version='1.1.2',
+    version='1.1.3',
     base_url='https://business-api.tiktok.com/open_api/v1.3',
     auth=AuthConfig(
         type=AuthType.API_KEY,
