@@ -3,9 +3,11 @@
 This module provides validation for connector definitions, including:
 - Readiness validation (cassettes, schemas, auth coverage)
 - Replication compatibility validation (Airbyte registry mappings)
+- Cache schema validation (x-airbyte-cache vs manifest)
 - Connector overview (structured status reporting)
 """
 
+from .cache import validate_cache_against_manifest
 from .models import ValidationResult
 from .overview import (
     compute_golden_questions_hash,
@@ -22,6 +24,7 @@ from .replication import (
 )
 
 __all__ = [
+    "validate_cache_against_manifest",
     "ValidationResult",
     "compute_golden_questions_hash",
     "fetch_airbyte_manifest",

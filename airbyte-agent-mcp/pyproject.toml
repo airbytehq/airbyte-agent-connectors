@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-mcp"
-version = "0.1.153"
+version = "0.1.154"
 description = "MCP server for Airbyte connectors - connect AI assistants to 500+ data sources"
 readme = "README.md"
 license = { text = "MIT" }
