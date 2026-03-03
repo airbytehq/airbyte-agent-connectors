@@ -17,13 +17,13 @@ This project provides an MCP server that exposes [Airbyte](https://airbyte.com/)
 1. **List available connectors**:
 
 ```bash
-uv run adp connectors list-oss
+uv run agent-engine connectors list-oss
 ```
 
 2. **Generate a connector configuration** (e.g., Gong):
 
 ```bash
-uv run adp connectors configure --package airbyte-agent-gong
+uv run agent-engine connectors configure --package airbyte-agent-gong
 ```
 
 3. **Set your connector credentials** in `.env`:
@@ -37,16 +37,16 @@ GONG_ACCESS_KEY_SECRET=your-secret
 
 ```bash
 # Claude Code
-uv run adp mcp add-to claude-code connector-gong-package.yaml
+uv run agent-engine mcp add-to claude-code connector-gong-package.yaml
 
 # Claude Desktop
-uv run adp mcp add-to claude-desktop connector-gong-package.yaml
+uv run agent-engine mcp add-to claude-desktop connector-gong-package.yaml
 
 # Cursor
-uv run adp mcp add-to cursor connector-gong-package.yaml
+uv run agent-engine mcp add-to cursor connector-gong-package.yaml
 
 # OpenAI Codex
-uv run adp mcp add-to codex connector-gong-package.yaml
+uv run agent-engine mcp add-to codex connector-gong-package.yaml
 ```
 
 5. **Restart your AI tool** and start asking questions like "List all users from Gong" or "Search for calls from last week".
@@ -82,7 +82,7 @@ credentials:
 
 Credentials use `${env.VAR_NAME}` syntax and are resolved from `.env` files, which the CLI loads automatically.
 
-You can also point the connector to a local path or a git repository — run `uv run adp connectors configure --help` for all options.
+You can also point the connector to a local path or a git repository — run `uv run agent-engine connectors configure --help` for all options.
 
 ### Aggregate Config (Multiple Connectors)
 
@@ -97,14 +97,14 @@ configs:
 
 ## CLI Commands
 
-All commands are run with `uv run adp <command>`. Use `--help` on any command for full options.
+All commands are run with `uv run agent-engine <command>`. Use `--help` on any command for full options.
 
 ### Login
 
 Save your Airbyte Cloud credentials so they are available to all commands without a local `.env` file:
 
 ```bash
-uv run adp login <organization-id>
+uv run agent-engine login <organization-id>
 ```
 
 This prints a link to the Airbyte authentication page for your organization where you can find your Client ID and Secret, then prompts for both values. Credentials are written to `~/.airbyte_agent_mcp/orgs/<organization-id>/.env` and the organization is set as the default.
@@ -112,44 +112,44 @@ This prints a link to the Airbyte authentication page for your organization wher
 You can log into multiple organizations and switch between them:
 
 ```bash
-uv run adp orgs list              # List logged-in organizations
-uv run adp orgs default org-xyz   # Switch default organization
-uv run adp --org org-abc <cmd>    # Override for a single command
+uv run agent-engine orgs list              # List logged-in organizations
+uv run agent-engine orgs default org-xyz   # Switch default organization
+uv run agent-engine --org org-abc <cmd>    # Override for a single command
 ```
 
 ### Connectors
 
 ```bash
 # List available connectors
-uv run adp connectors list-oss
-uv run adp connectors list-oss --pattern salesforce
+uv run agent-engine connectors list-oss
+uv run agent-engine connectors list-oss --pattern salesforce
 
 # List cloud connectors
-uv run adp connectors list-cloud
-uv run adp connectors list-cloud --customer acme
+uv run agent-engine connectors list-cloud
+uv run agent-engine connectors list-cloud --customer acme
 
 # Generate a connector configuration
-uv run adp connectors configure --package airbyte-agent-gong
-uv run adp connectors configure --connector-id <id>
+uv run agent-engine connectors configure --package airbyte-agent-gong
+uv run agent-engine connectors configure --connector-id <id>
 ```
 
 ### MCP Server
 
 ```bash
 # Start with stdio transport (default)
-uv run adp mcp serve connector-gong-package.yaml
+uv run agent-engine mcp serve connector-gong-package.yaml
 
 # Start with an aggregate config (multiple connectors)
-uv run adp mcp serve connectors.yaml
+uv run agent-engine mcp serve connectors.yaml
 
 # Start with HTTP transport
-uv run adp mcp serve connector-gong-package.yaml --transport http --port 8080
+uv run agent-engine mcp serve connector-gong-package.yaml --transport http --port 8080
 
 # Register with an AI tool
-uv run adp mcp add-to claude-code connector-gong-package.yaml
+uv run agent-engine mcp add-to claude-code connector-gong-package.yaml
 
 # Register aggregate config with an AI tool
-uv run adp mcp add-to codex connectors.yaml
+uv run agent-engine mcp add-to codex connectors.yaml
 ```
 
 ### Chat
@@ -158,13 +158,13 @@ Chat with your connector data using natural language, powered by Claude. Require
 
 ```bash
 # One-shot mode (great for piping)
-uv run adp chat connector-gong-package.yaml "show me 5 users"
+uv run agent-engine chat connector-gong-package.yaml "show me 5 users"
 
 # Chat with an aggregate config
-uv run adp chat connectors.yaml "show me 5 users from each system"
+uv run agent-engine chat connectors.yaml "show me 5 users from each system"
 
 # Interactive REPL
-uv run adp chat connector-gong-package.yaml
+uv run agent-engine chat connector-gong-package.yaml
 ```
 
 ## Development
