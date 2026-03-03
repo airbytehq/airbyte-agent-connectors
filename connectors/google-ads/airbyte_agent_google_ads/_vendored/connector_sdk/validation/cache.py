@@ -8,131 +8,42 @@ and that cache field names exist as properties in the manifest stream schema.
 from pathlib import Path
 from typing import Any
 
-import httpx
 import yaml
 
-# URL patterns for low-code connector manifests on GitHub.
-# Connectors may store their manifest at different paths.
-_MANIFEST_URL_PATTERNS = [
-    "https://raw.githubusercontent.com/airbytehq/airbyte/refs/heads/master/airbyte-integrations/connectors/source-{name}/source_{name_underscore}/manifest.yaml",
-    "https://raw.githubusercontent.com/airbytehq/airbyte/refs/heads/master/airbyte-integrations/connectors/source-{name}/manifest.yaml",
-]
+from .manifest import fetch_manifest_resolved
 
 
-def _fetch_manifest(connector_name: str) -> dict[str, Any] | None:
-    """Fetch low-code manifest from GitHub.
-
-    Tries multiple URL patterns since connectors may have different directory structures.
-
-    Args:
-        connector_name: Name of the connector (e.g., "gong", "hubspot")
-
-    Returns:
-        Parsed manifest dict, or None if not found
-    """
-    name = connector_name.lower().replace(" ", "-")
-    name_underscore = name.replace("-", "_")
-
-    for pattern in _MANIFEST_URL_PATTERNS:
-        url = pattern.format(name=name, name_underscore=name_underscore)
-        try:
-            response = httpx.get(url, timeout=15.0)
-            if response.status_code == 200:
-                return yaml.safe_load(response.text)
-        except (httpx.HTTPError, yaml.YAMLError):
-            continue
-
-    return None
-
-
-def _resolve_reference(ref: str, definitions: dict[str, Any]) -> dict[str, Any]:
-    """Resolve a ``#/definitions/...`` reference.
-
-    Supports nested paths like ``#/definitions/streams/users``.
-    """
-    if ref.startswith("#/definitions/"):
-        path = ref[len("#/definitions/") :]
-        parts = path.split("/")
-        current: Any = definitions
-        for part in parts:
-            if isinstance(current, dict) and part in current:
-                current = current[part]
-            else:
-                return {}
-        return current if isinstance(current, dict) else {}
-    return {}
-
-
-def _resolve_stream_schema(
-    stream: dict[str, Any],
-    definitions: dict[str, Any],
-    schemas: dict[str, Any] | None = None,
-) -> dict[str, Any]:
-    """Extract the JSON schema from a stream definition.
-
-    Handles InlineSchemaLoader with inline schemas, ``$ref`` to definitions,
-    and ``#/schemas/name`` top-level references.
-    """
-    schemas = schemas or {}
+def _extract_stream_schema(stream: dict[str, Any]) -> dict[str, Any]:
+    """Extract the JSON schema from a fully-resolved stream definition."""
     schema_loader = stream.get("schema_loader", {})
 
     if not isinstance(schema_loader, dict):
         return {}
 
-    if "$ref" in schema_loader:
-        resolved = _resolve_reference(schema_loader["$ref"], definitions)
-        schema_loader = resolved if resolved else schema_loader
-
     if schema_loader.get("type") == "InlineSchemaLoader":
         schema = schema_loader.get("schema", {})
-        if "$ref" in schema:
-            ref = schema["$ref"]
-            if ref.startswith("#/schemas/"):
-                return schemas.get(ref[len("#/schemas/") :], {})
-            return _resolve_reference(ref, definitions)
-        return schema
+        return schema if isinstance(schema, dict) else {}
 
     if "schema" in schema_loader:
         schema = schema_loader["schema"]
-        if "$ref" in schema:
-            ref = schema["$ref"]
-            if ref.startswith("#/schemas/"):
-                return schemas.get(ref[len("#/schemas/") :], {})
-            return _resolve_reference(ref, definitions)
-        return schema
+        return schema if isinstance(schema, dict) else {}
 
     return {}
 
 
 def _extract_manifest_streams(manifest: dict[str, Any]) -> dict[str, set[str]]:
-    """Extract stream names and their schema property keys from a manifest.
-
-    Handles both stream reference formats found in Airbyte manifests:
-    - String refs: ``"#/definitions/users_stream"``
-    - Dict refs: ``{"$ref": "#/definitions/streams/users"}``
+    """Extract stream names and their schema property keys from a resolved manifest.
 
     Args:
-        manifest: Parsed manifest dict
+        manifest: Fully-resolved manifest dict (all ``$ref`` already expanded)
 
     Returns:
         Dict mapping stream name to the set of property keys from its schema.
         Streams with empty/missing schemas map to an empty set.
     """
-    definitions = manifest.get("definitions", {})
-    top_schemas = manifest.get("schemas", {})
     result: dict[str, set[str]] = {}
 
-    for stream_entry in manifest.get("streams", []):
-        if isinstance(stream_entry, str):
-            stream = _resolve_reference(stream_entry, definitions)
-        elif isinstance(stream_entry, dict) and "$ref" in stream_entry:
-            resolved = _resolve_reference(stream_entry["$ref"], definitions)
-            stream = {**resolved, **{k: v for k, v in stream_entry.items() if k != "$ref"}}
-        elif isinstance(stream_entry, dict):
-            stream = stream_entry
-        else:
-            continue
-
+    for stream in manifest.get("streams", []):
         if not isinstance(stream, dict):
             continue
 
@@ -140,7 +51,7 @@ def _extract_manifest_streams(manifest: dict[str, Any]) -> dict[str, set[str]]:
         if not name:
             continue
 
-        schema = _resolve_stream_schema(stream, definitions, top_schemas)
+        schema = _extract_stream_schema(stream)
         result[name] = set(schema.get("properties", {}).keys())
 
     return result
@@ -197,7 +108,7 @@ def validate_cache_against_manifest(
             "manifest_streams": [],
         }
 
-    manifest = _fetch_manifest(connector_name)
+    manifest = fetch_manifest_resolved(connector_name)
     if manifest is None:
         return {
             "errors": [],
