@@ -88,7 +88,7 @@ def _uv_serve_args(config: Path) -> list[str]:
     """Build the uv command args to run the MCP server."""
     config_absolute = config.resolve()
     config_dir = str(config_absolute.parent)
-    return ["uv", "--directory", config_dir, "run", "adp", "mcp", "serve", str(config_absolute)]
+    return ["uv", "--directory", config_dir, "run", "agent-engine", "mcp", "serve", str(config_absolute)]
 
 
 def _add_to_json_config(
@@ -164,9 +164,9 @@ def claude_code(
     Uses the 'claude mcp add' command to register the server.
 
     Examples:
-        adp mcp add-to claude-code connector-config-gong.yaml
-        adp mcp add-to claude-code connector-config-gong.yaml --name my-gong-server
-        adp mcp add-to claude-code connector-config-gong.yaml --scope project
+        agent-engine mcp add-to claude-code connector-config-gong.yaml
+        agent-engine mcp add-to claude-code connector-config-gong.yaml --name my-gong-server
+        agent-engine mcp add-to claude-code connector-config-gong.yaml --scope project
     """
     console = Console(stderr=True)
 
@@ -214,8 +214,8 @@ def codex(
     Uses the 'codex mcp add' command to register the server.
 
     Examples:
-        adp mcp add-to codex connector-config-gong.yaml
-        adp mcp add-to codex connector-config-gong.yaml --name my-gong-server
+        agent-engine mcp add-to codex connector-config-gong.yaml
+        agent-engine mcp add-to codex connector-config-gong.yaml --name my-gong-server
     """
     console = Console(stderr=True)
 
@@ -257,8 +257,8 @@ def claude_desktop(
     Modifies the Claude Desktop configuration file directly.
 
     Examples:
-        adp mcp add-to claude-desktop connector-config-gong.yaml
-        adp mcp add-to claude-desktop connector-config-gong.yaml --name my-gong-server
+        agent-engine mcp add-to claude-desktop connector-config-gong.yaml
+        agent-engine mcp add-to claude-desktop connector-config-gong.yaml --name my-gong-server
     """
     console = Console(stderr=True)
     server_name = _resolve_server_name(config, name, console)
@@ -291,9 +291,9 @@ def cursor(
     Modifies the Cursor MCP configuration file directly.
 
     Examples:
-        adp mcp add-to cursor connector-config-gong.yaml
-        adp mcp add-to cursor connector-config-gong.yaml --name my-gong-server
-        adp mcp add-to cursor connector-config-gong.yaml --scope project
+        agent-engine mcp add-to cursor connector-config-gong.yaml
+        agent-engine mcp add-to cursor connector-config-gong.yaml --name my-gong-server
+        agent-engine mcp add-to cursor connector-config-gong.yaml --scope project
     """
     console = Console(stderr=True)
     server_name = _resolve_server_name(config, name, console)

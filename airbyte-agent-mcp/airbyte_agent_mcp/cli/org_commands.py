@@ -19,12 +19,12 @@ def orgs_list() -> None:
     orgs_dir = config_dir / "orgs"
 
     if not orgs_dir.exists():
-        console.print("No organizations logged in. Run [bold]adp login <org-id>[/bold] to get started.")
+        console.print("No organizations logged in. Run [bold]agent-engine login <org-id>[/bold] to get started.")
         return
 
     org_ids = sorted(d.name for d in orgs_dir.iterdir() if d.is_dir() and (d / ".env").exists())
     if not org_ids:
-        console.print("No organizations logged in. Run [bold]adp login <org-id>[/bold] to get started.")
+        console.print("No organizations logged in. Run [bold]agent-engine login <org-id>[/bold] to get started.")
         return
 
     config = Config.load()
@@ -56,13 +56,13 @@ def orgs_default(
         if config.default_organization_id:
             console.print(f"Default organization: [bold]{config.default_organization_id}[/bold]")
         else:
-            console.print("No default organization set. Run [bold]adp login <org-id>[/bold] to set one.")
+            console.print("No default organization set. Run [bold]agent-engine login <org-id>[/bold] to set one.")
         return
 
     config_dir = get_config_dir()
     org_env = config_dir / "orgs" / org_id / ".env"
     if not org_env.exists():
-        console.print(f"[red]Organization {org_id} not found. Run [bold]adp login {org_id}[/bold] first.[/red]")
+        console.print(f"[red]Organization {org_id} not found. Run [bold]agent-engine login {org_id}[/bold] first.[/red]")
         raise typer.Exit(code=1)
 
     config.default_organization_id = org_id

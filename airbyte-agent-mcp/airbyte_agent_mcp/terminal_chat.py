@@ -107,7 +107,7 @@ async def run_ask(connectors: list[Any], mcp: FastMCP, prompt: str, *, model: st
     """Run a single prompt against the connector and stream the response.
 
     Tool call progress is rendered to stderr via Rich so that piping
-    ``adp chat <config> "question" > out.md`` captures only the final answer.
+    ``agent-engine chat <config> "question" > out.md`` captures only the final answer.
 
     Args:
         connectors: Instantiated connector objects.
