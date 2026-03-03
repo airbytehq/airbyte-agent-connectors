@@ -1,5 +1,10 @@
 # Freshdesk changelog
 
+## [0.1.9] - 2026-03-03
+- Updated connector definition (YAML version 1.0.1)
+- Source commit: 258f32e0
+- SDK version: 0.1.0
+
 ## [0.1.8] - 2026-02-27
 - Updated connector definition (YAML version 1.0.1)
 - Source commit: a735c402
