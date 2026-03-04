@@ -431,6 +431,8 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                     content_type = ContentType.FORM_URLENCODED
                 elif "multipart/form-data" in operation.request_body.content:
                     content_type = ContentType.FORM_DATA
+                elif "multipart/related" in operation.request_body.content:
+                    content_type = ContentType.MULTIPART_RELATED
 
             # Extract parameters with their schemas (including defaults)
             path_params: list[str] = []
@@ -491,6 +493,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             # Extract preferred_for_check flag
             preferred_for_check = getattr(operation, "x_airbyte_preferred_for_check", None) or False
 
+            # Extract upload_file_param for multipart/related uploads
+            upload_file_param = getattr(operation, "x_airbyte_upload_file_param", None)
+
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
@@ -516,6 +521,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 file_field=file_field,
                 untested=untested,
                 preferred_for_check=preferred_for_check,
+                upload_file_param=upload_file_param,
                 no_content_response=has_no_content_response,
             )
 

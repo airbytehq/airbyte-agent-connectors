@@ -37,6 +37,39 @@ class FilesGetParams(TypedDict):
     fields: NotRequired[str]
     supports_all_drives: NotRequired[bool]
 
+class FilesCreateParams(TypedDict):
+    """Parameters for files.create operation"""
+    name: str
+    mime_type: NotRequired[str]
+    parents: NotRequired[list[str]]
+    description: NotRequired[str]
+
+class FilesUpdateParams(TypedDict):
+    """Parameters for files.update operation"""
+    name: NotRequired[str]
+    description: NotRequired[str]
+    mime_type: NotRequired[str]
+    file_id: str
+    add_parents: NotRequired[str]
+    remove_parents: NotRequired[str]
+    supports_all_drives: NotRequired[bool]
+
+class FilesDeleteParams(TypedDict):
+    """Parameters for files.delete operation"""
+    file_id: str
+    supports_all_drives: NotRequired[bool]
+
+class FilesUploadCreateParams(TypedDict):
+    """Parameters for files_upload.create operation"""
+    name: str
+    file_content: str
+    mime_type: NotRequired[str]
+    parents: NotRequired[list[str]]
+    description: NotRequired[str]
+    file_mime_type: NotRequired[str]
+    upload_type: NotRequired[str]
+    supports_all_drives: NotRequired[bool]
+
 class FilesDownloadParams(TypedDict):
     """Parameters for files.download operation"""
     file_id: str
