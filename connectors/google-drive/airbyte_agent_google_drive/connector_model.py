@@ -12,6 +12,7 @@ from ._vendored.connector_sdk.types import (
     AuthConfig,
     AuthType,
     ConnectorModel,
+    ContentType,
     EndpointDefinition,
     EntityDefinition,
 )
@@ -29,7 +30,7 @@ from uuid import (
 GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9f8dda77-1048-4368-815b-269bf54ee9b8'),
     name='google-drive',
-    version='0.1.8',
+    version='0.2.1',
     base_url='https://www.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -77,7 +78,14 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
     entities=[
         EntityDefinition(
             name='files',
-            actions=[Action.LIST, Action.GET, Action.DOWNLOAD],
+            actions=[
+                Action.LIST,
+                Action.GET,
+                Action.CREATE,
+                Action.UPDATE,
+                Action.DELETE,
+                Action.DOWNLOAD,
+            ],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -1307,6 +1315,1237 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                         'x-airbyte-entity-name': 'files',
                     },
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/drive/v3/files/create',
+                    path_override=PathOverrideConfig(
+                        path='/drive/v3/files',
+                    ),
+                    action=Action.CREATE,
+                    description="Creates a new file or folder in Google Drive (metadata only, no content).\nTo create a folder, set mimeType to 'application/vnd.google-apps.folder'.\nTo create a Google Doc, use 'application/vnd.google-apps.document'.\nTo create a Google Sheet, use 'application/vnd.google-apps.spreadsheet'.\n",
+                    body_fields=[
+                        'name',
+                        'mimeType',
+                        'parents',
+                        'description',
+                    ],
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new file or folder',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the file or folder'},
+                            'mimeType': {'type': 'string', 'description': "The MIME type of the file. Use 'application/vnd.google-apps.folder' for folders,\n'application/vnd.google-apps.document' for Google Docs,\n'application/vnd.google-apps.spreadsheet' for Google Sheets.\n"},
+                            'parents': {
+                                'type': 'array',
+                                'items': {'type': 'string'},
+                                'description': 'The IDs of the parent folders. If not specified, the file is placed in My Drive root.',
+                            },
+                            'description': {'type': 'string', 'description': 'A short description of the file'},
+                        },
+                        'required': ['name'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'The metadata for a file',
+                        'properties': {
+                            'kind': {
+                                'type': ['string', 'null'],
+                                'description': 'Identifies what kind of resource this is',
+                            },
+                            'id': {'type': 'string', 'description': 'The ID of the file'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the file',
+                            },
+                            'mimeType': {
+                                'type': ['string', 'null'],
+                                'description': 'The MIME type of the file',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'A short description of the file',
+                            },
+                            'starred': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user has starred the file',
+                            },
+                            'trashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been trashed',
+                            },
+                            'explicitlyTrashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been explicitly trashed',
+                            },
+                            'parents': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The IDs of the parent folders',
+                            },
+                            'properties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs',
+                            },
+                            'appProperties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs private to the app',
+                            },
+                            'spaces': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The list of spaces which contain the file',
+                            },
+                            'version': {
+                                'type': ['string', 'null'],
+                                'description': 'A monotonically increasing version number for the file',
+                            },
+                            'webContentLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for downloading the content of the file',
+                            },
+                            'webViewLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for opening the file in a relevant Google editor or viewer',
+                            },
+                            'iconLink': {
+                                'type': ['string', 'null'],
+                                'description': "A static, unauthenticated link to the file's icon",
+                            },
+                            'hasThumbnail': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this file has a thumbnail',
+                            },
+                            'thumbnailLink': {
+                                'type': ['string', 'null'],
+                                'description': "A short-lived link to the file's thumbnail",
+                            },
+                            'thumbnailVersion': {
+                                'type': ['string', 'null'],
+                                'description': 'The thumbnail version for use in thumbnail cache invalidation',
+                            },
+                            'viewedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been viewed by this user',
+                            },
+                            'viewedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was viewed by the user',
+                            },
+                            'createdTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was created',
+                            },
+                            'modifiedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by anyone',
+                            },
+                            'modifiedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by the user',
+                            },
+                            'modifiedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been modified by this user',
+                            },
+                            'sharedWithMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was shared with the user',
+                            },
+                            'sharingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who shared the file with the requesting user',
+                            },
+                            'owners': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Information about a Drive user',
+                                    'properties': {
+                                        'kind': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Identifies what kind of resource this is',
+                                        },
+                                        'displayName': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A plain text displayable name for this user',
+                                        },
+                                        'photoLink': {
+                                            'type': ['string', 'null'],
+                                            'description': "A link to the user's profile photo",
+                                        },
+                                        'me': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether this user is the requesting user',
+                                        },
+                                        'permissionId': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's ID as visible in Permission resources",
+                                        },
+                                        'emailAddress': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The email address of the user',
+                                        },
+                                    },
+                                },
+                                'description': 'The owner of this file',
+                            },
+                            'driveId': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the shared drive the file resides in',
+                            },
+                            'lastModifyingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The last user to modify the file',
+                            },
+                            'shared': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been shared',
+                            },
+                            'ownedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user owns the file',
+                            },
+                            'capabilities': {
+                                'type': ['object', 'null'],
+                                'description': 'Capabilities the current user has on this file',
+                                'properties': {
+                                    'canEdit': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canComment': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canShare': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canCopy': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDownload': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDelete': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRename': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canTrash': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canReadRevisions': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canAddChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canListChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRemoveChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'viewersCanCopyContent': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only reader or commenter permission can copy the file's content",
+                            },
+                            'copyRequiresWriterPermission': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the options to copy, print, or download this file should be disabled',
+                            },
+                            'writersCanShare': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only writer permission can modify the file's permissions",
+                            },
+                            'permissionIds': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'List of permission IDs for users with access to this file',
+                            },
+                            'folderColorRgb': {
+                                'type': ['string', 'null'],
+                                'description': 'The color for a folder as an RGB hex string',
+                            },
+                            'originalFilename': {
+                                'type': ['string', 'null'],
+                                'description': 'The original filename of the uploaded content',
+                            },
+                            'fullFileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The full file extension extracted from the name field',
+                            },
+                            'fileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The final component of fullFileExtension',
+                            },
+                            'md5Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The MD5 checksum for the content of the file',
+                            },
+                            'sha1Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA1 checksum for the content of the file',
+                            },
+                            'sha256Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA256 checksum for the content of the file',
+                            },
+                            'size': {
+                                'type': ['string', 'null'],
+                                'description': 'Size in bytes of blobs and first party editor files',
+                            },
+                            'quotaBytesUsed': {
+                                'type': ['string', 'null'],
+                                'description': 'The number of storage quota bytes used by the file',
+                            },
+                            'headRevisionId': {
+                                'type': ['string', 'null'],
+                                'description': "The ID of the file's head revision",
+                            },
+                            'isAppAuthorized': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file was created or opened by the requesting app',
+                            },
+                            'exportLinks': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Links for exporting Docs Editors files to specific formats',
+                            },
+                            'shortcutDetails': {
+                                'type': ['object', 'null'],
+                                'description': 'Shortcut file details',
+                                'properties': {
+                                    'targetId': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetMimeType': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetResourceKey': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'contentRestrictions': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'readOnly': {
+                                            'type': ['boolean', 'null'],
+                                        },
+                                        'reason': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'restrictingUser': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Information about a Drive user',
+                                                    'properties': {
+                                                        'kind': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Identifies what kind of resource this is',
+                                                        },
+                                                        'displayName': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'A plain text displayable name for this user',
+                                                        },
+                                                        'photoLink': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "A link to the user's profile photo",
+                                                        },
+                                                        'me': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Whether this user is the requesting user',
+                                                        },
+                                                        'permissionId': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "The user's ID as visible in Permission resources",
+                                                        },
+                                                        'emailAddress': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'The email address of the user',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'restrictionTime': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                                'description': 'Restrictions for accessing the content of the file',
+                            },
+                            'resourceKey': {
+                                'type': ['string', 'null'],
+                                'description': 'A key needed to access the item via a shared link',
+                            },
+                            'linkShareMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Contains details about the link URLs',
+                                'properties': {
+                                    'securityUpdateEligible': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'securityUpdateEnabled': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'labelInfo': {
+                                'type': ['object', 'null'],
+                                'description': 'An overview of the labels on the file',
+                                'properties': {
+                                    'labels': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'object'},
+                                    },
+                                },
+                            },
+                            'trashedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time that the item was trashed',
+                            },
+                            'trashingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who trashed the file',
+                            },
+                            'imageMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about image media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'rotation': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'time': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraMake': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraModel': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureTime': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'aperture': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'flashUsed': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'focalLength': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'isoSpeed': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'meteringMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'sensor': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'colorSpace': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'whiteBalance': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureBias': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'maxApertureValue': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'subjectDistance': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'lens': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'location': {
+                                        'type': ['object', 'null'],
+                                        'properties': {
+                                            'latitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'longitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'altitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'videoMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about video media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'durationMillis': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'files',
+                    },
+                ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/drive/v3/files/{fileId}/update',
+                    path_override=PathOverrideConfig(
+                        path='/drive/v3/files/{fileId}',
+                    ),
+                    action=Action.UPDATE,
+                    description="Updates a file's metadata. Use addParents/removeParents query parameters\nto move a file between folders.\n",
+                    body_fields=['name', 'description', 'mimeType'],
+                    query_params=['addParents', 'removeParents', 'supportsAllDrives'],
+                    query_params_schema={
+                        'addParents': {'type': 'string', 'required': False},
+                        'removeParents': {'type': 'string', 'required': False},
+                        'supportsAllDrives': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['fileId'],
+                    path_params_schema={
+                        'fileId': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating file metadata',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The new name of the file'},
+                            'description': {'type': 'string', 'description': 'A new description for the file'},
+                            'mimeType': {'type': 'string', 'description': 'The new MIME type of the file'},
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'The metadata for a file',
+                        'properties': {
+                            'kind': {
+                                'type': ['string', 'null'],
+                                'description': 'Identifies what kind of resource this is',
+                            },
+                            'id': {'type': 'string', 'description': 'The ID of the file'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the file',
+                            },
+                            'mimeType': {
+                                'type': ['string', 'null'],
+                                'description': 'The MIME type of the file',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'A short description of the file',
+                            },
+                            'starred': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user has starred the file',
+                            },
+                            'trashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been trashed',
+                            },
+                            'explicitlyTrashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been explicitly trashed',
+                            },
+                            'parents': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The IDs of the parent folders',
+                            },
+                            'properties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs',
+                            },
+                            'appProperties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs private to the app',
+                            },
+                            'spaces': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The list of spaces which contain the file',
+                            },
+                            'version': {
+                                'type': ['string', 'null'],
+                                'description': 'A monotonically increasing version number for the file',
+                            },
+                            'webContentLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for downloading the content of the file',
+                            },
+                            'webViewLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for opening the file in a relevant Google editor or viewer',
+                            },
+                            'iconLink': {
+                                'type': ['string', 'null'],
+                                'description': "A static, unauthenticated link to the file's icon",
+                            },
+                            'hasThumbnail': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this file has a thumbnail',
+                            },
+                            'thumbnailLink': {
+                                'type': ['string', 'null'],
+                                'description': "A short-lived link to the file's thumbnail",
+                            },
+                            'thumbnailVersion': {
+                                'type': ['string', 'null'],
+                                'description': 'The thumbnail version for use in thumbnail cache invalidation',
+                            },
+                            'viewedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been viewed by this user',
+                            },
+                            'viewedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was viewed by the user',
+                            },
+                            'createdTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was created',
+                            },
+                            'modifiedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by anyone',
+                            },
+                            'modifiedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by the user',
+                            },
+                            'modifiedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been modified by this user',
+                            },
+                            'sharedWithMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was shared with the user',
+                            },
+                            'sharingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who shared the file with the requesting user',
+                            },
+                            'owners': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Information about a Drive user',
+                                    'properties': {
+                                        'kind': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Identifies what kind of resource this is',
+                                        },
+                                        'displayName': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A plain text displayable name for this user',
+                                        },
+                                        'photoLink': {
+                                            'type': ['string', 'null'],
+                                            'description': "A link to the user's profile photo",
+                                        },
+                                        'me': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether this user is the requesting user',
+                                        },
+                                        'permissionId': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's ID as visible in Permission resources",
+                                        },
+                                        'emailAddress': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The email address of the user',
+                                        },
+                                    },
+                                },
+                                'description': 'The owner of this file',
+                            },
+                            'driveId': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the shared drive the file resides in',
+                            },
+                            'lastModifyingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The last user to modify the file',
+                            },
+                            'shared': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been shared',
+                            },
+                            'ownedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user owns the file',
+                            },
+                            'capabilities': {
+                                'type': ['object', 'null'],
+                                'description': 'Capabilities the current user has on this file',
+                                'properties': {
+                                    'canEdit': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canComment': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canShare': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canCopy': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDownload': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDelete': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRename': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canTrash': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canReadRevisions': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canAddChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canListChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRemoveChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'viewersCanCopyContent': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only reader or commenter permission can copy the file's content",
+                            },
+                            'copyRequiresWriterPermission': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the options to copy, print, or download this file should be disabled',
+                            },
+                            'writersCanShare': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only writer permission can modify the file's permissions",
+                            },
+                            'permissionIds': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'List of permission IDs for users with access to this file',
+                            },
+                            'folderColorRgb': {
+                                'type': ['string', 'null'],
+                                'description': 'The color for a folder as an RGB hex string',
+                            },
+                            'originalFilename': {
+                                'type': ['string', 'null'],
+                                'description': 'The original filename of the uploaded content',
+                            },
+                            'fullFileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The full file extension extracted from the name field',
+                            },
+                            'fileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The final component of fullFileExtension',
+                            },
+                            'md5Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The MD5 checksum for the content of the file',
+                            },
+                            'sha1Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA1 checksum for the content of the file',
+                            },
+                            'sha256Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA256 checksum for the content of the file',
+                            },
+                            'size': {
+                                'type': ['string', 'null'],
+                                'description': 'Size in bytes of blobs and first party editor files',
+                            },
+                            'quotaBytesUsed': {
+                                'type': ['string', 'null'],
+                                'description': 'The number of storage quota bytes used by the file',
+                            },
+                            'headRevisionId': {
+                                'type': ['string', 'null'],
+                                'description': "The ID of the file's head revision",
+                            },
+                            'isAppAuthorized': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file was created or opened by the requesting app',
+                            },
+                            'exportLinks': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Links for exporting Docs Editors files to specific formats',
+                            },
+                            'shortcutDetails': {
+                                'type': ['object', 'null'],
+                                'description': 'Shortcut file details',
+                                'properties': {
+                                    'targetId': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetMimeType': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetResourceKey': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'contentRestrictions': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'readOnly': {
+                                            'type': ['boolean', 'null'],
+                                        },
+                                        'reason': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'restrictingUser': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Information about a Drive user',
+                                                    'properties': {
+                                                        'kind': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Identifies what kind of resource this is',
+                                                        },
+                                                        'displayName': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'A plain text displayable name for this user',
+                                                        },
+                                                        'photoLink': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "A link to the user's profile photo",
+                                                        },
+                                                        'me': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Whether this user is the requesting user',
+                                                        },
+                                                        'permissionId': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "The user's ID as visible in Permission resources",
+                                                        },
+                                                        'emailAddress': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'The email address of the user',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'restrictionTime': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                                'description': 'Restrictions for accessing the content of the file',
+                            },
+                            'resourceKey': {
+                                'type': ['string', 'null'],
+                                'description': 'A key needed to access the item via a shared link',
+                            },
+                            'linkShareMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Contains details about the link URLs',
+                                'properties': {
+                                    'securityUpdateEligible': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'securityUpdateEnabled': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'labelInfo': {
+                                'type': ['object', 'null'],
+                                'description': 'An overview of the labels on the file',
+                                'properties': {
+                                    'labels': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'object'},
+                                    },
+                                },
+                            },
+                            'trashedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time that the item was trashed',
+                            },
+                            'trashingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who trashed the file',
+                            },
+                            'imageMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about image media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'rotation': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'time': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraMake': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraModel': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureTime': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'aperture': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'flashUsed': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'focalLength': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'isoSpeed': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'meteringMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'sensor': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'colorSpace': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'whiteBalance': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureBias': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'maxApertureValue': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'subjectDistance': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'lens': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'location': {
+                                        'type': ['object', 'null'],
+                                        'properties': {
+                                            'latitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'longitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'altitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'videoMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about video media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'durationMillis': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'files',
+                    },
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/drive/v3/files/{fileId}/delete',
+                    path_override=PathOverrideConfig(
+                        path='/drive/v3/files/{fileId}',
+                    ),
+                    action=Action.DELETE,
+                    description='Permanently deletes a file owned by the user without moving it to the trash.',
+                    query_params=['supportsAllDrives'],
+                    query_params_schema={
+                        'supportsAllDrives': {'type': 'boolean', 'required': False},
+                    },
+                    path_params=['fileId'],
+                    path_params_schema={
+                        'fileId': {'type': 'string', 'required': True},
+                    },
+                    no_content_response=True,
+                ),
                 Action.DOWNLOAD: EndpointDefinition(
                     method='GET',
                     path='/drive/v3/files/{fileId}/download',
@@ -1762,6 +3001,635 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'files',
+            },
+        ),
+        EntityDefinition(
+            name='files_upload',
+            actions=[Action.CREATE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/upload/drive/v3/files',
+                    action=Action.CREATE,
+                    description='Uploads a new file to Google Drive with both metadata and file content.\nThe file content must be base64-encoded in the file_content parameter.\nSuitable for files up to 5MB. For larger files, use the Drive UI.\n',
+                    body_fields=[
+                        'name',
+                        'file_content',
+                        'mimeType',
+                        'parents',
+                        'description',
+                        'file_mime_type',
+                    ],
+                    query_params=['uploadType', 'supportsAllDrives'],
+                    query_params_schema={
+                        'uploadType': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'multipart',
+                        },
+                        'supportsAllDrives': {'type': 'boolean', 'required': False},
+                    },
+                    content_type=ContentType.MULTIPART_RELATED,
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for uploading a file with content',
+                        'properties': {
+                            'name': {'type': 'string', 'description': 'The name of the file'},
+                            'file_content': {
+                                'type': 'string',
+                                'format': 'byte',
+                                'description': 'Base64-encoded file content to upload',
+                            },
+                            'mimeType': {'type': 'string', 'description': 'The MIME type for the file metadata in Google Drive'},
+                            'parents': {
+                                'type': 'array',
+                                'items': {'type': 'string'},
+                                'description': 'The IDs of the parent folders',
+                            },
+                            'description': {'type': 'string', 'description': 'A short description of the file'},
+                            'file_mime_type': {'type': 'string', 'description': "The MIME type of the actual file content (e.g., 'application/pdf', 'image/png'). Defaults to 'application/octet-stream'."},
+                        },
+                        'required': ['name', 'file_content'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'The metadata for a file',
+                        'properties': {
+                            'kind': {
+                                'type': ['string', 'null'],
+                                'description': 'Identifies what kind of resource this is',
+                            },
+                            'id': {'type': 'string', 'description': 'The ID of the file'},
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the file',
+                            },
+                            'mimeType': {
+                                'type': ['string', 'null'],
+                                'description': 'The MIME type of the file',
+                            },
+                            'description': {
+                                'type': ['string', 'null'],
+                                'description': 'A short description of the file',
+                            },
+                            'starred': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user has starred the file',
+                            },
+                            'trashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been trashed',
+                            },
+                            'explicitlyTrashed': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been explicitly trashed',
+                            },
+                            'parents': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The IDs of the parent folders',
+                            },
+                            'properties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs',
+                            },
+                            'appProperties': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'A collection of arbitrary key-value pairs private to the app',
+                            },
+                            'spaces': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'The list of spaces which contain the file',
+                            },
+                            'version': {
+                                'type': ['string', 'null'],
+                                'description': 'A monotonically increasing version number for the file',
+                            },
+                            'webContentLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for downloading the content of the file',
+                            },
+                            'webViewLink': {
+                                'type': ['string', 'null'],
+                                'description': 'A link for opening the file in a relevant Google editor or viewer',
+                            },
+                            'iconLink': {
+                                'type': ['string', 'null'],
+                                'description': "A static, unauthenticated link to the file's icon",
+                            },
+                            'hasThumbnail': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether this file has a thumbnail',
+                            },
+                            'thumbnailLink': {
+                                'type': ['string', 'null'],
+                                'description': "A short-lived link to the file's thumbnail",
+                            },
+                            'thumbnailVersion': {
+                                'type': ['string', 'null'],
+                                'description': 'The thumbnail version for use in thumbnail cache invalidation',
+                            },
+                            'viewedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been viewed by this user',
+                            },
+                            'viewedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was viewed by the user',
+                            },
+                            'createdTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was created',
+                            },
+                            'modifiedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by anyone',
+                            },
+                            'modifiedByMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The last time the file was modified by the user',
+                            },
+                            'modifiedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been modified by this user',
+                            },
+                            'sharedWithMeTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time at which the file was shared with the user',
+                            },
+                            'sharingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who shared the file with the requesting user',
+                            },
+                            'owners': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Information about a Drive user',
+                                    'properties': {
+                                        'kind': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Identifies what kind of resource this is',
+                                        },
+                                        'displayName': {
+                                            'type': ['string', 'null'],
+                                            'description': 'A plain text displayable name for this user',
+                                        },
+                                        'photoLink': {
+                                            'type': ['string', 'null'],
+                                            'description': "A link to the user's profile photo",
+                                        },
+                                        'me': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether this user is the requesting user',
+                                        },
+                                        'permissionId': {
+                                            'type': ['string', 'null'],
+                                            'description': "The user's ID as visible in Permission resources",
+                                        },
+                                        'emailAddress': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The email address of the user',
+                                        },
+                                    },
+                                },
+                                'description': 'The owner of this file',
+                            },
+                            'driveId': {
+                                'type': ['string', 'null'],
+                                'description': 'ID of the shared drive the file resides in',
+                            },
+                            'lastModifyingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The last user to modify the file',
+                            },
+                            'shared': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file has been shared',
+                            },
+                            'ownedByMe': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the user owns the file',
+                            },
+                            'capabilities': {
+                                'type': ['object', 'null'],
+                                'description': 'Capabilities the current user has on this file',
+                                'properties': {
+                                    'canEdit': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canComment': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canShare': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canCopy': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDownload': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canDelete': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRename': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canTrash': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canReadRevisions': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canAddChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canListChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'canRemoveChildren': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'viewersCanCopyContent': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only reader or commenter permission can copy the file's content",
+                            },
+                            'copyRequiresWriterPermission': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the options to copy, print, or download this file should be disabled',
+                            },
+                            'writersCanShare': {
+                                'type': ['boolean', 'null'],
+                                'description': "Whether users with only writer permission can modify the file's permissions",
+                            },
+                            'permissionIds': {
+                                'type': ['array', 'null'],
+                                'items': {'type': 'string'},
+                                'description': 'List of permission IDs for users with access to this file',
+                            },
+                            'folderColorRgb': {
+                                'type': ['string', 'null'],
+                                'description': 'The color for a folder as an RGB hex string',
+                            },
+                            'originalFilename': {
+                                'type': ['string', 'null'],
+                                'description': 'The original filename of the uploaded content',
+                            },
+                            'fullFileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The full file extension extracted from the name field',
+                            },
+                            'fileExtension': {
+                                'type': ['string', 'null'],
+                                'description': 'The final component of fullFileExtension',
+                            },
+                            'md5Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The MD5 checksum for the content of the file',
+                            },
+                            'sha1Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA1 checksum for the content of the file',
+                            },
+                            'sha256Checksum': {
+                                'type': ['string', 'null'],
+                                'description': 'The SHA256 checksum for the content of the file',
+                            },
+                            'size': {
+                                'type': ['string', 'null'],
+                                'description': 'Size in bytes of blobs and first party editor files',
+                            },
+                            'quotaBytesUsed': {
+                                'type': ['string', 'null'],
+                                'description': 'The number of storage quota bytes used by the file',
+                            },
+                            'headRevisionId': {
+                                'type': ['string', 'null'],
+                                'description': "The ID of the file's head revision",
+                            },
+                            'isAppAuthorized': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the file was created or opened by the requesting app',
+                            },
+                            'exportLinks': {
+                                'type': ['object', 'null'],
+                                'additionalProperties': {'type': 'string'},
+                                'description': 'Links for exporting Docs Editors files to specific formats',
+                            },
+                            'shortcutDetails': {
+                                'type': ['object', 'null'],
+                                'description': 'Shortcut file details',
+                                'properties': {
+                                    'targetId': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetMimeType': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'targetResourceKey': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                            'contentRestrictions': {
+                                'type': ['array', 'null'],
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'readOnly': {
+                                            'type': ['boolean', 'null'],
+                                        },
+                                        'reason': {
+                                            'type': ['string', 'null'],
+                                        },
+                                        'restrictingUser': {
+                                            'oneOf': [
+                                                {
+                                                    'type': 'object',
+                                                    'description': 'Information about a Drive user',
+                                                    'properties': {
+                                                        'kind': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'Identifies what kind of resource this is',
+                                                        },
+                                                        'displayName': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'A plain text displayable name for this user',
+                                                        },
+                                                        'photoLink': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "A link to the user's profile photo",
+                                                        },
+                                                        'me': {
+                                                            'type': ['boolean', 'null'],
+                                                            'description': 'Whether this user is the requesting user',
+                                                        },
+                                                        'permissionId': {
+                                                            'type': ['string', 'null'],
+                                                            'description': "The user's ID as visible in Permission resources",
+                                                        },
+                                                        'emailAddress': {
+                                                            'type': ['string', 'null'],
+                                                            'description': 'The email address of the user',
+                                                        },
+                                                    },
+                                                },
+                                                {'type': 'null'},
+                                            ],
+                                        },
+                                        'restrictionTime': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                        },
+                                        'type': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                                'description': 'Restrictions for accessing the content of the file',
+                            },
+                            'resourceKey': {
+                                'type': ['string', 'null'],
+                                'description': 'A key needed to access the item via a shared link',
+                            },
+                            'linkShareMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Contains details about the link URLs',
+                                'properties': {
+                                    'securityUpdateEligible': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'securityUpdateEnabled': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                },
+                            },
+                            'labelInfo': {
+                                'type': ['object', 'null'],
+                                'description': 'An overview of the labels on the file',
+                                'properties': {
+                                    'labels': {
+                                        'type': ['array', 'null'],
+                                        'items': {'type': 'object'},
+                                    },
+                                },
+                            },
+                            'trashedTime': {
+                                'type': ['string', 'null'],
+                                'format': 'date-time',
+                                'description': 'The time that the item was trashed',
+                            },
+                            'trashingUser': {
+                                'oneOf': [
+                                    {
+                                        'type': 'object',
+                                        'description': 'Information about a Drive user',
+                                        'properties': {
+                                            'kind': {
+                                                'type': ['string', 'null'],
+                                                'description': 'Identifies what kind of resource this is',
+                                            },
+                                            'displayName': {
+                                                'type': ['string', 'null'],
+                                                'description': 'A plain text displayable name for this user',
+                                            },
+                                            'photoLink': {
+                                                'type': ['string', 'null'],
+                                                'description': "A link to the user's profile photo",
+                                            },
+                                            'me': {
+                                                'type': ['boolean', 'null'],
+                                                'description': 'Whether this user is the requesting user',
+                                            },
+                                            'permissionId': {
+                                                'type': ['string', 'null'],
+                                                'description': "The user's ID as visible in Permission resources",
+                                            },
+                                            'emailAddress': {
+                                                'type': ['string', 'null'],
+                                                'description': 'The email address of the user',
+                                            },
+                                        },
+                                    },
+                                    {'type': 'null'},
+                                ],
+                                'description': 'The user who trashed the file',
+                            },
+                            'imageMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about image media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'rotation': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'time': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraMake': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'cameraModel': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureTime': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'aperture': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'flashUsed': {
+                                        'type': ['boolean', 'null'],
+                                    },
+                                    'focalLength': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'isoSpeed': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'meteringMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'sensor': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureMode': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'colorSpace': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'whiteBalance': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'exposureBias': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'maxApertureValue': {
+                                        'type': ['number', 'null'],
+                                    },
+                                    'subjectDistance': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'lens': {
+                                        'type': ['string', 'null'],
+                                    },
+                                    'location': {
+                                        'type': ['object', 'null'],
+                                        'properties': {
+                                            'latitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'longitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                            'altitude': {
+                                                'type': ['number', 'null'],
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                            'videoMediaMetadata': {
+                                'type': ['object', 'null'],
+                                'description': 'Additional metadata about video media',
+                                'properties': {
+                                    'width': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'height': {
+                                        'type': ['integer', 'null'],
+                                    },
+                                    'durationMillis': {
+                                        'type': ['string', 'null'],
+                                    },
+                                },
+                            },
+                        },
+                        'x-airbyte-entity-name': 'files',
+                    },
+                    upload_file_param='file_content',
+                ),
             },
         ),
         EntityDefinition(

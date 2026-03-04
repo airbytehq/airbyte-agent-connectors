@@ -27,10 +27,14 @@ from .types import (
     CommentsListParams,
     DrivesGetParams,
     DrivesListParams,
+    FilesCreateParams,
+    FilesDeleteParams,
     FilesDownloadParams,
     FilesExportDownloadParams,
     FilesGetParams,
     FilesListParams,
+    FilesUpdateParams,
+    FilesUploadCreateParams,
     PermissionsGetParams,
     PermissionsListParams,
     RepliesGetParams,
@@ -110,13 +114,17 @@ class GoogleDriveConnector:
     """
 
     connector_name = "google-drive"
-    connector_version = "0.1.8"
+    connector_version = "0.2.1"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("files", "list"): True,
         ("files", "get"): None,
+        ("files", "create"): None,
+        ("files", "update"): None,
+        ("files", "delete"): None,
+        ("files_upload", "create"): None,
         ("files", "download"): None,
         ("files_export", "download"): None,
         ("drives", "list"): True,
@@ -139,6 +147,10 @@ class GoogleDriveConnector:
     _PARAM_MAP = {
         ('files', 'list'): {'page_size': 'pageSize', 'page_token': 'pageToken', 'q': 'q', 'order_by': 'orderBy', 'fields': 'fields', 'spaces': 'spaces', 'corpora': 'corpora', 'drive_id': 'driveId', 'include_items_from_all_drives': 'includeItemsFromAllDrives', 'supports_all_drives': 'supportsAllDrives'},
         ('files', 'get'): {'file_id': 'fileId', 'fields': 'fields', 'supports_all_drives': 'supportsAllDrives'},
+        ('files', 'create'): {'name': 'name', 'mime_type': 'mimeType', 'parents': 'parents', 'description': 'description'},
+        ('files', 'update'): {'name': 'name', 'description': 'description', 'mime_type': 'mimeType', 'file_id': 'fileId', 'add_parents': 'addParents', 'remove_parents': 'removeParents', 'supports_all_drives': 'supportsAllDrives'},
+        ('files', 'delete'): {'file_id': 'fileId', 'supports_all_drives': 'supportsAllDrives'},
+        ('files_upload', 'create'): {'name': 'name', 'file_content': 'file_content', 'mime_type': 'mimeType', 'parents': 'parents', 'description': 'description', 'file_mime_type': 'file_mime_type', 'upload_type': 'uploadType', 'supports_all_drives': 'supportsAllDrives'},
         ('files', 'download'): {'file_id': 'fileId', 'alt': 'alt', 'acknowledge_abuse': 'acknowledgeAbuse', 'supports_all_drives': 'supportsAllDrives', 'range_header': 'range_header'},
         ('files_export', 'download'): {'file_id': 'fileId', 'mime_type': 'mimeType', 'range_header': 'range_header'},
         ('drives', 'list'): {'page_size': 'pageSize', 'page_token': 'pageToken', 'q': 'q', 'use_domain_admin_access': 'useDomainAdminAccess'},
@@ -249,6 +261,7 @@ class GoogleDriveConnector:
 
         # Initialize entity query objects
         self.files = FilesQuery(self)
+        self.files_upload = FilesUploadQuery(self)
         self.files_export = FilesExportQuery(self)
         self.drives = DrivesQuery(self)
         self.permissions = PermissionsQuery(self)
@@ -275,6 +288,38 @@ class GoogleDriveConnector:
         entity: Literal["files"],
         action: Literal["get"],
         params: "FilesGetParams"
+    ) -> "File": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["files"],
+        action: Literal["create"],
+        params: "FilesCreateParams"
+    ) -> "File": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["files"],
+        action: Literal["update"],
+        params: "FilesUpdateParams"
+    ) -> "File": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["files"],
+        action: Literal["delete"],
+        params: "FilesDeleteParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["files_upload"],
+        action: Literal["create"],
+        params: "FilesUploadCreateParams"
     ) -> "File": ...
 
     @overload
@@ -402,14 +447,14 @@ class GoogleDriveConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download"],
+        action: Literal["list", "get", "create", "update", "delete", "download"],
         params: Mapping[str, Any]
     ) -> GoogleDriveExecuteResult[Any] | GoogleDriveExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download"],
+        action: Literal["list", "get", "create", "update", "delete", "download"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -937,6 +982,120 @@ class FilesQuery:
 
 
 
+    async def create(
+        self,
+        name: str,
+        mime_type: str | None = None,
+        parents: list[str] | None = None,
+        description: str | None = None,
+        **kwargs
+    ) -> File:
+        """
+        Creates a new file or folder in Google Drive (metadata only, no content).
+To create a folder, set mimeType to 'application/vnd.google-apps.folder'.
+To create a Google Doc, use 'application/vnd.google-apps.document'.
+To create a Google Sheet, use 'application/vnd.google-apps.spreadsheet'.
+
+
+        Args:
+            name: The name of the file or folder
+            mime_type: The MIME type of the file. Use 'application/vnd.google-apps.folder' for folders,
+'application/vnd.google-apps.document' for Google Docs,
+'application/vnd.google-apps.spreadsheet' for Google Sheets.
+
+            parents: The IDs of the parent folders. If not specified, the file is placed in My Drive root.
+            description: A short description of the file
+            **kwargs: Additional parameters
+
+        Returns:
+            File
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            "mimeType": mime_type,
+            "parents": parents,
+            "description": description,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("files", "create", params)
+        return result
+
+
+
+    async def update(
+        self,
+        file_id: str,
+        name: str | None = None,
+        description: str | None = None,
+        mime_type: str | None = None,
+        add_parents: str | None = None,
+        remove_parents: str | None = None,
+        supports_all_drives: bool | None = None,
+        **kwargs
+    ) -> File:
+        """
+        Updates a file's metadata. Use addParents/removeParents query parameters
+to move a file between folders.
+
+
+        Args:
+            name: The new name of the file
+            description: A new description for the file
+            mime_type: The new MIME type of the file
+            file_id: The ID of the file to update
+            add_parents: Comma-separated list of parent IDs to add
+            remove_parents: Comma-separated list of parent IDs to remove
+            supports_all_drives: Whether the requesting application supports both My Drives and shared drives
+            **kwargs: Additional parameters
+
+        Returns:
+            File
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            "description": description,
+            "mimeType": mime_type,
+            "fileId": file_id,
+            "addParents": add_parents,
+            "removeParents": remove_parents,
+            "supportsAllDrives": supports_all_drives,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("files", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        file_id: str,
+        supports_all_drives: bool | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Permanently deletes a file owned by the user without moving it to the trash.
+
+        Args:
+            file_id: The ID of the file to delete
+            supports_all_drives: Whether the requesting application supports both My Drives and shared drives
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "fileId": file_id,
+            "supportsAllDrives": supports_all_drives,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("files", "delete", params)
+        return result
+
+
+
     async def download(
         self,
         file_id: str,
@@ -978,11 +1137,11 @@ use the export action instead.
 
     async def download_local(
         self,
-        fileId: str,
+        file_id: str,
         alt: str,
         path: str,
-        acknowledgeAbuse: bool | None = None,
-        supportsAllDrives: bool | None = None,
+        acknowledge_abuse: bool | None = None,
+        supports_all_drives: bool | None = None,
         range_header: str | None = None,
         **kwargs
     ) -> Path:
@@ -993,10 +1152,10 @@ use the export action instead.
  and save to file.
 
         Args:
-            fileId: The ID of the file to download
+            file_id: The ID of the file to download
             alt: Must be set to 'media' to download file content
-            acknowledgeAbuse: Whether the user is acknowledging the risk of downloading known malware or other abusive files
-            supportsAllDrives: Whether the requesting application supports both My Drives and shared drives
+            acknowledge_abuse: Whether the user is acknowledging the risk of downloading known malware or other abusive files
+            supports_all_drives: Whether the requesting application supports both My Drives and shared drives
             range_header: Optional Range header for partial downloads (e.g., 'bytes=0-99')
             path: File path to save downloaded content
             **kwargs: Additional parameters
@@ -1008,15 +1167,73 @@ use the export action instead.
 
         # Get the async iterator
         content_iterator = await self.download(
-            fileId=fileId,
+            file_id=file_id,
             alt=alt,
-            acknowledgeAbuse=acknowledgeAbuse,
-            supportsAllDrives=supportsAllDrives,
+            acknowledge_abuse=acknowledge_abuse,
+            supports_all_drives=supports_all_drives,
             range_header=range_header,
             **kwargs
         )
 
         return await save_download(content_iterator, path)
+
+
+class FilesUploadQuery:
+    """
+    Query class for FilesUpload entity operations.
+    """
+
+    def __init__(self, connector: GoogleDriveConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        name: str,
+        file_content: str,
+        mime_type: str | None = None,
+        parents: list[str] | None = None,
+        description: str | None = None,
+        file_mime_type: str | None = None,
+        upload_type: str | None = None,
+        supports_all_drives: bool | None = None,
+        **kwargs
+    ) -> File:
+        """
+        Uploads a new file to Google Drive with both metadata and file content.
+The file content must be base64-encoded in the file_content parameter.
+Suitable for files up to 5MB. For larger files, use the Drive UI.
+
+
+        Args:
+            name: The name of the file
+            file_content: Base64-encoded file content to upload
+            mime_type: The MIME type for the file metadata in Google Drive
+            parents: The IDs of the parent folders
+            description: A short description of the file
+            file_mime_type: The MIME type of the actual file content (e.g., 'application/pdf', 'image/png'). Defaults to 'application/octet-stream'.
+            upload_type: The type of upload request (must be 'multipart')
+            supports_all_drives: Whether the requesting application supports both My Drives and shared drives
+            **kwargs: Additional parameters
+
+        Returns:
+            File
+        """
+        params = {k: v for k, v in {
+            "name": name,
+            "file_content": file_content,
+            "mimeType": mime_type,
+            "parents": parents,
+            "description": description,
+            "file_mime_type": file_mime_type,
+            "uploadType": upload_type,
+            "supportsAllDrives": supports_all_drives,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("files_upload", "create", params)
+        return result
+
 
 
 class FilesExportQuery:
@@ -1076,8 +1293,8 @@ Note: Export has a 10MB limit. For larger files, use the Drive UI.
 
     async def download_local(
         self,
-        fileId: str,
-        mimeType: str,
+        file_id: str,
+        mime_type: str,
         path: str,
         range_header: str | None = None,
         **kwargs
@@ -1095,8 +1312,8 @@ Note: Export has a 10MB limit. For larger files, use the Drive UI.
  and save to file.
 
         Args:
-            fileId: The ID of the Google Workspace file to export
-            mimeType: The MIME type of the format to export to. Common values:
+            file_id: The ID of the Google Workspace file to export
+            mime_type: The MIME type of the format to export to. Common values:
 - application/pdf
 - text/plain
 - text/csv
@@ -1115,8 +1332,8 @@ Note: Export has a 10MB limit. For larger files, use the Drive UI.
 
         # Get the async iterator
         content_iterator = await self.download(
-            fileId=fileId,
-            mimeType=mimeType,
+            file_id=file_id,
+            mime_type=mime_type,
             range_header=range_header,
             **kwargs
         )

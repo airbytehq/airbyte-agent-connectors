@@ -113,6 +113,7 @@ class ContentType(str, Enum):
     JSON = "application/json"
     FORM_URLENCODED = "application/x-www-form-urlencoded"
     FORM_DATA = "multipart/form-data"
+    MULTIPART_RELATED = "multipart/related"
 
 
 class ParameterLocation(str, Enum):
@@ -301,6 +302,11 @@ class EndpointDefinition(BaseModel):
     preferred_for_check: bool = Field(
         False,
         description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
+    )
+
+    upload_file_param: str | None = Field(
+        None,
+        description="Parameter name containing base64-encoded file content for multipart/related uploads (from x-airbyte-upload-file-param)",
     )
 
     no_content_response: bool = Field(
