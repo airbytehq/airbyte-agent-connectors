@@ -384,8 +384,17 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     # - token_extract: for OAuth dynamic values like instance_url
     # DO NOT substitute defaults here - that would prevent runtime substitution
     base_url = ""
+    server_variable_defaults: dict[str, str] = {}
     if spec.servers:
+        # Per OpenAPI 3.1, multiple servers can be defined but the SDK only uses
+        # the first server entry as the base URL. Variable defaults are extracted
+        # from the same server entry to stay consistent.
         base_url = spec.servers[0].url
+        # Collect default values from server variables for fallback substitution
+        if spec.servers[0].variables:
+            for var_name, var_def in spec.servers[0].variables.items():
+                if var_def.default:
+                    server_variable_defaults[var_name] = var_def.default
 
     # Group operations by entity
     entities_map: dict[str, dict[str, EndpointDefinition]] = {}
@@ -431,6 +440,8 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                     content_type = ContentType.FORM_URLENCODED
                 elif "multipart/form-data" in operation.request_body.content:
                     content_type = ContentType.FORM_DATA
+                elif "multipart/related" in operation.request_body.content:
+                    content_type = ContentType.MULTIPART_RELATED
 
             # Extract parameters with their schemas (including defaults)
             path_params: list[str] = []
@@ -491,6 +502,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             # Extract preferred_for_check flag
             preferred_for_check = getattr(operation, "x_airbyte_preferred_for_check", None) or False
 
+            # Extract upload_file_param for multipart/related uploads
+            upload_file_param = getattr(operation, "x_airbyte_upload_file_param", None)
+
             # Create endpoint definition
             endpoint = EndpointDefinition(
                 method=method_name.upper(),
@@ -516,6 +530,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 file_field=file_field,
                 untested=untested,
                 preferred_for_check=preferred_for_check,
+                upload_file_param=upload_file_param,
                 no_content_response=has_no_content_response,
             )
 
@@ -572,6 +587,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         openapi_spec=spec,
         retry_config=retry_config,
         search_field_paths=search_field_paths,
+        server_variable_defaults=server_variable_defaults,
     )
 
     return model
