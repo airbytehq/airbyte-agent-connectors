@@ -344,3 +344,8 @@ class ConnectorModel(BaseModel):
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
     search_field_paths: dict[str, list[str]] | None = None
+    server_variable_defaults: dict[str, str] = Field(
+        default_factory=dict,
+        description="Default values for server URL variables from the OpenAPI spec. "
+        "Used as fallbacks when config_values doesn't include a variable.",
+    )
