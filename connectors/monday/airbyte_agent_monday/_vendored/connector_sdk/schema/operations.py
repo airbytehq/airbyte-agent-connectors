@@ -95,6 +95,14 @@ class Operation(BaseModel):
             "always-available endpoint (e.g., users, accounts)."
         ),
     )
+    x_airbyte_upload_file_param: str | None = Field(
+        None,
+        alias="x-airbyte-upload-file-param",
+        description=(
+            "Parameter name containing base64-encoded file content for multipart/related uploads. "
+            "When set, the executor builds a multipart/related body with JSON metadata and binary file content."
+        ),
+    )
 
     @model_validator(mode="after")
     def validate_download_action_requirements(self) -> "Operation":

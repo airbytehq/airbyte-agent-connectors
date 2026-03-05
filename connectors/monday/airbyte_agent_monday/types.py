@@ -318,7 +318,7 @@ class BoardsSearchFilter(TypedDict, total=False):
     """Board tags"""
     top_group: dict[str, Any] | None
     """Top group on the board"""
-    type: str | None
+    type_: str | None
     """Board type"""
     updated_at: str | None
     """When the board was last updated"""
@@ -362,7 +362,7 @@ class BoardsInFilter(TypedDict, total=False):
     """Board tags"""
     top_group: list[dict[str, Any]]
     """Top group on the board"""
-    type: list[str]
+    type_: list[str]
     """Board type"""
     updated_at: list[str]
     """When the board was last updated"""
@@ -406,7 +406,7 @@ class BoardsAnyValueFilter(TypedDict, total=False):
     """Board tags"""
     top_group: Any
     """Top group on the board"""
-    type: Any
+    type_: Any
     """Board type"""
     updated_at: Any
     """When the board was last updated"""
@@ -450,7 +450,7 @@ class BoardsStringFilter(TypedDict, total=False):
     """Board tags"""
     top_group: str
     """Top group on the board"""
-    type: str
+    type_: str
     """Board type"""
     updated_at: str
     """When the board was last updated"""
@@ -494,7 +494,7 @@ class BoardsSortFilter(TypedDict, total=False):
     """Board tags"""
     top_group: AirbyteSortOrder
     """Top group on the board"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Board type"""
     updated_at: AirbyteSortOrder
     """When the board was last updated"""

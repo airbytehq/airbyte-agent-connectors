@@ -1041,7 +1041,7 @@ class BoardsQuery:
         - subscribers: Board subscribers
         - tags: Board tags
         - top_group: Top group on the board
-        - type: Board type
+        - type_: Board type
         - updated_at: When the board was last updated
         - updated_at_int: When the board was last updated (Unix timestamp)
         - updates: Board updates
