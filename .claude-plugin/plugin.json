@@ -1,6 +1,6 @@
 {
   "name": "airbyte-agent-connectors",
-  "description": "Give your AI agents access to 21+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe, Jira, and more) through strongly typed, well-documented tools.",
+  "description": "Airbyte Claude skills: connector guidance for 21+ APIs plus md2gdoc markdown-to-Google-Docs conversion.",
   "version": "1.0.0",
   "author": {
     "name": "Airbyte",
@@ -13,6 +13,9 @@
   "keywords": [
     "api",
     "connectors",
+    "claude-skill",
+    "google-docs",
+    "markdown",
     "salesforce",
     "hubspot",
     "github",

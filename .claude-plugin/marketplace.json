@@ -5,7 +5,7 @@
     {
       "name": "airbyte-agent-connectors",
       "source": "./",
-      "description": "Give your AI agents access to 21+ third-party APIs through strongly typed, well-documented tools."
+      "description": "Airbyte Claude skills: API connector guidance plus md2gdoc markdown-to-Google-Docs conversion."
     }
   ]
 }
