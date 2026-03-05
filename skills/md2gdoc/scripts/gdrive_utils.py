@@ -47,8 +47,9 @@ async def _resolve_folder_id(connector, folder_path: str) -> str:
     parts = [p.strip() for p in folder_path.split("/") if p.strip()]
 
     for part in parts:
+        escaped_part = part.replace("'", "\\'")
         q = (
-            f"name = '{part}' and '{parent_id}' in parents "
+            f"name = '{escaped_part}' and '{parent_id}' in parents "
             f"and mimeType = 'application/vnd.google-apps.folder' "
             f"and trashed = false"
         )
@@ -103,8 +104,9 @@ async def _get_doc_url(folder_path: str, basename: str) -> str:
 
     folder_id = await _resolve_folder_id(connector, folder_path)
 
+    escaped_basename = basename.replace("'", "\\'")
     q = (
-        f"name contains '{basename}' and '{folder_id}' in parents "
+        f"name contains '{escaped_basename}' and '{folder_id}' in parents "
         f"and trashed = false"
     )
     result = await connector.files.list(q=q, page_size=10, fields="files(id,name,mimeType)")
