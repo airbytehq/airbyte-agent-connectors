@@ -186,7 +186,13 @@ class LocalExecutor:
             self.model: ConnectorModel = model
 
         self.on_token_refresh = on_token_refresh
-        self.config_values = config_values or {}
+
+        # Merge server variable defaults as fallbacks for config_values.
+        # User-provided config_values take priority over OpenAPI server variable defaults.
+        merged_config_values = dict(self.model.server_variable_defaults)
+        if config_values:
+            merged_config_values.update(config_values)
+        self.config_values = merged_config_values
 
         # Handle auth selection for multi-auth or single-auth connectors
         user_credentials = auth_config if auth_config is not None else secrets

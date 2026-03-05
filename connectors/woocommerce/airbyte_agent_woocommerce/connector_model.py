@@ -7694,4 +7694,5 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'tax_classes': ['name', 'slug'],
     },
+    server_variable_defaults={'shop': 'example.com'},
 )
