@@ -183,7 +183,7 @@ class CompaniesSearchFilter(TypedDict, total=False):
     """The size of the company"""
     tags: dict[str, Any] | None
     """Tags associated with the company"""
-    type: str | None
+    type_: str | None
     """The type of the company"""
     updated_at: int | None
     """The date and time when the company was last updated"""
@@ -223,7 +223,7 @@ class CompaniesInFilter(TypedDict, total=False):
     """The size of the company"""
     tags: list[dict[str, Any]]
     """Tags associated with the company"""
-    type: list[str]
+    type_: list[str]
     """The type of the company"""
     updated_at: list[int]
     """The date and time when the company was last updated"""
@@ -263,7 +263,7 @@ class CompaniesAnyValueFilter(TypedDict, total=False):
     """The size of the company"""
     tags: Any
     """Tags associated with the company"""
-    type: Any
+    type_: Any
     """The type of the company"""
     updated_at: Any
     """The date and time when the company was last updated"""
@@ -303,7 +303,7 @@ class CompaniesStringFilter(TypedDict, total=False):
     """The size of the company"""
     tags: str
     """Tags associated with the company"""
-    type: str
+    type_: str
     """The type of the company"""
     updated_at: str
     """The date and time when the company was last updated"""
@@ -343,7 +343,7 @@ class CompaniesSortFilter(TypedDict, total=False):
     """The size of the company"""
     tags: AirbyteSortOrder
     """Tags associated with the company"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """The type of the company"""
     updated_at: AirbyteSortOrder
     """The date and time when the company was last updated"""
@@ -538,7 +538,7 @@ class ContactsSearchFilter(TypedDict, total=False):
     """Social profiles associated with the contact."""
     tags: dict[str, Any] | None
     """Tags associated with the contact."""
-    type: str | None
+    type_: str | None
     """Type of contact."""
     unsubscribed_from_emails: bool | None
     """Flag indicating if the contact unsubscribed from emails."""
@@ -650,7 +650,7 @@ class ContactsInFilter(TypedDict, total=False):
     """Social profiles associated with the contact."""
     tags: list[dict[str, Any]]
     """Tags associated with the contact."""
-    type: list[str]
+    type_: list[str]
     """Type of contact."""
     unsubscribed_from_emails: list[bool]
     """Flag indicating if the contact unsubscribed from emails."""
@@ -762,7 +762,7 @@ class ContactsAnyValueFilter(TypedDict, total=False):
     """Social profiles associated with the contact."""
     tags: Any
     """Tags associated with the contact."""
-    type: Any
+    type_: Any
     """Type of contact."""
     unsubscribed_from_emails: Any
     """Flag indicating if the contact unsubscribed from emails."""
@@ -874,7 +874,7 @@ class ContactsStringFilter(TypedDict, total=False):
     """Social profiles associated with the contact."""
     tags: str
     """Tags associated with the contact."""
-    type: str
+    type_: str
     """Type of contact."""
     unsubscribed_from_emails: str
     """Flag indicating if the contact unsubscribed from emails."""
@@ -986,7 +986,7 @@ class ContactsSortFilter(TypedDict, total=False):
     """Social profiles associated with the contact."""
     tags: AirbyteSortOrder
     """Tags associated with the contact."""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of contact."""
     unsubscribed_from_emails: AirbyteSortOrder
     """Flag indicating if the contact unsubscribed from emails."""
@@ -1163,7 +1163,7 @@ class ConversationsSearchFilter(TypedDict, total=False):
     """The title of the conversation"""
     topics: dict[str, Any] | None
     """Topics associated with the conversation."""
-    type: str | None
+    type_: str | None
     """The type of the conversation"""
     updated_at: int | None
     """The timestamp when the conversation was last updated"""
@@ -1233,7 +1233,7 @@ class ConversationsInFilter(TypedDict, total=False):
     """The title of the conversation"""
     topics: list[dict[str, Any]]
     """Topics associated with the conversation."""
-    type: list[str]
+    type_: list[str]
     """The type of the conversation"""
     updated_at: list[int]
     """The timestamp when the conversation was last updated"""
@@ -1303,7 +1303,7 @@ class ConversationsAnyValueFilter(TypedDict, total=False):
     """The title of the conversation"""
     topics: Any
     """Topics associated with the conversation."""
-    type: Any
+    type_: Any
     """The type of the conversation"""
     updated_at: Any
     """The timestamp when the conversation was last updated"""
@@ -1373,7 +1373,7 @@ class ConversationsStringFilter(TypedDict, total=False):
     """The title of the conversation"""
     topics: str
     """Topics associated with the conversation."""
-    type: str
+    type_: str
     """The type of the conversation"""
     updated_at: str
     """The timestamp when the conversation was last updated"""
@@ -1443,7 +1443,7 @@ class ConversationsSortFilter(TypedDict, total=False):
     """The title of the conversation"""
     topics: AirbyteSortOrder
     """Topics associated with the conversation."""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """The type of the conversation"""
     updated_at: AirbyteSortOrder
     """The timestamp when the conversation was last updated"""
@@ -1556,7 +1556,7 @@ class TeamsSearchFilter(TypedDict, total=False):
     """Unique identifier for the team."""
     name: str | None
     """Name of the team."""
-    type: str | None
+    type_: str | None
     """Type of team (e.g., 'internal', 'external')."""
 
 
@@ -1568,7 +1568,7 @@ class TeamsInFilter(TypedDict, total=False):
     """Unique identifier for the team."""
     name: list[str]
     """Name of the team."""
-    type: list[str]
+    type_: list[str]
     """Type of team (e.g., 'internal', 'external')."""
 
 
@@ -1580,7 +1580,7 @@ class TeamsAnyValueFilter(TypedDict, total=False):
     """Unique identifier for the team."""
     name: Any
     """Name of the team."""
-    type: Any
+    type_: Any
     """Type of team (e.g., 'internal', 'external')."""
 
 
@@ -1592,7 +1592,7 @@ class TeamsStringFilter(TypedDict, total=False):
     """Unique identifier for the team."""
     name: str
     """Name of the team."""
-    type: str
+    type_: str
     """Type of team (e.g., 'internal', 'external')."""
 
 
@@ -1604,7 +1604,7 @@ class TeamsSortFilter(TypedDict, total=False):
     """Unique identifier for the team."""
     name: AirbyteSortOrder
     """Name of the team."""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of team (e.g., 'internal', 'external')."""
 
 

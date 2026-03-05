@@ -113,6 +113,7 @@ class ContentType(str, Enum):
     JSON = "application/json"
     FORM_URLENCODED = "application/x-www-form-urlencoded"
     FORM_DATA = "multipart/form-data"
+    MULTIPART_RELATED = "multipart/related"
 
 
 class ParameterLocation(str, Enum):
@@ -303,6 +304,11 @@ class EndpointDefinition(BaseModel):
         description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
+    upload_file_param: str | None = Field(
+        None,
+        description="Parameter name containing base64-encoded file content for multipart/related uploads (from x-airbyte-upload-file-param)",
+    )
+
     no_content_response: bool = Field(
         False,
         description="True when the operation defines a 204 No Content response, indicating no response body is expected",
@@ -338,3 +344,8 @@ class ConnectorModel(BaseModel):
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
     search_field_paths: dict[str, list[str]] | None = None
+    server_variable_defaults: dict[str, str] = Field(
+        default_factory=dict,
+        description="Default values for server URL variables from the OpenAPI spec. "
+        "Used as fallbacks when config_values doesn't include a variable.",
+    )

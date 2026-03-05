@@ -3,11 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import base64
 import inspect
+import json as json_module
 import logging
 import os
 import re
 import time
+import uuid
 from collections.abc import AsyncIterator
 from typing import Any, Protocol
 from urllib.parse import quote
@@ -183,7 +186,13 @@ class LocalExecutor:
             self.model: ConnectorModel = model
 
         self.on_token_refresh = on_token_refresh
-        self.config_values = config_values or {}
+
+        # Merge server variable defaults as fallbacks for config_values.
+        # User-provided config_values take priority over OpenAPI server variable defaults.
+        merged_config_values = dict(self.model.server_variable_defaults)
+        if config_values:
+            merged_config_values.update(config_values)
+        self.config_values = merged_config_values
 
         # Handle auth selection for multi-auth or single-auth connectors
         user_credentials = auth_config if auth_config is not None else secrets
@@ -990,6 +999,59 @@ class LocalExecutor:
 
         return flattened
 
+    def _build_multipart_related(self, endpoint: EndpointDefinition, body: dict[str, Any]) -> dict[str, Any]:
+        """Build a multipart/related request body for file uploads.
+
+        Creates an RFC 2387 multipart/related body with two parts:
+        - Part 1: JSON metadata (file name, parents, etc.)
+        - Part 2: Binary file content (base64-decoded from the upload param)
+
+        Args:
+            endpoint: Endpoint definition with upload_file_param
+            body: Request body containing metadata and base64-encoded file content
+
+        Returns:
+            Dict with 'content' (raw bytes) and 'headers' (Content-Type with boundary)
+        """
+        file_param = endpoint.upload_file_param or "file_content"
+
+        # Copy to avoid mutating the caller's dict (e.g. if retried after an error)
+        body = dict(body)
+        file_content_b64 = body.pop(file_param, None)
+        file_mime_type = body.pop("file_mime_type", "application/octet-stream")
+
+        if not file_content_b64:
+            return {"json": body}
+
+        try:
+            file_bytes = base64.b64decode(file_content_b64)
+        except Exception as exc:
+            raise ValueError(
+                f"Parameter '{file_param}' must be valid base64-encoded content."
+            ) from exc
+
+        boundary = f"airbyte_boundary_{uuid.uuid4().hex}"
+
+        metadata_json = json_module.dumps(body).encode("utf-8")
+
+        parts = []
+        parts.append(f"--{boundary}\r\n".encode())
+        parts.append(b"Content-Type: application/json; charset=UTF-8\r\n\r\n")
+        parts.append(metadata_json)
+        parts.append(b"\r\n")
+        parts.append(f"--{boundary}\r\n".encode())
+        parts.append(f"Content-Type: {file_mime_type}\r\n\r\n".encode())
+        parts.append(file_bytes)
+        parts.append(b"\r\n")
+        parts.append(f"--{boundary}--\r\n".encode())
+
+        content_bytes = b"".join(parts)
+
+        return {
+            "content": content_bytes,
+            "headers": {"Content-Type": f"multipart/related; boundary={boundary}"},
+        }
+
     def _determine_request_format(self, endpoint: EndpointDefinition, body: dict[str, Any] | None) -> dict[str, Any]:
         """Determine json/data parameters for HTTP request.
 
@@ -1014,6 +1076,8 @@ class LocalExecutor:
             # Flatten nested structures for form encoding
             flattened_body = self._flatten_form_data(body)
             return {"data": flattened_body}
+        elif endpoint.content_type.value == "multipart/related":
+            return self._build_multipart_related(endpoint, body)
 
         return {}
 
@@ -1575,11 +1639,16 @@ class _StandardOperationHandler:
                 # Build request body (GraphQL or standard)
                 body = self.ctx.build_request_body(endpoint, params)
 
-                # Determine request format (json/data parameters)
+                # Determine request format (json/data/content parameters)
                 request_kwargs = self.ctx.determine_request_format(endpoint, body)
 
                 # Extract header parameters from OpenAPI operation (pass body to add Content-Type)
                 header_params = self.ctx.extract_header_params(endpoint, params, body)
+
+                # Merge headers from request_kwargs (e.g., multipart/related boundary)
+                extra_headers = request_kwargs.pop("headers", None)
+                if extra_headers:
+                    header_params = {**(header_params or {}), **extra_headers}
 
                 # Execute async HTTP request
                 response_data, response_headers = await self.ctx.http_client.request(
@@ -1588,6 +1657,7 @@ class _StandardOperationHandler:
                     params=query_params if query_params else None,
                     json=request_kwargs.get("json"),
                     data=request_kwargs.get("data"),
+                    content=request_kwargs.get("content"),
                     headers=header_params if header_params else None,
                 )
 
@@ -1761,8 +1831,7 @@ class _DownloadOperationHandler:
 
                 # Stream file chunks
                 default_chunk_size = 8 * 1024 * 1024  # 8 MB
-                async for chunk in file_response.original_response.aiter_bytes(chunk_size=default_chunk_size):
-                    # Log each chunk for cassette recording
+                async for chunk in file_response.aiter_bytes(chunk_size=default_chunk_size):
                     self.ctx.logger.log_chunk_fetch(chunk)
                     yield chunk
 

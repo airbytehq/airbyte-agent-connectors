@@ -1033,7 +1033,7 @@ class ContactsQuery:
         - sms_consent: Consent status for SMS communication.
         - social_profiles: Social profiles associated with the contact.
         - tags: Tags associated with the contact.
-        - type: Type of contact.
+        - type_: Type of contact.
         - unsubscribed_from_emails: Flag indicating if the contact unsubscribed from emails.
         - unsubscribed_from_sms: Flag indicating if the contact unsubscribed from SMS.
         - updated_at: The date and time when the contact was last updated.
@@ -1192,7 +1192,7 @@ class ConversationsQuery:
         - teammates: List of teammates involved in the conversation.
         - title: The title of the conversation
         - topics: Topics associated with the conversation.
-        - type: The type of the conversation
+        - type_: The type of the conversation
         - updated_at: The timestamp when the conversation was last updated
         - user: The user related to the conversation.
         - waiting_since: Timestamp since waiting for a response
@@ -1422,7 +1422,7 @@ class CompaniesQuery:
         - session_count: The number of sessions related to the company
         - size: The size of the company
         - tags: Tags associated with the company
-        - type: The type of the company
+        - type_: The type of the company
         - updated_at: The date and time when the company was last updated
         - user_count: The number of users associated with the company
         - website: The website of the company
@@ -1539,7 +1539,7 @@ class TeamsQuery:
         - admin_ids: Array of user IDs representing the admins of the team.
         - id: Unique identifier for the team.
         - name: Name of the team.
-        - type: Type of team (e.g., 'internal', 'external').
+        - type_: Type of team (e.g., 'internal', 'external').
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,

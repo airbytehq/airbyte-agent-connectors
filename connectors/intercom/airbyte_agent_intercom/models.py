@@ -45,7 +45,7 @@ class Pages(BaseModel):
     """Pagination metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     page: Union[int | None, Any] = Field(default=None)
     per_page: Union[int | None, Any] = Field(default=None)
     total_pages: Union[int | None, Any] = Field(default=None)
@@ -55,7 +55,7 @@ class Contact(BaseModel):
     """Contact object representing a user or lead"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     workspace_id: Union[str | None, Any] = Field(default=None)
     external_id: Union[str | None, Any] = Field(default=None)
@@ -104,7 +104,7 @@ class SocialProfile(BaseModel):
     """Social profile"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     name: Union[str | None, Any] = Field(default=None)
     url: Union[str | None, Any] = Field(default=None)
 
@@ -112,14 +112,14 @@ class SocialProfiles(BaseModel):
     """Social profiles"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[SocialProfile], Any] = Field(default=None)
 
 class Location(BaseModel):
     """Location information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     country: Union[str | None, Any] = Field(default=None)
     region: Union[str | None, Any] = Field(default=None)
     city: Union[str | None, Any] = Field(default=None)
@@ -130,7 +130,7 @@ class TagReference(BaseModel):
     """Tag reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     url: Union[str | None, Any] = Field(default=None)
 
@@ -138,14 +138,14 @@ class ContactTags(BaseModel):
     """Tags associated with contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[TagReference], Any] = Field(default=None)
 
 class NoteReference(BaseModel):
     """Note reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     url: Union[str | None, Any] = Field(default=None)
 
@@ -153,14 +153,14 @@ class ContactNotes(BaseModel):
     """Notes associated with contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[NoteReference], Any] = Field(default=None)
 
 class CompanyReference(BaseModel):
     """Company reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     url: Union[str | None, Any] = Field(default=None)
 
@@ -168,7 +168,7 @@ class ContactCompanies(BaseModel):
     """Companies associated with contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[CompanyReference], Any] = Field(default=None)
 
 class ContactsListPagesNext(BaseModel):
@@ -184,7 +184,7 @@ class ContactsListPages(BaseModel):
     """Pagination metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None, description="Type of pagination")
+    type_: Union[str | None, Any] = Field(default=None, alias="type", description="Type of pagination")
     """Type of pagination"""
     page: Union[int | None, Any] = Field(default=None, description="Current page number")
     """Current page number"""
@@ -199,7 +199,7 @@ class ContactsList(BaseModel):
     """Paginated list of contacts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[Contact], Any] = Field(default=None)
     total_count: Union[int | None, Any] = Field(default=None)
     pages: Union[ContactsListPages | None, Any] = Field(default=None)
@@ -208,7 +208,7 @@ class Conversation(BaseModel):
     """Conversation object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     title: Union[str | None, Any] = Field(default=None)
     created_at: Union[int | None, Any] = Field(default=None)
@@ -236,7 +236,7 @@ class Tag(BaseModel):
     """Tag object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     applied_at: Union[int | None, Any] = Field(default=None)
@@ -246,7 +246,7 @@ class ConversationTags(BaseModel):
     """Tags on conversation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     tags: Union[list[Tag], Any] = Field(default=None)
 
 class ConversationRating(BaseModel):
@@ -263,21 +263,21 @@ class ContactReference(BaseModel):
     """Contact reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
 
 class AdminReference(BaseModel):
     """Admin reference"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
 
 class Attachment(BaseModel):
     """Message attachment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     name: Union[str | None, Any] = Field(default=None)
     url: Union[str | None, Any] = Field(default=None)
     content_type: Union[str | None, Any] = Field(default=None)
@@ -289,7 +289,7 @@ class ConversationSource(BaseModel):
     """Conversation source"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     delivered_as: Union[str | None, Any] = Field(default=None)
     subject: Union[str | None, Any] = Field(default=None)
@@ -303,7 +303,7 @@ class Author(BaseModel):
     """Message author"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     email: Union[str | None, Any] = Field(default=None)
@@ -312,14 +312,14 @@ class ConversationContacts(BaseModel):
     """Contacts in conversation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     contacts: Union[list[ContactReference], Any] = Field(default=None)
 
 class ConversationTeammates(BaseModel):
     """Teammates in conversation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     admins: Union[list[AdminReference], Any] = Field(default=None)
 
 class FirstContactReply(BaseModel):
@@ -327,14 +327,14 @@ class FirstContactReply(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     created_at: Union[int | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     url: Union[str | None, Any] = Field(default=None)
 
 class SlaApplied(BaseModel):
     """SLA applied to conversation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     sla_name: Union[str | None, Any] = Field(default=None)
     sla_status: Union[str | None, Any] = Field(default=None)
 
@@ -342,7 +342,7 @@ class ConversationStatistics(BaseModel):
     """Conversation statistics"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     time_to_assignment: Union[int | None, Any] = Field(default=None)
     time_to_admin_reply: Union[int | None, Any] = Field(default=None)
     time_to_first_close: Union[int | None, Any] = Field(default=None)
@@ -366,7 +366,7 @@ class ConversationPart(BaseModel):
     """Conversation part (message, note, action)"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     part_type: Union[str | None, Any] = Field(default=None)
     body: Union[str | None, Any] = Field(default=None)
@@ -383,7 +383,7 @@ class ConversationPartsReference(BaseModel):
     """Reference to conversation parts"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     conversation_parts: Union[list[ConversationPart], Any] = Field(default=None)
     total_count: Union[int | None, Any] = Field(default=None)
 
@@ -400,7 +400,7 @@ class ConversationsListPages(BaseModel):
     """Pagination metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None, description="Type of pagination")
+    type_: Union[str | None, Any] = Field(default=None, alias="type", description="Type of pagination")
     """Type of pagination"""
     page: Union[int | None, Any] = Field(default=None, description="Current page number")
     """Current page number"""
@@ -415,7 +415,7 @@ class ConversationsList(BaseModel):
     """Paginated list of conversations"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     conversations: Union[list[Conversation], Any] = Field(default=None)
     total_count: Union[int | None, Any] = Field(default=None)
     pages: Union[ConversationsListPages | None, Any] = Field(default=None)
@@ -424,7 +424,7 @@ class Company(BaseModel):
     """Company object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     app_id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
@@ -448,7 +448,7 @@ class CompanyPlan(BaseModel):
     """Company plan"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str | None, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
@@ -456,14 +456,14 @@ class CompanyTags(BaseModel):
     """Tags on company"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     tags: Union[list[Tag], Any] = Field(default=None)
 
 class Segment(BaseModel):
     """Segment object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     created_at: Union[int | None, Any] = Field(default=None)
@@ -475,7 +475,7 @@ class CompanySegments(BaseModel):
     """Segments for company"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     segments: Union[list[Segment], Any] = Field(default=None)
 
 class CompaniesListPagesNext(BaseModel):
@@ -491,7 +491,7 @@ class CompaniesListPages(BaseModel):
     """Pagination metadata"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None, description="Type of pagination")
+    type_: Union[str | None, Any] = Field(default=None, alias="type", description="Type of pagination")
     """Type of pagination"""
     page: Union[int | None, Any] = Field(default=None, description="Current page number")
     """Current page number"""
@@ -506,7 +506,7 @@ class CompaniesList(BaseModel):
     """Paginated list of companies"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[Company], Any] = Field(default=None)
     total_count: Union[int | None, Any] = Field(default=None)
     pages: Union[CompaniesListPages | None, Any] = Field(default=None)
@@ -515,7 +515,7 @@ class Team(BaseModel):
     """Team object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     admin_ids: Union[list[int], Any] = Field(default=None)
@@ -532,14 +532,14 @@ class TeamsList(BaseModel):
     """List of teams"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     teams: Union[list[Team], Any] = Field(default=None)
 
 class Admin(BaseModel):
     """Admin object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
     email: Union[str | None, Any] = Field(default=None)
@@ -555,28 +555,28 @@ class Avatar(BaseModel):
     """Avatar image"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     image_url: Union[str | None, Any] = Field(default=None)
 
 class AdminsList(BaseModel):
     """List of admins"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     admins: Union[list[Admin], Any] = Field(default=None)
 
 class TagsList(BaseModel):
     """List of tags"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     data: Union[list[Tag], Any] = Field(default=None)
 
 class SegmentsList(BaseModel):
     """List of segments"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     segments: Union[list[Segment], Any] = Field(default=None)
 
 class ContactCreateParams(BaseModel):
@@ -653,7 +653,7 @@ class Note(BaseModel):
     """Note object on a contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     id: Union[str, Any] = Field(default=None)
     created_at: Union[int | None, Any] = Field(default=None)
     contact: Union[Any, Any] = Field(default=None)
@@ -786,7 +786,7 @@ class CompaniesSearchData(BaseModel):
     """The size of the company"""
     tags: dict[str, Any] | None = None
     """Tags associated with the company"""
-    type: str | None = None
+    type_: str | None = None
     """The type of the company"""
     updated_at: int | None = None
     """The date and time when the company was last updated"""
@@ -888,7 +888,7 @@ class ContactsSearchData(BaseModel):
     """Social profiles associated with the contact."""
     tags: dict[str, Any] | None = None
     """Tags associated with the contact."""
-    type: str | None = None
+    type_: str | None = None
     """Type of contact."""
     unsubscribed_from_emails: bool | None = None
     """Flag indicating if the contact unsubscribed from emails."""
@@ -972,7 +972,7 @@ class ConversationsSearchData(BaseModel):
     """The title of the conversation"""
     topics: dict[str, Any] | None = None
     """Topics associated with the conversation."""
-    type: str | None = None
+    type_: str | None = None
     """The type of the conversation"""
     updated_at: int | None = None
     """The timestamp when the conversation was last updated"""
@@ -992,7 +992,7 @@ class TeamsSearchData(BaseModel):
     """Unique identifier for the team."""
     name: str | None = None
     """Name of the team."""
-    type: str | None = None
+    type_: str | None = None
     """Type of team (e.g., 'internal', 'external')."""
 
 
