@@ -1,6 +1,7 @@
 """HTTP response wrapper providing a consistent interface across HTTP clients."""
 
 import json as json_module
+from collections.abc import AsyncIterator
 from typing import Any
 
 
@@ -89,6 +90,19 @@ class HTTPResponse:
                 message=f"HTTP {self._status_code} error",
                 response=self,
             )
+
+    async def aiter_bytes(self, chunk_size: int = 8 * 1024 * 1024) -> AsyncIterator[bytes]:
+        """Yield the response body in chunks.
+
+        Args:
+            chunk_size: Maximum size of each chunk in bytes (default 8 MB).
+
+        Yields:
+            Chunks of the response body as bytes.
+        """
+        data = self._content
+        for offset in range(0, len(data), chunk_size):
+            yield data[offset : offset + chunk_size]
 
     @property
     def original_response(self) -> Any | None:

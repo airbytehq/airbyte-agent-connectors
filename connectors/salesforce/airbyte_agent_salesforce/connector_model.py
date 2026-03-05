@@ -1957,4 +1957,5 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
             'SystemModstamp',
         ],
     },
+    server_variable_defaults={'instance_url': 'https://login.salesforce.com'},
 )

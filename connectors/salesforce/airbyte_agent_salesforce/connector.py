@@ -1259,7 +1259,7 @@ Examples:
         - shipping_postal_code: Postal code portion of the shipping address
         - shipping_state: State or province portion of the shipping address
         - shipping_street: Street address portion of the shipping address
-        - type: Type of account (e.g., Customer, Partner, Competitor)
+        - type_: Type of account (e.g., Customer, Partner, Competitor)
         - website: Website URL for the account
         - system_modstamp: System timestamp when the record was last modified
 
@@ -1835,7 +1835,7 @@ Examples:
         - owner_id: ID of the user who owns this opportunity
         - probability: Likelihood of closing the opportunity (percentage)
         - stage_name: Current stage of the opportunity in the sales process
-        - type: Type of opportunity (e.g., New Business, Existing Business)
+        - type_: Type of opportunity (e.g., New Business, Existing Business)
         - system_modstamp: System timestamp when the record was last modified
 
         Args:
@@ -2020,7 +2020,7 @@ Examples:
         - status: Current status of the task
         - subject: Subject or title of the task
         - task_subtype: Subtype of the task (e.g., Call, Email, Task)
-        - type: Type of task
+        - type_: Type of task
         - what_id: ID of the related object (Account, Opportunity, etc.)
         - who_id: ID of the related person (Contact or Lead)
         - system_modstamp: System timestamp when the record was last modified

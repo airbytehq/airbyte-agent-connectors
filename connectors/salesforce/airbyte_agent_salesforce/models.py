@@ -55,7 +55,7 @@ class AccountAttributes(BaseModel):
     """Nested schema for Account.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Account(BaseModel):
@@ -79,7 +79,7 @@ class ContactAttributes(BaseModel):
     """Nested schema for Contact.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Contact(BaseModel):
@@ -103,7 +103,7 @@ class LeadAttributes(BaseModel):
     """Nested schema for Lead.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Lead(BaseModel):
@@ -127,7 +127,7 @@ class OpportunityAttributes(BaseModel):
     """Nested schema for Opportunity.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Opportunity(BaseModel):
@@ -151,7 +151,7 @@ class TaskAttributes(BaseModel):
     """Nested schema for Task.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Task(BaseModel):
@@ -175,7 +175,7 @@ class EventAttributes(BaseModel):
     """Nested schema for Event.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Event(BaseModel):
@@ -199,7 +199,7 @@ class CampaignAttributes(BaseModel):
     """Nested schema for Campaign.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Campaign(BaseModel):
@@ -223,7 +223,7 @@ class CaseAttributes(BaseModel):
     """Nested schema for Case.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Case(BaseModel):
@@ -248,7 +248,7 @@ class NoteAttributes(BaseModel):
     """Nested schema for Note.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Note(BaseModel):
@@ -272,7 +272,7 @@ class ContentVersionAttributes(BaseModel):
     """Nested schema for ContentVersion.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class ContentVersion(BaseModel):
@@ -301,7 +301,7 @@ class AttachmentAttributes(BaseModel):
     """Nested schema for Attachment.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class Attachment(BaseModel):
@@ -337,7 +337,7 @@ class SearchResultSearchrecordsItemAttributes(BaseModel):
     """Nested schema for SearchResultSearchrecordsItem.attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     url: Union[str, Any] = Field(default=None)
 
 class SearchResultSearchrecordsItem(BaseModel):
@@ -549,7 +549,7 @@ class AccountsSearchData(BaseModel):
     """State or province portion of the shipping address"""
     shipping_street: str | None = None
     """Street address portion of the shipping address"""
-    type: str | None = None
+    type_: str | None = None
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: str | None = None
     """Website URL for the account"""
@@ -741,7 +741,7 @@ class OpportunitiesSearchData(BaseModel):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: str | None = None
     """Current stage of the opportunity in the sales process"""
-    type: str | None = None
+    type_: str | None = None
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: str | None = None
     """System timestamp when the record was last modified"""
@@ -791,7 +791,7 @@ class TasksSearchData(BaseModel):
     """Subject or title of the task"""
     task_subtype: str | None = None
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: str | None = None
+    type_: str | None = None
     """Type of task"""
     what_id: str | None = None
     """ID of the related object (Account, Opportunity, etc.)"""

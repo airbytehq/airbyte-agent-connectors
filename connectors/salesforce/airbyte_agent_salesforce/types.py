@@ -235,7 +235,7 @@ class AccountsSearchFilter(TypedDict, total=False):
     """State or province portion of the shipping address"""
     shipping_street: str | None
     """Street address portion of the shipping address"""
-    type: str | None
+    type_: str | None
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: str | None
     """Website URL for the account"""
@@ -299,7 +299,7 @@ class AccountsInFilter(TypedDict, total=False):
     """State or province portion of the shipping address"""
     shipping_street: list[str]
     """Street address portion of the shipping address"""
-    type: list[str]
+    type_: list[str]
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: list[str]
     """Website URL for the account"""
@@ -363,7 +363,7 @@ class AccountsAnyValueFilter(TypedDict, total=False):
     """State or province portion of the shipping address"""
     shipping_street: Any
     """Street address portion of the shipping address"""
-    type: Any
+    type_: Any
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: Any
     """Website URL for the account"""
@@ -427,7 +427,7 @@ class AccountsStringFilter(TypedDict, total=False):
     """State or province portion of the shipping address"""
     shipping_street: str
     """Street address portion of the shipping address"""
-    type: str
+    type_: str
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: str
     """Website URL for the account"""
@@ -491,7 +491,7 @@ class AccountsSortFilter(TypedDict, total=False):
     """State or province portion of the shipping address"""
     shipping_street: AirbyteSortOrder
     """Street address portion of the shipping address"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of account (e.g., Customer, Partner, Competitor)"""
     website: AirbyteSortOrder
     """Website URL for the account"""
@@ -1474,7 +1474,7 @@ class OpportunitiesSearchFilter(TypedDict, total=False):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: str | None
     """Current stage of the opportunity in the sales process"""
-    type: str | None
+    type_: str | None
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: str | None
     """System timestamp when the record was last modified"""
@@ -1530,7 +1530,7 @@ class OpportunitiesInFilter(TypedDict, total=False):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: list[str]
     """Current stage of the opportunity in the sales process"""
-    type: list[str]
+    type_: list[str]
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: list[str]
     """System timestamp when the record was last modified"""
@@ -1586,7 +1586,7 @@ class OpportunitiesAnyValueFilter(TypedDict, total=False):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: Any
     """Current stage of the opportunity in the sales process"""
-    type: Any
+    type_: Any
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: Any
     """System timestamp when the record was last modified"""
@@ -1642,7 +1642,7 @@ class OpportunitiesStringFilter(TypedDict, total=False):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: str
     """Current stage of the opportunity in the sales process"""
-    type: str
+    type_: str
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: str
     """System timestamp when the record was last modified"""
@@ -1698,7 +1698,7 @@ class OpportunitiesSortFilter(TypedDict, total=False):
     """Likelihood of closing the opportunity (percentage)"""
     stage_name: AirbyteSortOrder
     """Current stage of the opportunity in the sales process"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of opportunity (e.g., New Business, Existing Business)"""
     system_modstamp: AirbyteSortOrder
     """System timestamp when the record was last modified"""
@@ -1841,7 +1841,7 @@ class TasksSearchFilter(TypedDict, total=False):
     """Subject or title of the task"""
     task_subtype: str | None
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: str | None
+    type_: str | None
     """Type of task"""
     what_id: str | None
     """ID of the related object (Account, Opportunity, etc.)"""
@@ -1893,7 +1893,7 @@ class TasksInFilter(TypedDict, total=False):
     """Subject or title of the task"""
     task_subtype: list[str]
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: list[str]
+    type_: list[str]
     """Type of task"""
     what_id: list[str]
     """ID of the related object (Account, Opportunity, etc.)"""
@@ -1945,7 +1945,7 @@ class TasksAnyValueFilter(TypedDict, total=False):
     """Subject or title of the task"""
     task_subtype: Any
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: Any
+    type_: Any
     """Type of task"""
     what_id: Any
     """ID of the related object (Account, Opportunity, etc.)"""
@@ -1997,7 +1997,7 @@ class TasksStringFilter(TypedDict, total=False):
     """Subject or title of the task"""
     task_subtype: str
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: str
+    type_: str
     """Type of task"""
     what_id: str
     """ID of the related object (Account, Opportunity, etc.)"""
@@ -2049,7 +2049,7 @@ class TasksSortFilter(TypedDict, total=False):
     """Subject or title of the task"""
     task_subtype: AirbyteSortOrder
     """Subtype of the task (e.g., Call, Email, Task)"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of task"""
     what_id: AirbyteSortOrder
     """ID of the related object (Account, Opportunity, etc.)"""
