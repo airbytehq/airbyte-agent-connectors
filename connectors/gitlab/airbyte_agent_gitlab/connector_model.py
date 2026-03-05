@@ -5303,4 +5303,5 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
             'web_url',
         ],
     },
+    server_variable_defaults={'api_url': 'gitlab.com'},
 )
