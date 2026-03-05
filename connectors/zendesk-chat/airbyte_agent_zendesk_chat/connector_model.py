@@ -2463,4 +2463,5 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'triggers': ['id', 'name', 'enabled'],
     },
+    server_variable_defaults={'subdomain': 'your-subdomain'},
 )
