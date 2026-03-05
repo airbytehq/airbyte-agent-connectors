@@ -384,8 +384,17 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     # - token_extract: for OAuth dynamic values like instance_url
     # DO NOT substitute defaults here - that would prevent runtime substitution
     base_url = ""
+    server_variable_defaults: dict[str, str] = {}
     if spec.servers:
+        # Per OpenAPI 3.1, multiple servers can be defined but the SDK only uses
+        # the first server entry as the base URL. Variable defaults are extracted
+        # from the same server entry to stay consistent.
         base_url = spec.servers[0].url
+        # Collect default values from server variables for fallback substitution
+        if spec.servers[0].variables:
+            for var_name, var_def in spec.servers[0].variables.items():
+                if var_def.default:
+                    server_variable_defaults[var_name] = var_def.default
 
     # Group operations by entity
     entities_map: dict[str, dict[str, EndpointDefinition]] = {}
@@ -578,6 +587,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         openapi_spec=spec,
         retry_config=retry_config,
         search_field_paths=search_field_paths,
+        server_variable_defaults=server_variable_defaults,
     )
 
     return model
