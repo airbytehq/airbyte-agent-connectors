@@ -46,7 +46,7 @@ class AccountInfo(BaseModel):
 
     marketplace_string_id: Union[str | None, Any] = Field(default=None, alias="marketplaceStringId")
     id: Union[str | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     name: Union[str | None, Any] = Field(default=None)
     sub_type: Union[str | None, Any] = Field(default=None, alias="subType")
     valid_payment_method: Union[bool | None, Any] = Field(default=None, alias="validPaymentMethod")

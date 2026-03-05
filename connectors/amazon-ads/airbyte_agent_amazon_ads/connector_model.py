@@ -2211,4 +2211,5 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
             'unitsSoldSameSku7d',
         ],
     },
+    server_variable_defaults={'region': 'https://advertising-api.amazon.com'},
 )
