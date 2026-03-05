@@ -423,6 +423,7 @@ class HTTPClient:
         data: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
         *,
+        content: bytes | None = None,
         stream: bool = False,
     ) -> tuple[dict[str, Any], dict[str, str]]:
         """Execute a single HTTP request attempt (no retries).
@@ -470,6 +471,7 @@ class HTTPClient:
                 data=data,
                 headers=request_headers,
                 stream=stream,
+                **({"content": content} if content is not None else {}),
             )
 
             status_code = response.status_code
@@ -530,7 +532,7 @@ class HTTPClient:
         except AuthenticationError as e:
             # Auth error (401, 403) - handle token refresh
             status_code = e.status_code if hasattr(e, "status_code") else 401
-            result = await self._handle_auth_error(e, request_id, method, path, params, json, data, headers)
+            result = await self._handle_auth_error(e, request_id, method, path, params, json, data, headers, content, stream)
             if result is not None:
                 return result  # Token refresh succeeded, return the retry result
             raise  # Token refresh failed or not applicable
@@ -572,6 +574,8 @@ class HTTPClient:
         json: dict[str, Any] | None,
         data: dict[str, Any] | None,
         headers: dict[str, str] | None,
+        content: bytes | None = None,
+        stream: bool = False,
     ):
         """Handle authentication error with potential token refresh.
 
@@ -639,6 +643,8 @@ class HTTPClient:
                         json=json,
                         data=data,
                         headers=headers,
+                        content=content,
+                        stream=stream,
                     )
 
         # Refresh failed or token didn't change, log and let original error propagate
@@ -653,6 +659,7 @@ class HTTPClient:
         data: dict[str, Any] | None = None,
         headers: dict[str, str] | None = None,
         *,
+        content: bytes | None = None,
         stream: bool = False,
         _auth_retry_attempted: bool = False,
     ) -> tuple[dict[str, Any], dict[str, str]]:
@@ -665,6 +672,7 @@ class HTTPClient:
             json: JSON body for POST/PUT
             data: Form-encoded body for POST/PUT (mutually exclusive with json)
             headers: Additional headers
+            content: Raw bytes body for multipart/related uploads
             stream: If True, do not eagerly read the body (useful for downloads)
 
         Returns:
@@ -682,7 +690,7 @@ class HTTPClient:
         """
         for attempt in range(self.retry_config.max_attempts):
             try:
-                return await self._execute_request(method, path, params, json, data, headers, stream=stream)
+                return await self._execute_request(method, path, params, json, data, headers, content=content, stream=stream)
             except (RateLimitError, HTTPStatusError, TimeoutError, NetworkError) as e:
                 status_code = getattr(e, "status_code", None)
                 headers_from_error = getattr(e, "headers", {}) or {}
