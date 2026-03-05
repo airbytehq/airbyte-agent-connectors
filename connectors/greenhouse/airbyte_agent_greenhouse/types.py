@@ -2045,7 +2045,7 @@ class SourcesSearchFilter(TypedDict, total=False):
     """The unique identifier for the source."""
     name: str | None
     """The name of the source."""
-    type: dict[str, Any] | None
+    type_: dict[str, Any] | None
     """Type of the data source"""
 
 
@@ -2055,7 +2055,7 @@ class SourcesInFilter(TypedDict, total=False):
     """The unique identifier for the source."""
     name: list[str]
     """The name of the source."""
-    type: list[dict[str, Any]]
+    type_: list[dict[str, Any]]
     """Type of the data source"""
 
 
@@ -2065,7 +2065,7 @@ class SourcesAnyValueFilter(TypedDict, total=False):
     """The unique identifier for the source."""
     name: Any
     """The name of the source."""
-    type: Any
+    type_: Any
     """Type of the data source"""
 
 
@@ -2075,7 +2075,7 @@ class SourcesStringFilter(TypedDict, total=False):
     """The unique identifier for the source."""
     name: str
     """The name of the source."""
-    type: str
+    type_: str
     """Type of the data source"""
 
 
@@ -2085,7 +2085,7 @@ class SourcesSortFilter(TypedDict, total=False):
     """The unique identifier for the source."""
     name: AirbyteSortOrder
     """The name of the source."""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of the data source"""
 
 

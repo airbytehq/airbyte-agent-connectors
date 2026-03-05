@@ -28,7 +28,7 @@ class Attachment(BaseModel):
 
     filename: Union[str, Any] = Field(default=None)
     url: Union[str, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     created_at: Union[str, Any] = Field(default=None)
 
 class Candidate(BaseModel):
@@ -193,7 +193,7 @@ class Source(BaseModel):
 
     id: Union[int, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
-    type: Union[dict[str, Any] | None, Any] = Field(default=None)
+    type_: Union[dict[str, Any] | None, Any] = Field(default=None, alias="type")
 
 class ScheduledInterview(BaseModel):
     """Greenhouse scheduled interview object"""
@@ -535,7 +535,7 @@ class SourcesSearchData(BaseModel):
     """The unique identifier for the source."""
     name: str | None = None
     """The name of the source."""
-    type: dict[str, Any] | None = None
+    type_: dict[str, Any] | None = None
     """Type of the data source"""
 
 

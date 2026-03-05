@@ -1985,7 +1985,7 @@ class SourcesQuery:
         Available filter fields (SourcesSearchFilter):
         - id: The unique identifier for the source.
         - name: The name of the source.
-        - type: Type of the data source
+        - type_: Type of the data source
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
