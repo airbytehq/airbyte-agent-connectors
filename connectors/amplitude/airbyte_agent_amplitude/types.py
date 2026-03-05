@@ -262,7 +262,7 @@ class CohortsSearchFilter(TypedDict, total=False):
     """Identifiers of any shortcuts associated with the cohort"""
     size: int | None
     """Size or scale of the cohort data"""
-    type: str | None
+    type_: str | None
     """The type or category of the cohort"""
     view_count: int | None
     """The total count of views on the cohort data"""
@@ -318,7 +318,7 @@ class CohortsInFilter(TypedDict, total=False):
     """Identifiers of any shortcuts associated with the cohort"""
     size: list[int]
     """Size or scale of the cohort data"""
-    type: list[str]
+    type_: list[str]
     """The type or category of the cohort"""
     view_count: list[int]
     """The total count of views on the cohort data"""
@@ -374,7 +374,7 @@ class CohortsAnyValueFilter(TypedDict, total=False):
     """Identifiers of any shortcuts associated with the cohort"""
     size: Any
     """Size or scale of the cohort data"""
-    type: Any
+    type_: Any
     """The type or category of the cohort"""
     view_count: Any
     """The total count of views on the cohort data"""
@@ -430,7 +430,7 @@ class CohortsStringFilter(TypedDict, total=False):
     """Identifiers of any shortcuts associated with the cohort"""
     size: str
     """Size or scale of the cohort data"""
-    type: str
+    type_: str
     """The type or category of the cohort"""
     view_count: str
     """The total count of views on the cohort data"""
@@ -486,7 +486,7 @@ class CohortsSortFilter(TypedDict, total=False):
     """Identifiers of any shortcuts associated with the cohort"""
     size: AirbyteSortOrder
     """Size or scale of the cohort data"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """The type or category of the cohort"""
     view_count: AirbyteSortOrder
     """The total count of views on the cohort data"""

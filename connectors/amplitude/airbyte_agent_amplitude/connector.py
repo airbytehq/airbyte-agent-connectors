@@ -844,7 +844,7 @@ class CohortsQuery:
         - published: Status indicating if the cohort data is published
         - shortcut_ids: Identifiers of any shortcuts associated with the cohort
         - size: Size or scale of the cohort data
-        - type: The type or category of the cohort
+        - type_: The type or category of the cohort
         - view_count: The total count of views on the cohort data
         - viewers: Users or viewers who have access to the cohort data
 

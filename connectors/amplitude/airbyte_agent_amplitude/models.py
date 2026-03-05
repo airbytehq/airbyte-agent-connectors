@@ -106,7 +106,7 @@ class Cohort(BaseModel):
     published: Union[bool | None, Any] = Field(default=None)
     shortcut_ids: Union[list[str] | None, Any] = Field(default=None)
     size: Union[int | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     view_count: Union[int | None, Any] = Field(default=None)
     viewers: Union[list[str] | None, Any] = Field(default=None)
     include_data_app_types: Union[list[str] | None, Any] = Field(default=None)
@@ -322,7 +322,7 @@ class CohortsSearchData(BaseModel):
     """Identifiers of any shortcuts associated with the cohort"""
     size: int | None = None
     """Size or scale of the cohort data"""
-    type: str | None = None
+    type_: str | None = None
     """The type or category of the cohort"""
     view_count: int | None = None
     """The total count of views on the cohort data"""
