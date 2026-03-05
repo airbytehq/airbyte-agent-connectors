@@ -99,7 +99,7 @@ class ProfilesSearchFilter(TypedDict, total=False):
     """"""
     segments: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated: str | None
     """"""
@@ -117,7 +117,7 @@ class ProfilesInFilter(TypedDict, total=False):
     """"""
     segments: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated: list[str]
     """"""
@@ -135,7 +135,7 @@ class ProfilesAnyValueFilter(TypedDict, total=False):
     """"""
     segments: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated: Any
     """"""
@@ -153,7 +153,7 @@ class ProfilesStringFilter(TypedDict, total=False):
     """"""
     segments: str
     """"""
-    type: str
+    type_: str
     """"""
     updated: str
     """"""
@@ -171,7 +171,7 @@ class ProfilesSortFilter(TypedDict, total=False):
     """"""
     segments: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated: AirbyteSortOrder
     """"""
@@ -284,7 +284,7 @@ class EventsSearchFilter(TypedDict, total=False):
     """"""
     relationships: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
 
 
@@ -300,7 +300,7 @@ class EventsInFilter(TypedDict, total=False):
     """"""
     relationships: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
 
 
@@ -316,7 +316,7 @@ class EventsAnyValueFilter(TypedDict, total=False):
     """"""
     relationships: Any
     """"""
-    type: Any
+    type_: Any
     """"""
 
 
@@ -332,7 +332,7 @@ class EventsStringFilter(TypedDict, total=False):
     """"""
     relationships: str
     """"""
-    type: str
+    type_: str
     """"""
 
 
@@ -348,7 +348,7 @@ class EventsSortFilter(TypedDict, total=False):
     """"""
     relationships: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
 
 
@@ -455,7 +455,7 @@ class EmailTemplatesSearchFilter(TypedDict, total=False):
     """"""
     links: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated: str | None
     """"""
@@ -469,7 +469,7 @@ class EmailTemplatesInFilter(TypedDict, total=False):
     """"""
     links: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated: list[str]
     """"""
@@ -483,7 +483,7 @@ class EmailTemplatesAnyValueFilter(TypedDict, total=False):
     """"""
     links: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated: Any
     """"""
@@ -497,7 +497,7 @@ class EmailTemplatesStringFilter(TypedDict, total=False):
     """"""
     links: str
     """"""
-    type: str
+    type_: str
     """"""
     updated: str
     """"""
@@ -511,7 +511,7 @@ class EmailTemplatesSortFilter(TypedDict, total=False):
     """"""
     links: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated: AirbyteSortOrder
     """"""
@@ -622,7 +622,7 @@ class CampaignsSearchFilter(TypedDict, total=False):
     """"""
     relationships: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated_at: str | None
     """"""
@@ -638,7 +638,7 @@ class CampaignsInFilter(TypedDict, total=False):
     """"""
     relationships: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated_at: list[str]
     """"""
@@ -654,7 +654,7 @@ class CampaignsAnyValueFilter(TypedDict, total=False):
     """"""
     relationships: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated_at: Any
     """"""
@@ -670,7 +670,7 @@ class CampaignsStringFilter(TypedDict, total=False):
     """"""
     relationships: str
     """"""
-    type: str
+    type_: str
     """"""
     updated_at: str
     """"""
@@ -686,7 +686,7 @@ class CampaignsSortFilter(TypedDict, total=False):
     """"""
     relationships: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated_at: AirbyteSortOrder
     """"""
@@ -797,7 +797,7 @@ class FlowsSearchFilter(TypedDict, total=False):
     """"""
     relationships: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated: str | None
     """"""
@@ -813,7 +813,7 @@ class FlowsInFilter(TypedDict, total=False):
     """"""
     relationships: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated: list[str]
     """"""
@@ -829,7 +829,7 @@ class FlowsAnyValueFilter(TypedDict, total=False):
     """"""
     relationships: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated: Any
     """"""
@@ -845,7 +845,7 @@ class FlowsStringFilter(TypedDict, total=False):
     """"""
     relationships: str
     """"""
-    type: str
+    type_: str
     """"""
     updated: str
     """"""
@@ -861,7 +861,7 @@ class FlowsSortFilter(TypedDict, total=False):
     """"""
     relationships: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated: AirbyteSortOrder
     """"""
@@ -972,7 +972,7 @@ class MetricsSearchFilter(TypedDict, total=False):
     """"""
     relationships: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated: str | None
     """"""
@@ -988,7 +988,7 @@ class MetricsInFilter(TypedDict, total=False):
     """"""
     relationships: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated: list[str]
     """"""
@@ -1004,7 +1004,7 @@ class MetricsAnyValueFilter(TypedDict, total=False):
     """"""
     relationships: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated: Any
     """"""
@@ -1020,7 +1020,7 @@ class MetricsStringFilter(TypedDict, total=False):
     """"""
     relationships: str
     """"""
-    type: str
+    type_: str
     """"""
     updated: str
     """"""
@@ -1036,7 +1036,7 @@ class MetricsSortFilter(TypedDict, total=False):
     """"""
     relationships: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated: AirbyteSortOrder
     """"""
@@ -1147,7 +1147,7 @@ class ListsSearchFilter(TypedDict, total=False):
     """"""
     relationships: dict[str, Any] | None
     """"""
-    type: str | None
+    type_: str | None
     """"""
     updated: str | None
     """"""
@@ -1163,7 +1163,7 @@ class ListsInFilter(TypedDict, total=False):
     """"""
     relationships: list[dict[str, Any]]
     """"""
-    type: list[str]
+    type_: list[str]
     """"""
     updated: list[str]
     """"""
@@ -1179,7 +1179,7 @@ class ListsAnyValueFilter(TypedDict, total=False):
     """"""
     relationships: Any
     """"""
-    type: Any
+    type_: Any
     """"""
     updated: Any
     """"""
@@ -1195,7 +1195,7 @@ class ListsStringFilter(TypedDict, total=False):
     """"""
     relationships: str
     """"""
-    type: str
+    type_: str
     """"""
     updated: str
     """"""
@@ -1211,7 +1211,7 @@ class ListsSortFilter(TypedDict, total=False):
     """"""
     relationships: AirbyteSortOrder
     """"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """"""
     updated: AirbyteSortOrder
     """"""

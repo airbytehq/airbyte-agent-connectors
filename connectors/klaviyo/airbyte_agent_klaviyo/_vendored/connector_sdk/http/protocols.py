@@ -77,7 +77,7 @@ class HTTPClientProtocol(Protocol):
             json: JSON data to send in the request body
             data: Form data or raw string to send in the request body
             headers: HTTP headers to include in the request
-            **kwargs: Additional client-specific parameters
+            **kwargs: Additional client-specific parameters (e.g., content for raw bytes)
 
         Returns:
             An HTTPResponseProtocol implementation with the response data.

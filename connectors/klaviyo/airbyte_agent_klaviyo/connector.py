@@ -789,7 +789,7 @@ class ProfilesQuery:
         - links: 
         - relationships: 
         - segments: 
-        - type: 
+        - type_: 
         - updated: 
 
         Args:
@@ -914,7 +914,7 @@ class ListsQuery:
         - id: 
         - links: 
         - relationships: 
-        - type: 
+        - type_: 
         - updated: 
 
         Args:
@@ -1042,7 +1042,7 @@ class CampaignsQuery:
         - id: 
         - links: 
         - relationships: 
-        - type: 
+        - type_: 
         - updated_at: 
 
         Args:
@@ -1146,7 +1146,7 @@ class EventsQuery:
         - id: 
         - links: 
         - relationships: 
-        - type: 
+        - type_: 
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -1270,7 +1270,7 @@ class MetricsQuery:
         - id: 
         - links: 
         - relationships: 
-        - type: 
+        - type_: 
         - updated: 
 
         Args:
@@ -1395,7 +1395,7 @@ class FlowsQuery:
         - id: 
         - links: 
         - relationships: 
-        - type: 
+        - type_: 
         - updated: 
 
         Args:
@@ -1519,7 +1519,7 @@ class EmailTemplatesQuery:
         - attributes: 
         - id: 
         - links: 
-        - type: 
+        - type_: 
         - updated: 
 
         Args:
