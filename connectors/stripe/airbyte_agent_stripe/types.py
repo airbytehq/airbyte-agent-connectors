@@ -388,7 +388,7 @@ class ChargesSearchFilter(TypedDict, total=False):
     """Whether the charge occurred in live mode (true) or test mode (false)."""
     metadata: dict[str, Any] | None
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: str | None
+    object_: str | None
     """String representing the object type, always 'charge' for charge objects."""
     on_behalf_of: str | None
     """ID of the account on whose behalf the charge was made (Connect only)."""
@@ -494,7 +494,7 @@ class ChargesInFilter(TypedDict, total=False):
     """Whether the charge occurred in live mode (true) or test mode (false)."""
     metadata: list[dict[str, Any]]
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: list[str]
+    object_: list[str]
     """String representing the object type, always 'charge' for charge objects."""
     on_behalf_of: list[str]
     """ID of the account on whose behalf the charge was made (Connect only)."""
@@ -600,7 +600,7 @@ class ChargesAnyValueFilter(TypedDict, total=False):
     """Whether the charge occurred in live mode (true) or test mode (false)."""
     metadata: Any
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: Any
+    object_: Any
     """String representing the object type, always 'charge' for charge objects."""
     on_behalf_of: Any
     """ID of the account on whose behalf the charge was made (Connect only)."""
@@ -706,7 +706,7 @@ class ChargesStringFilter(TypedDict, total=False):
     """Whether the charge occurred in live mode (true) or test mode (false)."""
     metadata: str
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: str
+    object_: str
     """String representing the object type, always 'charge' for charge objects."""
     on_behalf_of: str
     """ID of the account on whose behalf the charge was made (Connect only)."""
@@ -812,7 +812,7 @@ class ChargesSortFilter(TypedDict, total=False):
     """Whether the charge occurred in live mode (true) or test mode (false)."""
     metadata: AirbyteSortOrder
     """Key-value pairs for storing additional structured information about the charge, useful for internal tracking."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """String representing the object type, always 'charge' for charge objects."""
     on_behalf_of: AirbyteSortOrder
     """ID of the account on whose behalf the charge was made (Connect only)."""
@@ -999,7 +999,7 @@ class CustomersSearchFilter(TypedDict, total=False):
     """The customer's full name or business name."""
     next_invoice_sequence: int | None
     """The sequence number for the next invoice generated for this customer."""
-    object: str | None
+    object_: str | None
     """String representing the object type, always 'customer'."""
     phone: str | None
     """The customer's phone number."""
@@ -1065,7 +1065,7 @@ class CustomersInFilter(TypedDict, total=False):
     """The customer's full name or business name."""
     next_invoice_sequence: list[int]
     """The sequence number for the next invoice generated for this customer."""
-    object: list[str]
+    object_: list[str]
     """String representing the object type, always 'customer'."""
     phone: list[str]
     """The customer's phone number."""
@@ -1131,7 +1131,7 @@ class CustomersAnyValueFilter(TypedDict, total=False):
     """The customer's full name or business name."""
     next_invoice_sequence: Any
     """The sequence number for the next invoice generated for this customer."""
-    object: Any
+    object_: Any
     """String representing the object type, always 'customer'."""
     phone: Any
     """The customer's phone number."""
@@ -1197,7 +1197,7 @@ class CustomersStringFilter(TypedDict, total=False):
     """The customer's full name or business name."""
     next_invoice_sequence: str
     """The sequence number for the next invoice generated for this customer."""
-    object: str
+    object_: str
     """String representing the object type, always 'customer'."""
     phone: str
     """The customer's phone number."""
@@ -1263,7 +1263,7 @@ class CustomersSortFilter(TypedDict, total=False):
     """The customer's full name or business name."""
     next_invoice_sequence: AirbyteSortOrder
     """The sequence number for the next invoice generated for this customer."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """String representing the object type, always 'customer'."""
     phone: AirbyteSortOrder
     """The customer's phone number."""
@@ -1492,7 +1492,7 @@ class InvoicesSearchFilter(TypedDict, total=False):
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
     number: str | None
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: str | None
+    object_: str | None
     """String representing the object type, always 'invoice'."""
     on_behalf_of: str | None
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
@@ -1676,7 +1676,7 @@ class InvoicesInFilter(TypedDict, total=False):
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
     number: list[str]
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: list[str]
+    object_: list[str]
     """String representing the object type, always 'invoice'."""
     on_behalf_of: list[str]
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
@@ -1860,7 +1860,7 @@ class InvoicesAnyValueFilter(TypedDict, total=False):
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
     number: Any
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: Any
+    object_: Any
     """String representing the object type, always 'invoice'."""
     on_behalf_of: Any
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
@@ -2044,7 +2044,7 @@ class InvoicesStringFilter(TypedDict, total=False):
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
     number: str
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: str
+    object_: str
     """String representing the object type, always 'invoice'."""
     on_behalf_of: str
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
@@ -2228,7 +2228,7 @@ class InvoicesSortFilter(TypedDict, total=False):
     """Timestamp of the next automatic payment attempt for this invoice, if applicable."""
     number: AirbyteSortOrder
     """A unique, human-readable identifier for this invoice, often shown to customers."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """String representing the object type, always 'invoice'."""
     on_behalf_of: AirbyteSortOrder
     """The account on behalf of which the invoice is being created, used in Connect scenarios."""
@@ -2415,7 +2415,7 @@ class RefundsSearchFilter(TypedDict, total=False):
     """Unique identifier for the refund object."""
     metadata: dict[str, Any] | None
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: str | None
+    object_: str | None
     """String representing the object type, always 'refund'."""
     payment_intent: str | None
     """ID of the PaymentIntent that was refunded."""
@@ -2451,7 +2451,7 @@ class RefundsInFilter(TypedDict, total=False):
     """Unique identifier for the refund object."""
     metadata: list[dict[str, Any]]
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: list[str]
+    object_: list[str]
     """String representing the object type, always 'refund'."""
     payment_intent: list[str]
     """ID of the PaymentIntent that was refunded."""
@@ -2487,7 +2487,7 @@ class RefundsAnyValueFilter(TypedDict, total=False):
     """Unique identifier for the refund object."""
     metadata: Any
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: Any
+    object_: Any
     """String representing the object type, always 'refund'."""
     payment_intent: Any
     """ID of the PaymentIntent that was refunded."""
@@ -2523,7 +2523,7 @@ class RefundsStringFilter(TypedDict, total=False):
     """Unique identifier for the refund object."""
     metadata: str
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: str
+    object_: str
     """String representing the object type, always 'refund'."""
     payment_intent: str
     """ID of the PaymentIntent that was refunded."""
@@ -2559,7 +2559,7 @@ class RefundsSortFilter(TypedDict, total=False):
     """Unique identifier for the refund object."""
     metadata: AirbyteSortOrder
     """Set of key-value pairs that you can attach to an object for storing additional structured information."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """String representing the object type, always 'refund'."""
     payment_intent: AirbyteSortOrder
     """ID of the PaymentIntent that was refunded."""
@@ -2738,7 +2738,7 @@ class SubscriptionsSearchFilter(TypedDict, total=False):
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
     next_pending_invoice_item_invoice: int | None
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: str | None
+    object_: str | None
     """String representing the object type, always 'subscription'."""
     on_behalf_of: str | None
     """For Connect platforms, the account for which the subscription is being created or managed."""
@@ -2844,7 +2844,7 @@ class SubscriptionsInFilter(TypedDict, total=False):
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
     next_pending_invoice_item_invoice: list[int]
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: list[str]
+    object_: list[str]
     """String representing the object type, always 'subscription'."""
     on_behalf_of: list[str]
     """For Connect platforms, the account for which the subscription is being created or managed."""
@@ -2950,7 +2950,7 @@ class SubscriptionsAnyValueFilter(TypedDict, total=False):
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
     next_pending_invoice_item_invoice: Any
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: Any
+    object_: Any
     """String representing the object type, always 'subscription'."""
     on_behalf_of: Any
     """For Connect platforms, the account for which the subscription is being created or managed."""
@@ -3056,7 +3056,7 @@ class SubscriptionsStringFilter(TypedDict, total=False):
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
     next_pending_invoice_item_invoice: str
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: str
+    object_: str
     """String representing the object type, always 'subscription'."""
     on_behalf_of: str
     """For Connect platforms, the account for which the subscription is being created or managed."""
@@ -3162,7 +3162,7 @@ class SubscriptionsSortFilter(TypedDict, total=False):
     """Set of key-value pairs that you can attach to the subscription for storing additional structured information."""
     next_pending_invoice_item_invoice: AirbyteSortOrder
     """Timestamp when the next invoice for pending invoice items will be created."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """String representing the object type, always 'subscription'."""
     on_behalf_of: AirbyteSortOrder
     """For Connect platforms, the account for which the subscription is being created or managed."""

@@ -79,12 +79,11 @@ class HTTPXClient:
             pool=timeout.pool,
         )
 
-    def _convert_response(self, httpx_response: httpx.Response, *, stream: bool = False) -> HTTPResponse:
+    def _convert_response(self, httpx_response: httpx.Response) -> HTTPResponse:
         """Convert httpx.Response to SDK HTTPResponse.
 
         Args:
             httpx_response: The httpx response object
-            stream: Whether the response should be treated as streaming (do not eagerly read body)
 
         Returns:
             HTTPResponse wrapping the httpx response
@@ -92,8 +91,7 @@ class HTTPXClient:
         return HTTPResponse(
             status_code=httpx_response.status_code,
             headers=dict(httpx_response.headers),
-            # When streaming, avoid eagerly reading the body
-            content=b"" if stream else httpx_response.content,
+            content=httpx_response.content,
             _original_response=httpx_response,
         )
 
@@ -132,8 +130,8 @@ class HTTPXClient:
         if self._client is None:
             self._client = self._create_client()
 
-        # Extract stream parameter (not supported by httpx.request directly)
-        stream = kwargs.pop("stream", False)
+        # Remove stream parameter (handled at the SDK layer, not by httpx)
+        kwargs.pop("stream", None)
 
         try:
             # Execute the request
@@ -148,7 +146,7 @@ class HTTPXClient:
             )
 
             # Convert to SDK response
-            response = self._convert_response(httpx_response, stream=stream)
+            response = self._convert_response(httpx_response)
 
             # Check for HTTP errors and wrap them
             if httpx_response.status_code >= 400:
