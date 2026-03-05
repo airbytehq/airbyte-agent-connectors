@@ -632,7 +632,7 @@ class NotesQuery:
 
         Available filter fields (NotesSearchFilter):
         - id: The unique identifier of the note.
-        - object: The object type, always "note".
+        - object_: The object type, always "note".
         - title: The title of the note.
         - owner: The owner of the note.
         - created_at: The creation time of the note in ISO 8601 format.

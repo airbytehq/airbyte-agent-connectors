@@ -42,7 +42,7 @@ class NotesSearchFilter(TypedDict, total=False):
     """Available fields for filtering notes search queries."""
     id: str | None
     """The unique identifier of the note."""
-    object: str | None
+    object_: str | None
     """The object type, always "note"."""
     title: str | None
     """The title of the note."""
@@ -70,7 +70,7 @@ class NotesInFilter(TypedDict, total=False):
     """Available fields for 'in' condition (values are lists)."""
     id: list[str]
     """The unique identifier of the note."""
-    object: list[str]
+    object_: list[str]
     """The object type, always "note"."""
     title: list[str]
     """The title of the note."""
@@ -98,7 +98,7 @@ class NotesAnyValueFilter(TypedDict, total=False):
     """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
     id: Any
     """The unique identifier of the note."""
-    object: Any
+    object_: Any
     """The object type, always "note"."""
     title: Any
     """The title of the note."""
@@ -126,7 +126,7 @@ class NotesStringFilter(TypedDict, total=False):
     """String fields for text search conditions (like, fuzzy, keyword)."""
     id: str
     """The unique identifier of the note."""
-    object: str
+    object_: str
     """The object type, always "note"."""
     title: str
     """The title of the note."""
@@ -154,7 +154,7 @@ class NotesSortFilter(TypedDict, total=False):
     """Available fields for sorting notes search results."""
     id: AirbyteSortOrder
     """The unique identifier of the note."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """The object type, always "note"."""
     title: AirbyteSortOrder
     """The title of the note."""

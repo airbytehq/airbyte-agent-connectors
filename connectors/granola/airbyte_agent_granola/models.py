@@ -58,7 +58,7 @@ class FolderMembership(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str, Any] = Field(default=None)
-    object: Union[str | None, Any] = Field(default=None)
+    object_: Union[str | None, Any] = Field(default=None, alias="object")
     name: Union[str | None, Any] = Field(default=None)
 
 class TranscriptSpeaker(BaseModel):
@@ -81,7 +81,7 @@ class Note(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[str, Any] = Field(default=None)
-    object: Union[str | None, Any] = Field(default=None)
+    object_: Union[str | None, Any] = Field(default=None, alias="object")
     title: Union[str | None, Any] = Field(default=None)
     owner: Union[Any, Any] = Field(default=None)
     created_at: Union[str | None, Any] = Field(default=None)
@@ -168,7 +168,7 @@ class NotesSearchData(BaseModel):
 
     id: str | None = None
     """The unique identifier of the note."""
-    object: str | None = None
+    object_: str | None = None
     """The object type, always "note"."""
     title: str | None = None
     """The title of the note."""
