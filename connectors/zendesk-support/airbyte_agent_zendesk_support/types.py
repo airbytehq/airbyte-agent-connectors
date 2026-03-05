@@ -1588,7 +1588,7 @@ class TicketCommentsSearchFilter(TypedDict, total=False):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: int | None
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: str | None
+    type_: str | None
     """Type of event, typically indicating this is a comment event"""
     uploads: list[Any] | None
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -1626,7 +1626,7 @@ class TicketCommentsInFilter(TypedDict, total=False):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: list[int]
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: list[str]
+    type_: list[str]
     """Type of event, typically indicating this is a comment event"""
     uploads: list[list[Any]]
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -1664,7 +1664,7 @@ class TicketCommentsAnyValueFilter(TypedDict, total=False):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: Any
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: Any
+    type_: Any
     """Type of event, typically indicating this is a comment event"""
     uploads: Any
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -1702,7 +1702,7 @@ class TicketCommentsStringFilter(TypedDict, total=False):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: str
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: str
+    type_: str
     """Type of event, typically indicating this is a comment event"""
     uploads: str
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -1740,7 +1740,7 @@ class TicketCommentsSortFilter(TypedDict, total=False):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: AirbyteSortOrder
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of event, typically indicating this is a comment event"""
     uploads: AirbyteSortOrder
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -1893,7 +1893,7 @@ class TicketFieldsSearchFilter(TypedDict, total=False):
     """The title of the ticket field displayed to agents"""
     title_in_portal: str | None
     """The title of the ticket field displayed to end users in Help Center"""
-    type: str | None
+    type_: str | None
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str | None
     """Timestamp when the custom ticket field was last updated"""
@@ -1951,7 +1951,7 @@ class TicketFieldsInFilter(TypedDict, total=False):
     """The title of the ticket field displayed to agents"""
     title_in_portal: list[str]
     """The title of the ticket field displayed to end users in Help Center"""
-    type: list[str]
+    type_: list[str]
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: list[str]
     """Timestamp when the custom ticket field was last updated"""
@@ -2009,7 +2009,7 @@ class TicketFieldsAnyValueFilter(TypedDict, total=False):
     """The title of the ticket field displayed to agents"""
     title_in_portal: Any
     """The title of the ticket field displayed to end users in Help Center"""
-    type: Any
+    type_: Any
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: Any
     """Timestamp when the custom ticket field was last updated"""
@@ -2067,7 +2067,7 @@ class TicketFieldsStringFilter(TypedDict, total=False):
     """The title of the ticket field displayed to agents"""
     title_in_portal: str
     """The title of the ticket field displayed to end users in Help Center"""
-    type: str
+    type_: str
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str
     """Timestamp when the custom ticket field was last updated"""
@@ -2125,7 +2125,7 @@ class TicketFieldsSortFilter(TypedDict, total=False):
     """The title of the ticket field displayed to agents"""
     title_in_portal: AirbyteSortOrder
     """The title of the ticket field displayed to end users in Help Center"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: AirbyteSortOrder
     """Timestamp when the custom ticket field was last updated"""
@@ -2571,7 +2571,7 @@ class TicketMetricsSearchFilter(TypedDict, total=False):
     """Identifier of the associated ticket"""
     time: str | None
     """Time related to the ticket"""
-    type: str | None
+    type_: str | None
     """Type of ticket"""
     updated_at: str | None
     """Timestamp when the metric record was last updated"""
@@ -2635,7 +2635,7 @@ class TicketMetricsInFilter(TypedDict, total=False):
     """Identifier of the associated ticket"""
     time: list[str]
     """Time related to the ticket"""
-    type: list[str]
+    type_: list[str]
     """Type of ticket"""
     updated_at: list[str]
     """Timestamp when the metric record was last updated"""
@@ -2699,7 +2699,7 @@ class TicketMetricsAnyValueFilter(TypedDict, total=False):
     """Identifier of the associated ticket"""
     time: Any
     """Time related to the ticket"""
-    type: Any
+    type_: Any
     """Type of ticket"""
     updated_at: Any
     """Timestamp when the metric record was last updated"""
@@ -2763,7 +2763,7 @@ class TicketMetricsStringFilter(TypedDict, total=False):
     """Identifier of the associated ticket"""
     time: str
     """Time related to the ticket"""
-    type: str
+    type_: str
     """Type of ticket"""
     updated_at: str
     """Timestamp when the metric record was last updated"""
@@ -2827,7 +2827,7 @@ class TicketMetricsSortFilter(TypedDict, total=False):
     """Identifier of the associated ticket"""
     time: AirbyteSortOrder
     """Time related to the ticket"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of ticket"""
     updated_at: AirbyteSortOrder
     """Timestamp when the metric record was last updated"""
@@ -3004,7 +3004,7 @@ class TicketsSearchFilter(TypedDict, total=False):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: int | None
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: str | None
+    type_: str | None
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: str | None
     """Timestamp indicating when the ticket was last updated with a ticket event"""
@@ -3088,7 +3088,7 @@ class TicketsInFilter(TypedDict, total=False):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: list[int]
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: list[str]
+    type_: list[str]
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: list[str]
     """Timestamp indicating when the ticket was last updated with a ticket event"""
@@ -3172,7 +3172,7 @@ class TicketsAnyValueFilter(TypedDict, total=False):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: Any
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: Any
+    type_: Any
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: Any
     """Timestamp indicating when the ticket was last updated with a ticket event"""
@@ -3256,7 +3256,7 @@ class TicketsStringFilter(TypedDict, total=False):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: str
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: str
+    type_: str
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: str
     """Timestamp indicating when the ticket was last updated with a ticket event"""
@@ -3340,7 +3340,7 @@ class TicketsSortFilter(TypedDict, total=False):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: AirbyteSortOrder
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: AirbyteSortOrder
     """Timestamp indicating when the ticket was last updated with a ticket event"""

@@ -44,7 +44,7 @@ class Ticket(BaseModel):
     id: Union[int, Any] = Field(default=None)
     url: Union[str, Any] = Field(default=None)
     external_id: Union[str | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     subject: Union[str | None, Any] = Field(default=None)
     raw_subject: Union[str | None, Any] = Field(default=None)
     description: Union[str, Any] = Field(default=None)
@@ -162,7 +162,7 @@ class TicketComment(BaseModel):
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     id: Union[int, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     body: Union[str, Any] = Field(default=None)
     html_body: Union[str, Any] = Field(default=None)
     plain_body: Union[str, Any] = Field(default=None)
@@ -238,7 +238,7 @@ class TicketField(BaseModel):
 
     id: Union[int, Any] = Field(default=None)
     url: Union[str, Any] = Field(default=None)
-    type: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
     title: Union[str, Any] = Field(default=None)
     raw_title: Union[str, Any] = Field(default=None)
     description: Union[str, Any] = Field(default=None)
@@ -883,7 +883,7 @@ class TicketCommentsSearchData(BaseModel):
     """Identifier of the ticket to which this comment belongs"""
     timestamp: int | None = None
     """Timestamp of when the event occurred in the incremental export stream"""
-    type: str | None = None
+    type_: str | None = None
     """Type of event, typically indicating this is a comment event"""
     uploads: list[Any] | None = None
     """Array of upload tokens or identifiers for files being attached to the comment"""
@@ -943,7 +943,7 @@ class TicketFieldsSearchData(BaseModel):
     """The title of the ticket field displayed to agents"""
     title_in_portal: str | None = None
     """The title of the ticket field displayed to end users in Help Center"""
-    type: str | None = None
+    type_: str | None = None
     """Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger"""
     updated_at: str | None = None
     """Timestamp when the custom ticket field was last updated"""
@@ -1051,7 +1051,7 @@ class TicketMetricsSearchData(BaseModel):
     """Identifier of the associated ticket"""
     time: str | None = None
     """Time related to the ticket"""
-    type: str | None = None
+    type_: str | None = None
     """Type of ticket"""
     updated_at: str | None = None
     """Timestamp when the metric record was last updated"""
@@ -1135,7 +1135,7 @@ class TicketsSearchData(BaseModel):
     """Array of tags applied to the ticket for categorization and filtering"""
     ticket_form_id: int | None = None
     """Unique identifier of the ticket form used when creating the ticket"""
-    type: str | None = None
+    type_: str | None = None
     """Type of ticket (e.g., problem, incident, question, task)"""
     updated_at: str | None = None
     """Timestamp indicating when the ticket was last updated with a ticket event"""

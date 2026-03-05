@@ -1309,7 +1309,7 @@ class TicketsQuery:
         - submitter_id: Unique identifier of the user who submitted the ticket on behalf of the requester
         - tags: Array of tags applied to the ticket for categorization and filtering
         - ticket_form_id: Unique identifier of the ticket form used when creating the ticket
-        - type: Type of ticket (e.g., problem, incident, question, task)
+        - type_: Type of ticket (e.g., problem, incident, question, task)
         - updated_at: Timestamp indicating when the ticket was last updated with a ticket event
         - url: API URL to access the full ticket resource
         - via: Object describing the channel and method through which the ticket was created
@@ -1862,7 +1862,7 @@ class TicketCommentsQuery:
         - public: Boolean indicating whether the comment is visible to end users or is an internal note
         - ticket_id: Identifier of the ticket to which this comment belongs
         - timestamp: Timestamp of when the event occurred in the incremental export stream
-        - type: Type of event, typically indicating this is a comment event
+        - type_: Type of event, typically indicating this is a comment event
         - uploads: Array of upload tokens or identifiers for files being attached to the comment
         - via: Channel or method through which the comment was submitted
         - via_reference_id: Reference identifier for the channel through which the comment was created
@@ -2218,7 +2218,7 @@ class TicketMetricsQuery:
         - status_updated_at: Timestamp when the status of the ticket was last updated
         - ticket_id: Identifier of the associated ticket
         - time: Time related to the ticket
-        - type: Type of ticket
+        - type_: Type of ticket
         - updated_at: Timestamp when the metric record was last updated
         - url: The API url of the ticket metric
 
@@ -2367,7 +2367,7 @@ class TicketFieldsQuery:
         - tag: For checkbox fields only, a tag added to tickets when the checkbox field is selected
         - title: The title of the ticket field displayed to agents
         - title_in_portal: The title of the ticket field displayed to end users in Help Center
-        - type: Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger
+        - type_: Field type such as text, textarea, checkbox, date, integer, decimal, regexp, multiselect, or tagger
         - updated_at: Timestamp when the custom ticket field was last updated
         - url: The API URL for this ticket field resource
         - visible_in_portal: Whether this field is visible to end users in Help Center

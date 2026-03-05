@@ -4309,4 +4309,5 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             'verified',
         ],
     },
+    server_variable_defaults={'subdomain': 'your-subdomain'},
 )
