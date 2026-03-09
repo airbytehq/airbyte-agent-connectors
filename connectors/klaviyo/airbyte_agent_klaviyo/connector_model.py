@@ -26,7 +26,7 @@ from uuid import (
 KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('95e8cffd-b8c4-4039-968e-d32fb4a69bde'),
     name='klaviyo',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://a.klaviyo.com/api',
     auth=AuthConfig(
         type=AuthType.API_KEY,
