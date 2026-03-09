@@ -26,7 +26,7 @@ from uuid import (
 SendgridConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('fbb5fbe2-16ad-4cf4-af7d-ff9d9c316c87'),
     name='sendgrid',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://api.sendgrid.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
