@@ -3,14 +3,12 @@
 
 # Greenhouse
 
-**Package:** `airbyte-agent-greenhouse` v0.17.110
-
 The Greenhouse agent connector is a Python package that equips AI agents to interact with Greenhouse through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-greenhouse` v0.17.110
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** Token
 - **Docs:** [Official API docs](https://developers.greenhouse.io/harvest.html)
 - **Status:** complete
 

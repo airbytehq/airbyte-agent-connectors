@@ -3,14 +3,12 @@
 
 # Orb
 
-**Package:** `airbyte-agent-orb` v0.1.45
-
 The Orb agent connector is a Python package that equips AI agents to interact with Orb through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-orb` v0.1.45
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** Token
 - **Docs:** [Official API docs](https://docs.withorb.com/api-reference)
 - **Status:** complete
 

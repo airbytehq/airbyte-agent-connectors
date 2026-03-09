@@ -1,16 +1,14 @@
 <!-- AUTO-GENERATED from connectors/amazon-seller-partner/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Amazon-Seller-Partner
-
-**Package:** `airbyte-agent-amazon-seller-partner` v0.1.1
+# Amazon Seller Partner
 
 The Amazon-Seller-Partner agent connector is a Python package that equips AI agents to interact with Amazon-Seller-Partner through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-amazon-seller-partner` v0.1.1
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** OAuth
 - **Docs:** [Official API docs](https://developer-docs.amazon.com/sp-api/)
 - **Status:** complete
 

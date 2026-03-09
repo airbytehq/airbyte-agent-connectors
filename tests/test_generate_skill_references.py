@@ -5,8 +5,6 @@ Run with:  python -m pytest tests/test_generate_skill_references.py -v
 
 from __future__ import annotations
 
-import sys
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -16,6 +14,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 from generate_skill_references import (
     FORMAT_VERSION,
+    _brand_display_name,
     _extract_bullet_list,
     _extract_code_block,
     _extract_sections,
@@ -329,6 +328,48 @@ def test_parse_auth_with_auth_md(tmp_path: Path):
     assert len(result["methods"]) >= 1
 
 
+def test_parse_auth_filters_unavailable_methods(tmp_path: Path):
+    """Methods marked 'isn't available' should be filtered out."""
+    auth_content = """\
+# Authentication
+
+## Open source execution
+
+#### OAuth
+
+OAuth 2.0 flow.
+
+| Field | Required |
+|-------|----------|
+| client_id | Yes |
+
+#### Token
+
+This authentication method isn't available for this connector.
+
+## Hosted
+
+#### OAuth
+
+OAuth 2.0 flow (hosted).
+
+#### Execution
+
+This authentication method isn't available for this connector.
+"""
+    auth_path = tmp_path / "AUTH.md"
+    auth_path.write_text(auth_content)
+    result = parse_auth(auth_path)
+    assert result["exists"] is True
+    method_names = [m["name"] for m in result["methods"]]
+    assert "OAuth" in method_names
+    assert "Token" not in method_names  # filtered: isn't available
+    assert "Execution" not in method_names  # filtered: hosting-specific
+    # OAuth appears under both OSS and Hosted; should be deduplicated
+    assert method_names.count("OAuth") == 1
+    assert "Bring your own OAuth flow" not in method_names  # hosting-specific
+
+
 def test_parse_auth_missing_file(tmp_path: Path):
     auth_path = tmp_path / "AUTH.md"
     result = parse_auth(auth_path)
@@ -377,6 +418,24 @@ def test_validate_readme_structure_passes_standard():
     # All required sections present, so no ValueError raised
     for w in warnings:
         assert "missing expected section" not in w
+
+
+def test_validate_readme_warns_on_missing_optional_section():
+    """Missing optional section should produce a warning, not an error."""
+    # Build a README with all required sections but without optional ones
+    content = (
+        "# Test\n\n"
+        "Description.\n\n"
+        "## Installation\n\n```bash\npip install test\n```\n\n"
+        "## Usage\n\n```python\nimport test\n```\n\n"
+        "## Full documentation\n\n"
+        "### Entities and actions\n\n"
+        "| Entity | Actions |\n|--------|--------|\n| A | B |\n\n"
+        "## Version information\n\n**Package version:** 0.1.0\n"
+    )
+    warnings = validate_readme_structure(content, "test")
+    # Should have warnings for missing Example questions / Unsupported questions
+    assert any("Example questions" in w for w in warnings)
 
 
 def test_format_validation_catches_changed_structure():
@@ -490,7 +549,7 @@ def test_generate_connector_reference_header(tmp_path: Path):
     )
     assert "<!-- AUTO-GENERATED from connectors/stripe/" in content
     assert f"Source format: {FORMAT_VERSION}" in content
-    assert "**Package:** `airbyte-agent-stripe` v0.5.0" in content
+    assert "`airbyte-agent-stripe` v0.5.0" in content
 
 
 def test_generate_connector_reference_has_ops_table(tmp_path: Path):
@@ -566,6 +625,47 @@ def test_generate_skill_md_line_count():
     result = generate_skill_md(metadata)
     line_count = len(result.splitlines())
     assert line_count <= 500, f"SKILL.md is {line_count} lines, expected <= 500"
+
+
+def test_generate_skill_md_has_operational_content():
+    """SKILL.md must contain operational guidance, not just an index."""
+    metadata = [
+        {
+            "name": "stripe",
+            "safe_name": "stripe",
+            "display_name": "Stripe",
+            "pkg_name": "airbyte-agent-stripe",
+            "version": "0.5.0",
+            "auth_summary": "Token",
+            "key_entities": "Customers",
+            "docs_status": "complete",
+            "github_link": "https://example.com",
+        },
+    ]
+    result = generate_skill_md(metadata)
+    # Must have YAML frontmatter
+    assert result.startswith("---")
+    assert "name: airbyte-agent-connectors" in result
+    # Must have operational sections
+    assert "## Mode Detection" in result
+    assert "Platform Mode" in result
+    assert "OSS Mode" in result
+    assert "## Entity-Action API Pattern" in result
+    assert "## Authentication Quick Reference" in result
+    assert "## Security Best Practices" in result
+    # Must have pagination example
+    assert "fetch_all" in result
+
+
+def test_brand_display_name():
+    """_brand_display_name should return brand-correct names."""
+    assert _brand_display_name("google-analytics-data-api", "Google-Analytics-Data-Api") == "Google Analytics Data API"
+    assert _brand_display_name("tiktok-marketing", "Tiktok-Marketing") == "TikTok Marketing"
+    assert _brand_display_name("paypal-transaction", "Paypal-Transaction") == "PayPal Transaction"
+    # Names not in map: fall back to README title if no hyphens
+    assert _brand_display_name("stripe", "Stripe") == "Stripe"
+    # Hyphenated fallback: title-case
+    assert _brand_display_name("some-connector", "some-connector") == "Some Connector"
 
 
 # ---------------------------------------------------------------------------

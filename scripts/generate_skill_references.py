@@ -69,6 +69,43 @@ DEFAULT_REFS_DIR = DEFAULT_SKILLS_DIR / "references"
 
 GITHUB_BASE = "https://github.com/airbytehq/airbyte-agent-connectors"
 
+# Brand-correct display names for connectors whose README H1 uses
+# directory-cased names (e.g. "Google-Analytics-Data-Api") instead of
+# proper product names.
+_BRAND_NAMES: dict[str, str] = {
+    "amazon-ads": "Amazon Ads",
+    "amazon-seller-partner": "Amazon Seller Partner",
+    "facebook-marketing": "Facebook Marketing",
+    "google-ads": "Google Ads",
+    "google-analytics-data-api": "Google Analytics Data API",
+    "google-drive": "Google Drive",
+    "google-search-console": "Google Search Console",
+    "incident-io": "incident.io",
+    "linkedin-ads": "LinkedIn Ads",
+    "paypal-transaction": "PayPal Transaction",
+    "snapchat-marketing": "Snapchat Marketing",
+    "tiktok-marketing": "TikTok Marketing",
+    "zendesk-chat": "Zendesk Chat",
+    "zendesk-support": "Zendesk Support",
+    "zendesk-talk": "Zendesk Talk",
+}
+
+
+def _brand_display_name(dir_name: str, readme_title: str) -> str:
+    """Return a brand-correct display name for a connector.
+
+    Uses the explicit mapping first, then falls back to the README H1 title.
+    If the README H1 is obviously directory-cased (contains hyphens), apply
+    title-casing with common acronym handling.
+    """
+    if dir_name in _BRAND_NAMES:
+        return _BRAND_NAMES[dir_name]
+    # If the README title contains hyphens it was likely auto-generated from
+    # the directory name.  Fall back to a cleaned-up version.
+    if "-" in readme_title:
+        return readme_title.replace("-", " ").title()
+    return readme_title
+
 
 # ---------------------------------------------------------------------------
 # Parsing helpers
@@ -330,15 +367,33 @@ def parse_auth(path: Path) -> dict:
     content = _strip_details_blocks(content)
     sections = _extract_sections(content)
 
-    # Detect auth methods from #### headings
+    # Detect auth methods from #### headings, but filter out:
+    #  1. Methods explicitly marked as unavailable ("isn't available")
+    #  2. Hosting-specific method names that aren't auth types
+    #     ("Execution" = how to call the connector after auth,
+    #      "Bring your own OAuth flow" = a hosting mode, not an auth type)
+    #  3. Duplicates (same method appears under OSS + Hosted headings)
+    _HOSTING_METHOD_NAMES = {"Execution", "Bring your own OAuth flow"}
+    seen_names: set[str] = set()
     methods: list[dict] = []
     for section_name, section_body in sections.items():
         subsections = _extract_subsections(section_body, level=4)
         if subsections:
             for method_name, method_body in subsections.items():
+                body_stripped = method_body.strip()
+                # Skip methods that declare themselves unavailable
+                if "isn't available" in body_stripped:
+                    continue
+                # Skip hosting-specific sections (not auth types)
+                if method_name in _HOSTING_METHOD_NAMES:
+                    continue
+                # Deduplicate (same method may appear under OSS + Hosted)
+                if method_name in seen_names:
+                    continue
+                seen_names.add(method_name)
                 methods.append({
                     "name": method_name,
-                    "body": method_body.strip(),
+                    "body": body_stripped,
                 })
         elif "auth" in section_name.lower():
             methods.append({
@@ -481,7 +536,7 @@ def generate_connector_reference(
 
     pkg_name = pyproject["name"]
     version = pyproject["version"]
-    display_name = readme["title"]
+    display_name = _brand_display_name(name, readme["title"])
     description = readme["description"]
 
     # Auth summary
@@ -510,8 +565,6 @@ def generate_connector_reference(
     lines.append(f"<!-- Source format: {FORMAT_VERSION} | Generated: {date_str} -->")
     lines.append("")
     lines.append(f"# {display_name}")
-    lines.append("")
-    lines.append(f"**Package:** `{pkg_name}` v{version}")
     lines.append("")
     lines.append(description)
     lines.append("")
@@ -678,51 +731,265 @@ def generate_connector_index(
 # ---------------------------------------------------------------------------
 
 SKILL_MD_TEMPLATE = """\
+---
+name: airbyte-agent-connectors
+description: |
+  Sets up and operates Airbyte Agent Connectors -- strongly typed Python packages
+  for accessing {count}+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
+  Jira, and more) through a unified entity-action interface. Use when the user wants
+  to connect to a SaaS API, set up an Airbyte connector, integrate third-party data
+  into an AI agent, or configure MCP tools for Claude. Covers Platform Mode (Airbyte
+  Cloud) and OSS Mode (local SDK).
+license: Elastic-2.0
+compatibility: Requires Python 3.11+. Recommends uv for package management.
+metadata:
+  author: Airbyte
+  version: 1.2.0
+  repo: https://github.com/airbytehq/airbyte-agent-connectors
+  mcp-server: airbyte-agent-mcp
+---
+
 # Airbyte Agent Connectors
 
-Comprehensive reference for all Airbyte AI connectors -- type-safe Python
-packages for integrating SaaS APIs into AI applications.
+Airbyte Agent Connectors let AI agents call third-party APIs through strongly typed, well-documented tools. Each connector is a standalone Python package.
 
-## Overview
+> **Terminology:** **Platform Mode** = Airbyte Cloud at app.airbyte.ai (managed credentials, UI visibility). **OSS Mode** = local Python SDK (self-managed credentials, no cloud dependency). **Definition ID** = UUID that identifies a connector type in the Airbyte API (used in `definition_id` fields, not `connector_type` or `connector_definition_id`).
 
-{count} connectors available -- see the
-[Connector Index](references/connector-index.md) for the full list with
-auth types, key entities, and documentation status.
+> **Important:** This skill provides documentation and setup guidance. When helping users set up connectors, follow the documented workflows below. Do NOT attempt to import Python modules, verify package installations, or run code to check configurations -- simply guide users through the steps using the code examples provided.
 
-## Popular Connectors
+## Mode Detection
 
-| Connector | Package | Description |
-|-----------|---------|-------------|
+**First, determine which mode the user needs:**
+
+### Platform Mode (Airbyte Cloud)
+Use when:
+- Environment has `AIRBYTE_CLIENT_ID` + `AIRBYTE_CLIENT_SECRET`
+- User wants connectors visible in the Airbyte UI at app.airbyte.ai
+- User needs managed credential storage, entity cache, or multi-tenant deployments
+
+### OSS Mode (Open Source / Local SDK)
+Use when:
+- User wants to run connectors directly without platform integration
+- User is doing quick development or prototyping
+- User wants Claude Code/Desktop integration via MCP only
+
+> **Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
+
+---
+
+## Supported Connectors
+
+{count} connectors available. All connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
+
+| Connector | Package | Auth Type | Key Entities |
+|-----------|---------|-----------|--------------|
 {popular_rows}
 
-> For the full table, see [references/connector-index.md](references/connector-index.md).
+> **Full table:** See [references/connector-index.md](references/connector-index.md) for all {count} connectors with auth types, key entities, and documentation status.
 
-## Quick Start (any connector)
+**If the connector is NOT in the index:** Inform the user that this connector isn't available yet. Point them to [GitHub issues](https://github.com/airbytehq/airbyte-agent-connectors/issues).
 
-```bash
-# Install a connector
-uv pip install airbyte-agent-<name>
-```
+---
+
+## Platform Mode Quick Start
+
+For users with Airbyte Platform credentials.
+
+### Prerequisites
+
+Get credentials from [app.airbyte.ai](https://app.airbyte.ai) > Settings > API Keys:
+- `AIRBYTE_CLIENT_ID`
+- `AIRBYTE_CLIENT_SECRET`
+
+### Create a Connector
 
 ```python
-from airbyte_agent_<name> import <Name>Connector
-from airbyte_agent_<name>.models import <Name>AuthConfig
+from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
 
-connector = <Name>Connector(auth_config=<Name>AuthConfig(...))
+connector = await StripeConnector.create_hosted(
+    external_user_id="user_123",
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
+    auth_config=StripeAuthConfig(api_key="sk_live_...")
+)
 ```
 
-## Reference Documentation
+### Use Existing Connector
+
+```python
+connector = StripeConnector(
+    external_user_id="user_123",
+    airbyte_client_id="...",
+    airbyte_client_secret="...",
+)
+result = await connector.execute("customers", "list", {{"limit": 10}})
+```
+
+---
+
+## OSS Mode Quick Start
+
+### Install
+
+```bash
+# Using uv (recommended)
+uv add airbyte-agent-github
+
+# Or using pip in a virtual environment
+python3 -m venv .venv && source .venv/bin/activate
+pip install airbyte-agent-github
+```
+
+### Use Directly
+
+```python
+from airbyte_agent_github import GithubConnector
+from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
+
+connector = GithubConnector(
+    auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_your_token")
+)
+
+result = await connector.execute("issues", "list", {{
+    "owner": "airbytehq",
+    "repo": "airbyte",
+    "states": ["OPEN"],
+    "per_page": 10
+}})
+```
+
+### Add to Claude via MCP
+
+```bash
+claude mcp add airbyte-agent-mcp --scope project
+```
+
+---
+
+## Entity-Action API Pattern
+
+All connectors use the same interface:
+
+```python
+result = await connector.execute(entity, action, params)
+# result.data contains the records (list or dict depending on action)
+# result.meta contains pagination info for list operations
+```
+
+### Actions
+
+| Action | Description | `result.data` Type |
+|--------|-------------|-------------------|
+| `list` | Get multiple records | `list[dict]` |
+| `get` | Get single record by ID | `dict` |
+| `create` | Create new record | `dict` |
+| `update` | Modify existing record | `dict` |
+| `delete` | Remove record | `dict` |
+| `api_search` | Native API search syntax | `list[dict]` |
+
+### Quick Examples
+
+```python
+# List
+await connector.execute("customers", "list", {{"limit": 10}})
+
+# Get
+await connector.execute("customers", "get", {{"id": "cus_xxx"}})
+
+# Search
+await connector.execute("repositories", "api_search", {{
+    "query": "language:python stars:>1000"
+}})
+```
+
+### Pagination
+
+```python
+async def fetch_all(connector, entity, params=None):
+    all_records = []
+    cursor = None
+    params = params or {{}}
+
+    while True:
+        if cursor:
+            params["after"] = cursor
+        result = await connector.execute(entity, "list", params)
+        all_records.extend(result.data)
+
+        if result.meta and hasattr(result.meta, 'pagination'):
+            cursor = getattr(result.meta.pagination, 'cursor', None)
+            if not cursor:
+                break
+        else:
+            break
+
+    return all_records
+```
+
+---
+
+## Authentication Quick Reference
+
+### API Key Connectors
+
+```python
+# Stripe
+from airbyte_agent_stripe.models import StripeAuthConfig
+auth_config=StripeAuthConfig(api_key="sk_live_...")
+
+# Gong
+from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
+auth_config=GongAccessKeyAuthenticationAuthConfig(
+    access_key="...", access_key_secret="..."
+)
+
+# HubSpot (Private App)
+from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
+auth_config=HubspotPrivateAppAuthConfig(access_token="pat-na1-...")
+```
+
+### Personal Access Token
+
+```python
+# GitHub
+from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
+auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
+
+# Slack
+from airbyte_agent_slack.models import SlackAuthConfig
+auth_config=SlackAuthConfig(token="xoxb-...")
+```
+
+### OAuth (requires refresh token)
+
+```python
+# Salesforce
+from airbyte_agent_salesforce.models import SalesforceAuthConfig
+auth_config=SalesforceAuthConfig(
+    client_id="...", client_secret="...", refresh_token="..."
+)
+```
+
+> **Per-connector auth details:** Each connector reference in [references/connectors/](references/connectors/) includes the specific auth class name and fields.
+
+---
+
+## Security Best Practices
+
+- Never hard-code credentials in source files. Use environment variables or `.env` files.
+- Use `.env` pattern: `from dotenv import load_dotenv; load_dotenv()`
+- Rotate tokens regularly. Use short-lived tokens where possible.
+- For production, use Platform Mode for managed credential storage.
+
+---
+
+## Per-Connector Reference Documentation
 
 - [Connector Index](references/connector-index.md) -- full table of all connectors
 - Per-connector references: [references/connectors/](references/connectors/)
 
-Each per-connector reference includes:
-
-- Package name and version
-- Authentication details
-- Available entities and actions
-- Quick-start code snippets
-- Links to full GitHub documentation
+Each per-connector reference includes: package name and version, authentication details, available entities and actions, quick-start code snippets, and links to full GitHub documentation.
 
 ## How References Are Generated
 
@@ -730,15 +997,20 @@ Reference docs are auto-generated by `scripts/generate_skill_references.py`.
 Run `python scripts/generate_skill_references.py --all` to regenerate all
 references, or `--connector <name>` for a specific connector.
 
-See the [generator README](../../scripts/README-generate-skill-references.md)
-for full usage instructions.
+---
+
+## Support
+
+- **Slack Community**: [slack.airbyte.com](https://slack.airbyte.com/)
+- **GitHub Issues**: [airbytehq/airbyte-agent-connectors](https://github.com/airbytehq/airbyte-agent-connectors/issues)
+- **Documentation**: [docs.airbyte.com/ai-agents](https://docs.airbyte.com/ai-agents)
 """
 
 
 def generate_skill_md(connector_metadata: list[dict]) -> str:
-    """Generate a slim SKILL.md with summary + links."""
-    # Pick up to 5 popular connectors (by name recognition)
-    popular_names = ["stripe", "hubspot", "github", "gong", "asana"]
+    """Generate SKILL.md with operational content + auto-generated connector table."""
+    # Pick up to 5 popular connectors (by name recognition) for the table
+    popular_names = ["stripe", "hubspot", "github", "salesforce", "gong"]
     popular: list[dict] = []
     for pname in popular_names:
         for meta in connector_metadata:
@@ -757,7 +1029,11 @@ def generate_skill_md(connector_metadata: list[dict]) -> str:
     rows: list[str] = []
     for meta in popular:
         link = f"[{meta['display_name']}](references/connectors/{meta['safe_name']}.md)"
-        rows.append(f"| {link} | `{meta['pkg_name']}` | See reference |")
+        auth = meta["auth_summary"]
+        entities = meta["key_entities"] or "--"
+        if len(entities) > 40:
+            entities = entities[:37] + "..."
+        rows.append(f"| {link} | `{meta['pkg_name']}` | {auth} | {entities} |")
 
     return SKILL_MD_TEMPLATE.format(
         count=len(connector_metadata),
@@ -997,6 +1273,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("Specify --all, --connector NAME..., or --check.")
 
     # Determine output directory
+    _tmpdir = None  # keep a reference so GC doesn't clean it up early
     if args.dry_run and not args.output_dir:
         _tmpdir = tempfile.TemporaryDirectory(prefix="skill-dryrun-")
         output_dir = Path(_tmpdir.name)

@@ -1,16 +1,14 @@
 <!-- AUTO-GENERATED from connectors/tiktok-marketing/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Tiktok-Marketing
-
-**Package:** `airbyte-agent-tiktok-marketing` v0.1.16
+# TikTok Marketing
 
 The Tiktok-Marketing agent connector is a Python package that equips AI agents to interact with Tiktok-Marketing through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-tiktok-marketing` v0.1.16
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** OAuth
 - **Docs:** [Official API docs](https://business-api.tiktok.com/portal/docs?id=1740302848670722)
 - **Status:** complete
 

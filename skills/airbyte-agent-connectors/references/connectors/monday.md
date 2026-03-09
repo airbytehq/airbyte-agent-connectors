@@ -3,14 +3,12 @@
 
 # Monday
 
-**Package:** `airbyte-agent-monday` v0.1.7
-
 The Monday agent connector is a Python package that equips AI agents to interact with Monday through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-monday` v0.1.7
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developer.monday.com/api-reference/docs)
 - **Status:** complete
 

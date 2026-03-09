@@ -3,14 +3,12 @@
 
 # Chargebee
 
-**Package:** `airbyte-agent-chargebee` v0.1.1
-
 The Chargebee agent connector is a Python package that equips AI agents to interact with Chargebee through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-chargebee` v0.1.1
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** Token
 - **Docs:** [Official API docs](https://apidocs.chargebee.com/docs/api)
 - **Status:** complete
 

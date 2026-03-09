@@ -3,14 +3,12 @@
 
 # Intercom
 
-**Package:** `airbyte-agent-intercom` v0.1.85
-
 The Intercom agent connector is a Python package that equips AI agents to interact with Intercom through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-intercom` v0.1.85
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** Token
 - **Docs:** [Official API docs](https://developers.intercom.com/docs/references/rest-api/api.intercom.io)
 - **Status:** complete
 

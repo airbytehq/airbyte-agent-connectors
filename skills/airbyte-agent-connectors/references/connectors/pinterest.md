@@ -3,14 +3,12 @@
 
 # Pinterest
 
-**Package:** `airbyte-agent-pinterest` v0.1.0
-
 The Pinterest agent connector is a Python package that equips AI agents to interact with Pinterest through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-pinterest` v0.1.0
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.pinterest.com/docs/api/v5/)
 - **Status:** complete
 

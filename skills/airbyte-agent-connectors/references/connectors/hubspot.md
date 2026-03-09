@@ -3,14 +3,12 @@
 
 # Hubspot
 
-**Package:** `airbyte-agent-hubspot` v0.15.117
-
 The Hubspot agent connector is a Python package that equips AI agents to interact with Hubspot through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-hubspot` v0.15.117
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.hubspot.com/docs/api/crm/understanding-the-crm)
 - **Status:** complete
 

@@ -3,14 +3,12 @@
 
 # Stripe
 
-**Package:** `airbyte-agent-stripe` v0.5.113
-
 The Stripe agent connector is a Python package that equips AI agents to interact with Stripe through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
 - **Package:** `airbyte-agent-stripe` v0.5.113
-- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Auth:** Token
 - **Docs:** [Official API docs](https://docs.stripe.com/api)
 - **Status:** complete
 
