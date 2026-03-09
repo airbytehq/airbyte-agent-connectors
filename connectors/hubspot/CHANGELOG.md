@@ -1,4 +1,589 @@
-# Changelog
+# Hubspot changelog
+
+## [0.15.117] - 2026-03-09
+- Updated connector definition (YAML version 0.1.14)
+- Source commit: d395373b
+- SDK version: 0.1.0
+
+## [0.15.116] - 2026-03-05
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: e50d6dd2
+- SDK version: 0.1.0
+
+## [0.15.115] - 2026-03-03
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 9808f8a1
+- SDK version: 0.1.0
+
+## [0.15.114] - 2026-03-03
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 258f32e0
+- SDK version: 0.1.0
+
+## [0.15.113] - 2026-02-27
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: a735c402
+- SDK version: 0.1.0
+
+## [0.15.112] - 2026-02-27
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 7bd29cad
+- SDK version: 0.1.0
+
+## [0.15.111] - 2026-02-27
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 39690c8e
+- SDK version: 0.1.0
+
+## [0.15.110] - 2026-02-26
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 9072a725
+- SDK version: 0.1.0
+
+## [0.15.109] - 2026-02-24
+- Updated connector definition (YAML version 0.1.13)
+- Source commit: 2766150e
+- SDK version: 0.1.0
+
+## [0.15.108] - 2026-02-23
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 62fbfc1f
+- SDK version: 0.1.0
+
+## [0.15.107] - 2026-02-20
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: cb4380e7
+- SDK version: 0.1.0
+
+## [0.15.106] - 2026-02-19
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 7cda3ed1
+- SDK version: 0.1.0
+
+## [0.15.105] - 2026-02-19
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 3f4da97b
+- SDK version: 0.1.0
+
+## [0.15.104] - 2026-02-11
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 8c602f77
+- SDK version: 0.1.0
+
+## [0.15.103] - 2026-02-11
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 114c9599
+- SDK version: 0.1.0
+
+## [0.15.102] - 2026-02-11
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 64ac3a66
+- SDK version: 0.1.0
+
+## [0.15.101] - 2026-02-11
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 7ead0448
+- SDK version: 0.1.0
+
+## [0.15.100] - 2026-02-10
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: d6f8bda4
+- SDK version: 0.1.0
+
+## [0.15.99] - 2026-02-10
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: c1483418
+- SDK version: 0.1.0
+
+## [0.15.98] - 2026-02-10
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: 04691d06
+- SDK version: 0.1.0
+
+## [0.15.97] - 2026-02-06
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: df1e8094
+- SDK version: 0.1.0
+
+## [0.15.96] - 2026-02-06
+- Updated connector definition (YAML version 0.1.12)
+- Source commit: b36beaea
+- SDK version: 0.1.0
+
+## [0.15.95] - 2026-02-06
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 883f64f2
+- SDK version: 0.1.0
+
+## [0.15.94] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: e4f3b9c8
+- SDK version: 0.1.0
+
+## [0.15.93] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: cddf6b9f
+- SDK version: 0.1.0
+
+## [0.15.92] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 481be654
+- SDK version: 0.1.0
+
+## [0.15.91] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 271d94f6
+- SDK version: 0.1.0
+
+## [0.15.90] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: c081aa11
+- SDK version: 0.1.0
+
+## [0.15.89] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 72bd32a3
+- SDK version: 0.1.0
+
+## [0.15.88] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 3e4f6ea0
+- SDK version: 0.1.0
+
+## [0.15.87] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 0c907160
+- SDK version: 0.1.0
+
+## [0.15.86] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: aceb0c64
+- SDK version: 0.1.0
+
+## [0.15.85] - 2026-02-05
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: def0e484
+- SDK version: 0.1.0
+
+## [0.15.84] - 2026-02-04
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 5c699b63
+- SDK version: 0.1.0
+
+## [0.15.83] - 2026-02-04
+- Updated connector definition (YAML version 0.1.11)
+- Source commit: 7aef2bc0
+- SDK version: 0.1.0
+
+## [0.15.82] - 2026-02-04
+- Updated connector definition (YAML version 0.1.10)
+- Source commit: 30d23e05
+- SDK version: 0.1.0
+
+## [0.15.81] - 2026-02-03
+- Updated connector definition (YAML version 0.1.10)
+- Source commit: 5ef2158e
+- SDK version: 0.1.0
+
+## [0.15.80] - 2026-02-03
+- Updated connector definition (YAML version 0.1.10)
+- Source commit: 5c6dbf88
+- SDK version: 0.1.0
+
+## [0.15.79] - 2026-02-03
+- Updated connector definition (YAML version 0.1.10)
+- Source commit: 888d0538
+- SDK version: 0.1.0
+
+## [0.15.78] - 2026-02-02
+- Updated connector definition (YAML version 0.1.9)
+- Source commit: 94024675
+- SDK version: 0.1.0
+
+## [0.15.77] - 2026-02-02
+- Updated connector definition (YAML version 0.1.9)
+- Source commit: 9d9866b0
+- SDK version: 0.1.0
+
+## [0.15.76] - 2026-01-30
+- Updated connector definition (YAML version 0.1.9)
+- Source commit: b184da3e
+- SDK version: 0.1.0
+
+## [0.15.75] - 2026-01-30
+- Updated connector definition (YAML version 0.1.9)
+- Source commit: 5f65d643
+- SDK version: 0.1.0
+
+## [0.15.74] - 2026-01-30
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 5b20f488
+- SDK version: 0.1.0
+
+## [0.15.73] - 2026-01-30
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: a3729d85
+- SDK version: 0.1.0
+
+## [0.15.72] - 2026-01-29
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 43200eed
+- SDK version: 0.1.0
+
+## [0.15.71] - 2026-01-29
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: c718c683
+- SDK version: 0.1.0
+
+## [0.15.70] - 2026-01-28
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 97007bbd
+- SDK version: 0.1.0
+
+## [0.15.69] - 2026-01-28
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: f6c6fca2
+- SDK version: 0.1.0
+
+## [0.15.68] - 2026-01-28
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 71f48c10
+- SDK version: 0.1.0
+
+## [0.15.67] - 2026-01-27
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: 0f5e1914
+- SDK version: 0.1.0
+
+## [0.15.66] - 2026-01-27
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: a01f6b16
+- SDK version: 0.1.0
+
+## [0.15.65] - 2026-01-27
+- Updated connector definition (YAML version 0.1.8)
+- Source commit: c9b05509
+- SDK version: 0.1.0
+
+## [0.15.64] - 2026-01-27
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 4bded58d
+- SDK version: 0.1.0
+
+## [0.15.63] - 2026-01-26
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 74809153
+- SDK version: 0.1.0
+
+## [0.15.62] - 2026-01-26
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: b73c71e0
+- SDK version: 0.1.0
+
+## [0.15.61] - 2026-01-24
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 609c1d86
+- SDK version: 0.1.0
+
+## [0.15.60] - 2026-01-23
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 416466da
+- SDK version: 0.1.0
+
+## [0.15.59] - 2026-01-23
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: f17cdd8c
+- SDK version: 0.1.0
+
+## [0.15.58] - 2026-01-22
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 49e6dfe9
+- SDK version: 0.1.0
+
+## [0.15.57] - 2026-01-22
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: b27328e2
+- SDK version: 0.1.0
+
+## [0.15.56] - 2026-01-22
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 1da193dd
+- SDK version: 0.1.0
+
+## [0.15.55] - 2026-01-22
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: c713ec48
+- SDK version: 0.1.0
+
+## [0.15.54] - 2026-01-21
+- Updated connector definition (YAML version 0.1.7)
+- Source commit: 6fbe49cd
+- SDK version: 0.1.0
+
+## [0.15.53] - 2026-01-21
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: c7dab975
+- SDK version: 0.1.0
+
+## [0.15.52] - 2026-01-19
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: 529cebb7
+- SDK version: 0.1.0
+
+## [0.15.51] - 2026-01-16
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: a50c8f71
+- SDK version: 0.1.0
+
+## [0.15.50] - 2026-01-16
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: 49673b7b
+- SDK version: 0.1.0
+
+## [0.15.49] - 2026-01-16
+- Updated connector definition (YAML version 0.1.6)
+- Source commit: 1bd5ca37
+- SDK version: 0.1.0
+
+## [0.15.48] - 2026-01-16
+- Updated connector definition (YAML version 0.1.5)
+- Source commit: 05c940e3
+- SDK version: 0.1.0
+
+## [0.15.47] - 2026-01-16
+- Updated connector definition (YAML version 0.1.4)
+- Source commit: ca5acdda
+- SDK version: 0.1.0
+
+## [0.15.46] - 2026-01-15
+- Updated connector definition (YAML version 0.1.4)
+- Source commit: fa9a3b02
+- SDK version: 0.1.0
+
+## [0.15.45] - 2026-01-15
+- Updated connector definition (YAML version 0.1.4)
+- Source commit: 61a2e822
+- SDK version: 0.1.0
+
+## [0.15.44] - 2026-01-15
+- Updated connector definition (YAML version 0.1.4)
+- Source commit: 236c9a8a
+- SDK version: 0.1.0
+
+## [0.15.43] - 2026-01-15
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 35211193
+- SDK version: 0.1.0
+
+## [0.15.42] - 2026-01-15
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 20b3afd9
+- SDK version: 0.1.0
+
+## [0.15.41] - 2026-01-15
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: b7138b41
+- SDK version: 0.1.0
+
+## [0.15.40] - 2026-01-15
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 10173eb1
+- SDK version: 0.1.0
+
+## [0.15.39] - 2026-01-15
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: a23d9e7a
+- SDK version: 0.1.0
+
+## [0.15.38] - 2026-01-14
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 7ef09816
+- SDK version: 0.1.0
+
+## [0.15.37] - 2026-01-14
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: e6285db5
+- SDK version: 0.1.0
+
+## [0.15.36] - 2026-01-14
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 31de238d
+- SDK version: 0.1.0
+
+## [0.15.35] - 2026-01-13
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: e80a226e
+- SDK version: 0.1.0
+
+## [0.15.34] - 2026-01-13
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 78b1be67
+- SDK version: 0.1.0
+
+## [0.15.33] - 2026-01-11
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: e519b73d
+- SDK version: 0.1.0
+
+## [0.15.32] - 2026-01-09
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 3c7bfdfd
+- SDK version: 0.1.0
+
+## [0.15.31] - 2026-01-09
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 3bcb33e8
+- SDK version: 0.1.0
+
+## [0.15.30] - 2026-01-09
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: da9b741b
+- SDK version: 0.1.0
+
+## [0.15.29] - 2026-01-07
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: d023e05f
+- SDK version: 0.1.0
+
+## [0.15.28] - 2026-01-06
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 0580c727
+- SDK version: 0.1.0
+
+## [0.15.27] - 2026-01-06
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: e0e2f989
+- SDK version: 0.1.0
+
+## [0.15.26] - 2026-01-05
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 3e274293
+- SDK version: 0.1.0
+
+## [0.15.25] - 2025-12-22
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 0eb1b1c4
+- SDK version: 0.1.0
+
+## [0.15.24] - 2025-12-19
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 12f6b994
+- SDK version: 0.1.0
+
+## [0.15.23] - 2025-12-19
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 5d11bfdf
+- SDK version: 0.1.0
+
+## [0.15.22] - 2025-12-19
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: e996e848
+- SDK version: 0.1.0
+
+## [0.15.21] - 2025-12-18
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: f7c55d3e
+- SDK version: 0.1.0
+
+## [0.15.20] - 2025-12-17
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: af456521
+- SDK version: 0.1.0
+
+## [0.15.19] - 2025-12-17
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 6a6c981e
+- SDK version: 0.1.0
+
+## [0.15.18] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: c4c39c27
+- SDK version: 0.1.0
+
+## [0.15.17] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 85f4e6b0
+- SDK version: 0.1.0
+
+## [0.15.16] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 0bfa6500
+- SDK version: 0.1.0
+
+## [0.15.15] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: ea5a02a3
+- SDK version: 0.1.0
+
+## [0.15.14] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: f13dee0a
+- SDK version: 0.1.0
+
+## [0.15.13] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: d79da1e7
+- SDK version: 0.1.0
+
+## [0.15.12] - 2025-12-15
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 06e7d5c6
+- SDK version: 0.1.0
+
+## [0.15.11] - 2025-12-13
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 1ab72bd8
+- SDK version: 0.1.0
+
+## [0.15.10] - 2025-12-12
+- Updated connector definition (YAML version 0.1.2)
+- Source commit: 4d366cb5
+- SDK version: 0.1.0
+
+## [0.15.9] - 2025-12-12
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: dc79dc8b
+- SDK version: 0.1.0
+
+## [0.15.8] - 2025-12-12
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 9f7f8a98
+- SDK version: 0.1.0
+
+## [0.15.7] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 8c06aa10
+- SDK version: 0.1.0
+
+## [0.15.6] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 11427ac3
+- SDK version: 0.1.0
+
+## [0.15.5] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: bdd5df6d
+- SDK version: 0.1.0
+
+## [0.15.4] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: f2497f71
+- SDK version: 0.1.0
+
+## [0.15.3] - 2025-12-11
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 7d738be5
+- SDK version: 0.1.0
+
+## [0.15.2] - 2025-12-10
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 76636830
+- SDK version: 0.1.0
+
+## [0.15.1] - 2025-12-10
+- Updated connector definition (YAML version 0.1.1)
+- Source commit: 32ed3114
+- SDK version: 0.1.0
 
 ## [0.15.0] - 2025-12-08
 - Updated connector definition (YAML version 0.1.0)

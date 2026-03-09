@@ -24,3 +24,11 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+.env
+configured_connectors.yaml
+
+# Claude Code development symlink
+# Contributors: Create this symlink locally for skill testing
+# mkdir -p .claude/skills && ln -s ../../skills/airbyte-agent-connectors .claude/skills/airbyte-agent-connectors
+.claude/skills/airbyte-agent-connectors

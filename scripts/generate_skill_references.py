@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import argparse
 import difflib
-import hashlib
 import logging
 import re
 import sys
@@ -63,7 +62,7 @@ CONNECTORS_DIR = REPO_ROOT / "connectors"
 DEFAULT_SKILLS_DIR = REPO_ROOT / "skills" / "airbyte-agent-connectors"
 DEFAULT_REFS_DIR = DEFAULT_SKILLS_DIR / "references"
 
-GITHUB_BASE = "https://github.com/airbytehq/airbyte-ai-connectors"
+GITHUB_BASE = "https://github.com/airbytehq/airbyte-agent-connectors"
 
 
 # ---------------------------------------------------------------------------

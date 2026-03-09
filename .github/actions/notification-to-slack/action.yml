@@ -1,0 +1,42 @@
+name: "Notification to Slack (generic Action)"
+description: |
+  Send a notification to a Slack channel.
+  
+  For local testing, you can run the script directly:
+    export SLACK_BOT_TOKEN=xoxb-...
+    python .github/actions/notification-to-slack/notify_slack.py \
+      --channel C07PPP45S78 \
+      --message-body '[{"type": "section", "text": {"type": "mrkdwn", "text": "Hello!"}}]'
+
+inputs:
+  channel:
+    required: true
+    description: "Slack channel ID (e.g., C07PPP45S78)"
+  message_body:
+    required: true
+    description: "JSON array of Slack blocks"
+  slackbot_token:
+    required: true
+    description: "Slack bot token"
+  message_text:
+    required: false
+    description: "Optional plain text message (fallback for notifications)"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies for Python code
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install slack_sdk termcolor
+
+    - name: Send notification
+      shell: bash
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slackbot_token }}
+      run: |
+        python "$GITHUB_ACTION_PATH/notify_slack.py" \
+          --channel "${{ inputs.channel }}" \
+          --message-body '${{ inputs.message_body }}' \
+          --message-text "${{ inputs.message_text }}"

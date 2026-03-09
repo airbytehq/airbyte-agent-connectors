@@ -1,125 +1,136 @@
-# Airbyte Zendesk-Support AI Connector
+# Zendesk-Support
 
-Type-safe Zendesk-Support API connector with full IDE autocomplete support for AI applications.
+The Zendesk-Support agent connector is a Python package that equips AI agents to interact with Zendesk-Support through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
-**Package Version:** 0.18.0
+Zendesk Support is a customer service platform that helps businesses manage support
+tickets, customer interactions, and help center content. This connector provides
+access to tickets, users, organizations, groups, comments, attachments, automations,
+triggers, macros, views, satisfaction ratings, SLA policies, and help center articles
+for customer support analytics and service performance insights.
 
-**Connector Version:** 0.1.1
 
-**SDK Version:** 0.1.0
+## Example questions
+
+The Zendesk-Support connector is optimized to handle prompts like these.
+
+- Show me the tickets assigned to me last week
+- List all unresolved tickets
+- Show me the details of recent tickets
+- What are the top 5 support issues our organization has faced this month?
+- Analyze the satisfaction ratings for our support team in the last 30 days
+- Compare ticket resolution times across different support groups
+- Identify the most common ticket fields used in our support workflow
+- Summarize the performance of our SLA policies this quarter
+
+## Unsupported questions
+
+The Zendesk-Support connector isn't currently able to handle prompts like these.
+
+- Create a new support ticket for \{customer\}
+- Update the priority of this ticket
+- Assign this ticket to \{team_member\}
+- Delete these old support tickets
+- Send an automatic response to \{customer\}
 
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-zendesk-support
+uv pip install airbyte-agent-zendesk-support
 ```
 
 ## Usage
 
+Connectors can run in open source or hosted mode.
+
+### Open source
+
+In open source mode, you provide API credentials directly to the connector.
+
 ```python
-from airbyte_ai_zendesk_support import ZendeskSupportConnector
-from airbyte_ai_zendesk_support.models import ZendeskSupportAuthConfig
+from airbyte_agent_zendesk_support import ZendeskSupportConnector
+from airbyte_agent_zendesk_support.models import ZendeskSupportApiTokenAuthConfig
 
-# Create connector
-connector = ZendeskSupportConnector(auth_config=ZendeskSupportAuthConfig(access_token="...", refresh_token="...", client_id="...", client_secret="..."))
+connector = ZendeskSupportConnector(
+    auth_config=ZendeskSupportApiTokenAuthConfig(
+        email="<Your Zendesk account email address>",
+        api_token="<Your Zendesk API token from Admin Center>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@ZendeskSupportConnector.tool_utils
+async def zendesk_support_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
-## Available Operations
+### Hosted
 
-### Tickets Operations
-- `list_tickets()` - Returns a list of all tickets in your account
-- `get_ticket()` - Returns a ticket by its ID
+In hosted mode, API credentials are stored securely in Airbyte Cloud. You provide your Airbyte credentials instead. 
+If your Airbyte client can access multiple organizations, also set `organization_id`.
 
-### Users Operations
-- `list_users()` - Returns a list of all users in your account
-- `get_user()` - Returns a user by their ID
+This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
-### Organizations Operations
-- `list_organizations()` - Returns a list of all organizations in your account
-- `get_organization()` - Returns an organization by its ID
+```python
+from airbyte_agent_zendesk_support import ZendeskSupportConnector, AirbyteAuthConfig
 
-### Groups Operations
-- `list_groups()` - Returns a list of all groups in your account
-- `get_group()` - Returns a group by its ID
+connector = ZendeskSupportConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
 
-### Ticket_Comments Operations
-- `list_ticket_comments()` - Returns a list of comments for a specific ticket
+@agent.tool_plain # assumes you're using Pydantic AI
+@ZendeskSupportConnector.tool_utils
+async def zendesk_support_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
 
-### Attachments Operations
-- `get_attachment()` - Returns an attachment by its ID
-- `download_attachment()` - Downloads the file content of a ticket attachment
+## Full documentation
 
-### Ticket_Audits Operations
-- `list_ticket_audits()` - Returns a list of all ticket audits
-- `list_audits_for_ticket()` - Returns a list of audits for a specific ticket
+### Entities and actions
 
-### Ticket_Metrics Operations
-- `list_ticket_metrics()` - Returns a list of all ticket metrics
+This connector supports the following entities and actions. For more details, see this connector's [full reference documentation](REFERENCE.md).
 
-### Ticket_Fields Operations
-- `list_ticket_fields()` - Returns a list of all ticket fields
-- `get_ticket_field()` - Returns a ticket field by its ID
+| Entity | Actions |
+|--------|---------|
+| Tickets | [List](./REFERENCE.md#tickets-list), [Get](./REFERENCE.md#tickets-get), [Search](./REFERENCE.md#tickets-search) |
+| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Search](./REFERENCE.md#users-search) |
+| Organizations | [List](./REFERENCE.md#organizations-list), [Get](./REFERENCE.md#organizations-get), [Search](./REFERENCE.md#organizations-search) |
+| Groups | [List](./REFERENCE.md#groups-list), [Get](./REFERENCE.md#groups-get), [Search](./REFERENCE.md#groups-search) |
+| Ticket Comments | [List](./REFERENCE.md#ticket-comments-list), [Search](./REFERENCE.md#ticket-comments-search) |
+| Attachments | [Get](./REFERENCE.md#attachments-get), [Download](./REFERENCE.md#attachments-download) |
+| Ticket Audits | [List](./REFERENCE.md#ticket-audits-list), [List](./REFERENCE.md#ticket-audits-list), [Search](./REFERENCE.md#ticket-audits-search) |
+| Ticket Metrics | [List](./REFERENCE.md#ticket-metrics-list), [Search](./REFERENCE.md#ticket-metrics-search) |
+| Ticket Fields | [List](./REFERENCE.md#ticket-fields-list), [Get](./REFERENCE.md#ticket-fields-get), [Search](./REFERENCE.md#ticket-fields-search) |
+| Brands | [List](./REFERENCE.md#brands-list), [Get](./REFERENCE.md#brands-get), [Search](./REFERENCE.md#brands-search) |
+| Views | [List](./REFERENCE.md#views-list), [Get](./REFERENCE.md#views-get) |
+| Macros | [List](./REFERENCE.md#macros-list), [Get](./REFERENCE.md#macros-get) |
+| Triggers | [List](./REFERENCE.md#triggers-list), [Get](./REFERENCE.md#triggers-get) |
+| Automations | [List](./REFERENCE.md#automations-list), [Get](./REFERENCE.md#automations-get) |
+| Tags | [List](./REFERENCE.md#tags-list), [Search](./REFERENCE.md#tags-search) |
+| Satisfaction Ratings | [List](./REFERENCE.md#satisfaction-ratings-list), [Get](./REFERENCE.md#satisfaction-ratings-get), [Search](./REFERENCE.md#satisfaction-ratings-search) |
+| Group Memberships | [List](./REFERENCE.md#group-memberships-list) |
+| Organization Memberships | [List](./REFERENCE.md#organization-memberships-list) |
+| Sla Policies | [List](./REFERENCE.md#sla-policies-list), [Get](./REFERENCE.md#sla-policies-get) |
+| Ticket Forms | [List](./REFERENCE.md#ticket-forms-list), [Get](./REFERENCE.md#ticket-forms-get), [Search](./REFERENCE.md#ticket-forms-search) |
+| Articles | [List](./REFERENCE.md#articles-list), [Get](./REFERENCE.md#articles-get) |
+| Article Attachments | [List](./REFERENCE.md#article-attachments-list), [Get](./REFERENCE.md#article-attachments-get), [Download](./REFERENCE.md#article-attachments-download) |
 
-### Brands Operations
-- `list_brands()` - Returns a list of all brands for the account
-- `get_brand()` - Returns a brand by its ID
 
-### Views Operations
-- `list_views()` - Returns a list of all views for the account
-- `get_view()` - Returns a view by its ID
+### Authentication
 
-### Macros Operations
-- `list_macros()` - Returns a list of all macros for the account
-- `get_macro()` - Returns a macro by its ID
+For all authentication options, see the connector's [authentication documentation](AUTH.md).
 
-### Triggers Operations
-- `list_triggers()` - Returns a list of all triggers for the account
-- `get_trigger()` - Returns a trigger by its ID
+### Zendesk-Support API docs
 
-### Automations Operations
-- `list_automations()` - Returns a list of all automations for the account
-- `get_automation()` - Returns an automation by its ID
+See the official [Zendesk-Support API reference](https://developer.zendesk.com/api-reference/ticketing/introduction/).
 
-### Tags Operations
-- `list_tags()` - Returns a list of all tags used in the account
+## Version information
 
-### Satisfaction_Ratings Operations
-- `list_satisfaction_ratings()` - Returns a list of all satisfaction ratings
-- `get_satisfaction_rating()` - Returns a satisfaction rating by its ID
-
-### Group_Memberships Operations
-- `list_group_memberships()` - Returns a list of all group memberships
-
-### Organization_Memberships Operations
-- `list_organization_memberships()` - Returns a list of all organization memberships
-
-### Sla_Policies Operations
-- `list_sla_policies()` - Returns a list of all SLA policies
-- `get_sla_policy()` - Returns an SLA policy by its ID
-
-### Ticket_Forms Operations
-- `list_ticket_forms()` - Returns a list of all ticket forms for the account
-- `get_ticket_form()` - Returns a ticket form by its ID
-
-### Articles Operations
-- `list_articles()` - Returns a list of all articles in the Help Center
-- `get_article()` - Retrieves the details of a specific article
-
-### Article_Attachments Operations
-- `list_article_attachments()` - Returns a list of all attachments for a specific article
-- `get_article_attachment_metadata()` - Retrieves the metadata of a specific attachment for a specific article
-- `download_article_attachment()` - Downloads the file content of a specific attachment
-
-## Type Definitions
-
-All response types are fully typed using TypedDict for IDE autocomplete support.
-Import types from `airbyte_ai_zendesk_support.types`.
-
-## Documentation
-
-Generated from OpenAPI 3.0 specification.
-
-For API documentation, see the service's official API docs.
+- **Package version:** 0.18.117
+- **Connector version:** 0.1.15
+- **Generated with Connector SDK commit SHA:** e50d6dd2afcab025208f4c255431a51c213a1c5c
+- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-support/CHANGELOG.md)

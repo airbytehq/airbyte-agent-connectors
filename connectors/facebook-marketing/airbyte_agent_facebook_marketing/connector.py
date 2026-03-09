@@ -1,0 +1,2588 @@
+"""
+Facebook-Marketing connector.
+"""
+
+from __future__ import annotations
+
+import inspect
+import json
+import logging
+from functools import wraps
+from typing import TYPE_CHECKING, Any, Callable, Mapping, TypeVar, overload
+try:
+    from typing import Literal
+except ImportError:
+    from typing_extensions import Literal
+
+from pydantic import BaseModel
+
+from .connector_model import FacebookMarketingConnectorModel
+from ._vendored.connector_sdk.introspection import describe_entities, generate_tool_description
+from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as AirbyteAuthConfig
+from .types import (
+    AdAccountGetParams,
+    AdAccountsListParams,
+    AdCreativesListParams,
+    AdLibraryListParams,
+    AdSetsCreateParams,
+    AdSetsGetParams,
+    AdSetsListParams,
+    AdSetsUpdateParams,
+    AdsCreateParams,
+    AdsGetParams,
+    AdsInsightsListParams,
+    AdsListParams,
+    AdsUpdateParams,
+    CampaignsCreateParams,
+    CampaignsGetParams,
+    CampaignsListParams,
+    CampaignsUpdateParams,
+    CurrentUserGetParams,
+    CustomConversionsListParams,
+    ImagesListParams,
+    PixelStatsListParams,
+    PixelsGetParams,
+    PixelsListParams,
+    VideosListParams,
+    AirbyteSearchParams,
+    CampaignsSearchFilter,
+    CampaignsSearchQuery,
+    AdSetsSearchFilter,
+    AdSetsSearchQuery,
+    AdsSearchFilter,
+    AdsSearchQuery,
+    AdCreativesSearchFilter,
+    AdCreativesSearchQuery,
+    AdsInsightsSearchFilter,
+    AdsInsightsSearchQuery,
+    AdAccountSearchFilter,
+    AdAccountSearchQuery,
+    AdAccountsSearchFilter,
+    AdAccountsSearchQuery,
+    CustomConversionsSearchFilter,
+    CustomConversionsSearchQuery,
+    ImagesSearchFilter,
+    ImagesSearchQuery,
+    VideosSearchFilter,
+    VideosSearchQuery,
+)
+from .models import FacebookMarketingOauth20AuthenticationAuthConfig, FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
+from .models import FacebookMarketingAuthConfig
+if TYPE_CHECKING:
+    from .models import FacebookMarketingReplicationConfig
+
+# Import response models and envelope models at runtime
+from .models import (
+    FacebookMarketingCheckResult,
+    FacebookMarketingExecuteResult,
+    FacebookMarketingExecuteResultWithMeta,
+    AdAccountsListResult,
+    CampaignsListResult,
+    AdSetsListResult,
+    AdsListResult,
+    AdCreativesListResult,
+    AdsInsightsListResult,
+    CustomConversionsListResult,
+    ImagesListResult,
+    VideosListResult,
+    PixelsListResult,
+    PixelStatsListResult,
+    AdLibraryListResult,
+    Ad,
+    AdAccount,
+    AdAccountListItem,
+    AdCreateResponse,
+    AdCreative,
+    AdLibraryAd,
+    AdSet,
+    AdSetCreateResponse,
+    AdsInsight,
+    Campaign,
+    CampaignCreateResponse,
+    CurrentUser,
+    CustomConversion,
+    Image,
+    Pixel,
+    PixelStat,
+    UpdateResponse,
+    Video,
+    AirbyteSearchMeta,
+    AirbyteSearchResult,
+    CampaignsSearchData,
+    CampaignsSearchResult,
+    AdSetsSearchData,
+    AdSetsSearchResult,
+    AdsSearchData,
+    AdsSearchResult,
+    AdCreativesSearchData,
+    AdCreativesSearchResult,
+    AdsInsightsSearchData,
+    AdsInsightsSearchResult,
+    AdAccountSearchData,
+    AdAccountSearchResult,
+    AdAccountsSearchData,
+    AdAccountsSearchResult,
+    CustomConversionsSearchData,
+    CustomConversionsSearchResult,
+    ImagesSearchData,
+    ImagesSearchResult,
+    VideosSearchData,
+    VideosSearchResult,
+)
+
+# TypeVar for decorator type preservation
+_F = TypeVar("_F", bound=Callable[..., Any])
+
+DEFAULT_MAX_OUTPUT_CHARS = 50_000  # ~50KB default, configurable per-tool
+
+
+def _raise_output_too_large(message: str) -> None:
+    try:
+        from pydantic_ai import ModelRetry  # type: ignore[import-not-found]
+    except Exception as exc:
+        raise RuntimeError(message) from exc
+    raise ModelRetry(message)
+
+
+def _check_output_size(result: Any, max_chars: int | None, tool_name: str) -> Any:
+    if max_chars is None or max_chars <= 0:
+        return result
+
+    try:
+        serialized = json.dumps(result, default=str)
+    except (TypeError, ValueError):
+        return result
+
+    if len(serialized) > max_chars:
+        truncated_preview = serialized[:500] + "..." if len(serialized) > 500 else serialized
+        _raise_output_too_large(
+            f"Tool '{tool_name}' output too large ({len(serialized):,} chars, limit {max_chars:,}). "
+            "Please narrow your query by: using the 'fields' parameter to select only needed fields, "
+            "adding filters, or reducing the 'limit'. "
+            f"Preview: {truncated_preview}"
+        )
+
+    return result
+
+
+
+
+class FacebookMarketingConnector:
+    """
+    Type-safe Facebook-Marketing API connector.
+
+    Auto-generated from OpenAPI specification with full type safety.
+    """
+
+    connector_name = "facebook-marketing"
+    connector_version = "1.0.19"
+    vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
+
+    # Map of (entity, action) -> needs_envelope for envelope wrapping decision
+    _ENVELOPE_MAP = {
+        ("current_user", "get"): None,
+        ("ad_accounts", "list"): True,
+        ("campaigns", "list"): True,
+        ("campaigns", "create"): None,
+        ("ad_sets", "list"): True,
+        ("ad_sets", "create"): None,
+        ("ads", "list"): True,
+        ("ads", "create"): None,
+        ("ad_creatives", "list"): True,
+        ("ads_insights", "list"): True,
+        ("ad_account", "get"): None,
+        ("custom_conversions", "list"): True,
+        ("images", "list"): True,
+        ("videos", "list"): True,
+        ("pixels", "list"): True,
+        ("pixels", "get"): None,
+        ("pixel_stats", "list"): True,
+        ("campaigns", "get"): None,
+        ("campaigns", "update"): None,
+        ("ad_sets", "get"): None,
+        ("ad_sets", "update"): None,
+        ("ads", "get"): None,
+        ("ads", "update"): None,
+        ("ad_library", "list"): True,
+    }
+
+    # Map of (entity, action) -> {python_param_name: api_param_name}
+    # Used to convert snake_case TypedDict keys to API parameter names in execute()
+    _PARAM_MAP = {
+        ('current_user', 'get'): {'fields': 'fields'},
+        ('ad_accounts', 'list'): {'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('campaigns', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('campaigns', 'create'): {'account_id': 'account_id'},
+        ('ad_sets', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('ad_sets', 'create'): {'account_id': 'account_id'},
+        ('ads', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('ads', 'create'): {'account_id': 'account_id'},
+        ('ad_creatives', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('ads_insights', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'date_preset': 'date_preset', 'time_range': 'time_range', 'level': 'level', 'time_increment': 'time_increment', 'limit': 'limit', 'after': 'after'},
+        ('ad_account', 'get'): {'account_id': 'account_id', 'fields': 'fields'},
+        ('custom_conversions', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('images', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('videos', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('pixels', 'list'): {'account_id': 'account_id', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+        ('pixels', 'get'): {'pixel_id': 'pixel_id', 'fields': 'fields'},
+        ('pixel_stats', 'list'): {'pixel_id': 'pixel_id', 'start_time': 'start_time', 'end_time': 'end_time', 'aggregation': 'aggregation'},
+        ('campaigns', 'get'): {'campaign_id': 'campaign_id', 'fields': 'fields'},
+        ('campaigns', 'update'): {'campaign_id': 'campaign_id'},
+        ('ad_sets', 'get'): {'adset_id': 'adset_id', 'fields': 'fields'},
+        ('ad_sets', 'update'): {'adset_id': 'adset_id'},
+        ('ads', 'get'): {'ad_id': 'ad_id', 'fields': 'fields'},
+        ('ads', 'update'): {'ad_id': 'ad_id'},
+        ('ad_library', 'list'): {'ad_reached_countries': 'ad_reached_countries', 'search_terms': 'search_terms', 'search_page_ids': 'search_page_ids', 'ad_type': 'ad_type', 'ad_active_status': 'ad_active_status', 'ad_delivery_date_min': 'ad_delivery_date_min', 'ad_delivery_date_max': 'ad_delivery_date_max', 'bylines': 'bylines', 'languages': 'languages', 'media_type': 'media_type', 'publisher_platforms': 'publisher_platforms', 'search_type': 'search_type', 'unmask_removed_content': 'unmask_removed_content', 'fields': 'fields', 'limit': 'limit', 'after': 'after'},
+    }
+
+    # Accepted auth_config types for isinstance validation
+    _ACCEPTED_AUTH_TYPES = (FacebookMarketingOauth20AuthenticationAuthConfig, FacebookMarketingServiceAccountKeyAuthenticationAuthConfig, AirbyteAuthConfig)
+
+    def __init__(
+        self,
+        auth_config: FacebookMarketingAuthConfig | AirbyteAuthConfig | BaseModel | None = None,
+        on_token_refresh: Any | None = None    ):
+        """
+        Initialize a new facebook-marketing connector instance.
+
+        Supports both local and hosted execution modes:
+        - Local mode: Provide connector-specific auth config (e.g., FacebookMarketingAuthConfig)
+        - Hosted mode: Provide `AirbyteAuthConfig` with client credentials and either `connector_id` or `customer_name`
+
+        Args:
+            auth_config: Either connector-specific auth config for local mode, or AirbyteAuthConfig for hosted mode
+            on_token_refresh: Optional callback for OAuth2 token refresh persistence.
+                Called with new_tokens dict when tokens are refreshed. Can be sync or async.
+                Example: lambda tokens: save_to_database(tokens)
+        Examples:
+            # Local mode (direct API calls)
+            connector = FacebookMarketingConnector(auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="..."))
+            # Hosted mode with explicit connector_id (no lookup needed)
+            connector = FacebookMarketingConnector(
+                auth_config=AirbyteAuthConfig(
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789",
+                    connector_id="existing-source-uuid"
+                )
+            )
+
+            # Hosted mode with lookup by customer_name
+            connector = FacebookMarketingConnector(
+                auth_config=AirbyteAuthConfig(
+                    customer_name="user-123",
+                    organization_id="00000000-0000-0000-0000-000000000123",
+                    airbyte_client_id="client_abc123",
+                    airbyte_client_secret="secret_xyz789"
+                )
+            )
+        """
+        # Accept AirbyteAuthConfig from any vendored SDK version
+        if (
+            auth_config is not None
+            and not isinstance(auth_config, AirbyteAuthConfig)
+            and type(auth_config).__name__ == AirbyteAuthConfig.__name__
+        ):
+            auth_config = AirbyteAuthConfig(**auth_config.model_dump())
+
+        # Validate auth_config type
+        if auth_config is not None and not isinstance(auth_config, self._ACCEPTED_AUTH_TYPES):
+            raise TypeError(
+                f"Unsupported auth_config type: {type(auth_config).__name__}. "
+                f"Expected one of: {', '.join(t.__name__ for t in self._ACCEPTED_AUTH_TYPES)}"
+            )
+
+        # Hosted mode: auth_config is AirbyteAuthConfig
+        is_hosted = isinstance(auth_config, AirbyteAuthConfig)
+
+        if is_hosted:
+            from ._vendored.connector_sdk.executor import HostedExecutor
+            self._executor = HostedExecutor(
+                airbyte_client_id=auth_config.airbyte_client_id,
+                airbyte_client_secret=auth_config.airbyte_client_secret,
+                connector_id=auth_config.connector_id,
+                customer_name=auth_config.customer_name,
+                organization_id=auth_config.organization_id,
+                connector_definition_id=str(FacebookMarketingConnectorModel.id),
+            )
+        else:
+            # Local mode: auth_config required (must be connector-specific auth type)
+            if not auth_config:
+                raise ValueError(
+                    "Either provide AirbyteAuthConfig with client credentials for hosted mode, "
+                    "or FacebookMarketingAuthConfig for local mode"
+                )
+
+            from ._vendored.connector_sdk.executor import LocalExecutor
+
+            # Build config_values dict from server variables
+            config_values = None
+
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, FacebookMarketingOauth20AuthenticationAuthConfig):
+                    auth_scheme = "facebookOAuth"
+                if isinstance(auth_config, FacebookMarketingServiceAccountKeyAuthenticationAuthConfig):
+                    auth_scheme = "facebookServiceAuth"
+
+            self._executor = LocalExecutor(
+                model=FacebookMarketingConnectorModel,
+                auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
+                config_values=config_values,
+                on_token_refresh=on_token_refresh
+            )
+
+            # Update base_url with server variables if provided
+
+        # Initialize entity query objects
+        self.current_user = CurrentUserQuery(self)
+        self.ad_accounts = AdAccountsQuery(self)
+        self.campaigns = CampaignsQuery(self)
+        self.ad_sets = AdSetsQuery(self)
+        self.ads = AdsQuery(self)
+        self.ad_creatives = AdCreativesQuery(self)
+        self.ads_insights = AdsInsightsQuery(self)
+        self.ad_account = AdAccountQuery(self)
+        self.custom_conversions = CustomConversionsQuery(self)
+        self.images = ImagesQuery(self)
+        self.videos = VideosQuery(self)
+        self.pixels = PixelsQuery(self)
+        self.pixel_stats = PixelStatsQuery(self)
+        self.ad_library = AdLibraryQuery(self)
+
+    # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["current_user"],
+        action: Literal["get"],
+        params: "CurrentUserGetParams"
+    ) -> "CurrentUser": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_accounts"],
+        action: Literal["list"],
+        params: "AdAccountsListParams"
+    ) -> "AdAccountsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["list"],
+        params: "CampaignsListParams"
+    ) -> "CampaignsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["create"],
+        params: "CampaignsCreateParams"
+    ) -> "CampaignCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_sets"],
+        action: Literal["list"],
+        params: "AdSetsListParams"
+    ) -> "AdSetsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_sets"],
+        action: Literal["create"],
+        params: "AdSetsCreateParams"
+    ) -> "AdSetCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["list"],
+        params: "AdsListParams"
+    ) -> "AdsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["create"],
+        params: "AdsCreateParams"
+    ) -> "AdCreateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_creatives"],
+        action: Literal["list"],
+        params: "AdCreativesListParams"
+    ) -> "AdCreativesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads_insights"],
+        action: Literal["list"],
+        params: "AdsInsightsListParams"
+    ) -> "AdsInsightsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_account"],
+        action: Literal["get"],
+        params: "AdAccountGetParams"
+    ) -> "AdAccount": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["custom_conversions"],
+        action: Literal["list"],
+        params: "CustomConversionsListParams"
+    ) -> "CustomConversionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["images"],
+        action: Literal["list"],
+        params: "ImagesListParams"
+    ) -> "ImagesListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["videos"],
+        action: Literal["list"],
+        params: "VideosListParams"
+    ) -> "VideosListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixels"],
+        action: Literal["list"],
+        params: "PixelsListParams"
+    ) -> "PixelsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixels"],
+        action: Literal["get"],
+        params: "PixelsGetParams"
+    ) -> "Pixel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pixel_stats"],
+        action: Literal["list"],
+        params: "PixelStatsListParams"
+    ) -> "PixelStatsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["get"],
+        params: "CampaignsGetParams"
+    ) -> "Campaign": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["campaigns"],
+        action: Literal["update"],
+        params: "CampaignsUpdateParams"
+    ) -> "UpdateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_sets"],
+        action: Literal["get"],
+        params: "AdSetsGetParams"
+    ) -> "AdSet": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_sets"],
+        action: Literal["update"],
+        params: "AdSetsUpdateParams"
+    ) -> "UpdateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["get"],
+        params: "AdsGetParams"
+    ) -> "Ad": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ads"],
+        action: Literal["update"],
+        params: "AdsUpdateParams"
+    ) -> "UpdateResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["ad_library"],
+        action: Literal["list"],
+        params: "AdLibraryListParams"
+    ) -> "AdLibraryListResult": ...
+
+
+    @overload
+    async def execute(
+        self,
+        entity: str,
+        action: Literal["get", "list", "create", "update", "search"],
+        params: Mapping[str, Any]
+    ) -> FacebookMarketingExecuteResult[Any] | FacebookMarketingExecuteResultWithMeta[Any, Any] | Any: ...
+
+    async def execute(
+        self,
+        entity: str,
+        action: Literal["get", "list", "create", "update", "search"],
+        params: Mapping[str, Any] | None = None
+    ) -> Any:
+        """
+        Execute an entity operation with full type safety.
+
+        This is the recommended interface for blessed connectors as it:
+        - Uses the same signature as non-blessed connectors
+        - Provides full IDE autocomplete for entity/action/params
+        - Makes migration from generic to blessed connectors seamless
+
+        Args:
+            entity: Entity name (e.g., "customers")
+            action: Operation action (e.g., "create", "get", "list")
+            params: Operation parameters (typed based on entity+action)
+
+        Returns:
+            Typed response based on the operation
+
+        Example:
+            customer = await connector.execute(
+                entity="customers",
+                action="get",
+                params={"id": "cus_123"}
+            )
+        """
+        from ._vendored.connector_sdk.executor import ExecutionConfig
+
+        # Remap parameter names from snake_case (TypedDict keys) to API parameter names
+        resolved_params = dict(params) if params is not None else None
+        if resolved_params:
+            param_map = self._PARAM_MAP.get((entity, action), {})
+            if param_map:
+                resolved_params = {param_map.get(k, k): v for k, v in resolved_params.items()}
+
+        # Use ExecutionConfig for both local and hosted executors
+        config = ExecutionConfig(
+            entity=entity,
+            action=action,
+            params=resolved_params
+        )
+
+        result = await self._executor.execute(config)
+
+        if not result.success:
+            raise RuntimeError(f"Execution failed: {result.error}")
+
+        # Check if this operation has extractors configured
+        has_extractors = self._ENVELOPE_MAP.get((entity, action), False)
+
+        if has_extractors:
+            # With extractors - return Pydantic envelope with data and meta
+            if result.meta is not None:
+                return FacebookMarketingExecuteResultWithMeta[Any, Any](
+                    data=result.data,
+                    meta=result.meta
+                )
+            else:
+                return FacebookMarketingExecuteResult[Any](data=result.data)
+        else:
+            # No extractors - return raw response data
+            return result.data
+
+    # ===== HEALTH CHECK METHOD =====
+
+    async def check(self) -> FacebookMarketingCheckResult:
+        """
+        Perform a health check to verify connectivity and credentials.
+
+        Executes a lightweight list operation (limit=1) to validate that
+        the connector can communicate with the API and credentials are valid.
+
+        Returns:
+            FacebookMarketingCheckResult with status ("healthy" or "unhealthy") and optional error message
+
+        Example:
+            result = await connector.check()
+            if result.status == "healthy":
+                print("Connection verified!")
+            else:
+                print(f"Check failed: {result.error}")
+        """
+        result = await self._executor.check()
+
+        if result.success and isinstance(result.data, dict):
+            return FacebookMarketingCheckResult(
+                status=result.data.get("status", "unhealthy"),
+                error=result.data.get("error"),
+                checked_entity=result.data.get("checked_entity"),
+                checked_action=result.data.get("checked_action"),
+            )
+        else:
+            return FacebookMarketingCheckResult(
+                status="unhealthy",
+                error=result.error or "Unknown error during health check",
+            )
+
+    # ===== INTROSPECTION METHODS =====
+
+    @classmethod
+    def tool_utils(
+        cls,
+        func: _F | None = None,
+        *,
+        update_docstring: bool = True,
+        enable_hosted_mode_features: bool = True,
+        max_output_chars: int | None = DEFAULT_MAX_OUTPUT_CHARS,
+    ) -> _F | Callable[[_F], _F]:
+        """
+        Decorator that adds tool utilities like docstring augmentation and output limits.
+
+        Usage:
+            @mcp.tool()
+            @FacebookMarketingConnector.tool_utils
+            async def execute(entity: str, action: str, params: dict):
+                ...
+
+            @mcp.tool()
+            @FacebookMarketingConnector.tool_utils(update_docstring=False, max_output_chars=None)
+            async def execute(entity: str, action: str, params: dict):
+                ...
+
+        Args:
+            update_docstring: When True, append connector capabilities to __doc__.
+            enable_hosted_mode_features: When False, omit hosted-mode search sections from docstrings.
+            max_output_chars: Max serialized output size before raising. Use None to disable.
+        """
+
+        def decorate(inner: _F) -> _F:
+            if update_docstring:
+                description = generate_tool_description(
+                    FacebookMarketingConnectorModel,
+                    enable_hosted_mode_features=enable_hosted_mode_features,
+                )
+                original_doc = inner.__doc__ or ""
+                if original_doc.strip():
+                    full_doc = f"{original_doc.strip()}\n{description}"
+                else:
+                    full_doc = description
+            else:
+                full_doc = ""
+
+            if inspect.iscoroutinefunction(inner):
+
+                @wraps(inner)
+                async def aw(*args: Any, **kwargs: Any) -> Any:
+                    result = await inner(*args, **kwargs)
+                    return _check_output_size(result, max_output_chars, inner.__name__)
+
+                wrapped = aw
+            else:
+
+                @wraps(inner)
+                def sw(*args: Any, **kwargs: Any) -> Any:
+                    result = inner(*args, **kwargs)
+                    return _check_output_size(result, max_output_chars, inner.__name__)
+
+                wrapped = sw
+
+            if update_docstring:
+                wrapped.__doc__ = full_doc
+            return wrapped  # type: ignore[return-value]
+
+        if func is not None:
+            return decorate(func)
+        return decorate
+
+    def list_entities(self) -> list[dict[str, Any]]:
+        """
+        Get structured data about available entities, actions, and parameters.
+
+        Returns a list of entity descriptions with:
+        - entity_name: Name of the entity (e.g., "contacts", "deals")
+        - description: Entity description from the first endpoint
+        - available_actions: List of actions (e.g., ["list", "get", "create"])
+        - parameters: Dict mapping action -> list of parameter dicts
+
+        Example:
+            entities = connector.list_entities()
+            for entity in entities:
+                print(f"{entity['entity_name']}: {entity['available_actions']}")
+        """
+        return describe_entities(FacebookMarketingConnectorModel)
+
+    def entity_schema(self, entity: str) -> dict[str, Any] | None:
+        """
+        Get the JSON schema for an entity.
+
+        Args:
+            entity: Entity name (e.g., "contacts", "companies")
+
+        Returns:
+            JSON schema dict describing the entity structure, or None if not found.
+
+        Example:
+            schema = connector.entity_schema("contacts")
+            if schema:
+                print(f"Contact properties: {list(schema.get('properties', {}).keys())}")
+        """
+        entity_def = next(
+            (e for e in FacebookMarketingConnectorModel.entities if e.name == entity),
+            None
+        )
+        if entity_def is None:
+            logging.getLogger(__name__).warning(
+                f"Entity '{entity}' not found. Available entities: "
+                f"{[e.name for e in FacebookMarketingConnectorModel.entities]}"
+            )
+        return entity_def.entity_schema if entity_def else None
+
+    @property
+    def connector_id(self) -> str | None:
+        """Get the connector/source ID (only available in hosted mode).
+
+        Returns:
+            The connector ID if in hosted mode, None if in local mode.
+
+        Example:
+            connector = await FacebookMarketingConnector.create(...)
+            print(f"Created connector: {connector.connector_id}")
+        """
+        if hasattr(self, '_executor') and hasattr(self._executor, '_connector_id'):
+            return self._executor._connector_id
+        return None
+
+    # ===== HOSTED MODE FACTORY =====
+
+    @classmethod
+    async def get_consent_url(
+        cls,
+        *,
+        airbyte_config: AirbyteAuthConfig,
+        redirect_url: str,
+        name: str | None = None,
+        replication_config: "FacebookMarketingReplicationConfig" | None = None,
+        source_template_id: str | None = None,
+    ) -> str:
+        """
+        Initiate server-side OAuth flow with auto-source creation.
+
+        Returns a consent URL where the end user should be redirected to grant access.
+        After completing consent, the source is automatically created and the user is
+        redirected to your redirect_url with a `connector_id` query parameter.
+
+        Args:
+            airbyte_config: Airbyte hosted auth config with client credentials and customer_name.
+                Optionally include organization_id for multi-org request routing.
+            redirect_url: URL where users will be redirected after OAuth consent.
+                After consent, user arrives at: redirect_url?connector_id=...
+            name: Optional name for the source. Defaults to connector name + customer_name.
+            replication_config: Typed replication settings. Merged with OAuth credentials.
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
+
+        Returns:
+            The OAuth consent URL
+
+        Example:
+            consent_url = await FacebookMarketingConnector.get_consent_url(
+                airbyte_config=AirbyteAuthConfig(
+                    customer_name="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                redirect_url="https://myapp.com/oauth/callback",
+                name="My Facebook-Marketing Source",
+                replication_config=FacebookMarketingReplicationConfig(account_ids="..."),
+            )
+            # Redirect user to: consent_url
+            # After consent, user arrives at: https://myapp.com/oauth/callback?connector_id=...
+        """
+        if not airbyte_config.customer_name:
+            raise ValueError("airbyte_config.customer_name is required for get_consent_url()")
+
+        from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+
+        client = AirbyteCloudClient(
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
+            organization_id=airbyte_config.organization_id,
+        )
+
+        try:
+            replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config and hasattr(replication_config, 'model_dump') else replication_config
+
+            consent_url = await client.initiate_oauth(
+                definition_id=str(FacebookMarketingConnectorModel.id),
+                customer_name=airbyte_config.customer_name,
+                redirect_url=redirect_url,
+                name=name,
+                replication_config=replication_config_dict,
+                source_template_id=source_template_id,
+            )
+        finally:
+            await client.close()
+
+        return consent_url
+
+    @classmethod
+    async def create(
+        cls,
+        *,
+        airbyte_config: AirbyteAuthConfig,
+        auth_config: "FacebookMarketingAuthConfig" | None = None,
+        server_side_oauth_secret_id: str | None = None,
+        name: str | None = None,
+        replication_config: "FacebookMarketingReplicationConfig" | None = None,
+        source_template_id: str | None = None,
+    ) -> "FacebookMarketingConnector":
+        """
+        Create a new hosted connector on Airbyte Cloud.
+
+        This factory method:
+        1. Creates a source on Airbyte Cloud with the provided credentials
+        2. Returns a connector configured with the new connector_id
+
+        Supports two authentication modes:
+        1. Direct credentials: Provide `auth_config` with typed credentials
+        2. Server-side OAuth: Provide `server_side_oauth_secret_id` from OAuth flow
+
+        Args:
+            airbyte_config: Airbyte hosted auth config with client credentials and customer_name.
+                Optionally include organization_id for multi-org request routing.
+            auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
+            server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
+                When provided, auth_config is not required.
+            name: Optional source name (defaults to connector name + customer_name)
+            replication_config: Typed replication settings.
+                Required for connectors with x-airbyte-replication-config (REPLICATION mode sources).
+            source_template_id: Source template ID. Required when organization has
+                multiple source templates for this connector type.
+
+        Returns:
+            A FacebookMarketingConnector instance configured in hosted mode
+
+        Raises:
+            ValueError: If neither or both auth_config and server_side_oauth_secret_id provided
+
+        Example:
+            # Create a new hosted connector with API key auth
+            connector = await FacebookMarketingConnector.create(
+                airbyte_config=AirbyteAuthConfig(
+                    customer_name="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="..."),
+            )
+
+            # With replication config (required for this connector):
+            connector = await FacebookMarketingConnector.create(
+                airbyte_config=AirbyteAuthConfig(
+                    customer_name="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                auth_config=FacebookMarketingAuthConfig(access_token="...", client_id="...", client_secret="..."),
+                replication_config=FacebookMarketingReplicationConfig(account_ids="..."),
+            )
+
+            # With server-side OAuth:
+            connector = await FacebookMarketingConnector.create(
+                airbyte_config=AirbyteAuthConfig(
+                    customer_name="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
+                    airbyte_client_id="client_abc",
+                    airbyte_client_secret="secret_xyz",
+                ),
+                server_side_oauth_secret_id="airbyte_oauth_..._secret_...",
+                replication_config=FacebookMarketingReplicationConfig(account_ids="..."),
+            )
+
+            # Use the connector
+            result = await connector.execute("entity", "list", {})
+        """
+        if not airbyte_config.customer_name:
+            raise ValueError("airbyte_config.customer_name is required for create()")
+
+        # Validate: exactly one of auth_config or server_side_oauth_secret_id required
+        if auth_config is None and server_side_oauth_secret_id is None:
+            raise ValueError(
+                "Either auth_config or server_side_oauth_secret_id must be provided"
+            )
+        if auth_config is not None and server_side_oauth_secret_id is not None:
+            raise ValueError(
+                "Cannot provide both auth_config and server_side_oauth_secret_id"
+            )
+
+        from ._vendored.connector_sdk.cloud_utils import AirbyteCloudClient
+        from ._vendored.connector_sdk.types import AirbyteHostedAuthConfig as _AirbyteAuthConfig
+
+        client = AirbyteCloudClient(
+            client_id=airbyte_config.airbyte_client_id,
+            client_secret=airbyte_config.airbyte_client_secret,
+            organization_id=airbyte_config.organization_id,
+        )
+
+        try:
+            # Build credentials from auth_config (if provided)
+            credentials = auth_config.model_dump(exclude_none=True) if auth_config else None
+            replication_config_dict = replication_config.model_dump(exclude_none=True) if replication_config else None
+
+            # Create source on Airbyte Cloud
+            source_name = name or f"{cls.connector_name} - {airbyte_config.customer_name}"
+            source_id = await client.create_source(
+                name=source_name,
+                connector_definition_id=str(FacebookMarketingConnectorModel.id),
+                customer_name=airbyte_config.customer_name,
+                credentials=credentials,
+                replication_config=replication_config_dict,
+                server_side_oauth_secret_id=server_side_oauth_secret_id,
+                source_template_id=source_template_id,
+            )
+        finally:
+            await client.close()
+
+        # Return connector configured with the new connector_id
+        return cls(
+            auth_config=_AirbyteAuthConfig(
+                airbyte_client_id=airbyte_config.airbyte_client_id,
+                airbyte_client_secret=airbyte_config.airbyte_client_secret,
+                organization_id=airbyte_config.organization_id,
+                connector_id=source_id,
+            ),
+        )
+
+
+
+
+class CurrentUserQuery:
+    """
+    Query class for CurrentUser entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        fields: str | None = None,
+        **kwargs
+    ) -> CurrentUser:
+        """
+        Returns information about the current user associated with the access token
+
+        Args:
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            CurrentUser
+        """
+        params = {k: v for k, v in {
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("current_user", "get", params)
+        return result
+
+
+
+class AdAccountsQuery:
+    """
+    Query class for AdAccounts entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdAccountsListResult:
+        """
+        Returns a list of ad accounts associated with the current user
+
+        Args:
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdAccountsListResult
+        """
+        params = {k: v for k, v in {
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_accounts", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdAccountsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: AdAccountsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdAccountsSearchResult:
+        """
+        Search ad_accounts records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdAccountsSearchFilter):
+        - id: Ad account ID
+        - account_id: Ad account ID (numeric)
+        - name: Ad account name
+        - balance: Current balance of the ad account
+        - currency: Currency used by the ad account
+        - account_status: Account status
+        - amount_spent: Total amount spent
+        - business_name: Business name
+        - created_time: Account creation time
+        - spend_cap: Spend cap
+        - timezone_name: Timezone name
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdAccountsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ad_accounts", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdAccountsSearchResult(
+            data=[
+                AdAccountsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class CampaignsQuery:
+    """
+    Query class for Campaigns entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> CampaignsListResult:
+        """
+        Returns a list of campaigns for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            CampaignsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CampaignsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> CampaignCreateResponse:
+        """
+        Creates a new ad campaign in the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            CampaignCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        campaign_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> Campaign:
+        """
+        Returns a single campaign by ID
+
+        Args:
+            campaign_id: The campaign ID
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            Campaign
+        """
+        params = {k: v for k, v in {
+            "campaign_id": campaign_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        campaign_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad campaign
+
+        Args:
+            campaign_id: The campaign ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "campaign_id": campaign_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("campaigns", "update", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: CampaignsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CampaignsSearchResult:
+        """
+        Search campaigns records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CampaignsSearchFilter):
+        - id: Campaign ID
+        - name: Campaign name
+        - account_id: Ad account ID
+        - status: Campaign status
+        - effective_status: Effective status
+        - objective: Campaign objective
+        - daily_budget: Daily budget in account currency
+        - lifetime_budget: Lifetime budget
+        - budget_remaining: Remaining budget
+        - created_time: Campaign creation time
+        - start_time: Campaign start time
+        - stop_time: Campaign stop time
+        - updated_time: Last update time
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CampaignsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("campaigns", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return CampaignsSearchResult(
+            data=[
+                CampaignsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class AdSetsQuery:
+    """
+    Query class for AdSets entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdSetsListResult:
+        """
+        Returns a list of ad sets for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdSetsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdSetsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> AdSetCreateResponse:
+        """
+        Creates a new ad set in the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdSetCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        adset_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> AdSet:
+        """
+        Returns a single ad set by ID
+
+        Args:
+            adset_id: The ad set ID
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            AdSet
+        """
+        params = {k: v for k, v in {
+            "adset_id": adset_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        adset_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad set
+
+        Args:
+            adset_id: The ad set ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "adset_id": adset_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_sets", "update", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: AdSetsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdSetsSearchResult:
+        """
+        Search ad_sets records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdSetsSearchFilter):
+        - id: Ad Set ID
+        - name: Ad Set name
+        - account_id: Ad account ID
+        - campaign_id: Parent campaign ID
+        - effective_status: Effective status
+        - daily_budget: Daily budget
+        - lifetime_budget: Lifetime budget
+        - budget_remaining: Remaining budget
+        - bid_amount: Bid amount
+        - bid_strategy: Bid strategy
+        - created_time: Ad set creation time
+        - start_time: Ad set start time
+        - end_time: Ad set end time
+        - updated_time: Last update time
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdSetsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ad_sets", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdSetsSearchResult(
+            data=[
+                AdSetsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class AdsQuery:
+    """
+    Query class for Ads entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdsListResult:
+        """
+        Returns a list of ads for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def create(
+        self,
+        account_id: str,
+        **kwargs
+    ) -> AdCreateResponse:
+        """
+        Creates a new ad in the specified ad account. Note - requires a Facebook Page to be connected to the ad account.
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            **kwargs: Additional parameters
+
+        Returns:
+            AdCreateResponse
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "create", params)
+        return result
+
+
+
+    async def get(
+        self,
+        ad_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> Ad:
+        """
+        Returns a single ad by ID
+
+        Args:
+            ad_id: The ad ID
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            Ad
+        """
+        params = {k: v for k, v in {
+            "ad_id": ad_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        ad_id: str,
+        **kwargs
+    ) -> UpdateResponse:
+        """
+        Updates an existing ad
+
+        Args:
+            ad_id: The ad ID
+            **kwargs: Additional parameters
+
+        Returns:
+            UpdateResponse
+        """
+        params = {k: v for k, v in {
+            "ad_id": ad_id,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads", "update", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: AdsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdsSearchResult:
+        """
+        Search ads records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdsSearchFilter):
+        - id: Ad ID
+        - name: Ad name
+        - account_id: Ad account ID
+        - adset_id: Parent ad set ID
+        - campaign_id: Parent campaign ID
+        - status: Ad status
+        - effective_status: Effective status
+        - created_time: Ad creation time
+        - updated_time: Last update time
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ads", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdsSearchResult(
+            data=[
+                AdsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class AdCreativesQuery:
+    """
+    Query class for AdCreatives entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdCreativesListResult:
+        """
+        Returns a list of ad creatives for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdCreativesListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_creatives", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdCreativesListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: AdCreativesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdCreativesSearchResult:
+        """
+        Search ad_creatives records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdCreativesSearchFilter):
+        - id: Ad Creative ID
+        - name: Ad Creative name
+        - account_id: Ad account ID
+        - body: Ad body text
+        - title: Ad title
+        - status: Creative status
+        - image_url: Image URL
+        - thumbnail_url: Thumbnail URL
+        - link_url: Link URL
+        - call_to_action_type: Call to action type
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdCreativesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ad_creatives", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdCreativesSearchResult(
+            data=[
+                AdCreativesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class AdsInsightsQuery:
+    """
+    Query class for AdsInsights entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        date_preset: str | None = None,
+        time_range: str | None = None,
+        level: str | None = None,
+        time_increment: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdsInsightsListResult:
+        """
+        Returns performance insights for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            date_preset: Predefined date range
+            time_range: Time range as JSON object with since and until dates (YYYY-MM-DD)
+            level: Level of aggregation
+            time_increment: Number of days (1-90) to aggregate data over, or 'monthly' for monthly aggregation, or 'all_days' for daily breakdown. Use time_increment=1 to get daily insights data.
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdsInsightsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "date_preset": date_preset,
+            "time_range": time_range,
+            "level": level,
+            "time_increment": time_increment,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ads_insights", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdsInsightsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: AdsInsightsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdsInsightsSearchResult:
+        """
+        Search ads_insights records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdsInsightsSearchFilter):
+        - account_id: Ad account ID
+        - account_name: Ad account name
+        - campaign_id: Campaign ID
+        - campaign_name: Campaign name
+        - adset_id: Ad set ID
+        - adset_name: Ad set name
+        - ad_id: Ad ID
+        - ad_name: Ad name
+        - clicks: Number of clicks
+        - impressions: Number of impressions
+        - reach: Number of unique people reached
+        - spend: Amount spent
+        - cpc: Cost per click
+        - cpm: Cost per 1000 impressions
+        - ctr: Click-through rate
+        - date_start: Start date of the reporting period
+        - date_stop: End date of the reporting period
+        - actions: Total number of actions taken
+        - action_values: Action values taken on the ad
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdsInsightsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ads_insights", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdsInsightsSearchResult(
+            data=[
+                AdsInsightsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class AdAccountQuery:
+    """
+    Query class for AdAccount entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def get(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> AdAccount:
+        """
+        Returns information about the specified ad account including balance and currency
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            AdAccount
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_account", "get", params)
+        return result
+
+
+
+    async def search(
+        self,
+        query: AdAccountSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> AdAccountSearchResult:
+        """
+        Search ad_account records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (AdAccountSearchFilter):
+        - id: Ad account ID
+        - account_id: Ad account ID (numeric)
+        - name: Ad account name
+        - balance: Current balance of the ad account
+        - currency: Currency used by the ad account
+        - account_status: Account status
+        - amount_spent: Total amount spent
+        - business_name: Business name
+        - created_time: Account creation time
+        - spend_cap: Spend cap
+        - timezone_name: Timezone name
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            AdAccountSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("ad_account", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return AdAccountSearchResult(
+            data=[
+                AdAccountSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class CustomConversionsQuery:
+    """
+    Query class for CustomConversions entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> CustomConversionsListResult:
+        """
+        Returns a list of custom conversions for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            CustomConversionsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("custom_conversions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CustomConversionsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: CustomConversionsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CustomConversionsSearchResult:
+        """
+        Search custom_conversions records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CustomConversionsSearchFilter):
+        - id: Custom Conversion ID
+        - name: Custom Conversion name
+        - account_id: Ad account ID
+        - description: Description
+        - custom_event_type: Custom event type
+        - creation_time: Creation time
+        - first_fired_time: First fired time
+        - last_fired_time: Last fired time
+        - is_archived: Whether the conversion is archived
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CustomConversionsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("custom_conversions", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return CustomConversionsSearchResult(
+            data=[
+                CustomConversionsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class ImagesQuery:
+    """
+    Query class for Images entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> ImagesListResult:
+        """
+        Returns a list of ad images for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            ImagesListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("images", "list", params)
+        # Cast generic envelope to concrete typed result
+        return ImagesListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: ImagesSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> ImagesSearchResult:
+        """
+        Search images records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (ImagesSearchFilter):
+        - id: Image ID
+        - name: Image name
+        - account_id: Ad account ID
+        - hash: Image hash
+        - url: Image URL
+        - permalink_url: Permalink URL
+        - width: Image width
+        - height: Image height
+        - status: Image status
+        - created_time: Creation time
+        - updated_time: Last update time
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            ImagesSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("images", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return ImagesSearchResult(
+            data=[
+                ImagesSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class VideosQuery:
+    """
+    Query class for Videos entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> VideosListResult:
+        """
+        Returns a list of ad videos for the specified ad account
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            VideosListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("videos", "list", params)
+        # Cast generic envelope to concrete typed result
+        return VideosListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: VideosSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> VideosSearchResult:
+        """
+        Search videos records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (VideosSearchFilter):
+        - id: Video ID
+        - title: Video title
+        - account_id: Ad account ID
+        - description: Video description
+        - length: Video length in seconds
+        - source: Video source URL
+        - permalink_url: Permalink URL
+        - views: Number of views
+        - created_time: Creation time
+        - updated_time: Last update time
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            VideosSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("videos", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return VideosSearchResult(
+            data=[
+                VideosSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class PixelsQuery:
+    """
+    Query class for Pixels entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        account_id: str,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> PixelsListResult:
+        """
+        Returns a list of Facebook pixels for the specified ad account, including pixel configuration and event quality data
+
+        Args:
+            account_id: The Facebook Ad Account ID (without act_ prefix)
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            PixelsListResult
+        """
+        params = {k: v for k, v in {
+            "account_id": account_id,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixels", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PixelsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def get(
+        self,
+        pixel_id: str,
+        fields: str | None = None,
+        **kwargs
+    ) -> Pixel:
+        """
+        Returns details about a single Facebook pixel by ID
+
+        Args:
+            pixel_id: The Facebook pixel ID
+            fields: Comma-separated list of fields to return
+            **kwargs: Additional parameters
+
+        Returns:
+            Pixel
+        """
+        params = {k: v for k, v in {
+            "pixel_id": pixel_id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixels", "get", params)
+        return result
+
+
+
+class PixelStatsQuery:
+    """
+    Query class for PixelStats entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        pixel_id: str,
+        start_time: str | None = None,
+        end_time: str | None = None,
+        aggregation: str | None = None,
+        **kwargs
+    ) -> PixelStatsListResult:
+        """
+        Returns event quality and stats data for a Facebook pixel, including event counts, match quality scores, and deduplication metrics
+
+        Args:
+            pixel_id: The Facebook pixel ID
+            start_time: Start time for stats period as Unix timestamp
+            end_time: End time for stats period as Unix timestamp
+            aggregation: Aggregation level for stats
+            **kwargs: Additional parameters
+
+        Returns:
+            PixelStatsListResult
+        """
+        params = {k: v for k, v in {
+            "pixel_id": pixel_id,
+            "start_time": start_time,
+            "end_time": end_time,
+            "aggregation": aggregation,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pixel_stats", "list", params)
+        # Cast generic envelope to concrete typed result
+        return PixelStatsListResult(
+            data=result.data
+        )
+
+
+
+class AdLibraryQuery:
+    """
+    Query class for AdLibrary entity operations.
+    """
+
+    def __init__(self, connector: FacebookMarketingConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        ad_reached_countries: str,
+        search_terms: str | None = None,
+        search_page_ids: str | None = None,
+        ad_type: str | None = None,
+        ad_active_status: str | None = None,
+        ad_delivery_date_min: str | None = None,
+        ad_delivery_date_max: str | None = None,
+        bylines: str | None = None,
+        languages: str | None = None,
+        media_type: str | None = None,
+        publisher_platforms: str | None = None,
+        search_type: str | None = None,
+        unmask_removed_content: bool | None = None,
+        fields: str | None = None,
+        limit: int | None = None,
+        after: str | None = None,
+        **kwargs
+    ) -> AdLibraryListResult:
+        """
+        Search the Facebook Ad Library for ads about social issues, elections or politics, and ads delivered to the UK or EU. Returns archived ads matching the specified search criteria including ad creative content, delivery dates, spend ranges, and demographic reach data.
+
+        Args:
+            ad_reached_countries: Search by ISO country code to return ads that reached specific countries. Use ALL to search all countries.
+            search_terms: The terms to search for. Blank space is treated as logical AND. Limit of 100 characters.
+            search_page_ids: Search for ads by specific Facebook Page IDs (comma-separated, up to 10)
+            ad_type: Filter by ad type category
+            ad_active_status: Filter by ad active status
+            ad_delivery_date_min: Search for ads delivered after this date (inclusive, YYYY-MM-DD)
+            ad_delivery_date_max: Search for ads delivered before this date (inclusive, YYYY-MM-DD)
+            bylines: Filter by paid-for-by disclaimer byline (JSON array of strings). Available only for POLITICAL_AND_ISSUE_ADS.
+            languages: Filter by language codes (ISO 639-1 JSON array, e.g. "['en','es']")
+            media_type: Filter by media type in the ad
+            publisher_platforms: Filter by Meta platform where the ad appeared (JSON array)
+            search_type: Type of search to use for search_terms
+            unmask_removed_content: Whether to reveal content removed for violating standards
+            fields: Comma-separated list of fields to return
+            limit: Maximum number of results to return
+            after: Cursor for pagination
+            **kwargs: Additional parameters
+
+        Returns:
+            AdLibraryListResult
+        """
+        params = {k: v for k, v in {
+            "ad_reached_countries": ad_reached_countries,
+            "search_terms": search_terms,
+            "search_page_ids": search_page_ids,
+            "ad_type": ad_type,
+            "ad_active_status": ad_active_status,
+            "ad_delivery_date_min": ad_delivery_date_min,
+            "ad_delivery_date_max": ad_delivery_date_max,
+            "bylines": bylines,
+            "languages": languages,
+            "media_type": media_type,
+            "publisher_platforms": publisher_platforms,
+            "search_type": search_type,
+            "unmask_removed_content": unmask_removed_content,
+            "fields": fields,
+            "limit": limit,
+            "after": after,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("ad_library", "list", params)
+        # Cast generic envelope to concrete typed result
+        return AdLibraryListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+

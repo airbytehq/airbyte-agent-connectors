@@ -4,7 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - 'mcp/**'
+      - 'airbyte-agent-mcp/**'
+
+permissions:
+  contents: write
 
 jobs:
   publish:
@@ -16,10 +19,75 @@ jobs:
           python-version: '3.13'
       - name: Install build tools
         run: pip install build twine
+      - name: Get release info
+        id: release_info
+        run: |
+          python scripts/release_info.py \
+            --pyproject airbyte-agent-mcp/pyproject.toml \
+            --changelog airbyte-agent-mcp/CHANGELOG.md \
+            --package-name airbyte-agent-mcp \
+            --github-output >> $GITHUB_OUTPUT
       - name: Build MCP package
-        run: python -m build mcp/
+        if: steps.release_info.outputs.should_publish == 'true'
+        run: python -m build airbyte-agent-mcp/
       - name: Publish to PyPI
+        if: steps.release_info.outputs.should_publish == 'true'
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload mcp/dist/* --skip-existing
+        run: |
+          max_attempts=5
+          attempt=1
+          base_delay=10
+          
+          while [ $attempt -le $max_attempts ]; do
+            echo "Attempt $attempt of $max_attempts..."
+            if twine upload airbyte-agent-mcp/dist/*; then
+              echo "Upload successful!"
+              exit 0
+            fi
+            
+            if [ $attempt -eq $max_attempts ]; then
+              echo "All $max_attempts attempts failed."
+              exit 1
+            fi
+            
+            # Exponential backoff: 10s, 20s, 40s, 80s
+            delay=$((base_delay * (2 ** (attempt - 1))))
+            echo "Upload failed. Retrying in ${delay}s..."
+            sleep $delay
+            attempt=$((attempt + 1))
+          done
+      - name: Create GitHub Release
+        if: steps.release_info.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: airbyte-agent-mcp-v${{ steps.release_info.outputs.version }}
+          name: airbyte-agent-mcp ${{ steps.release_info.outputs.version }}
+          body: ${{ steps.release_info.outputs.notes }}
+          generate_release_notes: false
+
+  notify-on-failure:
+    name: Notify on Failure
+    needs: [publish]
+    if: always() && needs.publish.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Send Slack notification
+        uses: ./.github/actions/notification-to-slack
+        with:
+          slackbot_token: ${{ secrets.SLACK_AIRBYTE_TOOLING_BOT_API_TOKEN }}
+          channel: C07PPP45S78  # #ask-devin-ai
+          message_text: ":x: MCP publish workflow failed!"
+          message_body: |
+            [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":x: *MCP publish workflow failed!*\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow run>"
+                }
+              }
+            ]

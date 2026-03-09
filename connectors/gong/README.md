@@ -1,95 +1,133 @@
-# Airbyte Gong AI Connector
+# Gong
 
-Type-safe Gong API connector with full IDE autocomplete support for AI applications.
+The Gong agent connector is a Python package that equips AI agents to interact with Gong through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
-**Package Version:** 0.19.0
+Gong is a revenue intelligence platform that captures and analyzes customer interactions
+across calls, emails, and web conferences. This connector provides access to users,
+recorded calls with transcripts, activity statistics, scorecards, trackers, workspaces,
+coaching metrics, and library content for sales performance analysis and revenue insights.
 
-**Connector Version:** 0.1.0
 
-**SDK Version:** 0.1.0
+## Example questions
+
+The Gong connector is optimized to handle prompts like these.
+
+- List all users in my Gong account
+- Show me calls from last week
+- Get the transcript for a recent call
+- List all workspaces in Gong
+- Show me the scorecard configurations
+- What trackers are set up in my account?
+- Get coaching metrics for a manager
+- What are the activity stats for our sales team?
+- Find calls mentioning \{keyword\} this month
+- Show me calls for rep \{user_id\} in the last 30 days
+- Which calls had the longest duration last week?
+
+## Unsupported questions
+
+The Gong connector isn't currently able to handle prompts like these.
+
+- Create a new user in Gong
+- Delete a call recording
+- Update scorecard questions
+- Schedule a new meeting
+- Send feedback to a team member
+- Modify tracker keywords
 
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-gong
+uv pip install airbyte-agent-gong
 ```
 
 ## Usage
 
+Connectors can run in open source or hosted mode.
+
+### Open source
+
+In open source mode, you provide API credentials directly to the connector.
+
 ```python
-from airbyte_ai_gong import GongConnector
-from airbyte_ai_gong.models import GongAuthConfig
+from airbyte_agent_gong import GongConnector
+from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
 
-# Create connector
-connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))
+connector = GongConnector(
+    auth_config=GongAccessKeyAuthenticationAuthConfig(
+        access_key="<Your Gong API Access Key>",
+        access_key_secret="<Your Gong API Access Key Secret>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@GongConnector.tool_utils
+async def gong_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
-## Available Operations
+### Hosted
 
-### Users Operations
-- `list_users()` - Returns a list of all users in the Gong account
-- `get_user()` - Get a single user by ID
+In hosted mode, API credentials are stored securely in Airbyte Cloud. You provide your Airbyte credentials instead. 
+If your Airbyte client can access multiple organizations, also set `organization_id`.
 
-### Calls Operations
-- `list_calls()` - Retrieve calls data by date range
-- `get_call()` - Get specific call data by ID
+This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
-### Calls_Extensive Operations
-- `list_calls_extensive()` - Retrieve detailed call data including participants, interaction stats, and content
+```python
+from airbyte_agent_gong import GongConnector, AirbyteAuthConfig
 
-### Call_Audio Operations
-- `download_call_audio()` - Downloads the audio media file for a call. Temporarily, the request body must be configured with:
-{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+connector = GongConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
+
+@agent.tool_plain # assumes you're using Pydantic AI
+@GongConnector.tool_utils
+async def gong_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+## Full documentation
+
+### Entities and actions
+
+This connector supports the following entities and actions. For more details, see this connector's [full reference documentation](REFERENCE.md).
+
+| Entity | Actions |
+|--------|---------|
+| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Search](./REFERENCE.md#users-search) |
+| Calls | [List](./REFERENCE.md#calls-list), [Get](./REFERENCE.md#calls-get), [Search](./REFERENCE.md#calls-search) |
+| Calls Extensive | [List](./REFERENCE.md#calls-extensive-list), [Search](./REFERENCE.md#calls-extensive-search) |
+| Call Audio | [Download](./REFERENCE.md#call-audio-download) |
+| Call Video | [Download](./REFERENCE.md#call-video-download) |
+| Workspaces | [List](./REFERENCE.md#workspaces-list) |
+| Call Transcripts | [List](./REFERENCE.md#call-transcripts-list) |
+| Stats Activity Aggregate | [List](./REFERENCE.md#stats-activity-aggregate-list) |
+| Stats Activity Day By Day | [List](./REFERENCE.md#stats-activity-day-by-day-list) |
+| Stats Interaction | [List](./REFERENCE.md#stats-interaction-list) |
+| Settings Scorecards | [List](./REFERENCE.md#settings-scorecards-list), [Search](./REFERENCE.md#settings-scorecards-search) |
+| Settings Trackers | [List](./REFERENCE.md#settings-trackers-list) |
+| Library Folders | [List](./REFERENCE.md#library-folders-list) |
+| Library Folder Content | [List](./REFERENCE.md#library-folder-content-list) |
+| Coaching | [List](./REFERENCE.md#coaching-list) |
+| Stats Activity Scorecards | [List](./REFERENCE.md#stats-activity-scorecards-list), [Search](./REFERENCE.md#stats-activity-scorecards-search) |
 
 
-### Call_Video Operations
-- `download_call_video()` - Downloads the video media file for a call. Temporarily, the request body must be configured with:
-{"filter": {"callIds": [CALL_ID]}, "contentSelector": {"exposedFields": {"media": true}}}
+### Authentication
 
+For all authentication options, see the connector's [authentication documentation](AUTH.md).
 
-### Workspaces Operations
-- `list_workspaces()` - List all company workspaces
+### Gong API docs
 
-### Call_Transcripts Operations
-- `get_call_transcripts()` - Returns transcripts for calls in a specified date range or specific call IDs
+See the official [Gong API reference](https://gong.app.gong.io/settings/api/documentation).
 
-### Stats_Activity_Aggregate Operations
-- `get_activity_aggregate()` - Provides aggregated user activity metrics across a specified period
+## Version information
 
-### Stats_Activity_Day_By_Day Operations
-- `get_activity_day_by_day()` - Delivers daily user activity metrics across a specified date range
-
-### Stats_Interaction Operations
-- `get_interaction_stats()` - Returns interaction stats for users based on calls that have Whisper turned on
-
-### Settings_Scorecards Operations
-- `list_scorecards()` - Retrieve all scorecard configurations in the company
-
-### Settings_Trackers Operations
-- `list_trackers()` - Retrieve all keyword tracker configurations in the company
-
-### Library_Folders Operations
-- `list_library_folders()` - Retrieve the folder structure of the call library
-
-### Library_Folder_Content Operations
-- `list_folder_content()` - Retrieve calls in a specific library folder
-
-### Coaching Operations
-- `list_coaching_metrics()` - Retrieve coaching metrics for a manager and their direct reports
-
-### Stats_Activity_Scorecards Operations
-- `list_answered_scorecards()` - Retrieve answered scorecards for applicable reviewed users or scorecards for a date range
-
-## Type Definitions
-
-All response types are fully typed using TypedDict for IDE autocomplete support.
-Import types from `airbyte_ai_gong.types`.
-
-## Documentation
-
-Generated from OpenAPI 3.0 specification.
-
-For API documentation, see the service's official API docs.
+- **Package version:** 0.19.121
+- **Connector version:** 0.1.19
+- **Generated with Connector SDK commit SHA:** d395373bfd40767c9ecfddb735e4085811544872
+- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gong/CHANGELOG.md)
