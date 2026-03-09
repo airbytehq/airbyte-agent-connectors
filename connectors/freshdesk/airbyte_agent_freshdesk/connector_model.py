@@ -26,7 +26,7 @@ from uuid import (
 FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('ec4b9503-13cb-48ab-a4ab-6ade4be46567'),
     name='freshdesk',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://{subdomain}.freshdesk.com/api/v2',
     auth=AuthConfig(
         type=AuthType.BASIC,
