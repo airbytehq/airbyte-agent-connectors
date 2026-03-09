@@ -28,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.18',
+    version='1.0.19',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
