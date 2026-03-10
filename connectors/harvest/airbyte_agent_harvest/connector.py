@@ -219,7 +219,7 @@ class HarvestConnector:
     """
 
     connector_name = "harvest"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -313,7 +313,7 @@ class HarvestConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = HarvestConnector(auth_config=HarvestAuthConfig(access_token="...", account_id="..."))
+            connector = HarvestConnector(auth_config=HarvestAuthConfig(client_id="...", client_secret="...", refresh_token="...", account_id="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = HarvestConnector(
                 auth_config=AirbyteAuthConfig(
@@ -1022,7 +1022,7 @@ class HarvestConnector:
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
-                auth_config=HarvestAuthConfig(access_token="...", account_id="..."),
+                auth_config=HarvestAuthConfig(client_id="...", client_secret="...", refresh_token="...", account_id="..."),
             )
 
             # With replication config (required for this connector):
@@ -1033,7 +1033,7 @@ class HarvestConnector:
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
-                auth_config=HarvestAuthConfig(access_token="...", account_id="..."),
+                auth_config=HarvestAuthConfig(client_id="...", client_secret="...", refresh_token="...", account_id="..."),
                 replication_config=HarvestReplicationConfig(replication_start_date="..."),
             )
 

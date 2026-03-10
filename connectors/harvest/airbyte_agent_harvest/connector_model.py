@@ -27,7 +27,7 @@ from uuid import (
 HarvestConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('fe2b4084-3386-4d3b-9ad6-308f61a6f1e6'),
     name='harvest',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://api.harvestapp.com/v2',
     auth=AuthConfig(
         options=[
@@ -43,32 +43,52 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                 user_config_spec=AirbyteAuthConfig(
                     title='OAuth 2.0',
                     type='object',
-                    required=['access_token', 'account_id'],
+                    required=[
+                        'client_id',
+                        'client_secret',
+                        'refresh_token',
+                        'account_id',
+                    ],
                     properties={
-                        'access_token': AuthConfigFieldSpec(
-                            title='Access Token',
-                            description='Your Harvest OAuth2 access token',
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='Your Harvest OAuth2 refresh token',
                         ),
                         'account_id': AuthConfigFieldSpec(
                             title='Account ID',
                             description='Your Harvest account ID',
                         ),
                     },
-                    auth_mapping={'access_token': '${access_token}'},
+                    auth_mapping={
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                        'refresh_token': '${refresh_token}',
+                    },
                     replication_auth_key_mapping={
-                        'credentials.refresh_token': 'access_token',
-                        'credentials.client_id': 'access_token',
-                        'credentials.client_secret': 'access_token',
+                        'credentials.refresh_token': 'refresh_token',
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
                         'account_id': 'account_id',
                     },
                     additional_headers={'Harvest-Account-Id': '{{ account_id }}'},
                     replication_auth_key_constants={'credentials.auth_type': 'Client'},
                 ),
+                untested=True,
             ),
             AuthOption(
                 scheme_name='bearer',
                 type=AuthType.BEARER,
-                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'additional_headers': {'Harvest-Account-Id': '{{ account_id }}'},
+                },
                 user_config_spec=AirbyteAuthConfig(
                     title='Personal Access Token',
                     type='object',
@@ -88,7 +108,6 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
                     additional_headers={'Harvest-Account-Id': '{{ account_id }}'},
                     replication_auth_key_constants={'credentials.auth_type': 'Token'},
                 ),
-                untested=True,
             ),
         ],
     ),
