@@ -26,7 +26,7 @@ from uuid import (
 ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('311a7a27-3fb5-4f7e-8265-5e4afe258b66'),
     name='clickup-api',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://api.clickup.com',
     auth=AuthConfig(
         type=AuthType.API_KEY,
