@@ -1,19 +1,12 @@
 ---
 name: airbyte-agent-connectors
 description: |
-  Sets up and operates Airbyte Agent Connectors — strongly typed Python packages
-  for accessing 21+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
+  Sets up and operates Airbyte Agent Connectors -- strongly typed Python packages
+  for accessing 49+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
   Jira, and more) through a unified entity-action interface. Use when the user wants
   to connect to a SaaS API, set up an Airbyte connector, integrate third-party data
   into an AI agent, or configure MCP tools for Claude. Covers Platform Mode (Airbyte
   Cloud) and OSS Mode (local SDK).
-license: Elastic-2.0
-compatibility: Requires Python 3.11+. Recommends uv for package management.
-metadata:
-  author: Airbyte
-  version: 1.1.0
-  repo: https://github.com/airbytehq/airbyte-agent-connectors
-  mcp-server: airbyte-agent-mcp
 ---
 
 # Airbyte Agent Connectors
@@ -22,7 +15,7 @@ Airbyte Agent Connectors let AI agents call third-party APIs through strongly ty
 
 > **Terminology:** **Platform Mode** = Airbyte Cloud at app.airbyte.ai (managed credentials, UI visibility). **OSS Mode** = local Python SDK (self-managed credentials, no cloud dependency). **Definition ID** = UUID that identifies a connector type in the Airbyte API (used in `definition_id` fields, not `connector_type` or `connector_definition_id`).
 
-> **Important:** This skill provides documentation and setup guidance. When helping users set up connectors, follow the documented workflows in the "Common Workflows" section below. Do NOT attempt to import Python modules, verify package installations, or run code to check configurations—simply guide users through the steps using the code examples provided in this documentation.
+> **Important:** This skill provides documentation and setup guidance. When helping users set up connectors, follow the documented workflows below. Do NOT attempt to import Python modules, verify package installations, or run code to check configurations -- simply guide users through the steps using the code examples provided.
 
 ## Mode Detection
 
@@ -46,35 +39,19 @@ Use when:
 
 ## Supported Connectors
 
-**IMPORTANT:** Before proceeding with any setup, verify the requested connector is in this list. All 21 connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
+49 connectors available. All connectors follow the same entity-action pattern: `connector.execute(entity, action, params)`
 
 | Connector | Package | Auth Type | Key Entities |
 |-----------|---------|-----------|--------------|
-| [Airtable](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/airtable) | `airbyte-agent-airtable` | API Key | bases, tables, records |
-| [Amazon Ads](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/amazon-ads) | `airbyte-agent-amazon-ads` | OAuth2 | campaigns, ad_groups, ads |
-| [Asana](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/asana) | `airbyte-agent-asana` | PAT | projects, tasks, users |
-| [Facebook Marketing](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/facebook-marketing) | `airbyte-agent-facebook-marketing` | OAuth2 | campaigns, ad_sets, ads |
-| [GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/github) | `airbyte-agent-github` | PAT/OAuth2 | repositories, issues, pull_requests |
-| [Gong](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong) | `airbyte-agent-gong` | API Key | calls, users, deals |
-| [Google Drive](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/google-drive) | `airbyte-agent-google-drive` | OAuth2 | files, folders |
-| [Greenhouse](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/greenhouse) | `airbyte-agent-greenhouse` | API Key | applications, candidates, jobs |
-| [HubSpot](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/hubspot) | `airbyte-agent-hubspot` | OAuth2/API Key | contacts, companies, deals |
-| [Intercom](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/intercom) | `airbyte-agent-intercom` | API Key | contacts, conversations, companies |
-| [Jira](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/jira) | `airbyte-agent-jira` | API Key | issues, projects, users |
-| [Klaviyo](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/klaviyo) | `airbyte-agent-klaviyo` | API Key | profiles, lists, campaigns |
-| [Linear](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/linear) | `airbyte-agent-linear` | API Key | issues, projects, teams |
-| [Mailchimp](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/mailchimp) | `airbyte-agent-mailchimp` | API Key | lists, campaigns, members |
-| [Orb](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/orb) | `airbyte-agent-orb` | API Key | customers, subscriptions, invoices |
-| [Salesforce](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/salesforce) | `airbyte-agent-salesforce` | OAuth2 | accounts, contacts, opportunities |
-| [Shopify](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/shopify) | `airbyte-agent-shopify` | API Key | orders, products, customers |
-| [Slack](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/slack) | `airbyte-agent-slack` | Bot Token | channels, messages, users |
-| [Stripe](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe) | `airbyte-agent-stripe` | API Key | customers, payments, invoices |
-| [Zendesk Chat](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-chat) | `airbyte-agent-zendesk-chat` | OAuth2 | chats, visitors, agents |
-| [Zendesk Support](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/zendesk-support) | `airbyte-agent-zendesk-support` | OAuth2/API Key | tickets, users, organizations |
+| [Stripe](references/connectors/stripe.md) | `airbyte-agent-stripe` | Token | Customers, Invoices, Charges, Subscri... |
+| [HubSpot](references/connectors/hubspot.md) | `airbyte-agent-hubspot` | OAuth | Contacts, Companies, Deals, Tickets, ... |
+| [GitHub](references/connectors/github.md) | `airbyte-agent-github` | OAuth, Token | Repositories, Org Repositories, Branc... |
+| [Salesforce](references/connectors/salesforce.md) | `airbyte-agent-salesforce` | OAuth | Sobjects, Accounts, Contacts, Leads, ... |
+| [Gong](references/connectors/gong.md) | `airbyte-agent-gong` | OAuth, Token | Users, Calls, Calls Extensive, Call A... |
 
-**If the connector is NOT in this list:** Inform the user that this connector isn't available yet. Point them to:
-- GitHub issues: https://github.com/airbytehq/airbyte-agent-connectors/issues
-- Request a new connector by opening an issue
+> **Full table:** See [references/connector-index.md](references/connector-index.md) for all 49 connectors with auth types, key entities, and documentation status.
+
+**If the connector is NOT in the index:** Inform the user that this connector isn't available yet. Point them to [GitHub issues](https://github.com/airbytehq/airbyte-agent-connectors/issues).
 
 ---
 
@@ -95,43 +72,12 @@ from airbyte_agent_stripe import StripeConnector
 from airbyte_agent_stripe.models import StripeAuthConfig
 
 connector = await StripeConnector.create_hosted(
-    external_user_id="user_123",      # Your identifier for this user/tenant
-    airbyte_client_id="...",          # From app.airbyte.ai
+    external_user_id="user_123",
+    airbyte_client_id="...",
     airbyte_client_secret="...",
     auth_config=StripeAuthConfig(api_key="sk_live_...")
 )
-# Connector is created and ready to use programmatically
 ```
-
-### Register in UI (Required for UI Visibility)
-
-After creating the connector programmatically, register it as a template to make it appear in the Airbyte UI's Connectors page.
-
-**Get an Application Token first:**
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/account/applications/token' \
-  -H 'Content-Type: application/json' \
-  -d '{"client_id": "<AIRBYTE_CLIENT_ID>", "client_secret": "<AIRBYTE_CLIENT_SECRET>"}'
-```
-
-**Then register the template:**
-```bash
-curl -X POST 'https://api.airbyte.ai/api/v1/integrations/templates/sources' \
-  -H 'Content-Type: application/json' \
-  -H 'Authorization: Bearer <APPLICATION_TOKEN>' \
-  -d '{
-    "actor_definition_id": "<CONNECTOR_DEFINITION_ID>",
-    "name": "Stripe",
-    "original_source_template_id": "",
-    "partial_default_config": {},
-    "mode": "DIRECT"
-  }'
-```
-
-- Get `actor_definition_id` from the [Connector Definition IDs table](references/programmatic-setup.md#connector-definition-ids)
-- If registration fails with "already exists", a template with that name already exists—choose a different name
-
-Your connector now appears in the Connectors page at [app.airbyte.ai](https://app.airbyte.ai) with a "Direct" badge.
 
 ### Use Existing Connector
 
@@ -144,13 +90,9 @@ connector = StripeConnector(
 result = await connector.execute("customers", "list", {"limit": 10})
 ```
 
-**For OAuth connectors and complete platform setup:** See [Platform Setup Reference](references/platform-setup.md)
-
 ---
 
 ## OSS Mode Quick Start
-
-For users running connectors locally without platform integration.
 
 ### Install
 
@@ -162,8 +104,6 @@ uv add airbyte-agent-github
 python3 -m venv .venv && source .venv/bin/activate
 pip install airbyte-agent-github
 ```
-
-> **Note:** When working in the `airbyte-agent-connectors` repo, packages are already available—no installation needed.
 
 ### Use Directly
 
@@ -188,8 +128,6 @@ result = await connector.execute("issues", "list", {
 ```bash
 claude mcp add airbyte-agent-mcp --scope project
 ```
-
-**For MCP configuration and complete OSS setup:** See [OSS Setup Reference](references/oss-setup.md)
 
 ---
 
@@ -227,12 +165,6 @@ await connector.execute("customers", "get", {"id": "cus_xxx"})
 await connector.execute("repositories", "api_search", {
     "query": "language:python stars:>1000"
 })
-
-# Create
-await connector.execute("customers", "create", {
-    "email": "user@example.com",
-    "name": "Jane Doe"
-})
 ```
 
 ### Pagination
@@ -258,8 +190,6 @@ async def fetch_all(connector, entity, params=None):
 
     return all_records
 ```
-
-**For complete API reference:** See [Entity-Action API Reference](references/entity-action-api.md)
 
 ---
 
@@ -299,78 +229,61 @@ auth_config=SlackAuthConfig(token="xoxb-...")
 
 ```python
 # Salesforce
-from airbyte_agent_salesforce.models import SalesforceOAuthConfig
-auth_config=SalesforceOAuthConfig(
+from airbyte_agent_salesforce.models import SalesforceAuthConfig
+auth_config=SalesforceAuthConfig(
     client_id="...", client_secret="...", refresh_token="..."
 )
 ```
 
-**For complete auth details:** See [Authentication Reference](references/authentication.md)
-
----
-
-## Platform Mode: Full Setup
-
-For the complete 7-step HTTP API workflow, see [Platform Setup Checklist](references/platform-setup.md#complete-setup-checklist).
-
----
-
-## Handling "Already Exists" Errors
-
-For solutions to "already exists" errors during Platform Mode setup, see [Troubleshooting](references/troubleshooting.md#handling-already-exists-errors).
-
----
-
-## OSS Mode: Setup Workflow
-
-For the step-by-step OSS setup walkthrough, see [OSS Setup Reference](references/oss-setup.md#setup-workflow).
-
----
-
-## File Placement
-
-When working in the `airbyte-agent-connectors` repo, place files in the connector directory (not the repo root). See [Getting Started](references/getting-started.md#file-placement) for details.
-
----
-
-## Framework Integration
-
-For PydanticAI and LangChain integration examples, see [Entity-Action API Reference](references/entity-action-api.md#framework-quick-start).
+> **Per-connector auth details:** Each connector reference in [references/connectors/](references/connectors/) includes the specific auth class name and fields.
 
 ---
 
 ## Security Best Practices
 
-For credential security guidelines, `.env` file patterns, and production recommendations, see [Authentication Reference](references/authentication.md#security-best-practices).
+- Never hard-code credentials in source files. Use environment variables or `.env` files.
+- Use `.env` pattern: `from dotenv import load_dotenv; load_dotenv()`
+- Rotate tokens regularly. Use short-lived tokens where possible.
+- For production, use Platform Mode for managed credential storage.
 
 ---
 
+## Per-Connector Reference Documentation
+
+- [Connector Index](references/connector-index.md) -- full table of all connectors
+- Per-connector references: [references/connectors/](references/connectors/)
+
+Each per-connector reference includes: package name and version, authentication details, available entities and actions, quick-start code snippets, and links to full GitHub documentation.
+
 ## Reference Documentation
 
-> **Quick Reference:** Connector Definition IDs are in the [Platform Setup Checklist](references/platform-setup.md#complete-setup-checklist) and [Programmatic Setup](references/programmatic-setup.md#connector-definition-ids).
-
-| Topic | Link |
-|-------|------|
+| Topic | Reference |
+|-------|----------|
+| Getting Started | [references/getting-started.md](references/getting-started.md) |
 | Platform Setup | [references/platform-setup.md](references/platform-setup.md) |
 | OSS Setup | [references/oss-setup.md](references/oss-setup.md) |
-| Getting Started | [references/getting-started.md](references/getting-started.md) |
 | Entity-Action API | [references/entity-action-api.md](references/entity-action-api.md) |
 | Authentication | [references/authentication.md](references/authentication.md) |
 | Programmatic Setup | [references/programmatic-setup.md](references/programmatic-setup.md) |
 | MCP Integration | [references/mcp-integration.md](references/mcp-integration.md) |
 | Troubleshooting | [references/troubleshooting.md](references/troubleshooting.md) |
-| Demo Walkthrough | [references/demo-walkthrough.md](references/demo-walkthrough.md) |
 
-## Per-Connector Documentation
+## How References Are Generated
 
-Each connector directory contains:
-- **README.md** - Overview, example questions, basic usage
-- **AUTH.md** - All authentication options
-- **REFERENCE.md** - Complete entity/action reference with parameters
-
-Example: `connectors/github/README.md`, `connectors/github/AUTH.md`, `connectors/github/REFERENCE.md`
+Reference docs are auto-generated by `scripts/generate_skill_references.py`.
+Run `python scripts/generate_skill_references.py --all` to regenerate all
+references, or `--connector <name>` for a specific connector.
 
 ---
+
+## Skill Metadata
+
+- **Author:** Airbyte
+- **Version:** 1.2.0
+- **License:** Elastic-2.0
+- **Compatibility:** Requires Python 3.11+. Recommends uv for package management.
+- **Repository:** https://github.com/airbytehq/airbyte-agent-connectors
+- **MCP Server:** airbyte-agent-mcp
 
 ## Support
 
