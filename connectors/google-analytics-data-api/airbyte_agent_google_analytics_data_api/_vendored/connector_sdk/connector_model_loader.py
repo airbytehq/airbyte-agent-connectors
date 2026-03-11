@@ -988,6 +988,12 @@ def _parse_single_security_scheme(scheme: Any) -> AuthConfig:
     if scheme.x_airbyte_auth_config:
         _validate_auth_mapping_keys(auth_type, scheme.x_airbyte_auth_config)
 
+    # Extract additional_headers from x-airbyte-auth-config for non-OAuth2 schemes
+    if scheme.x_airbyte_auth_config:
+        additional_headers = getattr(scheme.x_airbyte_auth_config, "additional_headers", None)
+        if additional_headers:
+            auth_config["additional_headers"] = additional_headers
+
     return AuthConfig(
         type=auth_type,
         config=auth_config,

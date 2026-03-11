@@ -321,6 +321,34 @@ class AuthStrategy(ABC):
         """
         pass
 
+    def _inject_additional_headers(
+        self,
+        headers: dict[str, str],
+        additional_headers: dict[str, str],
+        secrets: dict[str, Any],
+    ) -> dict[str, str]:
+        """Inject additional headers with Jinja2 template variable substitution.
+
+        Processes additional_headers config, substituting {{ variable }} patterns
+        with values from secrets using Jinja2 templating.
+
+        Args:
+            headers: Headers dict to add to (modified in place)
+            additional_headers: Header name -> value template mapping
+            secrets: Secrets dict for variable substitution
+
+        Returns:
+            Headers dict with additional headers added
+        """
+        template_context = {key: extract_secret_value(value) for key, value in secrets.items()}
+
+        for header_name, value_template in additional_headers.items():
+            template = Template(value_template)
+            header_value = template.render(**template_context)
+            headers[header_name] = header_value
+
+        return headers
+
     @abstractmethod
     def validate_credentials(self, secrets: dict[str, SecretStr | str]) -> None:
         """
@@ -440,6 +468,11 @@ class APIKeyAuthStrategy(AuthStrategy):
             headers[header_name] = f"{prefix} {api_key_value}"
         else:
             headers[header_name] = api_key_value
+
+        additional_headers = config.get("additional_headers")
+        if additional_headers:
+            headers = self._inject_additional_headers(headers, additional_headers, secrets)
+
         return headers
 
     def validate_credentials(self, secrets: APIKeyAuthSecrets) -> None:  # type: ignore[override]
@@ -490,6 +523,11 @@ class BearerAuthStrategy(AuthStrategy):
 
         # Inject into headers
         headers[header_name] = f"{prefix} {token_value}"
+
+        additional_headers = config.get("additional_headers")
+        if additional_headers:
+            headers = self._inject_additional_headers(headers, additional_headers, secrets)
+
         return headers
 
     def validate_credentials(self, secrets: BearerAuthSecrets) -> None:  # type: ignore[override]
@@ -541,6 +579,10 @@ class BasicAuthStrategy(AuthStrategy):
         credentials = f"{username_value}:{password_value}"
         encoded = base64.b64encode(credentials.encode()).decode()
         headers["Authorization"] = f"Basic {encoded}"
+
+        additional_headers = config.get("additional_headers")
+        if additional_headers:
+            headers = self._inject_additional_headers(headers, additional_headers, secrets)
 
         return headers
 
@@ -611,36 +653,6 @@ class OAuth2AuthStrategy(AuthStrategy):
         additional_headers = config.get("additional_headers")
         if additional_headers:
             headers = self._inject_additional_headers(headers, additional_headers, secrets)
-
-        return headers
-
-    def _inject_additional_headers(
-        self,
-        headers: dict[str, str],
-        additional_headers: dict[str, str],
-        secrets: dict[str, Any],
-    ) -> dict[str, str]:
-        """Inject additional headers with Jinja2 template variable substitution.
-
-        Processes additional_headers config, substituting {{ variable }} patterns
-        with values from secrets using Jinja2 templating.
-
-        Args:
-            headers: Headers dict to add to (modified in place)
-            additional_headers: Header name -> value template mapping
-            secrets: Secrets dict for variable substitution
-
-        Returns:
-            Headers dict with additional headers added
-        """
-        # Build template context with extracted secret values
-        template_context = {key: extract_secret_value(value) for key, value in secrets.items()}
-
-        for header_name, value_template in additional_headers.items():
-            # Use Jinja2 templating for variable substitution
-            template = Template(value_template)
-            header_value = template.render(**template_context)
-            headers[header_name] = header_value
 
         return headers
 
