@@ -95,6 +95,12 @@ class ProfilesList(BaseModel):
     data: Union[list[Profile], Any] = Field(default=None)
     links: Union[ProfilesListLinks | None, Any] = Field(default=None)
 
+class ListLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,12 +113,6 @@ class ListAttributes(BaseModel):
     """Last update timestamp"""
     opt_in_process: Union[str | None, Any] = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
-
-class ListLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
@@ -195,11 +195,18 @@ class CampaignsList(BaseModel):
     data: Union[list[Campaign], Any] = Field(default=None)
     links: Union[CampaignsListLinks | None, Any] = Field(default=None)
 
-class EventLinks(BaseModel):
-    """Related links"""
+class EventRelationshipsProfileData(BaseModel):
+    """Nested schema for EventRelationshipsProfile.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    self: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+    id: Union[str | None, Any] = Field(default=None)
+
+class EventRelationshipsProfile(BaseModel):
+    """Nested schema for EventRelationships.profile"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
 
 class EventRelationshipsMetricData(BaseModel):
     """Nested schema for EventRelationshipsMetric.data"""
@@ -214,25 +221,18 @@ class EventRelationshipsMetric(BaseModel):
 
     data: Union[EventRelationshipsMetricData | None, Any] = Field(default=None)
 
-class EventRelationshipsProfileData(BaseModel):
-    """Nested schema for EventRelationshipsProfile.data"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-    id: Union[str | None, Any] = Field(default=None)
-
-class EventRelationshipsProfile(BaseModel):
-    """Nested schema for EventRelationships.profile"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    data: Union[EventRelationshipsProfileData | None, Any] = Field(default=None)
-
 class EventRelationships(BaseModel):
     """Related resources"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     profile: Union[EventRelationshipsProfile | None, Any] = Field(default=None)
     metric: Union[EventRelationshipsMetric | None, Any] = Field(default=None)
+
+class EventLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class EventAttributes(BaseModel):
     """Event attributes"""
@@ -323,12 +323,6 @@ class MetricsList(BaseModel):
     data: Union[list[Metric], Any] = Field(default=None)
     links: Union[MetricsListLinks | None, Any] = Field(default=None)
 
-class FlowLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class FlowAttributes(BaseModel):
     """Flow attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -345,6 +339,12 @@ class FlowAttributes(BaseModel):
     """Last update timestamp"""
     trigger_type: Union[str | None, Any] = Field(default=None, description="Type of trigger for the flow")
     """Type of trigger for the flow"""
+
+class FlowLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
 
 class Flow(BaseModel):
     """A Klaviyo flow (automated sequence)"""
