@@ -1452,6 +1452,7 @@ def compute_compatibility_range(version_str: str) -> str:
 def annotate_replication_version(
     connector_yaml_path: str | Path,
     dry_run: bool = False,
+    version_override: str | None = None,
 ) -> dict[str, Any]:
     """Annotate connector.yaml with replication version metadata.
 
@@ -1465,6 +1466,9 @@ def annotate_replication_version(
     Args:
         connector_yaml_path: Path to connector.yaml file
         dry_run: If True, don't modify file, just return what would change
+        version_override: If provided, use this version instead of fetching from registry.
+            Useful when the caller already knows the published version (e.g. from a
+            repository_dispatch payload).
 
     Returns:
         Dict with version, compatibility, or error/skipped info
@@ -1490,9 +1494,11 @@ def annotate_replication_version(
 
     # Check if connector was found in registry
     if not validation_result.get("registry_found", False):
-        return {"skipped": True, "reason": f"Connector '{connector_name}' not found in Airbyte registry"}
+        if not version_override:
+            return {"skipped": True, "reason": f"Connector '{connector_name}' not found in Airbyte registry"}
 
-    version = validation_result.get("replication_version")
+    # Use version_override if provided, otherwise fall back to the version from the registry.
+    version = version_override or validation_result.get("replication_version")
     if not version:
         return {"skipped": True, "reason": f"No dockerImageTag in registry metadata for '{connector_name}'"}
 
