@@ -41,7 +41,7 @@ OilPriceApiConnectorModel: ConnectorModel = ConnectorModel(
                     description='API key from oilpriceapi.com. Used as Token {api_key} in Authorization header.',
                 ),
             },
-            auth_mapping={'api_token': 'Token ${api_key}'},
+            auth_mapping={'api_key': '${api_key}'},
         ),
     ),
     entities=[

@@ -163,12 +163,18 @@ class OilPriceApiConnector:
                 )
 
             from ._vendored.connector_sdk.executor import LocalExecutor
+            from ._vendored.connector_sdk.secrets import SecretStr
 
             config_values = None
 
+            # Pass secrets directly: the APIKeyAuthStrategy expects {"api_key": ...}
+            auth_secrets = {
+                "api_key": SecretStr(auth_config.api_key),
+            }
+
             self._executor = LocalExecutor(
                 model=OilPriceApiConnectorModel,
-                auth_config=auth_config.model_dump() if auth_config else None,
+                secrets=auth_secrets,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh,
             )
