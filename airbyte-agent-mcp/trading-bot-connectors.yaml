@@ -1,0 +1,4 @@
+name: trading-bot
+configs:
+  - connector-oilpriceapi-local.yaml
+  - connector-reddit-finance-local.yaml
