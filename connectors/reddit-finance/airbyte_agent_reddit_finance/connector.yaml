@@ -1,0 +1,455 @@
+openapi: 3.1.0
+info:
+  title: Reddit Finance Connector
+  version: 0.1.0
+  x-airbyte-connector-name: reddit-finance
+  x-airbyte-connector-id: 30116aef-e047-41ed-8a09-348734afcaf1
+  x-airbyte-external-documentation-urls:
+    - title: Reddit API Documentation
+      type: api_reference
+      url: "https://www.reddit.com/dev/api/"
+
+servers:
+  - url: https://www.reddit.com
+    description: Reddit Public API (JSON endpoints)
+
+components:
+  securitySchemes: {}
+
+  schemas:
+    SubredditPost:
+      type: object
+      x-airbyte-entity-name: subreddit_posts
+      properties:
+        id:
+          type: string
+          description: Reddit post ID
+        subreddit:
+          type: [string, "null"]
+          description: Subreddit name
+        selftext:
+          type: [string, "null"]
+          description: Post body text
+        author_fullname:
+          type: [string, "null"]
+          description: Author unique ID
+        title:
+          type: [string, "null"]
+          description: Post title
+        subreddit_name_prefixed:
+          type: [string, "null"]
+          description: Subreddit name with r/ prefix
+        name:
+          type: [string, "null"]
+          description: Full name (kind_id) of the post
+        upvote_ratio:
+          type: [number, "null"]
+          description: Ratio of upvotes to total votes
+        ups:
+          type: [number, "null"]
+          description: Number of upvotes
+        score:
+          type: [number, "null"]
+          description: Post score
+        created:
+          type: [number, "null"]
+          description: Post creation timestamp (epoch)
+        created_utc:
+          type: [number, "null"]
+          description: Post creation timestamp UTC (epoch)
+        num_comments:
+          type: [number, "null"]
+          description: Number of comments
+        permalink:
+          type: [string, "null"]
+          description: Permalink to post
+        url:
+          type: [string, "null"]
+          description: URL of the post or linked content
+        is_self:
+          type: [boolean, "null"]
+          description: Whether the post is a self-post
+        over_18:
+          type: [boolean, "null"]
+          description: Whether the post is marked NSFW
+        author:
+          type: [string, "null"]
+          description: Author username
+        link_flair_text:
+          type: [string, "null"]
+          description: Link flair text
+        domain:
+          type: [string, "null"]
+          description: Domain of linked content
+        saved:
+          type: [boolean, "null"]
+          description: Whether the post is saved
+        gilded:
+          type: [number, "null"]
+          description: Number of times gilded
+        clicked:
+          type: [boolean, "null"]
+          description: Whether the post was clicked
+        hidden:
+          type: [boolean, "null"]
+          description: Whether the post is hidden
+        pinned:
+          type: [boolean, "null"]
+          description: Whether the post is pinned
+        stickied:
+          type: [boolean, "null"]
+          description: Whether the post is stickied
+        num_crossposts:
+          type: [number, "null"]
+          description: Number of crossposts
+        total_awards_received:
+          type: [number, "null"]
+          description: Total awards received
+        subreddit_subscribers:
+          type: [number, "null"]
+          description: Number of subreddit subscribers
+      required:
+        - id
+
+    SubredditPostsResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            after:
+              type: [string, "null"]
+            children:
+              type: array
+              items:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SubredditPost"
+
+    SubredditSearchPost:
+      type: object
+      x-airbyte-entity-name: subreddit_search
+      properties:
+        id:
+          type: string
+          description: Reddit post ID
+        subreddit:
+          type: [string, "null"]
+          description: Subreddit name
+        selftext:
+          type: [string, "null"]
+          description: Post body text
+        author_fullname:
+          type: [string, "null"]
+          description: Author unique ID
+        title:
+          type: [string, "null"]
+          description: Post title
+        subreddit_name_prefixed:
+          type: [string, "null"]
+          description: Subreddit name with r/ prefix
+        name:
+          type: [string, "null"]
+          description: Full name (kind_id) of the post
+        upvote_ratio:
+          type: [number, "null"]
+          description: Ratio of upvotes to total votes
+        ups:
+          type: [number, "null"]
+          description: Number of upvotes
+        score:
+          type: [number, "null"]
+          description: Post score
+        created:
+          type: [number, "null"]
+          description: Post creation timestamp (epoch)
+        created_utc:
+          type: [number, "null"]
+          description: Post creation timestamp UTC (epoch)
+        num_comments:
+          type: [number, "null"]
+          description: Number of comments
+        permalink:
+          type: [string, "null"]
+          description: Permalink to post
+        url:
+          type: [string, "null"]
+          description: URL of the post or linked content
+        is_self:
+          type: [boolean, "null"]
+          description: Whether the post is a self-post
+        over_18:
+          type: [boolean, "null"]
+          description: Whether the post is marked NSFW
+        author:
+          type: [string, "null"]
+          description: Author username
+        link_flair_text:
+          type: [string, "null"]
+          description: Link flair text
+        domain:
+          type: [string, "null"]
+          description: Domain of linked content
+      required:
+        - id
+
+    SubredditSearchResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            after:
+              type: [string, "null"]
+            children:
+              type: array
+              items:
+                type: object
+                properties:
+                  data:
+                    $ref: "#/components/schemas/SubredditSearchPost"
+
+    SubredditInfo:
+      type: object
+      x-airbyte-entity-name: subreddit_info
+      properties:
+        display_name:
+          type: string
+          description: Subreddit display name
+        title:
+          type: [string, "null"]
+          description: Subreddit title
+        display_name_prefixed:
+          type: [string, "null"]
+          description: Subreddit name with r/ prefix
+        public_description:
+          type: [string, "null"]
+          description: Public description text
+        subscribers:
+          type: [number, "null"]
+          description: Number of subscribers
+        accounts_active:
+          type: [number, "null"]
+          description: Number of active accounts
+        created:
+          type: [number, "null"]
+          description: Subreddit creation timestamp (epoch)
+        created_utc:
+          type: [number, "null"]
+          description: Subreddit creation timestamp UTC (epoch)
+        over18:
+          type: [boolean, "null"]
+          description: Whether subreddit is NSFW
+        wiki_enabled:
+          type: [boolean, "null"]
+          description: Whether wiki is enabled
+        icon_img:
+          type: [string, "null"]
+          description: Subreddit icon image URL
+        header_img:
+          type: [string, "null"]
+          description: Subreddit header image URL
+        primary_color:
+          type: [string, "null"]
+          description: Primary theme color
+        key_color:
+          type: [string, "null"]
+          description: Key theme color
+        url:
+          type: [string, "null"]
+          description: Subreddit URL path
+        subreddit_type:
+          type: [string, "null"]
+          description: Subreddit type (public, private, etc.)
+        lang:
+          type: [string, "null"]
+          description: Subreddit language
+        allow_galleries:
+          type: [boolean, "null"]
+          description: Whether galleries are allowed
+        restrict_posting:
+          type: [boolean, "null"]
+          description: Whether posting is restricted
+      required:
+        - display_name
+
+    SubredditInfoResponse:
+      type: object
+      properties:
+        data:
+          $ref: "#/components/schemas/SubredditInfo"
+
+paths:
+  /r/{subreddit}/{sort}.json:
+    get:
+      summary: List subreddit posts
+      description: Returns posts from a subreddit sorted by hot, new, or top
+      operationId: SubredditPosts_List
+      x-airbyte-entity: subreddit_posts
+      x-airbyte-action: list
+      tags:
+        - SubredditPosts
+      parameters:
+        - name: subreddit
+          in: path
+          description: Subreddit name (e.g. wallstreetbets, investing, oil)
+          required: true
+          schema:
+            type: string
+            enum:
+              - wallstreetbets
+              - investing
+              - oil
+              - options
+              - commodities
+              - energy
+              - fertilizer
+        - name: sort
+          in: path
+          description: Sort type for posts
+          required: true
+          schema:
+            type: string
+            enum:
+              - hot
+              - new
+              - top
+        - name: limit
+          in: query
+          description: Maximum number of posts to return (max 100)
+          required: false
+          schema:
+            type: integer
+            default: 100
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          required: false
+          schema:
+            type: string
+        - name: raw_json
+          in: query
+          description: Set to 1 to get raw JSON responses
+          required: false
+          schema:
+            type: string
+            default: "1"
+      responses:
+        "200":
+          description: List of subreddit posts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubredditPostsResponse"
+      x-airbyte-record-extractor: "$.data.children[*].data"
+
+  /r/{subreddit}/search.json:
+    get:
+      summary: Search subreddit posts
+      description: Search for posts in a subreddit matching a query (e.g. ticker symbols)
+      operationId: SubredditSearch_List
+      x-airbyte-entity: subreddit_search
+      x-airbyte-action: list
+      tags:
+        - SubredditSearch
+      parameters:
+        - name: subreddit
+          in: path
+          description: Subreddit name to search in
+          required: true
+          schema:
+            type: string
+            enum:
+              - wallstreetbets
+              - investing
+              - oil
+              - options
+              - commodities
+        - name: q
+          in: query
+          description: Search query (e.g. ticker symbol like UCO, OXY, XOM)
+          required: true
+          schema:
+            type: string
+        - name: restrict_sr
+          in: query
+          description: Restrict search to this subreddit
+          required: false
+          schema:
+            type: string
+            default: "true"
+        - name: sort
+          in: query
+          description: Sort order for search results
+          required: false
+          schema:
+            type: string
+            default: "relevance"
+            enum:
+              - relevance
+              - hot
+              - top
+              - new
+              - comments
+        - name: limit
+          in: query
+          description: Maximum number of results to return (max 100)
+          required: false
+          schema:
+            type: integer
+            default: 100
+        - name: after
+          in: query
+          description: Pagination cursor for next page
+          required: false
+          schema:
+            type: string
+        - name: raw_json
+          in: query
+          description: Set to 1 to get raw JSON responses
+          required: false
+          schema:
+            type: string
+            default: "1"
+      responses:
+        "200":
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubredditSearchResponse"
+      x-airbyte-record-extractor: "$.data.children[*].data"
+
+  /r/{subreddit}/about.json:
+    get:
+      summary: Get subreddit info
+      description: Returns information about a subreddit including subscriber count and description
+      operationId: SubredditInfo_Get
+      x-airbyte-entity: subreddit_info
+      x-airbyte-action: get
+      tags:
+        - SubredditInfo
+      parameters:
+        - name: subreddit
+          in: path
+          description: Subreddit name
+          required: true
+          schema:
+            type: string
+            enum:
+              - wallstreetbets
+              - investing
+              - oil
+              - options
+              - commodities
+              - energy
+              - fertilizer
+      responses:
+        "200":
+          description: Subreddit information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubredditInfoResponse"
+      x-airbyte-record-extractor: "$.data"
