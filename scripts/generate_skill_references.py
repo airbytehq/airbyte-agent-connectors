@@ -736,16 +736,55 @@ def generate_connector_index(
 # SKILL.md slimming
 # ---------------------------------------------------------------------------
 
+# Anchor brands for the SKILL.md description.  Each entry is
+# (display_name, [connector_dir_names_that_satisfy_it]).
+# An anchor appears if ANY of its connector dirs exist in the discovered set.
+_ANCHOR_SERVICES: list[tuple[str, list[str]]] = [
+    ("Salesforce", ["salesforce"]),
+    ("HubSpot", ["hubspot"]),
+    ("Stripe", ["stripe"]),
+    ("GitHub", ["github"]),
+    ("Slack", ["slack"]),
+    ("Jira", ["jira"]),
+    ("Shopify", ["shopify"]),
+    ("Zendesk", ["zendesk-support", "zendesk-chat", "zendesk-talk"]),
+    ("Google Ads", ["google-ads"]),
+    ("Notion", ["notion"]),
+    ("Linear", ["linear"]),
+    ("Intercom", ["intercom"]),
+    ("Gong", ["gong"]),
+]
+
+
+def _build_anchor_names(discovered: set[str]) -> tuple[str, int]:
+    """Return (comma-separated anchor display names, count of connector dirs consumed).
+
+    The consumed count is used to compute the ``{remaining}`` placeholder so
+    that anchor families (e.g. Zendesk = 3 dirs) are counted correctly.
+    """
+    names: list[str] = []
+    consumed = 0
+    for display, dirs in _ANCHOR_SERVICES:
+        matched = [d for d in dirs if d in discovered]
+        if matched:
+            names.append(display)
+            consumed += len(matched)
+    return ", ".join(names), consumed
+
+
 SKILL_MD_TEMPLATE = """\
 ---
 name: airbyte-agent-connectors
 description: |
-  Sets up and operates Airbyte Agent Connectors -- strongly typed Python packages
-  for accessing {count}+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
-  Jira, and more) through a unified entity-action interface. Use when the user wants
-  to connect to a SaaS API, set up an Airbyte connector, integrate third-party data
-  into an AI agent, or configure MCP tools for Claude. Covers Platform Mode (Airbyte
-  Cloud) and OSS Mode (local SDK).
+  Sets up and operates Airbyte Agent Connectors — strongly typed Python packages
+  for accessing {count}+ third-party SaaS APIs through a unified entity-action interface.
+  Supported services include {anchor_names}, and {remaining} more connectors spanning
+  CRM, billing, payments, e-commerce, marketing, analytics, project management, helpdesk,
+  developer tools, HR, and communication platforms. Make sure to use this skill when the
+  user wants to connect to any SaaS API, install an airbyte-agent connector package,
+  integrate third-party service data into a Python application or AI agent, query or
+  search records from any supported service, or configure Airbyte MCP tools for Claude.
+  Covers Platform Mode (Airbyte Cloud) and OSS Mode (local Python SDK).
 ---
 
 # Airbyte Agent Connectors
@@ -1056,8 +1095,16 @@ def generate_skill_md(connector_metadata: list[dict]) -> str:
             entities = entities[:37] + "..."
         rows.append(f"| {link} | `{meta['pkg_name']}` | {auth} | {entities} |")
 
+    # Build dynamic description vars
+    discovered = {meta["name"] for meta in connector_metadata}
+    anchor_names, consumed = _build_anchor_names(discovered)
+    count = len(connector_metadata)
+    remaining = count - consumed
+
     return SKILL_MD_TEMPLATE.format(
-        count=len(connector_metadata),
+        count=count,
+        anchor_names=anchor_names,
+        remaining=remaining,
         popular_rows="\n".join(rows),
     )
 
