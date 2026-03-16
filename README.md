@@ -66,35 +66,32 @@ If you're building AI agents with Airbyte Agent Connectors and want to share ide
 
 ## Claude Code Skills
 
-This repo includes Claude Code skills:
+This repo includes [Claude Code skills](https://docs.anthropic.com/en/docs/claude-code/skills) that teach Claude how to set up and operate Airbyte's agent connectors. For full documentation, see the [Claude Code skills](https://docs.airbyte.com/ai-agents/skills) page on the Airbyte docs site.
 
-- [`airbyte-agent-connectors`](skills/airbyte-agent-connectors/SKILL.md): setup and usage guidance for Airbyte Agent Connectors
-- [`md2gdoc`](skills/md2gdoc/SKILL.md): convert markdown files to styled Google Docs with template fitting
+Available skills:
 
-**Install via plugin marketplace:**
+- [`airbyte-agent-connectors`](skills/airbyte-agent-connectors/README.md): Setup and usage guidance for Airbyte Agent Connectors, including authentication, the entity-action API, framework integration, and MCP configuration.
+- [`md2gdoc`](skills/md2gdoc/README.md): Convert markdown files to styled Google Docs with template fitting.
 
-In Claude Code, run:
+### Install from the plugin marketplace
+
+In Claude Code, add this repository and install the skill you want:
+
 ```
 /plugin marketplace add airbytehq/airbyte-agent-connectors
-```
-Then install the plugin:
-```
 /plugin install airbyte-agent-connectors@airbyte-agent-connectors
-/plugin install airbyte-agent-connectors@md2gdoc
 ```
 
-**Or install manually:**
+### Install manually
+
 ```bash
 mkdir -p .claude/skills
 git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skills
 cp -r /tmp/airbyte-skills/skills/airbyte-agent-connectors .claude/skills/
-cp -r /tmp/airbyte-skills/skills/md2gdoc .claude/skills/
 rm -rf /tmp/airbyte-skills
 ```
 
-Once installed, invoke either `/airbyte-agent-connectors` or `/md2gdoc` in Claude Code.
-
-See [airbyte-agent-connectors](skills/airbyte-agent-connectors/SKILL.md) and [md2gdoc](skills/md2gdoc/SKILL.md) for full usage details.
+Once installed, invoke the skill by typing `/airbyte-agent-connectors` in Claude Code, or ask Claude directly and it uses the skill's knowledge automatically.
 
 ## Tutorial using the Python SDK
 
