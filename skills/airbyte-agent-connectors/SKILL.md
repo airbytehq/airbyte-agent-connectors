@@ -1,12 +1,16 @@
 ---
 name: airbyte-agent-connectors
 description: |
-  Sets up and operates Airbyte Agent Connectors -- strongly typed Python packages
-  for accessing 51+ third-party APIs (Salesforce, HubSpot, GitHub, Slack, Stripe,
-  Jira, and more) through a unified entity-action interface. Use when the user wants
-  to connect to a SaaS API, set up an Airbyte connector, integrate third-party data
-  into an AI agent, or configure MCP tools for Claude. Covers Platform Mode (Airbyte
-  Cloud) and OSS Mode (local SDK).
+  Sets up and operates Airbyte Agent Connectors — strongly typed Python packages
+  for accessing 51+ third-party SaaS APIs through a unified entity-action interface.
+  Supported services include Salesforce, HubSpot, Stripe, GitHub, Slack, Jira, Shopify, Zendesk, Google Ads, Notion, Linear, Intercom, Gong,
+  and 36 more connectors spanning CRM, billing,
+  payments, e-commerce, marketing, analytics, project management, helpdesk, developer
+  tools, HR, and communication platforms. Make sure to use this skill when the user wants
+  to connect to any SaaS API, install an airbyte-agent connector package,
+  integrate third-party service data into a Python application or AI agent, query or
+  search records from any supported service, or configure Airbyte MCP tools for Claude.
+  Covers Platform Mode (Airbyte Cloud) and OSS Mode (local Python SDK).
 ---
 
 # Airbyte Agent Connectors
