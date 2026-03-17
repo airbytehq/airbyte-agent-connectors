@@ -26,7 +26,7 @@ from uuid import (
 ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('4942d392-c7b5-4271-91f9-3b4f4e51eb3e'),
     name='zoho-crm',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://www.zohoapis.{dc_region}',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -55,16 +55,11 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
                     title='Refresh Token',
                     description='OAuth 2.0 Refresh Token (does not expire)',
                 ),
-                'access_token': AuthConfigFieldSpec(
-                    title='Access Token',
-                    description='OAuth 2.0 Access Token (auto-refreshed)',
-                ),
             },
             auth_mapping={
                 'client_id': '${client_id}',
                 'client_secret': '${client_secret}',
                 'refresh_token': '${refresh_token}',
-                'access_token': '${access_token}',
             },
             replication_auth_key_mapping={
                 'client_id': 'client_id',

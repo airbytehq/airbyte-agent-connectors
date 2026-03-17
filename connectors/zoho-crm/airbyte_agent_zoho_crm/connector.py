@@ -166,7 +166,7 @@ class ZohoCrmConnector:
     """
 
     connector_name = "zoho-crm"
-    connector_version = "1.0.1"
+    connector_version = "1.0.2"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -245,7 +245,7 @@ class ZohoCrmConnector:
 
         Examples:
             # Local mode (direct API calls)
-            connector = ZohoCrmConnector(auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="...", access_token="..."))
+            connector = ZohoCrmConnector(auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = ZohoCrmConnector(
                 auth_config=AirbyteAuthConfig(
@@ -871,7 +871,7 @@ class ZohoCrmConnector:
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
-                auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="...", access_token="..."),
+                auth_config=ZohoCrmAuthConfig(client_id="...", client_secret="...", refresh_token="..."),
             )
 
             # With server-side OAuth:

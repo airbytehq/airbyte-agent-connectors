@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
-from typing import Optional
 
 # Authentication configuration
 
@@ -24,8 +23,6 @@ class ZohoCrmAuthConfig(BaseModel):
     """OAuth 2.0 Client Secret from Zoho Developer Console"""
     refresh_token: str
     """OAuth 2.0 Refresh Token (does not expire)"""
-    access_token: Optional[str] = None
-    """OAuth 2.0 Access Token (auto-refreshed)"""
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
