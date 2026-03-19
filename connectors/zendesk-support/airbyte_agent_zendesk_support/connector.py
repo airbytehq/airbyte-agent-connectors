@@ -31,6 +31,7 @@ from .types import (
     AutomationsListParams,
     BrandsGetParams,
     BrandsListParams,
+    DeletedTicketsListParams,
     GroupMembershipsListParams,
     GroupsGetParams,
     GroupsListParams,
@@ -82,6 +83,8 @@ from .types import (
     TicketMetricsSearchQuery,
     TicketsSearchFilter,
     TicketsSearchQuery,
+    DeletedTicketsSearchFilter,
+    DeletedTicketsSearchQuery,
     UsersSearchFilter,
     UsersSearchQuery,
 )
@@ -94,6 +97,7 @@ from .models import (
     ZendeskSupportExecuteResult,
     ZendeskSupportExecuteResultWithMeta,
     TicketsListResult,
+    DeletedTicketsListResult,
     UsersListResult,
     OrganizationsListResult,
     GroupsListResult,
@@ -120,6 +124,7 @@ from .models import (
     Attachment,
     Automation,
     Brand,
+    DeletedTicket,
     Group,
     GroupMembership,
     Macro,
@@ -161,6 +166,8 @@ from .models import (
     TicketMetricsSearchResult,
     TicketsSearchData,
     TicketsSearchResult,
+    DeletedTicketsSearchData,
+    DeletedTicketsSearchResult,
     UsersSearchData,
     UsersSearchResult,
 )
@@ -210,13 +217,14 @@ class ZendeskSupportConnector:
     """
 
     connector_name = "zendesk-support"
-    connector_version = "0.1.16"
+    connector_version = "0.1.17"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
         ("tickets", "list"): True,
         ("tickets", "get"): None,
+        ("deleted_tickets", "list"): True,
         ("users", "list"): True,
         ("users", "get"): None,
         ("organizations", "list"): True,
@@ -262,6 +270,7 @@ class ZendeskSupportConnector:
     _PARAM_MAP = {
         ('tickets', 'list'): {'page': 'page', 'external_id': 'external_id', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('tickets', 'get'): {'ticket_id': 'ticket_id'},
+        ('deleted_tickets', 'list'): {'page': 'page', 'sort_by': 'sort_by', 'sort_order': 'sort_order', 'per_page': 'per_page'},
         ('users', 'list'): {'page': 'page', 'role': 'role', 'external_id': 'external_id', 'per_page': 'per_page'},
         ('users', 'get'): {'user_id': 'user_id'},
         ('organizations', 'list'): {'page': 'page', 'per_page': 'per_page'},
@@ -410,6 +419,7 @@ class ZendeskSupportConnector:
 
         # Initialize entity query objects
         self.tickets = TicketsQuery(self)
+        self.deleted_tickets = DeletedTicketsQuery(self)
         self.users = UsersQuery(self)
         self.organizations = OrganizationsQuery(self)
         self.groups = GroupsQuery(self)
@@ -449,6 +459,14 @@ class ZendeskSupportConnector:
         action: Literal["get"],
         params: "TicketsGetParams"
     ) -> "Ticket": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["deleted_tickets"],
+        action: Literal["list"],
+        params: "DeletedTicketsListParams"
+    ) -> "DeletedTicketsListResult": ...
 
     @overload
     async def execute(
@@ -1312,6 +1330,7 @@ class TicketsQuery:
         - type_: Type of ticket (e.g., problem, incident, question, task)
         - updated_at: Timestamp indicating when the ticket was last updated with a ticket event
         - url: API URL to access the full ticket resource
+        - result_type: The type of the search result (e.g. ticket) when returned from search endpoints
         - via: Object describing the channel and method through which the ticket was created
 
         Args:
@@ -1343,6 +1362,113 @@ class TicketsQuery:
         return TicketsSearchResult(
             data=[
                 TicketsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
+class DeletedTicketsQuery:
+    """
+    Query class for DeletedTickets entity operations.
+    """
+
+    def __init__(self, connector: ZendeskSupportConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        page: int | None = None,
+        sort_by: str | None = None,
+        sort_order: str | None = None,
+        per_page: int | None = None,
+        **kwargs
+    ) -> DeletedTicketsListResult:
+        """
+        Returns a list of deleted tickets in your account. Only tickets deleted in the past 30 days are returned.
+
+        Args:
+            page: Page number for pagination
+            sort_by: Sort tickets by field
+            sort_order: Sort order
+            per_page: Number of results per page
+            **kwargs: Additional parameters
+
+        Returns:
+            DeletedTicketsListResult
+        """
+        params = {k: v for k, v in {
+            "page": page,
+            "sort_by": sort_by,
+            "sort_order": sort_order,
+            "per_page": per_page,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("deleted_tickets", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DeletedTicketsListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def search(
+        self,
+        query: DeletedTicketsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> DeletedTicketsSearchResult:
+        """
+        Search deleted_tickets records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (DeletedTicketsSearchFilter):
+        - id: The unique identifier of the deleted ticket
+        - subject: The subject or title of the deleted ticket
+        - description: Additional details or comments about the deleted ticket
+        - deleted_at: The timestamp when the ticket was deleted
+        - previous_state: The state of the ticket before it was deleted
+        - actor: The user who performed the deletion action
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            DeletedTicketsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("deleted_tickets", "search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return DeletedTicketsSearchResult(
+            data=[
+                DeletedTicketsSearchData(**row)
                 for row in result.get("data", [])
                 if isinstance(row, dict)
             ],

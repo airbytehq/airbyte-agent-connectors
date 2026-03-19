@@ -77,9 +77,30 @@ class Ticket(BaseModel):
     allow_attachments: Union[bool, Any] = Field(default=None)
     from_messaging_channel: Union[bool, Any] = Field(default=None)
     generated_timestamp: Union[int, Any] = Field(default=None)
+    result_type: Union[str | None, Any] = Field(default=None)
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
     via: Union[dict[str, Any], Any] = Field(default=None)
+
+class DeletedTicketActor(BaseModel):
+    """The user who performed the deletion action"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int | None, Any] = Field(default=None, description="The unique identifier of the user")
+    """The unique identifier of the user"""
+    name: Union[str | None, Any] = Field(default=None, description="The name of the user")
+    """The name of the user"""
+
+class DeletedTicket(BaseModel):
+    """Zendesk Support deleted ticket object"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    subject: Union[str | None, Any] = Field(default=None)
+    description: Union[str | None, Any] = Field(default=None)
+    deleted_at: Union[str | None, Any] = Field(default=None)
+    previous_state: Union[str | None, Any] = Field(default=None)
+    actor: Union[DeletedTicketActor | None, Any] = Field(default=None)
 
 class User(BaseModel):
     """Zendesk Support user object"""
@@ -476,6 +497,14 @@ class ArticleAttachment(BaseModel):
 
 class TicketsListResultMeta(BaseModel):
     """Metadata for tickets.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[str | None, Any] = Field(default=None)
+    previous_page: Union[str | None, Any] = Field(default=None)
+    count: Union[int, Any] = Field(default=None)
+
+class DeletedTicketsListResultMeta(BaseModel):
+    """Metadata for deleted_tickets.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[str | None, Any] = Field(default=None)
@@ -1141,8 +1170,28 @@ class TicketsSearchData(BaseModel):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: str | None = None
     """API URL to access the full ticket resource"""
+    result_type: str | None = None
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: dict[str, Any] | None = None
     """Object describing the channel and method through which the ticket was created"""
+
+
+class DeletedTicketsSearchData(BaseModel):
+    """Search result data for deleted_tickets entity."""
+    model_config = ConfigDict(extra="allow")
+
+    id: int | None = None
+    """The unique identifier of the deleted ticket"""
+    subject: str | None = None
+    """The subject or title of the deleted ticket"""
+    description: str | None = None
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: str | None = None
+    """The timestamp when the ticket was deleted"""
+    previous_state: str | None = None
+    """The state of the ticket before it was deleted"""
+    actor: dict[str, Any] | None = None
+    """The user who performed the deletion action"""
 
 
 class UsersSearchData(BaseModel):
@@ -1288,6 +1337,9 @@ TicketMetricsSearchResult = AirbyteSearchResult[TicketMetricsSearchData]
 TicketsSearchResult = AirbyteSearchResult[TicketsSearchData]
 """Search result type for tickets entity."""
 
+DeletedTicketsSearchResult = AirbyteSearchResult[DeletedTicketsSearchData]
+"""Search result type for deleted_tickets entity."""
+
 UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 """Search result type for users entity."""
 
@@ -1300,6 +1352,9 @@ UsersSearchResult = AirbyteSearchResult[UsersSearchData]
 
 TicketsListResult = ZendeskSupportExecuteResultWithMeta[list[Ticket], TicketsListResultMeta]
 """Result type for tickets.list operation with data and metadata."""
+
+DeletedTicketsListResult = ZendeskSupportExecuteResultWithMeta[list[DeletedTicket], DeletedTicketsListResultMeta]
+"""Result type for deleted_tickets.list operation with data and metadata."""
 
 UsersListResult = ZendeskSupportExecuteResultWithMeta[list[User], UsersListResultMeta]
 """Result type for users.list operation with data and metadata."""

@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.16',
+    version='0.1.17',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
@@ -242,6 +242,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                                         'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
                                         'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
                                         'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                                        'result_type': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The type of the search result (e.g. ticket) when returned from search endpoints',
+                                        },
                                         'created_at': {
                                             'type': 'string',
                                             'format': 'date-time',
@@ -409,6 +413,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                                     'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
                                     'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
                                     'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                                    'result_type': {
+                                        'type': ['string', 'null'],
+                                        'description': 'The type of the search result (e.g. ticket) when returned from search endpoints',
+                                    },
                                     'created_at': {
                                         'type': 'string',
                                         'format': 'date-time',
@@ -549,6 +557,10 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     'allow_attachments': {'type': 'boolean', 'description': 'Permission for agents to add attachments to a comment'},
                     'from_messaging_channel': {'type': 'boolean', 'description': "If true, the ticket's via type is a messaging channel"},
                     'generated_timestamp': {'type': 'integer', 'description': 'A Unix timestamp for the ticket'},
+                    'result_type': {
+                        'type': ['string', 'null'],
+                        'description': 'The type of the search result (e.g. ticket) when returned from search endpoints',
+                    },
                     'created_at': {
                         'type': 'string',
                         'format': 'date-time',
@@ -563,6 +575,137 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id'],
                 'x-airbyte-entity-name': 'tickets',
+            },
+        ),
+        EntityDefinition(
+            name='deleted_tickets',
+            actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/deleted_tickets.json',
+                    action=Action.LIST,
+                    description='Returns a list of deleted tickets in your account. Only tickets deleted in the past 30 days are returned.',
+                    query_params=[
+                        'page',
+                        'sort_by',
+                        'sort_order',
+                        'per_page',
+                    ],
+                    query_params_schema={
+                        'page': {'type': 'integer', 'required': False},
+                        'sort_by': {'type': 'string', 'required': False},
+                        'sort_order': {
+                            'type': 'string',
+                            'required': False,
+                            'default': 'asc',
+                        },
+                        'per_page': {'type': 'integer', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'deleted_tickets': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Zendesk Support deleted ticket object',
+                                    'properties': {
+                                        'id': {'type': 'integer', 'description': 'The unique identifier of the deleted ticket'},
+                                        'subject': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The subject or title of the deleted ticket',
+                                        },
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                            'description': 'Additional details or comments about the deleted ticket',
+                                        },
+                                        'deleted_at': {
+                                            'type': ['string', 'null'],
+                                            'format': 'date-time',
+                                            'description': 'The timestamp when the ticket was deleted',
+                                        },
+                                        'previous_state': {
+                                            'type': ['string', 'null'],
+                                            'description': 'The state of the ticket before it was deleted',
+                                        },
+                                        'actor': {
+                                            'type': ['object', 'null'],
+                                            'description': 'The user who performed the deletion action',
+                                            'properties': {
+                                                'id': {
+                                                    'type': ['integer', 'null'],
+                                                    'description': 'The unique identifier of the user',
+                                                },
+                                                'name': {
+                                                    'type': ['string', 'null'],
+                                                    'description': 'The name of the user',
+                                                },
+                                            },
+                                        },
+                                    },
+                                    'required': ['id'],
+                                    'x-airbyte-entity-name': 'deleted_tickets',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the next page of results',
+                            },
+                            'previous_page': {
+                                'type': ['string', 'null'],
+                                'description': 'URL to the previous page of results',
+                            },
+                            'count': {'type': 'integer', 'description': 'Total count of records'},
+                        },
+                    },
+                    record_extractor='$.deleted_tickets',
+                    meta_extractor={
+                        'next_page': '$.next_page',
+                        'previous_page': '$.previous_page',
+                        'count': '$.count',
+                    },
+                ),
+            },
+            entity_schema={
+                'type': 'object',
+                'description': 'Zendesk Support deleted ticket object',
+                'properties': {
+                    'id': {'type': 'integer', 'description': 'The unique identifier of the deleted ticket'},
+                    'subject': {
+                        'type': ['string', 'null'],
+                        'description': 'The subject or title of the deleted ticket',
+                    },
+                    'description': {
+                        'type': ['string', 'null'],
+                        'description': 'Additional details or comments about the deleted ticket',
+                    },
+                    'deleted_at': {
+                        'type': ['string', 'null'],
+                        'format': 'date-time',
+                        'description': 'The timestamp when the ticket was deleted',
+                    },
+                    'previous_state': {
+                        'type': ['string', 'null'],
+                        'description': 'The state of the ticket before it was deleted',
+                    },
+                    'actor': {
+                        'type': ['object', 'null'],
+                        'description': 'The user who performed the deletion action',
+                        'properties': {
+                            'id': {
+                                'type': ['integer', 'null'],
+                                'description': 'The unique identifier of the user',
+                            },
+                            'name': {
+                                'type': ['string', 'null'],
+                                'description': 'The name of the user',
+                            },
+                        },
+                    },
+                },
+                'required': ['id'],
+                'x-airbyte-entity-name': 'deleted_tickets',
             },
         ),
         EntityDefinition(
@@ -4264,7 +4407,16 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             'type',
             'updated_at',
             'url',
+            'result_type',
             'via',
+        ],
+        'deleted_tickets': [
+            'id',
+            'subject',
+            'description',
+            'deleted_at',
+            'previous_state',
+            'actor',
         ],
         'users': [
             'active',

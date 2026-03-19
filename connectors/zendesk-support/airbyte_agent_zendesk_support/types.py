@@ -31,6 +31,13 @@ class TicketsGetParams(TypedDict):
     """Parameters for tickets.get operation"""
     ticket_id: str
 
+class DeletedTicketsListParams(TypedDict):
+    """Parameters for deleted_tickets.list operation"""
+    page: NotRequired[int]
+    sort_by: NotRequired[str]
+    sort_order: NotRequired[str]
+    per_page: NotRequired[int]
+
 class UsersListParams(TypedDict):
     """Parameters for users.list operation"""
     page: NotRequired[int]
@@ -3010,6 +3017,8 @@ class TicketsSearchFilter(TypedDict, total=False):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: str | None
     """API URL to access the full ticket resource"""
+    result_type: str | None
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: dict[str, Any] | None
     """Object describing the channel and method through which the ticket was created"""
 
@@ -3094,6 +3103,8 @@ class TicketsInFilter(TypedDict, total=False):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: list[str]
     """API URL to access the full ticket resource"""
+    result_type: list[str]
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: list[dict[str, Any]]
     """Object describing the channel and method through which the ticket was created"""
 
@@ -3178,6 +3189,8 @@ class TicketsAnyValueFilter(TypedDict, total=False):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: Any
     """API URL to access the full ticket resource"""
+    result_type: Any
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: Any
     """Object describing the channel and method through which the ticket was created"""
 
@@ -3262,6 +3275,8 @@ class TicketsStringFilter(TypedDict, total=False):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: str
     """API URL to access the full ticket resource"""
+    result_type: str
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: str
     """Object describing the channel and method through which the ticket was created"""
 
@@ -3346,6 +3361,8 @@ class TicketsSortFilter(TypedDict, total=False):
     """Timestamp indicating when the ticket was last updated with a ticket event"""
     url: AirbyteSortOrder
     """API URL to access the full ticket resource"""
+    result_type: AirbyteSortOrder
+    """The type of the search result (e.g. ticket) when returned from search endpoints"""
     via: AirbyteSortOrder
     """Object describing the channel and method through which the ticket was created"""
 
@@ -3441,6 +3458,181 @@ class TicketsSearchQuery(TypedDict, total=False):
     """Search query for tickets entity."""
     filter: TicketsCondition
     sort: list[TicketsSortFilter]
+
+
+# ===== DELETED_TICKETS SEARCH TYPES =====
+
+class DeletedTicketsSearchFilter(TypedDict, total=False):
+    """Available fields for filtering deleted_tickets search queries."""
+    id: int | None
+    """The unique identifier of the deleted ticket"""
+    subject: str | None
+    """The subject or title of the deleted ticket"""
+    description: str | None
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: str | None
+    """The timestamp when the ticket was deleted"""
+    previous_state: str | None
+    """The state of the ticket before it was deleted"""
+    actor: dict[str, Any] | None
+    """The user who performed the deletion action"""
+
+
+class DeletedTicketsInFilter(TypedDict, total=False):
+    """Available fields for 'in' condition (values are lists)."""
+    id: list[int]
+    """The unique identifier of the deleted ticket"""
+    subject: list[str]
+    """The subject or title of the deleted ticket"""
+    description: list[str]
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: list[str]
+    """The timestamp when the ticket was deleted"""
+    previous_state: list[str]
+    """The state of the ticket before it was deleted"""
+    actor: list[dict[str, Any]]
+    """The user who performed the deletion action"""
+
+
+class DeletedTicketsAnyValueFilter(TypedDict, total=False):
+    """Available fields with Any value type. Used for 'contains' and 'any' conditions."""
+    id: Any
+    """The unique identifier of the deleted ticket"""
+    subject: Any
+    """The subject or title of the deleted ticket"""
+    description: Any
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: Any
+    """The timestamp when the ticket was deleted"""
+    previous_state: Any
+    """The state of the ticket before it was deleted"""
+    actor: Any
+    """The user who performed the deletion action"""
+
+
+class DeletedTicketsStringFilter(TypedDict, total=False):
+    """String fields for text search conditions (like, fuzzy, keyword)."""
+    id: str
+    """The unique identifier of the deleted ticket"""
+    subject: str
+    """The subject or title of the deleted ticket"""
+    description: str
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: str
+    """The timestamp when the ticket was deleted"""
+    previous_state: str
+    """The state of the ticket before it was deleted"""
+    actor: str
+    """The user who performed the deletion action"""
+
+
+class DeletedTicketsSortFilter(TypedDict, total=False):
+    """Available fields for sorting deleted_tickets search results."""
+    id: AirbyteSortOrder
+    """The unique identifier of the deleted ticket"""
+    subject: AirbyteSortOrder
+    """The subject or title of the deleted ticket"""
+    description: AirbyteSortOrder
+    """Additional details or comments about the deleted ticket"""
+    deleted_at: AirbyteSortOrder
+    """The timestamp when the ticket was deleted"""
+    previous_state: AirbyteSortOrder
+    """The state of the ticket before it was deleted"""
+    actor: AirbyteSortOrder
+    """The user who performed the deletion action"""
+
+
+# Entity-specific condition types for deleted_tickets
+class DeletedTicketsEqCondition(TypedDict, total=False):
+    """Equal to: field equals value."""
+    eq: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsNeqCondition(TypedDict, total=False):
+    """Not equal to: field does not equal value."""
+    neq: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsGtCondition(TypedDict, total=False):
+    """Greater than: field > value."""
+    gt: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsGteCondition(TypedDict, total=False):
+    """Greater than or equal: field >= value."""
+    gte: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsLtCondition(TypedDict, total=False):
+    """Less than: field < value."""
+    lt: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsLteCondition(TypedDict, total=False):
+    """Less than or equal: field <= value."""
+    lte: DeletedTicketsSearchFilter
+
+
+class DeletedTicketsLikeCondition(TypedDict, total=False):
+    """Partial string match with % wildcards."""
+    like: DeletedTicketsStringFilter
+
+
+class DeletedTicketsFuzzyCondition(TypedDict, total=False):
+    """Ordered word text match (case-insensitive)."""
+    fuzzy: DeletedTicketsStringFilter
+
+
+class DeletedTicketsKeywordCondition(TypedDict, total=False):
+    """Keyword text match (any word present)."""
+    keyword: DeletedTicketsStringFilter
+
+
+class DeletedTicketsContainsCondition(TypedDict, total=False):
+    """Check if value exists in array field. Example: {"contains": {"tags": "premium"}}"""
+    contains: DeletedTicketsAnyValueFilter
+
+
+# Reserved keyword conditions using functional TypedDict syntax
+DeletedTicketsInCondition = TypedDict("DeletedTicketsInCondition", {"in": DeletedTicketsInFilter}, total=False)
+"""In list: field value is in list. Example: {"in": {"status": ["active", "pending"]}}"""
+
+DeletedTicketsNotCondition = TypedDict("DeletedTicketsNotCondition", {"not": "DeletedTicketsCondition"}, total=False)
+"""Negates the nested condition."""
+
+DeletedTicketsAndCondition = TypedDict("DeletedTicketsAndCondition", {"and": "list[DeletedTicketsCondition]"}, total=False)
+"""True if all nested conditions are true."""
+
+DeletedTicketsOrCondition = TypedDict("DeletedTicketsOrCondition", {"or": "list[DeletedTicketsCondition]"}, total=False)
+"""True if any nested condition is true."""
+
+DeletedTicketsAnyCondition = TypedDict("DeletedTicketsAnyCondition", {"any": DeletedTicketsAnyValueFilter}, total=False)
+"""Match if ANY element in array field matches nested condition. Example: {"any": {"addresses": {"eq": {"state": "CA"}}}}"""
+
+# Union of all deleted_tickets condition types
+DeletedTicketsCondition = (
+    DeletedTicketsEqCondition
+    | DeletedTicketsNeqCondition
+    | DeletedTicketsGtCondition
+    | DeletedTicketsGteCondition
+    | DeletedTicketsLtCondition
+    | DeletedTicketsLteCondition
+    | DeletedTicketsInCondition
+    | DeletedTicketsLikeCondition
+    | DeletedTicketsFuzzyCondition
+    | DeletedTicketsKeywordCondition
+    | DeletedTicketsContainsCondition
+    | DeletedTicketsNotCondition
+    | DeletedTicketsAndCondition
+    | DeletedTicketsOrCondition
+    | DeletedTicketsAnyCondition
+)
+
+
+class DeletedTicketsSearchQuery(TypedDict, total=False):
+    """Search query for deleted_tickets entity."""
+    filter: DeletedTicketsCondition
+    sort: list[DeletedTicketsSortFilter]
 
 
 # ===== USERS SEARCH TYPES =====
