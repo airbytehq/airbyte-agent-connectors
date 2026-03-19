@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/google-ads/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-17 -->
+<!-- Source format: v1 | Generated: 2026-03-19 -->
 
 # Google Ads
 
@@ -7,7 +7,7 @@ The Google-Ads agent connector is a Python package that equips AI agents to inte
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-ads` v0.1.12
+- **Package:** `airbyte-agent-google-ads` v0.1.13
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/google-ads/api/rest/reference/rest)
 - **Status:** complete
