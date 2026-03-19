@@ -55,6 +55,6 @@
 | [Typeform](connectors/typeform.md) | `airbyte-agent-typeform` | Token | Forms, Responses, Webhooks, Workspaces, Images, Themes | complete |
 | [WooCommerce](connectors/woocommerce.md) | `airbyte-agent-woocommerce` | Token | Customers, Orders, Products, Coupons, Product Categories,... | complete |
 | [Zendesk Chat](connectors/zendesk-chat.md) | `airbyte-agent-zendesk-chat` | OAuth | Accounts, Agents, Agent Timeline, Bans, Chats, Department... | complete |
-| [Zendesk Support](connectors/zendesk-support.md) | `airbyte-agent-zendesk-support` | OAuth, Token | Tickets, Users, Organizations, Groups, Ticket Comments, A... | complete |
+| [Zendesk Support](connectors/zendesk-support.md) | `airbyte-agent-zendesk-support` | OAuth, Token | Tickets, Deleted Tickets, Users, Organizations, Groups, T... | complete |
 | [Zendesk Talk](connectors/zendesk-talk.md) | `airbyte-agent-zendesk-talk` | OAuth, Token | Phone Numbers, Addresses, Greetings, Greeting Categories,... | complete |
 | [Zoho Crm](connectors/zoho-crm.md) | `airbyte-agent-zoho-crm` | OAuth | Leads, Contacts, Accounts, Deals, Campaigns, Tasks, Event... | complete |

@@ -7,7 +7,7 @@ The Zendesk-Support agent connector is a Python package that equips AI agents to
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-zendesk-support` v0.18.120
+- **Package:** `airbyte-agent-zendesk-support` v0.18.121
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developer.zendesk.com/api-reference/ticketing/introduction/)
 - **Status:** complete
@@ -83,6 +83,7 @@ async def zendesk_support_execute(entity: str, action: str, params: dict | None 
 | Entity | Actions |
 |--------|---------|
 | Tickets | List, Get, Search |
+| Deleted Tickets | List, Search |
 | Users | List, Get, Search |
 | Organizations | List, Get, Search |
 | Groups | List, Get, Search |
