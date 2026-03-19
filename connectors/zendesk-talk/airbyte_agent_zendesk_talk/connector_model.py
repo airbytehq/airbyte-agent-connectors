@@ -27,6 +27,7 @@ from uuid import (
 ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('c8630570-086d-4a40-99ae-ea5b18673071'),
     name='zendesk-talk',
+    version='1.0.1',
     base_url='https://{subdomain}.zendesk.com/api/v2/channels/voice',
     auth=AuthConfig(
         options=[
