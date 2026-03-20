@@ -35,6 +35,8 @@ from .models import (
     ViewerRepositoriesListResult,
     ProjectsListResult,
     ProjectItemsListResult,
+    DiscussionsListResult,
+    DiscussionsApiSearchResult,
     DirectoryContentListResult
 )
 from .types import (
@@ -78,6 +80,9 @@ from .types import (
     ProjectsListParams,
     ProjectsGetParams,
     ProjectItemsListParams,
+    DiscussionsListParams,
+    DiscussionsGetParams,
+    DiscussionsApiSearchParams,
     FileContentGetParams,
     DirectoryContentListParams
 )
@@ -115,6 +120,8 @@ __all__ = [
     "ViewerRepositoriesListResult",
     "ProjectsListResult",
     "ProjectItemsListResult",
+    "DiscussionsListResult",
+    "DiscussionsApiSearchResult",
     "DirectoryContentListResult",
     "RepositoriesGetParams",
     "RepositoriesListParams",
@@ -156,6 +163,9 @@ __all__ = [
     "ProjectsListParams",
     "ProjectsGetParams",
     "ProjectItemsListParams",
+    "DiscussionsListParams",
+    "DiscussionsGetParams",
+    "DiscussionsApiSearchParams",
     "FileContentGetParams",
     "DirectoryContentListParams",
 ]

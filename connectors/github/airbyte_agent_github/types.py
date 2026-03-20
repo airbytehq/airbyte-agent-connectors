@@ -303,6 +303,30 @@ class ProjectItemsListParams(TypedDict):
     after: NotRequired[str]
     fields: NotRequired[list[str]]
 
+class DiscussionsListParams(TypedDict):
+    """Parameters for discussions.list operation"""
+    owner: str
+    repo: str
+    states: NotRequired[list[str]]
+    answered: NotRequired[bool]
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
+class DiscussionsGetParams(TypedDict):
+    """Parameters for discussions.get operation"""
+    owner: str
+    repo: str
+    number: int
+    fields: NotRequired[list[str]]
+
+class DiscussionsApiSearchParams(TypedDict):
+    """Parameters for discussions.api_search operation"""
+    query: str
+    per_page: NotRequired[int]
+    after: NotRequired[str]
+    fields: NotRequired[list[str]]
+
 class FileContentGetParams(TypedDict):
     """Parameters for file_content.get operation"""
     owner: str

@@ -27,6 +27,9 @@ from .types import (
     CommitsGetParams,
     CommitsListParams,
     DirectoryContentListParams,
+    DiscussionsApiSearchParams,
+    DiscussionsGetParams,
+    DiscussionsListParams,
     FileContentGetParams,
     IssuesApiSearchParams,
     IssuesGetParams,
@@ -97,6 +100,8 @@ from .models import (
     ViewerRepositoriesListResult,
     ProjectsListResult,
     ProjectItemsListResult,
+    DiscussionsListResult,
+    DiscussionsApiSearchResult,
     DirectoryContentListResult,
 )
 
@@ -145,7 +150,7 @@ class GithubConnector:
     """
 
     connector_name = "github"
-    connector_version = "0.1.16"
+    connector_version = "0.1.17"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -190,6 +195,9 @@ class GithubConnector:
         ("projects", "list"): True,
         ("projects", "get"): None,
         ("project_items", "list"): True,
+        ("discussions", "list"): True,
+        ("discussions", "get"): None,
+        ("discussions", "api_search"): True,
         ("file_content", "get"): None,
         ("directory_content", "list"): True,
     }
@@ -237,6 +245,9 @@ class GithubConnector:
         ('projects', 'list'): {'org': 'org', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('projects', 'get'): {'org': 'org', 'project_number': 'project_number', 'fields': 'fields'},
         ('project_items', 'list'): {'org': 'org', 'project_number': 'project_number', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('discussions', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'answered': 'answered', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('discussions', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
+        ('discussions', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('file_content', 'get'): {'owner': 'owner', 'repo': 'repo', 'path': 'path', 'ref': 'ref', 'fields': 'fields'},
         ('directory_content', 'list'): {'owner': 'owner', 'repo': 'repo', 'path': 'path', 'ref': 'ref', 'fields': 'fields'},
     }
@@ -363,6 +374,7 @@ class GithubConnector:
         self.viewer_repositories = ViewerRepositoriesQuery(self)
         self.projects = ProjectsQuery(self)
         self.project_items = ProjectItemsQuery(self)
+        self.discussions = DiscussionsQuery(self)
         self.file_content = FileContentQuery(self)
         self.directory_content = DirectoryContentQuery(self)
 
@@ -687,6 +699,30 @@ class GithubConnector:
         action: Literal["list"],
         params: "ProjectItemsListParams"
     ) -> "ProjectItemsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discussions"],
+        action: Literal["list"],
+        params: "DiscussionsListParams"
+    ) -> "DiscussionsListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discussions"],
+        action: Literal["get"],
+        params: "DiscussionsGetParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["discussions"],
+        action: Literal["api_search"],
+        params: "DiscussionsApiSearchParams"
+    ) -> "DiscussionsApiSearchResult": ...
 
     @overload
     async def execute(
@@ -2807,6 +2843,132 @@ Each item includes its field values like Status, Priority, etc.
         result = await self._connector.execute("project_items", "list", params)
         # Cast generic envelope to concrete typed result
         return ProjectItemsListResult(
+            data=result.data
+        )
+
+
+
+class DiscussionsQuery:
+    """
+    Query class for Discussions entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        owner: str,
+        repo: str,
+        states: list[str] | None = None,
+        answered: bool | None = None,
+        per_page: int | None = None,
+        after: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> DiscussionsListResult:
+        """
+        Returns a list of discussions for the specified repository using GraphQL
+
+        Args:
+            owner: The account owner of the repository
+            repo: The name of the repository
+            states: Filter by discussion state
+            answered: Filter by answered/unanswered status
+            per_page: The number of results per page
+            after: Cursor for pagination
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            DiscussionsListResult
+        """
+        params = {k: v for k, v in {
+            "owner": owner,
+            "repo": repo,
+            "states": states,
+            "answered": answered,
+            "per_page": per_page,
+            "after": after,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discussions", "list", params)
+        # Cast generic envelope to concrete typed result
+        return DiscussionsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        owner: str,
+        repo: str,
+        number: int,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Gets information about a specific discussion by number using GraphQL
+
+        Args:
+            owner: The account owner of the repository
+            repo: The name of the repository
+            number: The discussion number
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "owner": owner,
+            "repo": repo,
+            "number": number,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discussions", "get", params)
+        return result
+
+
+
+    async def api_search(
+        self,
+        query: str,
+        per_page: int | None = None,
+        after: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> DiscussionsApiSearchResult:
+        """
+        Search for discussions using GitHub's search syntax
+
+        Args:
+            query: GitHub discussion search query using GitHub's search syntax
+            per_page: The number of results per page
+            after: Cursor for pagination
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            DiscussionsApiSearchResult
+        """
+        params = {k: v for k, v in {
+            "query": query,
+            "per_page": per_page,
+            "after": after,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("discussions", "api_search", params)
+        # Cast generic envelope to concrete typed result
+        return DiscussionsApiSearchResult(
             data=result.data
         )
 

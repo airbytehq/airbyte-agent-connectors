@@ -30,7 +30,7 @@ from uuid import (
 GithubConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('ef69ef6e-aa7f-4af1-a01d-ef775033524e'),
     name='github',
-    version='0.1.16',
+    version='0.1.17',
     base_url='https://api.github.com',
     auth=AuthConfig(
         options=[
@@ -2570,6 +2570,203 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id\ntype\ncreatedAt\nupdatedAt\nisArchived\ncontent {\n  ... on Issue {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on PullRequest {\n    id\n    title\n    number\n    state\n    url\n    createdAt\n    updatedAt\n    author { login }\n    assignees(first: 5) { nodes { login } }\n    labels(first: 10) { nodes { name color } }\n    repository { nameWithOwner }\n  }\n  ... on DraftIssue {\n    id\n    title\n    body\n    createdAt\n    updatedAt\n    creator { login }\n  }\n}\nfieldValues(first: 20) {\n  nodes {\n    ... on ProjectV2ItemFieldSingleSelectValue {\n      name\n      field { ... on ProjectV2SingleSelectField { name } }\n    }\n    ... on ProjectV2ItemFieldTextValue {\n      text\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldDateValue {\n      date\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldNumberValue {\n      number\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldIterationValue {\n      title\n      startDate\n      duration\n      field { ... on ProjectV2IterationField { name } }\n    }\n    ... on ProjectV2ItemFieldLabelValue {\n      labels(first: 10) { nodes { name color } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldUserValue {\n      users(first: 5) { nodes { login } }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldRepositoryValue {\n      repository { nameWithOwner }\n      field { ... on ProjectV2Field { name } }\n    }\n    ... on ProjectV2ItemFieldMilestoneValue {\n      milestone { title number }\n      field { ... on ProjectV2Field { name } }\n    }\n  }\n}\n',
                     },
                     record_extractor='$.data.organization.projectV2.items.nodes',
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='discussions',
+            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:discussions:list',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of discussions for the specified repository using GraphQL',
+                    query_params=[
+                        'owner',
+                        'repo',
+                        'states',
+                        'answered',
+                        'per_page',
+                        'after',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'states': {'type': 'array', 'required': False},
+                        'answered': {'type': 'boolean', 'required': False},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 30,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'repository': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'discussions': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'pageInfo': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'hasNextPage': {'type': 'boolean'},
+                                                            'endCursor': {
+                                                                'type': ['string', 'null'],
+                                                            },
+                                                        },
+                                                    },
+                                                    'nodes': {
+                                                        'type': 'array',
+                                                        'items': {'type': 'object'},
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query ListDiscussions($owner: String!, $name: String!, $first: Int!, $after: String, $states: [DiscussionState!], $answered: Boolean) {\n  repository(owner: $owner, name: $name) {\n    discussions(first: $first, after: $after, states: $states, answered: $answered, orderBy: {field: CREATED_AT, direction: DESC}) {\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n      nodes {\n        {{ fields }}\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'owner': '{{ owner }}',
+                            'name': '{{ repo }}',
+                            'first': '{{ per_page }}',
+                            'after': '{{ after }}',
+                            'states': '{{ states }}',
+                            'answered': '{{ answered }}',
+                        },
+                        'default_fields': 'id databaseId number title body bodyHTML createdAt updatedAt closedAt closed locked activeLockReason stateReason upvoteCount url isAnswered answerChosenAt author { login avatarUrl } category { id name slug emoji isAnswerable } answerChosenBy { login } answer { id body author { login } createdAt } labels(first: 10) { nodes { name color } } comments { totalCount }',
+                    },
+                    record_extractor='$.data.repository.discussions.nodes',
+                ),
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:discussions:get',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description='Gets information about a specific discussion by number using GraphQL',
+                    query_params=[
+                        'owner',
+                        'repo',
+                        'number',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'number': {'type': 'integer', 'required': True},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'repository': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'discussion': {'type': 'object'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query GetDiscussion($owner: String!, $name: String!, $number: Int!) {\n  repository(owner: $owner, name: $name) {\n    discussion(number: $number) {\n      {{ fields }}\n    }\n  }\n}\n',
+                        'variables': {
+                            'owner': '{{ owner }}',
+                            'name': '{{ repo }}',
+                            'number': '{{ number }}',
+                        },
+                        'default_fields': 'id databaseId number title body bodyHTML createdAt updatedAt closedAt closed locked activeLockReason stateReason upvoteCount url isAnswered answerChosenAt author { login avatarUrl } category { id name slug emoji isAnswerable } answerChosenBy { login } answer { id body author { login } createdAt } labels(first: 10) { nodes { name color } } comments { totalCount }',
+                    },
+                    record_extractor='$.data.repository.discussion',
+                ),
+                Action.API_SEARCH: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:discussions:search',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.API_SEARCH,
+                    description="Search for discussions using GitHub's search syntax",
+                    query_params=[
+                        'query',
+                        'per_page',
+                        'after',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'query': {'type': 'string', 'required': True},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 30,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'search': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'discussionCount': {'type': 'integer'},
+                                            'pageInfo': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'hasNextPage': {'type': 'boolean'},
+                                                    'endCursor': {
+                                                        'type': ['string', 'null'],
+                                                    },
+                                                },
+                                            },
+                                            'nodes': {
+                                                'type': 'array',
+                                                'items': {'type': 'object'},
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query SearchDiscussions($searchQuery: String!, $first: Int!, $after: String) {\n  search(query: $searchQuery, type: DISCUSSION, first: $first, after: $after) {\n    discussionCount\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n    nodes {\n      ... on Discussion {\n        {{ fields }}\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'searchQuery': '{{ query }}',
+                            'first': '{{ per_page }}',
+                            'after': '{{ after }}',
+                        },
+                        'default_fields': 'id databaseId number title body createdAt updatedAt closedAt closed locked stateReason upvoteCount url isAnswered answerChosenAt author { login avatarUrl } category { id name slug emoji isAnswerable } answerChosenBy { login } answer { id body author { login } createdAt } labels(first: 10) { nodes { name color } } comments { totalCount }',
+                    },
+                    record_extractor='$.data.search.nodes',
                 ),
             },
         ),
