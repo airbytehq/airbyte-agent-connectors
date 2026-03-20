@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/github/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-19 -->
+<!-- Source format: v1 | Generated: 2026-03-20 -->
 
 # GitHub
 
@@ -7,7 +7,7 @@ The Github agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-github` v0.18.120
+- **Package:** `airbyte-agent-github` v0.18.121
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://docs.github.com/en/rest)
 - **Status:** complete
@@ -24,6 +24,8 @@ The Github agent connector is a Python package that equips AI agents to interact
 - Get details about the most recent releases in my organization
 - List all milestones for our current development sprint
 - Show me insights about pull request review patterns in our team
+- List all unanswered discussions in a repository
+- Show me recent discussions in the General category
 
 ## Unsupported
 
@@ -104,6 +106,7 @@ async def github_execute(entity: str, action: str, params: dict | None = None):
 | Viewer Repositories | List |
 | Projects | List, Get |
 | Project Items | List |
+| Discussions | List, Get, API Search |
 | File Content | Get |
 | Directory Content | List |
 

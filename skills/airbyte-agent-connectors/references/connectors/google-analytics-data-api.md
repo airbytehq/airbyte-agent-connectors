@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/google-analytics-data-api/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-19 -->
+<!-- Source format: v1 | Generated: 2026-03-20 -->
 
 # Google Analytics Data API
 
