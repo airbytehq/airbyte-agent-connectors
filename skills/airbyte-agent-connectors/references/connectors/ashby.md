@@ -7,7 +7,7 @@ The Ashby agent connector is a Python package that equips AI agents to interact 
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-ashby` v0.1.18
+- **Package:** `airbyte-agent-ashby` v0.1.19
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.ashbyhq.com/reference)
 - **Status:** complete
