@@ -7,7 +7,7 @@ The Incident-Io agent connector is a Python package that equips AI agents to int
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-incident-io` v0.1.8
+- **Package:** `airbyte-agent-incident-io` v0.1.9
 - **Auth:** Token
 - **Docs:** [Official API docs](https://api-docs.incident.io/)
 - **Status:** complete
