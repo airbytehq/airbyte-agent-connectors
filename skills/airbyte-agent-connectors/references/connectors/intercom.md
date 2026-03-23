@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/intercom/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-20 -->
+<!-- Source format: v1 | Generated: 2026-03-23 -->
 
 # Intercom
 
@@ -7,7 +7,7 @@ The Intercom agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-intercom` v0.1.87
+- **Package:** `airbyte-agent-intercom` v0.1.88
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.intercom.com/docs/references/rest-api/api.intercom.io)
 - **Status:** complete
