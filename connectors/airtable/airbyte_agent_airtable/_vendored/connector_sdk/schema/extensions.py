@@ -264,6 +264,11 @@ class CacheConfig(BaseModel):
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
 
     entities: list[CacheEntityConfig]
+    disable_compaction: bool = Field(
+        default=False,
+        alias="disable_compaction",
+        description="When true, Athena compaction (OPTIMIZE + VACUUM) is skipped for this connector type.",
+    )
 
     def get_entity_mapping(self, user_entity: str) -> CacheEntityConfig | None:
         """
