@@ -1,5 +1,10 @@
 # Ashby changelog
 
+## [0.1.19] - 2026-03-23
+- Updated connector definition (YAML version 0.1.3)
+- Source commit: 5718dee3
+- SDK version: 0.1.0
+
 ## [0.1.18] - 2026-03-12
 - Updated connector definition (YAML version 0.1.3)
 - Source commit: b541ca65
