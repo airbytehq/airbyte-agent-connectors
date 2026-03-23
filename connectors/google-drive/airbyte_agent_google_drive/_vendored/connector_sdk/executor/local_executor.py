@@ -602,6 +602,88 @@ class LocalExecutor:
                 error=str(e),
             )
 
+    async def check_entities(self, entities: list[str]) -> ExecutionResult:
+        """Perform health checks for specific entities by probing their list or get operations.
+
+        For each entity, looks up (entity_name, Action.LIST) in the operation index.
+        If not found, falls back to (entity_name, Action.GET). Runs all probes
+        concurrently and returns per-entity results.
+
+        Args:
+            entities: List of entity names to check.
+
+        Returns:
+            ExecutionResult with per-entity health check results.
+        """
+        logging.debug("check_entities: probing entities %s", entities)
+
+        standard_handler = next(
+            (h for h in self._operation_handlers if isinstance(h, _StandardOperationHandler)),
+            None,
+        )
+
+        if standard_handler is None:
+            entity_results = [
+                {"entity": name, "status": "skipped", "error": "No standard handler available", "checked_action": None}
+                for name in entities
+            ]
+            return ExecutionResult(
+                success=not entities,
+                data={"entity_results": entity_results, "status": "unhealthy" if entities else "healthy"},
+            )
+
+        tasks = [self._probe_entity(name, standard_handler) for name in entities]
+        entity_results = await asyncio.gather(*tasks)
+
+        all_healthy = all(r["status"] == "healthy" for r in entity_results)
+        failed = [r for r in entity_results if r["status"] != "healthy"]
+        error = None
+        if failed:
+            names = ", ".join(r["entity"] for r in failed)
+            error = f"Entity check failed for: {names}"
+        return ExecutionResult(
+            success=all_healthy,
+            data={
+                "entity_results": list(entity_results),
+                "status": "healthy" if all_healthy else "unhealthy",
+            },
+            error=error,
+        )
+
+    async def _probe_entity(self, entity_name: str, standard_handler: _StandardOperationHandler) -> dict[str, Any]:
+        """Probe a single entity's health by executing its list or get operation."""
+        endpoint = self._operation_index.get((entity_name, Action.LIST))
+        action = Action.LIST
+        if endpoint is None:
+            endpoint = self._operation_index.get((entity_name, Action.GET))
+            action = Action.GET
+        if endpoint is None:
+            return {
+                "entity": entity_name,
+                "status": "failed",
+                "error": f"Entity '{entity_name}' has no list or get operation available for checking",
+                "status_code": None,
+                "checked_action": None,
+            }
+        try:
+            params = {"limit": 1} if action == Action.LIST else {}
+            await standard_handler.execute_operation(entity_name, action, params)
+            return {
+                "entity": entity_name,
+                "status": "healthy",
+                "error": None,
+                "status_code": None,
+                "checked_action": action.value,
+            }
+        except Exception as e:
+            return {
+                "entity": entity_name,
+                "status": "unhealthy",
+                "error": str(e),
+                "status_code": getattr(e, "status_code", None),
+                "checked_action": action.value,
+            }
+
     async def _execute_operation(
         self,
         entity: str,
