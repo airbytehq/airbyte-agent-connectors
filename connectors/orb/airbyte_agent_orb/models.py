@@ -197,15 +197,6 @@ class InvoiceSubscription(BaseModel):
     id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
     """The subscription ID"""
 
-class InvoiceCustomer(BaseModel):
-    """The customer associated with the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
-    """The customer ID"""
-    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
-    """The external customer ID"""
-
 class InvoiceLineItemsItem(BaseModel):
     """Nested schema for Invoice.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -222,6 +213,15 @@ class InvoiceLineItemsItem(BaseModel):
     """The start date of the line item"""
     end_date: Union[str | None, Any] = Field(default=None, description="The end date of the line item")
     """The end date of the line item"""
+
+class InvoiceCustomer(BaseModel):
+    """The customer associated with the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The customer ID")
+    """The customer ID"""
+    external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
+    """The external customer ID"""
 
 class Invoice(BaseModel):
     """Invoice object"""
