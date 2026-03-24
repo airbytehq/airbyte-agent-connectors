@@ -186,7 +186,7 @@ async def fetch_all(connector, entity, params=None):
         result = await connector.execute(entity, "list", params)
         all_records.extend(result.data)
 
-        cursor = getattr(result.meta, 'next_cursor', None) if result.meta else None
+        cursor = result.meta.get('next_cursor') if result.meta else None
         if not cursor:
             break
 

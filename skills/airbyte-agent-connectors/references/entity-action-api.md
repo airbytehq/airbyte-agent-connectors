@@ -198,7 +198,7 @@ Return types depend on the action:
   ```python
   # For Slack: SlackExecuteResultWithMeta (or similar per connector)
   result.data   # Typed list of Pydantic models (e.g., list[Channel])
-  result.meta   # Pagination metadata with fields like next_cursor, has_more
+  result.meta   # Pagination metadata dict with keys like 'next_cursor', 'has_more'
   ```
 
 - **`get` / `create` / `update` / `delete`** actions return the Pydantic model directly:
@@ -220,7 +220,7 @@ for customer in result.data:
 
 # Check pagination metadata
 if hasattr(result, 'meta') and result.meta:
-    next_cursor = getattr(result.meta, 'next_cursor', None)
+    next_cursor = result.meta.get('next_cursor')
     if next_cursor:
         print(f"More results available, cursor: {next_cursor}")
 
@@ -265,7 +265,7 @@ async def list_all_customers(connector):
         all_customers.extend(result.data)
 
         # Check if more pages exist
-        cursor = getattr(result.meta, 'next_cursor', None) if result.meta else None
+        cursor = result.meta.get('next_cursor') if result.meta else None
         if not cursor:
             break
 
@@ -310,11 +310,13 @@ You can discover available entities and actions before executing them to catch e
 ```python
 # List available entities
 entities = connector.list_entities()
-print(entities)  # ['customers', 'invoices', 'charges', ...]
+# Returns list of dicts: [{'entity_name': 'customers', 'available_actions': ['list', 'get', ...], ...}, ...]
+for entity in entities:
+    print(f"{entity['entity_name']}: {entity['available_actions']}")
 
-# Get schema for an entity (available actions and parameters)
+# Get schema for an entity
 schema = connector.entity_schema("customers")
-print(schema)  # Shows available actions and their parameter schemas
+print(schema)  # JSON schema dict describing the entity structure
 ```
 
 ### Safe Execution in Agent Tools
@@ -454,11 +456,13 @@ github_tool = StructuredTool.from_function(
 ```python
 # List available entities
 entities = connector.list_entities()
-print(entities)  # ['customers', 'invoices', 'charges', ...]
+# Returns list of dicts: [{'entity_name': 'customers', 'available_actions': ['list', 'get', ...], ...}, ...]
+for entity in entities:
+    print(f"{entity['entity_name']}: {entity['available_actions']}")
 
-# Get entity schema (available actions and parameters)
+# Get entity schema
 schema = connector.entity_schema("customers")
-print(schema)  # Shows available actions and parameters
+print(schema)  # JSON schema dict describing the entity structure
 ```
 
 ### Reference Documentation
