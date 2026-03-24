@@ -266,7 +266,7 @@ async def list_all_customers(connector):
         all_customers.extend(result.data)
 
         # Check if more pages exist
-        cursor = result.meta.get('next_cursor') if result.meta else None
+        cursor = result.meta.get('next_cursor') if hasattr(result, 'meta') and result.meta else None
         if not cursor:
             break
 

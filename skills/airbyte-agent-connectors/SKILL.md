@@ -189,7 +189,7 @@ async def fetch_all_slack(connector, entity, params=None):
         result = await connector.execute(entity, "list", params)
         all_records.extend(result.data)
 
-        cursor = result.meta.get('next_cursor') if result.meta else None  # dict access, not attribute
+        cursor = result.meta.get('next_cursor') if hasattr(result, 'meta') and result.meta else None  # dict access, not attribute
         if not cursor:
             break
 
