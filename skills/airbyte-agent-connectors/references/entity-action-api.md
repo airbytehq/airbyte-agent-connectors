@@ -207,7 +207,7 @@ Return types depend on the action:
   user = await connector.execute("users", "get", {"user": "U123"})
   print(user['name'])  # Use dict access, not attribute access
   ```
-  > **Note:** The typed query methods (e.g., `connector.users.get()`) return Pydantic models, but the generic `execute()` method returns raw dicts for non-list actions.
+  > **Note:** Both the typed query methods (e.g., `connector.users.get()`) and the generic `execute()` method return raw dicts for non-list actions. Use dict access (e.g., `user['name']`), not attribute access.
 
 - **Errors** are raised as exceptions (`RuntimeError`, `TypeError`, `ValueError`, `NotImplementedError`). There is no `.success` or `.error` attribute on the result — if the call returns, it succeeded.
 
