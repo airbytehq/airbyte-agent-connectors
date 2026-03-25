@@ -126,14 +126,6 @@ class Campaign(BaseModel):
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
 
-class AdSquadSkadnetworkProperties(BaseModel):
-    """SKAdNetwork properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    ecid_enrollment_status: Union[str, Any] = Field(default=None)
-    enable_skoverlay: Union[bool, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
-
 class AdSquadTargetingGeosItem(BaseModel):
     """Nested schema for AdSquadTargeting.geos_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -164,6 +156,14 @@ class AdSquadTargeting(BaseModel):
     demographics: Union[list[dict[str, Any]], Any] = Field(default=None)
     interests: Union[list[dict[str, Any]], Any] = Field(default=None)
     locations: Union[list[dict[str, Any]], Any] = Field(default=None)
+
+class AdSquadSkadnetworkProperties(BaseModel):
+    """SKAdNetwork properties"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ecid_enrollment_status: Union[str, Any] = Field(default=None)
+    enable_skoverlay: Union[bool, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
 
 class AdSquad(BaseModel):
     """Snapchat ad squad object"""
