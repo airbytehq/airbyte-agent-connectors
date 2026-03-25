@@ -304,6 +304,14 @@ class EndpointDefinition(BaseModel):
         description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
+    param_sources: dict[str, dict[str, str]] = Field(
+        default_factory=dict,
+        description=(
+            "Per-param source declarations: "
+            "{param_name: {'parent_entity': ..., 'parent_key': ...} | {'config': ...}}."
+        ),
+    )
+
     upload_file_param: str | None = Field(
         None,
         description="Parameter name containing base64-encoded file content for multipart/related uploads (from x-airbyte-upload-file-param)",
