@@ -1,5 +1,10 @@
 # Tiktok Marketing changelog
 
+## [0.1.21] - 2026-03-25
+- Updated connector definition (YAML version 1.1.4)
+- Source commit: bbb46256
+- SDK version: 0.1.0
+
 ## [0.1.20] - 2026-03-23
 - Updated connector definition (YAML version 1.1.4)
 - Source commit: 6ad04bc3
