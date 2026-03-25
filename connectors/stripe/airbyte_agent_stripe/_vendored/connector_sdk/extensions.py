@@ -450,6 +450,41 @@ Example:
     ```
 """
 
+AIRBYTE_PARAM_SOURCES = "x-airbyte-param-sources"
+"""
+Extension: x-airbyte-param-sources
+Location: Operation object (on individual HTTP operations)
+Type: dict[str, dict[str, str]] (param name → source declaration)
+Required: No
+
+Description:
+    Per-param source declarations for entity dependency resolution. Each key is
+    a parameter name; each value is a dict describing where that parameter's
+    value comes from at runtime.
+
+    Two source patterns are supported:
+
+    Pattern 1 — Parent entity (param value comes from another entity's field):
+        parent_entity: Name of the parent entity
+        parent_key: Field on the parent entity that supplies the value
+
+    Pattern 2 — Config (param value comes from user-provided configuration):
+        config: Name of the config key
+
+Example:
+    ```yaml
+    paths:
+      /accounts/{account_id}/contacts:
+        get:
+          x-airbyte-entity: contacts
+          x-airbyte-action: list
+          x-airbyte-param-sources:
+            account_id:
+              parent_entity: accounts
+              parent_key: id
+    ```
+"""
+
 AIRBYTE_TOKEN_EXTRACT = "x-airbyte-token-extract"
 """
 Extension: x-airbyte-token-extract
@@ -587,6 +622,7 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_RECORD_EXTRACTOR,
         AIRBYTE_META_EXTRACTOR,
         AIRBYTE_FILE_URL,
+        AIRBYTE_PARAM_SOURCES,
         AIRBYTE_TOKEN_EXTRACT,
     ]
 
@@ -674,6 +710,12 @@ EXTENSION_REGISTRY = {
         "type": "string",
         "required": "conditional",  # Required when action is 'download'
         "description": "Field in metadata response containing download URL (required for download action)",
+    },
+    AIRBYTE_PARAM_SOURCES: {
+        "location": "operation",
+        "type": "dict[str, dict[str, str]]",
+        "required": False,
+        "description": "Per-param source declarations for entity dependency resolution (parent_entity+parent_key or config)",
     },
     AIRBYTE_TOKEN_EXTRACT: {
         "location": "securityScheme",
