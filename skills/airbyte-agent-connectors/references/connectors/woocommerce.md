@@ -7,7 +7,7 @@ The Woocommerce agent connector is a Python package that equips AI agents to int
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-woocommerce` v0.1.5
+- **Package:** `airbyte-agent-woocommerce` v0.1.6
 - **Auth:** Token
 - **Docs:** [Official API docs](https://woocommerce.github.io/woocommerce-rest-api-docs/)
 - **Status:** complete
