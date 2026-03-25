@@ -53,6 +53,17 @@ from .models import (
     StandardExecuteResult,
 )
 
+MAX_PARAM_RESOLUTION_DEPTH = 5
+
+CHECK_STATUS_HEALTHY = "healthy"
+CHECK_STATUS_UNHEALTHY = "unhealthy"
+CHECK_STATUS_SKIPPED = "skipped"
+CHECK_STATUS_FAILED = "failed"
+
+
+class ParamResolutionError(Exception):
+    """Raised when a path parameter cannot be resolved for entity probing."""
+
 
 class _OperationContext:
     """Shared context for operation handlers."""
@@ -558,7 +569,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=True,
                 data={
-                    "status": "skipped",
+                    "status": CHECK_STATUS_SKIPPED,
                     "error": "No operation available for health check",
                 },
             )
@@ -573,7 +584,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=True,
                 data={
-                    "status": "skipped",
+                    "status": CHECK_STATUS_SKIPPED,
                     "error": "No standard handler available",
                 },
             )
@@ -585,7 +596,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=True,
                 data={
-                    "status": "healthy",
+                    "status": CHECK_STATUS_HEALTHY,
                     "checked_entity": check_entity,
                     "checked_action": check_action.value,
                 },
@@ -594,7 +605,7 @@ class LocalExecutor:
             return ExecutionResult(
                 success=False,
                 data={
-                    "status": "unhealthy",
+                    "status": CHECK_STATUS_UNHEALTHY,
                     "error": str(e),
                     "checked_entity": check_entity,
                     "checked_action": check_action.value,
@@ -624,19 +635,20 @@ class LocalExecutor:
 
         if standard_handler is None:
             entity_results = [
-                {"entity": name, "status": "skipped", "error": "No standard handler available", "checked_action": None}
+                {"entity": name, "status": CHECK_STATUS_SKIPPED, "error": "No standard handler available", "checked_action": None}
                 for name in entities
             ]
             return ExecutionResult(
                 success=not entities,
-                data={"entity_results": entity_results, "status": "unhealthy" if entities else "healthy"},
+                data={"entity_results": entity_results, "status": CHECK_STATUS_UNHEALTHY if entities else CHECK_STATUS_HEALTHY},
             )
 
-        tasks = [self._probe_entity(name, standard_handler) for name in entities]
+        parent_cache: dict[str, list[dict]] = {}
+        tasks = [self._probe_entity(name, standard_handler, parent_cache) for name in entities]
         entity_results = await asyncio.gather(*tasks)
 
-        all_healthy = all(r["status"] == "healthy" for r in entity_results)
-        failed = [r for r in entity_results if r["status"] != "healthy"]
+        all_healthy = all(r["status"] == CHECK_STATUS_HEALTHY for r in entity_results)
+        failed = [r for r in entity_results if r["status"] != CHECK_STATUS_HEALTHY]
         error = None
         if failed:
             names = ", ".join(r["entity"] for r in failed)
@@ -645,12 +657,17 @@ class LocalExecutor:
             success=all_healthy,
             data={
                 "entity_results": list(entity_results),
-                "status": "healthy" if all_healthy else "unhealthy",
+                "status": CHECK_STATUS_HEALTHY if all_healthy else CHECK_STATUS_UNHEALTHY,
             },
             error=error,
         )
 
-    async def _probe_entity(self, entity_name: str, standard_handler: _StandardOperationHandler) -> dict[str, Any]:
+    async def _probe_entity(
+        self,
+        entity_name: str,
+        standard_handler: _StandardOperationHandler,
+        parent_cache: dict[str, list[dict]],
+    ) -> dict[str, Any]:
         """Probe a single entity's health by executing its list or get operation."""
         endpoint = self._operation_index.get((entity_name, Action.LIST))
         action = Action.LIST
@@ -660,17 +677,34 @@ class LocalExecutor:
         if endpoint is None:
             return {
                 "entity": entity_name,
-                "status": "failed",
+                "status": CHECK_STATUS_FAILED,
                 "error": f"Entity '{entity_name}' has no list or get operation available for checking",
                 "status_code": None,
                 "checked_action": None,
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
+            if endpoint.path_params:
+                try:
+                    resolved = await self._resolve_param_sources(
+                        entity_name,
+                        endpoint,
+                        standard_handler,
+                        parent_cache,
+                    )
+                    params.update(resolved)
+                except ParamResolutionError as exc:
+                    return {
+                        "entity": entity_name,
+                        "status": CHECK_STATUS_SKIPPED,
+                        "error": str(exc),
+                        "status_code": None,
+                        "checked_action": action.value,
+                    }
             await standard_handler.execute_operation(entity_name, action, params)
             return {
                 "entity": entity_name,
-                "status": "healthy",
+                "status": CHECK_STATUS_HEALTHY,
                 "error": None,
                 "status_code": None,
                 "checked_action": action.value,
@@ -678,11 +712,78 @@ class LocalExecutor:
         except Exception as e:
             return {
                 "entity": entity_name,
-                "status": "unhealthy",
+                "status": CHECK_STATUS_UNHEALTHY,
                 "error": str(e),
                 "status_code": getattr(e, "status_code", None),
                 "checked_action": action.value,
             }
+
+    async def _resolve_param_sources(
+        self,
+        entity_name: str,
+        endpoint: EndpointDefinition,
+        standard_handler: _StandardOperationHandler,
+        parent_cache: dict[str, list[dict]],
+        depth: int = 0,
+    ) -> dict[str, Any]:
+        """Resolve params using x-airbyte-param-sources annotations and config_values.
+
+        Returns dict of {param_name: resolved_value}.
+        Raises ParamResolutionError if any param cannot be resolved.
+        """
+        if depth > MAX_PARAM_RESOLUTION_DEPTH:
+            raise ParamResolutionError(f"Max resolution depth exceeded for '{entity_name}'")
+
+        resolved: dict[str, Any] = {}
+        for param_name in endpoint.path_params:
+            source = endpoint.param_sources.get(param_name, {})
+
+            config_key = source.get("config") or param_name
+            if config_key in self.config_values:
+                resolved[param_name] = self.config_values[config_key]
+                continue
+
+            parent_entity_name = source.get("parent_entity")
+            parent_key = source.get("parent_key")
+            if not parent_entity_name or not parent_key:
+                raise ParamResolutionError(f"Cannot resolve param '{param_name}' for entity '{entity_name}'")
+            if parent_entity_name == entity_name:
+                raise ParamResolutionError(f"Self-referential param '{param_name}' on entity '{entity_name}'")
+
+            if parent_entity_name not in parent_cache:
+                parent_endpoint = self._operation_index.get((parent_entity_name, Action.LIST))
+                if parent_endpoint is None:
+                    raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
+                parent_params: dict[str, Any] = {"limit": 1}
+                if parent_endpoint.path_params:
+                    parent_resolved = await self._resolve_param_sources(
+                        parent_entity_name,
+                        parent_endpoint,
+                        standard_handler,
+                        parent_cache,
+                        depth + 1,
+                    )
+                    parent_params.update(parent_resolved)
+                try:
+                    result = await standard_handler.execute_operation(
+                        parent_entity_name,
+                        Action.LIST,
+                        parent_params,
+                    )
+                except Exception as exc:
+                    raise ParamResolutionError(f"Parent entity '{parent_entity_name}' probe failed: {exc}") from exc
+                records = result.data if isinstance(result.data, list) else []
+                if not records:
+                    raise ParamResolutionError(f"Parent entity '{parent_entity_name}' returned no records")
+                parent_cache[parent_entity_name] = records
+
+            record = parent_cache[parent_entity_name][0]
+            value = record.get(parent_key)
+            if value is None:
+                raise ParamResolutionError(f"Parent key '{parent_key}' not found in '{parent_entity_name}' response")
+            resolved[param_name] = value
+
+        return resolved
 
     async def _execute_operation(
         self,
@@ -1108,9 +1209,7 @@ class LocalExecutor:
         try:
             file_bytes = base64.b64decode(file_content_b64)
         except Exception as exc:
-            raise ValueError(
-                f"Parameter '{file_param}' must be valid base64-encoded content."
-            ) from exc
+            raise ValueError(f"Parameter '{file_param}' must be valid base64-encoded content.") from exc
 
         boundary = f"airbyte_boundary_{uuid.uuid4().hex}"
 
