@@ -412,6 +412,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             path_override = operation.x_airbyte_path_override
             record_extractor = operation.x_airbyte_record_extractor
             meta_extractor = operation.x_airbyte_meta_extractor
+            param_sources = operation.x_airbyte_param_sources or {}
 
             if not entity_name:
                 raise InvalidOpenAPIError(
@@ -530,6 +531,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 file_field=file_field,
                 untested=untested,
                 preferred_for_check=preferred_for_check,
+                param_sources=param_sources,
                 upload_file_param=upload_file_param,
                 no_content_response=has_no_content_response,
             )
