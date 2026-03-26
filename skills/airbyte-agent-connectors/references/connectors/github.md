@@ -7,7 +7,7 @@ The Github agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-github` v0.18.125
+- **Package:** `airbyte-agent-github` v0.18.126
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://docs.github.com/en/rest)
 - **Status:** complete
