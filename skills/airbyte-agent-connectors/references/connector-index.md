@@ -29,7 +29,7 @@
 | [Granola](connectors/granola.md) | `airbyte-agent-granola` | Token | Notes | complete |
 | [Greenhouse](connectors/greenhouse.md) | `airbyte-agent-greenhouse` | Token | Candidates, Applications, Jobs, Offers, Users, Department... | complete |
 | [Harvest](connectors/harvest.md) | `airbyte-agent-harvest` | OAuth, Token | Users, Clients, Contacts, Company, Projects, Tasks, Time ... | complete |
-| [HubSpot](connectors/hubspot.md) | `airbyte-agent-hubspot` | OAuth | Contacts, Companies, Deals, Tickets, Schemas, Objects | complete |
+| [HubSpot](connectors/hubspot.md) | `airbyte-agent-hubspot` | OAuth, Token | Contacts, Companies, Deals, Tickets, Schemas, Objects | complete |
 | [incident.io](connectors/incident-io.md) | `airbyte-agent-incident-io` | Token | Incidents, Alerts, Escalations, Users, Incident Updates, ... | complete |
 | [Intercom](connectors/intercom.md) | `airbyte-agent-intercom` | Token | Contacts, Conversations, Companies, Teams, Admins, Tags, ... | complete |
 | [Jira](connectors/jira.md) | `airbyte-agent-jira` | Token | Issues, Projects, Users, Issue Fields, Issue Comments, Is... | complete |

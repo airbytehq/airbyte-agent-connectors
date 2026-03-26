@@ -7,8 +7,8 @@ The Hubspot agent connector is a Python package that equips AI agents to interac
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-hubspot` v0.15.124
-- **Auth:** OAuth
+- **Package:** `airbyte-agent-hubspot` v0.15.125
+- **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developers.hubspot.com/docs/api/crm/understanding-the-crm)
 - **Status:** complete
 
@@ -46,14 +46,11 @@ uv pip install airbyte-agent-hubspot
 
 ```python
 from airbyte_agent_hubspot import HubspotConnector
-from airbyte_agent_hubspot.models import HubspotAuthConfig
+from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
 
 connector = HubspotConnector(
-    auth_config=HubspotAuthConfig(
-        client_id="<Your HubSpot OAuth2 Client ID>",
-        client_secret="<Your HubSpot OAuth2 Client Secret>",
-        refresh_token="<Your HubSpot OAuth2 Refresh Token>",
-        access_token="<Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)>"
+    auth_config=HubspotPrivateAppAuthConfig(
+        private_app_token="<Access token from a HubSpot Private App>"
     )
 )
 

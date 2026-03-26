@@ -48,7 +48,7 @@ Use when:
 | Connector | Package | Auth Type | Key Entities |
 |-----------|---------|-----------|--------------|
 | [Stripe](references/connectors/stripe.md) | `airbyte-agent-stripe` | Token | Customers, Invoices, Charges, Subscri... |
-| [HubSpot](references/connectors/hubspot.md) | `airbyte-agent-hubspot` | OAuth | Contacts, Companies, Deals, Tickets, ... |
+| [HubSpot](references/connectors/hubspot.md) | `airbyte-agent-hubspot` | OAuth, Token | Contacts, Companies, Deals, Tickets, ... |
 | [GitHub](references/connectors/github.md) | `airbyte-agent-github` | OAuth, Token | Repositories, Org Repositories, Branc... |
 | [Salesforce](references/connectors/salesforce.md) | `airbyte-agent-salesforce` | OAuth | Sobjects, Accounts, Contacts, Leads, ... |
 | [Gong](references/connectors/gong.md) | `airbyte-agent-gong` | OAuth, Token | Users, Calls, Calls Extensive, Call A... |
