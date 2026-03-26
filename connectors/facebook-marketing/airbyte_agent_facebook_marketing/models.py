@@ -54,6 +54,15 @@ class CurrentUser(BaseModel):
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
 
+class AdLabel(BaseModel):
+    """AdLabel type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    name: Union[str | None, Any] = Field(default=None)
+    created_time: Union[str | None, Any] = Field(default=None)
+    updated_time: Union[str | None, Any] = Field(default=None)
+
 class IssueInfo(BaseModel):
     """IssueInfo type definition"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -63,15 +72,6 @@ class IssueInfo(BaseModel):
     error_summary: Union[str | None, Any] = Field(default=None)
     error_type: Union[str | None, Any] = Field(default=None)
     level: Union[str | None, Any] = Field(default=None)
-
-class AdLabel(BaseModel):
-    """AdLabel type definition"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    name: Union[str | None, Any] = Field(default=None)
-    created_time: Union[str | None, Any] = Field(default=None)
-    updated_time: Union[str | None, Any] = Field(default=None)
 
 class Campaign(BaseModel):
     """Facebook Ad Campaign"""
@@ -476,15 +476,6 @@ class PixelCreator(BaseModel):
     name: Union[str | None, Any] = Field(default=None, description="Creator user name")
     """Creator user name"""
 
-class PixelOwnerAdAccount(BaseModel):
-    """Ad account that owns the pixel"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
-    """Owner ad account ID"""
-    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
-    """Owner ad account ID (with act_ prefix)"""
-
 class PixelOwnerBusiness(BaseModel):
     """Business that owns the pixel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -493,6 +484,15 @@ class PixelOwnerBusiness(BaseModel):
     """Owner business ID"""
     name: Union[str | None, Any] = Field(default=None, description="Owner business name")
     """Owner business name"""
+
+class PixelOwnerAdAccount(BaseModel):
+    """Ad account that owns the pixel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    account_id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID")
+    """Owner ad account ID"""
+    id: Union[str | None, Any] = Field(default=None, description="Owner ad account ID (with act_ prefix)")
+    """Owner ad account ID (with act_ prefix)"""
 
 class Pixel(BaseModel):
     """Facebook Ads Pixel"""
@@ -689,15 +689,6 @@ class AdUpdateParams(BaseModel):
     tracking_specs: Union[str | None, Any] = Field(default=None)
     bid_amount: Union[str | None, Any] = Field(default=None)
 
-class AdLibraryAdImpressions(BaseModel):
-    """Number of impressions as a range"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
-    """Lower bound of impressions"""
-    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
-    """Upper bound of impressions"""
-
 class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Nested schema for AdLibraryAd.demographic_distribution_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -708,6 +699,15 @@ class AdLibraryAdDemographicDistributionItem(BaseModel):
     """Gender category"""
     percentage: Union[str | None, Any] = Field(default=None, description="Percentage of audience in this demographic")
     """Percentage of audience in this demographic"""
+
+class AdLibraryAdImpressions(BaseModel):
+    """Number of impressions as a range"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    lower_bound: Union[int | None, Any] = Field(default=None, description="Lower bound of impressions")
+    """Lower bound of impressions"""
+    upper_bound: Union[int | None, Any] = Field(default=None, description="Upper bound of impressions")
+    """Upper bound of impressions"""
 
 class AdLibraryAdSpend(BaseModel):
     """Amount spent on the ad as a range"""
