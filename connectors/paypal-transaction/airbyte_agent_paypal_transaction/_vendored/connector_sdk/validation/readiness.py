@@ -632,6 +632,54 @@ def validate_meta_extractor_fields(
     return True, errors, warnings
 
 
+def _check_param_sources_coverage(config: ConnectorModel) -> List[str]:
+    """Check that endpoints with path params have x-airbyte-param-sources declarations.
+
+    Returns a list of warning strings for endpoints where path parameters
+    are not covered by param_sources and are not implicitly resolvable from
+    config (auth properties, server variables).
+
+    Skips single-record actions (get, update, delete) when the entity also has
+    a list action, since those path params are the entity's own primary key
+    resolved from list results — not a parent dependency.
+    """
+    warnings: List[str] = []
+
+    # Collect all known config key names that the SDK can resolve implicitly
+    # (auth properties + server variable defaults)
+    implicit_config_keys: set[str] = set()
+    if config.auth and config.auth.options:
+        for opt in config.auth.options:
+            if opt.user_config_spec and opt.user_config_spec.properties:
+                implicit_config_keys.update(opt.user_config_spec.properties.keys())
+    implicit_config_keys.update(config.server_variable_defaults.keys())
+
+    single_record_actions = {Action.GET, Action.UPDATE, Action.DELETE}
+
+    for entity in config.entities:
+        has_list = Action.LIST in entity.endpoints
+        for action, endpoint in entity.endpoints.items():
+            if not endpoint.path_params:
+                continue
+            # Skip self-referencing actions (get/update/delete by own ID)
+            # when the entity also has a list action
+            if has_list and action in single_record_actions:
+                continue
+            for param in endpoint.path_params:
+                if param in endpoint.param_sources:
+                    continue
+                # SDK resolves implicitly when param name matches a config key
+                if param in implicit_config_keys:
+                    continue
+                warnings.append(
+                    f"Entity '{entity.name}' operation '{action.value}' has path parameter "
+                    f"'{param}' with no x-airbyte-param-sources declaration. "
+                    f"Add param-sources to enable per-entity health checks. "
+                    f"See get_connector_yaml_schema_docs('extensions') for guidance."
+                )
+    return warnings
+
+
 def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     """
     Validate that a connector is ready to ship.
@@ -1003,6 +1051,11 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "Add this extension to a lightweight operation (e.g., users.list or accounts.get) "
             "to enable reliable health checks."
         )
+
+    # Check for missing x-airbyte-param-sources declarations
+    param_source_warnings = _check_param_sources_coverage(config)
+    readiness_warnings.extend(param_source_warnings)
+    total_warnings += len(param_source_warnings)
 
     if total_cassettes > 0:
         readiness_warnings.append(
