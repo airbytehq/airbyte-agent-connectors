@@ -401,17 +401,14 @@ async def execute(entity: str, action: str, params: dict | None = None) -> str:
 
 ### Entity-Specific Tools
 
-Create focused tools for common operations:
+Each connector exposes typed query classes as attributes (e.g., `connector.customers`, `connector.issues`). These provide strongly typed methods with documented parameters and return types, so you can create focused tools without dealing with raw entity/action strings:
 
 ```python
 @agent.tool_plain
-async def list_customers(limit: int = 10, email_filter: str | None = None) -> str:
-    """List Stripe customers."""
-    params = {"limit": limit}
-    if email_filter:
-        params["email"] = email_filter
+async def list_customers(limit: int = 10, email: str | None = None) -> str:
+    """List Stripe customers, optionally filtered by email."""
     try:
-        result = await connector.execute("customers", "list", params)
+        result = await connector.customers.list(limit=limit, email=email)
         return json.dumps(result.data, default=str)
     except Exception as e:
         return f"Error: {type(e).__name__}: {e}"
@@ -420,8 +417,8 @@ async def list_customers(limit: int = 10, email_filter: str | None = None) -> st
 async def get_customer(customer_id: str) -> str:
     """Get a specific Stripe customer by ID."""
     try:
-        result = await connector.execute("customers", "get", {"id": customer_id})
-        return json.dumps(result, default=str)  # result is a dict
+        result = await connector.customers.get(id=customer_id)
+        return json.dumps(result, default=str)
     except Exception as e:
         return f"Error: {type(e).__name__}: {e}"
 ```
