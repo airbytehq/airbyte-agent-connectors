@@ -10,6 +10,7 @@ from __future__ import annotations
 from ._vendored.connector_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -26,52 +27,76 @@ from uuid import (
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
-    version='0.1.14',
+    version='0.1.15',
     base_url='https://api.hubapi.com',
     auth=AuthConfig(
-        type=AuthType.OAUTH2,
-        config={
-            'header': 'Authorization',
-            'prefix': 'Bearer',
-            'refresh_url': 'https://api.hubapi.com/oauth/v1/token',
-            'auth_style': 'body',
-            'body_format': 'form',
-        },
-        user_config_spec=AirbyteAuthConfig(
-            title='OAuth2 Authentication',
-            type='object',
-            required=['refresh_token'],
-            properties={
-                'client_id': AuthConfigFieldSpec(
-                    title='Client ID',
-                    description='Your HubSpot OAuth2 Client ID',
+        options=[
+            AuthOption(
+                scheme_name='oauth2',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://api.hubapi.com/oauth/v1/token',
+                    'auth_style': 'body',
+                    'body_format': 'form',
+                },
+                user_config_spec=AirbyteAuthConfig(
+                    title='OAuth2',
+                    type='object',
+                    required=['refresh_token'],
+                    properties={
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description='Your HubSpot OAuth2 Client ID',
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description='Your HubSpot OAuth2 Client Secret',
+                        ),
+                        'refresh_token': AuthConfigFieldSpec(
+                            title='Refresh Token',
+                            description='Your HubSpot OAuth2 Refresh Token',
+                        ),
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)',
+                        ),
+                    },
+                    auth_mapping={
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                        'refresh_token': '${refresh_token}',
+                        'access_token': '${access_token}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.refresh_token': 'refresh_token',
+                    },
+                    replication_auth_key_constants={'credentials.credentials_title': 'OAuth Credentials'},
                 ),
-                'client_secret': AuthConfigFieldSpec(
-                    title='Client Secret',
-                    description='Your HubSpot OAuth2 Client Secret',
+            ),
+            AuthOption(
+                scheme_name='hubspotPrivateApp',
+                type=AuthType.BEARER,
+                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                user_config_spec=AirbyteAuthConfig(
+                    title='Private App',
+                    type='object',
+                    required=['private_app_token'],
+                    properties={
+                        'private_app_token': AuthConfigFieldSpec(
+                            title='Private App Token',
+                            description='Access token from a HubSpot Private App',
+                        ),
+                    },
+                    auth_mapping={'token': '${private_app_token}'},
+                    replication_auth_key_mapping={'credentials.access_token': 'private_app_token'},
+                    replication_auth_key_constants={'credentials.credentials_title': 'Private App Credentials'},
                 ),
-                'refresh_token': AuthConfigFieldSpec(
-                    title='Refresh Token',
-                    description='Your HubSpot OAuth2 Refresh Token',
-                ),
-                'access_token': AuthConfigFieldSpec(
-                    title='Access Token',
-                    description='Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)',
-                ),
-            },
-            auth_mapping={
-                'client_id': '${client_id}',
-                'client_secret': '${client_secret}',
-                'refresh_token': '${refresh_token}',
-                'access_token': '${access_token}',
-            },
-            replication_auth_key_mapping={
-                'credentials.client_id': 'client_id',
-                'credentials.client_secret': 'client_secret',
-                'credentials.refresh_token': 'refresh_token',
-            },
-            replication_auth_key_constants={'credentials.credentials_title': 'OAuth Credentials'},
-        ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
