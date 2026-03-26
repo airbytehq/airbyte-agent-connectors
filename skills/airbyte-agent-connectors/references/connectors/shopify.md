@@ -7,7 +7,7 @@ The Shopify agent connector is a Python package that equips AI agents to interac
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-shopify` v0.1.72
+- **Package:** `airbyte-agent-shopify` v0.1.73
 - **Auth:** Token
 - **Docs:** [Official API docs](https://shopify.dev/docs/api/admin-rest)
 - **Status:** complete
