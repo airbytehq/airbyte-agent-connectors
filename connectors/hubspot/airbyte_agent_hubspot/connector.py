@@ -52,6 +52,7 @@ from .types import (
     DealsSearchFilter,
     DealsSearchQuery,
 )
+from .models import HubspotOauth2AuthConfig, HubspotPrivateAppAuthConfig
 from .models import HubspotAuthConfig
 from .models import HubspotOAuthCredentials
 
@@ -131,7 +132,7 @@ class HubspotConnector:
     """
 
     connector_name = "hubspot"
-    connector_version = "0.1.14"
+    connector_version = "0.1.15"
     vendored_sdk_version = "0.1.0"  # Version of vendored connector-sdk
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
@@ -176,7 +177,7 @@ class HubspotConnector:
     }
 
     # Accepted auth_config types for isinstance validation
-    _ACCEPTED_AUTH_TYPES = (HubspotAuthConfig, AirbyteAuthConfig)
+    _ACCEPTED_AUTH_TYPES = (HubspotOauth2AuthConfig, HubspotPrivateAppAuthConfig, AirbyteAuthConfig)
 
     def __init__(
         self,
@@ -257,9 +258,18 @@ class HubspotConnector:
             # Build config_values dict from server variables
             config_values = None
 
+            # Multi-auth connector: detect auth scheme from auth_config type
+            auth_scheme: str | None = None
+            if auth_config:
+                if isinstance(auth_config, HubspotOauth2AuthConfig):
+                    auth_scheme = "oauth2"
+                if isinstance(auth_config, HubspotPrivateAppAuthConfig):
+                    auth_scheme = "hubspotPrivateApp"
+
             self._executor = LocalExecutor(
                 model=HubspotConnectorModel,
                 auth_config=auth_config.model_dump() if auth_config else None,
+                auth_scheme=auth_scheme,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh
             )

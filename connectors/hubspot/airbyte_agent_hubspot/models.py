@@ -11,10 +11,10 @@ from pydantic import BaseModel, ConfigDict, Field
 from typing import TypeVar, Generic, Union, Any
 from typing import Optional
 
-# Authentication configuration
+# Authentication configuration - multiple options available
 
-class HubspotAuthConfig(BaseModel):
-    """OAuth2 Authentication"""
+class HubspotOauth2AuthConfig(BaseModel):
+    """OAuth2"""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -26,6 +26,16 @@ class HubspotAuthConfig(BaseModel):
     """Your HubSpot OAuth2 Refresh Token"""
     access_token: Optional[str] = None
     """Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)"""
+
+class HubspotPrivateAppAuthConfig(BaseModel):
+    """Private App"""
+
+    model_config = ConfigDict(extra="forbid")
+
+    private_app_token: str
+    """Access token from a HubSpot Private App"""
+
+HubspotAuthConfig = HubspotOauth2AuthConfig | HubspotPrivateAppAuthConfig
 
 # OAuth credential override
 
@@ -232,13 +242,6 @@ class SchemaPropertiesItem(BaseModel):
     show_currency_symbol: Union[bool, Any] = Field(default=None, alias="showCurrencySymbol")
     modification_metadata: Union[SchemaPropertiesItemModificationmetadata, Any] = Field(default=None, alias="modificationMetadata")
 
-class SchemaLabels(BaseModel):
-    """Display labels"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    singular: Union[str, Any] = Field(default=None)
-    plural: Union[str, Any] = Field(default=None)
-
 class SchemaAssociationsItem(BaseModel):
     """Nested schema for Schema.associations_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -255,6 +258,13 @@ class SchemaAssociationsItem(BaseModel):
     max_from_object_ids: Union[int, Any] = Field(default=None, alias="maxFromObjectIds")
     created_at: Union[str | None, Any] = Field(default=None, alias="createdAt")
     updated_at: Union[str | None, Any] = Field(default=None, alias="updatedAt")
+
+class SchemaLabels(BaseModel):
+    """Display labels"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    singular: Union[str, Any] = Field(default=None)
+    plural: Union[str, Any] = Field(default=None)
 
 class Schema(BaseModel):
     """Custom object schema definition"""
