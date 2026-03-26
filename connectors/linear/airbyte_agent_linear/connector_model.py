@@ -29,7 +29,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.11',
+    version='0.1.12',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -141,6 +141,32 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                                             ],
                                                             'description': 'Assigned user',
                                                         },
+                                                        'team': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'properties': {
+                                                                        'id': {'type': 'string'},
+                                                                        'name': {'type': 'string'},
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                            'description': 'Team the issue belongs to',
+                                                        },
+                                                        'project': {
+                                                            'oneOf': [
+                                                                {
+                                                                    'type': 'object',
+                                                                    'properties': {
+                                                                        'id': {'type': 'string'},
+                                                                        'name': {'type': 'string'},
+                                                                    },
+                                                                },
+                                                                {'type': 'null'},
+                                                            ],
+                                                            'description': 'Project the issue belongs to',
+                                                        },
                                                         'createdAt': {
                                                             'type': 'string',
                                                             'format': 'date-time',
@@ -175,7 +201,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={
                         'type': 'graphql',
-                        'query': 'query($first: Int, $after: String) { issues(first: $first, after: $after) { nodes { id title description state { name } priority assignee { name email } createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
+                        'query': 'query($first: Int, $after: String) { issues(first: $first, after: $after) { nodes { id title description state { name } priority assignee { name email } team { id name } project { id name } createdAt updatedAt } pageInfo { hasNextPage endCursor } } }',
                         'variables': {'first': '{{ first }}', 'after': '{{ after }}'},
                     },
                     record_extractor='$.data.issues.nodes',
@@ -254,6 +280,32 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                                 ],
                                                 'description': 'Assigned user',
                                             },
+                                            'team': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'name': {'type': 'string'},
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                                'description': 'Team the issue belongs to',
+                                            },
+                                            'project': {
+                                                'oneOf': [
+                                                    {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'id': {'type': 'string'},
+                                                            'name': {'type': 'string'},
+                                                        },
+                                                    },
+                                                    {'type': 'null'},
+                                                ],
+                                                'description': 'Project the issue belongs to',
+                                            },
                                             'createdAt': {
                                                 'type': 'string',
                                                 'format': 'date-time',
@@ -274,7 +326,7 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     graphql_body={
                         'type': 'graphql',
-                        'query': 'query($id: String!) { issue(id: $id) { id title description state { name } priority assignee { name email } createdAt updatedAt } }',
+                        'query': 'query($id: String!) { issue(id: $id) { id title description state { name } priority assignee { name email } team { id name } project { id name } createdAt updatedAt } }',
                         'variables': {'id': '{{ id }}'},
                     },
                 ),
@@ -535,6 +587,32 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                             {'type': 'null'},
                         ],
                         'description': 'Assigned user',
+                    },
+                    'team': {
+                        'oneOf': [
+                            {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                },
+                            },
+                            {'type': 'null'},
+                        ],
+                        'description': 'Team the issue belongs to',
+                    },
+                    'project': {
+                        'oneOf': [
+                            {
+                                'type': 'object',
+                                'properties': {
+                                    'id': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                },
+                            },
+                            {'type': 'null'},
+                        ],
+                        'description': 'Project the issue belongs to',
                     },
                     'createdAt': {
                         'type': 'string',

@@ -32,6 +32,8 @@ class Issue(BaseModel):
     state: Union[Any, Any] = Field(default=None)
     priority: Union[Any, Any] = Field(default=None)
     assignee: Union[Any, Any] = Field(default=None)
+    team: Union[Any, Any] = Field(default=None)
+    project: Union[Any, Any] = Field(default=None)
     created_at: Union[str, Any] = Field(default=None, alias="createdAt")
     updated_at: Union[str, Any] = Field(default=None, alias="updatedAt")
 
