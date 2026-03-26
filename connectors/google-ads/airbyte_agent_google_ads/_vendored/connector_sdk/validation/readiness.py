@@ -652,6 +652,8 @@ def _check_param_sources_coverage(config: ConnectorModel) -> List[str]:
         for opt in config.auth.options:
             if opt.user_config_spec and opt.user_config_spec.properties:
                 implicit_config_keys.update(opt.user_config_spec.properties.keys())
+    elif config.auth and config.auth.user_config_spec and config.auth.user_config_spec.properties:
+        implicit_config_keys.update(config.auth.user_config_spec.properties.keys())
     implicit_config_keys.update(config.server_variable_defaults.keys())
 
     single_record_actions = {Action.GET, Action.UPDATE, Action.DELETE}
