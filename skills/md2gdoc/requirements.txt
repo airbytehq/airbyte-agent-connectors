@@ -1,2 +1,0 @@
-python-docx>=1.0.0
-airbyte-agent-google-drive>=0.1.85
