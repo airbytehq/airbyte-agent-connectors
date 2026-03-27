@@ -26,7 +26,7 @@ from uuid import (
 ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('311a7a27-3fb5-4f7e-8265-5e4afe258b66'),
     name='clickup-api',
-    version='0.1.2',
+    version='0.1.3',
     base_url='https://api.clickup.com',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -533,6 +533,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.spaces',
+                    param_sources={
+                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1120,6 +1123,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.folders',
+                    param_sources={
+                        'space_id': {'parent_entity': 'spaces', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1518,6 +1524,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.lists',
+                    param_sources={
+                        'folder_id': {'parent_entity': 'folders', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1977,6 +1986,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tasks',
+                    param_sources={
+                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2728,6 +2740,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.comments',
+                    param_sources={
+                        'task_id': {'parent_entity': 'tasks', 'parent_key': 'id'},
+                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2951,6 +2966,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.goals',
+                    param_sources={
+                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3189,6 +3207,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.views',
+                    param_sources={
+                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3569,6 +3590,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.tasks',
                     untested=True,
+                    param_sources={
+                        'view_id': {'parent_entity': 'views', 'parent_key': 'id'},
+                    },
                 ),
             },
         ),
@@ -3636,6 +3660,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    param_sources={
+                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3772,6 +3799,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.members',
+                    param_sources={
+                        'task_id': {'parent_entity': 'tasks', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -3866,6 +3896,9 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.docs',
+                    param_sources={
+                        'workspace_id': {'parent_entity': 'teams', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
