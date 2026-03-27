@@ -26,7 +26,7 @@ from uuid import (
 SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('200330b2-ea62-4d11-ac6d-cfe3e3f8ab2b'),
     name='snapchat-marketing',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://adsapi.snapchat.com/v1',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -325,6 +325,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.adaccounts[*].adaccount',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'organization_id': {'parent_entity': 'organizations', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -489,6 +492,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.campaigns[*].campaign',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -705,6 +711,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.adsquads[*].adsquad',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -973,6 +982,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.ads[*].ad',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1140,6 +1152,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.creatives[*].creative',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1335,6 +1350,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.media[*].media',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1500,6 +1518,9 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.segments[*].segment',
                     meta_extractor={'next_link': '$.paging.next_link'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'adaccounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
