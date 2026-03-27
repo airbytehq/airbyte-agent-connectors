@@ -29,7 +29,7 @@ from uuid import (
 SentryConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('cdaf146a-9b75-49fd-9dd2-9d64a0bb4781'),
     name='sentry',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://{hostname}/api/0',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -1036,6 +1036,10 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'issues',
                         },
                     },
+                    param_sources={
+                        'organization_slug': {'config': 'organization'},
+                        'project_slug': {'parent_entity': 'projects', 'parent_key': 'slug'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1568,6 +1572,10 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'events',
                             'x-airbyte-stream-name': 'events',
                         },
+                    },
+                    param_sources={
+                        'organization_slug': {'config': 'organization'},
+                        'project_slug': {'parent_entity': 'projects', 'parent_key': 'slug'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -2118,6 +2126,9 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'releases',
                             'x-airbyte-stream-name': 'releases',
                         },
+                    },
+                    param_sources={
+                        'organization_slug': {'config': 'organization'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
