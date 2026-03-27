@@ -27,7 +27,7 @@ from uuid import (
 GitlabConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('5e6175e5-68e1-4c17-bff9-56103bbb0d80'),
     name='gitlab',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://{api_url}/api/v4',
     auth=AuthConfig(
         options=[
@@ -1738,6 +1738,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'issues',
                         },
                     },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2350,6 +2353,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'merge_requests',
                             'x-airbyte-stream-name': 'merge_requests',
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -3048,6 +3054,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'commits',
                             'x-airbyte-stream-name': 'commits',
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -3851,6 +3860,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'branches',
                         },
                     },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3979,6 +3991,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'pipelines',
                             'x-airbyte-stream-name': 'pipelines',
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -4132,6 +4147,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    param_sources={
+                        'group_id': {'parent_entity': 'groups', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4263,6 +4281,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'required': ['id'],
                             'additionalProperties': True,
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -4407,6 +4428,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'releases',
                             'x-airbyte-stream-name': 'releases',
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -4585,6 +4609,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'tags',
                         },
                     },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4736,6 +4763,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
+                    param_sources={
+                        'group_id': {'parent_entity': 'groups', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4883,6 +4913,9 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'required': ['id'],
                             'additionalProperties': True,
                         },
+                    },
+                    param_sources={
+                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(

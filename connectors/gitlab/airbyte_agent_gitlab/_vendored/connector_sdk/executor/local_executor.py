@@ -556,10 +556,10 @@ class LocalExecutor:
                 check_action = op_action
                 break
 
-        # Fallback to first list operation
+        # Fallback to first list operation that has no required parameters
         if check_endpoint is None:
             for (ent_name, op_action), endpoint in self._operation_index.items():
-                if op_action == Action.LIST:
+                if op_action == Action.LIST and not self._has_required_params(endpoint):
                     check_entity = ent_name
                     check_endpoint = endpoint
                     check_action = op_action
@@ -612,6 +612,16 @@ class LocalExecutor:
                 },
                 error=str(e),
             )
+
+    @staticmethod
+    def _has_required_params(endpoint: EndpointDefinition) -> bool:
+        """Check if an endpoint has any required parameters without defaults."""
+        if endpoint.path_params:
+            return True
+        for schema in endpoint.query_params_schema.values():
+            if schema.get("required") and schema.get("default") is None:
+                return True
+        return False
 
     async def check_entities(self, entities: list[str]) -> ExecutionResult:
         """Perform health checks for specific entities by probing their list or get operations.
