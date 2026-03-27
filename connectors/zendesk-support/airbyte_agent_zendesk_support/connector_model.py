@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.17',
+    version='0.1.18',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
@@ -1530,6 +1530,9 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'previous_page': '$.previous_page',
                         'count': '$.count',
                     },
+                    param_sources={
+                        'ticket_id': {'parent_entity': 'tickets', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -1724,6 +1727,9 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'next_page': '$.next_page',
                         'previous_page': '$.previous_page',
                         'count': '$.count',
+                    },
+                    param_sources={
+                        'ticket_id': {'parent_entity': 'tickets', 'parent_key': 'id'},
                     },
                 ),
             },
@@ -4061,6 +4067,9 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                         'next_page': '$.next_page',
                         'previous_page': '$.previous_page',
                         'count': '$.count',
+                    },
+                    param_sources={
+                        'article_id': {'parent_entity': 'articles', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
