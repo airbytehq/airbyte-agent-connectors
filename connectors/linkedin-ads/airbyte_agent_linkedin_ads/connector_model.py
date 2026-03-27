@@ -29,7 +29,7 @@ from uuid import (
 LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('137ece28-5434-455c-8f34-69dc3782f451'),
     name='linkedin-ads',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://api.linkedin.com/rest',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -844,6 +844,9 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1410,6 +1413,9 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1767,6 +1773,9 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
