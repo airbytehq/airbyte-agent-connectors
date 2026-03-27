@@ -29,7 +29,7 @@ from uuid import (
 GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('3cc2eafd-84aa-4dca-93af-322d9dfeec1a'),
     name='google-analytics-data-api',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://analyticsdata.googleapis.com/v1beta',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -282,7 +282,6 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    preferred_for_check=True,
                 ),
             },
         ),
