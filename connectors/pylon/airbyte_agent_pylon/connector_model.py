@@ -26,7 +26,7 @@ from uuid import (
 PylonConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('f2e53e88-3c6b-4e5a-b7c2-a1d9c5e8f4b6'),
     name='pylon',
-    version='0.1.5',
+    version='0.1.6',
     base_url='https://api.usepylon.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -1607,6 +1607,9 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_cursor': '$.pagination.cursor', 'has_next_page': '$.pagination.has_next_page'},
+                    param_sources={
+                        'id': {'parent_entity': 'issues', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
