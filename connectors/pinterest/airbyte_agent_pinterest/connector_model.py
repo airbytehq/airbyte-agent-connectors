@@ -26,7 +26,7 @@ from uuid import (
 PinterestConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('5cb7e5fe-38c2-11ec-8d3d-0242ac130003'),
     name='pinterest',
-    version='0.1.1',
+    version='0.1.2',
     base_url='https://api.pinterest.com/v5',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -727,6 +727,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -1061,6 +1064,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -1448,6 +1454,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -1679,6 +1688,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'board_id': {'parent_entity': 'boards', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -1836,6 +1848,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'board_id': {'parent_entity': 'boards', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -2474,6 +2489,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -2678,6 +2696,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -2843,6 +2864,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
@@ -2975,6 +2999,9 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
+                    param_sources={
+                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
