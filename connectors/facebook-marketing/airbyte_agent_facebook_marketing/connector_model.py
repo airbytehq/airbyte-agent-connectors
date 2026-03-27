@@ -28,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.21',
+    version='1.0.22',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -585,6 +585,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -1297,6 +1300,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2065,6 +2071,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2611,6 +2620,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
             },
             entity_schema={
@@ -2947,6 +2959,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
             },
             entity_schema={
@@ -3521,6 +3536,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
             },
             entity_schema={
@@ -3746,6 +3764,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
             },
             entity_schema={
@@ -4050,6 +4071,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
             },
             entity_schema={
@@ -4338,6 +4362,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'after': '$.paging.cursors.after'},
+                    param_sources={
+                        'account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'account_id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4617,6 +4644,9 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    param_sources={
+                        'pixel_id': {'parent_entity': 'pixels', 'parent_key': 'id'},
+                    },
                 ),
             },
             entity_schema={
