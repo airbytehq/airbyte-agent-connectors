@@ -1,6 +1,6 @@
-# Airbyte Agent Connectors — Claude Code Skill
+# Airbyte Agent Connectors — Agent Skill
 
-> A Claude Code skill for setting up and operating 51+ Airbyte Agent Connectors
+> An agent skill for setting up and operating 51+ Airbyte Agent Connectors
 > through a unified entity-action interface.
 
 ## What This Skill Does

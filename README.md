@@ -64,9 +64,9 @@ We are actively expanding AI Connectors. Coming soon:
 We actively welcome feedback, ideas, and bug reports.
 If you're building AI agents with Airbyte Agent Connectors and want to share ideas or get help, join our community on [slack](https://slack.airbyte.com/). We'd love to hear what you're building and what connectors or capabilities you'd like to see next.
 
-## Claude Code Skill
+## Agent Skill
 
-This repo includes a Claude Code skill for setup and usage guidance:
+This repo includes an agent skill for setup and usage guidance:
 
 ```bash
 npx skills add airbytehq/airbyte-agent-connectors
