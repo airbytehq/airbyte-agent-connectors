@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.16',
+    version='0.1.17',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -389,6 +389,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'project_gid': {'parent_entity': 'projects', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -483,6 +486,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -743,6 +749,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -798,6 +807,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -853,6 +865,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1107,6 +1122,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1161,6 +1179,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1202,6 +1223,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    param_sources={
+                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
+                    },
                 ),
             },
             entity_schema={
@@ -1266,6 +1290,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1321,6 +1348,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'user_gid': {'parent_entity': 'users', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1449,6 +1479,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'attachment_gid': {'type': 'string', 'required': True},
                     },
                     file_field='data.download_url',
+                    param_sources={
+                        'attachment_gid': {'parent_entity': 'attachments', 'parent_key': 'gid'},
+                    },
                 ),
             },
             entity_schema={
@@ -1514,6 +1547,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1559,6 +1595,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    param_sources={
+                        'tag_gid': {'parent_entity': 'workspace_tags', 'parent_key': 'gid'},
+                    },
                 ),
             },
             entity_schema={
@@ -1623,6 +1662,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'project_gid': {'parent_entity': 'projects', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1664,6 +1706,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
+                    param_sources={
+                        'section_gid': {'parent_entity': 'project_sections', 'parent_key': 'gid'},
+                    },
                 ),
             },
             entity_schema={
@@ -1737,6 +1782,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1800,6 +1848,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
@@ -1863,6 +1914,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
+                    },
                 ),
             },
         ),
