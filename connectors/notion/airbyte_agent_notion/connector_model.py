@@ -10,6 +10,7 @@ from __future__ import annotations
 from ._vendored.connector_sdk.types import (
     Action,
     AuthConfig,
+    AuthOption,
     AuthType,
     ConnectorModel,
     EndpointDefinition,
@@ -29,25 +30,71 @@ from uuid import (
 NotionConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('6e00b415-b02e-4160-bf02-58176a0ae687'),
     name='notion',
-    version='0.1.5',
+    version='0.1.6',
     base_url='https://api.notion.com',
     auth=AuthConfig(
-        type=AuthType.BEARER,
-        config={'header': 'Authorization', 'prefix': 'Bearer'},
-        user_config_spec=AirbyteAuthConfig(
-            title='API Token Authentication',
-            type='object',
-            required=['token'],
-            properties={
-                'token': AuthConfigFieldSpec(
-                    title='Integration Token',
-                    description='Notion internal integration token (starts with ntn_ or secret_)',
+        options=[
+            AuthOption(
+                scheme_name='notionOAuth',
+                type=AuthType.OAUTH2,
+                config={
+                    'header': 'Authorization',
+                    'prefix': 'Bearer',
+                    'refresh_url': 'https://api.notion.com/v1/oauth/token',
+                    'auth_style': 'basic',
+                    'body_format': 'json',
+                },
+                user_config_spec=AirbyteAuthConfig(
+                    title='OAuth2.0',
+                    type='object',
+                    required=['access_token', 'client_id', 'client_secret'],
+                    properties={
+                        'client_id': AuthConfigFieldSpec(
+                            title='Client ID',
+                            description="Your Notion OAuth integration's client ID",
+                        ),
+                        'client_secret': AuthConfigFieldSpec(
+                            title='Client Secret',
+                            description="Your Notion OAuth integration's client secret",
+                        ),
+                        'access_token': AuthConfigFieldSpec(
+                            title='Access Token',
+                            description='OAuth access token obtained through the Notion authorization flow',
+                        ),
+                    },
+                    auth_mapping={
+                        'client_id': '${client_id}',
+                        'client_secret': '${client_secret}',
+                        'access_token': '${access_token}',
+                    },
+                    replication_auth_key_mapping={
+                        'credentials.client_id': 'client_id',
+                        'credentials.client_secret': 'client_secret',
+                        'credentials.access_token': 'access_token',
+                    },
+                    replication_auth_key_constants={'credentials.auth_type': 'OAuth2.0'},
                 ),
-            },
-            auth_mapping={'token': '${token}'},
-            replication_auth_key_mapping={'credentials.token': 'token'},
-            replication_auth_key_constants={'credentials.auth_type': 'token'},
-        ),
+            ),
+            AuthOption(
+                scheme_name='notionBearerToken',
+                type=AuthType.BEARER,
+                config={'header': 'Authorization', 'prefix': 'Bearer'},
+                user_config_spec=AirbyteAuthConfig(
+                    title='Access Token',
+                    type='object',
+                    required=['token'],
+                    properties={
+                        'token': AuthConfigFieldSpec(
+                            title='Integration Token',
+                            description='Notion internal integration token (starts with ntn_ or secret_)',
+                        ),
+                    },
+                    auth_mapping={'token': '${token}'},
+                    replication_auth_key_mapping={'credentials.token': 'token'},
+                    replication_auth_key_constants={'credentials.auth_type': 'token'},
+                ),
+            ),
+        ],
     ),
     entities=[
         EntityDefinition(
@@ -452,6 +499,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['boolean', 'null'],
                                             'description': 'Whether the page is in trash',
                                         },
+                                        'is_archived': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether the page is archived (alias for archived)',
+                                        },
                                         'is_locked': {
                                             'type': ['boolean', 'null'],
                                             'description': 'Whether the page is locked',
@@ -613,6 +664,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': ['boolean', 'null'],
                                 'description': 'Whether the page is in trash',
                             },
+                            'is_archived': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the page is archived (alias for archived)',
+                            },
                             'is_locked': {
                                 'type': ['boolean', 'null'],
                                 'description': 'Whether the page is locked',
@@ -704,6 +759,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     'in_trash': {
                         'type': ['boolean', 'null'],
                         'description': 'Whether the page is in trash',
+                    },
+                    'is_archived': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the page is archived (alias for archived)',
                     },
                     'is_locked': {
                         'type': ['boolean', 'null'],
@@ -1058,6 +1117,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                             'type': ['boolean', 'null'],
                                             'description': 'Whether the data source is in trash',
                                         },
+                                        'is_archived': {
+                                            'type': ['boolean', 'null'],
+                                            'description': 'Whether the data source is archived (alias for archived)',
+                                        },
                                         'is_inline': {
                                             'type': ['boolean', 'null'],
                                             'description': 'Whether the data source is inline',
@@ -1379,6 +1442,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                                 'type': ['boolean', 'null'],
                                 'description': 'Whether the data source is in trash',
                             },
+                            'is_archived': {
+                                'type': ['boolean', 'null'],
+                                'description': 'Whether the data source is archived (alias for archived)',
+                            },
                             'is_inline': {
                                 'type': ['boolean', 'null'],
                                 'description': 'Whether the data source is inline',
@@ -1491,6 +1558,10 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     'in_trash': {
                         'type': ['boolean', 'null'],
                         'description': 'Whether the data source is in trash',
+                    },
+                    'is_archived': {
+                        'type': ['boolean', 'null'],
+                        'description': 'Whether the data source is archived (alias for archived)',
                     },
                     'is_inline': {
                         'type': ['boolean', 'null'],
