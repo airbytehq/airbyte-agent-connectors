@@ -7,7 +7,7 @@ The Slack agent connector is a Python package that equips AI agents to interact 
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-slack` v0.1.86
+- **Package:** `airbyte-agent-slack` v0.1.87
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://api.slack.com/methods)
 - **Status:** complete
@@ -100,8 +100,8 @@ async def slack_execute(entity: str, action: str, params: dict | None = None):
 |--------|---------|
 | Users | List, Get, Search |
 | Channels | List, Get, Create, Update, Search |
-| Channel Messages | List |
-| Threads | List |
+| Channel Messages | List, Search |
+| Threads | List, Search |
 | Messages | Create, Update |
 | Channel Topics | Create |
 | Channel Purposes | Create |
