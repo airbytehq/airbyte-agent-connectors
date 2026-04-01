@@ -556,10 +556,10 @@ class LocalExecutor:
                 check_action = op_action
                 break
 
-        # Fallback to first list operation
+        # Fallback to first list operation that has no required parameters
         if check_endpoint is None:
             for (ent_name, op_action), endpoint in self._operation_index.items():
-                if op_action == Action.LIST:
+                if op_action == Action.LIST and not self._has_required_params(endpoint):
                     check_entity = ent_name
                     check_endpoint = endpoint
                     check_action = op_action
@@ -612,6 +612,16 @@ class LocalExecutor:
                 },
                 error=str(e),
             )
+
+    @staticmethod
+    def _has_required_params(endpoint: EndpointDefinition) -> bool:
+        """Check if an endpoint has any required parameters without defaults."""
+        if endpoint.path_params:
+            return True
+        for schema in endpoint.query_params_schema.values():
+            if schema.get("required") and schema.get("default") is None:
+                return True
+        return False
 
     async def check_entities(self, entities: list[str]) -> ExecutionResult:
         """Perform health checks for specific entities by probing their list or get operations.
@@ -684,13 +694,28 @@ class LocalExecutor:
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
-            if endpoint.path_params:
+            # Inject query param defaults from schema so that required params
+            # with defaults (e.g. Salesforce SOQL `q` parameter) are included
+            # in the probe request without needing explicit param_sources.
+            for param_name, schema in endpoint.query_params_schema.items():
+                if param_name not in params and schema.get("default") is not None:
+                    params[param_name] = schema["default"]
+            # Collect all params that need resolution: path params plus any
+            # query/body params that have explicit param_sources annotations
+            # (covers GraphQL connectors where all params are query params).
+            params_needing_resolution = list(endpoint.path_params)
+            if endpoint.param_sources:
+                for param_name in endpoint.param_sources:
+                    if param_name not in params_needing_resolution:
+                        params_needing_resolution.append(param_name)
+            if params_needing_resolution:
                 try:
                     resolved = await self._resolve_param_sources(
                         entity_name,
                         endpoint,
                         standard_handler,
                         parent_cache,
+                        params_to_resolve=params_needing_resolution,
                     )
                     params.update(resolved)
                 except ParamResolutionError as exc:
@@ -725,6 +750,7 @@ class LocalExecutor:
         standard_handler: _StandardOperationHandler,
         parent_cache: dict[str, list[dict]],
         depth: int = 0,
+        params_to_resolve: list[str] | None = None,
     ) -> dict[str, Any]:
         """Resolve params using x-airbyte-param-sources annotations and config_values.
 
@@ -734,8 +760,10 @@ class LocalExecutor:
         if depth > MAX_PARAM_RESOLUTION_DEPTH:
             raise ParamResolutionError(f"Max resolution depth exceeded for '{entity_name}'")
 
+        target_params = params_to_resolve if params_to_resolve is not None else list(endpoint.path_params)
+
         resolved: dict[str, Any] = {}
-        for param_name in endpoint.path_params:
+        for param_name in target_params:
             source = endpoint.param_sources.get(param_name, {})
 
             config_key = source.get("config") or param_name
@@ -755,6 +783,10 @@ class LocalExecutor:
                 if parent_endpoint is None:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
                 parent_params: dict[str, Any] = {"limit": 1}
+                # Inject query param defaults for parent entity (mirrors _probe_entity logic).
+                for pname, pschema in parent_endpoint.query_params_schema.items():
+                    if pname not in parent_params and pschema.get("default") is not None:
+                        parent_params[pname] = pschema["default"]
                 if parent_endpoint.path_params:
                     parent_resolved = await self._resolve_param_sources(
                         parent_entity_name,
