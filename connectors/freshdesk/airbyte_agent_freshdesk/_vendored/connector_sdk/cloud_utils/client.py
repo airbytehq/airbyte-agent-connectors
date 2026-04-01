@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timedelta
 from typing import Any
 
@@ -57,7 +58,7 @@ class AirbyteCloudClient:
         )
     """
 
-    API_BASE_URL = "https://api.airbyte.ai"  # For all API calls including token endpoint
+    DEFAULT_API_BASE_URL = "https://api.airbyte.ai"
     AUTHORIZATION_HEADER = "Authorization"
     ORGANIZATION_ID_HEADER = "X-Organization-Id"
 
@@ -77,6 +78,11 @@ class AirbyteCloudClient:
         self._client_id = client_id
         self._client_secret = client_secret
         self._organization_id = organization_id
+
+        # Allow developers to redirect all SDK traffic to a local backend via
+        # SDK_DEV_ADP_API_HOST (e.g. "http://localhost:8000").  This is NOT
+        # intended for end-user SDKs — only for local development and testing.
+        self.API_BASE_URL = os.environ.get("SDK_DEV_ADP_API_HOST", "").rstrip("/") or self.DEFAULT_API_BASE_URL
 
         # Token cache (instance-level)
         self._cached_token: str | None = None
