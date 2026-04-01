@@ -120,7 +120,7 @@ See the official [Gitlab API reference](https://docs.gitlab.com/ee/api/rest/).
 
 ## Version information
 
-- **Package version:** 0.1.9
+- **Package version:** 0.1.10
 - **Connector version:** 1.0.2
-- **Generated with Connector SDK commit SHA:** 09ed4945e89bf743be8a0f0d596ae77c99526607
+- **Generated with Connector SDK commit SHA:** 513344c6596e4c750dff4973729629f6cb7f924a
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gitlab/CHANGELOG.md)
