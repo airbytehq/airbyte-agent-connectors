@@ -7,7 +7,7 @@ The Amazon-Seller-Partner agent connector is a Python package that equips AI age
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-amazon-seller-partner` v0.1.9
+- **Package:** `airbyte-agent-amazon-seller-partner` v0.1.10
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developer-docs.amazon.com/sp-api/)
 - **Status:** complete
