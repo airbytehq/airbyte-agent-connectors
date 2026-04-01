@@ -29,7 +29,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.14',
+    version='0.1.15',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -1487,6 +1487,9 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.issue.comments.nodes',
                     meta_extractor={'hasNextPage': '$.data.issue.comments.pageInfo.hasNextPage', 'endCursor': '$.data.issue.comments.pageInfo.endCursor'},
+                    param_sources={
+                        'issueId': {'parent_entity': 'issues', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
