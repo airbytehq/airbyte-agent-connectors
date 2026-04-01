@@ -694,6 +694,12 @@ class LocalExecutor:
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
+            # Inject query param defaults from schema so that required params
+            # with defaults (e.g. Salesforce SOQL `q` parameter) are included
+            # in the probe request without needing explicit param_sources.
+            for param_name, schema in endpoint.query_params_schema.items():
+                if param_name not in params and schema.get("default") is not None:
+                    params[param_name] = schema["default"]
             # Collect all params that need resolution: path params plus any
             # query/body params that have explicit param_sources annotations
             # (covers GraphQL connectors where all params are query params).
@@ -777,6 +783,10 @@ class LocalExecutor:
                 if parent_endpoint is None:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' has no LIST operation")
                 parent_params: dict[str, Any] = {"limit": 1}
+                # Inject query param defaults for parent entity (mirrors _probe_entity logic).
+                for pname, pschema in parent_endpoint.query_params_schema.items():
+                    if pname not in parent_params and pschema.get("default") is not None:
+                        parent_params[pname] = pschema["default"]
                 if parent_endpoint.path_params:
                     parent_resolved = await self._resolve_param_sources(
                         parent_entity_name,
