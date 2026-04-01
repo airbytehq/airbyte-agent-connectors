@@ -694,13 +694,22 @@ class LocalExecutor:
             }
         try:
             params = {"limit": 1} if action == Action.LIST else {}
-            if endpoint.path_params:
+            # Collect all params that need resolution: path params plus any
+            # query/body params that have explicit param_sources annotations
+            # (covers GraphQL connectors where all params are query params).
+            params_needing_resolution = list(endpoint.path_params)
+            if endpoint.param_sources:
+                for param_name in endpoint.param_sources:
+                    if param_name not in params_needing_resolution:
+                        params_needing_resolution.append(param_name)
+            if params_needing_resolution:
                 try:
                     resolved = await self._resolve_param_sources(
                         entity_name,
                         endpoint,
                         standard_handler,
                         parent_cache,
+                        params_to_resolve=params_needing_resolution,
                     )
                     params.update(resolved)
                 except ParamResolutionError as exc:
@@ -735,6 +744,7 @@ class LocalExecutor:
         standard_handler: _StandardOperationHandler,
         parent_cache: dict[str, list[dict]],
         depth: int = 0,
+        params_to_resolve: list[str] | None = None,
     ) -> dict[str, Any]:
         """Resolve params using x-airbyte-param-sources annotations and config_values.
 
@@ -744,8 +754,10 @@ class LocalExecutor:
         if depth > MAX_PARAM_RESOLUTION_DEPTH:
             raise ParamResolutionError(f"Max resolution depth exceeded for '{entity_name}'")
 
+        target_params = params_to_resolve if params_to_resolve is not None else list(endpoint.path_params)
+
         resolved: dict[str, Any] = {}
-        for param_name in endpoint.path_params:
+        for param_name in target_params:
             source = endpoint.param_sources.get(param_name, {})
 
             config_key = source.get("config") or param_name
