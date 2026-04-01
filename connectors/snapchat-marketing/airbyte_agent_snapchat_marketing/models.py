@@ -126,6 +126,21 @@ class Campaign(BaseModel):
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
 
+class AdSquadSkadnetworkProperties(BaseModel):
+    """SKAdNetwork properties"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ecid_enrollment_status: Union[str, Any] = Field(default=None)
+    enable_skoverlay: Union[bool, Any] = Field(default=None)
+    status: Union[str, Any] = Field(default=None)
+
+class AdSquadTargetingGeosItem(BaseModel):
+    """Nested schema for AdSquadTargeting.geos_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    country_code: Union[str, Any] = Field(default=None)
+    operation: Union[str, Any] = Field(default=None)
+
 class AdSquadTargetingAutoExpansionOptionsInterestExpansionOption(BaseModel):
     """Nested schema for AdSquadTargetingAutoExpansionOptions.interest_expansion_option"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -138,13 +153,6 @@ class AdSquadTargetingAutoExpansionOptions(BaseModel):
 
     interest_expansion_option: Union[AdSquadTargetingAutoExpansionOptionsInterestExpansionOption, Any] = Field(default=None)
 
-class AdSquadTargetingGeosItem(BaseModel):
-    """Nested schema for AdSquadTargeting.geos_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    country_code: Union[str, Any] = Field(default=None)
-    operation: Union[str, Any] = Field(default=None)
-
 class AdSquadTargeting(BaseModel):
     """Targeting specification"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -156,14 +164,6 @@ class AdSquadTargeting(BaseModel):
     demographics: Union[list[dict[str, Any]], Any] = Field(default=None)
     interests: Union[list[dict[str, Any]], Any] = Field(default=None)
     locations: Union[list[dict[str, Any]], Any] = Field(default=None)
-
-class AdSquadSkadnetworkProperties(BaseModel):
-    """SKAdNetwork properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    ecid_enrollment_status: Union[str, Any] = Field(default=None)
-    enable_skoverlay: Union[bool, Any] = Field(default=None)
-    status: Union[str, Any] = Field(default=None)
 
 class AdSquad(BaseModel):
     """Snapchat ad squad object"""
@@ -215,6 +215,12 @@ class Ad(BaseModel):
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
 
+class CreativeAdToPlaceProperties(BaseModel):
+    """Ad-to-place properties"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    place_id: Union[str, Any] = Field(default=None)
+
 class CreativeWebViewProperties(BaseModel):
     """Web view properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -224,12 +230,6 @@ class CreativeWebViewProperties(BaseModel):
     deep_link_urls: Union[list[str], Any] = Field(default=None)
     url: Union[str, Any] = Field(default=None)
     use_immersive_mode: Union[bool, Any] = Field(default=None)
-
-class CreativeAdToPlaceProperties(BaseModel):
-    """Ad-to-place properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    place_id: Union[str, Any] = Field(default=None)
 
 class Creative(BaseModel):
     """Snapchat creative object"""
