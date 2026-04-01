@@ -1,0 +1,4 @@
+connector:
+  path: ../connectors/reddit-finance
+credentials:
+  user_agent: ${env.REDDIT_FINANCE_USER_AGENT}

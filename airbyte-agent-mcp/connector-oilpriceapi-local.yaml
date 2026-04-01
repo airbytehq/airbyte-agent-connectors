@@ -1,0 +1,4 @@
+connector:
+  path: ../connectors/oilpriceapi
+credentials:
+  api_key: ${env.OILPRICEAPI_API_KEY}
