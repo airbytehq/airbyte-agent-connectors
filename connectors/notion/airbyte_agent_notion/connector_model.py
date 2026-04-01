@@ -30,7 +30,7 @@ from uuid import (
 NotionConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('6e00b415-b02e-4160-bf02-58176a0ae687'),
     name='notion',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.notion.com',
     auth=AuthConfig(
         options=[
@@ -2769,6 +2769,9 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.results',
                     meta_extractor={'next_cursor': '$.next_cursor', 'has_more': '$.has_more'},
+                    param_sources={
+                        'block_id': {'parent_entity': 'pages', 'parent_key': 'id'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
