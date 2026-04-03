@@ -22,6 +22,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -32,7 +35,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.16',
+    version='0.1.17',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -183,6 +186,20 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                                     },
                                                     'required': ['id', 'title'],
                                                     'x-airbyte-entity-name': 'issues',
+                                                    'x-airbyte-ai-hints': {
+                                                        'summary': 'Engineering issues, bugs, feature requests, and feedback intake items',
+                                                        'when_to_use': 'Engineering, bug, or roadmap questions about tracked issues',
+                                                        'trigger_phrases': [
+                                                            'is there a ticket',
+                                                            'known bug',
+                                                            'feature request',
+                                                            'Linear issue',
+                                                            'engineering status',
+                                                        ],
+                                                        'freshness': 'live',
+                                                        'example_questions': ['Is there a ticket for the OAuth issue?', "What's the status of the API rate limiting feature?", 'Show me high-priority bugs assigned to the team'],
+                                                        'search_strategy': 'Search across both title and description for best results (use OR filter)',
+                                                    },
                                                 },
                                             },
                                             'pageInfo': {
@@ -322,6 +339,20 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                         'required': ['id', 'title'],
                                         'x-airbyte-entity-name': 'issues',
+                                        'x-airbyte-ai-hints': {
+                                            'summary': 'Engineering issues, bugs, feature requests, and feedback intake items',
+                                            'when_to_use': 'Engineering, bug, or roadmap questions about tracked issues',
+                                            'trigger_phrases': [
+                                                'is there a ticket',
+                                                'known bug',
+                                                'feature request',
+                                                'Linear issue',
+                                                'engineering status',
+                                            ],
+                                            'freshness': 'live',
+                                            'example_questions': ['Is there a ticket for the OAuth issue?', "What's the status of the API rate limiting feature?", 'Show me high-priority bugs assigned to the team'],
+                                            'search_strategy': 'Search across both title and description for best results (use OR filter)',
+                                        },
                                     },
                                 },
                             },
@@ -661,6 +692,34 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id', 'title'],
                 'x-airbyte-entity-name': 'issues',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Engineering issues, bugs, feature requests, and feedback intake items',
+                    'when_to_use': 'Engineering, bug, or roadmap questions about tracked issues',
+                    'trigger_phrases': [
+                        'is there a ticket',
+                        'known bug',
+                        'feature request',
+                        'Linear issue',
+                        'engineering status',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Is there a ticket for the OAuth issue?', "What's the status of the API rate limiting feature?", 'Show me high-priority bugs assigned to the team'],
+                    'search_strategy': 'Search across both title and description for best results (use OR filter)',
+                },
+            },
+            ai_hints={
+                'summary': 'Engineering issues, bugs, feature requests, and feedback intake items',
+                'when_to_use': 'Engineering, bug, or roadmap questions about tracked issues',
+                'trigger_phrases': [
+                    'is there a ticket',
+                    'known bug',
+                    'feature request',
+                    'Linear issue',
+                    'engineering status',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Is there a ticket for the OAuth issue?', "What's the status of the API rate limiting feature?", 'Show me high-priority bugs assigned to the team'],
+                'search_strategy': 'Search across both title and description for best results (use OR filter)',
             },
         ),
         EntityDefinition(
@@ -2159,4 +2218,39 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'updatedAt',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'Show me the open issues assigned to my team this week',
+            "List out all projects I'm currently involved in",
+            'List all users in my Linear workspace',
+            'Who is assigned to the most recently updated issue?',
+            "Create a new issue titled 'Fix login bug'",
+            'Update the priority of a recent issue to urgent',
+            "Change the title of a recent issue to 'Updated feature request'",
+            "Add a comment to a recent issue saying 'This is ready for review'",
+            "Update my most recent comment to say 'Revised feedback after testing'",
+            'Create a high priority issue about API performance',
+            'Assign a recent issue to a teammate',
+            'Unassign the current assignee from a recent issue',
+            'Reassign a recent issue from one teammate to another',
+            "Create a new issue in the 'Backend Improvements' project",
+            'Add a recent issue to a specific project',
+            'Move an issue to a different project',
+        ],
+        search=[
+            'Analyze the workload distribution across my development team',
+            'What are the top priority issues in our current sprint?',
+            'Identify the most active projects in our organization right now',
+            'Summarize the recent issues for {team_member} in the last two weeks',
+            'Compare the issue complexity across different teams',
+            'Which projects have the most unresolved issues?',
+            "Give me an overview of my team's current project backlog",
+        ],
+        unsupported=[
+            'Delete an outdated project from our workspace',
+            'Schedule a sprint planning meeting',
+            'Delete this issue',
+            'Remove a comment from an issue',
+        ],
+    ),
 )
