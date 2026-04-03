@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('311a7a27-3fb5-4f7e-8265-5e4afe258b66'),
     name='clickup-api',
-    version='0.1.3',
+    version='0.1.4',
     base_url='https://api.clickup.com',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -533,9 +536,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.spaces',
-                    param_sources={
-                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -970,6 +970,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'spaces',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='spaces',
+                    target_entity='teams',
+                    foreign_key='team_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='folders',
@@ -1123,9 +1131,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.folders',
-                    param_sources={
-                        'space_id': {'parent_entity': 'spaces', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1398,6 +1403,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'folders',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='folders',
+                    target_entity='spaces',
+                    foreign_key='space_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='lists',
@@ -1524,9 +1537,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.lists',
-                    param_sources={
-                        'folder_id': {'parent_entity': 'folders', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1745,6 +1755,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'lists',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='lists',
+                    target_entity='folders',
+                    foreign_key='folder_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='tasks',
@@ -1986,9 +2004,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.tasks',
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2683,6 +2698,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'tasks',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tasks',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='comments',
@@ -2740,9 +2763,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.comments',
-                    param_sources={
-                        'task_id': {'parent_entity': 'tasks', 'parent_key': 'id'},
-                    },
                 ),
                 Action.CREATE: EndpointDefinition(
                     method='POST',
@@ -2874,6 +2894,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'comments',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='comments',
+                    target_entity='tasks',
+                    foreign_key='task_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='goals',
@@ -2966,9 +2994,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.goals',
-                    param_sources={
-                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3116,6 +3141,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'goals',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='goals',
+                    target_entity='teams',
+                    foreign_key='team_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='views',
@@ -3207,9 +3240,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.views',
-                    param_sources={
-                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3348,6 +3378,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'views',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='views',
+                    target_entity='teams',
+                    foreign_key='team_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='view_tasks',
@@ -3590,11 +3628,16 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.tasks',
                     untested=True,
-                    param_sources={
-                        'view_id': {'parent_entity': 'views', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='view_tasks',
+                    target_entity='views',
+                    foreign_key='view_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='time_tracking',
@@ -3660,9 +3703,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    param_sources={
-                        'team_id': {'parent_entity': 'teams', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3755,6 +3795,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'time_tracking',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='time_tracking',
+                    target_entity='teams',
+                    foreign_key='team_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='members',
@@ -3799,9 +3847,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.members',
-                    param_sources={
-                        'task_id': {'parent_entity': 'tasks', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -3825,6 +3870,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'members',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='members',
+                    target_entity='tasks',
+                    foreign_key='task_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='docs',
@@ -3896,9 +3949,6 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.docs',
-                    param_sources={
-                        'workspace_id': {'parent_entity': 'teams', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4000,6 +4050,14 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'docs',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='docs',
+                    target_entity='teams',
+                    foreign_key='workspace_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
 )
