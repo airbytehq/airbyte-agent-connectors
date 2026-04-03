@@ -22,6 +22,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -29,7 +32,7 @@ from uuid import (
 PylonConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('f2e53e88-3c6b-4e5a-b7c2-a1d9c5e8f4b6'),
     name='pylon',
-    version='0.1.7',
+    version='0.1.8',
     base_url='https://api.usepylon.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -348,6 +351,20 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'issues',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                        'when_to_use': 'Support issue or customer response questions',
+                                        'trigger_phrases': [
+                                            'did they get back',
+                                            'support issue',
+                                            'ticket for',
+                                            'open issues',
+                                            'did someone follow up',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                        'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                    },
                                 },
                             },
                             'pagination': {
@@ -678,6 +695,20 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                    'when_to_use': 'Support issue or customer response questions',
+                                    'trigger_phrases': [
+                                        'did they get back',
+                                        'support issue',
+                                        'ticket for',
+                                        'open issues',
+                                        'did someone follow up',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                },
                             },
                             'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
                         },
@@ -969,6 +1000,20 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                    'when_to_use': 'Support issue or customer response questions',
+                                    'trigger_phrases': [
+                                        'did they get back',
+                                        'support issue',
+                                        'ticket for',
+                                        'open issues',
+                                        'did someone follow up',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                },
                             },
                             'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
                         },
@@ -1282,6 +1327,20 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                 },
                                 'x-airbyte-entity-name': 'issues',
+                                'x-airbyte-ai-hints': {
+                                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                                    'when_to_use': 'Support issue or customer response questions',
+                                    'trigger_phrases': [
+                                        'did they get back',
+                                        'support issue',
+                                        'ticket for',
+                                        'open issues',
+                                        'did someone follow up',
+                                    ],
+                                    'freshness': 'live',
+                                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                                },
                             },
                             'request_id': {'type': 'string', 'description': 'The request ID for tracking'},
                         },
@@ -1453,6 +1512,34 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'issues',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                    'when_to_use': 'Support issue or customer response questions',
+                    'trigger_phrases': [
+                        'did they get back',
+                        'support issue',
+                        'ticket for',
+                        'open issues',
+                        'did someone follow up',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                    'search_strategy': 'Search by title. If no results, try resolving by account name.',
+                },
+            },
+            ai_hints={
+                'summary': 'Customer support threads, open issues, response timelines, and who replied',
+                'when_to_use': 'Support issue or customer response questions',
+                'trigger_phrases': [
+                    'did they get back',
+                    'support issue',
+                    'ticket for',
+                    'open issues',
+                    'did someone follow up',
+                ],
+                'freshness': 'live',
+                'example_questions': ['Did Marathon get back to us on the integration issue?', 'What are the open support tickets for Acme?', 'Who last replied to the billing thread?'],
+                'search_strategy': 'Search by title. If no results, try resolving by account name.',
             },
         ),
         EntityDefinition(
@@ -4525,4 +4612,33 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all open issues in Pylon',
+            'Show me all accounts in Pylon',
+            'List all contacts in Pylon',
+            'What teams are configured in my Pylon workspace?',
+            'Show me all tags used in Pylon',
+            'List all users in my Pylon account',
+            'Show me the custom fields configured for issues',
+            'List all ticket forms in Pylon',
+            'What user roles are available in Pylon?',
+            'Show me details for a specific issue',
+            'Get details for a specific account',
+            'Show me details for a specific contact',
+        ],
+        search=[
+            'What are the most common issue sources this month?',
+            'Show me issues assigned to a specific team',
+            'Which accounts have the most open issues?',
+            'Analyze issue resolution times over the last 30 days',
+            'List contacts associated with a specific account',
+        ],
+        unsupported=[
+            'Delete an issue',
+            'Delete an account',
+            'Send a message to a customer',
+            'Schedule a meeting with a contact',
+        ],
+    ),
 )
