@@ -426,6 +426,13 @@ def generate_tool_description(
             search_sig = _format_search_param_signature()
             lines.append(f"    - search{search_sig}")
 
+    # Entity relationships
+    all_relationships = [r for e in model.entities for r in e.relationships]
+    if all_relationships:
+        lines.append("ENTITY RELATIONSHIPS:")
+        for rel in all_relationships:
+            lines.append(f"  {rel.format_line()}")
+
     # Response structure (brief, includes pagination hint)
     lines.append("RESPONSE STRUCTURE:")
     lines.append("  - list/api_search: {data: [...], meta: {has_more: bool}}")

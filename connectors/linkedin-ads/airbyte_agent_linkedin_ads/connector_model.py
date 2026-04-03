@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -29,7 +32,7 @@ from uuid import (
 LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('137ece28-5434-455c-8f34-69dc3782f451'),
     name='linkedin-ads',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://api.linkedin.com/rest',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -844,9 +847,6 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
-                    param_sources={
-                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1261,6 +1261,14 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'additionalProperties': True,
                 'x-airbyte-entity-name': 'campaigns',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='campaigns',
+                    target_entity='accounts',
+                    foreign_key='account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='campaign_groups',
@@ -1413,9 +1421,6 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
-                    param_sources={
-                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1630,6 +1635,14 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'additionalProperties': True,
                 'x-airbyte-entity-name': 'campaign_groups',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='campaign_groups',
+                    target_entity='accounts',
+                    foreign_key='account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='creatives',
@@ -1773,9 +1786,6 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.elements',
                     meta_extractor={'nextPageToken': '$.metadata.nextPageToken'},
-                    param_sources={
-                        'account_id': {'parent_entity': 'accounts', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1968,6 +1978,14 @@ LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
                 'additionalProperties': True,
                 'x-airbyte-entity-name': 'creatives',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='creatives',
+                    target_entity='accounts',
+                    foreign_key='account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='conversions',
