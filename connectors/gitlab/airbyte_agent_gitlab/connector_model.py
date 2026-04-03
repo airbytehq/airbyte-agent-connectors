@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -27,7 +30,7 @@ from uuid import (
 GitlabConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('5e6175e5-68e1-4c17-bff9-56103bbb0d80'),
     name='gitlab',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://{api_url}/api/v4',
     auth=AuthConfig(
         options=[
@@ -1738,9 +1741,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'issues',
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2074,6 +2074,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'issues',
                 'x-airbyte-stream-name': 'issues',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='issues',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='merge_requests',
@@ -2353,9 +2361,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'merge_requests',
                             'x-airbyte-stream-name': 'merge_requests',
                         },
-                    },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -2830,6 +2835,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'merge_requests',
                 'x-airbyte-stream-name': 'merge_requests',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='merge_requests',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='users',
@@ -3055,9 +3068,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'commits',
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3187,6 +3197,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'commits',
                 'x-airbyte-stream-name': 'commits',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='commits',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='groups',
@@ -3860,9 +3878,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'branches',
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3918,6 +3933,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'branches',
                 'x-airbyte-stream-name': 'branches',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='branches',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='pipelines',
@@ -3991,9 +4014,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'pipelines',
                             'x-airbyte-stream-name': 'pipelines',
                         },
-                    },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -4072,6 +4092,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'pipelines',
                 'x-airbyte-stream-name': 'pipelines',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='pipelines',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='group_members',
@@ -4147,9 +4175,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
-                    param_sources={
-                        'group_id': {'parent_entity': 'groups', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4207,6 +4232,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='group_members',
+                    target_entity='groups',
+                    foreign_key='group_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='project_members',
@@ -4282,9 +4315,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4342,6 +4372,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='project_members',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='releases',
@@ -4428,9 +4466,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-entity-name': 'releases',
                             'x-airbyte-stream-name': 'releases',
                         },
-                    },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -4543,6 +4578,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'releases',
                 'x-airbyte-stream-name': 'releases',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='releases',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='tags',
@@ -4609,9 +4652,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'x-airbyte-stream-name': 'tags',
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4677,6 +4717,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'tags',
                 'x-airbyte-stream-name': 'tags',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tags',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='group_milestones',
@@ -4763,9 +4811,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
-                    param_sources={
-                        'group_id': {'parent_entity': 'groups', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4828,6 +4873,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='group_milestones',
+                    target_entity='groups',
+                    foreign_key='group_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='project_milestones',
@@ -4914,9 +4967,6 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                             'additionalProperties': True,
                         },
                     },
-                    param_sources={
-                        'project_id': {'parent_entity': 'projects', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4979,6 +5029,14 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='project_milestones',
+                    target_entity='projects',
+                    foreign_key='project_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
