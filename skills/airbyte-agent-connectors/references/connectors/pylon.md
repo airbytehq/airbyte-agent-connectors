@@ -7,7 +7,7 @@ The Pylon agent connector is a Python package that equips AI agents to interact 
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-pylon` v0.1.23
+- **Package:** `airbyte-agent-pylon` v0.1.24
 - **Auth:** Token
 - **Docs:** [Official API docs](https://docs.usepylon.com/pylon-docs/developer/api/api-reference)
 - **Status:** complete
