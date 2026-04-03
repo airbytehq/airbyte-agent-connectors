@@ -7,7 +7,7 @@ The Linkedin-Ads agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-linkedin-ads` v0.1.11
+- **Package:** `airbyte-agent-linkedin-ads` v0.1.12
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://learn.microsoft.com/en-us/linkedin/marketing/)
 - **Status:** complete
