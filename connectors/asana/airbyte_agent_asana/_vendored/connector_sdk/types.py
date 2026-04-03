@@ -10,7 +10,7 @@ from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from .constants import OPENAPI_DEFAULT_VERSION
 from .schema.components import PathOverrideConfig
-from .schema.extensions import RetryConfig
+from .schema.extensions import EntityRelationshipConfig, RetryConfig, ScopingParamConfig
 from .schema.security import AirbyteAuthConfig
 
 
@@ -304,14 +304,6 @@ class EndpointDefinition(BaseModel):
         description="Mark this operation as preferred for health checks (from x-airbyte-preferred-for-check extension)",
     )
 
-    param_sources: dict[str, dict[str, str]] = Field(
-        default_factory=dict,
-        description=(
-            "Per-param source declarations: "
-            "{param_name: {'parent_entity': ..., 'parent_key': ...} | {'config': ...}}."
-        ),
-    )
-
     upload_file_param: str | None = Field(
         None,
         description="Parameter name containing base64-encoded file content for multipart/related uploads (from x-airbyte-upload-file-param)",
@@ -336,6 +328,10 @@ class EntityDefinition(BaseModel):
     actions: list[Action]
     endpoints: dict[Action, EndpointDefinition]
     entity_schema: dict[str, Any] | None = Field(default=None, alias="schema")
+    relationships: list[EntityRelationshipConfig] = Field(
+        default_factory=list,
+        description="Relationships where this entity is the source (from x-airbyte-entity-relationships)",
+    )
 
 
 class ConnectorModel(BaseModel):
@@ -352,6 +348,10 @@ class ConnectorModel(BaseModel):
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
     search_field_paths: dict[str, list[str]] | None = None
+    scoping: list[ScopingParamConfig] = Field(
+        default_factory=list,
+        description="Scoping parameters resolved from config at runtime (from x-airbyte-scoping)",
+    )
     server_variable_defaults: dict[str, str] = Field(
         default_factory=dict,
         description="Default values for server URL variables from the OpenAPI spec. "

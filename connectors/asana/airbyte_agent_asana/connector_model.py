@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -30,7 +33,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.18',
+    version='0.1.19',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -173,9 +176,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'project': {'parent_entity': 'workspace_projects', 'parent_key': 'gid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -392,11 +392,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'project_gid': {'parent_entity': 'projects', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='project_tasks',
+                    target_entity='projects',
+                    foreign_key='project_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='workspace_task_search',
@@ -489,11 +495,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='workspace_task_search',
+                    target_entity='workspaces',
+                    foreign_key='workspace_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='projects',
@@ -551,9 +563,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -755,11 +764,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='task_projects',
+                    target_entity='tasks',
+                    foreign_key='task_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='team_projects',
@@ -813,11 +828,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='team_projects',
+                    target_entity='workspace_teams',
+                    foreign_key='team_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='workspace_projects',
@@ -871,11 +892,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='workspace_projects',
+                    target_entity='workspaces',
+                    foreign_key='workspace_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='workspaces',
@@ -1023,9 +1050,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1131,11 +1155,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='workspace_users',
+                    target_entity='workspaces',
+                    foreign_key='workspace_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='team_users',
@@ -1188,11 +1218,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='team_users',
+                    target_entity='workspace_teams',
+                    foreign_key='team_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='teams',
@@ -1232,9 +1268,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    param_sources={
-                        'team_gid': {'parent_entity': 'workspace_teams', 'parent_key': 'gid'},
-                    },
                 ),
             },
             entity_schema={
@@ -1247,6 +1280,15 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'teams',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='teams',
+                    target_entity='workspace_teams',
+                    foreign_key='team_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='workspace_teams',
@@ -1299,11 +1341,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='workspace_teams',
+                    target_entity='workspaces',
+                    foreign_key='workspace_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='user_teams',
@@ -1357,12 +1405,24 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'user_gid': {'parent_entity': 'users', 'parent_key': 'gid'},
-                        'organization': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='user_teams',
+                    target_entity='users',
+                    foreign_key='user_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='user_teams',
+                    target_entity='workspaces',
+                    foreign_key='organization',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='attachments',
@@ -1413,9 +1473,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'parent': {'parent_entity': 'project_tasks', 'parent_key': 'gid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1492,9 +1549,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         'attachment_gid': {'type': 'string', 'required': True},
                     },
                     file_field='data.download_url',
-                    param_sources={
-                        'attachment_gid': {'parent_entity': 'attachments', 'parent_key': 'gid'},
-                    },
                 ),
             },
             entity_schema={
@@ -1560,11 +1614,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'workspace_gid': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='workspace_tags',
+                    target_entity='workspaces',
+                    foreign_key='workspace_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='tags',
@@ -1608,9 +1668,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    param_sources={
-                        'tag_gid': {'parent_entity': 'workspace_tags', 'parent_key': 'gid'},
-                    },
                 ),
             },
             entity_schema={
@@ -1623,6 +1680,15 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'tags',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tags',
+                    target_entity='workspace_tags',
+                    foreign_key='tag_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='project_sections',
@@ -1675,11 +1741,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'project_gid': {'parent_entity': 'projects', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='project_sections',
+                    target_entity='projects',
+                    foreign_key='project_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='sections',
@@ -1719,9 +1791,6 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.data',
-                    param_sources={
-                        'section_gid': {'parent_entity': 'project_sections', 'parent_key': 'gid'},
-                    },
                 ),
             },
             entity_schema={
@@ -1734,6 +1803,15 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'sections',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sections',
+                    target_entity='project_sections',
+                    foreign_key='section_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='task_subtasks',
@@ -1795,11 +1873,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='task_subtasks',
+                    target_entity='tasks',
+                    foreign_key='task_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='task_dependencies',
@@ -1861,11 +1945,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='task_dependencies',
+                    target_entity='tasks',
+                    foreign_key='task_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='task_dependents',
@@ -1927,11 +2017,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
-                    param_sources={
-                        'task_gid': {'parent_entity': 'tasks', 'parent_key': 'gid'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='task_dependents',
+                    target_entity='tasks',
+                    foreign_key='task_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
