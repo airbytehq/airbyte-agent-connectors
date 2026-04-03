@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 TwilioConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b9dc6155-672e-42ea-b10d-9f1f1fb95ab1'),
     name='twilio',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://api.twilio.com/2010-04-01',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -450,9 +453,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'page': '$.page',
                         'page_size': '$.page_size',
                     },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -710,6 +710,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'calls',
                 'x-airbyte-stream-name': 'calls',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='calls',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='messages',
@@ -859,9 +868,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -1062,6 +1068,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'messages',
                 'x-airbyte-stream-name': 'messages',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='messages',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='incoming_phone_numbers',
@@ -1289,9 +1304,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -1648,6 +1660,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'incoming_phone_numbers',
                 'x-airbyte-stream-name': 'incoming_phone_numbers',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='incoming_phone_numbers',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='recordings',
@@ -1794,9 +1815,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -1991,6 +2009,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'recordings',
                 'x-airbyte-stream-name': 'recordings',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='recordings',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='conferences',
@@ -2107,9 +2134,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -2244,6 +2268,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'conferences',
                 'x-airbyte-stream-name': 'conferences',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='conferences',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='usage_records',
@@ -2370,9 +2403,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'page': '$.page',
                         'page_size': '$.page_size',
                     },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
-                    },
                 ),
             },
             entity_schema={
@@ -2444,6 +2474,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'usage_records',
                 'x-airbyte-stream-name': 'usage_records',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='usage_records',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='addresses',
@@ -2575,9 +2614,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -2742,6 +2778,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'addresses',
                 'x-airbyte-stream-name': 'addresses',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='addresses',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='queues',
@@ -2850,9 +2895,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -2971,6 +3013,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'queues',
                 'x-airbyte-stream-name': 'queues',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='queues',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='transcriptions',
@@ -3090,9 +3141,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'first_page_uri': '$.first_page_uri',
                         'page': '$.page',
                         'page_size': '$.page_size',
-                    },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
                     },
                 ),
                 Action.GET: EndpointDefinition(
@@ -3233,6 +3281,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'transcriptions',
                 'x-airbyte-stream-name': 'transcriptions',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='transcriptions',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='outgoing_caller_ids',
@@ -3329,9 +3386,6 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                         'page': '$.page',
                         'page_size': '$.page_size',
                     },
-                    param_sources={
-                        'AccountSid': {'parent_entity': 'accounts', 'parent_key': 'sid'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3423,6 +3477,15 @@ TwilioConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'outgoing_caller_ids',
                 'x-airbyte-stream-name': 'outgoing_caller_ids',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='outgoing_caller_ids',
+                    target_entity='accounts',
+                    foreign_key='AccountSid',
+                    target_key='sid',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={

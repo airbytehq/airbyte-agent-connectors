@@ -450,41 +450,6 @@ Example:
     ```
 """
 
-AIRBYTE_PARAM_SOURCES = "x-airbyte-param-sources"
-"""
-Extension: x-airbyte-param-sources
-Location: Operation object (on individual HTTP operations)
-Type: dict[str, dict[str, str]] (param name → source declaration)
-Required: No
-
-Description:
-    Per-param source declarations for entity dependency resolution. Each key is
-    a parameter name; each value is a dict describing where that parameter's
-    value comes from at runtime.
-
-    Two source patterns are supported:
-
-    Pattern 1 — Parent entity (param value comes from another entity's field):
-        parent_entity: Name of the parent entity
-        parent_key: Field on the parent entity that supplies the value
-
-    Pattern 2 — Config (param value comes from user-provided configuration):
-        config: Name of the config key
-
-Example:
-    ```yaml
-    paths:
-      /accounts/{account_id}/contacts:
-        get:
-          x-airbyte-entity: contacts
-          x-airbyte-action: list
-          x-airbyte-param-sources:
-            account_id:
-              parent_entity: accounts
-              parent_key: id
-    ```
-"""
-
 AIRBYTE_TOKEN_EXTRACT = "x-airbyte-token-extract"
 """
 Extension: x-airbyte-token-extract
@@ -531,6 +496,66 @@ Example:
               scopes: {}
           x-airbyte-token-extract:
             - instance_url  # Extract from token response → updates {instance_url}
+    ```
+"""
+
+AIRBYTE_ENTITY_RELATIONSHIPS = "x-airbyte-entity-relationships"
+"""
+Extension: x-airbyte-entity-relationships
+Location: OpenAPI Info object
+Type: list[EntityRelationshipConfig]
+Required: No
+
+Description:
+    Declares foreign-key relationships between entities. Each entry specifies
+    which entity holds the foreign key (source_entity), which entity is
+    referenced (target_entity), the foreign key field, and optional cardinality.
+
+    Provides a single, connector-wide relationship graph that the runtime
+    uses for dependency resolution and agent introspection.
+
+Example:
+    ```yaml
+    info:
+      title: My API
+      x-airbyte-entity-relationships:
+        - source_entity: contacts
+          target_entity: accounts
+          foreign_key: account_id
+          cardinality: many_to_one
+          description: "Contact belongs to an account"
+        - source_entity: deals
+          target_entity: contacts
+          foreign_key: contact_id
+          target_key: id
+          cardinality: many_to_one
+    ```
+"""
+
+AIRBYTE_SCOPING = "x-airbyte-scoping"
+"""
+Extension: x-airbyte-scoping
+Location: OpenAPI Info object
+Type: list[ScopingParamConfig]
+Required: No
+
+Description:
+    Declares path parameters that should be resolved from the connector's
+    config values at runtime, rather than being supplied per-request. This
+    is used for tenant-scoped APIs where a path segment (e.g., account_id)
+    is fixed for the lifetime of the connector instance.
+
+    Each entry maps a path parameter name to an optional config key. If
+    config_key is omitted, the param name itself is used as the config key.
+
+Example:
+    ```yaml
+    info:
+      title: My API
+      x-airbyte-scoping:
+        - param: account_id
+          config_key: account_id
+        - param: workspace_id
     ```
 """
 
@@ -622,8 +647,9 @@ def get_all_extension_names() -> list[str]:
         AIRBYTE_RECORD_EXTRACTOR,
         AIRBYTE_META_EXTRACTOR,
         AIRBYTE_FILE_URL,
-        AIRBYTE_PARAM_SOURCES,
         AIRBYTE_TOKEN_EXTRACT,
+        AIRBYTE_ENTITY_RELATIONSHIPS,
+        AIRBYTE_SCOPING,
     ]
 
 
@@ -711,17 +737,23 @@ EXTENSION_REGISTRY = {
         "required": "conditional",  # Required when action is 'download'
         "description": "Field in metadata response containing download URL (required for download action)",
     },
-    AIRBYTE_PARAM_SOURCES: {
-        "location": "operation",
-        "type": "dict[str, dict[str, str]]",
-        "required": False,
-        "description": "Per-param source declarations for entity dependency resolution (parent_entity+parent_key or config)",
-    },
     AIRBYTE_TOKEN_EXTRACT: {
         "location": "securityScheme",
         "type": "list[str]",
         "required": False,
         "description": "List of fields to extract from OAuth2 token responses and use as server variables",
+    },
+    AIRBYTE_ENTITY_RELATIONSHIPS: {
+        "location": "info",
+        "type": "EntityRelationshipConfig",
+        "required": False,
+        "description": "Foreign-key relationships between entities for dependency resolution and agent introspection",
+    },
+    AIRBYTE_SCOPING: {
+        "location": "info",
+        "type": "ScopingParamConfig",
+        "required": False,
+        "description": "Path parameters resolved from connector config at runtime for tenant-scoped APIs",
     },
 }
 """

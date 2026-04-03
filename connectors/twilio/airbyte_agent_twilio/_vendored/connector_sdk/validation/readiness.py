@@ -632,16 +632,33 @@ def validate_meta_extractor_fields(
     return True, errors, warnings
 
 
-def _check_param_sources_coverage(config: ConnectorModel) -> List[str]:
-    """Check that endpoints with path params have x-airbyte-param-sources declarations.
+def _check_entity_relationships(config: ConnectorModel) -> List[str]:
+    """Check that entity relationship target_entity values reference real entities.
+
+    Returns a list of warning strings for relationships where target_entity
+    does not match any defined entity name.
+    """
+    warnings: List[str] = []
+    entity_names = {e.name for e in config.entities}
+    for entity in config.entities:
+        for rel in entity.relationships:
+            if rel.target_entity not in entity_names:
+                warnings.append(
+                    f"Entity '{entity.name}' has relationship with target_entity " f"'{rel.target_entity}' which does not match any defined entity."
+                )
+    return warnings
+
+
+def _check_entity_relationships_coverage(config: ConnectorModel) -> List[str]:
+    """Check that endpoints with path params are covered by entity relationships or scoping.
 
     Returns a list of warning strings for endpoints where path parameters
-    are not covered by param_sources and are not implicitly resolvable from
-    config (auth properties, server variables).
+    are not covered by entity relationships, scoping, or implicit config
+    resolution.
 
     Skips single-record actions (get, update, delete) when the entity also has
     a list action, since those path params are the entity's own primary key
-    resolved from list results — not a parent dependency.
+    resolved from list results -- not a parent dependency.
     """
     warnings: List[str] = []
 
@@ -656,10 +673,15 @@ def _check_param_sources_coverage(config: ConnectorModel) -> List[str]:
         implicit_config_keys.update(config.auth.user_config_spec.properties.keys())
     implicit_config_keys.update(config.server_variable_defaults.keys())
 
-    single_record_actions = {Action.GET, Action.UPDATE, Action.DELETE}
+    # Collect scoping param names
+    scoping_params = {s.param for s in config.scoping}
+
+    single_record_actions = {Action.GET, Action.UPDATE, Action.DELETE, Action.DOWNLOAD}
 
     for entity in config.entities:
         has_list = Action.LIST in entity.endpoints
+        # Build set of foreign_keys covered by entity relationships
+        relationship_keys = {rel.foreign_key for rel in entity.relationships}
         for action, endpoint in entity.endpoints.items():
             if not endpoint.path_params:
                 continue
@@ -668,16 +690,18 @@ def _check_param_sources_coverage(config: ConnectorModel) -> List[str]:
             if has_list and action in single_record_actions:
                 continue
             for param in endpoint.path_params:
-                if param in endpoint.param_sources:
+                if param in relationship_keys:
+                    continue
+                if param in scoping_params:
                     continue
                 # SDK resolves implicitly when param name matches a config key
                 if param in implicit_config_keys:
                     continue
                 warnings.append(
                     f"Entity '{entity.name}' operation '{action.value}' has path parameter "
-                    f"'{param}' with no x-airbyte-param-sources declaration. "
-                    f"Add param-sources to enable per-entity health checks. "
-                    f"See get_connector_yaml_schema_docs('extensions') for guidance."
+                    f"'{param}' with no entity relationship or scoping declaration. "
+                    f"Add an x-airbyte-entity-relationships entry or x-airbyte-scoping entry "
+                    f"to enable per-entity health checks."
                 )
     return warnings
 
@@ -992,8 +1016,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     # All agent connectors must have a replication counterpart in the Airbyte registry
     if not replication_result.get("registry_found", False):
         replication_errors.append(
-            "No replication connector found in Airbyte registry. "
-            "All agent connectors must have a corresponding replication connector."
+            "No replication connector found in Airbyte registry. " "All agent connectors must have a corresponding replication connector."
         )
 
     total_errors += len(replication_errors)
@@ -1054,10 +1077,15 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "to enable reliable health checks."
         )
 
-    # Check for missing x-airbyte-param-sources declarations
-    param_source_warnings = _check_param_sources_coverage(config)
-    readiness_warnings.extend(param_source_warnings)
-    total_warnings += len(param_source_warnings)
+    # Check for missing entity relationship / scoping declarations
+    relationship_coverage_warnings = _check_entity_relationships_coverage(config)
+    readiness_warnings.extend(relationship_coverage_warnings)
+    total_warnings += len(relationship_coverage_warnings)
+
+    # Check entity relationship target_entity references
+    relationship_warnings = _check_entity_relationships(config)
+    readiness_warnings.extend(relationship_warnings)
+    total_warnings += len(relationship_warnings)
 
     if total_cassettes > 0:
         readiness_warnings.append(
