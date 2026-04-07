@@ -103,7 +103,7 @@ from .models import (
 # TypeVar for decorator type preservation
 _F = TypeVar("_F", bound=Callable[..., Any])
 
-DEFAULT_MAX_OUTPUT_CHARS = 50_000  # ~50KB default, configurable per-tool
+DEFAULT_MAX_OUTPUT_CHARS = 100_000  # ~100KB default, configurable per-tool
 
 
 def _raise_output_too_large(message: str) -> None:

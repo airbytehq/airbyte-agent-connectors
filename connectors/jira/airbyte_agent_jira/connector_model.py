@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -3831,5 +3834,34 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             'visibility',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'Show me all open issues in my Jira instance',
+            'List recent issues created in the last 7 days',
+            'List all projects in my Jira instance',
+            'Show me details for the most recently updated issue',
+            'List all users in my Jira instance',
+            'Show me comments on the most recent issue',
+            'Show me worklogs from the last 7 days',
+            'Assign a recent issue to a teammate',
+            'Unassign a recent issue',
+            "Create a new task called 'Sample task' in a project",
+            'Create a bug with high priority',
+            "Update the summary of a recent issue to 'Updated summary'",
+            'Change the priority of a recent issue to high',
+            "Add a comment to a recent issue saying 'Please investigate'",
+            'Update my most recent comment',
+            'Delete a test issue',
+            'Remove my most recent comment',
+        ],
+        search=[
+            'What issues are assigned to {team_member} this week?',
+            'Find all high priority bugs in our current sprint',
+            'Show me overdue issues across all projects',
+            'What projects have the most issues?',
+            'Search for users named {user_name}',
+        ],
+        unsupported=['Log time on {issue_key}', 'Transition {issue_key} to Done'],
+    ),
     server_variable_defaults={'subdomain': '{subdomain}'},
 )
