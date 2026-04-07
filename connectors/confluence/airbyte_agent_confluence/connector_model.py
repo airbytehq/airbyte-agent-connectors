@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -1179,5 +1182,31 @@ ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
             'type',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all spaces in my Confluence instance',
+            'Show me the most recently created pages',
+            'List all blog posts',
+            'Show me details for a specific page',
+            'List all groups in Confluence',
+            'Show me recent audit log entries',
+            'Get details about a specific space',
+            'Show me blog post details',
+        ],
+        search=[
+            'Find pages created in the last 7 days',
+            'What spaces have the most pages?',
+            'Show me all pages in a specific space',
+            'Find blog posts by a specific author',
+            'What audit events happened this week?',
+        ],
+        unsupported=[
+            'Create a new page in Confluence',
+            'Update an existing page',
+            'Delete a space',
+            'Upload an attachment to a page',
+            'Manage space permissions',
+        ],
+    ),
     server_variable_defaults={'subdomain': '{subdomain}'},
 )
