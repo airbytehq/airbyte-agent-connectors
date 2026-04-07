@@ -649,17 +649,21 @@ def _check_entity_relationships(config: ConnectorModel) -> List[str]:
     return warnings
 
 
-def _check_entity_relationships_coverage(config: ConnectorModel) -> List[str]:
+def _check_entity_relationships_coverage(config: ConnectorModel) -> Tuple[List[str], List[str]]:
     """Check that endpoints with path params are covered by entity relationships or scoping.
 
-    Returns a list of warning strings for endpoints where path parameters
+    Returns a tuple of (errors, warnings) for endpoints where path parameters
     are not covered by entity relationships, scoping, or implicit config
     resolution.
+
+    List operations with uncovered path params are errors (they cause runtime
+    ParamResolutionError during health checks). Non-list operations are warnings.
 
     Skips single-record actions (get, update, delete) when the entity also has
     a list action, since those path params are the entity's own primary key
     resolved from list results -- not a parent dependency.
     """
+    errors: List[str] = []
     warnings: List[str] = []
 
     # Collect all known config key names that the SDK can resolve implicitly
@@ -697,12 +701,100 @@ def _check_entity_relationships_coverage(config: ConnectorModel) -> List[str]:
                 # SDK resolves implicitly when param name matches a config key
                 if param in implicit_config_keys:
                     continue
-                warnings.append(
+                msg = (
                     f"Entity '{entity.name}' operation '{action.value}' has path parameter "
                     f"'{param}' with no entity relationship or scoping declaration. "
                     f"Add an x-airbyte-entity-relationships entry or x-airbyte-scoping entry "
                     f"to enable per-entity health checks."
                 )
+                if action == Action.LIST:
+                    errors.append(msg)
+                else:
+                    warnings.append(msg)
+    return errors, warnings
+
+
+def _validate_entity_relationships(config: ConnectorModel, raw_spec: Dict[str, Any]) -> List[str]:
+    """Validate entity relationship structural integrity.
+
+    Checks beyond target_entity existence (handled by _check_entity_relationships):
+    - Orphaned source_entity/target_entity values in raw YAML
+    - Conflicting duplicate foreign_key declarations across entities
+    - foreign_key maps to a path or query param on the source entity
+    - target_key exists in the target entity's schema
+    - target entity has a LIST action for runtime resolution
+    """
+    warnings: List[str] = []
+    entity_names = {e.name for e in config.entities}
+    entity_map = {e.name: e for e in config.entities}
+
+    # Check 1: Orphaned relationships in raw YAML
+    raw_relationships = raw_spec.get("info", {}).get("x-airbyte-entity-relationships", [])
+    for raw_rel in raw_relationships:
+        src = raw_rel.get("source_entity", "")
+        tgt = raw_rel.get("target_entity", "")
+        if src and src not in entity_names:
+            warnings.append(
+                f"Relationship with source_entity '{src}' does not match any "
+                f"defined entity. It will be silently ignored at runtime."
+            )
+        if tgt and tgt not in entity_names:
+            warnings.append(
+                f"Relationship with target_entity '{tgt}' (from source_entity "
+                f"'{src}') does not match any defined entity."
+            )
+
+    # Check 2: Conflicting duplicate foreign_key declarations
+    fk_map: Dict[str, List[Tuple[str, str, str]]] = {}
+    for entity in config.entities:
+        for rel in entity.relationships:
+            entry = (entity.name, rel.target_entity, rel.target_key)
+            fk_map.setdefault(rel.foreign_key, []).append(entry)
+    for fk, entries in fk_map.items():
+        targets = {(te, tk) for _, te, tk in entries}
+        if len(targets) > 1:
+            sources = [src for src, _, _ in entries]
+            warnings.append(
+                f"Foreign key '{fk}' is declared by entities "
+                f"{sources} with conflicting targets: {sorted(targets)}. "
+                f"The SDK global FK index uses first-match only."
+            )
+
+    # Checks 3-5: Per-entity relationship validation
+    for entity in config.entities:
+        all_params: set[str] = set()
+        for endpoint in entity.endpoints.values():
+            all_params.update(endpoint.path_params)
+            all_params.update(endpoint.query_params)
+
+        for rel in entity.relationships:
+            # Check 3: foreign_key maps to a param
+            if rel.foreign_key not in all_params:
+                warnings.append(
+                    f"Entity '{entity.name}' relationship to '{rel.target_entity}' declares "
+                    f"foreign_key '{rel.foreign_key}' which is not a path or query parameter "
+                    f"on any of its endpoints."
+                )
+
+            # Check 4: target_key in target schema
+            target_entity = entity_map.get(rel.target_entity)
+            if target_entity and target_entity.entity_schema:
+                props = target_entity.entity_schema.get("properties", {})
+                if props and rel.target_key not in props:
+                    warnings.append(
+                        f"Entity '{entity.name}' relationship to '{rel.target_entity}' declares "
+                        f"target_key '{rel.target_key}' which is not a property in the "
+                        f"'{rel.target_entity}' entity schema."
+                    )
+
+            # Check 5: target entity has LIST
+            if target_entity and Action.LIST not in target_entity.endpoints:
+                warnings.append(
+                    f"Entity '{entity.name}' relationship targets '{rel.target_entity}' which "
+                    f"has no LIST action. The SDK requires LIST on the target entity to resolve "
+                    f"the foreign key at runtime."
+                )
+
     return warnings
 
 
@@ -1048,7 +1140,12 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_errors += len(auth_errors)
     total_warnings += len(auth_warnings)
 
-    # Update success criteria to include replication, cache, and auth scheme validation
+    # Check for missing entity relationship / scoping declarations (before success gate)
+    relationship_coverage_errors, relationship_coverage_warnings = _check_entity_relationships_coverage(config)
+    total_errors += len(relationship_coverage_errors)
+    total_warnings += len(relationship_coverage_warnings)
+
+    # Update success criteria to include replication, cache, auth scheme, and coverage validation
     success = (
         operations_missing_cassettes == 0
         and cassettes_invalid == 0
@@ -1056,6 +1153,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         and len(replication_errors) == 0
         and len(cache_errors) == 0
         and auth_valid
+        and len(relationship_coverage_errors) == 0
     )
 
     # Check for preferred_for_check on at least one list operation
@@ -1077,15 +1175,18 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "to enable reliable health checks."
         )
 
-    # Check for missing entity relationship / scoping declarations
-    relationship_coverage_warnings = _check_entity_relationships_coverage(config)
+    # Add coverage warnings to readiness_warnings (errors already counted above)
     readiness_warnings.extend(relationship_coverage_warnings)
-    total_warnings += len(relationship_coverage_warnings)
 
     # Check entity relationship target_entity references
     relationship_warnings = _check_entity_relationships(config)
     readiness_warnings.extend(relationship_warnings)
     total_warnings += len(relationship_warnings)
+
+    # Validate entity relationship structural integrity
+    relationship_validation_warnings = _validate_entity_relationships(config, raw_spec)
+    readiness_warnings.extend(relationship_validation_warnings)
+    total_warnings += len(relationship_validation_warnings)
 
     # Check for missing x-airbyte-ai-hints on entities
     entities_missing_hints = [entity.name for entity in config.entities if not getattr(entity, "ai_hints", None)]
@@ -1126,6 +1227,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "missing_schemes": missing_tested,
             "untested_schemes": untested_schemes_list,
         },
+        "readiness_errors": relationship_coverage_errors,
         "readiness_warnings": readiness_warnings,
         "summary": {
             "total_operations": total_operations,

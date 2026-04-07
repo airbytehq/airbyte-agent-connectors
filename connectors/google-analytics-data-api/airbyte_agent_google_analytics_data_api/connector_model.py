@@ -25,6 +25,9 @@ from ._vendored.connector_sdk.schema.base import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    ScopingParamConfig,
+)
 from uuid import (
     UUID,
 )
@@ -32,7 +35,7 @@ from uuid import (
 GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('3cc2eafd-84aa-4dca-93af-322d9dfeec1a'),
     name='google-analytics-data-api',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://analyticsdata.googleapis.com/v1beta',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -1883,4 +1886,10 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
             'Access real-time analytics data',
         ],
     ),
+    scoping=[
+        ScopingParamConfig(
+            param='property_id',
+            config_key='property_id',
+        ),
+    ],
 )
