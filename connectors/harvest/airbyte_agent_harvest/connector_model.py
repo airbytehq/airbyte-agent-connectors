@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -5246,4 +5249,30 @@ HarvestConnectorModel: ConnectorModel = ConnectorModel(
             'weekly_capacity',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all users in Harvest',
+            'Show me all active projects',
+            'List all clients',
+            'Show me recent time entries',
+            'List all invoices',
+            'Show me all tasks',
+            'List all expense categories',
+            'Get company information',
+        ],
+        search=[
+            'How many hours were logged last week?',
+            'Which projects have the most time entries?',
+            'Show me all unbilled time entries',
+            'What are the active projects for a specific client?',
+            'List all overdue invoices',
+            'Which users logged the most hours this month?',
+        ],
+        unsupported=[
+            'Create a new time entry in Harvest',
+            'Update a project budget',
+            'Delete an invoice',
+            'Start a timer for a task',
+        ],
+    ),
 )
