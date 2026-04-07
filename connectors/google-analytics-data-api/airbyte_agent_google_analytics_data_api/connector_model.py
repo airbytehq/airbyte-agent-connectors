@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -1854,4 +1857,30 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
             'totalUsers',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'Show me the website overview report',
+            'List daily active users',
+            'Show weekly active user trends',
+            'Get the four-weekly active users report',
+            'List traffic sources',
+            'Show me page performance metrics',
+            'Get device breakdown data',
+            'List user locations',
+        ],
+        search=[
+            'What are the top traffic sources by sessions?',
+            'Which pages have the highest bounce rate?',
+            'What devices do most users browse from?',
+            'Which countries send the most traffic?',
+            'How has daily active users changed over the last month?',
+        ],
+        unsupported=[
+            'Create a new GA4 property',
+            'Delete analytics data',
+            'Modify tracking configurations',
+            'Run a custom report with arbitrary dimensions',
+            'Access real-time analytics data',
+        ],
+    ),
 )
