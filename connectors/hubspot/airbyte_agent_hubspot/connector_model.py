@@ -23,6 +23,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2732,4 +2735,28 @@ HubspotConnectorModel: ConnectorModel = ConnectorModel(
             'updatedAt',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List recent deals',
+            'List recent tickets',
+            'List companies in my CRM',
+            'List contacts in my CRM',
+        ],
+        search=[
+            'Show me all deals from {company} this quarter',
+            'What are the top 5 most valuable deals in my pipeline right now?',
+            'Search for contacts in the marketing department at {company}',
+            "Give me an overview of my sales team's deals in the last 30 days",
+            'Identify the most active companies in our CRM this month',
+            'Compare the number of deals closed by different sales representatives',
+            'Find all tickets related to a specific product issue and summarize their status',
+        ],
+        unsupported=[
+            'Create a new contact record for {person}',
+            'Update the contact information for {customer}',
+            "Delete the ticket from last week's support case",
+            'Schedule a follow-up task for this deal',
+            'Send an email to all contacts in the sales pipeline',
+        ],
+    ),
 )
