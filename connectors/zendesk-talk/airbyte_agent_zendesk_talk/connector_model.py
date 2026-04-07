@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -3133,5 +3136,29 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
             'overflow_options[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all phone numbers in our Zendesk Talk account',
+            'Show all addresses on file',
+            'List all IVR configurations',
+            'Show all greetings',
+            'List greeting categories',
+            'Show agent activity statistics',
+            'Show the account overview stats',
+            'Show current queue activity',
+        ],
+        search=[
+            'Which phone numbers have SMS enabled?',
+            'Find agents who have missed the most calls today',
+            'What is the average call duration across all calls?',
+            'Which phone numbers are toll-free?',
+        ],
+        unsupported=[
+            'Create a new phone number',
+            'Delete an IVR configuration',
+            'Update a greeting',
+            'Make an outbound call',
+        ],
+    ),
     server_variable_defaults={'subdomain': 'your-subdomain'},
 )
