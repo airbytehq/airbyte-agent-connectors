@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2211,5 +2214,21 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
             'unitsSoldSameSku7d',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all my advertising profiles across marketplaces',
+            'Show me the profiles for my seller accounts',
+            'What marketplaces do I have advertising profiles in?',
+            'List all portfolios for one of my profiles',
+            'Show me all sponsored product campaigns',
+        ],
+        search=['What campaigns are currently enabled?', 'Find campaigns with a specific targeting type'],
+        unsupported=[
+            'Create a new advertising campaign',
+            'Update my campaign budget',
+            'Delete an ad group',
+            'Generate a performance report',
+        ],
+    ),
     server_variable_defaults={'region': 'https://advertising-api.amazon.com'},
 )
