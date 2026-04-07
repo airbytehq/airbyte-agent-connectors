@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -1785,4 +1788,29 @@ SendgridConnectorModel: ConnectorModel = ConnectorModel(
             'versions[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all marketing contacts',
+            'Get the details of a specific contact',
+            'Show me all marketing lists',
+            'List all transactional templates',
+            'Show all single sends',
+            'List all bounced emails',
+            'Show all blocked email addresses',
+            'List all spam reports',
+            'Show all suppression groups',
+        ],
+        search=[
+            'How many contacts are in each marketing list?',
+            'Which single sends were scheduled in the last month?',
+            'What are the most common bounce reasons?',
+            'Show me contacts created in the last 7 days',
+        ],
+        unsupported=[
+            'Send an email',
+            'Create a new contact',
+            'Delete a bounce record',
+            'Update a marketing list',
+        ],
+    ),
 )
