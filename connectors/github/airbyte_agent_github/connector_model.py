@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -2899,4 +2902,27 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    example_questions=ExampleQuestions(
+        direct=[
+            'Show me all open issues in my repositories this month',
+            "List the top 5 repositories I've starred recently",
+            'Analyze the commit trends in my main project over the last quarter',
+            'Find all pull requests created in the past two weeks',
+            'Search for repositories related to machine learning in my organizations',
+            'Compare the number of contributors across my different team projects',
+            'Identify the most active branches in my main repository',
+            'Get details about the most recent releases in my organization',
+            'List all milestones for our current development sprint',
+            'Show me insights about pull request review patterns in our team',
+            'List all unanswered discussions in a repository',
+            'Show me recent discussions in the General category',
+        ],
+        unsupported=[
+            'Create a new issue in the project repository',
+            'Update the status of this pull request',
+            'Delete an old branch from the repository',
+            'Schedule a team review for this code',
+            'Assign a new label to this issue',
+        ],
+    ),
 )
