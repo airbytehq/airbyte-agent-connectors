@@ -411,7 +411,25 @@ def generate_tool_description(
     # Avoid a "PARAMETERS:" header because some docstring parsers treat it as a params section marker.
     lines.append("ENTITIES (ACTIONS + PARAMS):")
     for entity in model.entities:
-        lines.append(f"  {entity.name}:")
+        # Emit per-entity AI hints if available
+        ai_hints = getattr(entity, "ai_hints", None) or {}
+        hint_summary = ai_hints.get("summary") if isinstance(ai_hints, dict) else None
+        if hint_summary:
+            lines.append(f"  {entity.name}: {hint_summary}")
+        else:
+            lines.append(f"  {entity.name}:")
+        hint_when = ai_hints.get("when_to_use") if isinstance(ai_hints, dict) else None
+        if hint_when:
+            lines.append(f"    WHEN TO USE: {hint_when}")
+        hint_freshness = ai_hints.get("freshness") if isinstance(ai_hints, dict) else None
+        if hint_freshness:
+            lines.append(f"    FRESHNESS: {hint_freshness.upper()}")
+        hint_triggers = ai_hints.get("trigger_phrases", []) if isinstance(ai_hints, dict) else []
+        if hint_triggers:
+            lines.append(f"    Trigger phrases: {', '.join(hint_triggers)}")
+        hint_search = ai_hints.get("search_strategy") if isinstance(ai_hints, dict) else None
+        if hint_search:
+            lines.append(f"    SEARCH STRATEGY: {hint_search}")
         actions = getattr(entity, "actions", []) or []
         endpoints = getattr(entity, "endpoints", {}) or {}
         for action in actions:
@@ -425,6 +443,10 @@ def generate_tool_description(
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
             lines.append(f"    - search{search_sig}")
+        # Per-entity example questions from ai_hints
+        hint_examples = ai_hints.get("example_questions", []) if isinstance(ai_hints, dict) else []
+        if hint_examples:
+            lines.append(f"    Examples: {'; '.join(hint_examples[:3])}")
 
     # Entity relationships
     all_relationships = [r for e in model.entities for r in e.relationships]
@@ -465,30 +487,32 @@ def generate_tool_description(
             else:
                 lines.append(f"  {entity_name}: (no fields listed)")
 
-    # Add example questions if available in openapi_spec
-    openapi_spec = getattr(model, "openapi_spec", None)
-    if openapi_spec:
-        info = getattr(openapi_spec, "info", None)
-        if info:
-            example_questions = getattr(info, "x_airbyte_example_questions", None)
-            if example_questions:
-                direct_questions = getattr(example_questions, "direct", None)
-                search_questions = getattr(example_questions, "search", None)
+    # Add example questions — try direct model field first, fall back to openapi_spec
+    example_questions = getattr(model, "example_questions", None)
+    if not example_questions:
+        openapi_spec = getattr(model, "openapi_spec", None)
+        if openapi_spec:
+            info = getattr(openapi_spec, "info", None)
+            if info:
+                example_questions = getattr(info, "x_airbyte_example_questions", None)
+    if example_questions:
+        direct_questions = getattr(example_questions, "direct", None)
+        search_questions = getattr(example_questions, "search", None)
 
-                direct_questions = direct_questions if isinstance(direct_questions, list) else []
-                search_questions = search_questions if isinstance(search_questions, list) else []
+        direct_questions = direct_questions if isinstance(direct_questions, list) else []
+        search_questions = search_questions if isinstance(search_questions, list) else []
 
-                selected_questions: list[str] = []
-                if direct_questions or search_questions:
-                    if enable_hosted_mode_features and search_questions:
-                        selected_questions = list(search_questions)
-                    else:
-                        selected_questions = list(direct_questions) or list(search_questions)
+        selected_questions: list[str] = []
+        if direct_questions or search_questions:
+            if enable_hosted_mode_features and search_questions:
+                selected_questions = list(search_questions)
+            else:
+                selected_questions = list(direct_questions) or list(search_questions)
 
-                if selected_questions:
-                    lines.append("EXAMPLE QUESTIONS:")
-                    for q in selected_questions[:MAX_EXAMPLE_QUESTIONS]:
-                        lines.append(f"  - {q}")
+        if selected_questions:
+            lines.append("EXAMPLE QUESTIONS:")
+            for q in selected_questions[:MAX_EXAMPLE_QUESTIONS]:
+                lines.append(f"  - {q}")
 
     # Generic parameter description for function signature
     lines.append("FUNCTION PARAMETERS:")
