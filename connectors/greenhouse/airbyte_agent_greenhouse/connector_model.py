@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -2857,4 +2860,29 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
             'updated_at',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all open jobs',
+            'Show me upcoming interviews this week',
+            'Show me recent job offers',
+            'List recent applications',
+        ],
+        search=[
+            'Show me candidates from {company} who applied last month',
+            'What are the top 5 sources for our job applications this quarter?',
+            'Analyze the interview schedules for our engineering candidates this week',
+            'Compare the number of applications across different offices',
+            'Identify candidates who have multiple applications in our system',
+            'Summarize the candidate pipeline for our latest job posting',
+            'Find the most active departments in recruiting this month',
+        ],
+        unsupported=[
+            'Create a new job posting for the marketing team',
+            'Schedule an interview for {candidate}',
+            "Update the status of {candidate}'s application",
+            'Delete a candidate profile',
+            'Send an offer letter to {candidate}',
+            'Edit the details of a job description',
+        ],
+    ),
 )
