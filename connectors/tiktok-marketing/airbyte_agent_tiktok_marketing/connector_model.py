@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -4277,4 +4280,28 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'app_install',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all my TikTok advertisers',
+            'Show me all campaigns for my advertiser account',
+            'List all ad groups',
+            'Show me all ads',
+            'List my custom audiences',
+            'Show me all creative asset images',
+            'List creative asset videos',
+            'Show me daily ad performance reports',
+            'Get campaign performance metrics for the last 30 days',
+            'Show me advertiser spend reports',
+        ],
+        search=[
+            'Which campaigns have the highest budget?',
+            'Find all paused ad groups',
+            'What ads were created last month?',
+            'Show campaigns with lifetime budget mode',
+            'Which ads had the most impressions yesterday?',
+            'What is my total ad spend this month?',
+            'Which campaigns have the highest click-through rate?',
+        ],
+        unsupported=['Create a new campaign', 'Update ad group targeting', 'Delete an ad'],
+    ),
 )
