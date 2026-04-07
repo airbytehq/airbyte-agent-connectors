@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -6014,5 +6017,44 @@ ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
             'Modified_Time',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all leads',
+            'Show me details for a specific lead',
+            'List all contacts',
+            'List all accounts',
+            'List all open deals',
+            'Show me details for a specific deal',
+            'List all campaigns',
+            'List all tasks',
+            'List all events',
+            'List recent calls',
+            'List all products',
+            'List all quotes',
+            'List all invoices',
+        ],
+        search=[
+            'Show me leads created in the last 30 days',
+            'Which deals have the highest amount?',
+            'List all contacts at a specific company',
+            'What is the total revenue across all deals by stage?',
+            'Show me overdue tasks',
+            'Which campaigns generated the most leads?',
+            'Summarize the deal pipeline by stage',
+            'Show me accounts with the highest annual revenue',
+            'List all events scheduled for this week',
+            'What are the top-performing products by unit price?',
+            'Show me all invoices that are past due',
+            'Break down leads by source and industry',
+        ],
+        unsupported=[
+            'Create a new lead in Zoho CRM',
+            "Update a contact's email address",
+            'Delete a deal record',
+            'Send an email to a lead',
+            'Convert a lead to a contact',
+            'Merge duplicate contacts',
+        ],
+    ),
     server_variable_defaults={'dc_region': 'com'},
 )
