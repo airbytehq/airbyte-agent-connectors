@@ -23,6 +23,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -5394,5 +5397,29 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
             'web_url',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all projects I have access to',
+            'Get the details of a specific project',
+            'List all open issues in a project',
+            'Show merge requests for a project',
+            'List all groups I belong to',
+            'Show recent commits in a project',
+            'List pipelines for a project',
+            'Show all branches in a project',
+        ],
+        search=[
+            'Find issues updated in the last week',
+            'What are the most active projects?',
+            'Show merge requests that are still open',
+            'List projects with the most commits',
+        ],
+        unsupported=[
+            'Create a new project',
+            'Delete an issue',
+            'Merge a merge request',
+            'Trigger a pipeline',
+        ],
+    ),
     server_variable_defaults={'api_url': 'gitlab.com'},
 )

@@ -328,6 +328,10 @@ class EntityDefinition(BaseModel):
     actions: list[Action]
     endpoints: dict[Action, EndpointDefinition]
     entity_schema: dict[str, Any] | None = Field(default=None, alias="schema")
+    ai_hints: dict[str, Any] | None = Field(
+        default=None,
+        description="AI hints for this entity (from x-airbyte-ai-hints schema extension)",
+    )
     relationships: list[EntityRelationshipConfig] = Field(
         default_factory=list,
         description="Relationships where this entity is the source (from x-airbyte-entity-relationships)",
@@ -348,6 +352,7 @@ class ConnectorModel(BaseModel):
     openapi_spec: Any | None = None  # Optional reference to OpenAPIConnector
     retry_config: RetryConfig | None = None  # Optional retry configuration
     search_field_paths: dict[str, list[str]] | None = None
+    example_questions: Any | None = None  # ExampleQuestions from x-airbyte-example-questions
     scoping: list[ScopingParamConfig] = Field(
         default_factory=list,
         description="Scoping parameters resolved from config at runtime (from x-airbyte-scoping)",
