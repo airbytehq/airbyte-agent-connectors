@@ -114,7 +114,7 @@ See the official [Notion API reference](https://developers.notion.com/reference/
 
 ## Version information
 
-- **Package version:** 0.1.29
+- **Package version:** 0.1.30
 - **Connector version:** 0.1.10
-- **Generated with Connector SDK commit SHA:** 525a1c0ff10c3c7f2b2620935d97dd6981ddfc42
+- **Generated with Connector SDK commit SHA:** fbc0bacdabf9b1de67621333cd97edee9c444de4
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/notion/CHANGELOG.md)
