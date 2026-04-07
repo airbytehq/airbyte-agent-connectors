@@ -22,6 +22,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -1838,4 +1841,28 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'visible_to[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all organizations I belong to',
+            'Show me all ad accounts for my organization',
+            'List all campaigns in my ad account',
+            'Show me the ad squads for my ad account',
+            'List all ads in my ad account',
+            'Show me the creatives for my ad account',
+            'List all media files in my ad account',
+            'Show me the audience segments in my ad account',
+        ],
+        search=[
+            'Which campaigns are currently active?',
+            'What ad squads have the highest daily budget?',
+            'Show me ads that are pending review',
+            'Find campaigns created in the last month',
+        ],
+        unsupported=[
+            'Create a new campaign',
+            "Update an ad's status",
+            'Delete a creative',
+            'Show me ad performance statistics',
+        ],
+    ),
 )
