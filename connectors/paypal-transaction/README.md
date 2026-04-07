@@ -114,7 +114,7 @@ See the official [Paypal-Transaction API reference](https://developer.paypal.com
 
 ## Version information
 
-- **Package version:** 0.1.10
+- **Package version:** 0.1.11
 - **Connector version:** 1.0.1
-- **Generated with Connector SDK commit SHA:** fbc0bacdabf9b1de67621333cd97edee9c444de4
+- **Generated with Connector SDK commit SHA:** 0bc9ab764a18fc48c3b595e69ba87a5337c63d51
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/paypal-transaction/CHANGELOG.md)

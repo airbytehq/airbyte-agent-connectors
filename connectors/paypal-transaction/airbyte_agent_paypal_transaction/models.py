@@ -219,14 +219,6 @@ class TransactionsList(BaseModel):
     total_pages: Union[int, Any] = Field(default=None)
     links: Union[list[TransactionsListLinksItem], Any] = Field(default=None)
 
-class PaymentLinksItem(BaseModel):
-    """Nested schema for Payment.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: Union[str, Any] = Field(default=None)
-    rel: Union[str, Any] = Field(default=None)
-    method: Union[str, Any] = Field(default=None)
-
 class PaymentTransactionsItemAmountDetails(BaseModel):
     """Nested schema for PaymentTransactionsItemAmount.details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -281,6 +273,14 @@ class PaymentPayer(BaseModel):
     """Payer status."""
     payer_info: Union[PaymentPayerPayerInfo, Any] = Field(default=None)
 
+class PaymentLinksItem(BaseModel):
+    """Nested schema for Payment.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: Union[str, Any] = Field(default=None)
+    rel: Union[str, Any] = Field(default=None)
+    method: Union[str, Any] = Field(default=None)
+
 class Payment(BaseModel):
     """A PayPal payment object."""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -303,14 +303,6 @@ class PaymentsList(BaseModel):
     count: Union[int, Any] = Field(default=None)
     next_id: Union[str, Any] = Field(default=None)
 
-class DisputeLinksItem(BaseModel):
-    """Nested schema for Dispute.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: Union[str, Any] = Field(default=None)
-    rel: Union[str, Any] = Field(default=None)
-    method: Union[str, Any] = Field(default=None)
-
 class DisputeDisputedTransactionsItemSeller(BaseModel):
     """Nested schema for DisputeDisputedTransactionsItem.seller"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -325,6 +317,14 @@ class DisputeDisputedTransactionsItem(BaseModel):
     buyer_transaction_id: Union[str, Any] = Field(default=None, description="Buyer's transaction ID.")
     """Buyer's transaction ID."""
     seller: Union[DisputeDisputedTransactionsItemSeller, Any] = Field(default=None)
+
+class DisputeLinksItem(BaseModel):
+    """Nested schema for Dispute.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: Union[str, Any] = Field(default=None)
+    rel: Union[str, Any] = Field(default=None)
+    method: Union[str, Any] = Field(default=None)
 
 class Dispute(BaseModel):
     """A PayPal dispute object."""
@@ -429,6 +429,79 @@ class InvoiceSearchParams(BaseModel):
 
     creation_date_range: Union[InvoiceSearchParamsCreationDateRange, Any] = Field(default=None)
 
+class InvoiceInvoicerName(BaseModel):
+    """Nested schema for InvoiceInvoicer.name"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    given_name: Union[str, Any] = Field(default=None)
+    surname: Union[str, Any] = Field(default=None)
+    full_name: Union[str, Any] = Field(default=None)
+
+class InvoiceInvoicer(BaseModel):
+    """Invoicer details."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[InvoiceInvoicerName, Any] = Field(default=None)
+    address: Union[dict[str, Any], Any] = Field(default=None)
+    email_address: Union[str, Any] = Field(default=None, description="Invoicer email.")
+    """Invoicer email."""
+
+class InvoicePrimaryRecipientsItemBillingInfoName(BaseModel):
+    """Nested schema for InvoicePrimaryRecipientsItemBillingInfo.name"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    given_name: Union[str, Any] = Field(default=None)
+    surname: Union[str, Any] = Field(default=None)
+    full_name: Union[str, Any] = Field(default=None)
+
+class InvoicePrimaryRecipientsItemBillingInfo(BaseModel):
+    """Nested schema for InvoicePrimaryRecipientsItem.billing_info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[InvoicePrimaryRecipientsItemBillingInfoName, Any] = Field(default=None)
+    email_address: Union[str, Any] = Field(default=None)
+    additional_info_value: Union[str, Any] = Field(default=None)
+
+class InvoicePrimaryRecipientsItem(BaseModel):
+    """Nested schema for Invoice.primary_recipients_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    billing_info: Union[InvoicePrimaryRecipientsItemBillingInfo, Any] = Field(default=None)
+
+class InvoiceItemsItemTax(BaseModel):
+    """Nested schema for InvoiceItemsItem.tax"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    percent: Union[str, Any] = Field(default=None)
+    amount: Union[Money, Any] = Field(default=None)
+
+class InvoiceItemsItem(BaseModel):
+    """Nested schema for Invoice.items_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None)
+    description: Union[str, Any] = Field(default=None)
+    quantity: Union[str, Any] = Field(default=None)
+    unit_amount: Union[Money, Any] = Field(default=None)
+    tax: Union[InvoiceItemsItemTax, Any] = Field(default=None)
+    unit_of_measure: Union[str, Any] = Field(default=None)
+
+class InvoiceLinksItem(BaseModel):
+    """Nested schema for Invoice.links_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    href: Union[str, Any] = Field(default=None)
+    rel: Union[str, Any] = Field(default=None)
+    method: Union[str, Any] = Field(default=None)
+
+class InvoicePayments(BaseModel):
+    """Payment records for this invoice."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    paid_amount: Union[Money, Any] = Field(default=None)
+    transactions: Union[list[dict[str, Any]], Any] = Field(default=None)
+
 class InvoiceAmountBreakdown(BaseModel):
     """Nested schema for InvoiceAmount.breakdown"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -504,6 +577,13 @@ class InvoiceDetail(BaseModel):
     payment_term: Union[InvoiceDetailPaymentTerm, Any] = Field(default=None)
     metadata: Union[InvoiceDetailMetadata, Any] = Field(default=None)
 
+class InvoiceRefunds(BaseModel):
+    """Refund records for this invoice."""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    refund_amount: Union[Money, Any] = Field(default=None)
+    transactions: Union[list[dict[str, Any]], Any] = Field(default=None)
+
 class InvoiceConfigurationPartialPayment(BaseModel):
     """Nested schema for InvoiceConfiguration.partial_payment"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -520,86 +600,6 @@ class InvoiceConfiguration(BaseModel):
     allow_tip: Union[str, Any] = Field(default=None)
     template_id: Union[str, Any] = Field(default=None)
     partial_payment: Union[InvoiceConfigurationPartialPayment, Any] = Field(default=None)
-
-class InvoicePrimaryRecipientsItemBillingInfoName(BaseModel):
-    """Nested schema for InvoicePrimaryRecipientsItemBillingInfo.name"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    given_name: Union[str, Any] = Field(default=None)
-    surname: Union[str, Any] = Field(default=None)
-    full_name: Union[str, Any] = Field(default=None)
-
-class InvoicePrimaryRecipientsItemBillingInfo(BaseModel):
-    """Nested schema for InvoicePrimaryRecipientsItem.billing_info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[InvoicePrimaryRecipientsItemBillingInfoName, Any] = Field(default=None)
-    email_address: Union[str, Any] = Field(default=None)
-    additional_info_value: Union[str, Any] = Field(default=None)
-
-class InvoicePrimaryRecipientsItem(BaseModel):
-    """Nested schema for Invoice.primary_recipients_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    billing_info: Union[InvoicePrimaryRecipientsItemBillingInfo, Any] = Field(default=None)
-
-class InvoicePayments(BaseModel):
-    """Payment records for this invoice."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    paid_amount: Union[Money, Any] = Field(default=None)
-    transactions: Union[list[dict[str, Any]], Any] = Field(default=None)
-
-class InvoiceInvoicerName(BaseModel):
-    """Nested schema for InvoiceInvoicer.name"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    given_name: Union[str, Any] = Field(default=None)
-    surname: Union[str, Any] = Field(default=None)
-    full_name: Union[str, Any] = Field(default=None)
-
-class InvoiceInvoicer(BaseModel):
-    """Invoicer details."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[InvoiceInvoicerName, Any] = Field(default=None)
-    address: Union[dict[str, Any], Any] = Field(default=None)
-    email_address: Union[str, Any] = Field(default=None, description="Invoicer email.")
-    """Invoicer email."""
-
-class InvoiceItemsItemTax(BaseModel):
-    """Nested schema for InvoiceItemsItem.tax"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    percent: Union[str, Any] = Field(default=None)
-    amount: Union[Money, Any] = Field(default=None)
-
-class InvoiceItemsItem(BaseModel):
-    """Nested schema for Invoice.items_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None)
-    description: Union[str, Any] = Field(default=None)
-    quantity: Union[str, Any] = Field(default=None)
-    unit_amount: Union[Money, Any] = Field(default=None)
-    tax: Union[InvoiceItemsItemTax, Any] = Field(default=None)
-    unit_of_measure: Union[str, Any] = Field(default=None)
-
-class InvoiceLinksItem(BaseModel):
-    """Nested schema for Invoice.links_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    href: Union[str, Any] = Field(default=None)
-    rel: Union[str, Any] = Field(default=None)
-    method: Union[str, Any] = Field(default=None)
-
-class InvoiceRefunds(BaseModel):
-    """Refund records for this invoice."""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    refund_amount: Union[Money, Any] = Field(default=None)
-    transactions: Union[list[dict[str, Any]], Any] = Field(default=None)
 
 class Invoice(BaseModel):
     """A PayPal invoice object."""
