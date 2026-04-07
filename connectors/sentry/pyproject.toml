@@ -1,6 +1,6 @@
 [project]
 name = "airbyte-agent-sentry"
-version = "0.1.11"
+version = "0.1.12"
 description = "Airbyte Sentry Connector for AI platforms"
 readme = "README.md"
 requires-python = ">=3.13"

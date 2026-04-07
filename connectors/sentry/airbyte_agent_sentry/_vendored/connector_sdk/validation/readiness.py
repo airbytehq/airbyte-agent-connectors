@@ -1087,6 +1087,16 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     readiness_warnings.extend(relationship_warnings)
     total_warnings += len(relationship_warnings)
 
+    # Check for missing x-airbyte-ai-hints on entities
+    entities_missing_hints = [entity.name for entity in config.entities if not getattr(entity, "ai_hints", None)]
+    if entities_missing_hints:
+        readiness_warnings.append(
+            f"Entities missing x-airbyte-ai-hints: {', '.join(entities_missing_hints)}. "
+            "Add AI hints (summary, when_to_use, trigger_phrases, freshness) to each entity schema "
+            "to improve LLM tool selection. See get_connector_yaml_schema_docs('extensions') for details."
+        )
+        total_warnings += 1
+
     if total_cassettes > 0:
         readiness_warnings.append(
             "IMPORTANT: Review cassette files for PII (names, emails, phone numbers, addresses) "

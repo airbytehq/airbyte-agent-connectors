@@ -23,6 +23,9 @@ from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
     ScopingParamConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -3457,6 +3460,27 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             'versionInfo.buildHash',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all projects in my Sentry organization',
+            'Show me the issues for a specific project',
+            'List recent events from a project',
+            'Show me all releases for my organization',
+            'Get the details of a specific project',
+        ],
+        search=[
+            'What are the most common unresolved issues?',
+            'Which projects have the most events?',
+            'Show me issues that were first seen this week',
+            'Find releases created in the last month',
+        ],
+        unsupported=[
+            'Create a new project in Sentry',
+            'Delete an issue',
+            'Update a release',
+            'Resolve all issues in a project',
+        ],
+    ),
     scoping=[
         ScopingParamConfig(
             param='organization_slug',
