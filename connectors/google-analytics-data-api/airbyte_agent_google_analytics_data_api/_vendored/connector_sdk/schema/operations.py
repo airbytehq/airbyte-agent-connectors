@@ -74,14 +74,6 @@ class Operation(BaseModel):
             "Example: {'pagination': '$.pagination', 'request_id': '$.requestId'}"
         ),
     )
-    x_airbyte_param_sources: Dict[str, Dict[str, str]] | None = Field(
-        None,
-        alias="x-airbyte-param-sources",
-        description=(
-            "Per-param source declarations for entity dependency resolution. "
-            "Keys are param names; values have 'parent_entity'+'parent_key' or 'config' keys."
-        ),
-    )
     x_airbyte_file_url: str | None = Field(None, alias="x-airbyte-file-url")
     x_airbyte_untested: bool | None = Field(
         None,
