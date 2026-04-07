@@ -254,6 +254,18 @@ class LocalExecutor:
                 if endpoint:
                     self._operation_index[(entity.name, action)] = endpoint
 
+        # Build O(1) scoping index: param_name -> config_key
+        self._scoping_index: dict[str, str] = {s.param: (s.config_key or s.param) for s in self.model.scoping}
+
+        # Build O(1) global foreign-key index: fk_name -> (target_entity, target_key)
+        # Used as a fallback when the current entity has no relationship for a param
+        # but another entity in the connector declares one with the same foreign_key.
+        self._global_fk_index: dict[str, tuple[str, str]] = {}
+        for entity in self.model.entities:
+            for rel in entity.relationships:
+                if rel.foreign_key not in self._global_fk_index:
+                    self._global_fk_index[rel.foreign_key] = (rel.target_entity, rel.target_key)
+
         # Register operation handlers (order matters for can_handle priority)
         op_context = _OperationContext(self)
         self._operation_handlers: list[_OperationHandler] = [
@@ -696,21 +708,29 @@ class LocalExecutor:
             params = {"limit": 1} if action == Action.LIST else {}
             # Inject query param defaults from schema so that required params
             # with defaults (e.g. Salesforce SOQL `q` parameter) are included
-            # in the probe request without needing explicit param_sources.
+            # in the probe request without needing explicit configuration.
             for param_name, schema in endpoint.query_params_schema.items():
                 if param_name not in params and schema.get("default") is not None:
                     params[param_name] = schema["default"]
-            # Collect all params that need resolution: path params plus any
-            # query/body params that have explicit param_sources annotations
-            # (covers GraphQL connectors where all params are query params).
+            # Collect all params that need resolution: path params, entity-
+            # relationship foreign_keys, and query params with matching config
+            # keys (so config values can override schema defaults).
             params_needing_resolution = list(endpoint.path_params)
-            if endpoint.param_sources:
-                for param_name in endpoint.param_sources:
-                    if param_name not in params_needing_resolution:
-                        params_needing_resolution.append(param_name)
+            entity_def = self._entity_index.get(entity_name)
+            if entity_def:
+                for rel in entity_def.relationships:
+                    if rel.foreign_key not in params_needing_resolution:
+                        params_needing_resolution.append(rel.foreign_key)
+            # Also resolve query params that have a matching scoping or config
+            # key, so explicit config values take precedence over defaults.
+            for qp in endpoint.query_params:
+                if qp not in params_needing_resolution and (
+                    qp in self._scoping_index or qp in self.config_values
+                ):
+                    params_needing_resolution.append(qp)
             if params_needing_resolution:
                 try:
-                    resolved = await self._resolve_param_sources(
+                    resolved = await self._resolve_path_params(
                         entity_name,
                         endpoint,
                         standard_handler,
@@ -743,7 +763,7 @@ class LocalExecutor:
                 "checked_action": action.value,
             }
 
-    async def _resolve_param_sources(
+    async def _resolve_path_params(
         self,
         entity_name: str,
         endpoint: EndpointDefinition,
@@ -752,7 +772,12 @@ class LocalExecutor:
         depth: int = 0,
         params_to_resolve: list[str] | None = None,
     ) -> dict[str, Any]:
-        """Resolve params using x-airbyte-param-sources annotations and config_values.
+        """Resolve params using scoping, config fallback, and entity relationships.
+
+        Resolution priority for each path param:
+        1. Scoping index (from ConnectorModel.scoping) -> config_values
+        2. Config fallback (param name matches a config_values key)
+        3. Entity relationships (from entity.relationships by foreign_key)
 
         Returns dict of {param_name: resolved_value}.
         Raises ParamResolutionError if any param cannot be resolved.
@@ -760,20 +785,35 @@ class LocalExecutor:
         if depth > MAX_PARAM_RESOLUTION_DEPTH:
             raise ParamResolutionError(f"Max resolution depth exceeded for '{entity_name}'")
 
+        # Build relationship index for this entity: foreign_key -> (target_entity, target_key)
+        entity_def = self._entity_index.get(entity_name)
+        rel_index: dict[str, tuple[str, str]] = {}
+        if entity_def:
+            for rel in entity_def.relationships:
+                rel_index[rel.foreign_key] = (rel.target_entity, rel.target_key)
+
         target_params = params_to_resolve if params_to_resolve is not None else list(endpoint.path_params)
 
         resolved: dict[str, Any] = {}
         for param_name in target_params:
-            source = endpoint.param_sources.get(param_name, {})
-
-            config_key = source.get("config") or param_name
-            if config_key in self.config_values:
-                resolved[param_name] = self.config_values[config_key]
+            # 1. Check scoping index
+            scoping_key = self._scoping_index.get(param_name)
+            if scoping_key and scoping_key in self.config_values:
+                resolved[param_name] = self.config_values[scoping_key]
                 continue
 
-            parent_entity_name = source.get("parent_entity")
-            parent_key = source.get("parent_key")
-            if not parent_entity_name or not parent_key:
+            # 2. Config fallback: param name matches a config_values key
+            if param_name in self.config_values:
+                resolved[param_name] = self.config_values[param_name]
+                continue
+
+            # 3. Check entity relationships by foreign_key
+            if param_name in rel_index:
+                parent_entity_name, parent_key = rel_index[param_name]
+            elif param_name in self._global_fk_index:
+                # Fallback: another entity declares a relationship for this foreign key
+                parent_entity_name, parent_key = self._global_fk_index[param_name]
+            else:
                 raise ParamResolutionError(f"Cannot resolve param '{param_name}' for entity '{entity_name}'")
             if parent_entity_name == entity_name:
                 raise ParamResolutionError(f"Self-referential param '{param_name}' on entity '{entity_name}'")
@@ -788,7 +828,7 @@ class LocalExecutor:
                     if pname not in parent_params and pschema.get("default") is not None:
                         parent_params[pname] = pschema["default"]
                 if parent_endpoint.path_params:
-                    parent_resolved = await self._resolve_param_sources(
+                    parent_resolved = await self._resolve_path_params(
                         parent_entity_name,
                         parent_endpoint,
                         standard_handler,

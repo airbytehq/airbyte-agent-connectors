@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2219,4 +2222,36 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    example_questions=ExampleQuestions(
+        direct=[
+            'List my recent emails',
+            'Show me unread messages in my inbox',
+            'Get the details of a specific email',
+            'List all my Gmail labels',
+            'Show me details for a specific label',
+            'List my email drafts',
+            'Get the content of a specific draft',
+            'List my email threads',
+            'Show me the full thread for a conversation',
+            'Get my Gmail profile information',
+            'Send an email to someone',
+            'Create a new email draft',
+            'Archive a message by removing the INBOX label',
+            'Mark a message as read',
+            'Mark a message as unread',
+            'Move a message to trash',
+            'Create a new label',
+            'Update a label name or settings',
+            'Delete a label',
+        ],
+        search=['Search for messages matching a query', 'Find emails from a specific sender', 'Show me emails with attachments'],
+        unsupported=[
+            'Attach a file to an email',
+            'Forward an email to someone',
+            'Create a filter or rule',
+            'Manage Gmail settings',
+            'Access Google Calendar events',
+            'Manage contacts',
+        ],
+    ),
 )
