@@ -22,6 +22,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -4060,4 +4063,38 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
     ],
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all workspaces I have access to',
+            'Show me the spaces in my workspace',
+            'List the folders in a space',
+            'Show me the lists in a folder',
+            'Get the tasks in a list',
+            'Get details for a specific task',
+            "Search for tasks containing 'bug' across my workspace",
+            'Find all urgent priority tasks in my workspace',
+            'Show me tasks assigned to a specific user',
+            'List comments on a task',
+            'Get threaded replies on a comment',
+            'Create a comment on a task',
+            'Update a comment to mark it resolved',
+            'List all goals in my workspace',
+            'Get details for a specific goal',
+            'Show me all workspace-level views',
+            'Get tasks matching a saved view',
+            'List time entries for my workspace this week',
+            'Get details for a specific time entry',
+            'Show me the members assigned to a task',
+            'List all docs in my workspace',
+            'Get details for a specific doc',
+        ],
+        search=[
+            'What tasks are overdue in my workspace?',
+            'Which tasks were updated in the last 24 hours?',
+            'Show me all high-priority tasks across all projects',
+            'How much time has been tracked this week?',
+            'What are the most commented tasks?',
+        ],
+        unsupported=['Delete a task', 'Delete a comment', 'Delete a goal'],
+    ),
 )

@@ -548,15 +548,18 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     for entity_name, endpoints_dict in entities_map.items():
         actions = list(endpoints_dict.keys())
 
-        # Get schema and stream_name from components if available
+        # Get schema, stream_name, and ai_hints from components if available
         schema = None
         entity_stream_name = None
+        entity_ai_hints = None
         if spec.components:
             # Look for a schema matching the entity name
             for schema_name, schema_def in spec.components.schemas.items():
                 if schema_def.x_airbyte_entity_name == entity_name or schema_name.lower() == entity_name.lower():
                     schema = schema_def.model_dump(by_alias=True)
                     entity_stream_name = schema_def.x_airbyte_stream_name
+                    if schema_def.x_airbyte_ai_hints is not None:
+                        entity_ai_hints = schema_def.x_airbyte_ai_hints.model_dump(by_alias=True)
                     break
 
         entity = EntityDefinition(
@@ -565,6 +568,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             actions=actions,
             endpoints=endpoints_dict,
             schema=schema,
+            ai_hints=entity_ai_hints,
         )
         entities.append(entity)
 
@@ -582,6 +586,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
 
     search_field_paths = _extract_search_field_paths(spec)
 
+    # Extract example questions from spec (serialized separately from openapi_spec)
+    example_questions = getattr(spec.info, "x_airbyte_example_questions", None)
+
     # Create ConnectorModel
     model = ConnectorModel(
         id=connector_definition_id,
@@ -593,6 +600,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         openapi_spec=spec,
         retry_config=retry_config,
         search_field_paths=search_field_paths,
+        example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
         scoping=scoping,
     )
