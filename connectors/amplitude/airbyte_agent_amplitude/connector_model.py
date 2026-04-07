@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -1148,4 +1151,9 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
         ],
         'average_session_length': ['date', 'length'],
     },
+    example_questions=ExampleQuestions(
+        direct=['List all chart annotations in Amplitude', 'Show me all cohorts', 'List all event types'],
+        search=['Which cohorts have more than 1000 users?', 'What are the most popular event types by total count?', 'Show me annotations created in the last month'],
+        unsupported=['Create a new annotation', 'Delete a cohort', 'Export raw event data'],
+    ),
 )
