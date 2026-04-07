@@ -669,17 +669,18 @@ class LocalExecutor:
         tasks = [self._probe_entity(name, standard_handler, parent_cache) for name in entities]
         entity_results = await asyncio.gather(*tasks)
 
-        all_healthy = all(r["status"] == CHECK_STATUS_HEALTHY for r in entity_results)
-        failed = [r for r in entity_results if r["status"] != CHECK_STATUS_HEALTHY]
+        acceptable = {CHECK_STATUS_HEALTHY, CHECK_STATUS_SKIPPED}
+        all_ok = all(r["status"] in acceptable for r in entity_results)
+        failed = [r for r in entity_results if r["status"] not in acceptable]
         error = None
         if failed:
             names = ", ".join(r["entity"] for r in failed)
             error = f"Entity check failed for: {names}"
         return ExecutionResult(
-            success=all_healthy,
+            success=all_ok,
             data={
                 "entity_results": list(entity_results),
-                "status": CHECK_STATUS_HEALTHY if all_healthy else CHECK_STATUS_UNHEALTHY,
+                "status": CHECK_STATUS_HEALTHY if all_ok else CHECK_STATUS_UNHEALTHY,
             },
             error=error,
         )
@@ -697,9 +698,10 @@ class LocalExecutor:
             endpoint = self._operation_index.get((entity_name, Action.GET))
             action = Action.GET
         if endpoint is None:
+            has_other_action = any(ent == entity_name for ent, _ in self._operation_index)
             return {
                 "entity": entity_name,
-                "status": CHECK_STATUS_FAILED,
+                "status": CHECK_STATUS_SKIPPED if has_other_action else CHECK_STATUS_FAILED,
                 "error": f"Entity '{entity_name}' has no list or get operation available for checking",
                 "status_code": None,
                 "checked_action": None,
