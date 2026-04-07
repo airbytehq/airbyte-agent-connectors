@@ -14,6 +14,24 @@ from pydantic import BaseModel, ConfigDict, Field
 from .security import SecurityScheme
 
 
+class AiHints(BaseModel):
+    """
+    AI hints for entity schemas — helps LLMs understand when and how to use an entity.
+
+    Attached to entity response schemas via x-airbyte-ai-hints extension.
+    Used by generate_tool_description() to emit per-entity guidance.
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    summary: str | None = Field(None, description="One-line description of what this entity contains")
+    when_to_use: str | None = Field(None, description="When an LLM should query this entity")
+    trigger_phrases: List[str] = Field(default_factory=list, description="Example user queries that should trigger this entity")
+    freshness: Literal["live", "static"] | None = Field(None, description="Whether data is live or static")
+    example_questions: List[str] = Field(default_factory=list, description="Example questions answerable by this entity")
+    search_strategy: str | None = Field(None, description="Hint for LLMs on how to construct effective search queries for this entity")
+
+
 class Schema(BaseModel):
     """
     JSON Schema definition for data models.
@@ -68,6 +86,7 @@ class Schema(BaseModel):
     # Airbyte extensions
     x_airbyte_entity_name: str | None = Field(None, alias="x-airbyte-entity-name")
     x_airbyte_stream_name: str | None = Field(None, alias="x-airbyte-stream-name")
+    x_airbyte_ai_hints: AiHints | None = Field(None, alias="x-airbyte-ai-hints")
 
 
 class Parameter(BaseModel):
