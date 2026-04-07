@@ -7,7 +7,7 @@ The Gitlab agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-gitlab` v0.1.12
+- **Package:** `airbyte-agent-gitlab` v0.1.13
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://docs.gitlab.com/ee/api/rest/)
 - **Status:** complete
