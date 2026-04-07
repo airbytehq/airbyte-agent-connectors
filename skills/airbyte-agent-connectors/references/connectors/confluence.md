@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/confluence/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-04-03 -->
+<!-- Source format: v1 | Generated: 2026-04-07 -->
 
 # Confluence
 
@@ -7,7 +7,7 @@ The Confluence agent connector is a Python package that equips AI agents to inte
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-confluence` v0.1.9
+- **Package:** `airbyte-agent-confluence` v0.1.10
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developer.atlassian.com/cloud/confluence/rest/v2/intro/)
 - **Status:** complete

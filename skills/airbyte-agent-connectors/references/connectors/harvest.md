@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/harvest/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-04-03 -->
+<!-- Source format: v1 | Generated: 2026-04-07 -->
 
 # Harvest
 
@@ -7,7 +7,7 @@ The Harvest agent connector is a Python package that equips AI agents to interac
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-harvest` v0.1.10
+- **Package:** `airbyte-agent-harvest` v0.1.11
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://help.getharvest.com/api-v2/)
 - **Status:** complete

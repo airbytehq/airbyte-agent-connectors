@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/paypal-transaction/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-04-03 -->
+<!-- Source format: v1 | Generated: 2026-04-07 -->
 
 # PayPal Transaction
 
@@ -7,7 +7,7 @@ The Paypal-Transaction agent connector is a Python package that equips AI agents
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-paypal-transaction` v0.1.9
+- **Package:** `airbyte-agent-paypal-transaction` v0.1.10
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developer.paypal.com/docs/api/transaction-search/v1/)
 - **Status:** complete
