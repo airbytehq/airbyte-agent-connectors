@@ -20,6 +20,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -2782,4 +2785,28 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
             'users_subscribers[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all users in the Monday.com account',
+            'Show me all boards',
+            'Get the details of board 18395979459',
+            'List all teams',
+            'Show me all tags',
+            'List recent updates',
+        ],
+        search=[
+            'Which boards were updated in the last week?',
+            'Find all items assigned to a specific group',
+            'What are the most active boards by update count?',
+            'Show me all users who are admins',
+            'List items with their column values from a specific board',
+        ],
+        unsupported=[
+            'Create a new board',
+            'Delete an item',
+            'Update a column value',
+            'Add a new user to the account',
+            'Create a webhook subscription',
+        ],
+    ),
 )

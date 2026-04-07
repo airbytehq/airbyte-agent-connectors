@@ -412,7 +412,6 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             path_override = operation.x_airbyte_path_override
             record_extractor = operation.x_airbyte_record_extractor
             meta_extractor = operation.x_airbyte_meta_extractor
-            param_sources = operation.x_airbyte_param_sources or {}
 
             if not entity_name:
                 raise InvalidOpenAPIError(
@@ -531,7 +530,6 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
                 file_field=file_field,
                 untested=untested,
                 preferred_for_check=preferred_for_check,
-                param_sources=param_sources,
                 upload_file_param=upload_file_param,
                 no_content_response=has_no_content_response,
             )
@@ -550,15 +548,18 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
     for entity_name, endpoints_dict in entities_map.items():
         actions = list(endpoints_dict.keys())
 
-        # Get schema and stream_name from components if available
+        # Get schema, stream_name, and ai_hints from components if available
         schema = None
         entity_stream_name = None
+        entity_ai_hints = None
         if spec.components:
             # Look for a schema matching the entity name
             for schema_name, schema_def in spec.components.schemas.items():
                 if schema_def.x_airbyte_entity_name == entity_name or schema_name.lower() == entity_name.lower():
                     schema = schema_def.model_dump(by_alias=True)
                     entity_stream_name = schema_def.x_airbyte_stream_name
+                    if schema_def.x_airbyte_ai_hints is not None:
+                        entity_ai_hints = schema_def.x_airbyte_ai_hints.model_dump(by_alias=True)
                     break
 
         entity = EntityDefinition(
@@ -567,8 +568,15 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
             actions=actions,
             endpoints=endpoints_dict,
             schema=schema,
+            ai_hints=entity_ai_hints,
         )
         entities.append(entity)
+
+    # Attach entity relationships from spec
+    _attach_entity_relationships(entities, spec)
+
+    # Read scoping config from spec
+    scoping = list(spec.info.x_airbyte_scoping)
 
     # Extract retry config from x-airbyte-retry-config extension
     retry_config = spec.info.x_airbyte_retry_config
@@ -577,6 +585,9 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         raise InvalidOpenAPIError("Missing required x-airbyte-connector-definition-id field")
 
     search_field_paths = _extract_search_field_paths(spec)
+
+    # Extract example questions from spec (serialized separately from openapi_spec)
+    example_questions = getattr(spec.info, "x_airbyte_example_questions", None)
 
     # Create ConnectorModel
     model = ConnectorModel(
@@ -589,10 +600,30 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         openapi_spec=spec,
         retry_config=retry_config,
         search_field_paths=search_field_paths,
+        example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
+        scoping=scoping,
     )
 
     return model
+
+
+def _attach_entity_relationships(
+    entities: list[EntityDefinition],
+    spec: OpenAPIConnector,
+) -> None:
+    """Attach relationships to EntityDefinitions from x-airbyte-entity-relationships.
+
+    Reads the connector-wide relationship declarations from the spec's info
+    object and attaches them to the matching EntityDefinition by source_entity name.
+    """
+    entity_relationships = spec.info.x_airbyte_entity_relationships
+    if entity_relationships:
+        entity_map = {e.name: e for e in entities}
+        for rel in entity_relationships:
+            entity = entity_map.get(rel.source_entity)
+            if entity is not None:
+                entity.relationships.append(rel)
 
 
 def _get_attribute_flexible(obj: Any, *names: str) -> Any:
@@ -1063,9 +1094,7 @@ def load_connector_model(definition_path: str | Path) -> ConnectorModel:
         raise ValueError("Invalid connector.yaml: empty file")
 
     if "openapi" not in raw_definition:
-        raise ValueError(
-            "Invalid connector.yaml: missing 'openapi' key. Only OpenAPI 3.1 format is supported."
-        )
+        raise ValueError("Invalid connector.yaml: missing 'openapi' key. Only OpenAPI 3.1 format is supported.")
 
     spec = parse_openapi_spec(raw_definition)
     return convert_openapi_to_connector_model(spec)
