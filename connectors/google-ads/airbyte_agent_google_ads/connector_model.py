@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -1580,4 +1583,33 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             'label.resource_name',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all accessible Google Ads customer accounts',
+            'Show me all campaigns and their statuses',
+            'List all ad groups across my campaigns',
+            'What ads are running in my ad groups?',
+            'Show me campaign labels',
+            'List all ad group labels',
+            'What labels are applied to my ads?',
+            "Pause campaign 'Summer Sale 2025'",
+            "Enable the ad group 'Brand Keywords'",
+            "Create a label called 'High Priority'",
+            "Apply the 'Q4 Campaigns' label to my search campaign",
+            "Update the name of campaign 123456 to 'Winter Promo'",
+        ],
+        search=[
+            'Which campaigns have the highest cost this month?',
+            'Show me all paused campaigns',
+            'Find ad groups with the most impressions',
+            'What are my top performing ads by click-through rate?',
+            'Show campaigns with budget over $100 per day',
+        ],
+        unsupported=[
+            'Create a new campaign',
+            'Delete an ad',
+            'Delete a campaign',
+            'Delete a label',
+        ],
+    ),
 )
