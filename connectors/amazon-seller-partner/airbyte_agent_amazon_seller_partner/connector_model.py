@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2338,5 +2341,27 @@ AmazonSellerPartnerConnectorModel: ConnectorModel = ConnectorModel(
             'ValueAddedServiceChargeEventList[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all recent orders',
+            'Show me order items for a specific order',
+            'List financial event groups',
+            'Show recent financial events',
+            'Search catalog items by keyword',
+            'List recent reports',
+        ],
+        search=[
+            'What are my top-selling products by order volume?',
+            'Show orders from the last 30 days with status Shipped',
+            'Find financial events related to refunds',
+            'Which orders have the highest total value?',
+        ],
+        unsupported=[
+            'Create a new order',
+            'Cancel an order',
+            'Submit a new report request',
+            'Update product listings',
+        ],
+    ),
     server_variable_defaults={'region': 'na'},
 )
