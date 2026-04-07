@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2863,5 +2866,31 @@ FreshdeskConnectorModel: ConnectorModel = ConnectorModel(
             'updated_at',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all open tickets in Freshdesk',
+            'Show me all agents in the support team',
+            'List all groups configured in Freshdesk',
+            'Get the details of ticket #26',
+            'Show me all companies in Freshdesk',
+            'List all roles defined in the helpdesk',
+            'Show me the ticket fields and their options',
+            'List time entries for tickets',
+        ],
+        search=[
+            'What are the high priority tickets from last week?',
+            'Which tickets have breached their SLA due date?',
+            'Show me tickets assigned to agent {agent_name}',
+            'Find all tickets from company {company_name}',
+            'How many tickets were created this month by status?',
+            'What are the satisfaction ratings for resolved tickets?',
+        ],
+        unsupported=[
+            'Create a new ticket in Freshdesk',
+            'Update the status of ticket #{ticket_id}',
+            'Delete a contact from Freshdesk',
+            'Assign a ticket to a different agent',
+        ],
+    ),
     server_variable_defaults={'subdomain': 'your-subdomain'},
 )
