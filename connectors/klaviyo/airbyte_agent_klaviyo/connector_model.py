@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -2228,4 +2231,29 @@ KlaviyoConnectorModel: ConnectorModel = ConnectorModel(
             'updated',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all profiles in my Klaviyo account',
+            'Show me details for a recent profile',
+            'Show me all email lists',
+            'Show me details for a recent email list',
+            'What campaigns have been created?',
+            'Show me details for a recent campaign',
+            'Show me all email campaigns',
+            'List all events for tracking customer actions',
+            'Show me all metrics (event types)',
+            'Show me details for a recent metric',
+            'What automated flows are configured?',
+            'Show me details for a recent flow',
+            'List all email templates',
+            'Show me details for a recent email template',
+        ],
+        unsupported=[
+            'Create a new profile',
+            "Update a profile's email address",
+            'Delete a list',
+            'Send an email campaign',
+            'Add a profile to a list',
+        ],
+    ),
 )

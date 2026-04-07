@@ -5,6 +5,8 @@ Provides Pydantic models for OpenAPI x-airbyte-* extensions:
 - RetryConfig: retry strategy with exponential backoff
 - CacheConfig / CacheEntityConfig / CacheFieldConfig: cache mapping for api_search
 - ReplicationConfig: replication settings for MULTI mode connectors
+- EntityRelationshipConfig: entity relationship declarations
+- ScopingParamConfig: scoping parameter resolution from config
 """
 
 from typing import Literal
@@ -284,3 +286,73 @@ class CacheConfig(BaseModel):
             if entity.entity == user_entity:
                 return entity
         return None
+
+
+class EntityRelationshipConfig(BaseModel):
+    """
+    Entity relationship declaration for cross-entity navigation.
+
+    Defines a foreign-key relationship between two entities, enabling
+    the runtime to resolve parent-child dependencies and provide
+    relationship metadata to agents.
+
+    Used in x-airbyte-entity-relationships extension in the Info object.
+
+    Example YAML usage:
+        info:
+          title: My API
+          x-airbyte-entity-relationships:
+            - source_entity: contacts
+              target_entity: accounts
+              foreign_key: account_id
+              cardinality: many_to_one
+              description: "Contact belongs to an account"
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    source_entity: str = Field(description="Entity that holds the foreign key")
+    target_entity: str = Field(description="Entity being referenced")
+    foreign_key: str = Field(description="Field on source_entity that references target_entity")
+    target_key: str = Field(default="id", description="Field on target_entity being referenced")
+    cardinality: Literal["one_to_one", "one_to_many", "many_to_one", "many_to_many"] | None = Field(
+        None, description="Optional relationship cardinality"
+    )
+    description: str | None = Field(
+        None, description="Human-readable description of the relationship"
+    )
+
+    def format_line(self) -> str:
+        """Format as a human-readable line for tool descriptions."""
+        line = f"{self.source_entity} -> {self.target_entity} (via {self.foreign_key}"
+        if self.cardinality:
+            line += f", {self.cardinality.replace('_', '-')}"
+        line += ")"
+        if self.description:
+            line += f" -- {self.description}"
+        return line
+
+
+class ScopingParamConfig(BaseModel):
+    """
+    Scoping parameter resolution from connector configuration.
+
+    Declares a path parameter that should be resolved from the connector's
+    config values at runtime, rather than being supplied per-request.
+
+    Used in x-airbyte-scoping extension in the Info object.
+
+    Example YAML usage:
+        info:
+          title: My API
+          x-airbyte-scoping:
+            - param: account_id
+              config_key: account_id
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    param: str = Field(description="Path parameter name to resolve from config")
+    config_key: str | None = Field(
+        None, description="Config key to read. Defaults to param name if omitted."
+    )

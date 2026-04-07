@@ -13,7 +13,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from pydantic_core import Url
 
-from .extensions import CacheConfig, ReplicationConfig, RetryConfig
+from .extensions import CacheConfig, EntityRelationshipConfig, ReplicationConfig, RetryConfig, ScopingParamConfig
 
 
 class ExampleQuestions(BaseModel):
@@ -111,6 +111,8 @@ class Info(BaseModel):
     - x-airbyte-example-questions: Example questions for AI connector README (Airbyte extension)
     - x-airbyte-cache: Cache configuration for field mapping between API and cache schemas (Airbyte extension)
     - x-airbyte-replication-config: Replication configuration for MULTI mode connectors (Airbyte extension)
+    - x-airbyte-entity-relationships: Entity relationship declarations (Airbyte extension)
+    - x-airbyte-scoping: Scoping parameter resolution from config (Airbyte extension)
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -129,6 +131,10 @@ class Info(BaseModel):
     x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
     x_airbyte_cache: CacheConfig | None = Field(None, alias="x-airbyte-cache")
+    x_airbyte_entity_relationships: list[EntityRelationshipConfig] = Field(
+        default_factory=list, alias="x-airbyte-entity-relationships"
+    )
+    x_airbyte_scoping: list[ScopingParamConfig] = Field(default_factory=list, alias="x-airbyte-scoping")
     x_airbyte_replication_config: ReplicationConfig | None = Field(None, alias="x-airbyte-replication-config")
     x_airbyte_replication_version: str | None = Field(
         default=None,
