@@ -257,6 +257,15 @@ class LocalExecutor:
         # Build O(1) scoping index: param_name -> config_key
         self._scoping_index: dict[str, str] = {s.param: (s.config_key or s.param) for s in self.model.scoping}
 
+        # Build O(1) global foreign-key index: fk_name -> (target_entity, target_key)
+        # Used as a fallback when the current entity has no relationship for a param
+        # but another entity in the connector declares one with the same foreign_key.
+        self._global_fk_index: dict[str, tuple[str, str]] = {}
+        for entity in self.model.entities:
+            for rel in entity.relationships:
+                if rel.foreign_key not in self._global_fk_index:
+                    self._global_fk_index[rel.foreign_key] = (rel.target_entity, rel.target_key)
+
         # Register operation handlers (order matters for can_handle priority)
         op_context = _OperationContext(self)
         self._operation_handlers: list[_OperationHandler] = [
@@ -799,10 +808,13 @@ class LocalExecutor:
                 continue
 
             # 3. Check entity relationships by foreign_key
-            if param_name not in rel_index:
+            if param_name in rel_index:
+                parent_entity_name, parent_key = rel_index[param_name]
+            elif param_name in self._global_fk_index:
+                # Fallback: another entity declares a relationship for this foreign key
+                parent_entity_name, parent_key = self._global_fk_index[param_name]
+            else:
                 raise ParamResolutionError(f"Cannot resolve param '{param_name}' for entity '{entity_name}'")
-
-            parent_entity_name, parent_key = rel_index[param_name]
             if parent_entity_name == entity_name:
                 raise ParamResolutionError(f"Self-referential param '{param_name}' on entity '{entity_name}'")
 

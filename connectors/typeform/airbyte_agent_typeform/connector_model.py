@@ -22,6 +22,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -3179,4 +3182,25 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
             'visibility',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all my typeforms',
+            'Show me the responses for my latest form',
+            'What workspaces do I have?',
+            'List all themes in my account',
+            'Get the details of a specific form',
+        ],
+        search=[
+            'Which forms received the most responses last month?',
+            'Find responses submitted in the last week',
+            'What forms were created this year?',
+            'Show me all forms in a specific workspace',
+        ],
+        unsupported=[
+            'Create a new typeform',
+            'Delete a form response',
+            'Update form settings',
+            'Send a webhook notification',
+        ],
+    ),
 )
