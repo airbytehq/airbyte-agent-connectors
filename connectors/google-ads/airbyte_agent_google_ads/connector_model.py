@@ -25,6 +25,9 @@ from ._vendored.connector_sdk.schema.base import (
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    ScopingParamConfig,
+)
 from uuid import (
     UUID,
 )
@@ -32,7 +35,7 @@ from uuid import (
 GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('253487c0-2246-43ba-a21f-5116b20a2c50'),
     name='google-ads',
-    version='1.0.6',
+    version='1.0.7',
     base_url='https://googleads.googleapis.com',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -1612,4 +1615,10 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             'Delete a label',
         ],
     ),
+    scoping=[
+        ScopingParamConfig(
+            param='customer_id',
+            config_key='customer_id',
+        ),
+    ],
 )
