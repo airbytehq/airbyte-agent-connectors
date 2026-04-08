@@ -7,7 +7,7 @@ The Google-Drive agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-drive` v0.1.98
+- **Package:** `airbyte-agent-google-drive` v0.1.99
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/workspace/drive/api/reference/rest/v3)
 - **Status:** complete
