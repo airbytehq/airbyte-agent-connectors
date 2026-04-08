@@ -442,7 +442,7 @@ def generate_tool_description(
                 lines.append(f"    - {action_str}()")
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
-            lines.append(f"    - search{search_sig}")
+            lines.append(f"    - context_store_search{search_sig}")
         # Per-entity example questions from ai_hints
         hint_examples = ai_hints.get("example_questions", []) if isinstance(ai_hints, dict) else []
         if hint_examples:
@@ -463,14 +463,14 @@ def generate_tool_description(
 
     lines.append("GUIDELINES:")
     if enable_hosted_mode_features:
-        lines.append('  - Prefer cached search over direct API calls when using execute(): action="search" whenever possible.')
+        lines.append('  - Prefer cached search over direct API calls when using execute(): action="context_store_search" whenever possible.')
         lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
 
     if search_field_paths:
         lines.append("SEARCH (PREFERRED):")
-        lines.append('  execute(entity, action="search", params={')
+        lines.append('  execute(entity, action="context_store_search", params={')
         lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
         lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')
         lines.append("  })")
