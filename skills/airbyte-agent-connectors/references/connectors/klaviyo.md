@@ -7,7 +7,7 @@ The Klaviyo agent connector is a Python package that equips AI agents to interac
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-klaviyo` v0.1.52
+- **Package:** `airbyte-agent-klaviyo` v0.1.53
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.klaviyo.com/en/reference/api_overview)
 - **Status:** complete
