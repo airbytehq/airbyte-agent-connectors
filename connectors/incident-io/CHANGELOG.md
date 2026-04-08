@@ -1,5 +1,10 @@
 # Incident Io changelog
 
+## [0.1.17] - 2026-04-08
+- Updated connector definition (YAML version 1.0.3)
+- Source commit: eeaf9a60
+- SDK version: 0.1.0
+
 ## [0.1.16] - 2026-04-07
 - Updated connector definition (YAML version 1.0.3)
 - Source commit: 0bc9ab76
