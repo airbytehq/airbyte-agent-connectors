@@ -7,7 +7,7 @@ The Zendesk-Talk agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-zendesk-talk` v0.1.12
+- **Package:** `airbyte-agent-zendesk-talk` v0.1.13
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developer.zendesk.com/api-reference/voice/talk-api/introduction/)
 - **Status:** complete

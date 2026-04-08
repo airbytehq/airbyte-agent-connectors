@@ -7,7 +7,7 @@ The Google-Search-Console agent connector is a Python package that equips AI age
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-search-console` v0.1.13
+- **Package:** `airbyte-agent-google-search-console` v0.1.14
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/webmaster-tools/v1/api_reference_index)
 - **Status:** complete
