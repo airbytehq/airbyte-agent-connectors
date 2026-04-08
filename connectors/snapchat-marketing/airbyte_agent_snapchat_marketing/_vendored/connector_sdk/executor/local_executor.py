@@ -501,9 +501,10 @@ class LocalExecutor:
         """
         try:
             # Check for hosted-only actions before converting to Action enum
-            if config.action == "search":
+            if config.action == "context_store_search":
                 raise NotImplementedError(
-                    "search is only available in hosted execution mode. Initialize the connector with an AirbyteAuthConfig to use this feature."
+                    "context_store_search is only available in hosted execution mode."
+                    " Initialize the connector with an AirbyteAuthConfig to use this feature."
                 )
 
             # Convert config to internal format
