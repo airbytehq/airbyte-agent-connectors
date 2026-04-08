@@ -7,7 +7,7 @@ The Asana agent connector is a Python package that equips AI agents to interact 
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-asana` v0.19.132
+- **Package:** `airbyte-agent-asana` v0.19.133
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developers.asana.com/reference/rest-api-reference)
 - **Status:** complete
