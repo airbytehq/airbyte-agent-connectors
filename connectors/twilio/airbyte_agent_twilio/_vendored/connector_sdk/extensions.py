@@ -278,13 +278,13 @@ Example:
       /graphql:repositories:  # OpenAPI path (for uniqueness)
         post:
           x-airbyte-entity: repositories
-          x-airbyte-action: search
+          x-airbyte-action: api_search
           x-airbyte-path-override:
             path: /graphql  # Actual HTTP endpoint
       /graphql:issues:  # Different OpenAPI path
         post:
           x-airbyte-entity: issues
-          x-airbyte-action: search
+          x-airbyte-action: api_search
           x-airbyte-path-override:
             path: /graphql  # Same actual endpoint
     ```
@@ -304,7 +304,7 @@ Description:
     where to find the actual records.
 
     Return type is automatically inferred from x-airbyte-action:
-    - list, search actions: Returns array ([] if path not found)
+    - list, api_search actions: Returns array ([] if path not found)
     - get, create, update, delete actions: Returns single record (None if path not found)
 
 Example:
