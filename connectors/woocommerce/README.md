@@ -130,7 +130,7 @@ See the official [Woocommerce API reference](https://woocommerce.github.io/wooco
 
 ## Version information
 
-- **Package version:** 0.1.14
+- **Package version:** 0.1.15
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 0bc9ab764a18fc48c3b595e69ba87a5337c63d51
+- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/woocommerce/CHANGELOG.md)
