@@ -7,7 +7,7 @@ The Zendesk-Chat agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-zendesk-chat` v0.1.76
+- **Package:** `airbyte-agent-zendesk-chat` v0.1.77
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developer.zendesk.com/api-reference/live-chat/chat-api/introduction/)
 - **Status:** complete
