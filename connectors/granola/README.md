@@ -106,7 +106,7 @@ See the official [Granola API reference](https://docs.granola.ai/introduction).
 
 ## Version information
 
-- **Package version:** 0.1.26
+- **Package version:** 0.1.27
 - **Connector version:** 1.0.5
-- **Generated with Connector SDK commit SHA:** b9079d5bfa452fad38cb720126c8726e15711bf1
+- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/granola/CHANGELOG.md)
