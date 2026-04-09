@@ -3340,6 +3340,14 @@ AshbyConnectorModel: ConnectorModel = ConnectorModel(
             'Show me all job postings',
             'List all users in the organization',
         ],
+        context_store_search=[
+            'Show me candidates who applied last month',
+            'What are the top sources for job applications?',
+            'Compare the number of applications across different departments',
+            'Find candidates with multiple applications',
+            'Summarize the candidate pipeline for our latest job posting',
+            'Find the most active departments in recruiting this month',
+        ],
         search=[
             'Show me candidates who applied last month',
             'What are the top sources for job applications?',
