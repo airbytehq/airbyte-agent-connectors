@@ -4265,6 +4265,13 @@ IncidentIoConnectorModel: ConnectorModel = ConnectorModel(
             'Show all incident statuses',
             'List all custom fields',
         ],
+        context_store_search=[
+            'Which incidents were created this week?',
+            'What are the most recent high-severity incidents?',
+            'Who is currently on-call?',
+            'How many incidents are in triage status?',
+            'What incidents were updated today?',
+        ],
         search=[
             'Which incidents were created this week?',
             'What are the most recent high-severity incidents?',

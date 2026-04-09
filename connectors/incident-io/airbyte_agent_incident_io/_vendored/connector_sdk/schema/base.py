@@ -30,14 +30,24 @@ class ExampleQuestions(BaseModel):
         default_factory=list,
         description="Example questions answerable via direct API operations",
     )
+    context_store_search: list[str] = Field(
+        default_factory=list,
+        description="Example questions requiring cached context store search operations",
+    )
     search: list[str] = Field(
         default_factory=list,
-        description="Example questions requiring cached search operations",
+        description="Deprecated alias for context_store_search example questions",
     )
     unsupported: list[str] = Field(
         default_factory=list,
         description="Example questions the connector cannot handle",
     )
+
+    @model_validator(mode="after")
+    def sync_legacy_search_questions(self) -> "ExampleQuestions":
+        if not self.context_store_search and self.search:
+            self.context_store_search = list(self.search)
+        return self
 
 
 class Contact(BaseModel):
