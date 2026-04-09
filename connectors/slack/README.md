@@ -112,10 +112,10 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Search](./REFERENCE.md#users-search) |
-| Channels | [List](./REFERENCE.md#channels-list), [Get](./REFERENCE.md#channels-get), [Create](./REFERENCE.md#channels-create), [Update](./REFERENCE.md#channels-update), [Search](./REFERENCE.md#channels-search) |
-| Channel Messages | [List](./REFERENCE.md#channel-messages-list), [Search](./REFERENCE.md#channel-messages-search) |
-| Threads | [List](./REFERENCE.md#threads-list), [Search](./REFERENCE.md#threads-search) |
+| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Context Store Search](./REFERENCE.md#users-context-store-search) |
+| Channels | [List](./REFERENCE.md#channels-list), [Get](./REFERENCE.md#channels-get), [Create](./REFERENCE.md#channels-create), [Update](./REFERENCE.md#channels-update), [Context Store Search](./REFERENCE.md#channels-context-store-search) |
+| Channel Messages | [List](./REFERENCE.md#channel-messages-list), [Context Store Search](./REFERENCE.md#channel-messages-context-store-search) |
+| Threads | [List](./REFERENCE.md#threads-list), [Context Store Search](./REFERENCE.md#threads-context-store-search) |
 | Messages | [Create](./REFERENCE.md#messages-create), [Update](./REFERENCE.md#messages-update) |
 | Channel Topics | [Create](./REFERENCE.md#channel-topics-create) |
 | Channel Purposes | [Create](./REFERENCE.md#channel-purposes-create) |
@@ -132,7 +132,7 @@ See the official [Slack API reference](https://api.slack.com/methods).
 
 ## Version information
 
-- **Package version:** 0.1.93
+- **Package version:** 0.1.94
 - **Connector version:** 0.1.18
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/slack/CHANGELOG.md)

@@ -379,14 +379,14 @@ class SlackConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any]
     ) -> SlackExecuteResult[Any] | SlackExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -884,7 +884,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -944,7 +944,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1089,7 +1089,7 @@ class ChannelsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ChannelsSearchQuery,
         limit: int | None = None,
@@ -1157,7 +1157,7 @@ class ChannelsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("channels", "search", params)
+        result = await self._connector.execute("channels", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1227,7 +1227,7 @@ class ChannelMessagesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ChannelMessagesSearchQuery,
         limit: int | None = None,
@@ -1282,7 +1282,7 @@ class ChannelMessagesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("channel_messages", "search", params)
+        result = await self._connector.execute("channel_messages", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1355,7 +1355,7 @@ class ThreadsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ThreadsSearchQuery,
         limit: int | None = None,
@@ -1408,7 +1408,7 @@ class ThreadsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("threads", "search", params)
+        result = await self._connector.execute("threads", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

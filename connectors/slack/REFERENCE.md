@@ -8,10 +8,10 @@ The Slack connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Users | [List](#users-list), [Get](#users-get), [Search](#users-search) |
-| Channels | [List](#channels-list), [Get](#channels-get), [Create](#channels-create), [Update](#channels-update), [Search](#channels-search) |
-| Channel Messages | [List](#channel-messages-list), [Search](#channel-messages-search) |
-| Threads | [List](#threads-list), [Search](#threads-search) |
+| Users | [List](#users-list), [Get](#users-get), [Context Store Search](#users-context-store-search) |
+| Channels | [List](#channels-list), [Get](#channels-get), [Create](#channels-create), [Update](#channels-update), [Context Store Search](#channels-context-store-search) |
+| Channel Messages | [List](#channel-messages-list), [Context Store Search](#channel-messages-context-store-search) |
+| Threads | [List](#threads-list), [Context Store Search](#threads-context-store-search) |
 | Messages | [Create](#messages-create), [Update](#messages-update) |
 | Channel Topics | [Create](#channel-topics-create) |
 | Channel Purposes | [Create](#channel-purposes-create) |
@@ -153,14 +153,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await slack.users.search(
+await slack.users.context_store_search(
     query={"filter": {"eq": {"color": "<str>"}}}
 )
 ```
@@ -173,7 +173,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"color": "<str>"}}}
     }
@@ -575,14 +575,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Channels Search
+### Channels Context Store Search
 
 Search and filter channels records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await slack.channels.search(
+await slack.channels.context_store_search(
     query={"filter": {"eq": {"context_team_id": "<str>"}}}
 )
 ```
@@ -595,7 +595,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "channels",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"context_team_id": "<str>"}}}
     }
@@ -812,14 +812,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Channel Messages Search
+### Channel Messages Context Store Search
 
 Search and filter channel messages records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await slack.channel_messages.search(
+await slack.channel_messages.context_store_search(
     query={"filter": {"eq": {"type": "<str>"}}}
 )
 ```
@@ -832,7 +832,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "channel_messages",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"type": "<str>"}}}
     }
@@ -1025,14 +1025,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Threads Search
+### Threads Context Store Search
 
 Search and filter threads records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await slack.threads.search(
+await slack.threads.context_store_search(
     query={"filter": {"eq": {"type": "<str>"}}}
 )
 ```
@@ -1045,7 +1045,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "threads",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"type": "<str>"}}}
     }

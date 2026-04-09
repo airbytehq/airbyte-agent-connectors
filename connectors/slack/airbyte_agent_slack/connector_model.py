@@ -3455,6 +3455,7 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'React with :rocket: to the latest message in a channel',
             "Reply to a recent thread with 'Thanks for the update!'",
         ],
+        context_store_search=['What messages were posted in channel {channel_id} last week?', 'Show me the conversation history for channel {channel_id}', 'Search for messages mentioning {keyword} in channel {channel_id}'],
         search=['What messages were posted in channel {channel_id} last week?', 'Show me the conversation history for channel {channel_id}', 'Search for messages mentioning {keyword} in channel {channel_id}'],
         unsupported=[
             'Delete a message from channel {channel_id}',
