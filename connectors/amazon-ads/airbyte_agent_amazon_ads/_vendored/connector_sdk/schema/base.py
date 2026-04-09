@@ -119,7 +119,7 @@ class Info(BaseModel):
     - x-airbyte-external-documentation-urls: List of external documentation URLs (Airbyte extension)
     - x-airbyte-retry-config: Retry configuration for transient errors (Airbyte extension)
     - x-airbyte-example-questions: Example questions for AI connector README (Airbyte extension)
-    - x-airbyte-cache: Cache configuration for field mapping between API and cache schemas (Airbyte extension)
+    - x-airbyte-context-store: Cache configuration for field mapping between API and cache schemas (Airbyte extension)
     - x-airbyte-replication-config: Replication configuration for MULTI mode connectors (Airbyte extension)
     - x-airbyte-entity-relationships: Entity relationship declarations (Airbyte extension)
     - x-airbyte-scoping: Scoping parameter resolution from config (Airbyte extension)
@@ -140,7 +140,7 @@ class Info(BaseModel):
     x_airbyte_external_documentation_urls: list[DocUrl] = Field(..., alias="x-airbyte-external-documentation-urls")
     x_airbyte_retry_config: RetryConfig | None = Field(None, alias="x-airbyte-retry-config")
     x_airbyte_example_questions: ExampleQuestions | None = Field(None, alias="x-airbyte-example-questions")
-    x_airbyte_cache: CacheConfig | None = Field(None, alias="x-airbyte-cache")
+    x_airbyte_context_store: CacheConfig | None = Field(None, alias="x-airbyte-context-store")
     x_airbyte_entity_relationships: list[EntityRelationshipConfig] = Field(
         default_factory=list, alias="x-airbyte-entity-relationships"
     )
@@ -166,6 +166,12 @@ class Info(BaseModel):
         alias="x-airbyte-skip-auth-methods",
         description="List of Airbyte auth methods to skip when validating auth compatibility. "
         "Use the SelectiveAuthenticator option key (e.g., 'Private App Credentials', 'oauth2.0')",
+    )
+    x_airbyte_skip_context_store: str | None = Field(
+        default=None,
+        alias="x-airbyte-skip-context-store",
+        description="Reason why this connector does not define x-airbyte-context-store. "
+        "Connectors must have either x-airbyte-context-store or x-airbyte-skip-context-store with a justification.",
     )
 
 
