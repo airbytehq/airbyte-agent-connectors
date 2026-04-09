@@ -5408,6 +5408,12 @@ GitlabConnectorModel: ConnectorModel = ConnectorModel(
             'List pipelines for a project',
             'Show all branches in a project',
         ],
+        context_store_search=[
+            'Find issues updated in the last week',
+            'What are the most active projects?',
+            'Show merge requests that are still open',
+            'List projects with the most commits',
+        ],
         search=[
             'Find issues updated in the last week',
             'What are the most active projects?',

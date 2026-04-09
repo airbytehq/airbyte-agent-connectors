@@ -613,14 +613,14 @@ class GitlabConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> GitlabExecuteResult[Any] | GitlabExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1135,7 +1135,7 @@ class ProjectsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectsSearchQuery,
         limit: int | None = None,
@@ -1251,7 +1251,7 @@ class ProjectsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1363,7 +1363,7 @@ class IssuesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssuesSearchQuery,
         limit: int | None = None,
@@ -1437,7 +1437,7 @@ class IssuesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1549,7 +1549,7 @@ class MergeRequestsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: MergeRequestsSearchQuery,
         limit: int | None = None,
@@ -1636,7 +1636,7 @@ class MergeRequestsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("merge_requests", "search", params)
+        result = await self._connector.execute("merge_requests", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1724,7 +1724,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -1768,7 +1768,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1871,7 +1871,7 @@ class CommitsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CommitsSearchQuery,
         limit: int | None = None,
@@ -1924,7 +1924,7 @@ class CommitsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("commits", "search", params)
+        result = await self._connector.execute("commits", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2018,7 +2018,7 @@ class GroupsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: GroupsSearchQuery,
         limit: int | None = None,
@@ -2080,7 +2080,7 @@ class GroupsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("groups", "search", params)
+        result = await self._connector.execute("groups", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2171,7 +2171,7 @@ class BranchesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BranchesSearchQuery,
         limit: int | None = None,
@@ -2219,7 +2219,7 @@ class BranchesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("branches", "search", params)
+        result = await self._connector.execute("branches", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2319,7 +2319,7 @@ class PipelinesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: PipelinesSearchQuery,
         limit: int | None = None,
@@ -2367,7 +2367,7 @@ class PipelinesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("pipelines", "search", params)
+        result = await self._connector.execute("pipelines", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2458,7 +2458,7 @@ class GroupMembersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: GroupMembersSearchQuery,
         limit: int | None = None,
@@ -2508,7 +2508,7 @@ class GroupMembersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("group_members", "search", params)
+        result = await self._connector.execute("group_members", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2599,7 +2599,7 @@ class ProjectMembersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectMembersSearchQuery,
         limit: int | None = None,
@@ -2649,7 +2649,7 @@ class ProjectMembersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("project_members", "search", params)
+        result = await self._connector.execute("project_members", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2743,7 +2743,7 @@ class ReleasesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ReleasesSearchQuery,
         limit: int | None = None,
@@ -2797,7 +2797,7 @@ class ReleasesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("releases", "search", params)
+        result = await self._connector.execute("releases", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2894,7 +2894,7 @@ class TagsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TagsSearchQuery,
         limit: int | None = None,
@@ -2939,7 +2939,7 @@ class TagsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("tags", "search", params)
+        result = await self._connector.execute("tags", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -3033,7 +3033,7 @@ class GroupMilestonesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: GroupMilestonesSearchQuery,
         limit: int | None = None,
@@ -3082,7 +3082,7 @@ class GroupMilestonesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("group_milestones", "search", params)
+        result = await self._connector.execute("group_milestones", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -3176,7 +3176,7 @@ class ProjectMilestonesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectMilestonesSearchQuery,
         limit: int | None = None,
@@ -3225,7 +3225,7 @@ class ProjectMilestonesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("project_milestones", "search", params)
+        result = await self._connector.execute("project_milestones", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
