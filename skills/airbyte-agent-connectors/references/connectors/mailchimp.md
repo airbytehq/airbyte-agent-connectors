@@ -7,7 +7,7 @@ The Mailchimp agent connector is a Python package that equips AI agents to inter
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-mailchimp` v0.1.84
+- **Package:** `airbyte-agent-mailchimp` v0.1.85
 - **Auth:** Token
 - **Docs:** [Official API docs](https://mailchimp.com/developer/marketing/api/)
 - **Status:** complete
@@ -86,11 +86,11 @@ async def mailchimp_execute(entity: str, action: str, params: dict | None = None
 
 | Entity | Actions |
 |--------|---------|
-| Campaigns | List, Get, Search |
-| Lists | List, Get, Search |
+| Campaigns | List, Get, Context Store Search |
+| Lists | List, Get, Context Store Search |
 | List Members | List, Get |
-| Reports | List, Get, Search |
-| Email Activity | List, Search |
+| Reports | List, Get, Context Store Search |
+| Email Activity | List, Context Store Search |
 | Automations | List |
 | Tags | List |
 | Interest Categories | List, Get |
