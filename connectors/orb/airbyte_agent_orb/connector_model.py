@@ -2157,6 +2157,17 @@ OrbConnectorModel: ConnectorModel = ConnectorModel(
             'Confirm the Stripe ID linked to a customer',
             'What is the payment provider ID for a customer?',
         ],
+        context_store_search=[
+            'List all invoices for a specific customer',
+            'List all subscriptions for customer XYZ',
+            'Show all active subscriptions for a specific customer',
+            'What subscriptions does customer {external_customer_id} have?',
+            'Pull all invoices from the last month',
+            'Show invoices created after {date}',
+            'List all paid invoices for customer {customer_id}',
+            'What invoices are in draft status?',
+            'Show all issued invoices for subscription {subscription_id}',
+        ],
         search=[
             'List all invoices for a specific customer',
             'List all subscriptions for customer XYZ',
