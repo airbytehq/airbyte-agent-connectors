@@ -7,7 +7,7 @@ The Intercom agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-intercom` v0.1.99
+- **Package:** `airbyte-agent-intercom` v0.1.100
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.intercom.com/docs/references/rest-api/api.intercom.io)
 - **Status:** complete
