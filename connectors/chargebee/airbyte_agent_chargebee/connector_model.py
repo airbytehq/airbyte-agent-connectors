@@ -29,7 +29,7 @@ from uuid import (
 ChargebeeConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('686473f1-76d9-4994-9cc7-9b13da46147c'),
     name='chargebee',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://{site}.chargebee.com/api/v2',
     auth=AuthConfig(
         type=AuthType.BASIC,
