@@ -3147,6 +3147,12 @@ ZendeskTalkConnectorModel: ConnectorModel = ConnectorModel(
             'Show the account overview stats',
             'Show current queue activity',
         ],
+        context_store_search=[
+            'Which phone numbers have SMS enabled?',
+            'Find agents who have missed the most calls today',
+            'What is the average call duration across all calls?',
+            'Which phone numbers are toll-free?',
+        ],
         search=[
             'Which phone numbers have SMS enabled?',
             'Find agents who have missed the most calls today',

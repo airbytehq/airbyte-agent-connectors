@@ -97,17 +97,17 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Phone Numbers | [List](./REFERENCE.md#phone-numbers-list), [Get](./REFERENCE.md#phone-numbers-get), [Search](./REFERENCE.md#phone-numbers-search) |
-| Addresses | [List](./REFERENCE.md#addresses-list), [Get](./REFERENCE.md#addresses-get), [Search](./REFERENCE.md#addresses-search) |
-| Greetings | [List](./REFERENCE.md#greetings-list), [Get](./REFERENCE.md#greetings-get), [Search](./REFERENCE.md#greetings-search) |
-| Greeting Categories | [List](./REFERENCE.md#greeting-categories-list), [Get](./REFERENCE.md#greeting-categories-get), [Search](./REFERENCE.md#greeting-categories-search) |
-| Ivrs | [List](./REFERENCE.md#ivrs-list), [Get](./REFERENCE.md#ivrs-get), [Search](./REFERENCE.md#ivrs-search) |
-| Agents Activity | [List](./REFERENCE.md#agents-activity-list), [Search](./REFERENCE.md#agents-activity-search) |
-| Agents Overview | [List](./REFERENCE.md#agents-overview-list), [Search](./REFERENCE.md#agents-overview-search) |
-| Account Overview | [List](./REFERENCE.md#account-overview-list), [Search](./REFERENCE.md#account-overview-search) |
-| Current Queue Activity | [List](./REFERENCE.md#current-queue-activity-list), [Search](./REFERENCE.md#current-queue-activity-search) |
-| Calls | [List](./REFERENCE.md#calls-list), [Search](./REFERENCE.md#calls-search) |
-| Call Legs | [List](./REFERENCE.md#call-legs-list), [Search](./REFERENCE.md#call-legs-search) |
+| Phone Numbers | [List](./REFERENCE.md#phone-numbers-list), [Get](./REFERENCE.md#phone-numbers-get), [Context Store Search](./REFERENCE.md#phone-numbers-context-store-search) |
+| Addresses | [List](./REFERENCE.md#addresses-list), [Get](./REFERENCE.md#addresses-get), [Context Store Search](./REFERENCE.md#addresses-context-store-search) |
+| Greetings | [List](./REFERENCE.md#greetings-list), [Get](./REFERENCE.md#greetings-get), [Context Store Search](./REFERENCE.md#greetings-context-store-search) |
+| Greeting Categories | [List](./REFERENCE.md#greeting-categories-list), [Get](./REFERENCE.md#greeting-categories-get), [Context Store Search](./REFERENCE.md#greeting-categories-context-store-search) |
+| Ivrs | [List](./REFERENCE.md#ivrs-list), [Get](./REFERENCE.md#ivrs-get), [Context Store Search](./REFERENCE.md#ivrs-context-store-search) |
+| Agents Activity | [List](./REFERENCE.md#agents-activity-list), [Context Store Search](./REFERENCE.md#agents-activity-context-store-search) |
+| Agents Overview | [List](./REFERENCE.md#agents-overview-list), [Context Store Search](./REFERENCE.md#agents-overview-context-store-search) |
+| Account Overview | [List](./REFERENCE.md#account-overview-list), [Context Store Search](./REFERENCE.md#account-overview-context-store-search) |
+| Current Queue Activity | [List](./REFERENCE.md#current-queue-activity-list), [Context Store Search](./REFERENCE.md#current-queue-activity-context-store-search) |
+| Calls | [List](./REFERENCE.md#calls-list), [Context Store Search](./REFERENCE.md#calls-context-store-search) |
+| Call Legs | [List](./REFERENCE.md#call-legs-list), [Context Store Search](./REFERENCE.md#call-legs-context-store-search) |
 
 
 ### Authentication
@@ -120,7 +120,7 @@ See the official [Zendesk-Talk API reference](https://developer.zendesk.com/api-
 
 ## Version information
 
-- **Package version:** 0.1.13
+- **Package version:** 0.1.14
 - **Connector version:** 1.0.1
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-talk/CHANGELOG.md)
