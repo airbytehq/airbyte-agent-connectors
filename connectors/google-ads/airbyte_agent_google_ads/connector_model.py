@@ -1601,6 +1601,13 @@ GoogleAdsConnectorModel: ConnectorModel = ConnectorModel(
             "Apply the 'Q4 Campaigns' label to my search campaign",
             "Update the name of campaign 123456 to 'Winter Promo'",
         ],
+        context_store_search=[
+            'Which campaigns have the highest cost this month?',
+            'Show me all paused campaigns',
+            'Find ad groups with the most impressions',
+            'What are my top performing ads by click-through rate?',
+            'Show campaigns with budget over $100 per day',
+        ],
         search=[
             'Which campaigns have the highest cost this month?',
             'Show me all paused campaigns',
