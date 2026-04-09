@@ -29,7 +29,7 @@ from uuid import (
 ZohoCrmConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('4942d392-c7b5-4271-91f9-3b4f4e51eb3e'),
     name='zoho-crm',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://www.zohoapis.{dc_region}',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
