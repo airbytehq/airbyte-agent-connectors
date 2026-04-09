@@ -7,7 +7,7 @@ The Linkedin-Ads agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-linkedin-ads` v0.1.15
+- **Package:** `airbyte-agent-linkedin-ads` v0.1.16
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://learn.microsoft.com/en-us/linkedin/marketing/)
 - **Status:** complete
@@ -85,14 +85,14 @@ async def linkedin_ads_execute(entity: str, action: str, params: dict | None = N
 
 | Entity | Actions |
 |--------|---------|
-| Accounts | List, Get, Search |
-| Account Users | List, Search |
-| Campaigns | List, Get, Search |
-| Campaign Groups | List, Get, Search |
-| Creatives | List, Get, Search |
-| Conversions | List, Get, Search |
-| Ad Campaign Analytics | List, Search |
-| Ad Creative Analytics | List, Search |
+| Accounts | List, Get, Context Store Search |
+| Account Users | List, Context Store Search |
+| Campaigns | List, Get, Context Store Search |
+| Campaign Groups | List, Get, Context Store Search |
+| Creatives | List, Get, Context Store Search |
+| Conversions | List, Get, Context Store Search |
+| Ad Campaign Analytics | List, Context Store Search |
+| Ad Creative Analytics | List, Context Store Search |
 
 ## Authentication
 
