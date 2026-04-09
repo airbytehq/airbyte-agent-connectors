@@ -7,7 +7,7 @@ The Airtable agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-airtable` v0.1.59
+- **Package:** `airbyte-agent-airtable` v0.1.60
 - **Auth:** Token
 - **Docs:** [Official API docs](https://airtable.com/developers/web/api/introduction)
 - **Status:** complete

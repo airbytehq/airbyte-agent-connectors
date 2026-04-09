@@ -7,7 +7,7 @@ The Google-Analytics-Data-Api agent connector is a Python package that equips AI
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-analytics-data-api` v0.1.23
+- **Package:** `airbyte-agent-google-analytics-data-api` v0.1.24
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/analytics/devguides/reporting/data/v1/rest)
 - **Status:** complete
