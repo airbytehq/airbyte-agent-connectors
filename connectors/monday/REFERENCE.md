@@ -8,14 +8,14 @@ The Monday connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Users | [List](#users-list), [Get](#users-get), [Search](#users-search) |
-| Boards | [List](#boards-list), [Get](#boards-get), [Search](#boards-search) |
-| Items | [List](#items-list), [Get](#items-get), [Search](#items-search) |
-| Teams | [List](#teams-list), [Get](#teams-get), [Search](#teams-search) |
-| Tags | [List](#tags-list), [Search](#tags-search) |
-| Updates | [List](#updates-list), [Get](#updates-get), [Search](#updates-search) |
-| Workspaces | [List](#workspaces-list), [Get](#workspaces-get), [Search](#workspaces-search) |
-| Activity Logs | [List](#activity-logs-list), [Search](#activity-logs-search) |
+| Users | [List](#users-list), [Get](#users-get), [Context Store Search](#users-context-store-search) |
+| Boards | [List](#boards-list), [Get](#boards-get), [Context Store Search](#boards-context-store-search) |
+| Items | [List](#items-list), [Get](#items-get), [Context Store Search](#items-context-store-search) |
+| Teams | [List](#teams-list), [Get](#teams-get), [Context Store Search](#teams-context-store-search) |
+| Tags | [List](#tags-list), [Context Store Search](#tags-context-store-search) |
+| Updates | [List](#updates-list), [Get](#updates-get), [Context Store Search](#updates-context-store-search) |
+| Workspaces | [List](#workspaces-list), [Get](#workspaces-get), [Context Store Search](#workspaces-context-store-search) |
+| Activity Logs | [List](#activity-logs-list), [Context Store Search](#activity-logs-context-store-search) |
 
 ## Users
 
@@ -78,14 +78,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | User ID |
 
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.users.search(
+await monday.users.context_store_search(
     query={"filter": {"eq": {"birthday": "<str>"}}}
 )
 ```
@@ -98,7 +98,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"birthday": "<str>"}}}
     }
@@ -245,14 +245,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | Board ID |
 
 
-### Boards Search
+### Boards Context Store Search
 
 Search and filter boards records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.boards.search(
+await monday.boards.context_store_search(
     query={"filter": {"eq": {"board_kind": "<str>"}}}
 )
 ```
@@ -265,7 +265,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "boards",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"board_kind": "<str>"}}}
     }
@@ -413,14 +413,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | Item ID |
 
 
-### Items Search
+### Items Context Store Search
 
 Search and filter items records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.items.search(
+await monday.items.context_store_search(
     query={"filter": {"eq": {"assets": []}}}
 )
 ```
@@ -433,7 +433,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "items",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"assets": []}}}
     }
@@ -558,14 +558,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | Team ID |
 
 
-### Teams Search
+### Teams Context Store Search
 
 Search and filter teams records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.teams.search(
+await monday.teams.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -578,7 +578,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "teams",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -648,14 +648,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 
-### Tags Search
+### Tags Context Store Search
 
 Search and filter tags records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.tags.search(
+await monday.tags.context_store_search(
     query={"filter": {"eq": {"color": "<str>"}}}
 )
 ```
@@ -668,7 +668,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tags",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"color": "<str>"}}}
     }
@@ -778,14 +778,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | Update ID |
 
 
-### Updates Search
+### Updates Context Store Search
 
 Search and filter updates records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.updates.search(
+await monday.updates.context_store_search(
     query={"filter": {"eq": {"assets": []}}}
 )
 ```
@@ -798,7 +798,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "updates",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"assets": []}}}
     }
@@ -913,14 +913,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `id` | `string` | Yes | Workspace ID |
 
 
-### Workspaces Search
+### Workspaces Context Store Search
 
 Search and filter workspaces records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.workspaces.search(
+await monday.workspaces.context_store_search(
     query={"filter": {"eq": {"account_product": {}}}}
 )
 ```
@@ -933,7 +933,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "workspaces",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"account_product": {}}}}
     }
@@ -1030,14 +1030,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `board_id` | `string` | Yes | Board ID to fetch activity logs from |
 
 
-### Activity Logs Search
+### Activity Logs Context Store Search
 
 Search and filter activity logs records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await monday.activity_logs.search(
+await monday.activity_logs.context_store_search(
     query={"filter": {"eq": {"board_id": 0}}}
 )
 ```
@@ -1050,7 +1050,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "activity_logs",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"board_id": 0}}}
     }

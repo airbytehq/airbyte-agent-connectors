@@ -2794,6 +2794,13 @@ MondayConnectorModel: ConnectorModel = ConnectorModel(
             'Show me all tags',
             'List recent updates',
         ],
+        context_store_search=[
+            'Which boards were updated in the last week?',
+            'Find all items assigned to a specific group',
+            'What are the most active boards by update count?',
+            'Show me all users who are admins',
+            'List items with their column values from a specific board',
+        ],
         search=[
             'Which boards were updated in the last week?',
             'Find all items assigned to a specific group',
