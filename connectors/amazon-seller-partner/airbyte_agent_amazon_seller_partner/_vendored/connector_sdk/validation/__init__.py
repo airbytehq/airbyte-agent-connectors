@@ -3,7 +3,7 @@
 This module provides validation for connector definitions, including:
 - Readiness validation (cassettes, schemas, auth coverage)
 - Replication compatibility validation (Airbyte registry mappings)
-- Cache schema validation (x-airbyte-cache vs manifest)
+- Cache schema validation (x-airbyte-context-store vs manifest)
 - Connector overview (structured status reporting)
 """
 
