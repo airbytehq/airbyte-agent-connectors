@@ -62,7 +62,36 @@ CHECK_STATUS_FAILED = "failed"
 
 
 class ParamResolutionError(Exception):
-    """Raised when a path parameter cannot be resolved for entity probing."""
+    """Raised when a path parameter cannot be resolved for entity probing.
+
+    Covers structural resolution failures (unresolvable param, self-reference,
+    parent with no LIST op, parent returning no records, missing parent key,
+    max recursion depth). ``_probe_entity`` converts these into UNHEALTHY
+    results so the backend controller classifies them as INCONCLUSIVE. SKIPPED
+    is reserved exclusively for "this entity has no list/get action at all".
+
+    Execution failures from probing a parent entity use ParentProbeError
+    instead, so the child can inherit the parent's ``status_code`` for
+    401/403 -> FAILED classification.
+    """
+
+
+class ParentProbeError(Exception):
+    """Raised when a parent entity's LIST probe fails during param resolution.
+
+    Wraps the original exception's message with parent-entity context for
+    debuggability, while preserving the parent's ``status_code`` so the child
+    can be classified the same way the parent would be (401/403 -> FAILED,
+    everything else -> INCONCLUSIVE at the backend controller layer).
+
+    Distinct from ``ParamResolutionError`` so the ``status_code`` survives --
+    both route through ``_probe_entity``'s UNHEALTHY branch, but only
+    ParentProbeError carries the parent's HTTP status.
+    """
+
+    def __init__(self, message: str, status_code: int | None = None) -> None:
+        super().__init__(message)
+        self.status_code = status_code
 
 
 class _OperationContext:
@@ -727,9 +756,7 @@ class LocalExecutor:
             # Also resolve query params that have a matching scoping or config
             # key, so explicit config values take precedence over defaults.
             for qp in endpoint.query_params:
-                if qp not in params_needing_resolution and (
-                    qp in self._scoping_index or qp in self.config_values
-                ):
+                if qp not in params_needing_resolution and (qp in self._scoping_index or qp in self.config_values):
                     params_needing_resolution.append(qp)
             if params_needing_resolution:
                 try:
@@ -744,7 +771,7 @@ class LocalExecutor:
                 except ParamResolutionError as exc:
                     return {
                         "entity": entity_name,
-                        "status": CHECK_STATUS_SKIPPED,
+                        "status": CHECK_STATUS_UNHEALTHY,
                         "error": str(exc),
                         "status_code": None,
                         "checked_action": action.value,
@@ -846,7 +873,10 @@ class LocalExecutor:
                         parent_params,
                     )
                 except Exception as exc:
-                    raise ParamResolutionError(f"Parent entity '{parent_entity_name}' probe failed: {exc}") from exc
+                    raise ParentProbeError(
+                        f"Parent entity '{parent_entity_name}' probe failed: {exc}",
+                        status_code=getattr(exc, "status_code", None),
+                    ) from exc
                 records = result.data if isinstance(result.data, list) else []
                 if not records:
                     raise ParamResolutionError(f"Parent entity '{parent_entity_name}' returned no records")
