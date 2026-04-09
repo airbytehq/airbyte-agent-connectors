@@ -32,7 +32,7 @@ from uuid import (
 TypeformConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7eff203-90bf-43e5-a240-19ea3056c474'),
     name='typeform',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://api.typeform.com',
     auth=AuthConfig(
         type=AuthType.BEARER,
