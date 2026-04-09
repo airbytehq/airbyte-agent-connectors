@@ -7,7 +7,7 @@ The Gong agent connector is a Python package that equips AI agents to interact w
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-gong` v0.19.136
+- **Package:** `airbyte-agent-gong` v0.19.137
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://gong.app.gong.io/settings/api/documentation)
 - **Status:** complete
