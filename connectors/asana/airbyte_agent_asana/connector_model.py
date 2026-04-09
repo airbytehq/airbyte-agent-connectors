@@ -36,7 +36,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.19',
+    version='0.1.20',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
