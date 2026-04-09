@@ -197,6 +197,18 @@ def _format_search_param_signature() -> str:
     return f"({', '.join(params)})"
 
 
+def get_cached_search_questions(example_questions: Any) -> list[str]:
+    context_store_search_questions = getattr(example_questions, "context_store_search", None)
+    if isinstance(context_store_search_questions, list):
+        return context_store_search_questions
+
+    legacy_search_questions = getattr(example_questions, "search", None)
+    if isinstance(legacy_search_questions, list):
+        return legacy_search_questions
+
+    return []
+
+
 class EndpointProtocol(Protocol):
     """Protocol defining the expected interface for endpoint parameters.
 
@@ -497,10 +509,9 @@ def generate_tool_description(
                 example_questions = getattr(info, "x_airbyte_example_questions", None)
     if example_questions:
         direct_questions = getattr(example_questions, "direct", None)
-        search_questions = getattr(example_questions, "search", None)
+        search_questions = get_cached_search_questions(example_questions)
 
         direct_questions = direct_questions if isinstance(direct_questions, list) else []
-        search_questions = search_questions if isinstance(search_questions, list) else []
 
         selected_questions: list[str] = []
         if direct_questions or search_questions:

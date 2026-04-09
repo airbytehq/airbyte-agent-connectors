@@ -100,11 +100,11 @@ This connector supports the following entities and actions. For more details, se
 | Entity | Actions |
 |--------|---------|
 | Sobjects | [List](./REFERENCE.md#sobjects-list) |
-| Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [API Search](./REFERENCE.md#accounts-api_search), [Search](./REFERENCE.md#accounts-search) |
-| Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [API Search](./REFERENCE.md#contacts-api_search), [Search](./REFERENCE.md#contacts-search) |
-| Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [API Search](./REFERENCE.md#leads-api_search), [Search](./REFERENCE.md#leads-search) |
-| Opportunities | [List](./REFERENCE.md#opportunities-list), [Get](./REFERENCE.md#opportunities-get), [API Search](./REFERENCE.md#opportunities-api_search), [Search](./REFERENCE.md#opportunities-search) |
-| Tasks | [List](./REFERENCE.md#tasks-list), [Get](./REFERENCE.md#tasks-get), [API Search](./REFERENCE.md#tasks-api_search), [Search](./REFERENCE.md#tasks-search) |
+| Accounts | [List](./REFERENCE.md#accounts-list), [Get](./REFERENCE.md#accounts-get), [API Search](./REFERENCE.md#accounts-api_search), [Context Store Search](./REFERENCE.md#accounts-context-store-search) |
+| Contacts | [List](./REFERENCE.md#contacts-list), [Get](./REFERENCE.md#contacts-get), [API Search](./REFERENCE.md#contacts-api_search), [Context Store Search](./REFERENCE.md#contacts-context-store-search) |
+| Leads | [List](./REFERENCE.md#leads-list), [Get](./REFERENCE.md#leads-get), [API Search](./REFERENCE.md#leads-api_search), [Context Store Search](./REFERENCE.md#leads-context-store-search) |
+| Opportunities | [List](./REFERENCE.md#opportunities-list), [Get](./REFERENCE.md#opportunities-get), [API Search](./REFERENCE.md#opportunities-api_search), [Context Store Search](./REFERENCE.md#opportunities-context-store-search) |
+| Tasks | [List](./REFERENCE.md#tasks-list), [Get](./REFERENCE.md#tasks-get), [API Search](./REFERENCE.md#tasks-api_search), [Context Store Search](./REFERENCE.md#tasks-context-store-search) |
 | Events | [List](./REFERENCE.md#events-list), [Get](./REFERENCE.md#events-get), [API Search](./REFERENCE.md#events-api_search) |
 | Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [API Search](./REFERENCE.md#campaigns-api_search) |
 | Cases | [List](./REFERENCE.md#cases-list), [Get](./REFERENCE.md#cases-get), [API Search](./REFERENCE.md#cases-api_search) |
@@ -124,7 +124,7 @@ See the official [Salesforce API reference](https://developer.salesforce.com/doc
 
 ## Version information
 
-- **Package version:** 0.1.121
+- **Package version:** 0.1.122
 - **Connector version:** 1.0.15
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/CHANGELOG.md)
