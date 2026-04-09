@@ -2244,6 +2244,7 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
             'Update a label name or settings',
             'Delete a label',
         ],
+        context_store_search=['Search for messages matching a query', 'Find emails from a specific sender', 'Show me emails with attachments'],
         search=['Search for messages matching a query', 'Find emails from a specific sender', 'Show me emails with attachments'],
         unsupported=[
             'Attach a file to an email',
