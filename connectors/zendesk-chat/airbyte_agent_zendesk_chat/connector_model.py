@@ -2468,6 +2468,14 @@ ZendeskChatConnectorModel: ConnectorModel = ConnectorModel(
     },
     example_questions=ExampleQuestions(
         direct=['List all banned visitors', 'List all departments with their settings'],
+        context_store_search=[
+            'Show me all chats from last week',
+            'List all agents in the support department',
+            'What are the most used chat shortcuts?',
+            'Show chat volume by department',
+            'What triggers are currently active?',
+            'Show agent activity timeline for today',
+        ],
         search=[
             'Show me all chats from last week',
             'List all agents in the support department',
