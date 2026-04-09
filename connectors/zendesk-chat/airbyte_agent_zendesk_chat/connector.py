@@ -465,14 +465,14 @@ class ZendeskChatConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "search"],
+        action: Literal["get", "list", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ZendeskChatExecuteResult[Any] | ZendeskChatExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "search"],
+        action: Literal["get", "list", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -893,7 +893,7 @@ class AgentsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AgentsSearchQuery,
         limit: int | None = None,
@@ -939,7 +939,7 @@ class AgentsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("agents", "search", params)
+        result = await self._connector.execute("agents", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1134,7 +1134,7 @@ class ChatsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ChatsSearchQuery,
         limit: int | None = None,
@@ -1180,7 +1180,7 @@ class ChatsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("chats", "search", params)
+        result = await self._connector.execute("chats", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1253,7 +1253,7 @@ class DepartmentsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: DepartmentsSearchQuery,
         limit: int | None = None,
@@ -1294,7 +1294,7 @@ class DepartmentsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("departments", "search", params)
+        result = await self._connector.execute("departments", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1507,7 +1507,7 @@ class ShortcutsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ShortcutsSearchQuery,
         limit: int | None = None,
@@ -1548,7 +1548,7 @@ class ShortcutsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("shortcuts", "search", params)
+        result = await self._connector.execute("shortcuts", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1652,7 +1652,7 @@ class TriggersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TriggersSearchQuery,
         limit: int | None = None,
@@ -1692,7 +1692,7 @@ class TriggersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("triggers", "search", params)
+        result = await self._connector.execute("triggers", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
