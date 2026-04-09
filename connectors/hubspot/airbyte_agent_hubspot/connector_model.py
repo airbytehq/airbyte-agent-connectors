@@ -33,7 +33,7 @@ from uuid import (
 HubspotConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('36c891d9-4bd9-43ac-bad2-10e12756272c'),
     name='hubspot',
-    version='0.1.17',
+    version='0.1.18',
     base_url='https://api.hubapi.com',
     auth=AuthConfig(
         options=[
