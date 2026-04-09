@@ -3674,6 +3674,18 @@ ChargebeeConnectorModel: ConnectorModel = ConnectorModel(
             'List recent transactions',
             'List recent events',
         ],
+        context_store_search=[
+            'Show me customers with the highest monthly recurring revenue',
+            'Which subscriptions are set to cancel in the next 30 days?',
+            'List all overdue invoices and their amounts',
+            'Analyze subscription churn trends over the past quarter',
+            'What are the most popular items by number of subscriptions?',
+            'Show me total revenue breakdown by currency',
+            'Identify customers with expiring payment sources',
+            'Compare subscription plan distribution across item prices',
+            'List all credit notes issued in the past month',
+            'What is the average subscription lifetime for each plan?',
+        ],
         search=[
             'Show me customers with the highest monthly recurring revenue',
             'Which subscriptions are set to cancel in the next 30 days?',

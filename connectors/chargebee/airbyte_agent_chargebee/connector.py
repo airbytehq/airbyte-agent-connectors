@@ -518,14 +518,14 @@ class ChargebeeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ChargebeeExecuteResult[Any] | ChargebeeExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -919,7 +919,7 @@ class CustomerQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CustomerSearchQuery,
         limit: int | None = None,
@@ -1019,7 +1019,7 @@ class CustomerQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("customer", "search", params)
+        result = await self._connector.execute("customer", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1102,7 +1102,7 @@ class SubscriptionQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: SubscriptionSearchQuery,
         limit: int | None = None,
@@ -1215,7 +1215,7 @@ class SubscriptionQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("subscription", "search", params)
+        result = await self._connector.execute("subscription", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1298,7 +1298,7 @@ class InvoiceQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: InvoiceSearchQuery,
         limit: int | None = None,
@@ -1404,7 +1404,7 @@ class InvoiceQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("invoice", "search", params)
+        result = await self._connector.execute("invoice", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1487,7 +1487,7 @@ class CreditNoteQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CreditNoteSearchQuery,
         limit: int | None = None,
@@ -1573,7 +1573,7 @@ class CreditNoteQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("credit_note", "search", params)
+        result = await self._connector.execute("credit_note", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1656,7 +1656,7 @@ class CouponQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CouponSearchQuery,
         limit: int | None = None,
@@ -1721,7 +1721,7 @@ class CouponQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("coupon", "search", params)
+        result = await self._connector.execute("coupon", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1804,7 +1804,7 @@ class TransactionQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TransactionSearchQuery,
         limit: int | None = None,
@@ -1896,7 +1896,7 @@ class TransactionQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("transaction", "search", params)
+        result = await self._connector.execute("transaction", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1979,7 +1979,7 @@ class EventQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: EventSearchQuery,
         limit: int | None = None,
@@ -2027,7 +2027,7 @@ class EventQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("event", "search", params)
+        result = await self._connector.execute("event", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2110,7 +2110,7 @@ class OrderQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: OrderSearchQuery,
         limit: int | None = None,
@@ -2207,7 +2207,7 @@ class OrderQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("order", "search", params)
+        result = await self._connector.execute("order", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2290,7 +2290,7 @@ class ItemQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ItemSearchQuery,
         limit: int | None = None,
@@ -2353,7 +2353,7 @@ class ItemQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("item", "search", params)
+        result = await self._connector.execute("item", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2436,7 +2436,7 @@ class ItemPriceQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ItemPriceSearchQuery,
         limit: int | None = None,
@@ -2510,7 +2510,7 @@ class ItemPriceQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("item_price", "search", params)
+        result = await self._connector.execute("item_price", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2593,7 +2593,7 @@ class PaymentSourceQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: PaymentSourceSearchQuery,
         limit: int | None = None,
@@ -2652,7 +2652,7 @@ class PaymentSourceQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("payment_source", "search", params)
+        result = await self._connector.execute("payment_source", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
