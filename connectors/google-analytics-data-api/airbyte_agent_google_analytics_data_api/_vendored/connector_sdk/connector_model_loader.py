@@ -238,7 +238,7 @@ def _dedupe_strings(values: list[str]) -> list[str]:
 
 
 def _extract_search_field_paths(spec: OpenAPIConnector) -> dict[str, list[str]]:
-    cache_config = getattr(spec.info, "x_airbyte_cache", None)
+    cache_config = getattr(spec.info, "x_airbyte_context_store", None)
     entities = getattr(cache_config, "entities", None)
     if not isinstance(entities, list):
         return {}

@@ -1,5 +1,10 @@
 # Google Analytics Data Api changelog
 
+## [0.1.23] - 2026-04-09
+- Updated connector definition (YAML version 1.0.5)
+- Source commit: 6bf360a5
+- SDK version: 0.1.0
+
 ## [0.1.22] - 2026-04-09
 - Updated connector definition (YAML version 1.0.4)
 - Source commit: 3cecc817

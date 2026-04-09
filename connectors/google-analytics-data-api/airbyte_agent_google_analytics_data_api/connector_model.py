@@ -35,7 +35,7 @@ from uuid import (
 GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('3cc2eafd-84aa-4dca-93af-322d9dfeec1a'),
     name='google-analytics-data-api',
-    version='1.0.4',
+    version='1.0.5',
     base_url='https://analyticsdata.googleapis.com/v1beta',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
