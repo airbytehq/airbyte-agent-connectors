@@ -8,25 +8,25 @@ The Asana connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Tasks | [List](#tasks-list), [Get](#tasks-get), [Search](#tasks-search) |
+| Tasks | [List](#tasks-list), [Get](#tasks-get), [Context Store Search](#tasks-context-store-search) |
 | Project Tasks | [List](#project-tasks-list) |
 | Workspace Task Search | [List](#workspace-task-search-list) |
-| Projects | [List](#projects-list), [Get](#projects-get), [Search](#projects-search) |
+| Projects | [List](#projects-list), [Get](#projects-get), [Context Store Search](#projects-context-store-search) |
 | Task Projects | [List](#task-projects-list) |
 | Team Projects | [List](#team-projects-list) |
 | Workspace Projects | [List](#workspace-projects-list) |
-| Workspaces | [List](#workspaces-list), [Get](#workspaces-get), [Search](#workspaces-search) |
-| Users | [List](#users-list), [Get](#users-get), [Search](#users-search) |
+| Workspaces | [List](#workspaces-list), [Get](#workspaces-get), [Context Store Search](#workspaces-context-store-search) |
+| Users | [List](#users-list), [Get](#users-get), [Context Store Search](#users-context-store-search) |
 | Workspace Users | [List](#workspace-users-list) |
 | Team Users | [List](#team-users-list) |
-| Teams | [Get](#teams-get), [Search](#teams-search) |
+| Teams | [Get](#teams-get), [Context Store Search](#teams-context-store-search) |
 | Workspace Teams | [List](#workspace-teams-list) |
 | User Teams | [List](#user-teams-list) |
-| Attachments | [List](#attachments-list), [Get](#attachments-get), [Download](#attachments-download), [Search](#attachments-search) |
+| Attachments | [List](#attachments-list), [Get](#attachments-get), [Download](#attachments-download), [Context Store Search](#attachments-context-store-search) |
 | Workspace Tags | [List](#workspace-tags-list) |
-| Tags | [Get](#tags-get), [Search](#tags-search) |
+| Tags | [Get](#tags-get), [Context Store Search](#tags-context-store-search) |
 | Project Sections | [List](#project-sections-list) |
-| Sections | [Get](#sections-get), [Search](#sections-search) |
+| Sections | [Get](#sections-get), [Context Store Search](#sections-context-store-search) |
 | Task Subtasks | [List](#task-subtasks-list) |
 | Task Dependencies | [List](#task-dependencies-list) |
 | Task Dependents | [List](#task-dependents-list) |
@@ -139,14 +139,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Tasks Search
+### Tasks Context Store Search
 
 Search and filter tasks records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.tasks.search(
+await asana.tasks.context_store_search(
     query={"filter": {"eq": {"actual_time_minutes": 0}}}
 )
 ```
@@ -159,7 +159,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tasks",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"actual_time_minutes": 0}}}
     }
@@ -539,14 +539,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Projects Search
+### Projects Context Store Search
 
 Search and filter projects records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.projects.search(
+await asana.projects.context_store_search(
     query={"filter": {"eq": {"archived": True}}}
 )
 ```
@@ -559,7 +559,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "projects",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"archived": True}}}
     }
@@ -928,14 +928,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Workspaces Search
+### Workspaces Context Store Search
 
 Search and filter workspaces records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.workspaces.search(
+await asana.workspaces.context_store_search(
     query={"filter": {"eq": {"email_domains": []}}}
 )
 ```
@@ -948,7 +948,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "workspaces",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"email_domains": []}}}
     }
@@ -1101,14 +1101,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.users.search(
+await asana.users.context_store_search(
     query={"filter": {"eq": {"email": "<str>"}}}
 )
 ```
@@ -1121,7 +1121,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"email": "<str>"}}}
     }
@@ -1340,14 +1340,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Teams Search
+### Teams Context Store Search
 
 Search and filter teams records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.teams.search(
+await asana.teams.context_store_search(
     query={"filter": {"eq": {"description": "<str>"}}}
 )
 ```
@@ -1360,7 +1360,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "teams",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"description": "<str>"}}}
     }
@@ -1687,14 +1687,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `range_header` | `string` | No | Optional Range header for partial downloads (e.g., 'bytes=0-99') |
 
 
-### Attachments Search
+### Attachments Context Store Search
 
 Search and filter attachments records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.attachments.search(
+await asana.attachments.context_store_search(
     query={"filter": {"eq": {"connected_to_app": True}}}
 )
 ```
@@ -1707,7 +1707,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "attachments",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"connected_to_app": True}}}
     }
@@ -1883,14 +1883,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Tags Search
+### Tags Context Store Search
 
 Search and filter tags records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.tags.search(
+await asana.tags.context_store_search(
     query={"filter": {"eq": {"color": "<str>"}}}
 )
 ```
@@ -1903,7 +1903,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tags",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"color": "<str>"}}}
     }
@@ -2065,14 +2065,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Sections Search
+### Sections Context Store Search
 
 Search and filter sections records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await asana.sections.search(
+await asana.sections.context_store_search(
     query={"filter": {"eq": {"created_at": "<str>"}}}
 )
 ```
@@ -2085,7 +2085,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "sections",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"created_at": "<str>"}}}
     }

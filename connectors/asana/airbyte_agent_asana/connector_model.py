@@ -2412,6 +2412,13 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             'Who are the team members in one of my teams?',
             'Show me details of my current workspace and its users',
         ],
+        context_store_search=[
+            "Summarize my team's workload and task completion rates",
+            'Find all tasks related to {client_name} across my workspaces',
+            'Analyze the most active projects in my workspace last month',
+            'Compare task completion rates between my different teams',
+            'Identify overdue tasks across all my projects',
+        ],
         search=[
             "Summarize my team's workload and task completion rates",
             'Find all tasks related to {client_name} across my workspaces',
