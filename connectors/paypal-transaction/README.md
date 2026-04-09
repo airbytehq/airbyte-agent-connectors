@@ -95,13 +95,13 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Balances | [List](./REFERENCE.md#balances-list), [Search](./REFERENCE.md#balances-search) |
-| Transactions | [List](./REFERENCE.md#transactions-list), [Search](./REFERENCE.md#transactions-search) |
-| List Payments | [List](./REFERENCE.md#list-payments-list), [Search](./REFERENCE.md#list-payments-search) |
-| List Disputes | [List](./REFERENCE.md#list-disputes-list), [Search](./REFERENCE.md#list-disputes-search) |
-| List Products | [List](./REFERENCE.md#list-products-list), [Search](./REFERENCE.md#list-products-search) |
-| Show Product Details | [Get](./REFERENCE.md#show-product-details-get), [Search](./REFERENCE.md#show-product-details-search) |
-| Search Invoices | [List](./REFERENCE.md#search-invoices-list), [Search](./REFERENCE.md#search-invoices-search) |
+| Balances | [List](./REFERENCE.md#balances-list), [Context Store Search](./REFERENCE.md#balances-context-store-search) |
+| Transactions | [List](./REFERENCE.md#transactions-list), [Context Store Search](./REFERENCE.md#transactions-context-store-search) |
+| List Payments | [List](./REFERENCE.md#list-payments-list), [Context Store Search](./REFERENCE.md#list-payments-context-store-search) |
+| List Disputes | [List](./REFERENCE.md#list-disputes-list), [Context Store Search](./REFERENCE.md#list-disputes-context-store-search) |
+| List Products | [List](./REFERENCE.md#list-products-list), [Context Store Search](./REFERENCE.md#list-products-context-store-search) |
+| Show Product Details | [Get](./REFERENCE.md#show-product-details-get), [Context Store Search](./REFERENCE.md#show-product-details-context-store-search) |
+| Search Invoices | [List](./REFERENCE.md#search-invoices-list), [Context Store Search](./REFERENCE.md#search-invoices-context-store-search) |
 
 
 ### Authentication
@@ -114,7 +114,7 @@ See the official [Paypal-Transaction API reference](https://developer.paypal.com
 
 ## Version information
 
-- **Package version:** 0.1.12
+- **Package version:** 0.1.13
 - **Connector version:** 1.0.1
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/paypal-transaction/CHANGELOG.md)
