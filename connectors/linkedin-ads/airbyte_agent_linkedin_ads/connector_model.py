@@ -35,7 +35,7 @@ from uuid import (
 LinkedinAdsConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('137ece28-5434-455c-8f34-69dc3782f451'),
     name='linkedin-ads',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://api.linkedin.com/rest',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
