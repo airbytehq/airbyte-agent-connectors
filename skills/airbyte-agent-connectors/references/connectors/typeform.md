@@ -7,7 +7,7 @@ The Typeform agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-typeform` v0.1.14
+- **Package:** `airbyte-agent-typeform` v0.1.15
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developer.typeform.com/)
 - **Status:** complete
@@ -81,12 +81,12 @@ async def typeform_execute(entity: str, action: str, params: dict | None = None)
 
 | Entity | Actions |
 |--------|---------|
-| Forms | List, Get, Search |
-| Responses | List, Search |
-| Webhooks | List, Search |
-| Workspaces | List, Search |
-| Images | List, Search |
-| Themes | List, Search |
+| Forms | List, Get, Context Store Search |
+| Responses | List, Context Store Search |
+| Webhooks | List, Context Store Search |
+| Workspaces | List, Context Store Search |
+| Images | List, Context Store Search |
+| Themes | List, Context Store Search |
 
 ## Authentication
 
