@@ -169,7 +169,7 @@ def _collect_search_field_paths(model: ConnectorModelProtocol) -> dict[str, list
 
     openapi_spec = getattr(model, "openapi_spec", None)
     info = getattr(openapi_spec, "info", None)
-    cache_config = getattr(info, "x_airbyte_cache", None)
+    cache_config = getattr(info, "x_airbyte_context_store", None)
     entities = getattr(cache_config, "entities", None)
     if not isinstance(entities, list):
         return {}
