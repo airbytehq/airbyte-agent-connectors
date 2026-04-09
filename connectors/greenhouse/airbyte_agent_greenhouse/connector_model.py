@@ -2867,6 +2867,15 @@ GreenhouseConnectorModel: ConnectorModel = ConnectorModel(
             'Show me recent job offers',
             'List recent applications',
         ],
+        context_store_search=[
+            'Show me candidates from {company} who applied last month',
+            'What are the top 5 sources for our job applications this quarter?',
+            'Analyze the interview schedules for our engineering candidates this week',
+            'Compare the number of applications across different offices',
+            'Identify candidates who have multiple applications in our system',
+            'Summarize the candidate pipeline for our latest job posting',
+            'Find the most active departments in recruiting this month',
+        ],
         search=[
             'Show me candidates from {company} who applied last month',
             'What are the top 5 sources for our job applications this quarter?',
