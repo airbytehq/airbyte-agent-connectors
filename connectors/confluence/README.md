@@ -96,11 +96,11 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Spaces | [List](./REFERENCE.md#spaces-list), [Get](./REFERENCE.md#spaces-get), [Search](./REFERENCE.md#spaces-search) |
-| Pages | [List](./REFERENCE.md#pages-list), [Get](./REFERENCE.md#pages-get), [Search](./REFERENCE.md#pages-search) |
-| Blog Posts | [List](./REFERENCE.md#blog-posts-list), [Get](./REFERENCE.md#blog-posts-get), [Search](./REFERENCE.md#blog-posts-search) |
-| Groups | [List](./REFERENCE.md#groups-list), [Search](./REFERENCE.md#groups-search) |
-| Audit | [List](./REFERENCE.md#audit-list), [Search](./REFERENCE.md#audit-search) |
+| Spaces | [List](./REFERENCE.md#spaces-list), [Get](./REFERENCE.md#spaces-get), [Context Store Search](./REFERENCE.md#spaces-context-store-search) |
+| Pages | [List](./REFERENCE.md#pages-list), [Get](./REFERENCE.md#pages-get), [Context Store Search](./REFERENCE.md#pages-context-store-search) |
+| Blog Posts | [List](./REFERENCE.md#blog-posts-list), [Get](./REFERENCE.md#blog-posts-get), [Context Store Search](./REFERENCE.md#blog-posts-context-store-search) |
+| Groups | [List](./REFERENCE.md#groups-list), [Context Store Search](./REFERENCE.md#groups-context-store-search) |
+| Audit | [List](./REFERENCE.md#audit-list), [Context Store Search](./REFERENCE.md#audit-context-store-search) |
 
 
 ### Authentication
@@ -113,7 +113,7 @@ See the official [Confluence API reference](https://developer.atlassian.com/clou
 
 ## Version information
 
-- **Package version:** 0.1.12
+- **Package version:** 0.1.13
 - **Connector version:** 1.0.0
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/confluence/CHANGELOG.md)

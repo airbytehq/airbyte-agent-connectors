@@ -1193,6 +1193,13 @@ ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
             'Get details about a specific space',
             'Show me blog post details',
         ],
+        context_store_search=[
+            'Find pages created in the last 7 days',
+            'What spaces have the most pages?',
+            'Show me all pages in a specific space',
+            'Find blog posts by a specific author',
+            'What audit events happened this week?',
+        ],
         search=[
             'Find pages created in the last 7 days',
             'What spaces have the most pages?',

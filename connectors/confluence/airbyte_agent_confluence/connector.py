@@ -320,14 +320,14 @@ class ConfluenceConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ConfluenceExecuteResult[Any] | ConfluenceExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -724,7 +724,7 @@ class SpacesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: SpacesSearchQuery,
         limit: int | None = None,
@@ -772,7 +772,7 @@ class SpacesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("spaces", "search", params)
+        result = await self._connector.execute("spaces", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -876,7 +876,7 @@ class PagesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: PagesSearchQuery,
         limit: int | None = None,
@@ -927,7 +927,7 @@ class PagesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("pages", "search", params)
+        result = await self._connector.execute("pages", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1031,7 +1031,7 @@ class BlogPostsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BlogPostsSearchQuery,
         limit: int | None = None,
@@ -1077,7 +1077,7 @@ class BlogPostsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("blog_posts", "search", params)
+        result = await self._connector.execute("blog_posts", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1135,7 +1135,7 @@ class GroupsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: GroupsSearchQuery,
         limit: int | None = None,
@@ -1176,7 +1176,7 @@ class GroupsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("groups", "search", params)
+        result = await self._connector.execute("groups", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1243,7 +1243,7 @@ class AuditQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AuditSearchQuery,
         limit: int | None = None,
@@ -1291,7 +1291,7 @@ class AuditQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("audit", "search", params)
+        result = await self._connector.execute("audit", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

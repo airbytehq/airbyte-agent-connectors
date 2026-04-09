@@ -1,5 +1,10 @@
 # Confluence changelog
 
+## [0.1.13] - 2026-04-09
+- Updated connector definition (YAML version 1.0.0)
+- Source commit: 3cecc817
+- SDK version: 0.1.0
+
 ## [0.1.12] - 2026-04-08
 - Updated connector definition (YAML version 1.0.0)
 - Source commit: eeaf9a60
