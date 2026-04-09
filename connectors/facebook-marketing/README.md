@@ -110,16 +110,16 @@ This connector supports the following entities and actions. For more details, se
 | Entity | Actions |
 |--------|---------|
 | Current User | [Get](./REFERENCE.md#current-user-get) |
-| Ad Accounts | [List](./REFERENCE.md#ad-accounts-list), [Search](./REFERENCE.md#ad-accounts-search) |
-| Campaigns | [List](./REFERENCE.md#campaigns-list), [Create](./REFERENCE.md#campaigns-create), [Get](./REFERENCE.md#campaigns-get), [Update](./REFERENCE.md#campaigns-update), [Search](./REFERENCE.md#campaigns-search) |
-| Ad Sets | [List](./REFERENCE.md#ad-sets-list), [Create](./REFERENCE.md#ad-sets-create), [Get](./REFERENCE.md#ad-sets-get), [Update](./REFERENCE.md#ad-sets-update), [Search](./REFERENCE.md#ad-sets-search) |
-| Ads | [List](./REFERENCE.md#ads-list), [Create](./REFERENCE.md#ads-create), [Get](./REFERENCE.md#ads-get), [Update](./REFERENCE.md#ads-update), [Search](./REFERENCE.md#ads-search) |
-| Ad Creatives | [List](./REFERENCE.md#ad-creatives-list), [Search](./REFERENCE.md#ad-creatives-search) |
-| Ads Insights | [List](./REFERENCE.md#ads-insights-list), [Search](./REFERENCE.md#ads-insights-search) |
-| Ad Account | [Get](./REFERENCE.md#ad-account-get), [Search](./REFERENCE.md#ad-account-search) |
-| Custom Conversions | [List](./REFERENCE.md#custom-conversions-list), [Search](./REFERENCE.md#custom-conversions-search) |
-| Images | [List](./REFERENCE.md#images-list), [Search](./REFERENCE.md#images-search) |
-| Videos | [List](./REFERENCE.md#videos-list), [Search](./REFERENCE.md#videos-search) |
+| Ad Accounts | [List](./REFERENCE.md#ad-accounts-list), [Context Store Search](./REFERENCE.md#ad-accounts-context-store-search) |
+| Campaigns | [List](./REFERENCE.md#campaigns-list), [Create](./REFERENCE.md#campaigns-create), [Get](./REFERENCE.md#campaigns-get), [Update](./REFERENCE.md#campaigns-update), [Context Store Search](./REFERENCE.md#campaigns-context-store-search) |
+| Ad Sets | [List](./REFERENCE.md#ad-sets-list), [Create](./REFERENCE.md#ad-sets-create), [Get](./REFERENCE.md#ad-sets-get), [Update](./REFERENCE.md#ad-sets-update), [Context Store Search](./REFERENCE.md#ad-sets-context-store-search) |
+| Ads | [List](./REFERENCE.md#ads-list), [Create](./REFERENCE.md#ads-create), [Get](./REFERENCE.md#ads-get), [Update](./REFERENCE.md#ads-update), [Context Store Search](./REFERENCE.md#ads-context-store-search) |
+| Ad Creatives | [List](./REFERENCE.md#ad-creatives-list), [Context Store Search](./REFERENCE.md#ad-creatives-context-store-search) |
+| Ads Insights | [List](./REFERENCE.md#ads-insights-list), [Context Store Search](./REFERENCE.md#ads-insights-context-store-search) |
+| Ad Account | [Get](./REFERENCE.md#ad-account-get), [Context Store Search](./REFERENCE.md#ad-account-context-store-search) |
+| Custom Conversions | [List](./REFERENCE.md#custom-conversions-list), [Context Store Search](./REFERENCE.md#custom-conversions-context-store-search) |
+| Images | [List](./REFERENCE.md#images-list), [Context Store Search](./REFERENCE.md#images-context-store-search) |
+| Videos | [List](./REFERENCE.md#videos-list), [Context Store Search](./REFERENCE.md#videos-context-store-search) |
 | Pixels | [List](./REFERENCE.md#pixels-list), [Get](./REFERENCE.md#pixels-get) |
 | Pixel Stats | [List](./REFERENCE.md#pixel-stats-list) |
 | Ad Library | [List](./REFERENCE.md#ad-library-list) |
@@ -135,7 +135,7 @@ See the official [Facebook-Marketing API reference](https://developers.facebook.
 
 ## Version information
 
-- **Package version:** 0.1.68
+- **Package version:** 0.1.69
 - **Connector version:** 1.0.23
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/facebook-marketing/CHANGELOG.md)

@@ -5426,6 +5426,12 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Find ads about climate change in the Ad Library',
             'Show me Ad Library ads from a specific Facebook page',
         ],
+        context_store_search=[
+            'Show me the ad sets with the highest daily budget',
+            'Show me the performance insights for the last 7 days',
+            'Which campaigns have the most spend this month?',
+            'Show me ads with the highest click-through rate',
+        ],
         search=[
             'Show me the ad sets with the highest daily budget',
             'Show me the performance insights for the last 7 days',
