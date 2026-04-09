@@ -11796,6 +11796,7 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
             'Show me details for a recent order',
             'Show me product variants for a recent product',
         ],
+        context_store_search=['Show me orders from the last 30 days', 'Show me abandoned checkouts from this week', 'What price rules are currently active?'],
         search=['Show me orders from the last 30 days', 'Show me abandoned checkouts from this week', 'What price rules are currently active?'],
         unsupported=[
             'Create a new customer in Shopify',
