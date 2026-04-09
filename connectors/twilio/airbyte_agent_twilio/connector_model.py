@@ -32,7 +32,7 @@ from uuid import (
 TwilioConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b9dc6155-672e-42ea-b10d-9f1f1fb95ab1'),
     name='twilio',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://api.twilio.com/2010-04-01',
     auth=AuthConfig(
         type=AuthType.BASIC,
