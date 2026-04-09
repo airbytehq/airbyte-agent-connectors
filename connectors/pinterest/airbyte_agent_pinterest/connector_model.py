@@ -3318,6 +3318,12 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
             'List all audiences for my ad account',
             'Show me my catalog feeds',
         ],
+        context_store_search=[
+            'Which campaigns are currently active?',
+            'What are the top boards by pin count?',
+            'Show me ads that have been rejected',
+            'Find campaigns with the highest daily spend cap',
+        ],
         search=[
             'Which campaigns are currently active?',
             'What are the top boards by pin count?',
