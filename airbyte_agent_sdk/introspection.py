@@ -18,6 +18,14 @@ from typing import Any, Protocol
 MAX_EXAMPLE_QUESTIONS = 5  # Maximum number of example questions to include in description
 
 
+def _simplify_type(type_value: str | list[str]) -> str:
+    """Simplify JSON Schema type to display string. ['null', 'string'] → 'string'."""
+    if isinstance(type_value, str):
+        return type_value
+    types = [t for t in type_value if t != "null"]
+    return types[0] if types else "any"
+
+
 def _type_includes(type_value: Any, target: str) -> bool:
     if isinstance(type_value, list):
         return target in type_value
@@ -36,16 +44,16 @@ def _is_array_schema(schema: dict[str, Any]) -> bool:
     return _type_includes(schema.get("type"), "array")
 
 
-def _dedupe_param_entries(entries: list[tuple[str, bool]]) -> list[tuple[str, bool]]:
-    seen: dict[str, bool] = {}
+def _dedupe_param_entries(entries: list[tuple[str, bool, str]]) -> list[tuple[str, bool, str]]:
+    seen: dict[str, tuple[bool, str]] = {}
     ordered: list[str] = []
-    for name, required in entries:
+    for name, required, param_type in entries:
         if name not in seen:
-            seen[name] = required
+            seen[name] = (required, param_type)
             ordered.append(name)
         else:
-            seen[name] = seen[name] or required
-    return [(name, seen[name]) for name in ordered]
+            seen[name] = (seen[name][0] or required, seen[name][1])
+    return [(name, seen[name][0], seen[name][1]) for name in ordered]
 
 
 def _flatten_schema_params(
@@ -53,7 +61,7 @@ def _flatten_schema_params(
     prefix: str = "",
     parent_required: bool = True,
     seen_stack: set[int] | None = None,
-) -> list[tuple[str, bool]]:
+) -> list[tuple[str, bool, str]]:
     if not isinstance(schema, dict):
         return []
 
@@ -66,7 +74,7 @@ def _flatten_schema_params(
 
     seen_stack.add(schema_id)
     try:
-        entries: list[tuple[str, bool]] = []
+        entries: list[tuple[str, bool, str]] = []
 
         for subschema in schema.get("allOf", []) or []:
             if isinstance(subschema, dict):
@@ -83,12 +91,13 @@ def _flatten_schema_params(
             for prop_name, prop_schema in properties.items():
                 path = f"{prefix}{prop_name}" if prefix else prop_name
                 is_required = parent_required and prop_name in required_fields
-                entries.append((path, is_required))
+                param_type = _simplify_type(prop_schema.get("type", "string")) if isinstance(prop_schema, dict) else "string"
+                entries.append((path, is_required, param_type))
 
                 if isinstance(prop_schema, dict):
                     if _is_array_schema(prop_schema):
                         array_path = f"{path}[]"
-                        entries.append((array_path, is_required))
+                        entries.append((array_path, is_required, "array"))
                         items = prop_schema.get("items")
                         if isinstance(items, dict):
                             entries.extend(_flatten_schema_params(items, prefix=f"{array_path}.", parent_required=is_required, seen_stack=seen_stack))
@@ -192,8 +201,57 @@ def _collect_search_field_paths(model: ConnectorModelProtocol) -> dict[str, list
     return search_fields
 
 
+def _collect_entity_field_schemas(model: ConnectorModelProtocol) -> dict[str, list[dict[str, Any]]]:
+    """Collect per-entity field schemas from cache config."""
+    openapi_spec = getattr(model, "openapi_spec", None)
+    info = getattr(openapi_spec, "info", None)
+    cache_config = getattr(info, "x_airbyte_context_store", None)
+    entities = getattr(cache_config, "entities", None)
+    if not isinstance(entities, list):
+        return {}
+    result: dict[str, list[dict[str, Any]]] = {}
+    for entity in entities:
+        entity_name = _cache_field_value(entity, "entity")
+        if not isinstance(entity_name, str) or not entity_name:
+            continue
+        fields_list = _cache_field_value(entity, "fields") or []
+        if not isinstance(fields_list, list):
+            continue
+        fields = []
+        for field in fields_list:
+            name = _cache_field_value(field, "name")
+            if not isinstance(name, str) or not name:
+                continue
+            fields.append(
+                {
+                    "name": name,
+                    "type": _cache_field_value(field, "type") or "any",
+                    "description": _cache_field_value(field, "description") or "",
+                }
+            )
+        if fields:
+            result[entity_name] = fields
+    return result
+
+
+def _build_relationship_index(
+    entities: list[Any],
+) -> tuple[dict[tuple[str, str], Any], dict[str, list[Any]]]:
+    """Build relationship indexes from entity relationships."""
+    rel_index: dict[tuple[str, str], Any] = {}
+    rels_by_entity: dict[str, list[Any]] = {}
+    for entity in entities:
+        for rel in getattr(entity, "relationships", []) or []:
+            source = getattr(rel, "source_entity", None)
+            fk = getattr(rel, "foreign_key", None)
+            if source and fk:
+                rel_index[(source, fk)] = rel
+                rels_by_entity.setdefault(source, []).append(rel)
+    return rel_index, rels_by_entity
+
+
 def _format_search_param_signature() -> str:
-    params = ["query*", "limit?", "cursor?", "fields?"]
+    params = ["query", "limit?", "cursor?", "fields?"]
     return f"({', '.join(params)})"
 
 
@@ -252,8 +310,8 @@ class ConnectorModelProtocol(Protocol):
 def format_param_signature(endpoint: EndpointProtocol) -> str:
     """Format parameter signature for an endpoint action.
 
-    Returns a string like: (id*) or (limit?, starting_after?, email?)
-    where * = required, ? = optional
+    Returns a string like: (id: string) or (limit?: integer, starting_after?: string)
+    where ? = optional, unmarked = required
 
     Args:
         endpoint: Object conforming to EndpointProtocol (e.g., EndpointDefinition)
@@ -272,22 +330,23 @@ def format_param_signature(endpoint: EndpointProtocol) -> str:
 
     # Path params (always required)
     for name in path_params:
-        params.append(f"{name}*")
+        params.append(f"{name}: string")
 
     # Query params
     for name in query_params:
         schema = query_params_schema.get(name, {})
         required = schema.get("required", False)
-        params.append(f"{name}{'*' if required else '?'}")
+        param_type = _simplify_type(schema.get("type", "string"))
+        params.append(f"{name}{'?' if not required else ''}: {param_type}")
 
     # Body fields (include nested params from schema when available)
     if isinstance(request_schema, dict):
-        for name, required in _flatten_schema_params(request_schema):
-            params.append(f"{name}{'*' if required else '?'}")
+        for name, required, param_type in _flatten_schema_params(request_schema):
+            params.append(f"{name}{'?' if not required else ''}: {param_type}")
     elif request_schema:
         required_fields = set(request_schema.get("required", [])) if isinstance(request_schema, dict) else set()
         for name in body_fields:
-            params.append(f"{name}{'*' if name in required_fields else '?'}")
+            params.append(f"{name}{'?' if name not in required_fields else ''}: string")
 
     return f"({', '.join(params)})" if params else "()"
 
@@ -400,7 +459,7 @@ def generate_tool_description(
     """Generate AI tool description from connector metadata.
 
     Produces a detailed description that includes:
-    - Per-entity/action parameter signatures with required (*) and optional (?) markers
+    - Per-entity/action parameter signatures with optional (?) markers
     - Response structure documentation with pagination hints
     - Example questions if available in the OpenAPI spec
 
@@ -420,8 +479,11 @@ def generate_tool_description(
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
     search_field_paths = _collect_search_field_paths(model) if enable_hosted_mode_features else {}
+    entity_field_schemas = _collect_entity_field_schemas(model) if enable_hosted_mode_features else {}
+    _, rels_by_entity = _build_relationship_index(model.entities)
+
     # Avoid a "PARAMETERS:" header because some docstring parsers treat it as a params section marker.
-    lines.append("ENTITIES (ACTIONS + PARAMS):")
+    lines.append("ENTITIES:")
     for entity in model.entities:
         # Emit per-entity AI hints if available
         ai_hints = getattr(entity, "ai_hints", None) or {}
@@ -442,30 +504,63 @@ def generate_tool_description(
         hint_search = ai_hints.get("search_strategy") if isinstance(ai_hints, dict) else None
         if hint_search:
             lines.append(f"    SEARCH STRATEGY: {hint_search}")
+
+        # Fields sub-section
+        cache_fields = entity_field_schemas.get(entity.name)
+        if cache_fields:
+            lines.append("    Fields:")
+            for field in cache_fields:
+                field_name = field["name"]
+                simplified = _simplify_type(field["type"])
+                line = f"      {field_name}: {simplified}"
+                if field.get("description"):
+                    line += f" — {field['description']}"
+                lines.append(line)
+
+        # Relationships sub-section
+        entity_rels = rels_by_entity.get(entity.name, [])
+        if entity_rels:
+            lines.append("    Relationships:")
+            for rel in entity_rels:
+                fk = getattr(rel, "foreign_key", "")
+                target = getattr(rel, "target_entity", "")
+                target_key = getattr(rel, "target_key", "id")
+                line = f"      {fk} → {target}.{target_key}"
+                cardinality = getattr(rel, "cardinality", None)
+                if cardinality:
+                    line += f" ({cardinality.replace('_', '-')})"
+                rel_desc = getattr(rel, "description", None)
+                if rel_desc:
+                    line += f" — {rel_desc}"
+                lines.append(line)
+
+        # Actions sub-section
         actions = getattr(entity, "actions", []) or []
         endpoints = getattr(entity, "endpoints", {}) or {}
+        lines.append("    Actions:")
         for action in actions:
             action_str = action.value if hasattr(action, "value") else str(action)
             endpoint = endpoints.get(action)
             if endpoint:
                 param_sig = format_param_signature(endpoint)
-                lines.append(f"    - {action_str}{param_sig}")
+                lines.append(f"      - {action_str}{param_sig}")
             else:
-                lines.append(f"    - {action_str}()")
+                lines.append(f"      - {action_str}()")
         if entity.name in search_field_paths:
             search_sig = _format_search_param_signature()
-            lines.append(f"    - context_store_search{search_sig}")
+            lines.append(f"      - context_store_search{search_sig}")
+
+        # Searchable fields sub-section (nested paths for search queries)
+        entity_search_fields = search_field_paths.get(entity.name)
+        if entity_search_fields:
+            display_fields = entity_search_fields[:20]
+            suffix = f" (and {len(entity_search_fields) - 20} more)" if len(entity_search_fields) > 20 else ""
+            lines.append(f"    Searchable fields: {', '.join(display_fields)}{suffix}")
+
         # Per-entity example questions from ai_hints
         hint_examples = ai_hints.get("example_questions", []) if isinstance(ai_hints, dict) else []
         if hint_examples:
             lines.append(f"    Examples: {'; '.join(hint_examples[:3])}")
-
-    # Entity relationships
-    all_relationships = [r for e in model.entities for r in e.relationships]
-    if all_relationships:
-        lines.append("ENTITY RELATIONSHIPS:")
-        for rel in all_relationships:
-            lines.append(f"  {rel.format_line()}")
 
     # Response structure (brief, includes pagination hint)
     lines.append("RESPONSE STRUCTURE:")
@@ -481,8 +576,9 @@ def generate_tool_description(
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
 
     if search_field_paths:
-        lines.append("SEARCH (PREFERRED):")
+        lines.append("SEARCH:")
         lines.append('  execute(entity, action="context_store_search", params={')
+
         lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
         lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')
         lines.append("  })")
@@ -491,13 +587,6 @@ def generate_tool_description(
         lines.append("  Conditions are composable:")
         lines.append("    - eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any")
         lines.append('    - and/or/not to combine conditions (e.g., {"and": [cond1, cond2]})')
-
-        lines.append("SEARCHABLE FIELDS:")
-        for entity_name, field_paths in search_field_paths.items():
-            if field_paths:
-                lines.append(f"  {entity_name}: {', '.join(field_paths)}")
-            else:
-                lines.append(f"  {entity_name}: (no fields listed)")
 
     # Add example questions — try direct model field first, fall back to openapi_spec
     example_questions = getattr(model, "example_questions", None)
@@ -530,6 +619,6 @@ def generate_tool_description(
     lines.append("  - entity: Entity name (string)")
     lines.append("  - action: Operation to perform (string)")
     lines.append("  - params: Operation parameters (dict) - see entity details above")
-    lines.append("Parameter markers: * = required, ? = optional")
+    lines.append("Parameter markers: ? = optional, unmarked = required")
 
     return "\n".join(lines)

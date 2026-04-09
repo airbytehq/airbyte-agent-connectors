@@ -215,6 +215,12 @@ class Ad(BaseModel):
     created_at: Union[str, Any] = Field(default=None)
     updated_at: Union[str, Any] = Field(default=None)
 
+class CreativeAdToPlaceProperties(BaseModel):
+    """Ad-to-place properties"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    place_id: Union[str, Any] = Field(default=None)
+
 class CreativeWebViewProperties(BaseModel):
     """Web view properties"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -224,12 +230,6 @@ class CreativeWebViewProperties(BaseModel):
     deep_link_urls: Union[list[str], Any] = Field(default=None)
     url: Union[str, Any] = Field(default=None)
     use_immersive_mode: Union[bool, Any] = Field(default=None)
-
-class CreativeAdToPlaceProperties(BaseModel):
-    """Ad-to-place properties"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    place_id: Union[str, Any] = Field(default=None)
 
 class Creative(BaseModel):
     """Snapchat creative object"""
