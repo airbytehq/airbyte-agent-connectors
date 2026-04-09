@@ -2222,6 +2222,7 @@ AmazonAdsConnectorModel: ConnectorModel = ConnectorModel(
             'List all portfolios for one of my profiles',
             'Show me all sponsored product campaigns',
         ],
+        context_store_search=['What campaigns are currently enabled?', 'Find campaigns with a specific targeting type'],
         search=['What campaigns are currently enabled?', 'Find campaigns with a specific targeting type'],
         unsupported=[
             'Create a new advertising campaign',

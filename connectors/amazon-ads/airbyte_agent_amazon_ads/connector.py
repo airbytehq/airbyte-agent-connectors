@@ -281,14 +281,14 @@ class AmazonAdsConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> AmazonAdsExecuteResult[Any] | AmazonAdsExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -776,7 +776,7 @@ information about the advertiser's account in a specific marketplace.
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProfilesSearchQuery,
         limit: int | None = None,
@@ -819,7 +819,7 @@ information about the advertiser's account in a specific marketplace.
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("profiles", "search", params)
+        result = await self._connector.execute("profiles", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
