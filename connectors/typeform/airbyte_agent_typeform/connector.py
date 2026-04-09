@@ -310,14 +310,14 @@ class TypeformConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> TypeformExecuteResult[Any] | TypeformExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -711,7 +711,7 @@ class FormsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: FormsSearchQuery,
         limit: int | None = None,
@@ -762,7 +762,7 @@ class FormsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("forms", "search", params)
+        result = await self._connector.execute("forms", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -841,7 +841,7 @@ class ResponsesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ResponsesSearchQuery,
         limit: int | None = None,
@@ -890,7 +890,7 @@ class ResponsesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("responses", "search", params)
+        result = await self._connector.execute("responses", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -944,7 +944,7 @@ class WebhooksQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WebhooksSearchQuery,
         limit: int | None = None,
@@ -989,7 +989,7 @@ class WebhooksQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("webhooks", "search", params)
+        result = await self._connector.execute("webhooks", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1047,7 +1047,7 @@ class WorkspacesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WorkspacesSearchQuery,
         limit: int | None = None,
@@ -1091,7 +1091,7 @@ class WorkspacesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("workspaces", "search", params)
+        result = await self._connector.execute("workspaces", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1139,7 +1139,7 @@ class ImagesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ImagesSearchQuery,
         limit: int | None = None,
@@ -1184,7 +1184,7 @@ class ImagesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("images", "search", params)
+        result = await self._connector.execute("images", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1242,7 +1242,7 @@ class ThemesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ThemesSearchQuery,
         limit: int | None = None,
@@ -1291,7 +1291,7 @@ class ThemesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("themes", "search", params)
+        result = await self._connector.execute("themes", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

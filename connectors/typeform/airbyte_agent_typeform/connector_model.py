@@ -3190,6 +3190,12 @@ TypeformConnectorModel: ConnectorModel = ConnectorModel(
             'List all themes in my account',
             'Get the details of a specific form',
         ],
+        context_store_search=[
+            'Which forms received the most responses last month?',
+            'Find responses submitted in the last week',
+            'What forms were created this year?',
+            'Show me all forms in a specific workspace',
+        ],
         search=[
             'Which forms received the most responses last month?',
             'Find responses submitted in the last week',
