@@ -7,7 +7,7 @@ The Asana agent connector is a Python package that equips AI agents to interact 
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-asana` v0.19.133
+- **Package:** `airbyte-agent-asana` v0.19.134
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developers.asana.com/reference/rest-api-reference)
 - **Status:** complete
@@ -84,25 +84,25 @@ async def asana_execute(entity: str, action: str, params: dict | None = None):
 
 | Entity | Actions |
 |--------|---------|
-| Tasks | List, Get, Search |
+| Tasks | List, Get, Context Store Search |
 | Project Tasks | List |
 | Workspace Task Search | List |
-| Projects | List, Get, Search |
+| Projects | List, Get, Context Store Search |
 | Task Projects | List |
 | Team Projects | List |
 | Workspace Projects | List |
-| Workspaces | List, Get, Search |
-| Users | List, Get, Search |
+| Workspaces | List, Get, Context Store Search |
+| Users | List, Get, Context Store Search |
 | Workspace Users | List |
 | Team Users | List |
-| Teams | Get, Search |
+| Teams | Get, Context Store Search |
 | Workspace Teams | List |
 | User Teams | List |
-| Attachments | List, Get, Download, Search |
+| Attachments | List, Get, Download, Context Store Search |
 | Workspace Tags | List |
-| Tags | Get, Search |
+| Tags | Get, Context Store Search |
 | Project Sections | List |
-| Sections | Get, Search |
+| Sections | Get, Context Store Search |
 | Task Subtasks | List |
 | Task Dependencies | List |
 | Task Dependents | List |
