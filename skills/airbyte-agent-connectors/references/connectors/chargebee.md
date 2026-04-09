@@ -7,7 +7,7 @@ The Chargebee agent connector is a Python package that equips AI agents to inter
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-chargebee` v0.1.13
+- **Package:** `airbyte-agent-chargebee` v0.1.14
 - **Auth:** Token
 - **Docs:** [Official API docs](https://apidocs.chargebee.com/docs/api)
 - **Status:** complete
@@ -90,17 +90,17 @@ async def chargebee_execute(entity: str, action: str, params: dict | None = None
 
 | Entity | Actions |
 |--------|---------|
-| Customer | List, Get, Search |
-| Subscription | List, Get, Search |
-| Invoice | List, Get, Search |
-| Credit Note | List, Get, Search |
-| Coupon | List, Get, Search |
-| Transaction | List, Get, Search |
-| Event | List, Get, Search |
-| Order | List, Get, Search |
-| Item | List, Get, Search |
-| Item Price | List, Get, Search |
-| Payment Source | List, Get, Search |
+| Customer | List, Get, Context Store Search |
+| Subscription | List, Get, Context Store Search |
+| Invoice | List, Get, Context Store Search |
+| Credit Note | List, Get, Context Store Search |
+| Coupon | List, Get, Context Store Search |
+| Transaction | List, Get, Context Store Search |
+| Event | List, Get, Context Store Search |
+| Order | List, Get, Context Store Search |
+| Item | List, Get, Context Store Search |
+| Item Price | List, Get, Context Store Search |
+| Payment Source | List, Get, Context Store Search |
 
 ## Authentication
 
