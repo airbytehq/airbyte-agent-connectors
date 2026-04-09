@@ -1,5 +1,5 @@
 """
-Validate x-airbyte-cache entities against the Airbyte source connector manifest.
+Validate x-airbyte-context-store entities against the Airbyte source connector manifest.
 
 Checks that each cache entity name corresponds to a real stream in the manifest,
 and that cache field names exist as properties in the manifest stream schema.
@@ -61,9 +61,9 @@ def validate_cache_against_manifest(
     connector_yaml_path: str | Path,
     connector_def: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Validate that x-airbyte-cache entities match the Airbyte manifest.
+    """Validate that x-airbyte-context-store entities match the Airbyte manifest.
 
-    For each entity in x-airbyte-cache, checks:
+    For each entity in x-airbyte-context-store, checks:
     1. A stream with a matching name exists in the manifest.  If the entity has
        an ``x-airbyte-name`` field, that value is used for the manifest lookup;
        otherwise the ``entity`` name is used.
@@ -89,12 +89,12 @@ def validate_cache_against_manifest(
             return {"errors": [f"Failed to load connector.yaml: {e}"], "warnings": []}
 
     info = connector_def.get("info", {})
-    cache_entities: list[dict[str, Any]] = info.get("x-airbyte-cache", {}).get("entities", [])
+    cache_entities: list[dict[str, Any]] = info.get("x-airbyte-context-store", {}).get("entities", [])
 
     if not cache_entities:
         return {
             "errors": [],
-            "warnings": ["No x-airbyte-cache entities found in connector.yaml — skipping cache validation"],
+            "warnings": ["No x-airbyte-context-store entities found in connector.yaml — skipping cache validation"],
             "entities_checked": 0,
             "manifest_streams": [],
         }

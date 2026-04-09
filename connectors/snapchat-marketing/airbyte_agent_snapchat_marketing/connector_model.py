@@ -32,7 +32,7 @@ from uuid import (
 SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('200330b2-ea62-4d11-ac6d-cfe3e3f8ab2b'),
     name='snapchat-marketing',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://adsapi.snapchat.com/v1',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
