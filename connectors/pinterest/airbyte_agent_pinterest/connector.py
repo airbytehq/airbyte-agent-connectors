@@ -466,14 +466,14 @@ class PinterestConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> PinterestExecuteResult[Any] | PinterestExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -974,7 +974,7 @@ class AdAccountsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AdAccountsSearchQuery,
         limit: int | None = None,
@@ -1019,7 +1019,7 @@ class AdAccountsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ad_accounts", "search", params)
+        result = await self._connector.execute("ad_accounts", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1105,7 +1105,7 @@ class BoardsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BoardsSearchQuery,
         limit: int | None = None,
@@ -1153,7 +1153,7 @@ class BoardsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("boards", "search", params)
+        result = await self._connector.execute("boards", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1220,7 +1220,7 @@ class CampaignsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CampaignsSearchQuery,
         limit: int | None = None,
@@ -1274,7 +1274,7 @@ class CampaignsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("campaigns", "search", params)
+        result = await self._connector.execute("campaigns", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1341,7 +1341,7 @@ class AdGroupsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AdGroupsSearchQuery,
         limit: int | None = None,
@@ -1403,7 +1403,7 @@ class AdGroupsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ad_groups", "search", params)
+        result = await self._connector.execute("ad_groups", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1470,7 +1470,7 @@ class AdsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AdsSearchQuery,
         limit: int | None = None,
@@ -1535,7 +1535,7 @@ class AdsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ads", "search", params)
+        result = await self._connector.execute("ads", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1596,7 +1596,7 @@ class BoardSectionsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BoardSectionsSearchQuery,
         limit: int | None = None,
@@ -1635,7 +1635,7 @@ class BoardSectionsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("board_sections", "search", params)
+        result = await self._connector.execute("board_sections", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1696,7 +1696,7 @@ class BoardPinsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BoardPinsSearchQuery,
         limit: int | None = None,
@@ -1750,7 +1750,7 @@ class BoardPinsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("board_pins", "search", params)
+        result = await self._connector.execute("board_pins", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1808,7 +1808,7 @@ class CatalogsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CatalogsSearchQuery,
         limit: int | None = None,
@@ -1850,7 +1850,7 @@ class CatalogsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("catalogs", "search", params)
+        result = await self._connector.execute("catalogs", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1908,7 +1908,7 @@ class CatalogsFeedsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CatalogsFeedsSearchQuery,
         limit: int | None = None,
@@ -1958,7 +1958,7 @@ class CatalogsFeedsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("catalogs_feeds", "search", params)
+        result = await self._connector.execute("catalogs_feeds", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2016,7 +2016,7 @@ class CatalogsProductGroupsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CatalogsProductGroupsSearchQuery,
         limit: int | None = None,
@@ -2062,7 +2062,7 @@ class CatalogsProductGroupsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("catalogs_product_groups", "search", params)
+        result = await self._connector.execute("catalogs_product_groups", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2123,7 +2123,7 @@ class AudiencesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AudiencesSearchQuery,
         limit: int | None = None,
@@ -2171,7 +2171,7 @@ class AudiencesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("audiences", "search", params)
+        result = await self._connector.execute("audiences", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2232,7 +2232,7 @@ class ConversionTagsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ConversionTagsSearchQuery,
         limit: int | None = None,
@@ -2278,7 +2278,7 @@ class ConversionTagsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("conversion_tags", "search", params)
+        result = await self._connector.execute("conversion_tags", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2339,7 +2339,7 @@ class CustomerListsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CustomerListsSearchQuery,
         limit: int | None = None,
@@ -2386,7 +2386,7 @@ class CustomerListsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("customer_lists", "search", params)
+        result = await self._connector.execute("customer_lists", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2450,7 +2450,7 @@ class KeywordsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: KeywordsSearchQuery,
         limit: int | None = None,
@@ -2495,7 +2495,7 @@ class KeywordsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("keywords", "search", params)
+        result = await self._connector.execute("keywords", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

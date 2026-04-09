@@ -96,20 +96,20 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Ad Accounts | [List](./REFERENCE.md#ad-accounts-list), [Get](./REFERENCE.md#ad-accounts-get), [Search](./REFERENCE.md#ad-accounts-search) |
-| Boards | [List](./REFERENCE.md#boards-list), [Get](./REFERENCE.md#boards-get), [Search](./REFERENCE.md#boards-search) |
-| Campaigns | [List](./REFERENCE.md#campaigns-list), [Search](./REFERENCE.md#campaigns-search) |
-| Ad Groups | [List](./REFERENCE.md#ad-groups-list), [Search](./REFERENCE.md#ad-groups-search) |
-| Ads | [List](./REFERENCE.md#ads-list), [Search](./REFERENCE.md#ads-search) |
-| Board Sections | [List](./REFERENCE.md#board-sections-list), [Search](./REFERENCE.md#board-sections-search) |
-| Board Pins | [List](./REFERENCE.md#board-pins-list), [Search](./REFERENCE.md#board-pins-search) |
-| Catalogs | [List](./REFERENCE.md#catalogs-list), [Search](./REFERENCE.md#catalogs-search) |
-| Catalogs Feeds | [List](./REFERENCE.md#catalogs-feeds-list), [Search](./REFERENCE.md#catalogs-feeds-search) |
-| Catalogs Product Groups | [List](./REFERENCE.md#catalogs-product-groups-list), [Search](./REFERENCE.md#catalogs-product-groups-search) |
-| Audiences | [List](./REFERENCE.md#audiences-list), [Search](./REFERENCE.md#audiences-search) |
-| Conversion Tags | [List](./REFERENCE.md#conversion-tags-list), [Search](./REFERENCE.md#conversion-tags-search) |
-| Customer Lists | [List](./REFERENCE.md#customer-lists-list), [Search](./REFERENCE.md#customer-lists-search) |
-| Keywords | [List](./REFERENCE.md#keywords-list), [Search](./REFERENCE.md#keywords-search) |
+| Ad Accounts | [List](./REFERENCE.md#ad-accounts-list), [Get](./REFERENCE.md#ad-accounts-get), [Context Store Search](./REFERENCE.md#ad-accounts-context-store-search) |
+| Boards | [List](./REFERENCE.md#boards-list), [Get](./REFERENCE.md#boards-get), [Context Store Search](./REFERENCE.md#boards-context-store-search) |
+| Campaigns | [List](./REFERENCE.md#campaigns-list), [Context Store Search](./REFERENCE.md#campaigns-context-store-search) |
+| Ad Groups | [List](./REFERENCE.md#ad-groups-list), [Context Store Search](./REFERENCE.md#ad-groups-context-store-search) |
+| Ads | [List](./REFERENCE.md#ads-list), [Context Store Search](./REFERENCE.md#ads-context-store-search) |
+| Board Sections | [List](./REFERENCE.md#board-sections-list), [Context Store Search](./REFERENCE.md#board-sections-context-store-search) |
+| Board Pins | [List](./REFERENCE.md#board-pins-list), [Context Store Search](./REFERENCE.md#board-pins-context-store-search) |
+| Catalogs | [List](./REFERENCE.md#catalogs-list), [Context Store Search](./REFERENCE.md#catalogs-context-store-search) |
+| Catalogs Feeds | [List](./REFERENCE.md#catalogs-feeds-list), [Context Store Search](./REFERENCE.md#catalogs-feeds-context-store-search) |
+| Catalogs Product Groups | [List](./REFERENCE.md#catalogs-product-groups-list), [Context Store Search](./REFERENCE.md#catalogs-product-groups-context-store-search) |
+| Audiences | [List](./REFERENCE.md#audiences-list), [Context Store Search](./REFERENCE.md#audiences-context-store-search) |
+| Conversion Tags | [List](./REFERENCE.md#conversion-tags-list), [Context Store Search](./REFERENCE.md#conversion-tags-context-store-search) |
+| Customer Lists | [List](./REFERENCE.md#customer-lists-list), [Context Store Search](./REFERENCE.md#customer-lists-context-store-search) |
+| Keywords | [List](./REFERENCE.md#keywords-list), [Context Store Search](./REFERENCE.md#keywords-context-store-search) |
 
 
 ### Authentication
@@ -122,7 +122,7 @@ See the official [Pinterest API reference](https://developers.pinterest.com/docs
 
 ## Version information
 
-- **Package version:** 0.1.14
+- **Package version:** 0.1.15
 - **Connector version:** 0.1.3
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/pinterest/CHANGELOG.md)
