@@ -30,7 +30,7 @@ from uuid import (
 HarvestConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('fe2b4084-3386-4d3b-9ad6-308f61a6f1e6'),
     name='harvest',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://api.harvestapp.com/v2',
     auth=AuthConfig(
         options=[
