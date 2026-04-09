@@ -1847,6 +1847,12 @@ PaypalTransactionConnectorModel: ConnectorModel = ConnectorModel(
             'List all disputes',
             'Show recent payments',
         ],
+        context_store_search=[
+            'What transactions had the highest amounts last month?',
+            'Find all declined transactions',
+            'Show disputes grouped by status',
+            'What is the total balance across all currencies?',
+        ],
         search=[
             'What transactions had the highest amounts last month?',
             'Find all declined transactions',
