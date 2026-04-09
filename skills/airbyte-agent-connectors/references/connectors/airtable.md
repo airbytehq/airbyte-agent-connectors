@@ -7,7 +7,7 @@ The Airtable agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-airtable` v0.1.57
+- **Package:** `airbyte-agent-airtable` v0.1.58
 - **Auth:** Token
 - **Docs:** [Official API docs](https://airtable.com/developers/web/api/introduction)
 - **Status:** complete
@@ -82,8 +82,8 @@ async def airtable_execute(entity: str, action: str, params: dict | None = None)
 
 | Entity | Actions |
 |--------|---------|
-| Bases | List, Search |
-| Tables | List, Search |
+| Bases | List, Context Store Search |
+| Tables | List, Context Store Search |
 | Records | List, Get |
 
 ## Authentication
