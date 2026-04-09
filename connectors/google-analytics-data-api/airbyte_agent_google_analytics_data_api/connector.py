@@ -353,14 +353,14 @@ class GoogleAnalyticsDataApiConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "search"],
+        action: Literal["list", "context_store_search"],
         params: Mapping[str, Any]
     ) -> GoogleAnalyticsDataApiExecuteResult[Any] | GoogleAnalyticsDataApiExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "search"],
+        action: Literal["list", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -847,7 +847,7 @@ class WebsiteOverviewQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WebsiteOverviewSearchQuery,
         limit: int | None = None,
@@ -896,7 +896,7 @@ class WebsiteOverviewQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("website_overview", "search", params)
+        result = await self._connector.execute("website_overview", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -968,7 +968,7 @@ class DailyActiveUsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: DailyActiveUsersSearchQuery,
         limit: int | None = None,
@@ -1010,7 +1010,7 @@ class DailyActiveUsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("daily_active_users", "search", params)
+        result = await self._connector.execute("daily_active_users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1082,7 +1082,7 @@ class WeeklyActiveUsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WeeklyActiveUsersSearchQuery,
         limit: int | None = None,
@@ -1124,7 +1124,7 @@ class WeeklyActiveUsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("weekly_active_users", "search", params)
+        result = await self._connector.execute("weekly_active_users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1196,7 +1196,7 @@ class FourWeeklyActiveUsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: FourWeeklyActiveUsersSearchQuery,
         limit: int | None = None,
@@ -1238,7 +1238,7 @@ class FourWeeklyActiveUsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("four_weekly_active_users", "search", params)
+        result = await self._connector.execute("four_weekly_active_users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1310,7 +1310,7 @@ class TrafficSourcesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TrafficSourcesSearchQuery,
         limit: int | None = None,
@@ -1361,7 +1361,7 @@ class TrafficSourcesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("traffic_sources", "search", params)
+        result = await self._connector.execute("traffic_sources", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1433,7 +1433,7 @@ class PagesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: PagesSearchQuery,
         limit: int | None = None,
@@ -1478,7 +1478,7 @@ class PagesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("pages", "search", params)
+        result = await self._connector.execute("pages", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1550,7 +1550,7 @@ class DevicesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: DevicesSearchQuery,
         limit: int | None = None,
@@ -1602,7 +1602,7 @@ class DevicesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("devices", "search", params)
+        result = await self._connector.execute("devices", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1674,7 +1674,7 @@ class LocationsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: LocationsSearchQuery,
         limit: int | None = None,
@@ -1726,7 +1726,7 @@ class LocationsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("locations", "search", params)
+        result = await self._connector.execute("locations", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

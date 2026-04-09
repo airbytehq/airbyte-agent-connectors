@@ -1871,6 +1871,13 @@ GoogleAnalyticsDataApiConnectorModel: ConnectorModel = ConnectorModel(
             'Get device breakdown data',
             'List user locations',
         ],
+        context_store_search=[
+            'What are the top traffic sources by sessions?',
+            'Which pages have the highest bounce rate?',
+            'What devices do most users browse from?',
+            'Which countries send the most traffic?',
+            'How has daily active users changed over the last month?',
+        ],
         search=[
             'What are the top traffic sources by sessions?',
             'Which pages have the highest bounce rate?',

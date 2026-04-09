@@ -102,14 +102,14 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Website Overview | [List](./REFERENCE.md#website-overview-list), [Search](./REFERENCE.md#website-overview-search) |
-| Daily Active Users | [List](./REFERENCE.md#daily-active-users-list), [Search](./REFERENCE.md#daily-active-users-search) |
-| Weekly Active Users | [List](./REFERENCE.md#weekly-active-users-list), [Search](./REFERENCE.md#weekly-active-users-search) |
-| Four Weekly Active Users | [List](./REFERENCE.md#four-weekly-active-users-list), [Search](./REFERENCE.md#four-weekly-active-users-search) |
-| Traffic Sources | [List](./REFERENCE.md#traffic-sources-list), [Search](./REFERENCE.md#traffic-sources-search) |
-| Pages | [List](./REFERENCE.md#pages-list), [Search](./REFERENCE.md#pages-search) |
-| Devices | [List](./REFERENCE.md#devices-list), [Search](./REFERENCE.md#devices-search) |
-| Locations | [List](./REFERENCE.md#locations-list), [Search](./REFERENCE.md#locations-search) |
+| Website Overview | [List](./REFERENCE.md#website-overview-list), [Context Store Search](./REFERENCE.md#website-overview-context-store-search) |
+| Daily Active Users | [List](./REFERENCE.md#daily-active-users-list), [Context Store Search](./REFERENCE.md#daily-active-users-context-store-search) |
+| Weekly Active Users | [List](./REFERENCE.md#weekly-active-users-list), [Context Store Search](./REFERENCE.md#weekly-active-users-context-store-search) |
+| Four Weekly Active Users | [List](./REFERENCE.md#four-weekly-active-users-list), [Context Store Search](./REFERENCE.md#four-weekly-active-users-context-store-search) |
+| Traffic Sources | [List](./REFERENCE.md#traffic-sources-list), [Context Store Search](./REFERENCE.md#traffic-sources-context-store-search) |
+| Pages | [List](./REFERENCE.md#pages-list), [Context Store Search](./REFERENCE.md#pages-context-store-search) |
+| Devices | [List](./REFERENCE.md#devices-list), [Context Store Search](./REFERENCE.md#devices-context-store-search) |
+| Locations | [List](./REFERENCE.md#locations-list), [Context Store Search](./REFERENCE.md#locations-context-store-search) |
 
 
 ### Authentication
@@ -122,7 +122,7 @@ See the official [Google-Analytics-Data-Api API reference](https://developers.go
 
 ## Version information
 
-- **Package version:** 0.1.21
+- **Package version:** 0.1.22
 - **Connector version:** 1.0.4
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/google-analytics-data-api/CHANGELOG.md)
