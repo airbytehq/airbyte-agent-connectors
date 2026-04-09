@@ -4725,6 +4725,7 @@ NotionConnectorModel: ConnectorModel = ConnectorModel(
             'What is the schema of a specific data source?',
             'Who are the bot users in my workspace?',
         ],
+        context_store_search=['Find pages created in the last week', 'List data sources that have been recently edited', 'Show me all archived pages'],
         search=['Find pages created in the last week', 'List data sources that have been recently edited', 'Show me all archived pages'],
         unsupported=[
             'Create a new page in Notion',

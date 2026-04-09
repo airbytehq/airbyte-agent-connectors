@@ -335,14 +335,14 @@ class NotionConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> NotionExecuteResult[Any] | NotionExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -882,7 +882,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -926,7 +926,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1015,7 +1015,7 @@ class PagesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: PagesSearchQuery,
         limit: int | None = None,
@@ -1066,7 +1066,7 @@ class PagesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("pages", "search", params)
+        result = await self._connector.execute("pages", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1155,7 +1155,7 @@ class DataSourcesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: DataSourcesSearchQuery,
         limit: int | None = None,
@@ -1209,7 +1209,7 @@ class DataSourcesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("data_sources", "search", params)
+        result = await self._connector.execute("data_sources", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1295,7 +1295,7 @@ class BlocksQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BlocksSearchQuery,
         limit: int | None = None,
@@ -1374,7 +1374,7 @@ class BlocksQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("blocks", "search", params)
+        result = await self._connector.execute("blocks", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

@@ -97,10 +97,10 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Search](./REFERENCE.md#users-search) |
-| Pages | [List](./REFERENCE.md#pages-list), [Get](./REFERENCE.md#pages-get), [Search](./REFERENCE.md#pages-search) |
-| Data Sources | [List](./REFERENCE.md#data-sources-list), [Get](./REFERENCE.md#data-sources-get), [Search](./REFERENCE.md#data-sources-search) |
-| Blocks | [List](./REFERENCE.md#blocks-list), [Get](./REFERENCE.md#blocks-get), [Search](./REFERENCE.md#blocks-search) |
+| Users | [List](./REFERENCE.md#users-list), [Get](./REFERENCE.md#users-get), [Context Store Search](./REFERENCE.md#users-context-store-search) |
+| Pages | [List](./REFERENCE.md#pages-list), [Get](./REFERENCE.md#pages-get), [Context Store Search](./REFERENCE.md#pages-context-store-search) |
+| Data Sources | [List](./REFERENCE.md#data-sources-list), [Get](./REFERENCE.md#data-sources-get), [Context Store Search](./REFERENCE.md#data-sources-context-store-search) |
+| Blocks | [List](./REFERENCE.md#blocks-list), [Get](./REFERENCE.md#blocks-get), [Context Store Search](./REFERENCE.md#blocks-context-store-search) |
 | Comments | [List](./REFERENCE.md#comments-list) |
 
 
@@ -114,7 +114,7 @@ See the official [Notion API reference](https://developers.notion.com/reference/
 
 ## Version information
 
-- **Package version:** 0.1.32
+- **Package version:** 0.1.33
 - **Connector version:** 0.1.10
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/notion/CHANGELOG.md)
