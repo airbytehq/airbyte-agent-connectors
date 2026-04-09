@@ -29,6 +29,7 @@ from uuid import (
 ConfluenceConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('cf40a7f8-71f8-45ce-a7fa-fca053e4028c'),
     name='confluence',
+    version='1.0.1',
     base_url='https://{subdomain}.atlassian.net',
     auth=AuthConfig(
         type=AuthType.BASIC,
