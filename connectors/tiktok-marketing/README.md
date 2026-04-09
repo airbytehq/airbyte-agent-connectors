@@ -97,17 +97,17 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Advertisers | [List](./REFERENCE.md#advertisers-list), [Search](./REFERENCE.md#advertisers-search) |
-| Campaigns | [List](./REFERENCE.md#campaigns-list), [Search](./REFERENCE.md#campaigns-search) |
-| Ad Groups | [List](./REFERENCE.md#ad-groups-list), [Search](./REFERENCE.md#ad-groups-search) |
-| Ads | [List](./REFERENCE.md#ads-list), [Search](./REFERENCE.md#ads-search) |
-| Audiences | [List](./REFERENCE.md#audiences-list), [Search](./REFERENCE.md#audiences-search) |
-| Creative Assets Images | [List](./REFERENCE.md#creative-assets-images-list), [Search](./REFERENCE.md#creative-assets-images-search) |
-| Creative Assets Videos | [List](./REFERENCE.md#creative-assets-videos-list), [Search](./REFERENCE.md#creative-assets-videos-search) |
-| Advertisers Reports Daily | [List](./REFERENCE.md#advertisers-reports-daily-list), [Search](./REFERENCE.md#advertisers-reports-daily-search) |
-| Campaigns Reports Daily | [List](./REFERENCE.md#campaigns-reports-daily-list), [Search](./REFERENCE.md#campaigns-reports-daily-search) |
-| Ad Groups Reports Daily | [List](./REFERENCE.md#ad-groups-reports-daily-list), [Search](./REFERENCE.md#ad-groups-reports-daily-search) |
-| Ads Reports Daily | [List](./REFERENCE.md#ads-reports-daily-list), [Search](./REFERENCE.md#ads-reports-daily-search) |
+| Advertisers | [List](./REFERENCE.md#advertisers-list), [Context Store Search](./REFERENCE.md#advertisers-context-store-search) |
+| Campaigns | [List](./REFERENCE.md#campaigns-list), [Context Store Search](./REFERENCE.md#campaigns-context-store-search) |
+| Ad Groups | [List](./REFERENCE.md#ad-groups-list), [Context Store Search](./REFERENCE.md#ad-groups-context-store-search) |
+| Ads | [List](./REFERENCE.md#ads-list), [Context Store Search](./REFERENCE.md#ads-context-store-search) |
+| Audiences | [List](./REFERENCE.md#audiences-list), [Context Store Search](./REFERENCE.md#audiences-context-store-search) |
+| Creative Assets Images | [List](./REFERENCE.md#creative-assets-images-list), [Context Store Search](./REFERENCE.md#creative-assets-images-context-store-search) |
+| Creative Assets Videos | [List](./REFERENCE.md#creative-assets-videos-list), [Context Store Search](./REFERENCE.md#creative-assets-videos-context-store-search) |
+| Advertisers Reports Daily | [List](./REFERENCE.md#advertisers-reports-daily-list), [Context Store Search](./REFERENCE.md#advertisers-reports-daily-context-store-search) |
+| Campaigns Reports Daily | [List](./REFERENCE.md#campaigns-reports-daily-list), [Context Store Search](./REFERENCE.md#campaigns-reports-daily-context-store-search) |
+| Ad Groups Reports Daily | [List](./REFERENCE.md#ad-groups-reports-daily-list), [Context Store Search](./REFERENCE.md#ad-groups-reports-daily-context-store-search) |
+| Ads Reports Daily | [List](./REFERENCE.md#ads-reports-daily-list), [Context Store Search](./REFERENCE.md#ads-reports-daily-context-store-search) |
 
 
 ### Authentication
@@ -120,7 +120,7 @@ See the official [Tiktok-Marketing API reference](https://business-api.tiktok.co
 
 ## Version information
 
-- **Package version:** 0.1.28
+- **Package version:** 0.1.29
 - **Connector version:** 1.1.4
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/tiktok-marketing/CHANGELOG.md)

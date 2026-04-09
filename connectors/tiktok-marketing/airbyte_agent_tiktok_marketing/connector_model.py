@@ -4293,6 +4293,15 @@ TiktokMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'Get campaign performance metrics for the last 30 days',
             'Show me advertiser spend reports',
         ],
+        context_store_search=[
+            'Which campaigns have the highest budget?',
+            'Find all paused ad groups',
+            'What ads were created last month?',
+            'Show campaigns with lifetime budget mode',
+            'Which ads had the most impressions yesterday?',
+            'What is my total ad spend this month?',
+            'Which campaigns have the highest click-through rate?',
+        ],
         search=[
             'Which campaigns have the highest budget?',
             'Find all paused ad groups',
