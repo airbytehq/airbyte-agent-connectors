@@ -302,14 +302,14 @@ class AmplitudeConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> AmplitudeExecuteResult[Any] | AmplitudeExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -693,7 +693,7 @@ class AnnotationsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AnnotationsSearchQuery,
         limit: int | None = None,
@@ -734,7 +734,7 @@ class AnnotationsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("annotations", "search", params)
+        result = await self._connector.execute("annotations", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -807,7 +807,7 @@ class CohortsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CohortsSearchQuery,
         limit: int | None = None,
@@ -870,7 +870,7 @@ class CohortsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("cohorts", "search", params)
+        result = await self._connector.execute("cohorts", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -919,7 +919,7 @@ class EventsListQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: EventsListSearchQuery,
         limit: int | None = None,
@@ -970,7 +970,7 @@ class EventsListQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("events_list", "search", params)
+        result = await self._connector.execute("events_list", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1037,7 +1037,7 @@ class ActiveUsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ActiveUsersSearchQuery,
         limit: int | None = None,
@@ -1076,7 +1076,7 @@ class ActiveUsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("active_users", "search", params)
+        result = await self._connector.execute("active_users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1134,7 +1134,7 @@ class AverageSessionLengthQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AverageSessionLengthSearchQuery,
         limit: int | None = None,
@@ -1173,7 +1173,7 @@ class AverageSessionLengthQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("average_session_length", "search", params)
+        result = await self._connector.execute("average_session_length", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

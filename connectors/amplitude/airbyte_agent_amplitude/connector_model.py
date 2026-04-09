@@ -1153,6 +1153,7 @@ AmplitudeConnectorModel: ConnectorModel = ConnectorModel(
     },
     example_questions=ExampleQuestions(
         direct=['List all chart annotations in Amplitude', 'Show me all cohorts', 'List all event types'],
+        context_store_search=['Which cohorts have more than 1000 users?', 'What are the most popular event types by total count?', 'Show me annotations created in the last month'],
         search=['Which cohorts have more than 1000 users?', 'What are the most popular event types by total count?', 'Show me annotations created in the last month'],
         unsupported=['Create a new annotation', 'Delete a cohort', 'Export raw event data'],
     ),
