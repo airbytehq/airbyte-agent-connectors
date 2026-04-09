@@ -470,14 +470,14 @@ class JiraConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["api_search", "create", "get", "update", "delete", "list", "search"],
+        action: Literal["api_search", "create", "get", "update", "delete", "list", "context_store_search"],
         params: Mapping[str, Any]
     ) -> JiraExecuteResult[Any] | JiraExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["api_search", "create", "get", "update", "delete", "list", "search"],
+        action: Literal["api_search", "create", "get", "update", "delete", "list", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1006,7 +1006,7 @@ IMPORTANT: This endpoint requires a bounded JQL query. A bounded query must incl
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssuesSearchQuery,
         limit: int | None = None,
@@ -1062,7 +1062,7 @@ IMPORTANT: This endpoint requires a bounded JQL query. A bounded query must incl
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1178,7 +1178,7 @@ class ProjectsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectsSearchQuery,
         limit: int | None = None,
@@ -1249,7 +1249,7 @@ class ProjectsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1374,7 +1374,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -1425,7 +1425,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1519,7 +1519,7 @@ class IssueFieldsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssueFieldsSearchQuery,
         limit: int | None = None,
@@ -1567,7 +1567,7 @@ class IssueFieldsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issue_fields", "search", params)
+        result = await self._connector.execute("issue_fields", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1770,7 +1770,7 @@ class IssueCommentsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssueCommentsSearchQuery,
         limit: int | None = None,
@@ -1819,7 +1819,7 @@ class IssueCommentsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issue_comments", "search", params)
+        result = await self._connector.execute("issue_comments", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1914,7 +1914,7 @@ class IssueWorklogsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssueWorklogsSearchQuery,
         limit: int | None = None,
@@ -1964,7 +1964,7 @@ class IssueWorklogsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issue_worklogs", "search", params)
+        result = await self._connector.execute("issue_worklogs", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

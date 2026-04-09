@@ -3873,6 +3873,13 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             'Delete a test issue',
             'Remove my most recent comment',
         ],
+        context_store_search=[
+            'What issues are assigned to {team_member} this week?',
+            'Find all high priority bugs in our current sprint',
+            'Show me overdue issues across all projects',
+            'What projects have the most issues?',
+            'Search for users named {user_name}',
+        ],
         search=[
             'What issues are assigned to {team_member} this week?',
             'Find all high priority bugs in our current sprint',
