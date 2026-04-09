@@ -33,7 +33,7 @@ from uuid import (
 GitlabConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('5e6175e5-68e1-4c17-bff9-56103bbb0d80'),
     name='gitlab',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://{api_url}/api/v4',
     auth=AuthConfig(
         options=[
