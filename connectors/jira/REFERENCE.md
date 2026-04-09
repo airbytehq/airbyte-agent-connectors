@@ -8,12 +8,12 @@ The Jira connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Issues | [API Search](#issues-api-search), [Create](#issues-create), [Get](#issues-get), [Update](#issues-update), [Delete](#issues-delete), [Search](#issues-search) |
-| Projects | [API Search](#projects-api-search), [Get](#projects-get), [Search](#projects-search) |
-| Users | [Get](#users-get), [List](#users-list), [API Search](#users-api-search), [Search](#users-search) |
-| Issue Fields | [List](#issue-fields-list), [API Search](#issue-fields-api-search), [Search](#issue-fields-search) |
-| Issue Comments | [List](#issue-comments-list), [Create](#issue-comments-create), [Get](#issue-comments-get), [Update](#issue-comments-update), [Delete](#issue-comments-delete), [Search](#issue-comments-search) |
-| Issue Worklogs | [List](#issue-worklogs-list), [Get](#issue-worklogs-get), [Search](#issue-worklogs-search) |
+| Issues | [API Search](#issues-api-search), [Create](#issues-create), [Get](#issues-get), [Update](#issues-update), [Delete](#issues-delete), [Context Store Search](#issues-context-store-search) |
+| Projects | [API Search](#projects-api-search), [Get](#projects-get), [Context Store Search](#projects-context-store-search) |
+| Users | [Get](#users-get), [List](#users-list), [API Search](#users-api-search), [Context Store Search](#users-context-store-search) |
+| Issue Fields | [List](#issue-fields-list), [API Search](#issue-fields-api-search), [Context Store Search](#issue-fields-context-store-search) |
+| Issue Comments | [List](#issue-comments-list), [Create](#issue-comments-create), [Get](#issue-comments-get), [Update](#issue-comments-update), [Delete](#issue-comments-delete), [Context Store Search](#issue-comments-context-store-search) |
+| Issue Worklogs | [List](#issue-worklogs-list), [Get](#issue-worklogs-get), [Context Store Search](#issue-worklogs-context-store-search) |
 | Issues Assignee | [Update](#issues-assignee-update) |
 
 ## Issues
@@ -352,14 +352,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `deleteSubtasks` | `boolean` | No | Whether to delete the issue's subtasks. Default is false. |
 
 
-### Issues Search
+### Issues Context Store Search
 
 Search and filter issues records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.issues.search(
+await jira.issues.context_store_search(
     query={"filter": {"eq": {"changelog": {}}}}
 )
 ```
@@ -372,7 +372,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issues",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"changelog": {}}}}
     }
@@ -598,14 +598,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Projects Search
+### Projects Context Store Search
 
 Search and filter projects records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.projects.search(
+await jira.projects.context_store_search(
     query={"filter": {"eq": {"archived": True}}}
 )
 ```
@@ -618,7 +618,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "projects",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"archived": True}}}
     }
@@ -894,14 +894,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.users.search(
+await jira.users.context_store_search(
     query={"filter": {"eq": {"accountId": "<str>"}}}
 )
 ```
@@ -914,7 +914,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"accountId": "<str>"}}}
     }
@@ -1101,14 +1101,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Issue Fields Search
+### Issue Fields Context Store Search
 
 Search and filter issue fields records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.issue_fields.search(
+await jira.issue_fields.context_store_search(
     query={"filter": {"eq": {"clauseNames": []}}}
 )
 ```
@@ -1121,7 +1121,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issue_fields",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"clauseNames": []}}}
     }
@@ -1526,14 +1526,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `commentId` | `string` | Yes | The comment ID |
 
 
-### Issue Comments Search
+### Issue Comments Context Store Search
 
 Search and filter issue comments records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.issue_comments.search(
+await jira.issue_comments.context_store_search(
     query={"filter": {"eq": {"author": {}}}}
 )
 ```
@@ -1546,7 +1546,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issue_comments",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"author": {}}}}
     }
@@ -1741,14 +1741,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Issue Worklogs Search
+### Issue Worklogs Context Store Search
 
 Search and filter issue worklogs records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await jira.issue_worklogs.search(
+await jira.issue_worklogs.context_store_search(
     query={"filter": {"eq": {"author": {}}}}
 )
 ```
@@ -1761,7 +1761,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issue_worklogs",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"author": {}}}}
     }
