@@ -1,5 +1,10 @@
 # Clickup Api changelog
 
+## [0.1.16] - 2026-04-09
+- Updated connector definition (YAML version 0.1.4)
+- Source commit: 3cecc817
+- SDK version: 0.1.0
+
 ## [0.1.15] - 2026-04-08
 - Updated connector definition (YAML version 0.1.4)
 - Source commit: eeaf9a60

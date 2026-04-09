@@ -4088,6 +4088,13 @@ ClickupApiConnectorModel: ConnectorModel = ConnectorModel(
             'List all docs in my workspace',
             'Get details for a specific doc',
         ],
+        context_store_search=[
+            'What tasks are overdue in my workspace?',
+            'Which tasks were updated in the last 24 hours?',
+            'Show me all high-priority tasks across all projects',
+            'How much time has been tracked this week?',
+            'What are the most commented tasks?',
+        ],
         search=[
             'What tasks are overdue in my workspace?',
             'Which tasks were updated in the last 24 hours?',

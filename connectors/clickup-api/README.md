@@ -135,7 +135,7 @@ See the official [Clickup-Api API reference](https://developer.clickup.com/refer
 
 ## Version information
 
-- **Package version:** 0.1.15
+- **Package version:** 0.1.16
 - **Connector version:** 0.1.4
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/clickup-api/CHANGELOG.md)
