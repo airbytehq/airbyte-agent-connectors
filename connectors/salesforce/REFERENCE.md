@@ -9,11 +9,11 @@ The Salesforce connector supports the following entities and actions.
 | Entity | Actions |
 |--------|---------|
 | Sobjects | [List](#sobjects-list) |
-| Accounts | [List](#accounts-list), [Get](#accounts-get), [API Search](#accounts-api-search), [Search](#accounts-search) |
-| Contacts | [List](#contacts-list), [Get](#contacts-get), [API Search](#contacts-api-search), [Search](#contacts-search) |
-| Leads | [List](#leads-list), [Get](#leads-get), [API Search](#leads-api-search), [Search](#leads-search) |
-| Opportunities | [List](#opportunities-list), [Get](#opportunities-get), [API Search](#opportunities-api-search), [Search](#opportunities-search) |
-| Tasks | [List](#tasks-list), [Get](#tasks-get), [API Search](#tasks-api-search), [Search](#tasks-search) |
+| Accounts | [List](#accounts-list), [Get](#accounts-get), [API Search](#accounts-api-search), [Context Store Search](#accounts-context-store-search) |
+| Contacts | [List](#contacts-list), [Get](#contacts-get), [API Search](#contacts-api-search), [Context Store Search](#contacts-context-store-search) |
+| Leads | [List](#leads-list), [Get](#leads-get), [API Search](#leads-api-search), [Context Store Search](#leads-context-store-search) |
+| Opportunities | [List](#opportunities-list), [Get](#opportunities-get), [API Search](#opportunities-api-search), [Context Store Search](#opportunities-context-store-search) |
+| Tasks | [List](#tasks-list), [Get](#tasks-get), [API Search](#tasks-api-search), [Context Store Search](#tasks-context-store-search) |
 | Events | [List](#events-list), [Get](#events-get), [API Search](#events-api-search) |
 | Campaigns | [List](#campaigns-list), [Get](#campaigns-get), [API Search](#campaigns-api-search) |
 | Cases | [List](#cases-list), [Get](#cases-get), [API Search](#cases-api-search) |
@@ -244,14 +244,14 @@ Examples:
 
 </details>
 
-### Accounts Search
+### Accounts Context Store Search
 
 Search and filter accounts records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await salesforce.accounts.search(
+await salesforce.accounts.context_store_search(
     query={"filter": {"eq": {"Id": "<str>"}}}
 )
 ```
@@ -264,7 +264,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "accounts",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"Id": "<str>"}}}
     }
@@ -530,14 +530,14 @@ Examples:
 
 </details>
 
-### Contacts Search
+### Contacts Context Store Search
 
 Search and filter contacts records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await salesforce.contacts.search(
+await salesforce.contacts.context_store_search(
     query={"filter": {"eq": {"Id": "<str>"}}}
 )
 ```
@@ -550,7 +550,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "contacts",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"Id": "<str>"}}}
     }
@@ -808,14 +808,14 @@ Examples:
 
 </details>
 
-### Leads Search
+### Leads Context Store Search
 
 Search and filter leads records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await salesforce.leads.search(
+await salesforce.leads.context_store_search(
     query={"filter": {"eq": {"Id": "<str>"}}}
 )
 ```
@@ -828,7 +828,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "leads",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"Id": "<str>"}}}
     }
@@ -1102,14 +1102,14 @@ Examples:
 
 </details>
 
-### Opportunities Search
+### Opportunities Context Store Search
 
 Search and filter opportunities records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await salesforce.opportunities.search(
+await salesforce.opportunities.context_store_search(
     query={"filter": {"eq": {"Id": "<str>"}}}
 )
 ```
@@ -1122,7 +1122,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "opportunities",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"Id": "<str>"}}}
     }
@@ -1380,14 +1380,14 @@ Examples:
 
 </details>
 
-### Tasks Search
+### Tasks Context Store Search
 
 Search and filter tasks records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await salesforce.tasks.search(
+await salesforce.tasks.context_store_search(
     query={"filter": {"eq": {"Id": "<str>"}}}
 )
 ```
@@ -1400,7 +1400,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tasks",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"Id": "<str>"}}}
     }

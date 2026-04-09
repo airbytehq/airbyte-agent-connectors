@@ -1962,6 +1962,16 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
     },
     example_questions=ExampleQuestions(
         direct=['List recent contacts in my Salesforce account', 'List open cases in my Salesforce account', 'Show me the notes and attachments for a recent account'],
+        context_store_search=[
+            'Show me my top 5 opportunities this month',
+            'List all contacts from {company} in the last quarter',
+            'Search for leads in the technology sector with revenue over $10M',
+            'What trends can you identify in my recent sales pipeline?',
+            'Summarize the open cases for my key accounts',
+            'Find upcoming events related to my most important opportunities',
+            'Analyze the performance of my recent marketing campaigns',
+            "Identify the highest value opportunities I'm currently tracking",
+        ],
         search=[
             'Show me my top 5 opportunities this month',
             'List all contacts from {company} in the last quarter',
