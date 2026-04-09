@@ -4493,6 +4493,13 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     },
     example_questions=ExampleQuestions(
         direct=['Show me the tickets assigned to me last week', 'List all unresolved tickets', 'Show me the details of recent tickets'],
+        context_store_search=[
+            'What are the top 5 support issues our organization has faced this month?',
+            'Analyze the satisfaction ratings for our support team in the last 30 days',
+            'Compare ticket resolution times across different support groups',
+            'Identify the most common ticket fields used in our support workflow',
+            'Summarize the performance of our SLA policies this quarter',
+        ],
         search=[
             'What are the top 5 support issues our organization has faced this month?',
             'Analyze the satisfaction ratings for our support team in the last 30 days',

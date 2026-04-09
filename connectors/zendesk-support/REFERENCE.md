@@ -8,27 +8,27 @@ The Zendesk-Support connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Tickets | [List](#tickets-list), [Get](#tickets-get), [Search](#tickets-search) |
-| Deleted Tickets | [List](#deleted-tickets-list), [Search](#deleted-tickets-search) |
-| Users | [List](#users-list), [Get](#users-get), [Search](#users-search) |
-| Organizations | [List](#organizations-list), [Get](#organizations-get), [Search](#organizations-search) |
-| Groups | [List](#groups-list), [Get](#groups-get), [Search](#groups-search) |
-| Ticket Comments | [List](#ticket-comments-list), [Search](#ticket-comments-search) |
+| Tickets | [List](#tickets-list), [Get](#tickets-get), [Context Store Search](#tickets-context-store-search) |
+| Deleted Tickets | [List](#deleted-tickets-list), [Context Store Search](#deleted-tickets-context-store-search) |
+| Users | [List](#users-list), [Get](#users-get), [Context Store Search](#users-context-store-search) |
+| Organizations | [List](#organizations-list), [Get](#organizations-get), [Context Store Search](#organizations-context-store-search) |
+| Groups | [List](#groups-list), [Get](#groups-get), [Context Store Search](#groups-context-store-search) |
+| Ticket Comments | [List](#ticket-comments-list), [Context Store Search](#ticket-comments-context-store-search) |
 | Attachments | [Get](#attachments-get), [Download](#attachments-download) |
-| Ticket Audits | [List](#ticket-audits-list), [List](#ticket-audits-list), [Search](#ticket-audits-search) |
-| Ticket Metrics | [List](#ticket-metrics-list), [Search](#ticket-metrics-search) |
-| Ticket Fields | [List](#ticket-fields-list), [Get](#ticket-fields-get), [Search](#ticket-fields-search) |
-| Brands | [List](#brands-list), [Get](#brands-get), [Search](#brands-search) |
+| Ticket Audits | [List](#ticket-audits-list), [List](#ticket-audits-list), [Context Store Search](#ticket-audits-context-store-search) |
+| Ticket Metrics | [List](#ticket-metrics-list), [Context Store Search](#ticket-metrics-context-store-search) |
+| Ticket Fields | [List](#ticket-fields-list), [Get](#ticket-fields-get), [Context Store Search](#ticket-fields-context-store-search) |
+| Brands | [List](#brands-list), [Get](#brands-get), [Context Store Search](#brands-context-store-search) |
 | Views | [List](#views-list), [Get](#views-get) |
 | Macros | [List](#macros-list), [Get](#macros-get) |
 | Triggers | [List](#triggers-list), [Get](#triggers-get) |
 | Automations | [List](#automations-list), [Get](#automations-get) |
-| Tags | [List](#tags-list), [Search](#tags-search) |
-| Satisfaction Ratings | [List](#satisfaction-ratings-list), [Get](#satisfaction-ratings-get), [Search](#satisfaction-ratings-search) |
+| Tags | [List](#tags-list), [Context Store Search](#tags-context-store-search) |
+| Satisfaction Ratings | [List](#satisfaction-ratings-list), [Get](#satisfaction-ratings-get), [Context Store Search](#satisfaction-ratings-context-store-search) |
 | Group Memberships | [List](#group-memberships-list) |
 | Organization Memberships | [List](#organization-memberships-list) |
 | Sla Policies | [List](#sla-policies-list), [Get](#sla-policies-get) |
-| Ticket Forms | [List](#ticket-forms-list), [Get](#ticket-forms-get), [Search](#ticket-forms-search) |
+| Ticket Forms | [List](#ticket-forms-list), [Get](#ticket-forms-get), [Context Store Search](#ticket-forms-context-store-search) |
 | Articles | [List](#articles-list), [Get](#articles-get) |
 | Article Attachments | [List](#article-attachments-list), [Get](#article-attachments-get), [Download](#article-attachments-download) |
 
@@ -213,14 +213,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Tickets Search
+### Tickets Context Store Search
 
 Search and filter tickets records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.tickets.search(
+await zendesk_support.tickets.context_store_search(
     query={"filter": {"eq": {"allow_attachments": True}}}
 )
 ```
@@ -233,7 +233,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tickets",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"allow_attachments": True}}}
     }
@@ -411,14 +411,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Deleted Tickets Search
+### Deleted Tickets Context Store Search
 
 Search and filter deleted tickets records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.deleted_tickets.search(
+await zendesk_support.deleted_tickets.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -431,7 +431,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "deleted_tickets",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -655,14 +655,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.users.search(
+await zendesk_support.users.context_store_search(
     query={"filter": {"eq": {"active": True}}}
 )
 ```
@@ -675,7 +675,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"active": True}}}
     }
@@ -915,14 +915,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Organizations Search
+### Organizations Context Store Search
 
 Search and filter organizations records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.organizations.search(
+await zendesk_support.organizations.context_store_search(
     query={"filter": {"eq": {"created_at": "<str>"}}}
 )
 ```
@@ -935,7 +935,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "organizations",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"created_at": "<str>"}}}
     }
@@ -1118,14 +1118,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Groups Search
+### Groups Context Store Search
 
 Search and filter groups records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.groups.search(
+await zendesk_support.groups.context_store_search(
     query={"filter": {"eq": {"created_at": "<str>"}}}
 )
 ```
@@ -1138,7 +1138,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "groups",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"created_at": "<str>"}}}
     }
@@ -1264,14 +1264,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Ticket Comments Search
+### Ticket Comments Context Store Search
 
 Search and filter ticket comments records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.ticket_comments.search(
+await zendesk_support.ticket_comments.context_store_search(
     query={"filter": {"eq": {"attachments": []}}}
 )
 ```
@@ -1284,7 +1284,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "ticket_comments",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"attachments": []}}}
     }
@@ -1575,14 +1575,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Ticket Audits Search
+### Ticket Audits Context Store Search
 
 Search and filter ticket audits records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.ticket_audits.search(
+await zendesk_support.ticket_audits.context_store_search(
     query={"filter": {"eq": {"attachments": []}}}
 )
 ```
@@ -1595,7 +1595,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "ticket_audits",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"attachments": []}}}
     }
@@ -1721,14 +1721,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Ticket Metrics Search
+### Ticket Metrics Context Store Search
 
 Search and filter ticket metrics records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.ticket_metrics.search(
+await zendesk_support.ticket_metrics.context_store_search(
     query={"filter": {"eq": {"agent_wait_time_in_minutes": {}}}}
 )
 ```
@@ -1741,7 +1741,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "ticket_metrics",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"agent_wait_time_in_minutes": {}}}}
     }
@@ -1986,14 +1986,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Ticket Fields Search
+### Ticket Fields Context Store Search
 
 Search and filter ticket fields records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.ticket_fields.search(
+await zendesk_support.ticket_fields.context_store_search(
     query={"filter": {"eq": {"active": True}}}
 )
 ```
@@ -2006,7 +2006,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "ticket_fields",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"active": True}}}
     }
@@ -2226,14 +2226,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Brands Search
+### Brands Context Store Search
 
 Search and filter brands records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.brands.search(
+await zendesk_support.brands.context_store_search(
     query={"filter": {"eq": {"active": True}}}
 )
 ```
@@ -2246,7 +2246,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "brands",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"active": True}}}
     }
@@ -2869,14 +2869,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Tags Search
+### Tags Context Store Search
 
 Search and filter tags records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.tags.search(
+await zendesk_support.tags.context_store_search(
     query={"filter": {"eq": {"count": 0}}}
 )
 ```
@@ -2889,7 +2889,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tags",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"count": 0}}}
     }
@@ -3056,14 +3056,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Satisfaction Ratings Search
+### Satisfaction Ratings Context Store Search
 
 Search and filter satisfaction ratings records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.satisfaction_ratings.search(
+await zendesk_support.satisfaction_ratings.context_store_search(
     query={"filter": {"eq": {"assignee_id": 0}}}
 )
 ```
@@ -3076,7 +3076,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "satisfaction_ratings",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"assignee_id": 0}}}
     }
@@ -3506,14 +3506,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Ticket Forms Search
+### Ticket Forms Context Store Search
 
 Search and filter ticket forms records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await zendesk_support.ticket_forms.search(
+await zendesk_support.ticket_forms.context_store_search(
     query={"filter": {"eq": {"active": True}}}
 )
 ```
@@ -3526,7 +3526,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "ticket_forms",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"active": True}}}
     }

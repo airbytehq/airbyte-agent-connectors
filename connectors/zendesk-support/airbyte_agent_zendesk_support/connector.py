@@ -777,14 +777,14 @@ class ZendeskSupportConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "search"],
+        action: Literal["list", "get", "download", "context_store_search"],
         params: Mapping[str, Any]
     ) -> ZendeskSupportExecuteResult[Any] | ZendeskSupportExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "search"],
+        action: Literal["list", "get", "download", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1277,7 +1277,7 @@ class TicketsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketsSearchQuery,
         limit: int | None = None,
@@ -1355,7 +1355,7 @@ class TicketsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("tickets", "search", params)
+        result = await self._connector.execute("tickets", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1419,7 +1419,7 @@ class DeletedTicketsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: DeletedTicketsSearchQuery,
         limit: int | None = None,
@@ -1462,7 +1462,7 @@ class DeletedTicketsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("deleted_tickets", "search", params)
+        result = await self._connector.execute("deleted_tickets", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1551,7 +1551,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -1627,7 +1627,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1710,7 +1710,7 @@ class OrganizationsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: OrganizationsSearchQuery,
         limit: int | None = None,
@@ -1762,7 +1762,7 @@ class OrganizationsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("organizations", "search", params)
+        result = await self._connector.execute("organizations", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1848,7 +1848,7 @@ class GroupsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: GroupsSearchQuery,
         limit: int | None = None,
@@ -1894,7 +1894,7 @@ class GroupsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("groups", "search", params)
+        result = await self._connector.execute("groups", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1961,7 +1961,7 @@ class TicketCommentsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketCommentsSearchQuery,
         limit: int | None = None,
@@ -2015,7 +2015,7 @@ class TicketCommentsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ticket_comments", "search", params)
+        result = await self._connector.execute("ticket_comments", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2200,7 +2200,7 @@ class TicketAuditsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketAuditsSearchQuery,
         limit: int | None = None,
@@ -2245,7 +2245,7 @@ class TicketAuditsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ticket_audits", "search", params)
+        result = await self._connector.execute("ticket_audits", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2303,7 +2303,7 @@ class TicketMetricsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketMetricsSearchQuery,
         limit: int | None = None,
@@ -2370,7 +2370,7 @@ class TicketMetricsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ticket_metrics", "search", params)
+        result = await self._connector.execute("ticket_metrics", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2456,7 +2456,7 @@ class TicketFieldsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketFieldsSearchQuery,
         limit: int | None = None,
@@ -2520,7 +2520,7 @@ class TicketFieldsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ticket_fields", "search", params)
+        result = await self._connector.execute("ticket_fields", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2603,7 +2603,7 @@ class BrandsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: BrandsSearchQuery,
         limit: int | None = None,
@@ -2656,7 +2656,7 @@ class BrandsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("brands", "search", params)
+        result = await self._connector.execute("brands", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -3035,7 +3035,7 @@ class TagsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TagsSearchQuery,
         limit: int | None = None,
@@ -3074,7 +3074,7 @@ class TagsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("tags", "search", params)
+        result = await self._connector.execute("tags", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -3166,7 +3166,7 @@ class SatisfactionRatingsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: SatisfactionRatingsSearchQuery,
         limit: int | None = None,
@@ -3215,7 +3215,7 @@ class SatisfactionRatingsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("satisfaction_ratings", "search", params)
+        result = await self._connector.execute("satisfaction_ratings", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -3452,7 +3452,7 @@ class TicketFormsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TicketFormsSearchQuery,
         limit: int | None = None,
@@ -3506,7 +3506,7 @@ class TicketFormsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("ticket_forms", "search", params)
+        result = await self._connector.execute("ticket_forms", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
