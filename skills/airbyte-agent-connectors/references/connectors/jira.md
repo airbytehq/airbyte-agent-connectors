@@ -7,7 +7,7 @@ The Jira agent connector is a Python package that equips AI agents to interact w
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-jira` v0.1.119
+- **Package:** `airbyte-agent-jira` v0.1.120
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/)
 - **Status:** complete
@@ -93,12 +93,12 @@ async def jira_execute(entity: str, action: str, params: dict | None = None):
 
 | Entity | Actions |
 |--------|---------|
-| Issues | API Search, Create, Get, Update, Delete, Search |
-| Projects | API Search, Get, Search |
-| Users | Get, List, API Search, Search |
-| Issue Fields | List, API Search, Search |
-| Issue Comments | List, Create, Get, Update, Delete, Search |
-| Issue Worklogs | List, Get, Search |
+| Issues | API Search, Create, Get, Update, Delete, Context Store Search |
+| Projects | API Search, Get, Context Store Search |
+| Users | Get, List, API Search, Context Store Search |
+| Issue Fields | List, API Search, Context Store Search |
+| Issue Comments | List, Create, Get, Update, Delete, Context Store Search |
+| Issue Worklogs | List, Get, Context Store Search |
 | Issues Assignee | Update |
 
 ## Authentication
