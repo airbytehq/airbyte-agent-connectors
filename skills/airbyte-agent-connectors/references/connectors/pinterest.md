@@ -7,7 +7,7 @@ The Pinterest agent connector is a Python package that equips AI agents to inter
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-pinterest` v0.1.14
+- **Package:** `airbyte-agent-pinterest` v0.1.15
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.pinterest.com/docs/api/v5/)
 - **Status:** complete
@@ -86,20 +86,20 @@ async def pinterest_execute(entity: str, action: str, params: dict | None = None
 
 | Entity | Actions |
 |--------|---------|
-| Ad Accounts | List, Get, Search |
-| Boards | List, Get, Search |
-| Campaigns | List, Search |
-| Ad Groups | List, Search |
-| Ads | List, Search |
-| Board Sections | List, Search |
-| Board Pins | List, Search |
-| Catalogs | List, Search |
-| Catalogs Feeds | List, Search |
-| Catalogs Product Groups | List, Search |
-| Audiences | List, Search |
-| Conversion Tags | List, Search |
-| Customer Lists | List, Search |
-| Keywords | List, Search |
+| Ad Accounts | List, Get, Context Store Search |
+| Boards | List, Get, Context Store Search |
+| Campaigns | List, Context Store Search |
+| Ad Groups | List, Context Store Search |
+| Ads | List, Context Store Search |
+| Board Sections | List, Context Store Search |
+| Board Pins | List, Context Store Search |
+| Catalogs | List, Context Store Search |
+| Catalogs Feeds | List, Context Store Search |
+| Catalogs Product Groups | List, Context Store Search |
+| Audiences | List, Context Store Search |
+| Conversion Tags | List, Context Store Search |
+| Customer Lists | List, Context Store Search |
+| Keywords | List, Context Store Search |
 
 ## Authentication
 

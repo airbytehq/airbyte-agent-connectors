@@ -7,7 +7,7 @@ The Google-Ads agent connector is a Python package that equips AI agents to inte
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-ads` v0.1.25
+- **Package:** `airbyte-agent-google-ads` v0.1.26
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/google-ads/api/rest/reference/rest)
 - **Status:** complete
@@ -93,13 +93,13 @@ async def google_ads_execute(entity: str, action: str, params: dict | None = Non
 | Entity | Actions |
 |--------|---------|
 | Accessible Customers | List |
-| Accounts | List, Search |
-| Campaigns | List, Update, Search |
-| Ad Groups | List, Update, Search |
-| Ad Group Ads | List, Search |
-| Campaign Labels | List, Create, Search |
-| Ad Group Labels | List, Create, Search |
-| Ad Group Ad Labels | List, Search |
+| Accounts | List, Context Store Search |
+| Campaigns | List, Update, Context Store Search |
+| Ad Groups | List, Update, Context Store Search |
+| Ad Group Ads | List, Context Store Search |
+| Campaign Labels | List, Create, Context Store Search |
+| Ad Group Labels | List, Create, Context Store Search |
+| Ad Group Ad Labels | List, Context Store Search |
 | Labels | Create |
 
 ## Authentication

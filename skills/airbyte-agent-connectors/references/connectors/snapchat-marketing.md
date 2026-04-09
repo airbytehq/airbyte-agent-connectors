@@ -7,7 +7,7 @@ The Snapchat-Marketing agent connector is a Python package that equips AI agents
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-snapchat-marketing` v0.1.14
+- **Package:** `airbyte-agent-snapchat-marketing` v0.1.15
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.snap.com/api/marketing-api/Ads-API/introduction)
 - **Status:** complete
@@ -86,14 +86,14 @@ async def snapchat_marketing_execute(entity: str, action: str, params: dict | No
 
 | Entity | Actions |
 |--------|---------|
-| Organizations | List, Get, Search |
-| Adaccounts | List, Get, Search |
-| Campaigns | List, Get, Search |
-| Adsquads | List, Get, Search |
-| Ads | List, Get, Search |
-| Creatives | List, Get, Search |
-| Media | List, Get, Search |
-| Segments | List, Get, Search |
+| Organizations | List, Get, Context Store Search |
+| Adaccounts | List, Get, Context Store Search |
+| Campaigns | List, Get, Context Store Search |
+| Adsquads | List, Get, Context Store Search |
+| Ads | List, Get, Context Store Search |
+| Creatives | List, Get, Context Store Search |
+| Media | List, Get, Context Store Search |
+| Segments | List, Get, Context Store Search |
 
 ## Authentication
 

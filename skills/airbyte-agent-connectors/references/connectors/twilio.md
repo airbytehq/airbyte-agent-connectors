@@ -7,7 +7,7 @@ The Twilio agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-twilio` v0.1.15
+- **Package:** `airbyte-agent-twilio` v0.1.16
 - **Auth:** Token
 - **Docs:** [Official API docs](https://www.twilio.com/docs/usage/api)
 - **Status:** complete
@@ -91,17 +91,17 @@ async def twilio_execute(entity: str, action: str, params: dict | None = None):
 
 | Entity | Actions |
 |--------|---------|
-| Accounts | List, Get, Search |
-| Calls | List, Get, Search |
-| Messages | List, Get, Search |
-| Incoming Phone Numbers | List, Get, Search |
-| Recordings | List, Get, Search |
-| Conferences | List, Get, Search |
-| Usage Records | List, Search |
-| Addresses | List, Get, Search |
-| Queues | List, Get, Search |
-| Transcriptions | List, Get, Search |
-| Outgoing Caller Ids | List, Get, Search |
+| Accounts | List, Get, Context Store Search |
+| Calls | List, Get, Context Store Search |
+| Messages | List, Get, Context Store Search |
+| Incoming Phone Numbers | List, Get, Context Store Search |
+| Recordings | List, Get, Context Store Search |
+| Conferences | List, Get, Context Store Search |
+| Usage Records | List, Context Store Search |
+| Addresses | List, Get, Context Store Search |
+| Queues | List, Get, Context Store Search |
+| Transcriptions | List, Get, Context Store Search |
+| Outgoing Caller Ids | List, Get, Context Store Search |
 
 ## Authentication
 

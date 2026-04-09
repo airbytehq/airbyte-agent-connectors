@@ -7,7 +7,7 @@ The Zendesk-Talk agent connector is a Python package that equips AI agents to in
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-zendesk-talk` v0.1.13
+- **Package:** `airbyte-agent-zendesk-talk` v0.1.14
 - **Auth:** OAuth, Token
 - **Docs:** [Official API docs](https://developer.zendesk.com/api-reference/voice/talk-api/introduction/)
 - **Status:** complete
@@ -85,17 +85,17 @@ async def zendesk_talk_execute(entity: str, action: str, params: dict | None = N
 
 | Entity | Actions |
 |--------|---------|
-| Phone Numbers | List, Get, Search |
-| Addresses | List, Get, Search |
-| Greetings | List, Get, Search |
-| Greeting Categories | List, Get, Search |
-| Ivrs | List, Get, Search |
-| Agents Activity | List, Search |
-| Agents Overview | List, Search |
-| Account Overview | List, Search |
-| Current Queue Activity | List, Search |
-| Calls | List, Search |
-| Call Legs | List, Search |
+| Phone Numbers | List, Get, Context Store Search |
+| Addresses | List, Get, Context Store Search |
+| Greetings | List, Get, Context Store Search |
+| Greeting Categories | List, Get, Context Store Search |
+| Ivrs | List, Get, Context Store Search |
+| Agents Activity | List, Context Store Search |
+| Agents Overview | List, Context Store Search |
+| Account Overview | List, Context Store Search |
+| Current Queue Activity | List, Context Store Search |
+| Calls | List, Context Store Search |
+| Call Legs | List, Context Store Search |
 
 ## Authentication
 
