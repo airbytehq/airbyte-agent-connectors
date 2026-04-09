@@ -316,8 +316,9 @@ def _extract_exceptions(info: dict, config) -> Dict[str, Any]:
 
 def _extract_example_questions(info: dict) -> Dict[str, Any]:
     questions = info.get("x-airbyte-example-questions", {}) or {}
+    context_store_search = questions.get("context_store_search", []) or []
+    search = context_store_search or questions.get("search", []) or []
     direct = questions.get("direct", []) or []
-    search = questions.get("search", []) or []
     unsupported = questions.get("unsupported", []) or []
 
     return {
