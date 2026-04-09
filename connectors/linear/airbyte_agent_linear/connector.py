@@ -399,14 +399,14 @@ class LinearConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any]
     ) -> LinearExecuteResult[Any] | LinearExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "create", "update", "search"],
+        action: Literal["list", "get", "create", "update", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -874,7 +874,7 @@ Omit assigneeId to leave the current assignee unchanged.
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssuesSearchQuery,
         limit: int | None = None,
@@ -964,7 +964,7 @@ Omit assigneeId to leave the current assignee unchanged.
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1047,7 +1047,7 @@ class ProjectsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectsSearchQuery,
         limit: int | None = None,
@@ -1124,7 +1124,7 @@ class ProjectsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1207,7 +1207,7 @@ class TeamsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TeamsSearchQuery,
         limit: int | None = None,
@@ -1284,7 +1284,7 @@ class TeamsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("teams", "search", params)
+        result = await self._connector.execute("teams", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1342,7 +1342,7 @@ class WorkflowStatesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WorkflowStatesSearchQuery,
         limit: int | None = None,
@@ -1390,7 +1390,7 @@ class WorkflowStatesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("workflow_states", "search", params)
+        result = await self._connector.execute("workflow_states", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1473,7 +1473,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -1530,7 +1530,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1672,7 +1672,7 @@ class CommentsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CommentsSearchQuery,
         limit: int | None = None,
@@ -1724,7 +1724,7 @@ class CommentsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("comments", "search", params)
+        result = await self._connector.execute("comments", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

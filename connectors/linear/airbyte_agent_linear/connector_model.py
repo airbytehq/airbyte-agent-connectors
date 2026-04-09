@@ -2408,6 +2408,15 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
             'Add a recent issue to a specific project',
             'Move an issue to a different project',
         ],
+        context_store_search=[
+            'Analyze the workload distribution across my development team',
+            'What are the top priority issues in our current sprint?',
+            'Identify the most active projects in our organization right now',
+            'Summarize the recent issues for {team_member} in the last two weeks',
+            'Compare the issue complexity across different teams',
+            'Which projects have the most unresolved issues?',
+            "Give me an overview of my team's current project backlog",
+        ],
         search=[
             'Analyze the workload distribution across my development team',
             'What are the top priority issues in our current sprint?',
