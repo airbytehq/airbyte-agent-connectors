@@ -33,7 +33,7 @@ from uuid import (
 MondayConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('80a54ea2-9959-4040-aac1-eee42423ec9b'),
     name='monday',
-    version='1.0.2',
+    version='1.0.3',
     base_url='https://api.monday.com',
     auth=AuthConfig(
         options=[
