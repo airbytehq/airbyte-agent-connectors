@@ -4627,6 +4627,13 @@ PylonConnectorModel: ConnectorModel = ConnectorModel(
             'Get details for a specific account',
             'Show me details for a specific contact',
         ],
+        context_store_search=[
+            'What are the most common issue sources this month?',
+            'Show me issues assigned to a specific team',
+            'Which accounts have the most open issues?',
+            'Analyze issue resolution times over the last 30 days',
+            'List contacts associated with a specific account',
+        ],
         search=[
             'What are the most common issue sources this month?',
             'Show me issues assigned to a specific team',
