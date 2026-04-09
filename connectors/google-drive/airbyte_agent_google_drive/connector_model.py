@@ -6895,6 +6895,7 @@ GoogleDriveConnectorModel: ConnectorModel = ConnectorModel(
             'Delete a file from Drive',
             'Move a file to a different folder',
         ],
+        context_store_search=['Show me files modified in the last week', 'What changes have been made since my last sync?'],
         search=['Show me files modified in the last week', 'What changes have been made since my last sync?'],
         unsupported=['Update file permissions', 'Add a comment to a file'],
     ),
