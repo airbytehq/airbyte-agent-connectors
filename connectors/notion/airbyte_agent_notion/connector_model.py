@@ -36,7 +36,7 @@ from uuid import (
 NotionConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('6e00b415-b02e-4160-bf02-58176a0ae687'),
     name='notion',
-    version='0.1.10',
+    version='0.1.11',
     base_url='https://api.notion.com',
     auth=AuthConfig(
         options=[
