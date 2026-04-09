@@ -7,7 +7,7 @@ The Granola agent connector is a Python package that equips AI agents to interac
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-granola` v0.1.27
+- **Package:** `airbyte-agent-granola` v0.1.28
 - **Auth:** Token
 - **Docs:** [Official API docs](https://docs.granola.ai/introduction)
 - **Status:** complete
@@ -80,7 +80,7 @@ async def granola_execute(entity: str, action: str, params: dict | None = None):
 
 | Entity | Actions |
 |--------|---------|
-| Notes | List, Get, Search |
+| Notes | List, Get, Context Store Search |
 
 ## Authentication
 
