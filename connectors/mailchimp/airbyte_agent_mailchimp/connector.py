@@ -458,14 +458,14 @@ class MailchimpConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> MailchimpExecuteResult[Any] | MailchimpExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -877,7 +877,7 @@ class CampaignsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: CampaignsSearchQuery,
         limit: int | None = None,
@@ -936,7 +936,7 @@ class CampaignsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("campaigns", "search", params)
+        result = await self._connector.execute("campaigns", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1040,7 +1040,7 @@ class ListsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ListsSearchQuery,
         limit: int | None = None,
@@ -1098,7 +1098,7 @@ class ListsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("lists", "search", params)
+        result = await self._connector.execute("lists", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1301,7 +1301,7 @@ class ReportsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ReportsSearchQuery,
         limit: int | None = None,
@@ -1364,7 +1364,7 @@ class ReportsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("reports", "search", params)
+        result = await self._connector.execute("reports", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1428,7 +1428,7 @@ class EmailActivityQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: EmailActivitySearchQuery,
         limit: int | None = None,
@@ -1475,7 +1475,7 @@ class EmailActivityQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("email_activity", "search", params)
+        result = await self._connector.execute("email_activity", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")

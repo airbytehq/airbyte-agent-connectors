@@ -5080,6 +5080,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
             'Show me email activity for a recent campaign',
             'Show me the performance report for a recent campaign',
         ],
+        context_store_search=[
+            'Show me all my email campaigns from the last month',
+            'What are the open rates for my recent campaigns?',
+            'Who unsubscribed from list {list_id} this week?',
+            'What tags are applied to my subscribers?',
+            'How many subscribers do I have in each list?',
+            'What are my top performing campaigns by click rate?',
+        ],
         search=[
             'Show me all my email campaigns from the last month',
             'What are the open rates for my recent campaigns?',
