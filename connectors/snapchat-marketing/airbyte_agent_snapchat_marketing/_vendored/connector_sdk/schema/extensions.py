@@ -87,7 +87,7 @@ class CacheFieldConfig(BaseModel):
     For object-type fields, supports nested properties to define the internal structure
     of complex nested schemas.
 
-    Used in x-airbyte-cache extension for api_search operations.
+    Used in x-airbyte-context-store extension for api_search operations.
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -111,7 +111,7 @@ class CacheEntityConfig(BaseModel):
     Defines a cache-enabled entity with its fields and optional name aliasing
     to map between user-facing entity names and cache storage names.
 
-    Used in x-airbyte-cache extension for api_search operations.
+    Used in x-airbyte-context-store extension for api_search operations.
     """
 
     model_config = ConfigDict(populate_by_name=True, extra="forbid")
@@ -237,7 +237,7 @@ class ReplicationConfig(BaseModel):
 
 class CacheConfig(BaseModel):
     """
-    Cache configuration extension (x-airbyte-cache).
+    Cache configuration extension (x-airbyte-context-store).
 
     Defines cache-enabled entities and their field mappings for api_search operations.
     Supports optional name aliasing via x-airbyte-name for both entities and fields,
@@ -249,7 +249,7 @@ class CacheConfig(BaseModel):
     Example YAML usage:
         info:
           title: Stripe API
-          x-airbyte-cache:
+          x-airbyte-context-store:
             entities:
               - entity: customers
                 stream: customers
