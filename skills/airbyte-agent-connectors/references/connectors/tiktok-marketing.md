@@ -7,7 +7,7 @@ The Tiktok-Marketing agent connector is a Python package that equips AI agents t
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-tiktok-marketing` v0.1.29
+- **Package:** `airbyte-agent-tiktok-marketing` v0.1.30
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://business-api.tiktok.com/portal/docs?id=1740302848670722)
 - **Status:** complete
