@@ -1852,6 +1852,12 @@ SnapchatMarketingConnectorModel: ConnectorModel = ConnectorModel(
             'List all media files in my ad account',
             'Show me the audience segments in my ad account',
         ],
+        context_store_search=[
+            'Which campaigns are currently active?',
+            'What ad squads have the highest daily budget?',
+            'Show me ads that are pending review',
+            'Find campaigns created in the last month',
+        ],
         search=[
             'Which campaigns are currently active?',
             'What ad squads have the highest daily budget?',

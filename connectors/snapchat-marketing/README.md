@@ -96,14 +96,14 @@ This connector supports the following entities and actions. For more details, se
 
 | Entity | Actions |
 |--------|---------|
-| Organizations | [List](./REFERENCE.md#organizations-list), [Get](./REFERENCE.md#organizations-get), [Search](./REFERENCE.md#organizations-search) |
-| Adaccounts | [List](./REFERENCE.md#adaccounts-list), [Get](./REFERENCE.md#adaccounts-get), [Search](./REFERENCE.md#adaccounts-search) |
-| Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [Search](./REFERENCE.md#campaigns-search) |
-| Adsquads | [List](./REFERENCE.md#adsquads-list), [Get](./REFERENCE.md#adsquads-get), [Search](./REFERENCE.md#adsquads-search) |
-| Ads | [List](./REFERENCE.md#ads-list), [Get](./REFERENCE.md#ads-get), [Search](./REFERENCE.md#ads-search) |
-| Creatives | [List](./REFERENCE.md#creatives-list), [Get](./REFERENCE.md#creatives-get), [Search](./REFERENCE.md#creatives-search) |
-| Media | [List](./REFERENCE.md#media-list), [Get](./REFERENCE.md#media-get), [Search](./REFERENCE.md#media-search) |
-| Segments | [List](./REFERENCE.md#segments-list), [Get](./REFERENCE.md#segments-get), [Search](./REFERENCE.md#segments-search) |
+| Organizations | [List](./REFERENCE.md#organizations-list), [Get](./REFERENCE.md#organizations-get), [Context Store Search](./REFERENCE.md#organizations-context-store-search) |
+| Adaccounts | [List](./REFERENCE.md#adaccounts-list), [Get](./REFERENCE.md#adaccounts-get), [Context Store Search](./REFERENCE.md#adaccounts-context-store-search) |
+| Campaigns | [List](./REFERENCE.md#campaigns-list), [Get](./REFERENCE.md#campaigns-get), [Context Store Search](./REFERENCE.md#campaigns-context-store-search) |
+| Adsquads | [List](./REFERENCE.md#adsquads-list), [Get](./REFERENCE.md#adsquads-get), [Context Store Search](./REFERENCE.md#adsquads-context-store-search) |
+| Ads | [List](./REFERENCE.md#ads-list), [Get](./REFERENCE.md#ads-get), [Context Store Search](./REFERENCE.md#ads-context-store-search) |
+| Creatives | [List](./REFERENCE.md#creatives-list), [Get](./REFERENCE.md#creatives-get), [Context Store Search](./REFERENCE.md#creatives-context-store-search) |
+| Media | [List](./REFERENCE.md#media-list), [Get](./REFERENCE.md#media-get), [Context Store Search](./REFERENCE.md#media-context-store-search) |
+| Segments | [List](./REFERENCE.md#segments-list), [Get](./REFERENCE.md#segments-get), [Context Store Search](./REFERENCE.md#segments-context-store-search) |
 
 
 ### Authentication
@@ -116,7 +116,7 @@ See the official [Snapchat-Marketing API reference](https://developers.snap.com/
 
 ## Version information
 
-- **Package version:** 0.1.14
+- **Package version:** 0.1.15
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** eeaf9a603e6c650b89bac7339c63f31ef77f5bcf
+- **Generated with Connector SDK commit SHA:** 3cecc817f060335c13c5d88bc9ad34a4dace961f
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/snapchat-marketing/CHANGELOG.md)
