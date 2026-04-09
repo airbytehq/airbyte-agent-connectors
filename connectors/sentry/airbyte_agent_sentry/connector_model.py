@@ -3468,6 +3468,12 @@ SentryConnectorModel: ConnectorModel = ConnectorModel(
             'Show me all releases for my organization',
             'Get the details of a specific project',
         ],
+        context_store_search=[
+            'What are the most common unresolved issues?',
+            'Which projects have the most events?',
+            'Show me issues that were first seen this week',
+            'Find releases created in the last month',
+        ],
         search=[
             'What are the most common unresolved issues?',
             'Which projects have the most events?',

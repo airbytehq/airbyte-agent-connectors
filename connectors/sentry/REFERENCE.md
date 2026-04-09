@@ -8,10 +8,10 @@ The Sentry connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Projects | [List](#projects-list), [Get](#projects-get), [Search](#projects-search) |
-| Issues | [List](#issues-list), [Get](#issues-get), [Search](#issues-search) |
-| Events | [List](#events-list), [Get](#events-get), [Search](#events-search) |
-| Releases | [List](#releases-list), [Get](#releases-get), [Search](#releases-search) |
+| Projects | [List](#projects-list), [Get](#projects-get), [Context Store Search](#projects-context-store-search) |
+| Issues | [List](#issues-list), [Get](#issues-get), [Context Store Search](#issues-context-store-search) |
+| Events | [List](#events-list), [Get](#events-get), [Context Store Search](#events-context-store-search) |
+| Releases | [List](#releases-list), [Get](#releases-get), [Context Store Search](#releases-context-store-search) |
 | Project Detail | [Get](#project-detail-get) |
 
 ## Projects
@@ -223,14 +223,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Projects Search
+### Projects Context Store Search
 
 Search and filter projects records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await sentry.projects.search(
+await sentry.projects.context_store_search(
     query={"filter": {"eq": {"access": []}}}
 )
 ```
@@ -243,7 +243,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "projects",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"access": []}}}
     }
@@ -496,14 +496,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Issues Search
+### Issues Context Store Search
 
 Search and filter issues records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await sentry.issues.search(
+await sentry.issues.context_store_search(
     query={"filter": {"eq": {"annotations": []}}}
 )
 ```
@@ -516,7 +516,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issues",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"annotations": []}}}
     }
@@ -775,14 +775,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Events Search
+### Events Context Store Search
 
 Search and filter events records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await sentry.events.search(
+await sentry.events.context_store_search(
     query={"filter": {"eq": {"_meta": {}}}}
 )
 ```
@@ -795,7 +795,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "events",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"_meta": {}}}}
     }
@@ -1032,14 +1032,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Releases Search
+### Releases Context Store Search
 
 Search and filter releases records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await sentry.releases.search(
+await sentry.releases.context_store_search(
     query={"filter": {"eq": {"authors": []}}}
 )
 ```
@@ -1052,7 +1052,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "releases",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"authors": []}}}
     }

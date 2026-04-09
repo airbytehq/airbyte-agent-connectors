@@ -328,14 +328,14 @@ class SentryConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any]
     ) -> SentryExecuteResult[Any] | SentryExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "search"],
+        action: Literal["list", "get", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -728,7 +728,7 @@ class ProjectsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectsSearchQuery,
         limit: int | None = None,
@@ -791,7 +791,7 @@ class ProjectsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -885,7 +885,7 @@ class IssuesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: IssuesSearchQuery,
         limit: int | None = None,
@@ -953,7 +953,7 @@ class IssuesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("issues", "search", params)
+        result = await self._connector.execute("issues", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1047,7 +1047,7 @@ class EventsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: EventsSearchQuery,
         limit: int | None = None,
@@ -1113,7 +1113,7 @@ class EventsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("events", "search", params)
+        result = await self._connector.execute("events", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1201,7 +1201,7 @@ class ReleasesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ReleasesSearchQuery,
         limit: int | None = None,
@@ -1260,7 +1260,7 @@ class ReleasesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("releases", "search", params)
+        result = await self._connector.execute("releases", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
