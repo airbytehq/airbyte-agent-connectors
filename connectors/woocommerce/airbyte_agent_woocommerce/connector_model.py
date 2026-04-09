@@ -7736,6 +7736,13 @@ WoocommerceConnectorModel: ConnectorModel = ConnectorModel(
             'Show me the tax rates',
             'List all payment gateways',
         ],
+        context_store_search=[
+            'Find orders placed this month',
+            'What are the top-selling products?',
+            'Show me customers who have made purchases',
+            'Find all coupons expiring this year',
+            'What orders are still processing?',
+        ],
         search=[
             'Find orders placed this month',
             'What are the top-selling products?',
