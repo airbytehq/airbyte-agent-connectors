@@ -597,14 +597,14 @@ class AsanaConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "search"],
+        action: Literal["list", "get", "download", "context_store_search"],
         params: Mapping[str, Any]
     ) -> AsanaExecuteResult[Any] | AsanaExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["list", "get", "download", "search"],
+        action: Literal["list", "get", "download", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1106,7 +1106,7 @@ class TasksQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TasksSearchQuery,
         limit: int | None = None,
@@ -1179,7 +1179,7 @@ class TasksQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("tasks", "search", params)
+        result = await self._connector.execute("tasks", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1413,7 +1413,7 @@ class ProjectsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: ProjectsSearchQuery,
         limit: int | None = None,
@@ -1475,7 +1475,7 @@ class ProjectsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("projects", "search", params)
+        result = await self._connector.execute("projects", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1696,7 +1696,7 @@ class WorkspacesQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: WorkspacesSearchQuery,
         limit: int | None = None,
@@ -1738,7 +1738,7 @@ class WorkspacesQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("workspaces", "search", params)
+        result = await self._connector.execute("workspaces", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -1827,7 +1827,7 @@ class UsersQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: UsersSearchQuery,
         limit: int | None = None,
@@ -1870,7 +1870,7 @@ class UsersQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("users", "search", params)
+        result = await self._connector.execute("users", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2009,7 +2009,7 @@ class TeamsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TeamsSearchQuery,
         limit: int | None = None,
@@ -2053,7 +2053,7 @@ class TeamsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("teams", "search", params)
+        result = await self._connector.execute("teams", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2292,7 +2292,7 @@ metadata to get the download_url, then downloads the file from that URL.
         return await save_download(content_iterator, path)
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: AttachmentsSearchQuery,
         limit: int | None = None,
@@ -2341,7 +2341,7 @@ metadata to get the download_url, then downloads the file from that URL.
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("attachments", "search", params)
+        result = await self._connector.execute("attachments", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2436,7 +2436,7 @@ class TagsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: TagsSearchQuery,
         limit: int | None = None,
@@ -2480,7 +2480,7 @@ class TagsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("tags", "search", params)
+        result = await self._connector.execute("tags", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
@@ -2575,7 +2575,7 @@ class SectionsQuery:
 
 
 
-    async def search(
+    async def context_store_search(
         self,
         query: SectionsSearchQuery,
         limit: int | None = None,
@@ -2617,7 +2617,7 @@ class SectionsQuery:
         if fields is not None:
             params["fields"] = fields
 
-        result = await self._connector.execute("sections", "search", params)
+        result = await self._connector.execute("sections", "context_store_search", params)
 
         # Parse response into typed result
         meta_data = result.get("meta")
