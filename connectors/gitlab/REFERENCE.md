@@ -8,20 +8,20 @@ The Gitlab connector supports the following entities and actions.
 
 | Entity | Actions |
 |--------|---------|
-| Projects | [List](#projects-list), [Get](#projects-get), [Search](#projects-search) |
-| Issues | [List](#issues-list), [Get](#issues-get), [Search](#issues-search) |
-| Merge Requests | [List](#merge-requests-list), [Get](#merge-requests-get), [Search](#merge-requests-search) |
-| Users | [List](#users-list), [Get](#users-get), [Search](#users-search) |
-| Commits | [List](#commits-list), [Get](#commits-get), [Search](#commits-search) |
-| Groups | [List](#groups-list), [Get](#groups-get), [Search](#groups-search) |
-| Branches | [List](#branches-list), [Get](#branches-get), [Search](#branches-search) |
-| Pipelines | [List](#pipelines-list), [Get](#pipelines-get), [Search](#pipelines-search) |
-| Group Members | [List](#group-members-list), [Get](#group-members-get), [Search](#group-members-search) |
-| Project Members | [List](#project-members-list), [Get](#project-members-get), [Search](#project-members-search) |
-| Releases | [List](#releases-list), [Get](#releases-get), [Search](#releases-search) |
-| Tags | [List](#tags-list), [Get](#tags-get), [Search](#tags-search) |
-| Group Milestones | [List](#group-milestones-list), [Get](#group-milestones-get), [Search](#group-milestones-search) |
-| Project Milestones | [List](#project-milestones-list), [Get](#project-milestones-get), [Search](#project-milestones-search) |
+| Projects | [List](#projects-list), [Get](#projects-get), [Context Store Search](#projects-context-store-search) |
+| Issues | [List](#issues-list), [Get](#issues-get), [Context Store Search](#issues-context-store-search) |
+| Merge Requests | [List](#merge-requests-list), [Get](#merge-requests-get), [Context Store Search](#merge-requests-context-store-search) |
+| Users | [List](#users-list), [Get](#users-get), [Context Store Search](#users-context-store-search) |
+| Commits | [List](#commits-list), [Get](#commits-get), [Context Store Search](#commits-context-store-search) |
+| Groups | [List](#groups-list), [Get](#groups-get), [Context Store Search](#groups-context-store-search) |
+| Branches | [List](#branches-list), [Get](#branches-get), [Context Store Search](#branches-context-store-search) |
+| Pipelines | [List](#pipelines-list), [Get](#pipelines-get), [Context Store Search](#pipelines-context-store-search) |
+| Group Members | [List](#group-members-list), [Get](#group-members-get), [Context Store Search](#group-members-context-store-search) |
+| Project Members | [List](#project-members-list), [Get](#project-members-get), [Context Store Search](#project-members-context-store-search) |
+| Releases | [List](#releases-list), [Get](#releases-get), [Context Store Search](#releases-context-store-search) |
+| Tags | [List](#tags-list), [Get](#tags-get), [Context Store Search](#tags-context-store-search) |
+| Group Milestones | [List](#group-milestones-list), [Get](#group-milestones-get), [Context Store Search](#group-milestones-context-store-search) |
+| Project Milestones | [List](#project-milestones-list), [Get](#project-milestones-get), [Context Store Search](#project-milestones-context-store-search) |
 
 ## Projects
 
@@ -361,14 +361,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Projects Search
+### Projects Context Store Search
 
 Search and filter projects records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.projects.search(
+await gitlab.projects.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -381,7 +381,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "projects",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -770,14 +770,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Issues Search
+### Issues Context Store Search
 
 Search and filter issues records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.issues.search(
+await gitlab.issues.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -790,7 +790,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "issues",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -1131,14 +1131,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Merge Requests Search
+### Merge Requests Context Store Search
 
 Search and filter merge requests records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.merge_requests.search(
+await gitlab.merge_requests.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -1151,7 +1151,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "merge_requests",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -1395,14 +1395,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Users Search
+### Users Context Store Search
 
 Search and filter users records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.users.search(
+await gitlab.users.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -1415,7 +1415,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "users",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -1601,14 +1601,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Commits Search
+### Commits Context Store Search
 
 Search and filter commits records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.commits.search(
+await gitlab.commits.context_store_search(
     query={"filter": {"eq": {"project_id": 0}}}
 )
 ```
@@ -1621,7 +1621,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "commits",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"project_id": 0}}}
     }
@@ -1883,14 +1883,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Groups Search
+### Groups Context Store Search
 
 Search and filter groups records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.groups.search(
+await gitlab.groups.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -1903,7 +1903,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "groups",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -2107,14 +2107,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Branches Search
+### Branches Context Store Search
 
 Search and filter branches records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.branches.search(
+await gitlab.branches.context_store_search(
     query={"filter": {"eq": {"project_id": 0}}}
 )
 ```
@@ -2127,7 +2127,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "branches",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"project_id": 0}}}
     }
@@ -2310,14 +2310,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Pipelines Search
+### Pipelines Context Store Search
 
 Search and filter pipelines records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.pipelines.search(
+await gitlab.pipelines.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -2330,7 +2330,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "pipelines",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -2514,14 +2514,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Group Members Search
+### Group Members Context Store Search
 
 Search and filter group members records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.group_members.search(
+await gitlab.group_members.context_store_search(
     query={"filter": {"eq": {"group_id": 0}}}
 )
 ```
@@ -2534,7 +2534,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "group_members",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"group_id": 0}}}
     }
@@ -2722,14 +2722,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Project Members Search
+### Project Members Context Store Search
 
 Search and filter project members records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.project_members.search(
+await gitlab.project_members.context_store_search(
     query={"filter": {"eq": {"project_id": 0}}}
 )
 ```
@@ -2742,7 +2742,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "project_members",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"project_id": 0}}}
     }
@@ -2933,14 +2933,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Releases Search
+### Releases Context Store Search
 
 Search and filter releases records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.releases.search(
+await gitlab.releases.context_store_search(
     query={"filter": {"eq": {"name": "<str>"}}}
 )
 ```
@@ -2953,7 +2953,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "releases",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"name": "<str>"}}}
     }
@@ -3139,14 +3139,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Tags Search
+### Tags Context Store Search
 
 Search and filter tags records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.tags.search(
+await gitlab.tags.context_store_search(
     query={"filter": {"eq": {"name": "<str>"}}}
 )
 ```
@@ -3159,7 +3159,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "tags",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"name": "<str>"}}}
     }
@@ -3338,14 +3338,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Group Milestones Search
+### Group Milestones Context Store Search
 
 Search and filter group milestones records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.group_milestones.search(
+await gitlab.group_milestones.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -3358,7 +3358,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "group_milestones",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
@@ -3545,14 +3545,14 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
-### Project Milestones Search
+### Project Milestones Context Store Search
 
 Search and filter project milestones records powered by Airbyte's data sync. This often provides additional fields and operators beyond what the API natively supports, making it easier to narrow down results before performing further operations. Only available in hosted mode.
 
 #### Python SDK
 
 ```python
-await gitlab.project_milestones.search(
+await gitlab.project_milestones.context_store_search(
     query={"filter": {"eq": {"id": 0}}}
 )
 ```
@@ -3565,7 +3565,7 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 --header 'Authorization: Bearer {your_auth_token}' \
 --data '{
     "entity": "project_milestones",
-    "action": "search",
+    "action": "context_store_search",
     "params": {
         "query": {"filter": {"eq": {"id": 0}}}
     }
