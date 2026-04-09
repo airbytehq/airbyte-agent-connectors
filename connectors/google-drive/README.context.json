@@ -1,0 +1,1832 @@
+{
+  "connector_name": "google-drive",
+  "class_name": "GoogleDriveConnector",
+  "package_name": "airbyte_agent_google_drive",
+  "package_version": "0.2.4",
+  "yaml_version": "0.2.4",
+  "api_reference_url": "https://developers.google.com/workspace/drive/api/reference/rest/v3",
+  "commit_sha": "unknown",
+  "auth_example": "GoogleDriveAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", GoogleDriveAuthConfig",
+  "auth_config": {
+    "type_name": "GoogleDriveAuthConfig",
+    "base_name": "GoogleDrive",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your Google OAuth2 Access Token (optional, will be obtained via refresh)"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Google OAuth2 Refresh Token"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your Google OAuth2 Client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your Google OAuth2 Client Secret"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "GoogleDriveReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Google Drive.",
+    "fields": [
+      {
+        "name": "folder_url",
+        "type": "str",
+        "required": true,
+        "title": "Folder URL",
+        "description": "URL for the Google Drive folder you want to sync (e.g., https://drive.google.com/drive/folders/YOUR-FOLDER-ID)",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "streams",
+        "type": "str",
+        "required": true,
+        "title": "Streams",
+        "description": "Configuration for file streams to sync from Google Drive",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Google Drive is a cloud-based file storage and synchronization service that allows users\nto store files, share content, and collaborate on documents. This connector provides\naccess to files, shared drives, permissions, comments, replies, revisions,\nand change tracking, including the ability to create, update, delete, and upload files.\n",
+  "supported_questions": "- List all files in my Google Drive\n- Show me details for a recent file\n- Download a recent file from my Drive\n- Export a recent Google Doc as PDF\n- Export a recent Google Sheet as CSV\n- Show me the content of a recent file\n- List all shared drives I have access to\n- Show me details for a shared drive I have access to\n- Show permissions for a recent file\n- List comments on a recent file\n- Show replies to a recent comment on a file\n- Show revision history for a recent file\n- Get my Drive storage quota and user info\n- List files in a folder I have access to\n- Create a new file in Google Drive\n- Upload a document to Drive\n- Delete a file from Drive\n- Move a file to a different folder\n- Show me files modified in the last week\n- What changes have been made since my last sync?",
+  "unsupported_questions": "- Update file permissions\n- Add a comment to a file",
+  "first_operation": {
+    "method_name": "list_files",
+    "http_method": "get",
+    "path": "/drive/v3/files",
+    "entity": "files",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "pageSize",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 100
+        },
+        "required": false,
+        "description": "Maximum number of files to return per page (1-1000)",
+        "is_deep_object": false
+      },
+      {
+        "name": "pageToken",
+        "python_name": "page_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Token for continuing a previous list request",
+        "is_deep_object": false
+      },
+      {
+        "name": "q",
+        "python_name": "q",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Query string for searching files",
+        "is_deep_object": false
+      },
+      {
+        "name": "orderBy",
+        "python_name": "order_by",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Sort order (e.g., 'modifiedTime desc', 'name')",
+        "is_deep_object": false
+      },
+      {
+        "name": "fields",
+        "python_name": "fields",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Fields to include in the response",
+        "is_deep_object": false
+      },
+      {
+        "name": "spaces",
+        "python_name": "spaces",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Comma-separated list of spaces to query (drive, appDataFolder)",
+        "is_deep_object": false
+      },
+      {
+        "name": "corpora",
+        "python_name": "corpora",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Bodies of items to search (user, drive, allDrives)",
+        "is_deep_object": false
+      },
+      {
+        "name": "driveId",
+        "python_name": "drive_id",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "ID of the shared drive to search",
+        "is_deep_object": false
+      },
+      {
+        "name": "includeItemsFromAllDrives",
+        "python_name": "include_items_from_all_drives",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": false,
+        "description": "Whether to include items from all drives",
+        "is_deep_object": false
+      },
+      {
+        "name": "supportsAllDrives",
+        "python_name": "supports_all_drives",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": false,
+        "description": "Whether the requesting application supports both My Drives and shared drives",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "FilesListParams",
+    "response_type": "FilesListResult",
+    "description": "Lists the user's files. Returns a paginated list of files.",
+    "record_extractor": "$.files",
+    "meta_extractor": {
+      "nextPageToken": "$.nextPageToken",
+      "incompleteSearch": "$.incompleteSearch"
+    },
+    "needs_envelope": true,
+    "record_type": "list[File]",
+    "meta_fields": [
+      {
+        "name": "nextPageToken",
+        "python_name": "next_page_token",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The page token for the next page of files"
+        }
+      },
+      {
+        "name": "incompleteSearch",
+        "python_name": "incomplete_search",
+        "type": "bool | None",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether the search process was incomplete"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "files": [
+      {
+        "method_name": "list_files",
+        "http_method": "get",
+        "path": "/drive/v3/files",
+        "entity": "files",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of files to return per page (1-1000)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Query string for searching files",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderBy",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Sort order (e.g., 'modifiedTime desc', 'name')",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Fields to include in the response",
+            "is_deep_object": false
+          },
+          {
+            "name": "spaces",
+            "python_name": "spaces",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Comma-separated list of spaces to query (drive, appDataFolder)",
+            "is_deep_object": false
+          },
+          {
+            "name": "corpora",
+            "python_name": "corpora",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Bodies of items to search (user, drive, allDrives)",
+            "is_deep_object": false
+          },
+          {
+            "name": "driveId",
+            "python_name": "drive_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "ID of the shared drive to search",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeItemsFromAllDrives",
+            "python_name": "include_items_from_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether to include items from all drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FilesListParams",
+        "response_type": "FilesListResult",
+        "description": "Lists the user's files. Returns a paginated list of files.",
+        "record_extractor": "$.files",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "incompleteSearch": "$.incompleteSearch"
+        },
+        "needs_envelope": true,
+        "record_type": "list[File]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of files"
+            }
+          },
+          {
+            "name": "incompleteSearch",
+            "python_name": "incomplete_search",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether the search process was incomplete"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_file",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}",
+        "entity": "files",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Fields to include in the response",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FilesGetParams",
+        "response_type": "File",
+        "description": "Gets a file's metadata by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "File",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_file",
+        "http_method": "post",
+        "path": "/drive/v3/files/create",
+        "entity": "files",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the file or folder"
+            },
+            "required": true,
+            "description": "The name of the file or folder"
+          },
+          {
+            "name": "mimeType",
+            "python_name": "mime_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The MIME type of the file. Use 'application/vnd.google-apps.folder' for folders,\n'application/vnd.google-apps.document' for Google Docs,\n'application/vnd.google-apps.spreadsheet' for Google Sheets.\n"
+            },
+            "required": false,
+            "description": "The MIME type of the file. Use 'application/vnd.google-apps.folder' for folders,\n'application/vnd.google-apps.document' for Google Docs,\n'application/vnd.google-apps.spreadsheet' for Google Sheets.\n"
+          },
+          {
+            "name": "parents",
+            "python_name": "parents",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The IDs of the parent folders. If not specified, the file is placed in My Drive root."
+            },
+            "required": false,
+            "description": "The IDs of the parent folders. If not specified, the file is placed in My Drive root."
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A short description of the file"
+            },
+            "required": false,
+            "description": "A short description of the file"
+          }
+        ],
+        "params_type_name": "FilesCreateParams",
+        "response_type": "File",
+        "description": "Creates a new file or folder in Google Drive (metadata only, no content).\nTo create a folder, set mimeType to 'application/vnd.google-apps.folder'.\nTo create a Google Doc, use 'application/vnd.google-apps.document'.\nTo create a Google Sheet, use 'application/vnd.google-apps.spreadsheet'.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "File",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_file",
+        "http_method": "patch",
+        "path": "/drive/v3/files/{fileId}/update",
+        "entity": "files",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new name of the file"
+            },
+            "required": false,
+            "description": "The new name of the file"
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A new description for the file"
+            },
+            "required": false,
+            "description": "A new description for the file"
+          },
+          {
+            "name": "mimeType",
+            "python_name": "mime_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new MIME type of the file"
+            },
+            "required": false,
+            "description": "The new MIME type of the file"
+          },
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file to update"
+          },
+          {
+            "name": "addParents",
+            "python_name": "add_parents",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Comma-separated list of parent IDs to add",
+            "is_deep_object": false
+          },
+          {
+            "name": "removeParents",
+            "python_name": "remove_parents",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Comma-separated list of parent IDs to remove",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FilesUpdateParams",
+        "response_type": "File",
+        "description": "Updates a file's metadata. Use addParents/removeParents query parameters\nto move a file between folders.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "File",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_file",
+        "http_method": "delete",
+        "path": "/drive/v3/files/{fileId}/delete",
+        "entity": "files",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file to delete"
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FilesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Permanently deletes a file owned by the user without moving it to the trash.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "download_file",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/download",
+        "entity": "files",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file to download"
+          },
+          {
+            "name": "alt",
+            "python_name": "alt",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "media"
+              ],
+              "default": "media"
+            },
+            "required": true,
+            "description": "Must be set to 'media' to download file content",
+            "is_deep_object": false
+          },
+          {
+            "name": "acknowledgeAbuse",
+            "python_name": "acknowledge_abuse",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the user is acknowledging the risk of downloading known malware or other abusive files",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "FilesDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads the binary content of a file. This works for non-Google Workspace files\n(PDFs, images, zip files, etc.). For Google Docs, Sheets, Slides, or Drawings,\nuse the export action instead.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "files_upload": [
+      {
+        "method_name": "upload_file",
+        "http_method": "post",
+        "path": "/upload/drive/v3/files",
+        "entity": "files_upload",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the file"
+            },
+            "required": true,
+            "description": "The name of the file"
+          },
+          {
+            "name": "file_content",
+            "python_name": "file_content",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "byte",
+              "description": "Base64-encoded file content to upload"
+            },
+            "required": true,
+            "description": "Base64-encoded file content to upload"
+          },
+          {
+            "name": "mimeType",
+            "python_name": "mime_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The MIME type for the file metadata in Google Drive"
+            },
+            "required": false,
+            "description": "The MIME type for the file metadata in Google Drive"
+          },
+          {
+            "name": "parents",
+            "python_name": "parents",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The IDs of the parent folders"
+            },
+            "required": false,
+            "description": "The IDs of the parent folders"
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A short description of the file"
+            },
+            "required": false,
+            "description": "A short description of the file"
+          },
+          {
+            "name": "file_mime_type",
+            "python_name": "file_mime_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The MIME type of the actual file content (e.g., 'application/pdf', 'image/png'). Defaults to 'application/octet-stream'."
+            },
+            "required": false,
+            "description": "The MIME type of the actual file content (e.g., 'application/pdf', 'image/png'). Defaults to 'application/octet-stream'."
+          },
+          {
+            "name": "uploadType",
+            "python_name": "upload_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "multipart"
+              ],
+              "default": "multipart"
+            },
+            "required": false,
+            "description": "The type of upload request (must be 'multipart')",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FilesUploadCreateParams",
+        "response_type": "File",
+        "description": "Uploads a new file to Google Drive with both metadata and file content.\nThe file content must be base64-encoded in the file_content parameter.\nSuitable for files up to 5MB. For larger files, use the Drive UI.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "File",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "files_export": [
+      {
+        "method_name": "export_file",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/export",
+        "entity": "files_export",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the Google Workspace file to export"
+          },
+          {
+            "name": "mimeType",
+            "python_name": "mime_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The MIME type of the format to export to. Common values:\n- application/pdf\n- text/plain\n- text/csv\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\n- application/vnd.openxmlformats-officedocument.presentationml.presentation\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "FilesExportDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Exports a Google Workspace file (Docs, Sheets, Slides, Drawings) to a specified format.\nCommon export formats:\n- application/pdf (all types)\n- text/plain (Docs)\n- text/csv (Sheets)\n- application/vnd.openxmlformats-officedocument.wordprocessingml.document (Docs to .docx)\n- application/vnd.openxmlformats-officedocument.spreadsheetml.sheet (Sheets to .xlsx)\n- application/vnd.openxmlformats-officedocument.presentationml.presentation (Slides to .pptx)\nNote: Export has a 10MB limit. For larger files, use the Drive UI.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "drives": [
+      {
+        "method_name": "list_drives",
+        "http_method": "get",
+        "path": "/drive/v3/drives",
+        "entity": "drives",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": false,
+            "description": "Maximum number of shared drives to return (1-100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Query string for searching shared drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "useDomainAdminAccess",
+            "python_name": "use_domain_admin_access",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Issue the request as a domain administrator",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DrivesListParams",
+        "response_type": "DrivesListResult",
+        "description": "Lists the user's shared drives",
+        "record_extractor": "$.drives",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Drive]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of shared drives"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_drive",
+        "http_method": "get",
+        "path": "/drive/v3/drives/{driveId}",
+        "entity": "drives",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "driveId",
+            "python_name": "drive_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the shared drive"
+          },
+          {
+            "name": "useDomainAdminAccess",
+            "python_name": "use_domain_admin_access",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Issue the request as a domain administrator",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DrivesGetParams",
+        "response_type": "Drive",
+        "description": "Gets a shared drive's metadata by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Drive",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "permissions": [
+      {
+        "method_name": "list_permissions",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/permissions",
+        "entity": "permissions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file or shared drive"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": false,
+            "description": "Maximum number of permissions to return (1-100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "useDomainAdminAccess",
+            "python_name": "use_domain_admin_access",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Issue the request as a domain administrator",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PermissionsListParams",
+        "response_type": "PermissionsListResult",
+        "description": "Lists a file's or shared drive's permissions",
+        "record_extractor": "$.permissions",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Permission]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of permissions"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_permission",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/permissions/{permissionId}",
+        "entity": "permissions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "permissionId",
+            "python_name": "permission_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the permission"
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "useDomainAdminAccess",
+            "python_name": "use_domain_admin_access",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Issue the request as a domain administrator",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PermissionsGetParams",
+        "response_type": "Permission",
+        "description": "Gets a permission by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Permission",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "comments": [
+      {
+        "method_name": "list_comments",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/comments",
+        "entity": "comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "description": "Maximum number of comments to return (1-100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          },
+          {
+            "name": "startModifiedTime",
+            "python_name": "start_modified_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": "Minimum value of modifiedTime to filter by (RFC 3339)",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeDeleted",
+            "python_name": "include_deleted",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Whether to include deleted comments",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            },
+            "required": false,
+            "description": "Fields to include in the response (required for comments)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsListParams",
+        "response_type": "CommentsListResult",
+        "description": "Lists a file's comments",
+        "record_extractor": "$.comments",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Comment]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of comments"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_comment",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/comments/{commentId}",
+        "entity": "comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the comment"
+          },
+          {
+            "name": "includeDeleted",
+            "python_name": "include_deleted",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Whether to return deleted comments",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            },
+            "required": false,
+            "description": "Fields to include in the response (required for comments)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsGetParams",
+        "response_type": "Comment",
+        "description": "Gets a comment by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Comment",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "replies": [
+      {
+        "method_name": "list_replies",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies",
+        "entity": "replies",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the comment"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "description": "Maximum number of replies to return (1-100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeDeleted",
+            "python_name": "include_deleted",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Whether to include deleted replies",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            },
+            "required": false,
+            "description": "Fields to include in the response (required for replies)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RepliesListParams",
+        "response_type": "RepliesListResult",
+        "description": "Lists a comment's replies",
+        "record_extractor": "$.replies",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Reply]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of replies"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_reply",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/comments/{commentId}/replies/{replyId}",
+        "entity": "replies",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the comment"
+          },
+          {
+            "name": "replyId",
+            "python_name": "reply_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the reply"
+          },
+          {
+            "name": "includeDeleted",
+            "python_name": "include_deleted",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Whether to return deleted replies",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "*"
+            },
+            "required": false,
+            "description": "Fields to include in the response (required for replies)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RepliesGetParams",
+        "response_type": "Reply",
+        "description": "Gets a reply by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Reply",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "revisions": [
+      {
+        "method_name": "list_revisions",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/revisions",
+        "entity": "revisions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 200
+            },
+            "required": false,
+            "description": "Maximum number of revisions to return (1-1000)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for continuing a previous list request",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RevisionsListParams",
+        "response_type": "RevisionsListResult",
+        "description": "Lists a file's revisions",
+        "record_extractor": "$.revisions",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Revision]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of revisions"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_revision",
+        "http_method": "get",
+        "path": "/drive/v3/files/{fileId}/revisions/{revisionId}",
+        "entity": "revisions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fileId",
+            "python_name": "file_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the file"
+          },
+          {
+            "name": "revisionId",
+            "python_name": "revision_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the revision"
+          }
+        ],
+        "params_type_name": "RevisionsGetParams",
+        "response_type": "Revision",
+        "description": "Gets a revision's metadata by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Revision",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "changes": [
+      {
+        "method_name": "list_changes",
+        "http_method": "get",
+        "path": "/drive/v3/changes",
+        "entity": "changes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Token for the page of changes to retrieve (from changes.getStartPageToken or previous response)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of changes to return (1-1000)",
+            "is_deep_object": false
+          },
+          {
+            "name": "driveId",
+            "python_name": "drive_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The shared drive from which changes are returned",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeItemsFromAllDrives",
+            "python_name": "include_items_from_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether to include changes from all drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          },
+          {
+            "name": "spaces",
+            "python_name": "spaces",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Comma-separated list of spaces to query",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeRemoved",
+            "python_name": "include_removed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": "Whether to include changes indicating that items have been removed",
+            "is_deep_object": false
+          },
+          {
+            "name": "restrictToMyDrive",
+            "python_name": "restrict_to_my_drive",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Whether to restrict the results to changes inside the My Drive hierarchy",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ChangesListParams",
+        "response_type": "ChangesListResult",
+        "description": "Lists the changes for a user or shared drive",
+        "record_extractor": "$.changes",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "newStartPageToken": "$.newStartPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Change]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The page token for the next page of changes"
+            }
+          },
+          {
+            "name": "newStartPageToken",
+            "python_name": "new_start_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The starting page token for future changes"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "changes_start_page_token": [
+      {
+        "method_name": "get_changes_start_page_token",
+        "http_method": "get",
+        "path": "/drive/v3/changes/startPageToken",
+        "entity": "changes_start_page_token",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "driveId",
+            "python_name": "drive_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The ID of the shared drive for which the starting pageToken is returned",
+            "is_deep_object": false
+          },
+          {
+            "name": "supportsAllDrives",
+            "python_name": "supports_all_drives",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Whether the requesting application supports both My Drives and shared drives",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ChangesStartPageTokenGetParams",
+        "response_type": "StartPageToken",
+        "description": "Gets the starting pageToken for listing future changes",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "StartPageToken",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "about": [
+      {
+        "method_name": "get_about",
+        "http_method": "get",
+        "path": "/drive/v3/about",
+        "entity": "about",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Fields to include in the response (use * for all fields)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AboutGetParams",
+        "response_type": "About",
+        "description": "Gets information about the user, the user's Drive, and system capabilities",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "About",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

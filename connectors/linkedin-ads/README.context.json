@@ -1,0 +1,2325 @@
+{
+  "connector_name": "linkedin-ads",
+  "class_name": "LinkedinAdsConnector",
+  "package_name": "airbyte_agent_linkedin_ads",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://learn.microsoft.com/en-us/linkedin/marketing/",
+  "commit_sha": "unknown",
+  "auth_example": "LinkedinAdsAuthConfig(refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", LinkedinAdsAuthConfig",
+  "auth_config": {
+    "type_name": "LinkedinAdsAuthConfig",
+    "base_name": "LinkedinAds",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth 2.0 refresh token for automatic renewal"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "OAuth 2.0 application client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "OAuth 2.0 application client secret"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "LinkedinAdsReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from LinkedIn Ads.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date in the format YYYY-MM-DD. Any data before this date will not be replicated.",
+        "format": "date",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the LinkedIn Ads Marketing API. Provides access to ad accounts, campaigns, campaign groups, creatives, conversions, and ad analytics data. Supports OAuth 2.0 and direct access token authentication. Use this connector to retrieve advertising performance metrics, manage campaign structures, and monitor creative assets across your LinkedIn advertising accounts.\n",
+  "supported_questions": "- List all my LinkedIn ad accounts\n- Show me all campaigns in my ad account\n- List all campaign groups\n- Show me the creatives for my campaigns\n- List all conversions configured for my ad accounts\n- Show me account users for my LinkedIn ads accounts\n- Which campaigns have the highest click-through rate?\n- What is the total ad spend across all campaigns this month?\n- Show me campaigns with status ACTIVE\n- Which creatives have the most impressions?\n- Compare campaign performance by cost type",
+  "unsupported_questions": "- Create a new campaign\n- Update campaign budgets\n- Delete an ad creative\n- Pause a campaign",
+  "first_operation": {
+    "method_name": "list_accounts",
+    "http_method": "get",
+    "path": "/adAccounts",
+    "entity": "accounts",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "q",
+        "python_name": "q",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "default": "search"
+        },
+        "required": true,
+        "description": "",
+        "is_deep_object": false
+      },
+      {
+        "name": "pageSize",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 100
+        },
+        "required": null,
+        "description": "Number of items per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "pageToken",
+        "python_name": "page_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Token for the next page of results",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "AccountsListParams",
+    "response_type": "AccountsListResult",
+    "description": "Returns a list of ad accounts the authenticated user has access to",
+    "record_extractor": "$.elements",
+    "meta_extractor": {
+      "nextPageToken": "$.metadata.nextPageToken"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Account]",
+    "meta_fields": [
+      {
+        "name": "nextPageToken",
+        "python_name": "next_page_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "get",
+        "path": "/adAccounts",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "search"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Token for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Returns a list of ad accounts the authenticated user has access to",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "nextPageToken": "$.metadata.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/adAccounts/{id}",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          }
+        ],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "Account",
+        "description": "Get a single ad account by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "account_users": [
+      {
+        "method_name": "list_account_users",
+        "http_method": "get",
+        "path": "/adAccountUsers",
+        "entity": "account_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "accounts"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "accounts",
+            "python_name": "accounts",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account URN, e.g. urn:li:sponsoredAccount:123456",
+            "is_deep_object": false
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Offset for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountUsersListParams",
+        "response_type": "AccountUsersListResult",
+        "description": "Returns a list of users associated with ad accounts",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "nextPageToken": "$.metadata.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AccountUser]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/adCampaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "search"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Token for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns a list of campaigns for an ad account",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "nextPageToken": "$.metadata.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/adCampaigns/{id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Campaign ID"
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "Campaign",
+        "description": "Get a single campaign by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Campaign",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaign_groups": [
+      {
+        "method_name": "list_campaign_groups",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/adCampaignGroups",
+        "entity": "campaign_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "search"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Token for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignGroupsListParams",
+        "response_type": "CampaignGroupsListResult",
+        "description": "Returns a list of campaign groups for an ad account",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "nextPageToken": "$.metadata.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CampaignGroup]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign_group",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/adCampaignGroups/{id}",
+        "entity": "campaign_groups",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Campaign group ID"
+          }
+        ],
+        "params_type_name": "CampaignGroupsGetParams",
+        "response_type": "CampaignGroup",
+        "description": "Get a single campaign group by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CampaignGroup",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "creatives": [
+      {
+        "method_name": "list_creatives",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/creatives",
+        "entity": "creatives",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "criteria"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Token for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CreativesListParams",
+        "response_type": "CreativesListResult",
+        "description": "Returns a list of creatives for an ad account",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "nextPageToken": "$.metadata.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Creative]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_creative",
+        "http_method": "get",
+        "path": "/adAccounts/{account_id}/creatives/{id}",
+        "entity": "creatives",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ad account ID"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Creative ID"
+          }
+        ],
+        "params_type_name": "CreativesGetParams",
+        "response_type": "Creative",
+        "description": "Get a single creative by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Creative",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "conversions": [
+      {
+        "method_name": "list_conversions",
+        "http_method": "get",
+        "path": "/conversions",
+        "entity": "conversions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "account"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "account",
+            "python_name": "account",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account URN, e.g. urn:li:sponsoredAccount:123456",
+            "is_deep_object": false
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Offset for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ConversionsListParams",
+        "response_type": "ConversionsListResult",
+        "description": "Returns a list of conversion rules for an ad account",
+        "record_extractor": "$.elements",
+        "meta_extractor": {
+          "total": "$.paging.total"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Conversion]",
+        "meta_fields": [
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_conversion",
+        "http_method": "get",
+        "path": "/conversions/{id}",
+        "entity": "conversions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Conversion ID"
+          }
+        ],
+        "params_type_name": "ConversionsGetParams",
+        "response_type": "Conversion",
+        "description": "Get a single conversion rule by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Conversion",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_campaign_analytics": [
+      {
+        "method_name": "list_ad_campaign_analytics",
+        "http_method": "get",
+        "path": "/adAnalytics:campaign",
+        "entity": "ad_campaign_analytics",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "analytics"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pivot",
+            "python_name": "pivot",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "CAMPAIGN"
+            },
+            "required": true,
+            "description": "Pivot dimension for analytics grouping",
+            "is_deep_object": false
+          },
+          {
+            "name": "timeGranularity",
+            "python_name": "time_granularity",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DAILY",
+                "MONTHLY",
+                "ALL"
+              ],
+              "default": "DAILY"
+            },
+            "required": true,
+            "description": "Time granularity for analytics data",
+            "is_deep_object": false
+          },
+          {
+            "name": "dateRange",
+            "python_name": "date_range",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Date range in LinkedIn format, e.g. (start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))",
+            "is_deep_object": false
+          },
+          {
+            "name": "campaigns",
+            "python_name": "campaigns",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "List of campaign URNs, e.g. List(urn%3Ali%3AsponsoredCampaign%3A123)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of metric fields to return",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdCampaignAnalyticsListParams",
+        "response_type": "AdCampaignAnalyticsListResult",
+        "description": "Returns ad analytics data pivoted by campaign. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by campaign.\n",
+        "record_extractor": "$.elements",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[AdAnalyticsRecord]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_creative_analytics": [
+      {
+        "method_name": "list_ad_creative_analytics",
+        "http_method": "get",
+        "path": "/adAnalytics:creative",
+        "entity": "ad_creative_analytics",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "analytics"
+            },
+            "required": true,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "pivot",
+            "python_name": "pivot",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "CREATIVE"
+            },
+            "required": true,
+            "description": "Pivot dimension for analytics grouping",
+            "is_deep_object": false
+          },
+          {
+            "name": "timeGranularity",
+            "python_name": "time_granularity",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DAILY",
+                "MONTHLY",
+                "ALL"
+              ],
+              "default": "DAILY"
+            },
+            "required": true,
+            "description": "Time granularity for analytics data",
+            "is_deep_object": false
+          },
+          {
+            "name": "dateRange",
+            "python_name": "date_range",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Date range in LinkedIn format, e.g. (start:(year:2024,month:1,day:1),end:(year:2024,month:12,day:31))",
+            "is_deep_object": false
+          },
+          {
+            "name": "creatives",
+            "python_name": "creatives",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "List of creative URNs, e.g. List(urn%3Ali%3AsponsoredCreative%3A123)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of metric fields to return",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdCreativeAnalyticsListParams",
+        "response_type": "AdCreativeAnalyticsListResult",
+        "description": "Returns ad analytics data pivoted by creative. Provides performance metrics including clicks, impressions, spend, and engagement data grouped by creative.\n",
+        "record_extractor": "$.elements",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[AdAnalyticsRecord]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "accounts": {
+      "entity": "accounts",
+      "data_type_name": "AccountsSearchData",
+      "filter_type_name": "AccountsSearchFilter",
+      "in_filter_type_name": "AccountsInFilter",
+      "any_value_filter_type_name": "AccountsAnyValueFilter",
+      "string_filter_type_name": "AccountsStringFilter",
+      "sort_filter_type_name": "AccountsSortFilter",
+      "result_type_name": "AccountsSearchResult",
+      "query_type_name": "AccountsSearchQuery",
+      "condition_prefix": "Accounts",
+      "condition_type_name": "AccountsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique account identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account name"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code used by the account"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account type"
+        },
+        {
+          "name": "reference",
+          "python_name": "reference",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference organization URN"
+        },
+        {
+          "name": "test",
+          "python_name": "test",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a test account"
+        },
+        {
+          "name": "notifiedOnCampaignOptimization",
+          "python_name": "notified_on_campaign_optimization",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for notifications on campaign optimization"
+        },
+        {
+          "name": "notifiedOnCreativeApproval",
+          "python_name": "notified_on_creative_approval",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for notifications on creative approval"
+        },
+        {
+          "name": "notifiedOnCreativeRejection",
+          "python_name": "notified_on_creative_rejection",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for notifications on creative rejection"
+        },
+        {
+          "name": "notifiedOnEndOfCampaign",
+          "python_name": "notified_on_end_of_campaign",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for notifications on end of campaign"
+        },
+        {
+          "name": "notifiedOnNewFeaturesEnabled",
+          "python_name": "notified_on_new_features_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for notifications on new features"
+        },
+        {
+          "name": "servingStatuses",
+          "python_name": "serving_statuses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of serving statuses"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Version information"
+        }
+      ]
+    },
+    "account_users": {
+      "entity": "account_users",
+      "data_type_name": "AccountUsersSearchData",
+      "filter_type_name": "AccountUsersSearchFilter",
+      "in_filter_type_name": "AccountUsersInFilter",
+      "any_value_filter_type_name": "AccountUsersAnyValueFilter",
+      "string_filter_type_name": "AccountUsersStringFilter",
+      "sort_filter_type_name": "AccountUsersSortFilter",
+      "result_type_name": "AccountUsersSearchResult",
+      "query_type_name": "AccountUsersSearchQuery",
+      "condition_prefix": "AccountUsers",
+      "condition_type_name": "AccountUsersCondition",
+      "fields": [
+        {
+          "name": "account",
+          "python_name": "account",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated account URN"
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User URN"
+        },
+        {
+          "name": "role",
+          "python_name": "role",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User role in the account"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique campaign identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "account",
+          "python_name": "account",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated account URN"
+        },
+        {
+          "name": "campaignGroup",
+          "python_name": "campaign_group",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent campaign group URN"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign type"
+        },
+        {
+          "name": "costType",
+          "python_name": "cost_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost type (CPC CPM etc)"
+        },
+        {
+          "name": "format",
+          "python_name": "format",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign ad format"
+        },
+        {
+          "name": "objectiveType",
+          "python_name": "objective_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign objective type"
+        },
+        {
+          "name": "optimizationTargetType",
+          "python_name": "optimization_target_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Optimization target type"
+        },
+        {
+          "name": "creativeSelection",
+          "python_name": "creative_selection",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative selection mode"
+        },
+        {
+          "name": "pacingStrategy",
+          "python_name": "pacing_strategy",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Budget pacing strategy"
+        },
+        {
+          "name": "audienceExpansionEnabled",
+          "python_name": "audience_expansion_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether audience expansion is enabled"
+        },
+        {
+          "name": "offsiteDeliveryEnabled",
+          "python_name": "offsite_delivery_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether offsite delivery is enabled"
+        },
+        {
+          "name": "storyDeliveryEnabled",
+          "python_name": "story_delivery_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether story delivery is enabled"
+        },
+        {
+          "name": "test",
+          "python_name": "test",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a test campaign"
+        },
+        {
+          "name": "associatedEntity",
+          "python_name": "associated_entity",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated entity URN"
+        },
+        {
+          "name": "dailyBudget",
+          "python_name": "daily_budget",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Daily budget configuration"
+        },
+        {
+          "name": "totalBudget",
+          "python_name": "total_budget",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Total budget configuration"
+        },
+        {
+          "name": "unitCost",
+          "python_name": "unit_cost",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Cost per unit (bid amount)"
+        },
+        {
+          "name": "runSchedule",
+          "python_name": "run_schedule",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Campaign run schedule"
+        },
+        {
+          "name": "locale",
+          "python_name": "locale",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Campaign locale settings"
+        },
+        {
+          "name": "servingStatuses",
+          "python_name": "serving_statuses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of serving statuses"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Version information"
+        }
+      ]
+    },
+    "campaign_groups": {
+      "entity": "campaign_groups",
+      "data_type_name": "CampaignGroupsSearchData",
+      "filter_type_name": "CampaignGroupsSearchFilter",
+      "in_filter_type_name": "CampaignGroupsInFilter",
+      "any_value_filter_type_name": "CampaignGroupsAnyValueFilter",
+      "string_filter_type_name": "CampaignGroupsStringFilter",
+      "sort_filter_type_name": "CampaignGroupsSortFilter",
+      "result_type_name": "CampaignGroupsSearchResult",
+      "query_type_name": "CampaignGroupsSearchQuery",
+      "condition_prefix": "CampaignGroups",
+      "condition_type_name": "CampaignGroupsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique campaign group identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign group name"
+        },
+        {
+          "name": "account",
+          "python_name": "account",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated account URN"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign group status"
+        },
+        {
+          "name": "test",
+          "python_name": "test",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a test campaign group"
+        },
+        {
+          "name": "backfilled",
+          "python_name": "backfilled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the campaign group is backfilled"
+        },
+        {
+          "name": "totalBudget",
+          "python_name": "total_budget",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Total budget for the campaign group"
+        },
+        {
+          "name": "runSchedule",
+          "python_name": "run_schedule",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Campaign group run schedule"
+        },
+        {
+          "name": "servingStatuses",
+          "python_name": "serving_statuses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of serving statuses"
+        },
+        {
+          "name": "allowedCampaignTypes",
+          "python_name": "allowed_campaign_types",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Types of campaigns allowed in this group"
+        }
+      ]
+    },
+    "creatives": {
+      "entity": "creatives",
+      "data_type_name": "CreativesSearchData",
+      "filter_type_name": "CreativesSearchFilter",
+      "in_filter_type_name": "CreativesInFilter",
+      "any_value_filter_type_name": "CreativesAnyValueFilter",
+      "string_filter_type_name": "CreativesStringFilter",
+      "sort_filter_type_name": "CreativesSortFilter",
+      "result_type_name": "CreativesSearchResult",
+      "query_type_name": "CreativesSearchQuery",
+      "condition_prefix": "Creatives",
+      "condition_type_name": "CreativesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique creative identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative name"
+        },
+        {
+          "name": "account",
+          "python_name": "account",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated account URN"
+        },
+        {
+          "name": "campaign",
+          "python_name": "campaign",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent campaign URN"
+        },
+        {
+          "name": "intendedStatus",
+          "python_name": "intended_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Intended creative status"
+        },
+        {
+          "name": "isServing",
+          "python_name": "is_serving",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the creative is currently serving"
+        },
+        {
+          "name": "isTest",
+          "python_name": "is_test",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a test creative"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (epoch milliseconds)"
+        },
+        {
+          "name": "createdBy",
+          "python_name": "created_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URN of the user who created the creative"
+        },
+        {
+          "name": "lastModifiedAt",
+          "python_name": "last_modified_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last modification timestamp (epoch milliseconds)"
+        },
+        {
+          "name": "lastModifiedBy",
+          "python_name": "last_modified_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URN of the user who last modified the creative"
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Creative content configuration"
+        },
+        {
+          "name": "servingHoldReasons",
+          "python_name": "serving_hold_reasons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Reasons for holding creative from serving"
+        }
+      ]
+    },
+    "conversions": {
+      "entity": "conversions",
+      "data_type_name": "ConversionsSearchData",
+      "filter_type_name": "ConversionsSearchFilter",
+      "in_filter_type_name": "ConversionsInFilter",
+      "any_value_filter_type_name": "ConversionsAnyValueFilter",
+      "string_filter_type_name": "ConversionsStringFilter",
+      "sort_filter_type_name": "ConversionsSortFilter",
+      "result_type_name": "ConversionsSearchResult",
+      "query_type_name": "ConversionsSearchQuery",
+      "condition_prefix": "Conversions",
+      "condition_type_name": "ConversionsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique conversion identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Conversion name"
+        },
+        {
+          "name": "account",
+          "python_name": "account",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated account URN"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Conversion type"
+        },
+        {
+          "name": "attributionType",
+          "python_name": "attribution_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Attribution type for the conversion"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the conversion tracking is enabled"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (epoch milliseconds)"
+        },
+        {
+          "name": "lastModified",
+          "python_name": "last_modified",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last modification timestamp (epoch milliseconds)"
+        },
+        {
+          "name": "postClickAttributionWindowSize",
+          "python_name": "post_click_attribution_window_size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Post-click attribution window size in days"
+        },
+        {
+          "name": "viewThroughAttributionWindowSize",
+          "python_name": "view_through_attribution_window_size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "View-through attribution window size in days"
+        },
+        {
+          "name": "campaigns",
+          "python_name": "campaigns",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Related campaign URNs"
+        },
+        {
+          "name": "associatedCampaigns",
+          "python_name": "associated_campaigns",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Associated campaigns"
+        },
+        {
+          "name": "imagePixelTag",
+          "python_name": "image_pixel_tag",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Image pixel tracking tag"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Conversion value"
+        }
+      ]
+    },
+    "ad_campaign_analytics": {
+      "entity": "ad_campaign_analytics",
+      "data_type_name": "AdCampaignAnalyticsSearchData",
+      "filter_type_name": "AdCampaignAnalyticsSearchFilter",
+      "in_filter_type_name": "AdCampaignAnalyticsInFilter",
+      "any_value_filter_type_name": "AdCampaignAnalyticsAnyValueFilter",
+      "string_filter_type_name": "AdCampaignAnalyticsStringFilter",
+      "sort_filter_type_name": "AdCampaignAnalyticsSortFilter",
+      "result_type_name": "AdCampaignAnalyticsSearchResult",
+      "query_type_name": "AdCampaignAnalyticsSearchQuery",
+      "condition_prefix": "AdCampaignAnalytics",
+      "condition_type_name": "AdCampaignAnalyticsCondition",
+      "fields": [
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times the ad was shown"
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the ad"
+        },
+        {
+          "name": "costInLocalCurrency",
+          "python_name": "cost_in_local_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total cost in the accounts local currency"
+        },
+        {
+          "name": "costInUsd",
+          "python_name": "cost_in_usd",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total cost in USD"
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes"
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares"
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments"
+        },
+        {
+          "name": "reactions",
+          "python_name": "reactions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of reactions"
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows"
+        },
+        {
+          "name": "totalEngagements",
+          "python_name": "total_engagements",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total number of engagements"
+        },
+        {
+          "name": "landingPageClicks",
+          "python_name": "landing_page_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of landing page clicks"
+        },
+        {
+          "name": "companyPageClicks",
+          "python_name": "company_page_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of company page clicks"
+        },
+        {
+          "name": "externalWebsiteConversions",
+          "python_name": "external_website_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of conversions on external websites"
+        },
+        {
+          "name": "externalWebsitePostClickConversions",
+          "python_name": "external_website_post_click_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Post-click conversions on external websites"
+        },
+        {
+          "name": "externalWebsitePostViewConversions",
+          "python_name": "external_website_post_view_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Post-view conversions on external websites"
+        },
+        {
+          "name": "conversionValueInLocalCurrency",
+          "python_name": "conversion_value_in_local_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Conversion value in local currency"
+        },
+        {
+          "name": "approximateMemberReach",
+          "python_name": "approximate_member_reach",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Approximate unique member reach"
+        },
+        {
+          "name": "cardClicks",
+          "python_name": "card_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of carousel card clicks"
+        },
+        {
+          "name": "cardImpressions",
+          "python_name": "card_impressions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of carousel card impressions"
+        },
+        {
+          "name": "videoStarts",
+          "python_name": "video_starts",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video starts"
+        },
+        {
+          "name": "videoViews",
+          "python_name": "video_views",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video views"
+        },
+        {
+          "name": "videoFirstQuartileCompletions",
+          "python_name": "video_first_quartile_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 25%"
+        },
+        {
+          "name": "videoMidpointCompletions",
+          "python_name": "video_midpoint_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 50%"
+        },
+        {
+          "name": "videoThirdQuartileCompletions",
+          "python_name": "video_third_quartile_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 75%"
+        },
+        {
+          "name": "videoCompletions",
+          "python_name": "video_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 100%"
+        },
+        {
+          "name": "fullScreenPlays",
+          "python_name": "full_screen_plays",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of full screen video plays"
+        },
+        {
+          "name": "oneClickLeads",
+          "python_name": "one_click_leads",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of one-click leads"
+        },
+        {
+          "name": "oneClickLeadFormOpens",
+          "python_name": "one_click_lead_form_opens",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of one-click lead form opens"
+        },
+        {
+          "name": "otherEngagements",
+          "python_name": "other_engagements",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of other engagements"
+        },
+        {
+          "name": "adUnitClicks",
+          "python_name": "ad_unit_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of ad unit clicks"
+        },
+        {
+          "name": "actionClicks",
+          "python_name": "action_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of action clicks"
+        },
+        {
+          "name": "textUrlClicks",
+          "python_name": "text_url_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of text URL clicks"
+        },
+        {
+          "name": "commentLikes",
+          "python_name": "comment_likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comment likes"
+        },
+        {
+          "name": "sends",
+          "python_name": "sends",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of sends (InMail)"
+        },
+        {
+          "name": "opens",
+          "python_name": "opens",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of opens (InMail)"
+        },
+        {
+          "name": "downloadClicks",
+          "python_name": "download_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of download clicks"
+        },
+        {
+          "name": "pivotValues",
+          "python_name": "pivot_values",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Pivot values (URNs) for this analytics record"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the ad analytics data"
+        },
+        {
+          "name": "end_date",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the ad analytics data"
+        }
+      ]
+    },
+    "ad_creative_analytics": {
+      "entity": "ad_creative_analytics",
+      "data_type_name": "AdCreativeAnalyticsSearchData",
+      "filter_type_name": "AdCreativeAnalyticsSearchFilter",
+      "in_filter_type_name": "AdCreativeAnalyticsInFilter",
+      "any_value_filter_type_name": "AdCreativeAnalyticsAnyValueFilter",
+      "string_filter_type_name": "AdCreativeAnalyticsStringFilter",
+      "sort_filter_type_name": "AdCreativeAnalyticsSortFilter",
+      "result_type_name": "AdCreativeAnalyticsSearchResult",
+      "query_type_name": "AdCreativeAnalyticsSearchQuery",
+      "condition_prefix": "AdCreativeAnalytics",
+      "condition_type_name": "AdCreativeAnalyticsCondition",
+      "fields": [
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times the ad was shown"
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the ad"
+        },
+        {
+          "name": "costInLocalCurrency",
+          "python_name": "cost_in_local_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total cost in the accounts local currency"
+        },
+        {
+          "name": "costInUsd",
+          "python_name": "cost_in_usd",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total cost in USD"
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes"
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares"
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments"
+        },
+        {
+          "name": "reactions",
+          "python_name": "reactions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of reactions"
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows"
+        },
+        {
+          "name": "totalEngagements",
+          "python_name": "total_engagements",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total number of engagements"
+        },
+        {
+          "name": "landingPageClicks",
+          "python_name": "landing_page_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of landing page clicks"
+        },
+        {
+          "name": "companyPageClicks",
+          "python_name": "company_page_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of company page clicks"
+        },
+        {
+          "name": "externalWebsiteConversions",
+          "python_name": "external_website_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of conversions on external websites"
+        },
+        {
+          "name": "externalWebsitePostClickConversions",
+          "python_name": "external_website_post_click_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Post-click conversions on external websites"
+        },
+        {
+          "name": "externalWebsitePostViewConversions",
+          "python_name": "external_website_post_view_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Post-view conversions on external websites"
+        },
+        {
+          "name": "conversionValueInLocalCurrency",
+          "python_name": "conversion_value_in_local_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Conversion value in local currency"
+        },
+        {
+          "name": "approximateMemberReach",
+          "python_name": "approximate_member_reach",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Approximate unique member reach"
+        },
+        {
+          "name": "cardClicks",
+          "python_name": "card_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of carousel card clicks"
+        },
+        {
+          "name": "cardImpressions",
+          "python_name": "card_impressions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of carousel card impressions"
+        },
+        {
+          "name": "videoStarts",
+          "python_name": "video_starts",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video starts"
+        },
+        {
+          "name": "videoViews",
+          "python_name": "video_views",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video views"
+        },
+        {
+          "name": "videoFirstQuartileCompletions",
+          "python_name": "video_first_quartile_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 25%"
+        },
+        {
+          "name": "videoMidpointCompletions",
+          "python_name": "video_midpoint_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 50%"
+        },
+        {
+          "name": "videoThirdQuartileCompletions",
+          "python_name": "video_third_quartile_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 75%"
+        },
+        {
+          "name": "videoCompletions",
+          "python_name": "video_completions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video played to 100%"
+        },
+        {
+          "name": "fullScreenPlays",
+          "python_name": "full_screen_plays",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of full screen video plays"
+        },
+        {
+          "name": "oneClickLeads",
+          "python_name": "one_click_leads",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of one-click leads"
+        },
+        {
+          "name": "oneClickLeadFormOpens",
+          "python_name": "one_click_lead_form_opens",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of one-click lead form opens"
+        },
+        {
+          "name": "otherEngagements",
+          "python_name": "other_engagements",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of other engagements"
+        },
+        {
+          "name": "adUnitClicks",
+          "python_name": "ad_unit_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of ad unit clicks"
+        },
+        {
+          "name": "actionClicks",
+          "python_name": "action_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of action clicks"
+        },
+        {
+          "name": "textUrlClicks",
+          "python_name": "text_url_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of text URL clicks"
+        },
+        {
+          "name": "commentLikes",
+          "python_name": "comment_likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comment likes"
+        },
+        {
+          "name": "sends",
+          "python_name": "sends",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of sends (InMail)"
+        },
+        {
+          "name": "opens",
+          "python_name": "opens",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of opens (InMail)"
+        },
+        {
+          "name": "downloadClicks",
+          "python_name": "download_clicks",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of download clicks"
+        },
+        {
+          "name": "pivotValues",
+          "python_name": "pivot_values",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Pivot values (URNs) for this analytics record"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the ad analytics data"
+        },
+        {
+          "name": "end_date",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the ad analytics data"
+        }
+      ]
+    }
+  }
+}

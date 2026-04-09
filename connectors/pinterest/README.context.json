@@ -1,0 +1,2866 @@
+{
+  "connector_name": "pinterest",
+  "class_name": "PinterestConnector",
+  "package_name": "airbyte_agent_pinterest",
+  "package_version": "0.1.4",
+  "yaml_version": "0.1.4",
+  "api_reference_url": "https://developers.pinterest.com/docs/api/v5/",
+  "commit_sha": "unknown",
+  "auth_example": "PinterestAuthConfig(refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", PinterestAuthConfig",
+  "auth_config": {
+    "type_name": "PinterestAuthConfig",
+    "base_name": "Pinterest",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Pinterest OAuth2 refresh token."
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "Pinterest OAuth2 client ID."
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "Pinterest OAuth2 client secret."
+          }
+        ],
+        "type_suffix": "Oauth20Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "PinterestReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Pinterest.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": false,
+        "title": "Start Date",
+        "description": "A date in the format YYYY-MM-DD. If not set, defaults to 89 days ago.",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Pinterest API v5, enabling access to Pinterest advertising and content management data. Supports reading ad accounts, boards, campaigns, ad groups, ads, board sections, board pins, catalogs, catalog feeds, catalog product groups, audiences, conversion tags, customer lists, and keywords.\n",
+  "supported_questions": "- List all my Pinterest ad accounts\n- List all my Pinterest boards\n- Show me all campaigns in my ad account\n- List all ads in my ad account\n- Show me all ad groups in my ad account\n- List all audiences for my ad account\n- Show me my catalog feeds\n- Which campaigns are currently active?\n- What are the top boards by pin count?\n- Show me ads that have been rejected\n- Find campaigns with the highest daily spend cap",
+  "unsupported_questions": "- Create a new Pinterest board\n- Update a campaign budget\n- Delete an ad group\n- Post a new pin\n- Show me campaign analytics or performance metrics",
+  "first_operation": {
+    "method_name": "list_ad_accounts",
+    "http_method": "get",
+    "path": "/ad_accounts",
+    "entity": "ad_accounts",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 25
+        },
+        "required": false,
+        "description": "Maximum number of items to include in a single page of the response.",
+        "is_deep_object": false
+      },
+      {
+        "name": "bookmark",
+        "python_name": "bookmark",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor value for paginating through results.",
+        "is_deep_object": false
+      },
+      {
+        "name": "include_shared_accounts",
+        "python_name": "include_shared_accounts",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        },
+        "required": false,
+        "description": "Include shared ad accounts.",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "AdAccountsListParams",
+    "response_type": "AdAccountsListResult",
+    "description": "Get a list of the ad accounts that the authenticated user has access to.",
+    "record_extractor": "$.items",
+    "meta_extractor": {
+      "bookmark": "$.bookmark"
+    },
+    "needs_envelope": true,
+    "record_type": "list[AdAccount]",
+    "meta_fields": [
+      {
+        "name": "bookmark",
+        "python_name": "bookmark",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Cursor for next page of results"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "ad_accounts": [
+      {
+        "method_name": "list_ad_accounts",
+        "http_method": "get",
+        "path": "/ad_accounts",
+        "entity": "ad_accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "include_shared_accounts",
+            "python_name": "include_shared_accounts",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": "Include shared ad accounts.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdAccountsListParams",
+        "response_type": "AdAccountsListResult",
+        "description": "Get a list of the ad accounts that the authenticated user has access to.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdAccount]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ad_account",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}",
+        "entity": "ad_accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          }
+        ],
+        "params_type_name": "AdAccountsGetParams",
+        "response_type": "AdAccount",
+        "description": "Get an ad account by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AdAccount",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "boards": [
+      {
+        "method_name": "list_boards",
+        "http_method": "get",
+        "path": "/boards",
+        "entity": "boards",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "privacy",
+            "python_name": "privacy",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PUBLIC",
+                "PROTECTED",
+                "SECRET"
+              ]
+            },
+            "required": false,
+            "description": "Filter by board privacy setting.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BoardsListParams",
+        "response_type": "BoardsListResult",
+        "description": "Get a list of the boards owned by the authenticated user.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Board]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_board",
+        "http_method": "get",
+        "path": "/boards/{board_id}",
+        "entity": "boards",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "board_id",
+            "python_name": "board_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the board."
+          }
+        ],
+        "params_type_name": "BoardsGetParams",
+        "response_type": "Board",
+        "description": "Get a board by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Board",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "entity_statuses",
+            "python_name": "entity_statuses",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ACTIVE",
+                  "PAUSED",
+                  "ARCHIVED",
+                  "DRAFT",
+                  "DELETED_DRAFT"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by entity status.",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASCENDING",
+                "DESCENDING"
+              ]
+            },
+            "required": false,
+            "description": "Sort order.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Get a list of campaigns in the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ad_groups": [
+      {
+        "method_name": "list_ad_groups",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/ad_groups",
+        "entity": "ad_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "entity_statuses",
+            "python_name": "entity_statuses",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ACTIVE",
+                  "PAUSED",
+                  "ARCHIVED",
+                  "DRAFT",
+                  "DELETED_DRAFT"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by entity status.",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASCENDING",
+                "DESCENDING"
+              ]
+            },
+            "required": false,
+            "description": "Sort order.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdGroupsListParams",
+        "response_type": "AdGroupsListResult",
+        "description": "Get a list of ad groups in the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroup]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ads": [
+      {
+        "method_name": "list_ads",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/ads",
+        "entity": "ads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "entity_statuses",
+            "python_name": "entity_statuses",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "ACTIVE",
+                  "PAUSED",
+                  "ARCHIVED",
+                  "DRAFT",
+                  "DELETED_DRAFT"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by entity status.",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASCENDING",
+                "DESCENDING"
+              ]
+            },
+            "required": false,
+            "description": "Sort order.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdsListParams",
+        "response_type": "AdsListResult",
+        "description": "Get a list of ads in the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ad]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "board_sections": [
+      {
+        "method_name": "list_board_sections",
+        "http_method": "get",
+        "path": "/boards/{board_id}/sections",
+        "entity": "board_sections",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "board_id",
+            "python_name": "board_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the board."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BoardSectionsListParams",
+        "response_type": "BoardSectionsListResult",
+        "description": "Get a list of sections for a specific board.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[BoardSection]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "board_pins": [
+      {
+        "method_name": "list_board_pins",
+        "http_method": "get",
+        "path": "/boards/{board_id}/pins",
+        "entity": "board_pins",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "board_id",
+            "python_name": "board_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the board."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BoardPinsListParams",
+        "response_type": "BoardPinsListResult",
+        "description": "Get a list of pins on a specific board.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[BoardPin]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "catalogs": [
+      {
+        "method_name": "list_catalogs",
+        "http_method": "get",
+        "path": "/catalogs",
+        "entity": "catalogs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogsListParams",
+        "response_type": "CatalogsListResult",
+        "description": "Get a list of catalogs for the authenticated user.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Catalog]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "catalogs_feeds": [
+      {
+        "method_name": "list_catalogs_feeds",
+        "http_method": "get",
+        "path": "/catalogs/feeds",
+        "entity": "catalogs_feeds",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogsFeedsListParams",
+        "response_type": "CatalogsFeedsListResult",
+        "description": "Get a list of catalog feeds for the authenticated user.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CatalogsFeed]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "catalogs_product_groups": [
+      {
+        "method_name": "list_catalogs_product_groups",
+        "http_method": "get",
+        "path": "/catalogs/product_groups",
+        "entity": "catalogs_product_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogsProductGroupsListParams",
+        "response_type": "CatalogsProductGroupsListResult",
+        "description": "Get a list of catalog product groups for the authenticated user.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CatalogsProductGroup]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "audiences": [
+      {
+        "method_name": "list_audiences",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/audiences",
+        "entity": "audiences",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AudiencesListParams",
+        "response_type": "AudiencesListResult",
+        "description": "Get a list of audiences for the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Audience]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "conversion_tags": [
+      {
+        "method_name": "list_conversion_tags",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/conversion_tags",
+        "entity": "conversion_tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ConversionTagsListParams",
+        "response_type": "ConversionTagsListResult",
+        "description": "Get a list of conversion tags for the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ConversionTag]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "customer_lists": [
+      {
+        "method_name": "list_customer_lists",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/customer_lists",
+        "entity": "customer_lists",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomerListsListParams",
+        "response_type": "CustomerListsListResult",
+        "description": "Get a list of customer lists for the specified ad account.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CustomerList]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "keywords": [
+      {
+        "method_name": "list_keywords",
+        "http_method": "get",
+        "path": "/ad_accounts/{ad_account_id}/keywords",
+        "entity": "keywords",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier of the ad account."
+          },
+          {
+            "name": "ad_group_id",
+            "python_name": "ad_group_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad group ID to filter keywords by.",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of items to include in a single page of the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor value for paginating through results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "KeywordsListParams",
+        "response_type": "KeywordsListResult",
+        "description": "Get a list of keywords for the specified ad account. Requires an ad_group_id filter.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "bookmark": "$.bookmark"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Keyword]",
+        "meta_fields": [
+          {
+            "name": "bookmark",
+            "python_name": "bookmark",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "Cursor for next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "ad_accounts": {
+      "entity": "ad_accounts",
+      "data_type_name": "AdAccountsSearchData",
+      "filter_type_name": "AdAccountsSearchFilter",
+      "in_filter_type_name": "AdAccountsInFilter",
+      "any_value_filter_type_name": "AdAccountsAnyValueFilter",
+      "string_filter_type_name": "AdAccountsStringFilter",
+      "sort_filter_type_name": "AdAccountsSortFilter",
+      "result_type_name": "AdAccountsSearchResult",
+      "query_type_name": "AdAccountsSearchQuery",
+      "condition_prefix": "AdAccounts",
+      "condition_type_name": "AdAccountsCondition",
+      "fields": [
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country associated with the ad account"
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the ad account was created (Unix seconds)"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency used for billing"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the ad account"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the ad account"
+        },
+        {
+          "name": "owner",
+          "python_name": "owner",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Owner details of the ad account"
+        },
+        {
+          "name": "permissions",
+          "python_name": "permissions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Permissions assigned to the ad account"
+        },
+        {
+          "name": "updated_time",
+          "python_name": "updated_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the ad account was last updated (Unix seconds)"
+        }
+      ]
+    },
+    "boards": {
+      "entity": "boards",
+      "data_type_name": "BoardsSearchData",
+      "filter_type_name": "BoardsSearchFilter",
+      "in_filter_type_name": "BoardsInFilter",
+      "any_value_filter_type_name": "BoardsAnyValueFilter",
+      "string_filter_type_name": "BoardsStringFilter",
+      "sort_filter_type_name": "BoardsSortFilter",
+      "result_type_name": "BoardsSearchResult",
+      "query_type_name": "BoardsSearchQuery",
+      "condition_prefix": "Boards",
+      "condition_type_name": "BoardsCondition",
+      "fields": [
+        {
+          "name": "board_pins_modified_at",
+          "python_name": "board_pins_modified_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when pins on the board were last modified"
+        },
+        {
+          "name": "collaborator_count",
+          "python_name": "collaborator_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of collaborators"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the board was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board description"
+        },
+        {
+          "name": "follower_count",
+          "python_name": "follower_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of followers"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the board"
+        },
+        {
+          "name": "media",
+          "python_name": "media",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Media content for the board"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board name"
+        },
+        {
+          "name": "owner",
+          "python_name": "owner",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Board owner details"
+        },
+        {
+          "name": "pin_count",
+          "python_name": "pin_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of pins on the board"
+        },
+        {
+          "name": "privacy",
+          "python_name": "privacy",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board privacy setting"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account ID"
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix seconds)"
+        },
+        {
+          "name": "daily_spend_cap",
+          "python_name": "daily_spend_cap",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Maximum daily spend in microcurrency"
+        },
+        {
+          "name": "end_time",
+          "python_name": "end_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "End timestamp (Unix seconds)"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign ID"
+        },
+        {
+          "name": "is_campaign_budget_optimization",
+          "python_name": "is_campaign_budget_optimization",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether CBO is enabled"
+        },
+        {
+          "name": "is_flexible_daily_budgets",
+          "python_name": "is_flexible_daily_budgets",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether flexible daily budgets are enabled"
+        },
+        {
+          "name": "lifetime_spend_cap",
+          "python_name": "lifetime_spend_cap",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Maximum lifetime spend in microcurrency"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "objective_type",
+          "python_name": "objective_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign objective type"
+        },
+        {
+          "name": "order_line_id",
+          "python_name": "order_line_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order line ID on invoice"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Start timestamp (Unix seconds)"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Entity status"
+        },
+        {
+          "name": "summary_status",
+          "python_name": "summary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Summary status"
+        },
+        {
+          "name": "tracking_urls",
+          "python_name": "tracking_urls",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Third-party tracking URLs"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'campaign'"
+        },
+        {
+          "name": "updated_time",
+          "python_name": "updated_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix seconds)"
+        }
+      ]
+    },
+    "ad_groups": {
+      "entity": "ad_groups",
+      "data_type_name": "AdGroupsSearchData",
+      "filter_type_name": "AdGroupsSearchFilter",
+      "in_filter_type_name": "AdGroupsInFilter",
+      "any_value_filter_type_name": "AdGroupsAnyValueFilter",
+      "string_filter_type_name": "AdGroupsStringFilter",
+      "sort_filter_type_name": "AdGroupsSortFilter",
+      "result_type_name": "AdGroupsSearchResult",
+      "query_type_name": "AdGroupsSearchQuery",
+      "condition_prefix": "AdGroups",
+      "condition_type_name": "AdGroupsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account ID"
+        },
+        {
+          "name": "auto_targeting_enabled",
+          "python_name": "auto_targeting_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether auto targeting is enabled"
+        },
+        {
+          "name": "bid_in_micro_currency",
+          "python_name": "bid_in_micro_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Bid in microcurrency"
+        },
+        {
+          "name": "bid_strategy_type",
+          "python_name": "bid_strategy_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Bid strategy type"
+        },
+        {
+          "name": "billable_event",
+          "python_name": "billable_event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billable event type"
+        },
+        {
+          "name": "budget_in_micro_currency",
+          "python_name": "budget_in_micro_currency",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Budget in microcurrency"
+        },
+        {
+          "name": "budget_type",
+          "python_name": "budget_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Budget type"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent campaign ID"
+        },
+        {
+          "name": "conversion_learning_mode_type",
+          "python_name": "conversion_learning_mode_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "oCPM learn mode type"
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Creation timestamp (Unix seconds)"
+        },
+        {
+          "name": "end_time",
+          "python_name": "end_time",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "End time (Unix seconds)"
+        },
+        {
+          "name": "feed_profile_id",
+          "python_name": "feed_profile_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Feed profile ID"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group ID"
+        },
+        {
+          "name": "lifetime_frequency_cap",
+          "python_name": "lifetime_frequency_cap",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Max impressions per user in 30 days"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group name"
+        },
+        {
+          "name": "optimization_goal_metadata",
+          "python_name": "optimization_goal_metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Optimization goal metadata"
+        },
+        {
+          "name": "pacing_delivery_type",
+          "python_name": "pacing_delivery_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Pacing delivery type"
+        },
+        {
+          "name": "placement_group",
+          "python_name": "placement_group",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Placement group"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Start time (Unix seconds)"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Entity status"
+        },
+        {
+          "name": "summary_status",
+          "python_name": "summary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Summary status"
+        },
+        {
+          "name": "targeting_spec",
+          "python_name": "targeting_spec",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Targeting specifications"
+        },
+        {
+          "name": "tracking_urls",
+          "python_name": "tracking_urls",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Third-party tracking URLs"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'adgroup'"
+        },
+        {
+          "name": "updated_time",
+          "python_name": "updated_time",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Last update timestamp (Unix seconds)"
+        }
+      ]
+    },
+    "ads": {
+      "entity": "ads",
+      "data_type_name": "AdsSearchData",
+      "filter_type_name": "AdsSearchFilter",
+      "in_filter_type_name": "AdsInFilter",
+      "any_value_filter_type_name": "AdsAnyValueFilter",
+      "string_filter_type_name": "AdsStringFilter",
+      "sort_filter_type_name": "AdsSortFilter",
+      "result_type_name": "AdsSearchResult",
+      "query_type_name": "AdsSearchQuery",
+      "condition_prefix": "Ads",
+      "condition_type_name": "AdsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account ID"
+        },
+        {
+          "name": "ad_group_id",
+          "python_name": "ad_group_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group ID"
+        },
+        {
+          "name": "android_deep_link",
+          "python_name": "android_deep_link",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Android deep link"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign ID"
+        },
+        {
+          "name": "carousel_android_deep_links",
+          "python_name": "carousel_android_deep_links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Carousel Android deep links"
+        },
+        {
+          "name": "carousel_destination_urls",
+          "python_name": "carousel_destination_urls",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Carousel destination URLs"
+        },
+        {
+          "name": "carousel_ios_deep_links",
+          "python_name": "carousel_ios_deep_links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Carousel iOS deep links"
+        },
+        {
+          "name": "click_tracking_url",
+          "python_name": "click_tracking_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Click tracking URL"
+        },
+        {
+          "name": "collection_items_destination_url_template",
+          "python_name": "collection_items_destination_url_template",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Template URL for collection items"
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix seconds)"
+        },
+        {
+          "name": "creative_type",
+          "python_name": "creative_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative type"
+        },
+        {
+          "name": "destination_url",
+          "python_name": "destination_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Main destination URL"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ad ID"
+        },
+        {
+          "name": "ios_deep_link",
+          "python_name": "ios_deep_link",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "iOS deep link"
+        },
+        {
+          "name": "is_pin_deleted",
+          "python_name": "is_pin_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the original pin is deleted"
+        },
+        {
+          "name": "is_removable",
+          "python_name": "is_removable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the ad is removable"
+        },
+        {
+          "name": "lead_form_id",
+          "python_name": "lead_form_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead form ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad name"
+        },
+        {
+          "name": "pin_id",
+          "python_name": "pin_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated pin ID"
+        },
+        {
+          "name": "rejected_reasons",
+          "python_name": "rejected_reasons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Rejection reasons"
+        },
+        {
+          "name": "rejection_labels",
+          "python_name": "rejection_labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Rejection text labels"
+        },
+        {
+          "name": "review_status",
+          "python_name": "review_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Review status"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Entity status"
+        },
+        {
+          "name": "summary_status",
+          "python_name": "summary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Summary status"
+        },
+        {
+          "name": "tracking_urls",
+          "python_name": "tracking_urls",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Third-party tracking URLs"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'pinpromotion'"
+        },
+        {
+          "name": "updated_time",
+          "python_name": "updated_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix seconds)"
+        },
+        {
+          "name": "view_tracking_url",
+          "python_name": "view_tracking_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "View tracking URL"
+        }
+      ]
+    },
+    "board_sections": {
+      "entity": "board_sections",
+      "data_type_name": "BoardSectionsSearchData",
+      "filter_type_name": "BoardSectionsSearchFilter",
+      "in_filter_type_name": "BoardSectionsInFilter",
+      "any_value_filter_type_name": "BoardSectionsAnyValueFilter",
+      "string_filter_type_name": "BoardSectionsStringFilter",
+      "sort_filter_type_name": "BoardSectionsSortFilter",
+      "result_type_name": "BoardSectionsSearchResult",
+      "query_type_name": "BoardSectionsSearchQuery",
+      "condition_prefix": "BoardSections",
+      "condition_type_name": "BoardSectionsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the board section"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the board section"
+        }
+      ]
+    },
+    "board_pins": {
+      "entity": "board_pins",
+      "data_type_name": "BoardPinsSearchData",
+      "filter_type_name": "BoardPinsSearchFilter",
+      "in_filter_type_name": "BoardPinsInFilter",
+      "any_value_filter_type_name": "BoardPinsAnyValueFilter",
+      "string_filter_type_name": "BoardPinsStringFilter",
+      "sort_filter_type_name": "BoardPinsSortFilter",
+      "result_type_name": "BoardPinsSearchResult",
+      "query_type_name": "BoardPinsSearchQuery",
+      "condition_prefix": "BoardPins",
+      "condition_type_name": "BoardPinsCondition",
+      "fields": [
+        {
+          "name": "alt_text",
+          "python_name": "alt_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Alternate text for accessibility"
+        },
+        {
+          "name": "board_id",
+          "python_name": "board_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board the pin belongs to"
+        },
+        {
+          "name": "board_owner",
+          "python_name": "board_owner",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Board owner info"
+        },
+        {
+          "name": "board_section_id",
+          "python_name": "board_section_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Section within the board"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the pin was created"
+        },
+        {
+          "name": "creative_type",
+          "python_name": "creative_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative type"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Pin description"
+        },
+        {
+          "name": "dominant_color",
+          "python_name": "dominant_color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Dominant color from the pin image"
+        },
+        {
+          "name": "has_been_promoted",
+          "python_name": "has_been_promoted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the pin has been promoted"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique pin identifier"
+        },
+        {
+          "name": "is_owner",
+          "python_name": "is_owner",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the current user is the owner"
+        },
+        {
+          "name": "is_standard",
+          "python_name": "is_standard",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the pin is a standard pin"
+        },
+        {
+          "name": "link",
+          "python_name": "link",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL link associated with the pin"
+        },
+        {
+          "name": "media",
+          "python_name": "media",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Media content"
+        },
+        {
+          "name": "parent_pin_id",
+          "python_name": "parent_pin_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent pin ID if this is a repin"
+        },
+        {
+          "name": "pin_metrics",
+          "python_name": "pin_metrics",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Pin metrics data"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Pin title"
+        }
+      ]
+    },
+    "catalogs": {
+      "entity": "catalogs",
+      "data_type_name": "CatalogsSearchData",
+      "filter_type_name": "CatalogsSearchFilter",
+      "in_filter_type_name": "CatalogsInFilter",
+      "any_value_filter_type_name": "CatalogsAnyValueFilter",
+      "string_filter_type_name": "CatalogsStringFilter",
+      "sort_filter_type_name": "CatalogsSortFilter",
+      "result_type_name": "CatalogsSearchResult",
+      "query_type_name": "CatalogsSearchQuery",
+      "condition_prefix": "Catalogs",
+      "condition_type_name": "CatalogsCondition",
+      "fields": [
+        {
+          "name": "catalog_type",
+          "python_name": "catalog_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of catalog"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the catalog was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique catalog identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Catalog name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the catalog was last updated"
+        }
+      ]
+    },
+    "catalogs_feeds": {
+      "entity": "catalogs_feeds",
+      "data_type_name": "CatalogsFeedsSearchData",
+      "filter_type_name": "CatalogsFeedsSearchFilter",
+      "in_filter_type_name": "CatalogsFeedsInFilter",
+      "any_value_filter_type_name": "CatalogsFeedsAnyValueFilter",
+      "string_filter_type_name": "CatalogsFeedsStringFilter",
+      "sort_filter_type_name": "CatalogsFeedsSortFilter",
+      "result_type_name": "CatalogsFeedsSearchResult",
+      "query_type_name": "CatalogsFeedsSearchQuery",
+      "condition_prefix": "CatalogsFeeds",
+      "condition_type_name": "CatalogsFeedsCondition",
+      "fields": [
+        {
+          "name": "catalog_type",
+          "python_name": "catalog_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of catalog"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the feed was created"
+        },
+        {
+          "name": "default_availability",
+          "python_name": "default_availability",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default availability status"
+        },
+        {
+          "name": "default_country",
+          "python_name": "default_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default country"
+        },
+        {
+          "name": "default_currency",
+          "python_name": "default_currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default currency for pricing"
+        },
+        {
+          "name": "default_locale",
+          "python_name": "default_locale",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default locale"
+        },
+        {
+          "name": "format",
+          "python_name": "format",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Feed format"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique feed identifier"
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL where the feed is available"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Feed name"
+        },
+        {
+          "name": "preferred_processing_schedule",
+          "python_name": "preferred_processing_schedule",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Preferred processing schedule"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Feed status"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the feed was last updated"
+        }
+      ]
+    },
+    "catalogs_product_groups": {
+      "entity": "catalogs_product_groups",
+      "data_type_name": "CatalogsProductGroupsSearchData",
+      "filter_type_name": "CatalogsProductGroupsSearchFilter",
+      "in_filter_type_name": "CatalogsProductGroupsInFilter",
+      "any_value_filter_type_name": "CatalogsProductGroupsAnyValueFilter",
+      "string_filter_type_name": "CatalogsProductGroupsStringFilter",
+      "sort_filter_type_name": "CatalogsProductGroupsSortFilter",
+      "result_type_name": "CatalogsProductGroupsSearchResult",
+      "query_type_name": "CatalogsProductGroupsSearchQuery",
+      "condition_prefix": "CatalogsProductGroups",
+      "condition_type_name": "CatalogsProductGroupsCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation timestamp (Unix seconds)"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product group description"
+        },
+        {
+          "name": "feed_id",
+          "python_name": "feed_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated feed ID"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique product group identifier"
+        },
+        {
+          "name": "is_featured",
+          "python_name": "is_featured",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the product group is featured"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product group name"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product group status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product group type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update timestamp (Unix seconds)"
+        }
+      ]
+    },
+    "audiences": {
+      "entity": "audiences",
+      "data_type_name": "AudiencesSearchData",
+      "filter_type_name": "AudiencesSearchFilter",
+      "in_filter_type_name": "AudiencesInFilter",
+      "any_value_filter_type_name": "AudiencesAnyValueFilter",
+      "string_filter_type_name": "AudiencesStringFilter",
+      "sort_filter_type_name": "AudiencesSortFilter",
+      "result_type_name": "AudiencesSearchResult",
+      "query_type_name": "AudiencesSearchQuery",
+      "condition_prefix": "Audiences",
+      "condition_type_name": "AudiencesCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account ID"
+        },
+        {
+          "name": "audience_type",
+          "python_name": "audience_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Audience type"
+        },
+        {
+          "name": "created_timestamp",
+          "python_name": "created_timestamp",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation time (Unix seconds)"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Audience description"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique audience identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Audience name"
+        },
+        {
+          "name": "rule",
+          "python_name": "rule",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Audience targeting rules"
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Estimated audience size"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Audience status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'audience'"
+        },
+        {
+          "name": "updated_timestamp",
+          "python_name": "updated_timestamp",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update time (Unix seconds)"
+        }
+      ]
+    },
+    "conversion_tags": {
+      "entity": "conversion_tags",
+      "data_type_name": "ConversionTagsSearchData",
+      "filter_type_name": "ConversionTagsSearchFilter",
+      "in_filter_type_name": "ConversionTagsInFilter",
+      "any_value_filter_type_name": "ConversionTagsAnyValueFilter",
+      "string_filter_type_name": "ConversionTagsStringFilter",
+      "sort_filter_type_name": "ConversionTagsSortFilter",
+      "result_type_name": "ConversionTagsSearchResult",
+      "query_type_name": "ConversionTagsSearchQuery",
+      "condition_prefix": "ConversionTags",
+      "condition_type_name": "ConversionTagsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account ID"
+        },
+        {
+          "name": "code_snippet",
+          "python_name": "code_snippet",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "JavaScript code snippet for tracking"
+        },
+        {
+          "name": "configs",
+          "python_name": "configs",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tag configurations"
+        },
+        {
+          "name": "enhanced_match_status",
+          "python_name": "enhanced_match_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Enhanced match status"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique conversion tag identifier"
+        },
+        {
+          "name": "last_fired_time_ms",
+          "python_name": "last_fired_time_ms",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp of last event fired (milliseconds)"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Conversion tag name"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Version number"
+        }
+      ]
+    },
+    "customer_lists": {
+      "entity": "customer_lists",
+      "data_type_name": "CustomerListsSearchData",
+      "filter_type_name": "CustomerListsSearchFilter",
+      "in_filter_type_name": "CustomerListsInFilter",
+      "any_value_filter_type_name": "CustomerListsAnyValueFilter",
+      "string_filter_type_name": "CustomerListsStringFilter",
+      "sort_filter_type_name": "CustomerListsSortFilter",
+      "result_type_name": "CustomerListsSearchResult",
+      "query_type_name": "CustomerListsSearchQuery",
+      "condition_prefix": "CustomerLists",
+      "condition_type_name": "CustomerListsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated ad account ID"
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Creation time (Unix seconds)"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique customer list identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer list name"
+        },
+        {
+          "name": "num_batches",
+          "python_name": "num_batches",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of list updates"
+        },
+        {
+          "name": "num_removed_user_records",
+          "python_name": "num_removed_user_records",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Count of removed user records"
+        },
+        {
+          "name": "num_uploaded_user_records",
+          "python_name": "num_uploaded_user_records",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Count of uploaded user records"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'customerlist'"
+        },
+        {
+          "name": "updated_time",
+          "python_name": "updated_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Last update time (Unix seconds)"
+        }
+      ]
+    },
+    "keywords": {
+      "entity": "keywords",
+      "data_type_name": "KeywordsSearchData",
+      "filter_type_name": "KeywordsSearchFilter",
+      "in_filter_type_name": "KeywordsInFilter",
+      "any_value_filter_type_name": "KeywordsAnyValueFilter",
+      "string_filter_type_name": "KeywordsStringFilter",
+      "sort_filter_type_name": "KeywordsSortFilter",
+      "result_type_name": "KeywordsSearchResult",
+      "query_type_name": "KeywordsSearchQuery",
+      "condition_prefix": "Keywords",
+      "condition_type_name": "KeywordsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the keyword is archived"
+        },
+        {
+          "name": "bid",
+          "python_name": "bid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Bid value in microcurrency"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique keyword identifier"
+        },
+        {
+          "name": "match_type",
+          "python_name": "match_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Match type"
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent entity ID"
+        },
+        {
+          "name": "parent_type",
+          "python_name": "parent_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent entity type"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Always 'keyword'"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Keyword text value"
+        }
+      ]
+    }
+  }
+}

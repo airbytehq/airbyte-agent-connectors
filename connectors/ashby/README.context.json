@@ -1,0 +1,1100 @@
+{
+  "connector_name": "ashby",
+  "class_name": "AshbyConnector",
+  "package_name": "airbyte_agent_ashby",
+  "package_version": "0.1.4",
+  "yaml_version": "0.1.4",
+  "api_reference_url": "https://developers.ashbyhq.com/reference",
+  "commit_sha": "unknown",
+  "auth_example": "AshbyAuthConfig(api_key=\"...\")",
+  "auth_import": ", AshbyAuthConfig",
+  "auth_config": {
+    "type_name": "AshbyAuthConfig",
+    "base_name": "Ashby",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Ashby API key"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "AshbyReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Ashby.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "The date from which to start replicating data, in the format YYYY-MM-DDT00:00:00Z.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Ashby is a modern applicant tracking system (ATS) and recruiting platform that helps companies manage their hiring process. This connector provides access to candidates, applications, jobs, departments, locations, users, job postings, sources, archive reasons, candidate tags, custom fields, and feedback form definitions for talent acquisition analytics and hiring insights.\n",
+  "supported_questions": "- List all open jobs\n- Show me all candidates\n- List recent applications\n- List all departments\n- Show me all job postings\n- List all users in the organization\n- Show me candidates who applied last month\n- What are the top sources for job applications?\n- Compare the number of applications across different departments\n- Find candidates with multiple applications\n- Summarize the candidate pipeline for our latest job posting\n- Find the most active departments in recruiting this month",
+  "unsupported_questions": "- Create a new job posting\n- Schedule an interview for a candidate\n- Update a candidates application status\n- Delete a candidate profile\n- Send an offer letter to a candidate",
+  "first_operation": {
+    "method_name": "list_candidates",
+    "http_method": "post",
+    "path": "/candidate.list",
+    "entity": "candidates",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "Pagination cursor for next page"
+        },
+        "required": false,
+        "description": "Pagination cursor for next page"
+      },
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Maximum number of records to return per page"
+        },
+        "required": false,
+        "description": "Maximum number of records to return per page"
+      }
+    ],
+    "params_type_name": "CandidatesListParams",
+    "response_type": "CandidatesListResult",
+    "description": "Lists all candidates in the organization",
+    "record_extractor": "$.results",
+    "meta_extractor": {
+      "cursor": "$.nextCursor",
+      "has_more": "$.moreDataAvailable"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Candidate]",
+    "meta_fields": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      {
+        "name": "has_more",
+        "python_name": "has_more",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "candidates": [
+      {
+        "method_name": "list_candidates",
+        "http_method": "post",
+        "path": "/candidate.list",
+        "entity": "candidates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "CandidatesListParams",
+        "response_type": "CandidatesListResult",
+        "description": "Lists all candidates in the organization",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Candidate]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_candidate",
+        "http_method": "post",
+        "path": "/candidate.info",
+        "entity": "candidates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Candidate ID"
+            },
+            "required": true,
+            "description": "Candidate ID"
+          }
+        ],
+        "params_type_name": "CandidatesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single candidate by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "applications": [
+      {
+        "method_name": "list_applications",
+        "http_method": "post",
+        "path": "/application.list",
+        "entity": "applications",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "ApplicationsListParams",
+        "response_type": "ApplicationsListResult",
+        "description": "Gets all applications in the organization",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Application]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_application",
+        "http_method": "post",
+        "path": "/application.info",
+        "entity": "applications",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "applicationId",
+            "python_name": "application_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Application ID"
+            },
+            "required": true,
+            "description": "Application ID"
+          }
+        ],
+        "params_type_name": "ApplicationsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single application by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "jobs": [
+      {
+        "method_name": "list_jobs",
+        "http_method": "post",
+        "path": "/job.list",
+        "entity": "jobs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "JobsListParams",
+        "response_type": "JobsListResult",
+        "description": "List all open, closed, and archived jobs",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Job]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_job",
+        "http_method": "post",
+        "path": "/job.info",
+        "entity": "jobs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Job ID"
+            },
+            "required": true,
+            "description": "Job ID"
+          }
+        ],
+        "params_type_name": "JobsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single job by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "departments": [
+      {
+        "method_name": "list_departments",
+        "http_method": "post",
+        "path": "/department.list",
+        "entity": "departments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "DepartmentsListParams",
+        "response_type": "DepartmentsListResult",
+        "description": "List all departments",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Department]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_department",
+        "http_method": "post",
+        "path": "/department.info",
+        "entity": "departments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "departmentId",
+            "python_name": "department_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Department ID"
+            },
+            "required": true,
+            "description": "Department ID"
+          }
+        ],
+        "params_type_name": "DepartmentsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single department by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "locations": [
+      {
+        "method_name": "list_locations",
+        "http_method": "post",
+        "path": "/location.list",
+        "entity": "locations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "LocationsListParams",
+        "response_type": "LocationsListResult",
+        "description": "List all locations",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Location]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_location",
+        "http_method": "post",
+        "path": "/location.info",
+        "entity": "locations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "locationId",
+            "python_name": "location_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Location ID"
+            },
+            "required": true,
+            "description": "Location ID"
+          }
+        ],
+        "params_type_name": "LocationsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single location by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "post",
+        "path": "/user.list",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "List all users in the organization",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "post",
+        "path": "/user.info",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "userId",
+            "python_name": "user_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "User ID"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single user by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "job_postings": [
+      {
+        "method_name": "list_job_postings",
+        "http_method": "post",
+        "path": "/jobPosting.list",
+        "entity": "job_postings",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "JobPostingsListParams",
+        "response_type": "JobPostingsListResult",
+        "description": "List all job postings",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[JobPosting]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_job_posting",
+        "http_method": "post",
+        "path": "/jobPosting.info",
+        "entity": "job_postings",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "jobPostingId",
+            "python_name": "job_posting_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Job posting ID"
+            },
+            "required": true,
+            "description": "Job posting ID"
+          }
+        ],
+        "params_type_name": "JobPostingsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single job posting by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "sources": [
+      {
+        "method_name": "list_sources",
+        "http_method": "post",
+        "path": "/source.list",
+        "entity": "sources",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "SourcesListParams",
+        "response_type": "SourcesListResult",
+        "description": "List all candidate sources",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Source]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "archive_reasons": [
+      {
+        "method_name": "list_archive_reasons",
+        "http_method": "post",
+        "path": "/archiveReason.list",
+        "entity": "archive_reasons",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "ArchiveReasonsListParams",
+        "response_type": "ArchiveReasonsListResult",
+        "description": "List all archive reasons",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ArchiveReason]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "candidate_tags": [
+      {
+        "method_name": "list_candidate_tags",
+        "http_method": "post",
+        "path": "/candidateTag.list",
+        "entity": "candidate_tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "CandidateTagsListParams",
+        "response_type": "CandidateTagsListResult",
+        "description": "List all candidate tags",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CandidateTag]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "custom_fields": [
+      {
+        "method_name": "list_custom_fields",
+        "http_method": "post",
+        "path": "/customField.list",
+        "entity": "custom_fields",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "CustomFieldsListParams",
+        "response_type": "CustomFieldsListResult",
+        "description": "List all custom fields",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CustomField]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "feedback_form_definitions": [
+      {
+        "method_name": "list_feedback_form_definitions",
+        "http_method": "post",
+        "path": "/feedbackFormDefinition.list",
+        "entity": "feedback_form_definitions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor for next page"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of records to return per page"
+            },
+            "required": false,
+            "description": "Maximum number of records to return per page"
+          }
+        ],
+        "params_type_name": "FeedbackFormDefinitionsListParams",
+        "response_type": "FeedbackFormDefinitionsListResult",
+        "description": "List all feedback form definitions",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "cursor": "$.nextCursor",
+          "has_more": "$.moreDataAvailable"
+        },
+        "needs_envelope": true,
+        "record_type": "list[FeedbackFormDefinition]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

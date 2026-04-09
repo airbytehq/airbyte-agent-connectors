@@ -1,0 +1,1893 @@
+{
+  "connector_name": "amazon-seller-partner",
+  "class_name": "AmazonSellerPartnerConnector",
+  "package_name": "airbyte_agent_amazon_seller_partner",
+  "package_version": "1.0.5",
+  "yaml_version": "1.0.5",
+  "api_reference_url": "https://developer-docs.amazon.com/sp-api/",
+  "commit_sha": "unknown",
+  "auth_example": "AmazonSellerPartnerAuthConfig(lwa_app_id=\"...\", lwa_client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
+  "auth_import": ", AmazonSellerPartnerAuthConfig",
+  "auth_config": {
+    "type_name": "AmazonSellerPartnerAuthConfig",
+    "base_name": "AmazonSellerPartner",
+    "options": [
+      {
+        "title": "Login with Amazon OAuth 2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "lwa_app_id",
+            "type": "str",
+            "required": true,
+            "title": "LWA Client ID",
+            "description": "Your Login with Amazon Client ID."
+          },
+          {
+            "name": "lwa_client_secret",
+            "type": "str",
+            "required": true,
+            "title": "LWA Client Secret",
+            "description": "Your Login with Amazon Client Secret."
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "The Refresh Token obtained via the OAuth authorization flow."
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Access token (optional if refresh_token is provided)."
+          }
+        ],
+        "type_suffix": "LoginWithAmazonOauth20"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "AmazonSellerPartnerReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Amazon Seller Partner.",
+    "fields": [
+      {
+        "name": "replication_start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format 2017-01-25T00:00:00Z. Any data before this date will not be replicated.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Amazon Selling Partner API (SP-API). Provides access to seller orders and order items, financial events and event groups, catalog item search and details, and report metadata. Supports OAuth 2.0 authentication via Login with Amazon (LWA) with automatic token refresh.\n",
+  "supported_questions": "- List all recent orders\n- Show me order items for a specific order\n- List financial event groups\n- Show recent financial events\n- Search catalog items by keyword\n- List recent reports\n- What are my top-selling products by order volume?\n- Show orders from the last 30 days with status Shipped\n- Find financial events related to refunds\n- Which orders have the highest total value?",
+  "unsupported_questions": "- Create a new order\n- Cancel an order\n- Submit a new report request\n- Update product listings",
+  "first_operation": {
+    "method_name": "list_orders",
+    "http_method": "get",
+    "path": "/orders/v0/orders",
+    "entity": "orders",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "MarketplaceIds",
+        "python_name": "marketplace_ids",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "default": "ATVPDKIKX0DER"
+        },
+        "required": true,
+        "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.",
+        "is_deep_object": false
+      },
+      {
+        "name": "CreatedAfter",
+        "python_name": "created_after",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.",
+        "is_deep_object": false
+      },
+      {
+        "name": "CreatedBefore",
+        "python_name": "created_before",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "A date used for selecting orders created before the specified date (ISO 8601 format).",
+        "is_deep_object": false
+      },
+      {
+        "name": "LastUpdatedAfter",
+        "python_name": "last_updated_after",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "A date used for selecting orders that were last updated after the specified date (ISO 8601 format).",
+        "is_deep_object": false
+      },
+      {
+        "name": "LastUpdatedBefore",
+        "python_name": "last_updated_before",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "A date used for selecting orders that were last updated before the specified date (ISO 8601 format).",
+        "is_deep_object": false
+      },
+      {
+        "name": "OrderStatuses",
+        "python_name": "order_statuses",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Filter by order status values.",
+        "is_deep_object": false
+      },
+      {
+        "name": "MaxResultsPerPage",
+        "python_name": "max_results_per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "required": null,
+        "description": "Maximum number of results to return per page.",
+        "is_deep_object": false
+      },
+      {
+        "name": "NextToken",
+        "python_name": "next_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A string token returned in a previous response for pagination.",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "OrdersListParams",
+    "response_type": "OrdersListResult",
+    "description": "Returns a list of orders based on the specified parameters.",
+    "record_extractor": "$.payload.Orders",
+    "meta_extractor": {
+      "next_token": "$.payload.NextToken"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Order]",
+    "meta_fields": [
+      {
+        "name": "next_token",
+        "python_name": "next_token",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "Pagination token for next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "orders": [
+      {
+        "method_name": "list_orders",
+        "http_method": "get",
+        "path": "/orders/v0/orders",
+        "entity": "orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "MarketplaceIds",
+            "python_name": "marketplace_ids",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "ATVPDKIKX0DER"
+            },
+            "required": true,
+            "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.",
+            "is_deep_object": false
+          },
+          {
+            "name": "CreatedAfter",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.",
+            "is_deep_object": false
+          },
+          {
+            "name": "CreatedBefore",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "A date used for selecting orders created before the specified date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "LastUpdatedAfter",
+            "python_name": "last_updated_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "A date used for selecting orders that were last updated after the specified date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "LastUpdatedBefore",
+            "python_name": "last_updated_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "A date used for selecting orders that were last updated before the specified date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "OrderStatuses",
+            "python_name": "order_statuses",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by order status values.",
+            "is_deep_object": false
+          },
+          {
+            "name": "MaxResultsPerPage",
+            "python_name": "max_results_per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Maximum number of results to return per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "NextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A string token returned in a previous response for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrdersListParams",
+        "response_type": "OrdersListResult",
+        "description": "Returns a list of orders based on the specified parameters.",
+        "record_extractor": "$.payload.Orders",
+        "meta_extractor": {
+          "next_token": "$.payload.NextToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Order]",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination token for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_order",
+        "http_method": "get",
+        "path": "/orders/v0/orders/{orderId}",
+        "entity": "orders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "orderId",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "An Amazon order identifier in 3-7-7 format."
+          }
+        ],
+        "params_type_name": "OrdersGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns the order indicated by the specified order ID.",
+        "record_extractor": "$.payload",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "order_items": [
+      {
+        "method_name": "list_order_items",
+        "http_method": "get",
+        "path": "/orders/v0/orders/{orderId}/orderItems",
+        "entity": "order_items",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "orderId",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "An Amazon order identifier in 3-7-7 format."
+          },
+          {
+            "name": "NextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A string token returned in a previous response for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrderItemsListParams",
+        "response_type": "OrderItemsListResult",
+        "description": "Returns detailed order item information for the order indicated by the specified order ID.",
+        "record_extractor": "$.payload.OrderItems",
+        "meta_extractor": {
+          "next_token": "$.payload.NextToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[OrderItem]",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "list_financial_event_groups": [
+      {
+        "method_name": "list_financial_event_groups",
+        "http_method": "get",
+        "path": "/finances/v0/financialEventGroups",
+        "entity": "list_financial_event_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "FinancialEventGroupStartedAfter",
+            "python_name": "financial_event_group_started_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return groups opened after this date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "FinancialEventGroupStartedBefore",
+            "python_name": "financial_event_group_started_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return groups opened before this date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "MaxResultsPerPage",
+            "python_name": "max_results_per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Maximum number of results to return per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "NextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A string token returned in a previous response for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListFinancialEventGroupsListParams",
+        "response_type": "ListFinancialEventGroupsListResult",
+        "description": "Returns financial event groups for a given date range.",
+        "record_extractor": "$.payload.FinancialEventGroupList",
+        "meta_extractor": {
+          "next_token": "$.payload.NextToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[FinancialEventGroup]",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "list_financial_events": [
+      {
+        "method_name": "list_financial_events",
+        "http_method": "get",
+        "path": "/finances/v0/financialEvents",
+        "entity": "list_financial_events",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "PostedAfter",
+            "python_name": "posted_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return events posted after this date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "PostedBefore",
+            "python_name": "posted_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return events posted before this date (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "MaxResultsPerPage",
+            "python_name": "max_results_per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Maximum number of results to return per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "NextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A string token returned in a previous response for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListFinancialEventsListParams",
+        "response_type": "ListFinancialEventsListResult",
+        "description": "Returns financial events for a given date range.",
+        "record_extractor": "$.payload.FinancialEvents",
+        "meta_extractor": {
+          "next_token": "$.payload.NextToken"
+        },
+        "needs_envelope": true,
+        "record_type": "FinancialEvents",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "catalog_items": [
+      {
+        "method_name": "search_catalog_items",
+        "http_method": "get",
+        "path": "/catalog/2022-04-01/items",
+        "entity": "catalog_items",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "marketplaceIds",
+            "python_name": "marketplace_ids",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "ATVPDKIKX0DER"
+            },
+            "required": true,
+            "description": "A marketplace identifier.",
+            "is_deep_object": false
+          },
+          {
+            "name": "keywords",
+            "python_name": "keywords",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Keywords to search for in the Amazon catalog.",
+            "is_deep_object": false
+          },
+          {
+            "name": "identifiers",
+            "python_name": "identifiers",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Product identifiers to search for (ASIN, EAN, UPC, etc.).",
+            "is_deep_object": false
+          },
+          {
+            "name": "identifiersType",
+            "python_name": "identifiers_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "ASIN",
+                "EAN",
+                "GTIN",
+                "ISBN",
+                "JAN",
+                "MINSAN",
+                "SKU",
+                "UPC"
+              ]
+            },
+            "required": null,
+            "description": "Type of identifiers (required when identifiers is set).",
+            "is_deep_object": false
+          },
+          {
+            "name": "includedData",
+            "python_name": "included_data",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "summaries"
+            },
+            "required": null,
+            "description": "Data sets to include in the response.",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 10
+            },
+            "required": null,
+            "description": "Number of items to return per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Token for pagination returned by a previous request.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogItemsListParams",
+        "response_type": "CatalogItemsListResult",
+        "description": "Search for items in the Amazon catalog by keywords or identifiers.",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "next_token": "$.pagination.nextToken",
+          "number_of_results": "$.numberOfResults"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CatalogItem]",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "number_of_results",
+            "python_name": "number_of_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of matching items"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_catalog_item",
+        "http_method": "get",
+        "path": "/catalog/2022-04-01/items/{asin}",
+        "entity": "catalog_items",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "asin",
+            "python_name": "asin",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The Amazon Standard Identification Number (ASIN) of the item."
+          },
+          {
+            "name": "marketplaceIds",
+            "python_name": "marketplace_ids",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "ATVPDKIKX0DER"
+            },
+            "required": true,
+            "description": "A marketplace identifier.",
+            "is_deep_object": false
+          },
+          {
+            "name": "includedData",
+            "python_name": "included_data",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "summaries"
+            },
+            "required": null,
+            "description": "Data sets to include in the response.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CatalogItemsGetParams",
+        "response_type": "CatalogItem",
+        "description": "Retrieves details for an item in the Amazon catalog by ASIN.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CatalogItem",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "reports": [
+      {
+        "method_name": "list_reports",
+        "http_method": "get",
+        "path": "/reports/2021-06-30/reports",
+        "entity": "reports",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "reportTypes",
+            "python_name": "report_types",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A list of report types used to filter reports.",
+            "is_deep_object": false
+          },
+          {
+            "name": "processingStatuses",
+            "python_name": "processing_statuses",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A list of processing statuses used to filter reports.",
+            "is_deep_object": false
+          },
+          {
+            "name": "marketplaceIds",
+            "python_name": "marketplace_ids",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A list of marketplace identifiers used to filter reports.",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of reports to return per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "createdSince",
+            "python_name": "created_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Earliest report creation date and time (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "createdUntil",
+            "python_name": "created_until",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Latest report creation date and time (ISO 8601 format).",
+            "is_deep_object": false
+          },
+          {
+            "name": "nextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A string token returned in a previous response for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReportsListParams",
+        "response_type": "ReportsListResult",
+        "description": "Returns report details for the reports that match the specified filters.",
+        "record_extractor": "$.reports",
+        "meta_extractor": {
+          "next_token": "$.nextToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Report]",
+        "meta_fields": [
+          {
+            "name": "next_token",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination token for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_report",
+        "http_method": "get",
+        "path": "/reports/2021-06-30/reports/{reportId}",
+        "entity": "reports",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "reportId",
+            "python_name": "report_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier for the report."
+          }
+        ],
+        "params_type_name": "ReportsGetParams",
+        "response_type": "Report",
+        "description": "Returns report details including status and report document ID for a specified report.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Report",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "orders": {
+      "entity": "orders",
+      "data_type_name": "OrdersSearchData",
+      "filter_type_name": "OrdersSearchFilter",
+      "in_filter_type_name": "OrdersInFilter",
+      "any_value_filter_type_name": "OrdersAnyValueFilter",
+      "string_filter_type_name": "OrdersStringFilter",
+      "sort_filter_type_name": "OrdersSortFilter",
+      "result_type_name": "OrdersSearchResult",
+      "query_type_name": "OrdersSearchQuery",
+      "condition_prefix": "Orders",
+      "condition_type_name": "OrdersCondition",
+      "fields": [
+        {
+          "name": "AmazonOrderId",
+          "python_name": "amazon_order_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the Amazon order"
+        },
+        {
+          "name": "AutomatedShippingSettings",
+          "python_name": "automated_shipping_settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Settings related to automated shipping processes"
+        },
+        {
+          "name": "BuyerInfo",
+          "python_name": "buyer_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the buyer"
+        },
+        {
+          "name": "DefaultShipFromLocationAddress",
+          "python_name": "default_ship_from_location_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The default address from which orders are shipped"
+        },
+        {
+          "name": "EarliestDeliveryDate",
+          "python_name": "earliest_delivery_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Earliest estimated delivery date of the order"
+        },
+        {
+          "name": "EarliestShipDate",
+          "python_name": "earliest_ship_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Earliest shipment date for the order"
+        },
+        {
+          "name": "FulfillmentChannel",
+          "python_name": "fulfillment_channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel through which the order is fulfilled"
+        },
+        {
+          "name": "HasRegulatedItems",
+          "python_name": "has_regulated_items",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order has regulated items"
+        },
+        {
+          "name": "IsAccessPointOrder",
+          "python_name": "is_access_point_order",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is an Amazon Hub Counter order"
+        },
+        {
+          "name": "IsBusinessOrder",
+          "python_name": "is_business_order",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is a business order"
+        },
+        {
+          "name": "IsGlobalExpressEnabled",
+          "python_name": "is_global_express_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if global express is enabled for the order"
+        },
+        {
+          "name": "IsISPU",
+          "python_name": "is_ispu",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is for In-Store Pickup"
+        },
+        {
+          "name": "IsPremiumOrder",
+          "python_name": "is_premium_order",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is a premium order"
+        },
+        {
+          "name": "IsPrime",
+          "python_name": "is_prime",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is a Prime order"
+        },
+        {
+          "name": "IsReplacementOrder",
+          "python_name": "is_replacement_order",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Indicates if the order is a replacement order"
+        },
+        {
+          "name": "IsSoldByAB",
+          "python_name": "is_sold_by_ab",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the order is sold by Amazon Business"
+        },
+        {
+          "name": "LastUpdateDate",
+          "python_name": "last_update_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the order was last updated"
+        },
+        {
+          "name": "LatestDeliveryDate",
+          "python_name": "latest_delivery_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Latest estimated delivery date of the order"
+        },
+        {
+          "name": "LatestShipDate",
+          "python_name": "latest_ship_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Latest shipment date for the order"
+        },
+        {
+          "name": "MarketplaceId",
+          "python_name": "marketplace_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the marketplace where the order was placed"
+        },
+        {
+          "name": "NumberOfItemsShipped",
+          "python_name": "number_of_items_shipped",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of items shipped in the order"
+        },
+        {
+          "name": "NumberOfItemsUnshipped",
+          "python_name": "number_of_items_unshipped",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of items yet to be shipped in the order"
+        },
+        {
+          "name": "OrderStatus",
+          "python_name": "order_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the order"
+        },
+        {
+          "name": "OrderTotal",
+          "python_name": "order_total",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Total amount of the order"
+        },
+        {
+          "name": "OrderType",
+          "python_name": "order_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the order"
+        },
+        {
+          "name": "PaymentMethod",
+          "python_name": "payment_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment method used for the order"
+        },
+        {
+          "name": "PaymentMethodDetails",
+          "python_name": "payment_method_details",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of the payment method used for the order"
+        },
+        {
+          "name": "PurchaseDate",
+          "python_name": "purchase_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the order was purchased"
+        },
+        {
+          "name": "SalesChannel",
+          "python_name": "sales_channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel through which the order was sold"
+        },
+        {
+          "name": "SellerOrderId",
+          "python_name": "seller_order_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier given by the seller for the order"
+        },
+        {
+          "name": "ShipServiceLevel",
+          "python_name": "ship_service_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Service level for shipping the order"
+        },
+        {
+          "name": "ShipmentServiceLevelCategory",
+          "python_name": "shipment_service_level_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Service level category for shipping the order"
+        },
+        {
+          "name": "ShippingAddress",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The address to which the order will be shipped"
+        },
+        {
+          "name": "seller_id",
+          "python_name": "seller_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the seller associated with the order"
+        }
+      ]
+    },
+    "order_items": {
+      "entity": "order_items",
+      "data_type_name": "OrderItemsSearchData",
+      "filter_type_name": "OrderItemsSearchFilter",
+      "in_filter_type_name": "OrderItemsInFilter",
+      "any_value_filter_type_name": "OrderItemsAnyValueFilter",
+      "string_filter_type_name": "OrderItemsStringFilter",
+      "sort_filter_type_name": "OrderItemsSortFilter",
+      "result_type_name": "OrderItemsSearchResult",
+      "query_type_name": "OrderItemsSearchQuery",
+      "condition_prefix": "OrderItems",
+      "condition_type_name": "OrderItemsCondition",
+      "fields": [
+        {
+          "name": "ASIN",
+          "python_name": "asin",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Amazon Standard Identification Number of the product"
+        },
+        {
+          "name": "AmazonOrderId",
+          "python_name": "amazon_order_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the Amazon order"
+        },
+        {
+          "name": "BuyerInfo",
+          "python_name": "buyer_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the buyer"
+        },
+        {
+          "name": "BuyerRequestedCancel",
+          "python_name": "buyer_requested_cancel",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about buyer's request for cancellation"
+        },
+        {
+          "name": "CODFee",
+          "python_name": "cod_fee",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Cash on delivery fee"
+        },
+        {
+          "name": "CODFeeDiscount",
+          "python_name": "cod_fee_discount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Discount on cash on delivery fee"
+        },
+        {
+          "name": "ConditionId",
+          "python_name": "condition_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Condition ID of the product"
+        },
+        {
+          "name": "ConditionNote",
+          "python_name": "condition_note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional notes on the condition of the product"
+        },
+        {
+          "name": "ConditionSubtypeId",
+          "python_name": "condition_subtype_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subtype ID of the product condition"
+        },
+        {
+          "name": "DeemedResellerCategory",
+          "python_name": "deemed_reseller_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category indicating if the seller is considered a reseller"
+        },
+        {
+          "name": "IossNumber",
+          "python_name": "ioss_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Import One Stop Shop number"
+        },
+        {
+          "name": "IsGift",
+          "python_name": "is_gift",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Flag indicating if the order is a gift"
+        },
+        {
+          "name": "IsTransparency",
+          "python_name": "is_transparency",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if transparency is applied"
+        },
+        {
+          "name": "ItemPrice",
+          "python_name": "item_price",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Price of the item"
+        },
+        {
+          "name": "ItemTax",
+          "python_name": "item_tax",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tax applied on the item"
+        },
+        {
+          "name": "LastUpdateDate",
+          "python_name": "last_update_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time of the last update"
+        },
+        {
+          "name": "OrderItemId",
+          "python_name": "order_item_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the order item"
+        },
+        {
+          "name": "PointsGranted",
+          "python_name": "points_granted",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Points granted for the purchase"
+        },
+        {
+          "name": "PriceDesignation",
+          "python_name": "price_designation",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Designation of the price"
+        },
+        {
+          "name": "ProductInfo",
+          "python_name": "product_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the product"
+        },
+        {
+          "name": "PromotionDiscount",
+          "python_name": "promotion_discount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Discount applied due to promotion"
+        },
+        {
+          "name": "PromotionDiscountTax",
+          "python_name": "promotion_discount_tax",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tax applied on the promotion discount"
+        },
+        {
+          "name": "PromotionIds",
+          "python_name": "promotion_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of promotions applied"
+        },
+        {
+          "name": "QuantityOrdered",
+          "python_name": "quantity_ordered",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Quantity of the item ordered"
+        },
+        {
+          "name": "QuantityShipped",
+          "python_name": "quantity_shipped",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Quantity of the item shipped"
+        },
+        {
+          "name": "ScheduledDeliveryEndDate",
+          "python_name": "scheduled_delivery_end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date for scheduled delivery"
+        },
+        {
+          "name": "ScheduledDeliveryStartDate",
+          "python_name": "scheduled_delivery_start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date for scheduled delivery"
+        },
+        {
+          "name": "SellerSKU",
+          "python_name": "seller_sku",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SKU of the seller"
+        },
+        {
+          "name": "SerialNumberRequired",
+          "python_name": "serial_number_required",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if serial number is required"
+        },
+        {
+          "name": "SerialNumbers",
+          "python_name": "serial_numbers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of serial numbers"
+        },
+        {
+          "name": "ShippingDiscount",
+          "python_name": "shipping_discount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Discount applied on shipping"
+        },
+        {
+          "name": "ShippingDiscountTax",
+          "python_name": "shipping_discount_tax",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tax applied on the shipping discount"
+        },
+        {
+          "name": "ShippingPrice",
+          "python_name": "shipping_price",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Price of shipping"
+        },
+        {
+          "name": "ShippingTax",
+          "python_name": "shipping_tax",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tax applied on shipping"
+        },
+        {
+          "name": "StoreChainStoreId",
+          "python_name": "store_chain_store_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the store chain"
+        },
+        {
+          "name": "TaxCollection",
+          "python_name": "tax_collection",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about tax collection"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the product"
+        }
+      ]
+    },
+    "list_financial_event_groups": {
+      "entity": "list_financial_event_groups",
+      "data_type_name": "ListFinancialEventGroupsSearchData",
+      "filter_type_name": "ListFinancialEventGroupsSearchFilter",
+      "in_filter_type_name": "ListFinancialEventGroupsInFilter",
+      "any_value_filter_type_name": "ListFinancialEventGroupsAnyValueFilter",
+      "string_filter_type_name": "ListFinancialEventGroupsStringFilter",
+      "sort_filter_type_name": "ListFinancialEventGroupsSortFilter",
+      "result_type_name": "ListFinancialEventGroupsSearchResult",
+      "query_type_name": "ListFinancialEventGroupsSearchQuery",
+      "condition_prefix": "ListFinancialEventGroups",
+      "condition_type_name": "ListFinancialEventGroupsCondition",
+      "fields": [
+        {
+          "name": "AccountTail",
+          "python_name": "account_tail",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The last digits of the account number"
+        },
+        {
+          "name": "BeginningBalance",
+          "python_name": "beginning_balance",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Beginning balance"
+        },
+        {
+          "name": "ConvertedTotal",
+          "python_name": "converted_total",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Converted total"
+        },
+        {
+          "name": "FinancialEventGroupEnd",
+          "python_name": "financial_event_group_end",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End datetime of the financial event group"
+        },
+        {
+          "name": "FinancialEventGroupId",
+          "python_name": "financial_event_group_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the financial event group"
+        },
+        {
+          "name": "FinancialEventGroupStart",
+          "python_name": "financial_event_group_start",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start datetime of the financial event group"
+        },
+        {
+          "name": "FundTransferDate",
+          "python_name": "fund_transfer_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date the fund transfer occurred"
+        },
+        {
+          "name": "FundTransferStatus",
+          "python_name": "fund_transfer_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the fund transfer"
+        },
+        {
+          "name": "OriginalTotal",
+          "python_name": "original_total",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Original total amount"
+        },
+        {
+          "name": "ProcessingStatus",
+          "python_name": "processing_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Processing status of the financial event group"
+        },
+        {
+          "name": "TraceId",
+          "python_name": "trace_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for tracing"
+        }
+      ]
+    },
+    "list_financial_events": {
+      "entity": "list_financial_events",
+      "data_type_name": "ListFinancialEventsSearchData",
+      "filter_type_name": "ListFinancialEventsSearchFilter",
+      "in_filter_type_name": "ListFinancialEventsInFilter",
+      "any_value_filter_type_name": "ListFinancialEventsAnyValueFilter",
+      "string_filter_type_name": "ListFinancialEventsStringFilter",
+      "sort_filter_type_name": "ListFinancialEventsSortFilter",
+      "result_type_name": "ListFinancialEventsSearchResult",
+      "query_type_name": "ListFinancialEventsSearchQuery",
+      "condition_prefix": "ListFinancialEvents",
+      "condition_type_name": "ListFinancialEventsCondition",
+      "fields": [
+        {
+          "name": "AdhocDisbursementEventList",
+          "python_name": "adhoc_disbursement_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of adhoc disbursement events"
+        },
+        {
+          "name": "AdjustmentEventList",
+          "python_name": "adjustment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of adjustment events"
+        },
+        {
+          "name": "AffordabilityExpenseEventList",
+          "python_name": "affordability_expense_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of affordability expense events"
+        },
+        {
+          "name": "AffordabilityExpenseReversalEventList",
+          "python_name": "affordability_expense_reversal_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of affordability expense reversal events"
+        },
+        {
+          "name": "CapacityReservationBillingEventList",
+          "python_name": "capacity_reservation_billing_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of capacity reservation billing events"
+        },
+        {
+          "name": "ChargeRefundEventList",
+          "python_name": "charge_refund_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of charge refund events"
+        },
+        {
+          "name": "ChargebackEventList",
+          "python_name": "chargeback_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of chargeback events"
+        },
+        {
+          "name": "CouponPaymentEventList",
+          "python_name": "coupon_payment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of coupon payment events"
+        },
+        {
+          "name": "DebtRecoveryEventList",
+          "python_name": "debt_recovery_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of debt recovery events"
+        },
+        {
+          "name": "FBALiquidationEventList",
+          "python_name": "fba_liquidation_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of FBA liquidation events"
+        },
+        {
+          "name": "FailedAdhocDisbursementEventList",
+          "python_name": "failed_adhoc_disbursement_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of failed adhoc disbursement events"
+        },
+        {
+          "name": "GuaranteeClaimEventList",
+          "python_name": "guarantee_claim_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of guarantee claim events"
+        },
+        {
+          "name": "ImagingServicesFeeEventList",
+          "python_name": "imaging_services_fee_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of imaging services fee events"
+        },
+        {
+          "name": "LoanServicingEventList",
+          "python_name": "loan_servicing_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of loan servicing events"
+        },
+        {
+          "name": "NetworkComminglingTransactionEventList",
+          "python_name": "network_commingling_transaction_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of network commingling events"
+        },
+        {
+          "name": "PayWithAmazonEventList",
+          "python_name": "pay_with_amazon_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of Pay with Amazon events"
+        },
+        {
+          "name": "PerformanceBondRefundEventList",
+          "python_name": "performance_bond_refund_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of performance bond refund events"
+        },
+        {
+          "name": "PostedBefore",
+          "python_name": "posted_before",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date filter for events posted before"
+        },
+        {
+          "name": "ProductAdsPaymentEventList",
+          "python_name": "product_ads_payment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of product ads payment events"
+        },
+        {
+          "name": "RefundEventList",
+          "python_name": "refund_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of refund events"
+        },
+        {
+          "name": "RemovalShipmentAdjustmentEventList",
+          "python_name": "removal_shipment_adjustment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of removal shipment adjustment events"
+        },
+        {
+          "name": "RemovalShipmentEventList",
+          "python_name": "removal_shipment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of removal shipment events"
+        },
+        {
+          "name": "RentalTransactionEventList",
+          "python_name": "rental_transaction_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of rental transaction events"
+        },
+        {
+          "name": "RetrochargeEventList",
+          "python_name": "retrocharge_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of retrocharge events"
+        },
+        {
+          "name": "SAFETReimbursementEventList",
+          "python_name": "safet_reimbursement_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of SAFET reimbursement events"
+        },
+        {
+          "name": "SellerDealPaymentEventList",
+          "python_name": "seller_deal_payment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of seller deal payment events"
+        },
+        {
+          "name": "SellerReviewEnrollmentPaymentEventList",
+          "python_name": "seller_review_enrollment_payment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of seller review enrollment events"
+        },
+        {
+          "name": "ServiceFeeEventList",
+          "python_name": "service_fee_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of service fee events"
+        },
+        {
+          "name": "ServiceProviderCreditEventList",
+          "python_name": "service_provider_credit_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of service provider credit events"
+        },
+        {
+          "name": "ShipmentEventList",
+          "python_name": "shipment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of shipment events"
+        },
+        {
+          "name": "ShipmentSettleEventList",
+          "python_name": "shipment_settle_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of shipment settlement events"
+        },
+        {
+          "name": "TDSReimbursementEventList",
+          "python_name": "tds_reimbursement_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of TDS reimbursement events"
+        },
+        {
+          "name": "TaxWithholdingEventList",
+          "python_name": "tax_withholding_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of tax withholding events"
+        },
+        {
+          "name": "TrialShipmentEventList",
+          "python_name": "trial_shipment_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of trial shipment events"
+        },
+        {
+          "name": "ValueAddedServiceChargeEventList",
+          "python_name": "value_added_service_charge_event_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of value-added service charge events"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,950 @@
+{
+  "connector_name": "orb",
+  "class_name": "OrbConnector",
+  "package_name": "airbyte_agent_orb",
+  "package_version": "0.1.7",
+  "yaml_version": "0.1.7",
+  "api_reference_url": "https://docs.withorb.com/api-reference",
+  "commit_sha": "unknown",
+  "auth_example": "OrbAuthConfig(api_key=\"...\")",
+  "auth_import": ", OrbAuthConfig",
+  "auth_config": {
+    "type_name": "OrbAuthConfig",
+    "base_name": "Orb",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Orb API key"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "OrbReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Orb.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Orb is a usage-based billing platform that enables businesses to implement flexible pricing models,\ntrack customer usage, and manage subscriptions. This connector provides access to customers,\nsubscriptions, plans, and invoices for billing analytics and customer management.\n",
+  "supported_questions": "- Show me all my customers in Orb\n- List all active subscriptions\n- What plans are available?\n- Show me recent invoices\n- Show me details for a recent customer\n- What is the status of a recent subscription?\n- Show me the pricing details for a plan\n- Confirm the Stripe ID linked to a customer\n- What is the payment provider ID for a customer?\n- List all invoices for a specific customer\n- List all subscriptions for customer XYZ\n- Show all active subscriptions for a specific customer\n- What subscriptions does customer {external_customer_id} have?\n- Pull all invoices from the last month\n- Show invoices created after {date}\n- List all paid invoices for customer {customer_id}\n- What invoices are in draft status?\n- Show all issued invoices for subscription {subscription_id}",
+  "unsupported_questions": "- Create a new customer in Orb\n- Update subscription details\n- Delete a customer record\n- Send an invoice to a customer\n- Filter subscriptions by plan name (must filter client-side after listing)\n- Pull customers billed for specific products (must examine invoice line_items client-side)",
+  "first_operation": {
+    "method_name": "list_customers",
+    "http_method": "get",
+    "path": "/customers",
+    "entity": "customers",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 50
+        },
+        "required": null,
+        "description": "Number of items to return per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "CustomersListParams",
+    "response_type": "CustomersListResult",
+    "description": "Returns a paginated list of customers",
+    "record_extractor": "$.data",
+    "meta_extractor": {
+      "next_cursor": "$.pagination_metadata.next_cursor"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Customer]",
+    "meta_fields": [
+      {
+        "name": "next_cursor",
+        "python_name": "next_cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cursor for the next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "customers": [
+      {
+        "method_name": "list_customers",
+        "http_method": "get",
+        "path": "/customers",
+        "entity": "customers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomersListParams",
+        "response_type": "CustomersListResult",
+        "description": "Returns a paginated list of customers",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination_metadata.next_cursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Customer]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_customer",
+        "http_method": "get",
+        "path": "/customers/{customer_id}",
+        "entity": "customers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Customer ID"
+          }
+        ],
+        "params_type_name": "CustomersGetParams",
+        "response_type": "Customer",
+        "description": "Get a single customer by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Customer",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "subscriptions": [
+      {
+        "method_name": "list_subscriptions",
+        "http_method": "get",
+        "path": "/subscriptions",
+        "entity": "subscriptions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter subscriptions by customer ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "external_customer_id",
+            "python_name": "external_customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter subscriptions by external customer ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "ended",
+                "upcoming"
+              ]
+            },
+            "required": null,
+            "description": "Filter subscriptions by status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SubscriptionsListParams",
+        "response_type": "SubscriptionsListResult",
+        "description": "Returns a paginated list of subscriptions",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination_metadata.next_cursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Subscription]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_subscription",
+        "http_method": "get",
+        "path": "/subscriptions/{subscription_id}",
+        "entity": "subscriptions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "python_name": "subscription_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Subscription ID"
+          }
+        ],
+        "params_type_name": "SubscriptionsGetParams",
+        "response_type": "Subscription",
+        "description": "Get a single subscription by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Subscription",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "plans": [
+      {
+        "method_name": "list_plans",
+        "http_method": "get",
+        "path": "/plans",
+        "entity": "plans",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PlansListParams",
+        "response_type": "PlansListResult",
+        "description": "Returns a paginated list of plans",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination_metadata.next_cursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Plan]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_plan",
+        "http_method": "get",
+        "path": "/plans/{plan_id}",
+        "entity": "plans",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "python_name": "plan_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Plan ID"
+          }
+        ],
+        "params_type_name": "PlansGetParams",
+        "response_type": "Plan",
+        "description": "Get a single plan by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Plan",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoices": [
+      {
+        "method_name": "list_invoices",
+        "http_method": "get",
+        "path": "/invoices",
+        "entity": "invoices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter invoices by customer ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "external_customer_id",
+            "python_name": "external_customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter invoices by external customer ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "subscription_id",
+            "python_name": "subscription_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter invoices by subscription ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "invoice_date_gt",
+            "python_name": "invoice_date_gt",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter invoices with invoice date greater than this value (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "invoice_date_gte",
+            "python_name": "invoice_date_gte",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter invoices with invoice date greater than or equal to this value (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "invoice_date_lt",
+            "python_name": "invoice_date_lt",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter invoices with invoice date less than this value (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "invoice_date_lte",
+            "python_name": "invoice_date_lte",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter invoices with invoice date less than or equal to this value (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "issued",
+                "paid",
+                "synced",
+                "void"
+              ]
+            },
+            "required": null,
+            "description": "Filter invoices by status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvoicesListParams",
+        "response_type": "InvoicesListResult",
+        "description": "Returns a paginated list of invoices",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination_metadata.next_cursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Invoice]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for the next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_invoice",
+        "http_method": "get",
+        "path": "/invoices/{invoice_id}",
+        "entity": "invoices",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "invoice_id",
+            "python_name": "invoice_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Invoice ID"
+          }
+        ],
+        "params_type_name": "InvoicesGetParams",
+        "response_type": "Invoice",
+        "description": "Get a single invoice by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "customers": {
+      "entity": "customers",
+      "data_type_name": "CustomersSearchData",
+      "filter_type_name": "CustomersSearchFilter",
+      "in_filter_type_name": "CustomersInFilter",
+      "any_value_filter_type_name": "CustomersAnyValueFilter",
+      "string_filter_type_name": "CustomersStringFilter",
+      "sort_filter_type_name": "CustomersSortFilter",
+      "result_type_name": "CustomersSearchResult",
+      "query_type_name": "CustomersSearchQuery",
+      "condition_prefix": "Customers",
+      "condition_type_name": "CustomersCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the customer"
+        },
+        {
+          "name": "external_customer_id",
+          "python_name": "external_customer_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the customer in an external system"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the customer"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address of the customer"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the customer was created"
+        },
+        {
+          "name": "payment_provider",
+          "python_name": "payment_provider",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The payment provider used by the customer"
+        },
+        {
+          "name": "payment_provider_id",
+          "python_name": "payment_provider_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the customer in the payment provider's system"
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The timezone setting of the customer"
+        },
+        {
+          "name": "shipping_address",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "The shipping address of the customer"
+        },
+        {
+          "name": "billing_address",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "The billing address of the customer"
+        }
+      ]
+    },
+    "subscriptions": {
+      "entity": "subscriptions",
+      "data_type_name": "SubscriptionsSearchData",
+      "filter_type_name": "SubscriptionsSearchFilter",
+      "in_filter_type_name": "SubscriptionsInFilter",
+      "any_value_filter_type_name": "SubscriptionsAnyValueFilter",
+      "string_filter_type_name": "SubscriptionsStringFilter",
+      "sort_filter_type_name": "SubscriptionsSortFilter",
+      "result_type_name": "SubscriptionsSearchResult",
+      "query_type_name": "SubscriptionsSearchQuery",
+      "condition_prefix": "Subscriptions",
+      "condition_type_name": "SubscriptionsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the subscription"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the subscription was created"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the subscription starts"
+        },
+        {
+          "name": "end_date",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the subscription ends"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the subscription"
+        }
+      ]
+    },
+    "plans": {
+      "entity": "plans",
+      "data_type_name": "PlansSearchData",
+      "filter_type_name": "PlansSearchFilter",
+      "in_filter_type_name": "PlansInFilter",
+      "any_value_filter_type_name": "PlansAnyValueFilter",
+      "string_filter_type_name": "PlansStringFilter",
+      "sort_filter_type_name": "PlansSortFilter",
+      "result_type_name": "PlansSearchResult",
+      "query_type_name": "PlansSearchQuery",
+      "condition_prefix": "Plans",
+      "condition_type_name": "PlansCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the plan"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the plan was created"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the plan"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "A description of the plan"
+        },
+        {
+          "name": "prices",
+          "python_name": "prices",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "The pricing options for the plan"
+        },
+        {
+          "name": "product",
+          "python_name": "product",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "The product associated with the plan"
+        }
+      ]
+    },
+    "invoices": {
+      "entity": "invoices",
+      "data_type_name": "InvoicesSearchData",
+      "filter_type_name": "InvoicesSearchFilter",
+      "in_filter_type_name": "InvoicesInFilter",
+      "any_value_filter_type_name": "InvoicesAnyValueFilter",
+      "string_filter_type_name": "InvoicesStringFilter",
+      "sort_filter_type_name": "InvoicesSortFilter",
+      "result_type_name": "InvoicesSearchResult",
+      "query_type_name": "InvoicesSearchQuery",
+      "condition_prefix": "Invoices",
+      "condition_type_name": "InvoicesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the invoice"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the invoice was created"
+        },
+        {
+          "name": "invoice_date",
+          "python_name": "invoice_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date of the invoice"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The due date for the invoice"
+        },
+        {
+          "name": "invoice_pdf",
+          "python_name": "invoice_pdf",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL to download the PDF version of the invoice"
+        },
+        {
+          "name": "subtotal",
+          "python_name": "subtotal",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The subtotal amount of the invoice"
+        },
+        {
+          "name": "total",
+          "python_name": "total",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The total amount of the invoice"
+        },
+        {
+          "name": "amount_due",
+          "python_name": "amount_due",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The amount due on the invoice"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the invoice"
+        },
+        {
+          "name": "memo",
+          "python_name": "memo",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Any additional notes or comments on the invoice"
+        },
+        {
+          "name": "paid_at",
+          "python_name": "paid_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the invoice was paid"
+        },
+        {
+          "name": "issued_at",
+          "python_name": "issued_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the invoice was issued"
+        },
+        {
+          "name": "hosted_invoice_url",
+          "python_name": "hosted_invoice_url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL to view the hosted invoice"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "The line items on the invoice"
+        },
+        {
+          "name": "subscription",
+          "python_name": "subscription",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "The subscription associated with the invoice"
+        }
+      ]
+    }
+  }
+}

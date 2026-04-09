@@ -1,0 +1,2953 @@
+{
+  "connector_name": "zoho-crm",
+  "class_name": "ZohoCrmConnector",
+  "package_name": "airbyte_agent_zoho_crm",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://www.zoho.com/crm/developer/docs/api/v2/",
+  "commit_sha": "unknown",
+  "auth_example": "ZohoCrmAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\")",
+  "auth_import": ", ZohoCrmAuthConfig",
+  "auth_config": {
+    "type_name": "ZohoCrmAuthConfig",
+    "base_name": "ZohoCrm",
+    "options": [
+      {
+        "title": "Zoho CRM OAuth 2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "OAuth 2.0 Client ID from Zoho Developer Console"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "OAuth 2.0 Client Secret from Zoho Developer Console"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth 2.0 Refresh Token (does not expire)"
+          }
+        ],
+        "type_suffix": "ZohoCrmOauth20"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Connector for the Zoho CRM API, providing access to CRM modules including leads, contacts, accounts, deals, campaigns, tasks, events, calls, products, quotes, and invoices. Supports OAuth 2.0 authentication with regional data center support (US, EU, AU, IN, CN, JP). Read-only operations (list and get) are supported for all entities.\n",
+  "supported_questions": "- List all leads\n- Show me details for a specific lead\n- List all contacts\n- List all accounts\n- List all open deals\n- Show me details for a specific deal\n- List all campaigns\n- List all tasks\n- List all events\n- List recent calls\n- List all products\n- List all quotes\n- List all invoices\n- Show me leads created in the last 30 days\n- Which deals have the highest amount?\n- List all contacts at a specific company\n- What is the total revenue across all deals by stage?\n- Show me overdue tasks\n- Which campaigns generated the most leads?\n- Summarize the deal pipeline by stage\n- Show me accounts with the highest annual revenue\n- List all events scheduled for this week\n- What are the top-performing products by unit price?\n- Show me all invoices that are past due\n- Break down leads by source and industry",
+  "unsupported_questions": "- Create a new lead in Zoho CRM\n- Update a contact's email address\n- Delete a deal record\n- Send an email to a lead\n- Convert a lead to a contact\n- Merge duplicate contacts",
+  "first_operation": {
+    "method_name": "list_leads",
+    "http_method": "get",
+    "path": "/crm/v2/Leads",
+    "entity": "leads",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number",
+        "is_deep_object": false
+      },
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 200
+        },
+        "required": null,
+        "description": "Number of records per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "page_token",
+        "python_name": "page_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Page token for fetching beyond 2000 records",
+        "is_deep_object": false
+      },
+      {
+        "name": "sort_by",
+        "python_name": "sort_by",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Field to sort by",
+        "is_deep_object": false
+      },
+      {
+        "name": "sort_order",
+        "python_name": "sort_order",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        },
+        "required": null,
+        "description": "Sort order",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "LeadsListParams",
+    "response_type": "LeadsListResult",
+    "description": "Returns a paginated list of leads",
+    "record_extractor": "$.data",
+    "meta_extractor": {
+      "pagination": "$.info"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Lead]",
+    "meta_fields": [
+      {
+        "name": "pagination",
+        "python_name": "pagination",
+        "type": "PaginationInfo",
+        "schema": {
+          "$ref": "#/components/schemas/PaginationInfo"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "leads": [
+      {
+        "method_name": "list_leads",
+        "http_method": "get",
+        "path": "/crm/v2/Leads",
+        "entity": "leads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LeadsListParams",
+        "response_type": "LeadsListResult",
+        "description": "Returns a paginated list of leads",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Lead]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_lead",
+        "http_method": "get",
+        "path": "/crm/v2/Leads/{id}",
+        "entity": "leads",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Lead ID"
+          }
+        ],
+        "params_type_name": "LeadsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single lead by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/crm/v2/Contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a paginated list of contacts",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/crm/v2/Contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "get",
+        "path": "/crm/v2/Accounts",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Returns a paginated list of accounts",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/crm/v2/Accounts/{id}",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account ID"
+          }
+        ],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single account by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "deals": [
+      {
+        "method_name": "list_deals",
+        "http_method": "get",
+        "path": "/crm/v2/Deals",
+        "entity": "deals",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DealsListParams",
+        "response_type": "DealsListResult",
+        "description": "Returns a paginated list of deals",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Deal]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_deal",
+        "http_method": "get",
+        "path": "/crm/v2/Deals/{id}",
+        "entity": "deals",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Deal ID"
+          }
+        ],
+        "params_type_name": "DealsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single deal by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/crm/v2/Campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns a paginated list of campaigns",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/crm/v2/Campaigns/{id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Campaign ID"
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single campaign by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/crm/v2/Tasks",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Returns a paginated list of tasks",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/crm/v2/Tasks/{id}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task ID"
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single task by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "events": [
+      {
+        "method_name": "list_events",
+        "http_method": "get",
+        "path": "/crm/v2/Events",
+        "entity": "events",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsListParams",
+        "response_type": "EventsListResult",
+        "description": "Returns a paginated list of events (meetings/calendar events)",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Event]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_event",
+        "http_method": "get",
+        "path": "/crm/v2/Events/{id}",
+        "entity": "events",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Event ID"
+          }
+        ],
+        "params_type_name": "EventsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single event by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls": [
+      {
+        "method_name": "list_calls",
+        "http_method": "get",
+        "path": "/crm/v2/Calls",
+        "entity": "calls",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsListParams",
+        "response_type": "CallsListResult",
+        "description": "Returns a paginated list of calls",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Call]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_call",
+        "http_method": "get",
+        "path": "/crm/v2/Calls/{id}",
+        "entity": "calls",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call ID"
+          }
+        ],
+        "params_type_name": "CallsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single call by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "products": [
+      {
+        "method_name": "list_products",
+        "http_method": "get",
+        "path": "/crm/v2/Products",
+        "entity": "products",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductsListParams",
+        "response_type": "ProductsListResult",
+        "description": "Returns a paginated list of products",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Product]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_product",
+        "http_method": "get",
+        "path": "/crm/v2/Products/{id}",
+        "entity": "products",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Product ID"
+          }
+        ],
+        "params_type_name": "ProductsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single product by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "quotes": [
+      {
+        "method_name": "list_quotes",
+        "http_method": "get",
+        "path": "/crm/v2/Quotes",
+        "entity": "quotes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "QuotesListParams",
+        "response_type": "QuotesListResult",
+        "description": "Returns a paginated list of quotes",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Quote]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_quote",
+        "http_method": "get",
+        "path": "/crm/v2/Quotes/{id}",
+        "entity": "quotes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Quote ID"
+          }
+        ],
+        "params_type_name": "QuotesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single quote by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoices": [
+      {
+        "method_name": "list_invoices",
+        "http_method": "get",
+        "path": "/crm/v2/Invoices",
+        "entity": "invoices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            },
+            "required": null,
+            "description": "Number of records per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_token",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Page token for fetching beyond 2000 records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_order",
+            "python_name": "sort_order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvoicesListParams",
+        "response_type": "InvoicesListResult",
+        "description": "Returns a paginated list of invoices",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "pagination": "$.info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Invoice]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationInfo",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationInfo"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_invoice",
+        "http_method": "get",
+        "path": "/crm/v2/Invoices/{id}",
+        "entity": "invoices",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Invoice ID"
+          }
+        ],
+        "params_type_name": "InvoicesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single invoice by ID",
+        "record_extractor": "$.data[0]",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "leads": {
+      "entity": "leads",
+      "data_type_name": "LeadsSearchData",
+      "filter_type_name": "LeadsSearchFilter",
+      "in_filter_type_name": "LeadsInFilter",
+      "any_value_filter_type_name": "LeadsAnyValueFilter",
+      "string_filter_type_name": "LeadsStringFilter",
+      "sort_filter_type_name": "LeadsSortFilter",
+      "result_type_name": "LeadsSearchResult",
+      "query_type_name": "LeadsSearchQuery",
+      "condition_prefix": "Leads",
+      "condition_type_name": "LeadsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "First_Name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's first name"
+        },
+        {
+          "name": "Last_Name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's last name"
+        },
+        {
+          "name": "Full_Name",
+          "python_name": "full_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's full name"
+        },
+        {
+          "name": "Email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's email address"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's phone number"
+        },
+        {
+          "name": "Mobile",
+          "python_name": "mobile",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's mobile number"
+        },
+        {
+          "name": "Company",
+          "python_name": "company",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Company the lead is associated with"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's job title"
+        },
+        {
+          "name": "Lead_Source",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which the lead was generated"
+        },
+        {
+          "name": "Industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Industry the lead belongs to"
+        },
+        {
+          "name": "Annual_Revenue",
+          "python_name": "annual_revenue",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Annual revenue of the lead's company"
+        },
+        {
+          "name": "No_of_Employees",
+          "python_name": "no_of_employees",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of employees in the lead's company"
+        },
+        {
+          "name": "Rating",
+          "python_name": "rating",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead rating"
+        },
+        {
+          "name": "Lead_Status",
+          "python_name": "lead_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the lead"
+        },
+        {
+          "name": "Website",
+          "python_name": "website",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's website URL"
+        },
+        {
+          "name": "City",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's city"
+        },
+        {
+          "name": "State",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's state or province"
+        },
+        {
+          "name": "Country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Lead's country"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the lead"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "First_Name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's first name"
+        },
+        {
+          "name": "Last_Name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's last name"
+        },
+        {
+          "name": "Full_Name",
+          "python_name": "full_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's full name"
+        },
+        {
+          "name": "Email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's email address"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's phone number"
+        },
+        {
+          "name": "Mobile",
+          "python_name": "mobile",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's mobile number"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's job title"
+        },
+        {
+          "name": "Department",
+          "python_name": "department",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Department the contact belongs to"
+        },
+        {
+          "name": "Lead_Source",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which the contact was generated"
+        },
+        {
+          "name": "Date_of_Birth",
+          "python_name": "date_of_birth",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact's date of birth"
+        },
+        {
+          "name": "Mailing_City",
+          "python_name": "mailing_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mailing address city"
+        },
+        {
+          "name": "Mailing_State",
+          "python_name": "mailing_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mailing address state or province"
+        },
+        {
+          "name": "Mailing_Country",
+          "python_name": "mailing_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mailing address country"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the contact"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "accounts": {
+      "entity": "accounts",
+      "data_type_name": "AccountsSearchData",
+      "filter_type_name": "AccountsSearchFilter",
+      "in_filter_type_name": "AccountsInFilter",
+      "any_value_filter_type_name": "AccountsAnyValueFilter",
+      "string_filter_type_name": "AccountsStringFilter",
+      "sort_filter_type_name": "AccountsSortFilter",
+      "result_type_name": "AccountsSearchResult",
+      "query_type_name": "AccountsSearchQuery",
+      "condition_prefix": "Accounts",
+      "condition_type_name": "AccountsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Account_Name",
+          "python_name": "account_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the account or company"
+        },
+        {
+          "name": "Account_Number",
+          "python_name": "account_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account number"
+        },
+        {
+          "name": "Account_Type",
+          "python_name": "account_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of account (e.g., Analyst, Competitor, Customer)"
+        },
+        {
+          "name": "Industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Industry the account belongs to"
+        },
+        {
+          "name": "Annual_Revenue",
+          "python_name": "annual_revenue",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Annual revenue of the account"
+        },
+        {
+          "name": "Employees",
+          "python_name": "employees",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of employees"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account phone number"
+        },
+        {
+          "name": "Website",
+          "python_name": "website",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account website URL"
+        },
+        {
+          "name": "Ownership",
+          "python_name": "ownership",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ownership type (e.g., Public, Private)"
+        },
+        {
+          "name": "Rating",
+          "python_name": "rating",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account rating"
+        },
+        {
+          "name": "Billing_City",
+          "python_name": "billing_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing address city"
+        },
+        {
+          "name": "Billing_State",
+          "python_name": "billing_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing address state or province"
+        },
+        {
+          "name": "Billing_Country",
+          "python_name": "billing_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing address country"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the account"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "deals": {
+      "entity": "deals",
+      "data_type_name": "DealsSearchData",
+      "filter_type_name": "DealsSearchFilter",
+      "in_filter_type_name": "DealsInFilter",
+      "any_value_filter_type_name": "DealsAnyValueFilter",
+      "string_filter_type_name": "DealsStringFilter",
+      "sort_filter_type_name": "DealsSortFilter",
+      "result_type_name": "DealsSearchResult",
+      "query_type_name": "DealsSearchQuery",
+      "condition_prefix": "Deals",
+      "condition_type_name": "DealsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Deal_Name",
+          "python_name": "deal_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the deal"
+        },
+        {
+          "name": "Amount",
+          "python_name": "amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Monetary value of the deal"
+        },
+        {
+          "name": "Stage",
+          "python_name": "stage",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current stage of the deal in the pipeline"
+        },
+        {
+          "name": "Probability",
+          "python_name": "probability",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Probability of closing the deal (percentage)"
+        },
+        {
+          "name": "Closing_Date",
+          "python_name": "closing_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expected closing date"
+        },
+        {
+          "name": "Type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of deal (e.g., New Business, Existing Business)"
+        },
+        {
+          "name": "Next_Step",
+          "python_name": "next_step",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Next step in the deal process"
+        },
+        {
+          "name": "Lead_Source",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which the deal originated"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the deal"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Campaign_Name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the campaign"
+        },
+        {
+          "name": "Type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of campaign (e.g., Email, Webinar, Conference)"
+        },
+        {
+          "name": "Status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the campaign"
+        },
+        {
+          "name": "Start_Date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign start date"
+        },
+        {
+          "name": "End_Date",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign end date"
+        },
+        {
+          "name": "Expected_Revenue",
+          "python_name": "expected_revenue",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Expected revenue from the campaign"
+        },
+        {
+          "name": "Budgeted_Cost",
+          "python_name": "budgeted_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Budget allocated for the campaign"
+        },
+        {
+          "name": "Actual_Cost",
+          "python_name": "actual_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Actual cost incurred"
+        },
+        {
+          "name": "Num_sent",
+          "python_name": "num_sent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of campaign messages sent"
+        },
+        {
+          "name": "Expected_Response",
+          "python_name": "expected_response",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Expected response count"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the campaign"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "tasks": {
+      "entity": "tasks",
+      "data_type_name": "TasksSearchData",
+      "filter_type_name": "TasksSearchFilter",
+      "in_filter_type_name": "TasksInFilter",
+      "any_value_filter_type_name": "TasksAnyValueFilter",
+      "string_filter_type_name": "TasksStringFilter",
+      "sort_filter_type_name": "TasksSortFilter",
+      "result_type_name": "TasksSearchResult",
+      "query_type_name": "TasksSearchQuery",
+      "condition_prefix": "Tasks",
+      "condition_type_name": "TasksCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject or title of the task"
+        },
+        {
+          "name": "Due_Date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date for the task"
+        },
+        {
+          "name": "Status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status (e.g., Not Started, In Progress, Completed)"
+        },
+        {
+          "name": "Priority",
+          "python_name": "priority",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Priority level (e.g., High, Highest, Low, Lowest, Normal)"
+        },
+        {
+          "name": "Send_Notification_Email",
+          "python_name": "send_notification_email",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to send a notification email"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the task"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        },
+        {
+          "name": "Closed_Time",
+          "python_name": "closed_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the task was closed"
+        }
+      ]
+    },
+    "events": {
+      "entity": "events",
+      "data_type_name": "EventsSearchData",
+      "filter_type_name": "EventsSearchFilter",
+      "in_filter_type_name": "EventsInFilter",
+      "any_value_filter_type_name": "EventsAnyValueFilter",
+      "string_filter_type_name": "EventsStringFilter",
+      "sort_filter_type_name": "EventsSortFilter",
+      "result_type_name": "EventsSearchResult",
+      "query_type_name": "EventsSearchQuery",
+      "condition_prefix": "Events",
+      "condition_type_name": "EventsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Event_Title",
+          "python_name": "event_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the event"
+        },
+        {
+          "name": "Start_DateTime",
+          "python_name": "start_date_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event start date and time"
+        },
+        {
+          "name": "End_DateTime",
+          "python_name": "end_date_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event end date and time"
+        },
+        {
+          "name": "All_day",
+          "python_name": "all_day",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is an all-day event"
+        },
+        {
+          "name": "Location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event location"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the event"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "calls": {
+      "entity": "calls",
+      "data_type_name": "CallsSearchData",
+      "filter_type_name": "CallsSearchFilter",
+      "in_filter_type_name": "CallsInFilter",
+      "any_value_filter_type_name": "CallsAnyValueFilter",
+      "string_filter_type_name": "CallsStringFilter",
+      "sort_filter_type_name": "CallsSortFilter",
+      "result_type_name": "CallsSearchResult",
+      "query_type_name": "CallsSearchQuery",
+      "condition_prefix": "Calls",
+      "condition_type_name": "CallsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject of the call"
+        },
+        {
+          "name": "Call_Type",
+          "python_name": "call_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of call (Inbound or Outbound)"
+        },
+        {
+          "name": "Call_Start_Time",
+          "python_name": "call_start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start time of the call"
+        },
+        {
+          "name": "Call_Duration",
+          "python_name": "call_duration",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Duration of the call as a formatted string"
+        },
+        {
+          "name": "Call_Duration_in_seconds",
+          "python_name": "call_duration_in_seconds",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Duration of the call in seconds"
+        },
+        {
+          "name": "Call_Purpose",
+          "python_name": "call_purpose",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Purpose of the call"
+        },
+        {
+          "name": "Call_Result",
+          "python_name": "call_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Result or outcome of the call"
+        },
+        {
+          "name": "Caller_ID",
+          "python_name": "caller_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Caller ID number"
+        },
+        {
+          "name": "Outgoing_Call_Status",
+          "python_name": "outgoing_call_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of outgoing calls"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the call"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "products": {
+      "entity": "products",
+      "data_type_name": "ProductsSearchData",
+      "filter_type_name": "ProductsSearchFilter",
+      "in_filter_type_name": "ProductsInFilter",
+      "any_value_filter_type_name": "ProductsAnyValueFilter",
+      "string_filter_type_name": "ProductsStringFilter",
+      "sort_filter_type_name": "ProductsSortFilter",
+      "result_type_name": "ProductsSearchResult",
+      "query_type_name": "ProductsSearchQuery",
+      "condition_prefix": "Products",
+      "condition_type_name": "ProductsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Product_Name",
+          "python_name": "product_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the product"
+        },
+        {
+          "name": "Product_Code",
+          "python_name": "product_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product code or SKU"
+        },
+        {
+          "name": "Product_Category",
+          "python_name": "product_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category of the product"
+        },
+        {
+          "name": "Product_Active",
+          "python_name": "product_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the product is active"
+        },
+        {
+          "name": "Unit_Price",
+          "python_name": "unit_price",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Unit price of the product"
+        },
+        {
+          "name": "Commission_Rate",
+          "python_name": "commission_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Commission rate for the product"
+        },
+        {
+          "name": "Manufacturer",
+          "python_name": "manufacturer",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product manufacturer"
+        },
+        {
+          "name": "Sales_Start_Date",
+          "python_name": "sales_start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date when sales begin"
+        },
+        {
+          "name": "Sales_End_Date",
+          "python_name": "sales_end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date when sales end"
+        },
+        {
+          "name": "Qty_in_Stock",
+          "python_name": "qty_in_stock",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Quantity currently in stock"
+        },
+        {
+          "name": "Qty_in_Demand",
+          "python_name": "qty_in_demand",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Quantity in demand"
+        },
+        {
+          "name": "Qty_Ordered",
+          "python_name": "qty_ordered",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Quantity on order"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the product"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "quotes": {
+      "entity": "quotes",
+      "data_type_name": "QuotesSearchData",
+      "filter_type_name": "QuotesSearchFilter",
+      "in_filter_type_name": "QuotesInFilter",
+      "any_value_filter_type_name": "QuotesAnyValueFilter",
+      "string_filter_type_name": "QuotesStringFilter",
+      "sort_filter_type_name": "QuotesSortFilter",
+      "result_type_name": "QuotesSearchResult",
+      "query_type_name": "QuotesSearchQuery",
+      "condition_prefix": "Quotes",
+      "condition_type_name": "QuotesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject or title of the quote"
+        },
+        {
+          "name": "Quote_Stage",
+          "python_name": "quote_stage",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current stage of the quote"
+        },
+        {
+          "name": "Valid_Till",
+          "python_name": "valid_till",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date until which the quote is valid"
+        },
+        {
+          "name": "Carrier",
+          "python_name": "carrier",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping carrier"
+        },
+        {
+          "name": "Sub_Total",
+          "python_name": "sub_total",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Subtotal before tax and adjustments"
+        },
+        {
+          "name": "Tax",
+          "python_name": "tax",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Tax amount"
+        },
+        {
+          "name": "Adjustment",
+          "python_name": "adjustment",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Adjustment amount"
+        },
+        {
+          "name": "Grand_Total",
+          "python_name": "grand_total",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total amount including tax and adjustments"
+        },
+        {
+          "name": "Discount",
+          "python_name": "discount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Discount amount"
+        },
+        {
+          "name": "Terms_and_Conditions",
+          "python_name": "terms_and_conditions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Terms and conditions text"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the quote"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    },
+    "invoices": {
+      "entity": "invoices",
+      "data_type_name": "InvoicesSearchData",
+      "filter_type_name": "InvoicesSearchFilter",
+      "in_filter_type_name": "InvoicesInFilter",
+      "any_value_filter_type_name": "InvoicesAnyValueFilter",
+      "string_filter_type_name": "InvoicesStringFilter",
+      "sort_filter_type_name": "InvoicesSortFilter",
+      "result_type_name": "InvoicesSearchResult",
+      "query_type_name": "InvoicesSearchQuery",
+      "condition_prefix": "Invoices",
+      "condition_type_name": "InvoicesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique record identifier"
+        },
+        {
+          "name": "Subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject or title of the invoice"
+        },
+        {
+          "name": "Invoice_Number",
+          "python_name": "invoice_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Invoice number"
+        },
+        {
+          "name": "Invoice_Date",
+          "python_name": "invoice_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date the invoice was issued"
+        },
+        {
+          "name": "Due_Date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment due date"
+        },
+        {
+          "name": "Status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the invoice"
+        },
+        {
+          "name": "Purchase_Order",
+          "python_name": "purchase_order",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated purchase order number"
+        },
+        {
+          "name": "Sub_Total",
+          "python_name": "sub_total",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Subtotal before tax and adjustments"
+        },
+        {
+          "name": "Tax",
+          "python_name": "tax",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Tax amount"
+        },
+        {
+          "name": "Adjustment",
+          "python_name": "adjustment",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Adjustment amount"
+        },
+        {
+          "name": "Grand_Total",
+          "python_name": "grand_total",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total amount including tax and adjustments"
+        },
+        {
+          "name": "Discount",
+          "python_name": "discount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Discount amount"
+        },
+        {
+          "name": "Excise_Duty",
+          "python_name": "excise_duty",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Excise duty amount"
+        },
+        {
+          "name": "Terms_and_Conditions",
+          "python_name": "terms_and_conditions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Terms and conditions text"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description or notes about the invoice"
+        },
+        {
+          "name": "Created_Time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was created"
+        },
+        {
+          "name": "Modified_Time",
+          "python_name": "modified_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time the record was last modified"
+        }
+      ]
+    }
+  }
+}

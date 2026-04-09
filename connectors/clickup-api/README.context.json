@@ -1,0 +1,1092 @@
+{
+  "connector_name": "clickup-api",
+  "class_name": "ClickupApiConnector",
+  "package_name": "airbyte_agent_clickup_api",
+  "package_version": "0.1.5",
+  "yaml_version": "0.1.5",
+  "api_reference_url": "https://developer.clickup.com/reference",
+  "commit_sha": "unknown",
+  "auth_example": "ClickupApiAuthConfig(api_key=\"...\")",
+  "auth_import": ", ClickupApiAuthConfig",
+  "auth_config": {
+    "type_name": "ClickupApiAuthConfig",
+    "base_name": "ClickupApi",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your ClickUp personal API token"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "ClickUp is a productivity platform that provides project management, task tracking, docs, goals,\nand time tracking for teams. This connector provides access to workspaces, spaces, folders, lists,\ntasks (including workspace-wide search), comments, goals, views, time tracking, members, and docs.\n",
+  "supported_questions": "- List all workspaces I have access to\n- Show me the spaces in my workspace\n- List the folders in a space\n- Show me the lists in a folder\n- Get the tasks in a list\n- Get details for a specific task\n- Search for tasks containing 'bug' across my workspace\n- Find all urgent priority tasks in my workspace\n- Show me tasks assigned to a specific user\n- List comments on a task\n- Get threaded replies on a comment\n- Create a comment on a task\n- Update a comment to mark it resolved\n- List all goals in my workspace\n- Get details for a specific goal\n- Show me all workspace-level views\n- Get tasks matching a saved view\n- List time entries for my workspace this week\n- Get details for a specific time entry\n- Show me the members assigned to a task\n- List all docs in my workspace\n- Get details for a specific doc\n- What tasks are overdue in my workspace?\n- Which tasks were updated in the last 24 hours?\n- Show me all high-priority tasks across all projects\n- How much time has been tracked this week?\n- What are the most commented tasks?",
+  "unsupported_questions": "- Delete a task\n- Delete a comment\n- Delete a goal",
+  "first_operation": {
+    "method_name": "get_authorized_user",
+    "http_method": "get",
+    "path": "/api/v2/user",
+    "entity": "user",
+    "action": "get",
+    "parameters": [],
+    "params_type_name": "UserGetParams",
+    "response_type": "User",
+    "description": "View the details of the authenticated user's ClickUp account",
+    "record_extractor": "$.user",
+    "meta_extractor": null,
+    "needs_envelope": null,
+    "record_type": "User",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "user": [
+      {
+        "method_name": "get_authorized_user",
+        "http_method": "get",
+        "path": "/api/v2/user",
+        "entity": "user",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "UserGetParams",
+        "response_type": "User",
+        "description": "View the details of the authenticated user's ClickUp account",
+        "record_extractor": "$.user",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "get",
+        "path": "/api/v2/team",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Get the workspaces (teams) available to the authenticated user",
+        "record_extractor": "$.teams",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Team]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "spaces": [
+      {
+        "method_name": "list_spaces",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/space",
+        "entity": "spaces",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          }
+        ],
+        "params_type_name": "SpacesListParams",
+        "response_type": "SpacesListResult",
+        "description": "Get the spaces available in a workspace",
+        "record_extractor": "$.spaces",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Space]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_space",
+        "http_method": "get",
+        "path": "/api/v2/space/{space_id}",
+        "entity": "spaces",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "space_id",
+            "python_name": "space_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the space"
+          }
+        ],
+        "params_type_name": "SpacesGetParams",
+        "response_type": "Space",
+        "description": "Get a single space by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Space",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "folders": [
+      {
+        "method_name": "list_folders",
+        "http_method": "get",
+        "path": "/api/v2/space/{space_id}/folder",
+        "entity": "folders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "space_id",
+            "python_name": "space_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the space"
+          }
+        ],
+        "params_type_name": "FoldersListParams",
+        "response_type": "FoldersListResult",
+        "description": "Get the folders in a space",
+        "record_extractor": "$.folders",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Folder]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_folder",
+        "http_method": "get",
+        "path": "/api/v2/folder/{folder_id}",
+        "entity": "folders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "folder_id",
+            "python_name": "folder_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the folder"
+          }
+        ],
+        "params_type_name": "FoldersGetParams",
+        "response_type": "Folder",
+        "description": "Get a single folder by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Folder",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "lists": [
+      {
+        "method_name": "list_lists",
+        "http_method": "get",
+        "path": "/api/v2/folder/{folder_id}/list",
+        "entity": "lists",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "folder_id",
+            "python_name": "folder_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the folder"
+          }
+        ],
+        "params_type_name": "ListsListParams",
+        "response_type": "ListsListResult",
+        "description": "Get the lists in a folder",
+        "record_extractor": "$.lists",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[List]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_list",
+        "http_method": "get",
+        "path": "/api/v2/list/{list_id}",
+        "entity": "lists",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "list_id",
+            "python_name": "list_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the list"
+          }
+        ],
+        "params_type_name": "ListsGetParams",
+        "response_type": "List",
+        "description": "Get a single list by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "List",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/api/v2/list/{list_id}/task",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "list_id",
+            "python_name": "list_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the list"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "required": null,
+            "description": "Page number (0-indexed)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Get the tasks in a list",
+        "record_extractor": "$.tasks",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/api/v2/task/{task_id}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "task_id",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the task"
+          },
+          {
+            "name": "custom_task_ids",
+            "python_name": "custom_task_ids",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Set to true to use a custom task ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "include_subtasks",
+            "python_name": "include_subtasks",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Include subtasks",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "Task",
+        "description": "Get a single task by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_tasks",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/task",
+        "entity": "tasks",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The workspace ID to search within"
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Free-text search across task name, description, and custom field text",
+            "is_deep_object": false
+          },
+          {
+            "name": "statuses[]",
+            "python_name": "statuses",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": null,
+            "description": "Filter by status names (e.g. \"in progress\", \"done\")",
+            "is_deep_object": false
+          },
+          {
+            "name": "assignees[]",
+            "python_name": "assignees",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": null,
+            "description": "Filter by user IDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "tags[]",
+            "python_name": "tags",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": null,
+            "description": "Filter by tag names",
+            "is_deep_object": false
+          },
+          {
+            "name": "priority",
+            "python_name": "priority",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by priority: 1=Urgent, 2=High, 3=Normal, 4=Low",
+            "is_deep_object": false
+          },
+          {
+            "name": "due_date_gt",
+            "python_name": "due_date_gt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Due date after (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "due_date_lt",
+            "python_name": "due_date_lt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Due date before (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "date_created_gt",
+            "python_name": "date_created_gt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Created after (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "date_created_lt",
+            "python_name": "date_created_lt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Created before (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "date_updated_gt",
+            "python_name": "date_updated_gt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Updated after (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "date_updated_lt",
+            "python_name": "date_updated_lt",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Updated before (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "custom_fields",
+            "python_name": "custom_fields",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "required": null,
+            "description": "JSON array of custom field filters. Each object: {\"field_id\": \"<UUID>\", \"operator\": \"<OP>\", \"value\": \"<DATA>\"}.\nOperators: = (contains), == (exact), <, <=, >, >=, !=, !==, IS NULL, IS NOT NULL, RANGE, ANY, ALL, NOT ANY, NOT ALL\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "include_closed",
+            "python_name": "include_closed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Include closed tasks (excluded by default)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "required": null,
+            "description": "Page number (0-indexed), results capped at 100/page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksApiSearchParams",
+        "response_type": "TasksApiSearchResult",
+        "description": "View the tasks that meet specific criteria from a workspace. Supports free-text search\nand structured filters including status, assignee, tags, priority, and date ranges.\nResponses are limited to 100 tasks per page.\n",
+        "record_extractor": "$.tasks",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "comments": [
+      {
+        "method_name": "list_task_comments",
+        "http_method": "get",
+        "path": "/api/v2/task/{task_id}/comment",
+        "entity": "comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_id",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the task"
+          }
+        ],
+        "params_type_name": "CommentsListParams",
+        "response_type": "CommentsListResult",
+        "description": "Get the comments on a task",
+        "record_extractor": "$.comments",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Comment]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_task_comment",
+        "http_method": "post",
+        "path": "/api/v2/task/{task_id}/comment",
+        "entity": "comments",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "comment_text",
+            "python_name": "comment_text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The comment text"
+            },
+            "required": true,
+            "description": "The comment text"
+          },
+          {
+            "name": "assignee",
+            "python_name": "assignee",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "User ID to assign"
+            },
+            "required": false,
+            "description": "User ID to assign"
+          },
+          {
+            "name": "notify_all",
+            "python_name": "notify_all",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Notify all assignees and watchers"
+            },
+            "required": false,
+            "description": "Notify all assignees and watchers"
+          },
+          {
+            "name": "task_id",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the task"
+          }
+        ],
+        "params_type_name": "CommentsCreateParams",
+        "response_type": "CommentCreateResponse",
+        "description": "Create a comment on a task",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CommentCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_threaded_comments",
+        "http_method": "get",
+        "path": "/api/v2/comment/{comment_id}/reply",
+        "entity": "comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the comment"
+          }
+        ],
+        "params_type_name": "CommentsGetParams",
+        "response_type": "list[Comment]",
+        "description": "Get threaded replies on a comment",
+        "record_extractor": "$.comments",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "list[Comment]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_comment",
+        "http_method": "put",
+        "path": "/api/v2/comment/{comment_id}",
+        "entity": "comments",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "comment_text",
+            "python_name": "comment_text",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Updated comment text"
+            },
+            "required": false,
+            "description": "Updated comment text"
+          },
+          {
+            "name": "assignee",
+            "python_name": "assignee",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "User ID to assign"
+            },
+            "required": false,
+            "description": "User ID to assign"
+          },
+          {
+            "name": "resolved",
+            "python_name": "resolved",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the comment is resolved"
+            },
+            "required": false,
+            "description": "Whether the comment is resolved"
+          },
+          {
+            "name": "comment_id",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the comment"
+          }
+        ],
+        "params_type_name": "CommentsUpdateParams",
+        "response_type": "CommentUpdateResponse",
+        "description": "Update an existing comment",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CommentUpdateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "goals": [
+      {
+        "method_name": "list_goals",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/goal",
+        "entity": "goals",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          }
+        ],
+        "params_type_name": "GoalsListParams",
+        "response_type": "GoalsListResult",
+        "description": "Get the goals in a workspace",
+        "record_extractor": "$.goals",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Goal]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_goal",
+        "http_method": "get",
+        "path": "/api/v2/goal/{goal_id}",
+        "entity": "goals",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "python_name": "goal_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the goal"
+          }
+        ],
+        "params_type_name": "GoalsGetParams",
+        "response_type": "Goal",
+        "description": "Get a single goal by ID",
+        "record_extractor": "$.goal",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Goal",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "views": [
+      {
+        "method_name": "list_workspace_views",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/view",
+        "entity": "views",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          }
+        ],
+        "params_type_name": "ViewsListParams",
+        "response_type": "ViewsListResult",
+        "description": "Get the workspace-level (Everything level) views",
+        "record_extractor": "$.views",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[View]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_view",
+        "http_method": "get",
+        "path": "/api/v2/view/{view_id}",
+        "entity": "views",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "view_id",
+            "python_name": "view_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the view"
+          }
+        ],
+        "params_type_name": "ViewsGetParams",
+        "response_type": "View",
+        "description": "Get a single view by ID",
+        "record_extractor": "$.view",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "View",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "view_tasks": [
+      {
+        "method_name": "get_view_tasks",
+        "http_method": "get",
+        "path": "/api/v2/view/{view_id}/task",
+        "entity": "view_tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "view_id",
+            "python_name": "view_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the view"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 0
+            },
+            "required": null,
+            "description": "Page number (0-indexed)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ViewTasksListParams",
+        "response_type": "ViewTasksListResult",
+        "description": "Get tasks matching a view's pre-configured filters \u2014 useful as a secondary search mechanism",
+        "record_extractor": "$.tasks",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "time_tracking": [
+      {
+        "method_name": "list_time_entries",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/time_entries",
+        "entity": "time_tracking",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Start date (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "End date (Unix ms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "assignee",
+            "python_name": "assignee",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by user ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TimeTrackingListParams",
+        "response_type": "TimeTrackingListResult",
+        "description": "Get time entries within a date range for a workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TimeEntry]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_time_entry",
+        "http_method": "get",
+        "path": "/api/v2/team/{team_id}/time_entries/{time_entry_id}",
+        "entity": "time_tracking",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          },
+          {
+            "name": "time_entry_id",
+            "python_name": "time_entry_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the time entry"
+          }
+        ],
+        "params_type_name": "TimeTrackingGetParams",
+        "response_type": "TimeEntry",
+        "description": "Get a single time entry by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TimeEntry",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "members": [
+      {
+        "method_name": "list_task_members",
+        "http_method": "get",
+        "path": "/api/v2/task/{task_id}/member",
+        "entity": "members",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_id",
+            "python_name": "task_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the task"
+          }
+        ],
+        "params_type_name": "MembersListParams",
+        "response_type": "MembersListResult",
+        "description": "Get the members assigned to a task",
+        "record_extractor": "$.members",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Member]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "docs": [
+      {
+        "method_name": "list_docs",
+        "http_method": "get",
+        "path": "/api/v3/workspaces/{workspace_id}/docs",
+        "entity": "docs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          }
+        ],
+        "params_type_name": "DocsListParams",
+        "response_type": "DocsListResult",
+        "description": "Search for docs in a workspace",
+        "record_extractor": "$.docs",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Doc]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_doc",
+        "http_method": "get",
+        "path": "/api/v3/workspaces/{workspace_id}/docs/{doc_id}",
+        "entity": "docs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "workspace_id",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the workspace"
+          },
+          {
+            "name": "doc_id",
+            "python_name": "doc_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the doc"
+          }
+        ],
+        "params_type_name": "DocsGetParams",
+        "response_type": "Doc",
+        "description": "Fetch a single doc by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Doc",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

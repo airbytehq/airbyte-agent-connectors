@@ -1,0 +1,2361 @@
+{
+  "connector_name": "pylon",
+  "class_name": "PylonConnector",
+  "package_name": "airbyte_agent_pylon",
+  "package_version": "0.1.9",
+  "yaml_version": "0.1.9",
+  "api_reference_url": "https://docs.usepylon.com/pylon-docs/developer/api/api-reference",
+  "commit_sha": "unknown",
+  "auth_example": "PylonAuthConfig(api_token=\"...\")",
+  "auth_import": ", PylonAuthConfig",
+  "auth_config": {
+    "type_name": "PylonAuthConfig",
+    "base_name": "Pylon",
+    "options": [
+      {
+        "title": "API Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_token",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "Your Pylon API token. Only admin users can create API tokens."
+          }
+        ],
+        "type_suffix": "ApiTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Pylon is a customer support platform that helps B2B companies manage customer interactions\nacross Slack, email, chat widgets, and other channels. This connector provides access to\nissues, accounts, contacts, teams, tags, users, custom fields, ticket forms, and user roles\nfor customer support analytics and account intelligence insights.\n",
+  "supported_questions": "- List all open issues in Pylon\n- Show me all accounts in Pylon\n- List all contacts in Pylon\n- What teams are configured in my Pylon workspace?\n- Show me all tags used in Pylon\n- List all users in my Pylon account\n- Show me the custom fields configured for issues\n- List all ticket forms in Pylon\n- What user roles are available in Pylon?\n- Show me details for a specific issue\n- Get details for a specific account\n- Show me details for a specific contact\n- What are the most common issue sources this month?\n- Show me issues assigned to a specific team\n- Which accounts have the most open issues?\n- Analyze issue resolution times over the last 30 days\n- List contacts associated with a specific account",
+  "unsupported_questions": "- Delete an issue\n- Delete an account\n- Send a message to a customer\n- Schedule a meeting with a contact",
+  "first_operation": {
+    "method_name": "list_issues",
+    "http_method": "get",
+    "path": "/issues",
+    "entity": "issues",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "start_time",
+        "python_name": "start_time",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": true,
+        "description": "The start time (RFC3339) of the time range to get issues for.",
+        "is_deep_object": false
+      },
+      {
+        "name": "end_time",
+        "python_name": "end_time",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": true,
+        "description": "The end time (RFC3339) of the time range to get issues for.",
+        "is_deep_object": false
+      },
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "IssuesListParams",
+    "response_type": "IssuesListResult",
+    "description": "Get a list of issues within a time range",
+    "record_extractor": "$.data",
+    "meta_extractor": {
+      "next_cursor": "$.pagination.cursor",
+      "has_next_page": "$.pagination.has_next_page"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Issue]",
+    "meta_fields": [
+      {
+        "name": "next_cursor",
+        "python_name": "next_cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The cursor for the next page of results"
+        }
+      },
+      {
+        "name": "has_next_page",
+        "python_name": "has_next_page",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "description": "Indicates if there is a next page of results"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "issues": [
+      {
+        "method_name": "list_issues",
+        "http_method": "get",
+        "path": "/issues",
+        "entity": "issues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": "The start time (RFC3339) of the time range to get issues for.",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_time",
+            "python_name": "end_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": "The end time (RFC3339) of the time range to get issues for.",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesListParams",
+        "response_type": "IssuesListResult",
+        "description": "Get a list of issues within a time range",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Issue]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_issue",
+        "http_method": "post",
+        "path": "/issues",
+        "entity": "issues",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the issue"
+            },
+            "required": true,
+            "description": "The title of the issue"
+          },
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML content of the body of the issue"
+            },
+            "required": true,
+            "description": "The HTML content of the body of the issue"
+          },
+          {
+            "name": "priority",
+            "python_name": "priority",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The priority of the issue (urgent, high, medium, low)"
+            },
+            "required": false,
+            "description": "The priority of the issue (urgent, high, medium, low)"
+          },
+          {
+            "name": "requester_email",
+            "python_name": "requester_email",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The email of the requester"
+            },
+            "required": false,
+            "description": "The email of the requester"
+          },
+          {
+            "name": "requester_name",
+            "python_name": "requester_name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The full name of the requester"
+            },
+            "required": false,
+            "description": "The full name of the requester"
+          },
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The account that this issue belongs to"
+            },
+            "required": false,
+            "description": "The account that this issue belongs to"
+          },
+          {
+            "name": "assignee_id",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The user the issue should be assigned to"
+            },
+            "required": false,
+            "description": "The user the issue should be assigned to"
+          },
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the team this issue should be assigned to"
+            },
+            "required": false,
+            "description": "The ID of the team this issue should be assigned to"
+          },
+          {
+            "name": "tags",
+            "python_name": "tags",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Tags to associate with the issue"
+            },
+            "required": false,
+            "description": "Tags to associate with the issue"
+          }
+        ],
+        "params_type_name": "IssuesCreateParams",
+        "response_type": "IssueResponse",
+        "description": "Create a new issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue",
+        "http_method": "get",
+        "path": "/issues/{id}",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue"
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "Issue",
+        "description": "Get a single issue by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_issue",
+        "http_method": "patch",
+        "path": "/issues/{id}",
+        "entity": "issues",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The state of the issue (open, snoozed, closed)"
+            },
+            "required": false,
+            "description": "The state of the issue (open, snoozed, closed)"
+          },
+          {
+            "name": "assignee_id",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The user the issue should be assigned to"
+            },
+            "required": false,
+            "description": "The user the issue should be assigned to"
+          },
+          {
+            "name": "team_id",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the team this issue should be assigned to"
+            },
+            "required": false,
+            "description": "The ID of the team this issue should be assigned to"
+          },
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The account that this issue belongs to"
+            },
+            "required": false,
+            "description": "The account that this issue belongs to"
+          },
+          {
+            "name": "tags",
+            "python_name": "tags",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Tags to associate with the issue"
+            },
+            "required": false,
+            "description": "Tags to associate with the issue"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to update"
+          }
+        ],
+        "params_type_name": "IssuesUpdateParams",
+        "response_type": "IssueResponse",
+        "description": "Update an existing issue by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages": [
+      {
+        "method_name": "list_issue_messages",
+        "http_method": "get",
+        "path": "/issues/{id}/messages",
+        "entity": "messages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to fetch messages for"
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MessagesListParams",
+        "response_type": "MessagesListResult",
+        "description": "Returns all messages on an issue (customer-facing replies and internal notes)",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Message]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "issue_notes": [
+      {
+        "method_name": "create_issue_note",
+        "http_method": "post",
+        "path": "/issues/{id}/note",
+        "entity": "issue_notes",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML content of the note"
+            },
+            "required": true,
+            "description": "The HTML content of the note"
+          },
+          {
+            "name": "thread_id",
+            "python_name": "thread_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the thread to add the note to"
+            },
+            "required": false,
+            "description": "The ID of the thread to add the note to"
+          },
+          {
+            "name": "message_id",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the message to add the note to"
+            },
+            "required": false,
+            "description": "The ID of the message to add the note to"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to add a note to"
+          }
+        ],
+        "params_type_name": "IssueNotesCreateParams",
+        "response_type": "IssueNoteResponse",
+        "description": "Create an internal note on an issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueNoteResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_threads": [
+      {
+        "method_name": "create_issue_thread",
+        "http_method": "post",
+        "path": "/issues/{id}/threads",
+        "entity": "issue_threads",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the thread"
+            },
+            "required": false,
+            "description": "The name of the thread"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to create a thread on"
+          }
+        ],
+        "params_type_name": "IssueThreadsCreateParams",
+        "response_type": "IssueThreadResponse",
+        "description": "Create a new thread on an issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueThreadResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "get",
+        "path": "/accounts",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Get a list of accounts",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_account",
+        "http_method": "post",
+        "path": "/accounts",
+        "entity": "accounts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the account"
+            },
+            "required": true,
+            "description": "The name of the account"
+          },
+          {
+            "name": "domains",
+            "python_name": "domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The domains of the account (e.g. stripe.com)"
+            },
+            "required": false,
+            "description": "The domains of the account (e.g. stripe.com)"
+          },
+          {
+            "name": "primary_domain",
+            "python_name": "primary_domain",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Must be in the list of domains. If there are any domains, there must be exactly one primary domain."
+            },
+            "required": false,
+            "description": "Must be in the list of domains. If there are any domains, there must be exactly one primary domain."
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the owner of the account"
+            },
+            "required": false,
+            "description": "The ID of the owner of the account"
+          },
+          {
+            "name": "logo_url",
+            "python_name": "logo_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The logo URL of the account. Must be a square .png, .jpg or .jpeg."
+            },
+            "required": false,
+            "description": "The logo URL of the account. Must be a square .png, .jpg or .jpeg."
+          },
+          {
+            "name": "tags",
+            "python_name": "tags",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Tags to associate with the account"
+            },
+            "required": false,
+            "description": "Tags to associate with the account"
+          }
+        ],
+        "params_type_name": "AccountsCreateParams",
+        "response_type": "AccountResponse",
+        "description": "Create a new account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AccountResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/accounts/{id}",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the account"
+          }
+        ],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "Account",
+        "description": "Get a single account by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_account",
+        "http_method": "patch",
+        "path": "/accounts/{id}",
+        "entity": "accounts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the account"
+            },
+            "required": false,
+            "description": "The name of the account"
+          },
+          {
+            "name": "domains",
+            "python_name": "domains",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Domains of the account. Must specify one domain as primary."
+            },
+            "required": false,
+            "description": "Domains of the account. Must specify one domain as primary."
+          },
+          {
+            "name": "primary_domain",
+            "python_name": "primary_domain",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Must be in the list of domains. If there are any domains, there must be exactly one primary domain."
+            },
+            "required": false,
+            "description": "Must be in the list of domains. If there are any domains, there must be exactly one primary domain."
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the owner of the account. If empty string is passed in, the owner will be removed."
+            },
+            "required": false,
+            "description": "The ID of the owner of the account. If empty string is passed in, the owner will be removed."
+          },
+          {
+            "name": "logo_url",
+            "python_name": "logo_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Logo URL of the account"
+            },
+            "required": false,
+            "description": "Logo URL of the account"
+          },
+          {
+            "name": "is_disabled",
+            "python_name": "is_disabled",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the account is disabled"
+            },
+            "required": false,
+            "description": "Whether the account is disabled"
+          },
+          {
+            "name": "tags",
+            "python_name": "tags",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Tags to associate with the account"
+            },
+            "required": false,
+            "description": "Tags to associate with the account"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the account to update"
+          }
+        ],
+        "params_type_name": "AccountsUpdateParams",
+        "response_type": "AccountResponse",
+        "description": "Update an existing account by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AccountResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Get a list of contacts",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_contact",
+        "http_method": "post",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the contact"
+            },
+            "required": true,
+            "description": "The name of the contact"
+          },
+          {
+            "name": "email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The email address of the contact"
+            },
+            "required": false,
+            "description": "The email address of the contact"
+          },
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the account to associate this contact with"
+            },
+            "required": false,
+            "description": "The ID of the account to associate this contact with"
+          },
+          {
+            "name": "avatar_url",
+            "python_name": "avatar_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL of the contact's avatar"
+            },
+            "required": false,
+            "description": "The URL of the contact's avatar"
+          }
+        ],
+        "params_type_name": "ContactsCreateParams",
+        "response_type": "ContactResponse",
+        "description": "Create a new contact",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ContactResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the contact"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_contact",
+        "http_method": "patch",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the contact"
+            },
+            "required": false,
+            "description": "The name of the contact"
+          },
+          {
+            "name": "email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The email address of the contact"
+            },
+            "required": false,
+            "description": "The email address of the contact"
+          },
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the account to associate this contact with"
+            },
+            "required": false,
+            "description": "The ID of the account to associate this contact with"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the contact to update"
+          }
+        ],
+        "params_type_name": "ContactsUpdateParams",
+        "response_type": "ContactResponse",
+        "description": "Update an existing contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ContactResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "get",
+        "path": "/teams",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Get a list of teams",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Team]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_team",
+        "http_method": "post",
+        "path": "/teams",
+        "entity": "teams",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the team"
+            },
+            "required": false,
+            "description": "The name of the team"
+          }
+        ],
+        "params_type_name": "TeamsCreateParams",
+        "response_type": "TeamResponse",
+        "description": "Create a new team",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TeamResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_team",
+        "http_method": "get",
+        "path": "/teams/{id}",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the team"
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "Team",
+        "description": "Get a single team by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Team",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_team",
+        "http_method": "patch",
+        "path": "/teams/{id}",
+        "entity": "teams",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the team"
+            },
+            "required": false,
+            "description": "The name of the team"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the team to update"
+          }
+        ],
+        "params_type_name": "TeamsUpdateParams",
+        "response_type": "TeamResponse",
+        "description": "Update an existing team by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TeamResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "list_tags",
+        "http_method": "get",
+        "path": "/tags",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Get all tags",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Tag]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_tag",
+        "http_method": "post",
+        "path": "/tags",
+        "entity": "tags",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "value",
+            "python_name": "value",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The tag value"
+            },
+            "required": true,
+            "description": "The tag value"
+          },
+          {
+            "name": "object_type",
+            "python_name": "object_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The object type (issue, account, contact)"
+            },
+            "required": true,
+            "description": "The object type (issue, account, contact)"
+          },
+          {
+            "name": "hex_color",
+            "python_name": "hex_color",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The hex color code of the tag"
+            },
+            "required": false,
+            "description": "The hex color code of the tag"
+          }
+        ],
+        "params_type_name": "TagsCreateParams",
+        "response_type": "TagResponse",
+        "description": "Create a new tag",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TagResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_tag",
+        "http_method": "get",
+        "path": "/tags/{id}",
+        "entity": "tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the tag"
+          }
+        ],
+        "params_type_name": "TagsGetParams",
+        "response_type": "Tag",
+        "description": "Get a tag by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_tag",
+        "http_method": "patch",
+        "path": "/tags/{id}",
+        "entity": "tags",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "value",
+            "python_name": "value",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The tag value"
+            },
+            "required": false,
+            "description": "The tag value"
+          },
+          {
+            "name": "hex_color",
+            "python_name": "hex_color",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The hex color code of the tag"
+            },
+            "required": false,
+            "description": "The hex color code of the tag"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the tag to update"
+          }
+        ],
+        "params_type_name": "TagsUpdateParams",
+        "response_type": "TagResponse",
+        "description": "Update an existing tag by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TagResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Get a list of users",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the user"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "custom_fields": [
+      {
+        "method_name": "list_custom_fields",
+        "http_method": "get",
+        "path": "/custom-fields",
+        "entity": "custom_fields",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "object_type",
+            "python_name": "object_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "account",
+                "issue",
+                "contact"
+              ]
+            },
+            "required": true,
+            "description": "The object type of the custom fields. Can be \"account\", \"issue\", or \"contact\".",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomFieldsListParams",
+        "response_type": "CustomFieldsListResult",
+        "description": "Get all custom fields for a given object type",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CustomField]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_custom_field",
+        "http_method": "get",
+        "path": "/custom-fields/{id}",
+        "entity": "custom_fields",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the custom field"
+          }
+        ],
+        "params_type_name": "CustomFieldsGetParams",
+        "response_type": "CustomField",
+        "description": "Get a custom field by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomField",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ticket_forms": [
+      {
+        "method_name": "list_ticket_forms",
+        "http_method": "get",
+        "path": "/ticket-forms",
+        "entity": "ticket_forms",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TicketFormsListParams",
+        "response_type": "TicketFormsListResult",
+        "description": "Get a list of ticket forms",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TicketForm]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "user_roles": [
+      {
+        "method_name": "list_user_roles",
+        "http_method": "get",
+        "path": "/user-roles",
+        "entity": "user_roles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UserRolesListParams",
+        "response_type": "UserRolesListResult",
+        "description": "Get a list of all user roles",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_cursor": "$.pagination.cursor",
+          "has_next_page": "$.pagination.has_next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserRole]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "The cursor for the next page of results"
+            }
+          },
+          {
+            "name": "has_next_page",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Indicates if there is a next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "create_task",
+        "http_method": "post",
+        "path": "/tasks",
+        "entity": "tasks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the task"
+            },
+            "required": true,
+            "description": "The title of the task"
+          },
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The body HTML of the task"
+            },
+            "required": false,
+            "description": "The body HTML of the task"
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The status of the task (not_started, in_progress, completed)"
+            },
+            "required": false,
+            "description": "The status of the task (not_started, in_progress, completed)"
+          },
+          {
+            "name": "assignee_id",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The assignee ID for the task"
+            },
+            "required": false,
+            "description": "The assignee ID for the task"
+          },
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The project ID for the task"
+            },
+            "required": false,
+            "description": "The project ID for the task"
+          },
+          {
+            "name": "milestone_id",
+            "python_name": "milestone_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The milestone ID for the task"
+            },
+            "required": false,
+            "description": "The milestone ID for the task"
+          },
+          {
+            "name": "due_date",
+            "python_name": "due_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The due date for the task (RFC3339)"
+            },
+            "required": false,
+            "description": "The due date for the task (RFC3339)"
+          }
+        ],
+        "params_type_name": "TasksCreateParams",
+        "response_type": "TaskResponse",
+        "description": "Create a new task",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TaskResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_task",
+        "http_method": "patch",
+        "path": "/tasks/{id}",
+        "entity": "tasks",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the task"
+            },
+            "required": false,
+            "description": "The title of the task"
+          },
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The body HTML of the task"
+            },
+            "required": false,
+            "description": "The body HTML of the task"
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The status of the task (not_started, in_progress, completed)"
+            },
+            "required": false,
+            "description": "The status of the task (not_started, in_progress, completed)"
+          },
+          {
+            "name": "assignee_id",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The assignee ID for the task"
+            },
+            "required": false,
+            "description": "The assignee ID for the task"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the task to update"
+          }
+        ],
+        "params_type_name": "TasksUpdateParams",
+        "response_type": "TaskResponse",
+        "description": "Update an existing task by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TaskResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "create_project",
+        "http_method": "post",
+        "path": "/projects",
+        "entity": "projects",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the project"
+            },
+            "required": true,
+            "description": "The name of the project"
+          },
+          {
+            "name": "account_id",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The account ID for the project"
+            },
+            "required": true,
+            "description": "The account ID for the project"
+          },
+          {
+            "name": "description_html",
+            "python_name": "description_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML description of the project"
+            },
+            "required": false,
+            "description": "The HTML description of the project"
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The start date of the project (RFC3339)"
+            },
+            "required": false,
+            "description": "The start date of the project (RFC3339)"
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The end date of the project (RFC3339)"
+            },
+            "required": false,
+            "description": "The end date of the project (RFC3339)"
+          }
+        ],
+        "params_type_name": "ProjectsCreateParams",
+        "response_type": "ProjectResponse",
+        "description": "Create a new project",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProjectResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_project",
+        "http_method": "patch",
+        "path": "/projects/{id}",
+        "entity": "projects",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the project"
+            },
+            "required": false,
+            "description": "The name of the project"
+          },
+          {
+            "name": "description_html",
+            "python_name": "description_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML description of the project"
+            },
+            "required": false,
+            "description": "The HTML description of the project"
+          },
+          {
+            "name": "is_archived",
+            "python_name": "is_archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the project is archived"
+            },
+            "required": false,
+            "description": "Whether the project is archived"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the project to update"
+          }
+        ],
+        "params_type_name": "ProjectsUpdateParams",
+        "response_type": "ProjectResponse",
+        "description": "Update an existing project by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProjectResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "milestones": [
+      {
+        "method_name": "create_milestone",
+        "http_method": "post",
+        "path": "/milestones",
+        "entity": "milestones",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the milestone"
+            },
+            "required": true,
+            "description": "The name of the milestone"
+          },
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The project ID for the milestone"
+            },
+            "required": true,
+            "description": "The project ID for the milestone"
+          },
+          {
+            "name": "due_date",
+            "python_name": "due_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The due date of the milestone (RFC3339)"
+            },
+            "required": false,
+            "description": "The due date of the milestone (RFC3339)"
+          }
+        ],
+        "params_type_name": "MilestonesCreateParams",
+        "response_type": "MilestoneResponse",
+        "description": "Create a new milestone",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MilestoneResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_milestone",
+        "http_method": "patch",
+        "path": "/milestones/{id}",
+        "entity": "milestones",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the milestone"
+            },
+            "required": false,
+            "description": "The name of the milestone"
+          },
+          {
+            "name": "due_date",
+            "python_name": "due_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The due date of the milestone (RFC3339)"
+            },
+            "required": false,
+            "description": "The due date of the milestone (RFC3339)"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the milestone to update"
+          }
+        ],
+        "params_type_name": "MilestonesUpdateParams",
+        "response_type": "MilestoneResponse",
+        "description": "Update an existing milestone by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MilestoneResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "articles": [
+      {
+        "method_name": "create_article",
+        "http_method": "post",
+        "path": "/knowledge-bases/{kb_id}/articles",
+        "entity": "articles",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the article"
+            },
+            "required": true,
+            "description": "The title of the article"
+          },
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML body of the article"
+            },
+            "required": true,
+            "description": "The HTML body of the article"
+          },
+          {
+            "name": "author_user_id",
+            "python_name": "author_user_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the user attributed as the author"
+            },
+            "required": true,
+            "description": "The ID of the user attributed as the author"
+          },
+          {
+            "name": "slug",
+            "python_name": "slug",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The slug of the article"
+            },
+            "required": false,
+            "description": "The slug of the article"
+          },
+          {
+            "name": "is_published",
+            "python_name": "is_published",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the article should be published"
+            },
+            "required": false,
+            "description": "Whether the article should be published"
+          },
+          {
+            "name": "kb_id",
+            "python_name": "kb_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the knowledge base"
+          }
+        ],
+        "params_type_name": "ArticlesCreateParams",
+        "response_type": "ArticleResponse",
+        "description": "Create a new article in a knowledge base",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ArticleResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_article",
+        "http_method": "patch",
+        "path": "/knowledge-bases/{kb_id}/articles/{article_id}",
+        "entity": "articles",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the article"
+            },
+            "required": false,
+            "description": "The title of the article"
+          },
+          {
+            "name": "body_html",
+            "python_name": "body_html",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The HTML body of the article"
+            },
+            "required": false,
+            "description": "The HTML body of the article"
+          },
+          {
+            "name": "kb_id",
+            "python_name": "kb_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the knowledge base"
+          },
+          {
+            "name": "article_id",
+            "python_name": "article_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the article to update"
+          }
+        ],
+        "params_type_name": "ArticlesUpdateParams",
+        "response_type": "ArticleResponse",
+        "description": "Update an existing article in a knowledge base",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ArticleResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "collections": [
+      {
+        "method_name": "create_collection",
+        "http_method": "post",
+        "path": "/knowledge-bases/{kb_id}/collections",
+        "entity": "collections",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the collection"
+            },
+            "required": true,
+            "description": "The title of the collection"
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The description of the collection"
+            },
+            "required": false,
+            "description": "The description of the collection"
+          },
+          {
+            "name": "slug",
+            "python_name": "slug",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The slug of the collection"
+            },
+            "required": false,
+            "description": "The slug of the collection"
+          },
+          {
+            "name": "kb_id",
+            "python_name": "kb_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the knowledge base"
+          }
+        ],
+        "params_type_name": "CollectionsCreateParams",
+        "response_type": "CollectionResponse",
+        "description": "Create a new collection in a knowledge base",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CollectionResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "me": [
+      {
+        "method_name": "get_me",
+        "http_method": "get",
+        "path": "/me",
+        "entity": "me",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "MeGetParams",
+        "response_type": "User",
+        "description": "Get the currently authenticated user",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

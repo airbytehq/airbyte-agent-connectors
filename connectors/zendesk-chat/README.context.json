@@ -1,0 +1,1001 @@
+{
+  "connector_name": "zendesk-chat",
+  "class_name": "ZendeskChatConnector",
+  "package_name": "airbyte_agent_zendesk_chat",
+  "package_version": "0.1.10",
+  "yaml_version": "0.1.10",
+  "api_reference_url": "https://developer.zendesk.com/api-reference/live-chat/chat-api/introduction/",
+  "commit_sha": "unknown",
+  "auth_example": "ZendeskChatAuthConfig(access_token=\"...\")",
+  "auth_import": ", ZendeskChatAuthConfig",
+  "auth_config": {
+    "type_name": "ZendeskChatAuthConfig",
+    "base_name": "ZendeskChat",
+    "options": [
+      {
+        "title": "OAuth 2.0 Access Token",
+        "description": "Authenticate using an OAuth 2.0 access token from Zendesk",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Your Zendesk Chat OAuth 2.0 access token"
+          }
+        ],
+        "type_suffix": "Oauth20AccessToken"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "ZendeskChatReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Zendesk Chat.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "The date from which to start replicating data, in the format YYYY-MM-DDT00:00:00Z.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Zendesk Chat enables real-time customer support through live chat. This connector\nprovides access to chat transcripts, agents, departments, shortcuts, triggers,\nand other chat configuration data for analytics and support insights.\n\n## Supported Entities\n- **accounts**: Account information and billing details\n- **agents**: Chat agents with roles and department assignments\n- **agent_timeline**: Agent activity timeline (incremental export)\n- **bans**: Banned visitors (IP and visitor-based)\n- **chats**: Chat transcripts with full conversation history (incremental export)\n- **departments**: Chat departments for routing\n- **goals**: Conversion goals for tracking\n- **roles**: Agent role definitions\n- **routing_settings**: Account-level routing configuration\n- **shortcuts**: Canned responses for agents\n- **skills**: Agent skills for skill-based routing\n- **triggers**: Automated chat triggers\n\n## Rate Limits\nZendesk Chat API uses the `Retry-After` header for rate limit backoff.\nThe connector handles this automatically.\n",
+  "supported_questions": "- List all banned visitors\n- List all departments with their settings\n- Show me all chats from last week\n- List all agents in the support department\n- What are the most used chat shortcuts?\n- Show chat volume by department\n- What triggers are currently active?\n- Show agent activity timeline for today",
+  "unsupported_questions": "- Start a new chat session\n- Send a message to a visitor\n- Create a new agent\n- Update department settings\n- Delete a shortcut",
+  "first_operation": {
+    "method_name": "get_account",
+    "http_method": "get",
+    "path": "/account",
+    "entity": "accounts",
+    "action": "get",
+    "parameters": [],
+    "params_type_name": "AccountsGetParams",
+    "response_type": "Account",
+    "description": "Returns the account information for the authenticated user",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": null,
+    "record_type": "Account",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "accounts": [
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/account",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "Account",
+        "description": "Returns the account information for the authenticated user",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "agents": [
+      {
+        "method_name": "list_agents",
+        "http_method": "get",
+        "path": "/agents",
+        "entity": "agents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AgentsListParams",
+        "response_type": "AgentsListResult",
+        "description": "List all agents",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Agent]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_agent",
+        "http_method": "get",
+        "path": "/agents/{agent_id}",
+        "entity": "agents",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "python_name": "agent_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "AgentsGetParams",
+        "response_type": "Agent",
+        "description": "Get an agent",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Agent",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "agent_timeline": [
+      {
+        "method_name": "list_agent_timeline",
+        "http_method": "get",
+        "path": "/incremental/agent_timeline",
+        "entity": "agent_timeline",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 1000,
+              "maximum": 1000
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "agent_timeline(*)"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AgentTimelineListParams",
+        "response_type": "AgentTimelineListResult",
+        "description": "List agent timeline (incremental export)",
+        "record_extractor": "$.agent_timeline",
+        "meta_extractor": {
+          "next_page": "$.next_page",
+          "count": "$.count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AgentTimeline]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "bans": [
+      {
+        "method_name": "list_bans",
+        "http_method": "get",
+        "path": "/bans",
+        "entity": "bans",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "maximum": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BansListParams",
+        "response_type": "BansListResult",
+        "description": "List all bans",
+        "record_extractor": "$[*][*]",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_ban",
+        "http_method": "get",
+        "path": "/bans/{ban_id}",
+        "entity": "bans",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "ban_id",
+            "python_name": "ban_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "BansGetParams",
+        "response_type": "Ban",
+        "description": "Get a ban",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ban",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "chats": [
+      {
+        "method_name": "list_chats",
+        "http_method": "get",
+        "path": "/incremental/chats",
+        "entity": "chats",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 1000,
+              "maximum": 1000
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "chats(*)"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ChatsListParams",
+        "response_type": "ChatsListResult",
+        "description": "List chats (incremental export)",
+        "record_extractor": "$.chats",
+        "meta_extractor": {
+          "next_page": "$.next_page",
+          "count": "$.count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Chat]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_chat",
+        "http_method": "get",
+        "path": "/chats/{chat_id}",
+        "entity": "chats",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "chat_id",
+            "python_name": "chat_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ChatsGetParams",
+        "response_type": "Chat",
+        "description": "Get a chat",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Chat",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "departments": [
+      {
+        "method_name": "list_departments",
+        "http_method": "get",
+        "path": "/departments",
+        "entity": "departments",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "DepartmentsListParams",
+        "response_type": "DepartmentsListResult",
+        "description": "List all departments",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Department]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_department",
+        "http_method": "get",
+        "path": "/departments/{department_id}",
+        "entity": "departments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "department_id",
+            "python_name": "department_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "DepartmentsGetParams",
+        "response_type": "Department",
+        "description": "Get a department",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Department",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "goals": [
+      {
+        "method_name": "list_goals",
+        "http_method": "get",
+        "path": "/goals",
+        "entity": "goals",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "GoalsListParams",
+        "response_type": "GoalsListResult",
+        "description": "List all goals",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Goal]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_goal",
+        "http_method": "get",
+        "path": "/goals/{goal_id}",
+        "entity": "goals",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "goal_id",
+            "python_name": "goal_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "GoalsGetParams",
+        "response_type": "Goal",
+        "description": "Get a goal",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Goal",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "roles": [
+      {
+        "method_name": "list_roles",
+        "http_method": "get",
+        "path": "/roles",
+        "entity": "roles",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "RolesListParams",
+        "response_type": "RolesListResult",
+        "description": "List all roles",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Role]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_role",
+        "http_method": "get",
+        "path": "/roles/{role_id}",
+        "entity": "roles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "role_id",
+            "python_name": "role_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "RolesGetParams",
+        "response_type": "Role",
+        "description": "Get a role",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Role",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "routing_settings": [
+      {
+        "method_name": "get_routing_settings",
+        "http_method": "get",
+        "path": "/routing_settings/account",
+        "entity": "routing_settings",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "RoutingSettingsGetParams",
+        "response_type": "RoutingSettings",
+        "description": "Get routing settings",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "RoutingSettings",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "shortcuts": [
+      {
+        "method_name": "list_shortcuts",
+        "http_method": "get",
+        "path": "/shortcuts",
+        "entity": "shortcuts",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ShortcutsListParams",
+        "response_type": "ShortcutsListResult",
+        "description": "List all shortcuts",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Shortcut]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_shortcut",
+        "http_method": "get",
+        "path": "/shortcuts/{shortcut_id}",
+        "entity": "shortcuts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "shortcut_id",
+            "python_name": "shortcut_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "ShortcutsGetParams",
+        "response_type": "Shortcut",
+        "description": "Get a shortcut",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Shortcut",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "skills": [
+      {
+        "method_name": "list_skills",
+        "http_method": "get",
+        "path": "/skills",
+        "entity": "skills",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SkillsListParams",
+        "response_type": "SkillsListResult",
+        "description": "List all skills",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Skill]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_skill",
+        "http_method": "get",
+        "path": "/skills/{skill_id}",
+        "entity": "skills",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "skill_id",
+            "python_name": "skill_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": ""
+          }
+        ],
+        "params_type_name": "SkillsGetParams",
+        "response_type": "Skill",
+        "description": "Get a skill",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Skill",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "triggers": [
+      {
+        "method_name": "list_triggers",
+        "http_method": "get",
+        "path": "/triggers",
+        "entity": "triggers",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TriggersListParams",
+        "response_type": "TriggersListResult",
+        "description": "List all triggers",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Trigger]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "agents": {
+      "entity": "agents",
+      "data_type_name": "AgentsSearchData",
+      "filter_type_name": "AgentsSearchFilter",
+      "in_filter_type_name": "AgentsInFilter",
+      "any_value_filter_type_name": "AgentsAnyValueFilter",
+      "string_filter_type_name": "AgentsStringFilter",
+      "sort_filter_type_name": "AgentsSortFilter",
+      "result_type_name": "AgentsSearchResult",
+      "query_type_name": "AgentsSearchQuery",
+      "condition_prefix": "Agents",
+      "condition_type_name": "AgentsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int",
+          "json_type": "integer",
+          "example_value_json": "0",
+          "description": "Unique agent identifier"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent email address"
+        },
+        {
+          "name": "display_name",
+          "python_name": "display_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent display name"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent first name"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent last name"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether agent is enabled"
+        },
+        {
+          "name": "role_id",
+          "python_name": "role_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Agent role ID"
+        },
+        {
+          "name": "departments",
+          "python_name": "departments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Department IDs agent belongs to"
+        },
+        {
+          "name": "create_date",
+          "python_name": "create_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When agent was created"
+        }
+      ]
+    },
+    "chats": {
+      "entity": "chats",
+      "data_type_name": "ChatsSearchData",
+      "filter_type_name": "ChatsSearchFilter",
+      "in_filter_type_name": "ChatsInFilter",
+      "any_value_filter_type_name": "ChatsAnyValueFilter",
+      "string_filter_type_name": "ChatsStringFilter",
+      "sort_filter_type_name": "ChatsSortFilter",
+      "result_type_name": "ChatsSearchResult",
+      "query_type_name": "ChatsSearchQuery",
+      "condition_prefix": "Chats",
+      "condition_type_name": "ChatsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique chat identifier"
+        },
+        {
+          "name": "timestamp",
+          "python_name": "timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Chat start timestamp"
+        },
+        {
+          "name": "update_timestamp",
+          "python_name": "update_timestamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "department_id",
+          "python_name": "department_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Department ID"
+        },
+        {
+          "name": "department_name",
+          "python_name": "department_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Department name"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Chat duration in seconds"
+        },
+        {
+          "name": "rating",
+          "python_name": "rating",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Satisfaction rating"
+        },
+        {
+          "name": "missed",
+          "python_name": "missed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether chat was missed"
+        },
+        {
+          "name": "agent_ids",
+          "python_name": "agent_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of agents in chat"
+        }
+      ]
+    },
+    "departments": {
+      "entity": "departments",
+      "data_type_name": "DepartmentsSearchData",
+      "filter_type_name": "DepartmentsSearchFilter",
+      "in_filter_type_name": "DepartmentsInFilter",
+      "any_value_filter_type_name": "DepartmentsAnyValueFilter",
+      "string_filter_type_name": "DepartmentsStringFilter",
+      "sort_filter_type_name": "DepartmentsSortFilter",
+      "result_type_name": "DepartmentsSearchResult",
+      "query_type_name": "DepartmentsSearchQuery",
+      "condition_prefix": "Departments",
+      "condition_type_name": "DepartmentsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int",
+          "json_type": "integer",
+          "example_value_json": "0",
+          "description": "Department ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Department name"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether department is enabled"
+        },
+        {
+          "name": "members",
+          "python_name": "members",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Agent IDs in department"
+        }
+      ]
+    },
+    "shortcuts": {
+      "entity": "shortcuts",
+      "data_type_name": "ShortcutsSearchData",
+      "filter_type_name": "ShortcutsSearchFilter",
+      "in_filter_type_name": "ShortcutsInFilter",
+      "any_value_filter_type_name": "ShortcutsAnyValueFilter",
+      "string_filter_type_name": "ShortcutsStringFilter",
+      "sort_filter_type_name": "ShortcutsSortFilter",
+      "result_type_name": "ShortcutsSearchResult",
+      "query_type_name": "ShortcutsSearchQuery",
+      "condition_prefix": "Shortcuts",
+      "condition_type_name": "ShortcutsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int",
+          "json_type": "integer",
+          "example_value_json": "0",
+          "description": "Shortcut ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shortcut name/trigger"
+        },
+        {
+          "name": "message",
+          "python_name": "message",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shortcut message content"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tags applied when shortcut is used"
+        }
+      ]
+    },
+    "triggers": {
+      "entity": "triggers",
+      "data_type_name": "TriggersSearchData",
+      "filter_type_name": "TriggersSearchFilter",
+      "in_filter_type_name": "TriggersInFilter",
+      "any_value_filter_type_name": "TriggersAnyValueFilter",
+      "string_filter_type_name": "TriggersStringFilter",
+      "sort_filter_type_name": "TriggersSortFilter",
+      "result_type_name": "TriggersSearchResult",
+      "query_type_name": "TriggersSearchQuery",
+      "condition_prefix": "Triggers",
+      "condition_type_name": "TriggersCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int",
+          "json_type": "integer",
+          "example_value_json": "0",
+          "description": "Trigger ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Trigger name"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether trigger is enabled"
+        }
+      ]
+    }
+  }
+}

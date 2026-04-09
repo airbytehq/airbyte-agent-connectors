@@ -1,0 +1,2295 @@
+{
+  "connector_name": "greenhouse",
+  "class_name": "GreenhouseConnector",
+  "package_name": "airbyte_agent_greenhouse",
+  "package_version": "0.1.8",
+  "yaml_version": "0.1.8",
+  "api_reference_url": "https://developers.greenhouse.io/harvest.html",
+  "commit_sha": "unknown",
+  "auth_example": "GreenhouseAuthConfig(api_key=\"...\")",
+  "auth_import": ", GreenhouseAuthConfig",
+  "auth_config": {
+    "type_name": "GreenhouseAuthConfig",
+    "base_name": "Greenhouse",
+    "options": [
+      {
+        "title": "Harvest API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "Harvest API Key",
+            "description": "Your Greenhouse Harvest API Key from the Dev Center"
+          }
+        ],
+        "type_suffix": "HarvestApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Greenhouse is an applicant tracking system (ATS) that helps companies manage their\nhiring process. This connector provides access to candidates, applications, jobs,\noffers, users, departments, offices, job posts, sources, and scheduled interviews\nfor recruiting analytics and talent acquisition insights.\n",
+  "supported_questions": "- List all open jobs\n- Show me upcoming interviews this week\n- Show me recent job offers\n- List recent applications\n- Show me candidates from {company} who applied last month\n- What are the top 5 sources for our job applications this quarter?\n- Analyze the interview schedules for our engineering candidates this week\n- Compare the number of applications across different offices\n- Identify candidates who have multiple applications in our system\n- Summarize the candidate pipeline for our latest job posting\n- Find the most active departments in recruiting this month",
+  "unsupported_questions": "- Create a new job posting for the marketing team\n- Schedule an interview for {candidate}\n- Update the status of {candidate}'s application\n- Delete a candidate profile\n- Send an offer letter to {candidate}\n- Edit the details of a job description",
+  "first_operation": {
+    "method_name": "list_candidates",
+    "http_method": "get",
+    "path": "/candidates",
+    "entity": "candidates",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 500,
+          "default": 100
+        },
+        "required": null,
+        "description": "Number of items to return per page (max 500)",
+        "is_deep_object": false
+      },
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "CandidatesListParams",
+    "response_type": "CandidatesListResult",
+    "description": "Returns a paginated list of all candidates in the organization",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Candidate]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "candidates": [
+      {
+        "method_name": "list_candidates",
+        "http_method": "get",
+        "path": "/candidates",
+        "entity": "candidates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CandidatesListParams",
+        "response_type": "CandidatesListResult",
+        "description": "Returns a paginated list of all candidates in the organization",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Candidate]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_candidate",
+        "http_method": "get",
+        "path": "/candidates/{id}",
+        "entity": "candidates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Candidate ID"
+          }
+        ],
+        "params_type_name": "CandidatesGetParams",
+        "response_type": "Candidate",
+        "description": "Get a single candidate by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Candidate",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "applications": [
+      {
+        "method_name": "list_applications",
+        "http_method": "get",
+        "path": "/applications",
+        "entity": "applications",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by applications created before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by applications created after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "last_activity_after",
+            "python_name": "last_activity_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by applications with activity after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "job_id",
+            "python_name": "job_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by job ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "rejected",
+                "hired"
+              ]
+            },
+            "required": null,
+            "description": "Filter by application status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ApplicationsListParams",
+        "response_type": "ApplicationsListResult",
+        "description": "Returns a paginated list of all applications",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Application]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_application",
+        "http_method": "get",
+        "path": "/applications/{id}",
+        "entity": "applications",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Application ID"
+          }
+        ],
+        "params_type_name": "ApplicationsGetParams",
+        "response_type": "Application",
+        "description": "Get a single application by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Application",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "jobs": [
+      {
+        "method_name": "list_jobs",
+        "http_method": "get",
+        "path": "/jobs",
+        "entity": "jobs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "JobsListParams",
+        "response_type": "JobsListResult",
+        "description": "Returns a paginated list of all jobs in the organization",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Job]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_job",
+        "http_method": "get",
+        "path": "/jobs/{id}",
+        "entity": "jobs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Job ID"
+          }
+        ],
+        "params_type_name": "JobsGetParams",
+        "response_type": "Job",
+        "description": "Get a single job by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Job",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "offers": [
+      {
+        "method_name": "list_offers",
+        "http_method": "get",
+        "path": "/offers",
+        "entity": "offers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by offers created before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by offers created after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "resolved_after",
+            "python_name": "resolved_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by offers resolved after this timestamp",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OffersListParams",
+        "response_type": "OffersListResult",
+        "description": "Returns a paginated list of all offers",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Offer]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_offer",
+        "http_method": "get",
+        "path": "/offers/{id}",
+        "entity": "offers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Offer ID"
+          }
+        ],
+        "params_type_name": "OffersGetParams",
+        "response_type": "Offer",
+        "description": "Get a single offer by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Offer",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by users created before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by users created after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_before",
+            "python_name": "updated_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by users updated before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_after",
+            "python_name": "updated_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by users updated after this timestamp",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of all users",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "departments": [
+      {
+        "method_name": "list_departments",
+        "http_method": "get",
+        "path": "/departments",
+        "entity": "departments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DepartmentsListParams",
+        "response_type": "DepartmentsListResult",
+        "description": "Returns a paginated list of all departments",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Department]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_department",
+        "http_method": "get",
+        "path": "/departments/{id}",
+        "entity": "departments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Department ID"
+          }
+        ],
+        "params_type_name": "DepartmentsGetParams",
+        "response_type": "Department",
+        "description": "Get a single department by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Department",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "offices": [
+      {
+        "method_name": "list_offices",
+        "http_method": "get",
+        "path": "/offices",
+        "entity": "offices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OfficesListParams",
+        "response_type": "OfficesListResult",
+        "description": "Returns a paginated list of all offices",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Office]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_office",
+        "http_method": "get",
+        "path": "/offices/{id}",
+        "entity": "offices",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Office ID"
+          }
+        ],
+        "params_type_name": "OfficesGetParams",
+        "response_type": "Office",
+        "description": "Get a single office by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Office",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "job_posts": [
+      {
+        "method_name": "list_job_posts",
+        "http_method": "get",
+        "path": "/job_posts",
+        "entity": "job_posts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "live",
+            "python_name": "live",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by live status",
+            "is_deep_object": false
+          },
+          {
+            "name": "active",
+            "python_name": "active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by active status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "JobPostsListParams",
+        "response_type": "JobPostsListResult",
+        "description": "Returns a paginated list of all job posts",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[JobPost]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_job_post",
+        "http_method": "get",
+        "path": "/job_posts/{id}",
+        "entity": "job_posts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Job Post ID"
+          }
+        ],
+        "params_type_name": "JobPostsGetParams",
+        "response_type": "JobPost",
+        "description": "Get a single job post by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "JobPost",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "sources": [
+      {
+        "method_name": "list_sources",
+        "http_method": "get",
+        "path": "/sources",
+        "entity": "sources",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SourcesListParams",
+        "response_type": "SourcesListResult",
+        "description": "Returns a paginated list of all sources",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Source]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "scheduled_interviews": [
+      {
+        "method_name": "list_scheduled_interviews",
+        "http_method": "get",
+        "path": "/scheduled_interviews",
+        "entity": "scheduled_interviews",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page (max 500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews created before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews created after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_before",
+            "python_name": "updated_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews updated before this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_after",
+            "python_name": "updated_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews updated after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "starts_after",
+            "python_name": "starts_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews starting after this timestamp",
+            "is_deep_object": false
+          },
+          {
+            "name": "ends_before",
+            "python_name": "ends_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter by interviews ending before this timestamp",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ScheduledInterviewsListParams",
+        "response_type": "ScheduledInterviewsListResult",
+        "description": "Returns a paginated list of all scheduled interviews",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ScheduledInterview]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_scheduled_interview",
+        "http_method": "get",
+        "path": "/scheduled_interviews/{id}",
+        "entity": "scheduled_interviews",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Scheduled Interview ID"
+          }
+        ],
+        "params_type_name": "ScheduledInterviewsGetParams",
+        "response_type": "ScheduledInterview",
+        "description": "Get a single scheduled interview by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ScheduledInterview",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "application_attachment": [
+      {
+        "method_name": "download_application_attachment",
+        "http_method": "get",
+        "path": "/applications/{id}/attachment:download/{attachment_index}",
+        "entity": "application_attachment",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Application ID"
+          },
+          {
+            "name": "attachment_index",
+            "python_name": "attachment_index",
+            "type": "str",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": true,
+            "description": "Index of the attachment to download (0-based)"
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "ApplicationAttachmentDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads an attachment (resume, cover letter, etc.) for an application by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Application",
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "candidate_attachment": [
+      {
+        "method_name": "download_candidate_attachment",
+        "http_method": "get",
+        "path": "/candidates/{id}/attachment:download/{attachment_index}",
+        "entity": "candidate_attachment",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Candidate ID"
+          },
+          {
+            "name": "attachment_index",
+            "python_name": "attachment_index",
+            "type": "str",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": true,
+            "description": "Index of the attachment to download (0-based)"
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "CandidateAttachmentDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads an attachment (resume, cover letter, etc.) for a candidate by index.\nThe attachment URL is a temporary signed AWS S3 URL that expires within 7 days.\nFiles should be downloaded immediately after retrieval.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Candidate",
+        "meta_fields": null,
+        "is_download": true
+      }
+    ]
+  },
+  "search_schemas": {
+    "applications": {
+      "entity": "applications",
+      "data_type_name": "ApplicationsSearchData",
+      "filter_type_name": "ApplicationsSearchFilter",
+      "in_filter_type_name": "ApplicationsInFilter",
+      "any_value_filter_type_name": "ApplicationsAnyValueFilter",
+      "string_filter_type_name": "ApplicationsStringFilter",
+      "sort_filter_type_name": "ApplicationsSortFilter",
+      "result_type_name": "ApplicationsSearchResult",
+      "query_type_name": "ApplicationsSearchQuery",
+      "condition_prefix": "Applications",
+      "condition_type_name": "ApplicationsCondition",
+      "fields": [
+        {
+          "name": "answers",
+          "python_name": "answers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Answers provided in the application."
+        },
+        {
+          "name": "applied_at",
+          "python_name": "applied_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the candidate applied."
+        },
+        {
+          "name": "attachments",
+          "python_name": "attachments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Attachments uploaded with the application."
+        },
+        {
+          "name": "candidate_id",
+          "python_name": "candidate_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the candidate."
+        },
+        {
+          "name": "credited_to",
+          "python_name": "credited_to",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the employee who credited the application."
+        },
+        {
+          "name": "current_stage",
+          "python_name": "current_stage",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Current stage of the application process."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the application."
+        },
+        {
+          "name": "job_post_id",
+          "python_name": "job_post_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "jobs",
+          "python_name": "jobs",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Jobs applied for by the candidate."
+        },
+        {
+          "name": "last_activity_at",
+          "python_name": "last_activity_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of the last activity on the application."
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Location related to the application."
+        },
+        {
+          "name": "prospect",
+          "python_name": "prospect",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Status of the application prospect."
+        },
+        {
+          "name": "prospect_detail",
+          "python_name": "prospect_detail",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details related to the application prospect."
+        },
+        {
+          "name": "prospective_department",
+          "python_name": "prospective_department",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prospective department for the candidate."
+        },
+        {
+          "name": "prospective_office",
+          "python_name": "prospective_office",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prospective office for the candidate."
+        },
+        {
+          "name": "rejected_at",
+          "python_name": "rejected_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the application was rejected."
+        },
+        {
+          "name": "rejection_details",
+          "python_name": "rejection_details",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details related to the application rejection."
+        },
+        {
+          "name": "rejection_reason",
+          "python_name": "rejection_reason",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Reason for the application rejection."
+        },
+        {
+          "name": "source",
+          "python_name": "source",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Source of the application."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the application."
+        }
+      ]
+    },
+    "candidates": {
+      "entity": "candidates",
+      "data_type_name": "CandidatesSearchData",
+      "filter_type_name": "CandidatesSearchFilter",
+      "in_filter_type_name": "CandidatesInFilter",
+      "any_value_filter_type_name": "CandidatesAnyValueFilter",
+      "string_filter_type_name": "CandidatesStringFilter",
+      "sort_filter_type_name": "CandidatesSortFilter",
+      "result_type_name": "CandidatesSearchResult",
+      "query_type_name": "CandidatesSearchQuery",
+      "condition_prefix": "Candidates",
+      "condition_type_name": "CandidatesCondition",
+      "fields": [
+        {
+          "name": "addresses",
+          "python_name": "addresses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Candidate's addresses"
+        },
+        {
+          "name": "application_ids",
+          "python_name": "application_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of application IDs"
+        },
+        {
+          "name": "applications",
+          "python_name": "applications",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "An array of all applications made by candidates."
+        },
+        {
+          "name": "attachments",
+          "python_name": "attachments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Attachments related to the candidate"
+        },
+        {
+          "name": "can_email",
+          "python_name": "can_email",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if candidate can be emailed"
+        },
+        {
+          "name": "company",
+          "python_name": "company",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Company where the candidate is associated"
+        },
+        {
+          "name": "coordinator",
+          "python_name": "coordinator",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Coordinator assigned to the candidate"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time of creation"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom fields associated with the candidate"
+        },
+        {
+          "name": "educations",
+          "python_name": "educations",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of candidate's educations"
+        },
+        {
+          "name": "email_addresses",
+          "python_name": "email_addresses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Candidate's email addresses"
+        },
+        {
+          "name": "employments",
+          "python_name": "employments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of candidate's employments"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Candidate's first name"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Candidate's ID"
+        },
+        {
+          "name": "is_private",
+          "python_name": "is_private",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the candidate's data is private"
+        },
+        {
+          "name": "keyed_custom_fields",
+          "python_name": "keyed_custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Keyed custom fields associated with the candidate"
+        },
+        {
+          "name": "last_activity",
+          "python_name": "last_activity",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Details of the last activity related to the candidate"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Candidate's last name"
+        },
+        {
+          "name": "phone_numbers",
+          "python_name": "phone_numbers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Candidate's phone numbers"
+        },
+        {
+          "name": "photo_url",
+          "python_name": "photo_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the candidate's profile photo"
+        },
+        {
+          "name": "recruiter",
+          "python_name": "recruiter",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Recruiter assigned to the candidate"
+        },
+        {
+          "name": "social_media_addresses",
+          "python_name": "social_media_addresses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Candidate's social media addresses"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tags associated with the candidate"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Candidate's title (e.g., Mr., Mrs., Dr.)"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time of last update"
+        },
+        {
+          "name": "website_addresses",
+          "python_name": "website_addresses",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of candidate's website addresses"
+        }
+      ]
+    },
+    "departments": {
+      "entity": "departments",
+      "data_type_name": "DepartmentsSearchData",
+      "filter_type_name": "DepartmentsSearchFilter",
+      "in_filter_type_name": "DepartmentsInFilter",
+      "any_value_filter_type_name": "DepartmentsAnyValueFilter",
+      "string_filter_type_name": "DepartmentsStringFilter",
+      "sort_filter_type_name": "DepartmentsSortFilter",
+      "result_type_name": "DepartmentsSearchResult",
+      "query_type_name": "DepartmentsSearchQuery",
+      "condition_prefix": "Departments",
+      "condition_type_name": "DepartmentsCondition",
+      "fields": [
+        {
+          "name": "child_department_external_ids",
+          "python_name": "child_department_external_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "External IDs of child departments associated with this department."
+        },
+        {
+          "name": "child_ids",
+          "python_name": "child_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Unique IDs of child departments associated with this department."
+        },
+        {
+          "name": "external_id",
+          "python_name": "external_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External ID of this department."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique ID of this department."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the department."
+        },
+        {
+          "name": "parent_department_external_id",
+          "python_name": "parent_department_external_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External ID of the parent department of this department."
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique ID of the parent department of this department."
+        }
+      ]
+    },
+    "job_posts": {
+      "entity": "job_posts",
+      "data_type_name": "JobPostsSearchData",
+      "filter_type_name": "JobPostsSearchFilter",
+      "in_filter_type_name": "JobPostsInFilter",
+      "any_value_filter_type_name": "JobPostsAnyValueFilter",
+      "string_filter_type_name": "JobPostsStringFilter",
+      "sort_filter_type_name": "JobPostsSortFilter",
+      "result_type_name": "JobPostsSearchResult",
+      "query_type_name": "JobPostsSearchQuery",
+      "condition_prefix": "JobPosts",
+      "condition_type_name": "JobPostsCondition",
+      "fields": [
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the job post is active or not."
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Content or description of the job post."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the job post was created."
+        },
+        {
+          "name": "demographic_question_set_id",
+          "python_name": "demographic_question_set_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the demographic question set associated with the job post."
+        },
+        {
+          "name": "external",
+          "python_name": "external",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the job post is external or not."
+        },
+        {
+          "name": "first_published_at",
+          "python_name": "first_published_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the job post was first published."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier of the job post."
+        },
+        {
+          "name": "internal",
+          "python_name": "internal",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the job post is internal or not."
+        },
+        {
+          "name": "internal_content",
+          "python_name": "internal_content",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Internal content or description of the job post."
+        },
+        {
+          "name": "job_id",
+          "python_name": "job_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the job associated with the job post."
+        },
+        {
+          "name": "live",
+          "python_name": "live",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the job post is live or not."
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details about the job post location."
+        },
+        {
+          "name": "questions",
+          "python_name": "questions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of questions related to the job post."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title or headline of the job post."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the job post was last updated."
+        }
+      ]
+    },
+    "jobs": {
+      "entity": "jobs",
+      "data_type_name": "JobsSearchData",
+      "filter_type_name": "JobsSearchFilter",
+      "in_filter_type_name": "JobsInFilter",
+      "any_value_filter_type_name": "JobsAnyValueFilter",
+      "string_filter_type_name": "JobsStringFilter",
+      "sort_filter_type_name": "JobsSortFilter",
+      "result_type_name": "JobsSearchResult",
+      "query_type_name": "JobsSearchQuery",
+      "condition_prefix": "Jobs",
+      "condition_type_name": "JobsCondition",
+      "fields": [
+        {
+          "name": "closed_at",
+          "python_name": "closed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time the job was closed"
+        },
+        {
+          "name": "confidential",
+          "python_name": "confidential",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the job details are confidential"
+        },
+        {
+          "name": "copied_from_id",
+          "python_name": "copied_from_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The ID of the job from which this job was copied"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time the job was created"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom fields related to the job"
+        },
+        {
+          "name": "departments",
+          "python_name": "departments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Departments associated with the job"
+        },
+        {
+          "name": "hiring_team",
+          "python_name": "hiring_team",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Members of the hiring team for the job"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique ID of the job"
+        },
+        {
+          "name": "is_template",
+          "python_name": "is_template",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the job is a template"
+        },
+        {
+          "name": "keyed_custom_fields",
+          "python_name": "keyed_custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Keyed custom fields related to the job"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the job"
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional notes or comments about the job"
+        },
+        {
+          "name": "offices",
+          "python_name": "offices",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Offices associated with the job"
+        },
+        {
+          "name": "opened_at",
+          "python_name": "opened_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time the job was opened"
+        },
+        {
+          "name": "openings",
+          "python_name": "openings",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Openings associated with the job"
+        },
+        {
+          "name": "requisition_id",
+          "python_name": "requisition_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID associated with the job requisition"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the job"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time the job was last updated"
+        }
+      ]
+    },
+    "offers": {
+      "entity": "offers",
+      "data_type_name": "OffersSearchData",
+      "filter_type_name": "OffersSearchFilter",
+      "in_filter_type_name": "OffersInFilter",
+      "any_value_filter_type_name": "OffersAnyValueFilter",
+      "string_filter_type_name": "OffersStringFilter",
+      "sort_filter_type_name": "OffersSortFilter",
+      "result_type_name": "OffersSearchResult",
+      "query_type_name": "OffersSearchQuery",
+      "condition_prefix": "Offers",
+      "condition_type_name": "OffersCondition",
+      "fields": [
+        {
+          "name": "application_id",
+          "python_name": "application_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the application associated with the offer"
+        },
+        {
+          "name": "candidate_id",
+          "python_name": "candidate_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the candidate associated with the offer"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the offer was created"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional custom fields related to the offer"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the offer"
+        },
+        {
+          "name": "job_id",
+          "python_name": "job_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the job associated with the offer"
+        },
+        {
+          "name": "keyed_custom_fields",
+          "python_name": "keyed_custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Keyed custom fields associated with the offer"
+        },
+        {
+          "name": "opening",
+          "python_name": "opening",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details about the job opening"
+        },
+        {
+          "name": "resolved_at",
+          "python_name": "resolved_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the offer was resolved"
+        },
+        {
+          "name": "sent_at",
+          "python_name": "sent_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the offer was sent"
+        },
+        {
+          "name": "starts_at",
+          "python_name": "starts_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the offer starts"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the offer"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the offer was last updated"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the offer data"
+        }
+      ]
+    },
+    "offices": {
+      "entity": "offices",
+      "data_type_name": "OfficesSearchData",
+      "filter_type_name": "OfficesSearchFilter",
+      "in_filter_type_name": "OfficesInFilter",
+      "any_value_filter_type_name": "OfficesAnyValueFilter",
+      "string_filter_type_name": "OfficesStringFilter",
+      "sort_filter_type_name": "OfficesSortFilter",
+      "result_type_name": "OfficesSearchResult",
+      "query_type_name": "OfficesSearchQuery",
+      "condition_prefix": "Offices",
+      "condition_type_name": "OfficesCondition",
+      "fields": [
+        {
+          "name": "child_ids",
+          "python_name": "child_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of child offices associated with this office"
+        },
+        {
+          "name": "child_office_external_ids",
+          "python_name": "child_office_external_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "External IDs of child offices associated with this office"
+        },
+        {
+          "name": "external_id",
+          "python_name": "external_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for this office in the external system"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for this office in the API system"
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Location details of this office"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the office"
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the parent office, if this office is a branch office"
+        },
+        {
+          "name": "parent_office_external_id",
+          "python_name": "parent_office_external_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External ID of the parent office in the external system"
+        },
+        {
+          "name": "primary_contact_user_id",
+          "python_name": "primary_contact_user_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "User ID of the primary contact person for this office"
+        }
+      ]
+    },
+    "sources": {
+      "entity": "sources",
+      "data_type_name": "SourcesSearchData",
+      "filter_type_name": "SourcesSearchFilter",
+      "in_filter_type_name": "SourcesInFilter",
+      "any_value_filter_type_name": "SourcesAnyValueFilter",
+      "string_filter_type_name": "SourcesStringFilter",
+      "sort_filter_type_name": "SourcesSortFilter",
+      "result_type_name": "SourcesSearchResult",
+      "query_type_name": "SourcesSearchQuery",
+      "condition_prefix": "Sources",
+      "condition_type_name": "SourcesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the source."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the source."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Type of the data source"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the user account was created."
+        },
+        {
+          "name": "departments",
+          "python_name": "departments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of departments associated with users"
+        },
+        {
+          "name": "disabled",
+          "python_name": "disabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the user account is disabled."
+        },
+        {
+          "name": "emails",
+          "python_name": "emails",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Email addresses of the users"
+        },
+        {
+          "name": "employee_id",
+          "python_name": "employee_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Employee identifier for the user."
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The first name of the user."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the user."
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The last name of the user."
+        },
+        {
+          "name": "linked_candidate_ids",
+          "python_name": "linked_candidate_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of candidates linked to the user."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The full name of the user."
+        },
+        {
+          "name": "offices",
+          "python_name": "offices",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of office locations where users are based"
+        },
+        {
+          "name": "primary_email_address",
+          "python_name": "primary_email_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The primary email address of the user."
+        },
+        {
+          "name": "site_admin",
+          "python_name": "site_admin",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the user is a site administrator."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the user account was last updated."
+        }
+      ]
+    }
+  }
+}

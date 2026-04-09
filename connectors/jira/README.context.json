@@ -1,0 +1,3045 @@
+{
+  "connector_name": "jira",
+  "class_name": "JiraConnector",
+  "package_name": "airbyte_agent_jira",
+  "package_version": "1.1.9",
+  "yaml_version": "1.1.9",
+  "api_reference_url": "https://developer.atlassian.com/cloud/jira/platform/rest/v3/intro/",
+  "commit_sha": "unknown",
+  "auth_example": "JiraAuthConfig(username=\"...\", password=\"...\")",
+  "auth_import": ", JiraAuthConfig",
+  "auth_config": {
+    "type_name": "JiraAuthConfig",
+    "base_name": "Jira",
+    "options": [
+      {
+        "title": "Jira API Token Authentication",
+        "description": "Authenticate using your Atlassian account email and API token",
+        "fields": [
+          {
+            "name": "username",
+            "type": "str",
+            "required": true,
+            "title": "Email Address",
+            "description": "Your Atlassian account email address"
+          },
+          {
+            "name": "password",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "Your Jira API token from https://id.atlassian.com/manage-profile/security/api-tokens"
+          }
+        ],
+        "type_suffix": "JiraApiTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Connector for Jira API",
+  "supported_questions": "- Show me all open issues in my Jira instance\n- List recent issues created in the last 7 days\n- List all projects in my Jira instance\n- Show me details for the most recently updated issue\n- List all users in my Jira instance\n- Show me comments on the most recent issue\n- Show me worklogs from the last 7 days\n- Assign a recent issue to a teammate\n- Unassign a recent issue\n- Create a new task called 'Sample task' in a project\n- Create a bug with high priority\n- Update the summary of a recent issue to 'Updated summary'\n- Change the priority of a recent issue to high\n- Add a comment to a recent issue saying 'Please investigate'\n- Update my most recent comment\n- Delete a test issue\n- Remove my most recent comment\n- What issues are assigned to {team_member} this week?\n- Find all high priority bugs in our current sprint\n- Show me overdue issues across all projects\n- What projects have the most issues?\n- Search for users named {user_name}",
+  "unsupported_questions": "- Log time on {issue_key}\n- Transition {issue_key} to Done",
+  "first_operation": {
+    "method_name": "search_issues",
+    "http_method": "get",
+    "path": "/rest/api/3/search/jql",
+    "entity": "issues",
+    "action": "api_search",
+    "parameters": [
+      {
+        "name": "jql",
+        "python_name": "jql",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "JQL query string to filter issues",
+        "is_deep_object": false
+      },
+      {
+        "name": "nextPageToken",
+        "python_name": "next_page_token",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "The token for a page to fetch that is not the first page. The first page has a nextPageToken of null. Use the `nextPageToken` to fetch the next page of issues. The `nextPageToken` field is not included in the response for the last page, indicating there is no next page.",
+        "is_deep_object": false
+      },
+      {
+        "name": "maxResults",
+        "python_name": "max_results",
+        "type": "int",
+        "schema": {
+          "type": "integer"
+        },
+        "required": null,
+        "description": "The maximum number of items to return per page. To manage page size, API may return fewer items per page where a large number of fields or properties are requested. The greatest number of items returned per page is achieved when requesting `id` or `key` only. It returns max 5000 issues.",
+        "is_deep_object": false
+      },
+      {
+        "name": "fields",
+        "python_name": "fields",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma-separated list of fields to return for each issue. By default, all navigable fields are returned. To get a list of all fields, use the Get fields operation.",
+        "is_deep_object": false
+      },
+      {
+        "name": "expand",
+        "python_name": "expand",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma-separated list of parameters to expand. This parameter accepts multiple values, including `renderedFields`, `names`, `schema`, `transitions`, `operations`, `editmeta`, `changelog`, and `versionedRepresentations`.",
+        "is_deep_object": false
+      },
+      {
+        "name": "properties",
+        "python_name": "properties",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma-separated list of issue property keys. To get a list of all issue property keys, use the Get issue operation. A maximum of 5 properties can be requested.",
+        "is_deep_object": false
+      },
+      {
+        "name": "fieldsByKeys",
+        "python_name": "fields_by_keys",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": null,
+        "description": "Whether the fields parameter contains field keys (true) or field IDs (false). Default is false.",
+        "is_deep_object": false
+      },
+      {
+        "name": "failFast",
+        "python_name": "fail_fast",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": null,
+        "description": "Fail the request early if all field data cannot be retrieved. Default is false.",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "IssuesApiSearchParams",
+    "response_type": "IssuesApiSearchResult",
+    "description": "Retrieve issues based on JQL query with pagination support.\n\nIMPORTANT: This endpoint requires a bounded JQL query. A bounded query must include a search restriction that limits the scope of the search. Examples of valid restrictions include: project (e.g., \"project = MYPROJECT\"), assignee (e.g., \"assignee = currentUser()\"), reporter, issue key, sprint, or date-based filters combined with a project restriction. An unbounded query like \"order by key desc\" will be rejected with a 400 error. Example bounded query: \"project = MYPROJECT AND updated >= -7d ORDER BY created DESC\".\n",
+    "record_extractor": "$.issues",
+    "meta_extractor": {
+      "nextPageToken": "$.nextPageToken",
+      "isLast": "$.isLast",
+      "total": "$.total"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Issue]",
+    "meta_fields": [
+      {
+        "name": "nextPageToken",
+        "python_name": "next_page_token",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Token for fetching the next page"
+        }
+      },
+      {
+        "name": "isLast",
+        "python_name": "is_last",
+        "type": "bool | None",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether this is the last page"
+        }
+      },
+      {
+        "name": "total",
+        "python_name": "total",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "description": "Total number of issues matching query"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "issues": [
+      {
+        "method_name": "search_issues",
+        "http_method": "get",
+        "path": "/rest/api/3/search/jql",
+        "entity": "issues",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "jql",
+            "python_name": "jql",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "JQL query string to filter issues",
+            "is_deep_object": false
+          },
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The token for a page to fetch that is not the first page. The first page has a nextPageToken of null. Use the `nextPageToken` to fetch the next page of issues. The `nextPageToken` field is not included in the response for the last page, indicating there is no next page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page. To manage page size, API may return fewer items per page where a large number of fields or properties are requested. The greatest number of items returned per page is achieved when requesting `id` or `key` only. It returns max 5000 issues.",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of fields to return for each issue. By default, all navigable fields are returned. To get a list of all fields, use the Get fields operation.",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of parameters to expand. This parameter accepts multiple values, including `renderedFields`, `names`, `schema`, `transitions`, `operations`, `editmeta`, `changelog`, and `versionedRepresentations`.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of issue property keys. To get a list of all issue property keys, use the Get issue operation. A maximum of 5 properties can be requested.",
+            "is_deep_object": false
+          },
+          {
+            "name": "fieldsByKeys",
+            "python_name": "fields_by_keys",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether the fields parameter contains field keys (true) or field IDs (false). Default is false.",
+            "is_deep_object": false
+          },
+          {
+            "name": "failFast",
+            "python_name": "fail_fast",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Fail the request early if all field data cannot be retrieved. Default is false.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesApiSearchParams",
+        "response_type": "IssuesApiSearchResult",
+        "description": "Retrieve issues based on JQL query with pagination support.\n\nIMPORTANT: This endpoint requires a bounded JQL query. A bounded query must include a search restriction that limits the scope of the search. Examples of valid restrictions include: project (e.g., \"project = MYPROJECT\"), assignee (e.g., \"assignee = currentUser()\"), reporter, issue key, sprint, or date-based filters combined with a project restriction. An unbounded query like \"order by key desc\" will be rejected with a 400 error. Example bounded query: \"project = MYPROJECT AND updated >= -7d ORDER BY created DESC\".\n",
+        "record_extractor": "$.issues",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "isLast": "$.isLast",
+          "total": "$.total"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Issue]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Token for fetching the next page"
+            }
+          },
+          {
+            "name": "isLast",
+            "python_name": "is_last",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether this is the last page"
+            }
+          },
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of issues matching query"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_issue",
+        "http_method": "post",
+        "path": "/rest/api/3/issue",
+        "entity": "issues",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "IssuesCreateParamsFields",
+            "schema": {
+              "type": "object",
+              "description": "The issue fields to set",
+              "required": [
+                "project",
+                "issuetype",
+                "summary"
+              ],
+              "properties": {
+                "project": {
+                  "type": "object",
+                  "description": "The project to create the issue in",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Project ID"
+                    },
+                    "key": {
+                      "type": "string",
+                      "description": "Project key (e.g., 'PROJ')"
+                    }
+                  }
+                },
+                "issuetype": {
+                  "type": "object",
+                  "description": "The type of issue (e.g., Bug, Task, Story)",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Issue type ID"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Issue type name (e.g., 'Bug', 'Task', 'Story')"
+                    }
+                  }
+                },
+                "summary": {
+                  "type": "string",
+                  "description": "A brief summary of the issue (title)"
+                },
+                "description": {
+                  "type": "object",
+                  "description": "Issue description in Atlassian Document Format (ADF)",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "default": "doc",
+                      "description": "Document type (always 'doc')"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "default": 1,
+                      "description": "ADF version"
+                    },
+                    "content": {
+                      "type": "array",
+                      "description": "Array of content blocks",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Block type (e.g., 'paragraph')"
+                          },
+                          "content": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "description": "Content type (e.g., 'text')"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "description": "Text content"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "priority": {
+                  "type": "object",
+                  "description": "Issue priority",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Priority ID"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"
+                    }
+                  }
+                },
+                "assignee": {
+                  "type": "object",
+                  "description": "The user to assign the issue to",
+                  "properties": {
+                    "accountId": {
+                      "type": "string",
+                      "description": "The account ID of the user"
+                    }
+                  }
+                },
+                "labels": {
+                  "type": "array",
+                  "description": "Labels to add to the issue",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "parent": {
+                  "type": "object",
+                  "description": "Parent issue for subtasks",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "description": "Parent issue key"
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "The issue fields to set"
+          },
+          {
+            "name": "update",
+            "python_name": "update",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Additional update operations to perform",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Additional update operations to perform"
+          },
+          {
+            "name": "updateHistory",
+            "python_name": "update_history",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether the action taken is added to the user's Recent history",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesCreateParams",
+        "response_type": "IssueCreateResponse",
+        "description": "Creates an issue or a sub-task from a JSON representation",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueCreateResponse",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of fields to return for the issue. By default, all navigable and Jira default fields are returned. Use it to retrieve a subset of fields.",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of parameters to expand. This parameter accepts multiple values, including `renderedFields`, `names`, `schema`, `transitions`, `operations`, `editmeta`, `changelog`, and `versionedRepresentations`.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of issue property keys. To get a list of all issue property keys, use the Get issue operation. A maximum of 5 properties can be requested.",
+            "is_deep_object": false
+          },
+          {
+            "name": "fieldsByKeys",
+            "python_name": "fields_by_keys",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether the fields parameter contains field keys (true) or field IDs (false). Default is false.",
+            "is_deep_object": false
+          },
+          {
+            "name": "updateHistory",
+            "python_name": "update_history",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether the action taken is added to the user's Recent history. Default is false.",
+            "is_deep_object": false
+          },
+          {
+            "name": "failFast",
+            "python_name": "fail_fast",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Fail the request early if all field data cannot be retrieved. Default is false.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "Issue",
+        "description": "Retrieve a single issue by its ID or key",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_issue",
+        "http_method": "put",
+        "path": "/rest/api/3/issue/{issueIdOrKey}",
+        "entity": "issues",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "IssuesUpdateParamsFields",
+            "schema": {
+              "type": "object",
+              "description": "The issue fields to update",
+              "properties": {
+                "summary": {
+                  "type": "string",
+                  "description": "A brief summary of the issue (title)"
+                },
+                "description": {
+                  "type": "object",
+                  "description": "Issue description in Atlassian Document Format (ADF)",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "default": "doc",
+                      "description": "Document type (always 'doc')"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "default": 1,
+                      "description": "ADF version"
+                    },
+                    "content": {
+                      "type": "array",
+                      "description": "Array of content blocks",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "Block type (e.g., 'paragraph')"
+                          },
+                          "content": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "description": "Content type (e.g., 'text')"
+                                },
+                                "text": {
+                                  "type": "string",
+                                  "description": "Text content"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "priority": {
+                  "type": "object",
+                  "description": "Issue priority",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Priority ID"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Priority name (e.g., 'Highest', 'High', 'Medium', 'Low', 'Lowest')"
+                    }
+                  }
+                },
+                "assignee": {
+                  "type": "object",
+                  "description": "The user to assign the issue to",
+                  "properties": {
+                    "accountId": {
+                      "type": "string",
+                      "description": "The account ID of the user (use null to unassign)"
+                    }
+                  }
+                },
+                "labels": {
+                  "type": "array",
+                  "description": "Labels for the issue",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "The issue fields to update"
+          },
+          {
+            "name": "update",
+            "python_name": "update",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Additional update operations to perform",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Additional update operations to perform"
+          },
+          {
+            "name": "transition",
+            "python_name": "transition",
+            "type": "IssuesUpdateParamsTransition",
+            "schema": {
+              "type": "object",
+              "description": "Transition the issue to a new status",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "The ID of the transition to perform"
+                }
+              }
+            },
+            "required": false,
+            "description": "Transition the issue to a new status"
+          },
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "notifyUsers",
+            "python_name": "notify_users",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": null,
+            "description": "Whether a notification email about the issue update is sent to all watchers. Default is true.",
+            "is_deep_object": false
+          },
+          {
+            "name": "overrideScreenSecurity",
+            "python_name": "override_screen_security",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether screen security is overridden to enable hidden fields to be edited.",
+            "is_deep_object": false
+          },
+          {
+            "name": "overrideEditableFlag",
+            "python_name": "override_editable_flag",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether the issue's edit metadata is overridden.",
+            "is_deep_object": false
+          },
+          {
+            "name": "returnIssue",
+            "python_name": "return_issue",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether the updated issue is returned.",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Expand options when returning the updated issue.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesUpdateParams",
+        "response_type": "Issue",
+        "description": "Edits an issue. Issue properties may be updated as part of the edit. Only fields included in the request body are updated.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_issue",
+        "http_method": "delete",
+        "path": "/rest/api/3/issue/{issueIdOrKey}",
+        "entity": "issues",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "deleteSubtasks",
+            "python_name": "delete_subtasks",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to delete the issue's subtasks. Default is false.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Deletes an issue. An issue cannot be deleted if it has one or more subtasks unless deleteSubtasks is true.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "search_projects",
+        "http_method": "get",
+        "path": "/rest/api/3/project/search",
+        "entity": "projects",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderBy",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "key",
+              "enum": [
+                "category",
+                "-category",
+                "+category",
+                "key",
+                "-key",
+                "+key",
+                "name",
+                "-name",
+                "+name",
+                "owner",
+                "-owner",
+                "+owner",
+                "issueCount",
+                "-issueCount",
+                "+issueCount",
+                "lastIssueUpdatedDate",
+                "-lastIssueUpdatedDate",
+                "+lastIssueUpdatedDate",
+                "archivedDate",
+                "+archivedDate",
+                "-archivedDate",
+                "deletedDate",
+                "+deletedDate",
+                "-deletedDate"
+              ]
+            },
+            "required": null,
+            "description": "Order the results by a field (prefix with + for ascending, - for descending)",
+            "is_deep_object": false
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "uniqueItems": true
+            },
+            "required": null,
+            "description": "Filter by project IDs (up to 50)",
+            "is_deep_object": false
+          },
+          {
+            "name": "keys",
+            "python_name": "keys",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "required": null,
+            "description": "Filter by project keys (up to 50)",
+            "is_deep_object": false
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter using a literal string (matches project key or name, case insensitive)",
+            "is_deep_object": false
+          },
+          {
+            "name": "typeKey",
+            "python_name": "type_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by project type (comma-separated)",
+            "is_deep_object": false
+          },
+          {
+            "name": "categoryId",
+            "python_name": "category_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": null,
+            "description": "Filter by project category ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "action",
+            "python_name": "action",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "view",
+              "enum": [
+                "view",
+                "browse",
+                "edit",
+                "create"
+              ]
+            },
+            "required": null,
+            "description": "Filter by user permission (view, browse, edit, create)",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields (description, projectKeys, lead, issueTypes, url, insight)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "live",
+                  "archived",
+                  "deleted"
+                ],
+                "default": "live"
+              }
+            },
+            "required": null,
+            "description": "EXPERIMENTAL - Filter by project status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsApiSearchParams",
+        "response_type": "ProjectsApiSearchResult",
+        "description": "Search and filter projects with advanced query parameters",
+        "record_extractor": "$.values",
+        "meta_extractor": {
+          "nextPage": "$.nextPage",
+          "total": "$.total"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Project]",
+        "meta_fields": [
+          {
+            "name": "nextPage",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "uri",
+              "description": "URL of the next page (if exists)"
+            }
+          },
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of projects matching query"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_project",
+        "http_method": "get",
+        "path": "/rest/api/3/project/{projectIdOrKey}",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "projectIdOrKey",
+            "python_name": "project_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The project ID or key (e.g., \"PROJ\" or \"10000\")"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (description, projectKeys, lead, issueTypes, url, insight)",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma-separated list of project property keys to return. To get a list of all project property keys, use Get project property keys.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "Project",
+        "description": "Retrieve a single project by its ID or key",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Project",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/rest/api/3/user",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "accountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account ID of the user",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (groups, applicationRoles)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Retrieve a single user by their account ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/rest/api/3/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page (max 1000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of users",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_users",
+        "http_method": "get",
+        "path": "/rest/api/3/user/search",
+        "entity": "users",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A query string to search for users (matches display name, email, account ID)",
+            "is_deep_object": false
+          },
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page (max 1000)",
+            "is_deep_object": false
+          },
+          {
+            "name": "accountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by account IDs (supports multiple values)",
+            "is_deep_object": false
+          },
+          {
+            "name": "property",
+            "python_name": "property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Property key to filter users",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersApiSearchParams",
+        "response_type": "UsersApiSearchResult",
+        "description": "Search for users using a query string",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_fields": [
+      {
+        "method_name": "list_issue_fields",
+        "http_method": "get",
+        "path": "/rest/api/3/field",
+        "entity": "issue_fields",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "IssueFieldsListParams",
+        "response_type": "IssueFieldsListResult",
+        "description": "Returns a list of all custom and system fields",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[IssueField]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_issue_fields",
+        "http_method": "get",
+        "path": "/rest/api/3/field/search",
+        "entity": "issue_fields",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "custom",
+                  "system"
+                ]
+              }
+            },
+            "required": null,
+            "description": "The type of fields to search for (custom, system, or both)",
+            "is_deep_object": false
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": null,
+            "description": "List of field IDs to search for",
+            "is_deep_object": false
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "String to match against field names, descriptions, and field IDs (case insensitive)",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderBy",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "contextsCount",
+                "-contextsCount",
+                "+contextsCount",
+                "lastUsed",
+                "-lastUsed",
+                "+lastUsed",
+                "name",
+                "-name",
+                "+name",
+                "screensCount",
+                "-screensCount",
+                "+screensCount"
+              ]
+            },
+            "required": null,
+            "description": "Order the results by a field (contextsCount, lastUsed, name, screensCount)",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (searcherKey, screensCount, contextsCount, isLocked, lastUsed)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueFieldsApiSearchParams",
+        "response_type": "IssueFieldsApiSearchResult",
+        "description": "Search and filter issue fields with query parameters",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "IssueFieldSearchResults",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_comments": [
+      {
+        "method_name": "list_issue_comments",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/comment",
+        "entity": "issue_comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "default": 50
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderBy",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "-created",
+                "+created"
+              ]
+            },
+            "required": null,
+            "description": "Order the results by created date (+ for ascending, - for descending)",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (renderedBody, properties)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueCommentsListParams",
+        "response_type": "IssueCommentsListResult",
+        "description": "Retrieve all comments for a specific issue",
+        "record_extractor": "$.comments",
+        "meta_extractor": {
+          "startAt": "$.startAt",
+          "maxResults": "$.maxResults",
+          "total": "$.total"
+        },
+        "needs_envelope": true,
+        "record_type": "list[IssueComment]",
+        "meta_fields": [
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Index of first item returned"
+            }
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results per page"
+            }
+          },
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of comments"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_issue_comment",
+        "http_method": "post",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/comment",
+        "entity": "issue_comments",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "IssueCommentsCreateParamsBody",
+            "schema": {
+              "type": "object",
+              "description": "Comment content in Atlassian Document Format (ADF)",
+              "required": [
+                "type",
+                "version",
+                "content"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "default": "doc",
+                  "description": "Document type (always 'doc')"
+                },
+                "version": {
+                  "type": "integer",
+                  "default": 1,
+                  "description": "ADF version"
+                },
+                "content": {
+                  "type": "array",
+                  "description": "Array of content blocks",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Block type (e.g., 'paragraph')"
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Content type (e.g., 'text')"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Text content"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Comment content in Atlassian Document Format (ADF)"
+          },
+          {
+            "name": "visibility",
+            "python_name": "visibility",
+            "type": "IssueCommentsCreateParamsVisibility",
+            "schema": {
+              "type": "object",
+              "description": "Restrict comment visibility to a group or role",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "group",
+                    "role"
+                  ],
+                  "description": "The type of visibility restriction"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The name of the group or role"
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "The ID of the group or role"
+                }
+              }
+            },
+            "required": false,
+            "description": "Restrict comment visibility to a group or role"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "list[dict[str, Any]]",
+            "schema": {
+              "type": "array",
+              "description": "Custom properties for the comment",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            "required": false,
+            "description": "Custom properties for the comment"
+          },
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Expand options for the returned comment",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueCommentsCreateParams",
+        "response_type": "IssueComment",
+        "description": "Adds a comment to an issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueComment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue_comment",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}",
+        "entity": "issue_comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The comment ID"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (renderedBody, properties)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueCommentsGetParams",
+        "response_type": "IssueComment",
+        "description": "Retrieve a single comment by its ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueComment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_issue_comment",
+        "http_method": "put",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}",
+        "entity": "issue_comments",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "IssueCommentsUpdateParamsBody",
+            "schema": {
+              "type": "object",
+              "description": "Updated comment content in Atlassian Document Format (ADF)",
+              "required": [
+                "type",
+                "version",
+                "content"
+              ],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "default": "doc",
+                  "description": "Document type (always 'doc')"
+                },
+                "version": {
+                  "type": "integer",
+                  "default": 1,
+                  "description": "ADF version"
+                },
+                "content": {
+                  "type": "array",
+                  "description": "Array of content blocks",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "Block type (e.g., 'paragraph')"
+                      },
+                      "content": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "Content type (e.g., 'text')"
+                            },
+                            "text": {
+                              "type": "string",
+                              "description": "Text content"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "Updated comment content in Atlassian Document Format (ADF)"
+          },
+          {
+            "name": "visibility",
+            "python_name": "visibility",
+            "type": "IssueCommentsUpdateParamsVisibility",
+            "schema": {
+              "type": "object",
+              "description": "Restrict comment visibility to a group or role",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "group",
+                    "role"
+                  ],
+                  "description": "The type of visibility restriction"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The name of the group or role"
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "The ID of the group or role"
+                }
+              }
+            },
+            "required": false,
+            "description": "Restrict comment visibility to a group or role"
+          },
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The comment ID"
+          },
+          {
+            "name": "notifyUsers",
+            "python_name": "notify_users",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": null,
+            "description": "Whether a notification email about the comment update is sent. Default is true.",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Expand options for the returned comment",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueCommentsUpdateParams",
+        "response_type": "IssueComment",
+        "description": "Updates a comment on an issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueComment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_issue_comment",
+        "http_method": "delete",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/comment/{commentId}",
+        "entity": "issue_comments",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "commentId",
+            "python_name": "comment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The comment ID"
+          }
+        ],
+        "params_type_name": "IssueCommentsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Deletes a comment from an issue",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issue_worklogs": [
+      {
+        "method_name": "list_issue_worklogs",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/worklog",
+        "entity": "issue_worklogs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "The index of the first item to return in a page of results (page offset)",
+            "is_deep_object": false
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "default": 1048576
+            },
+            "required": null,
+            "description": "The maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (properties)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueWorklogsListParams",
+        "response_type": "IssueWorklogsListResult",
+        "description": "Retrieve all worklogs for a specific issue",
+        "record_extractor": "$.worklogs",
+        "meta_extractor": {
+          "startAt": "$.startAt",
+          "maxResults": "$.maxResults",
+          "total": "$.total"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Worklog]",
+        "meta_fields": [
+          {
+            "name": "startAt",
+            "python_name": "start_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Index of first item returned"
+            }
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results per page"
+            }
+          },
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of worklogs"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue_worklog",
+        "http_method": "get",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/worklog/{worklogId}",
+        "entity": "issue_worklogs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          },
+          {
+            "name": "worklogId",
+            "python_name": "worklog_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The worklog ID"
+          },
+          {
+            "name": "expand",
+            "python_name": "expand",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of additional fields to include (properties)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssueWorklogsGetParams",
+        "response_type": "Worklog",
+        "description": "Retrieve a single worklog by its ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Worklog",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issues_assignee": [
+      {
+        "method_name": "assign_issue",
+        "http_method": "put",
+        "path": "/rest/api/3/issue/{issueIdOrKey}/assignee",
+        "entity": "issues_assignee",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "accountId",
+            "python_name": "account_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "nullable": true,
+              "description": "The account ID of the user to assign the issue to. Use null to unassign the issue. Use \"-1\" to set to automatic (project default assignee)."
+            },
+            "required": false,
+            "description": "The account ID of the user to assign the issue to. Use null to unassign the issue. Use \"-1\" to set to automatic (project default assignee)."
+          },
+          {
+            "name": "issueIdOrKey",
+            "python_name": "issue_id_or_key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The issue ID or key (e.g., \"PROJ-123\" or \"10000\")"
+          }
+        ],
+        "params_type_name": "IssuesAssigneeUpdateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Assigns an issue to a user. Use accountId to specify the assignee. Use null to unassign the issue. Use \"-1\" to set to automatic (project default).",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "issues": {
+      "entity": "issues",
+      "data_type_name": "IssuesSearchData",
+      "filter_type_name": "IssuesSearchFilter",
+      "in_filter_type_name": "IssuesInFilter",
+      "any_value_filter_type_name": "IssuesAnyValueFilter",
+      "string_filter_type_name": "IssuesStringFilter",
+      "sort_filter_type_name": "IssuesSortFilter",
+      "result_type_name": "IssuesSearchResult",
+      "query_type_name": "IssuesSearchQuery",
+      "condition_prefix": "Issues",
+      "condition_type_name": "IssuesCondition",
+      "fields": [
+        {
+          "name": "changelog",
+          "python_name": "changelog",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of changelogs associated with the issue"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the issue was created"
+        },
+        {
+          "name": "editmeta",
+          "python_name": "editmeta",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The metadata for the fields on the issue that can be amended"
+        },
+        {
+          "name": "expand",
+          "python_name": "expand",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expand options that include additional issue details in the response"
+        },
+        {
+          "name": "fields",
+          "python_name": "fields",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Details of various fields associated with the issue"
+        },
+        {
+          "name": "fieldsToInclude",
+          "python_name": "fields_to_include",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Specify the fields to include in the fetched issues data"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique ID of the issue"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique key of the issue"
+        },
+        {
+          "name": "names",
+          "python_name": "names",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The ID and name of each field present on the issue"
+        },
+        {
+          "name": "operations",
+          "python_name": "operations",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The operations that can be performed on the issue"
+        },
+        {
+          "name": "projectId",
+          "python_name": "project_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the project containing the issue"
+        },
+        {
+          "name": "projectKey",
+          "python_name": "project_key",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The key of the project containing the issue"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Details of the issue properties identified in the request"
+        },
+        {
+          "name": "renderedFields",
+          "python_name": "rendered_fields",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The rendered value of each field present on the issue"
+        },
+        {
+          "name": "schema",
+          "python_name": "schema_",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The schema describing each field present on the issue"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the issue details"
+        },
+        {
+          "name": "transitions",
+          "python_name": "transitions",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "The transitions that can be performed on the issue"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the issue was last updated"
+        },
+        {
+          "name": "versionedRepresentations",
+          "python_name": "versioned_representations",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The versions of each field on the issue"
+        }
+      ]
+    },
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is archived"
+        },
+        {
+          "name": "archivedBy",
+          "python_name": "archived_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who archived the project"
+        },
+        {
+          "name": "archivedDate",
+          "python_name": "archived_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date when the project was archived"
+        },
+        {
+          "name": "assigneeType",
+          "python_name": "assignee_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The default assignee when creating issues for this project"
+        },
+        {
+          "name": "avatarUrls",
+          "python_name": "avatar_urls",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The URLs of the project's avatars"
+        },
+        {
+          "name": "components",
+          "python_name": "components",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "List of the components contained in the project"
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is marked as deleted"
+        },
+        {
+          "name": "deletedBy",
+          "python_name": "deleted_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who marked the project as deleted"
+        },
+        {
+          "name": "deletedDate",
+          "python_name": "deleted_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date when the project was marked as deleted"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A brief description of the project"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "An email address associated with the project"
+        },
+        {
+          "name": "entityId",
+          "python_name": "entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the project entity"
+        },
+        {
+          "name": "expand",
+          "python_name": "expand",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expand options that include additional project details in the response"
+        },
+        {
+          "name": "favourite",
+          "python_name": "favourite",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is selected as a favorite"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the project"
+        },
+        {
+          "name": "insight",
+          "python_name": "insight",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Insights about the project"
+        },
+        {
+          "name": "isPrivate",
+          "python_name": "is_private",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is private"
+        },
+        {
+          "name": "issueTypeHierarchy",
+          "python_name": "issue_type_hierarchy",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The issue type hierarchy for the project"
+        },
+        {
+          "name": "issueTypes",
+          "python_name": "issue_types",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "List of the issue types available in the project"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The key of the project"
+        },
+        {
+          "name": "lead",
+          "python_name": "lead",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The username of the project lead"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the project"
+        },
+        {
+          "name": "permissions",
+          "python_name": "permissions",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User permissions on the project"
+        },
+        {
+          "name": "projectCategory",
+          "python_name": "project_category",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The category the project belongs to"
+        },
+        {
+          "name": "projectTypeKey",
+          "python_name": "project_type_key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The project type of the project"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Map of project properties"
+        },
+        {
+          "name": "retentionTillDate",
+          "python_name": "retention_till_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date when the project is deleted permanently"
+        },
+        {
+          "name": "roles",
+          "python_name": "roles",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The name and self URL for each role defined in the project"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the project details"
+        },
+        {
+          "name": "simplified",
+          "python_name": "simplified",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is simplified"
+        },
+        {
+          "name": "style",
+          "python_name": "style",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of the project"
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A link to information about this project"
+        },
+        {
+          "name": "uuid",
+          "python_name": "uuid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ID for next-gen projects"
+        },
+        {
+          "name": "versions",
+          "python_name": "versions",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "The versions defined in the project"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "accountId",
+          "python_name": "account_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account ID of the user, uniquely identifying the user across all Atlassian products"
+        },
+        {
+          "name": "accountType",
+          "python_name": "account_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The user account type (atlassian, app, or customer)"
+        },
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the user is active"
+        },
+        {
+          "name": "applicationRoles",
+          "python_name": "application_roles",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The application roles assigned to the user"
+        },
+        {
+          "name": "avatarUrls",
+          "python_name": "avatar_urls",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The avatars of the user"
+        },
+        {
+          "name": "displayName",
+          "python_name": "display_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The display name of the user"
+        },
+        {
+          "name": "emailAddress",
+          "python_name": "email_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address of the user"
+        },
+        {
+          "name": "expand",
+          "python_name": "expand",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Options to include additional user details in the response"
+        },
+        {
+          "name": "groups",
+          "python_name": "groups",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The groups to which the user belongs"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deprecated property"
+        },
+        {
+          "name": "locale",
+          "python_name": "locale",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The locale of the user"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deprecated property"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the user"
+        },
+        {
+          "name": "timeZone",
+          "python_name": "time_zone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The time zone specified in the user's profile"
+        }
+      ]
+    },
+    "issue_comments": {
+      "entity": "issue_comments",
+      "data_type_name": "IssueCommentsSearchData",
+      "filter_type_name": "IssueCommentsSearchFilter",
+      "in_filter_type_name": "IssueCommentsInFilter",
+      "any_value_filter_type_name": "IssueCommentsAnyValueFilter",
+      "string_filter_type_name": "IssueCommentsStringFilter",
+      "sort_filter_type_name": "IssueCommentsSortFilter",
+      "result_type_name": "IssueCommentsSearchResult",
+      "query_type_name": "IssueCommentsSearchQuery",
+      "condition_prefix": "IssueComments",
+      "condition_type_name": "IssueCommentsCondition",
+      "fields": [
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The ID of the user who created the comment"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "The comment text in Atlassian Document Format"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time at which the comment was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the comment"
+        },
+        {
+          "name": "issueId",
+          "python_name": "issue_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Id of the related issue"
+        },
+        {
+          "name": "jsdPublic",
+          "python_name": "jsd_public",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the comment is visible in Jira Service Desk"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "A list of comment properties"
+        },
+        {
+          "name": "renderedBody",
+          "python_name": "rendered_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The rendered version of the comment"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the comment"
+        },
+        {
+          "name": "updateAuthor",
+          "python_name": "update_author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The ID of the user who updated the comment last"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time at which the comment was updated last"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The group or role to which this item is visible"
+        }
+      ]
+    },
+    "issue_fields": {
+      "entity": "issue_fields",
+      "data_type_name": "IssueFieldsSearchData",
+      "filter_type_name": "IssueFieldsSearchFilter",
+      "in_filter_type_name": "IssueFieldsInFilter",
+      "any_value_filter_type_name": "IssueFieldsAnyValueFilter",
+      "string_filter_type_name": "IssueFieldsStringFilter",
+      "sort_filter_type_name": "IssueFieldsSortFilter",
+      "result_type_name": "IssueFieldsSearchResult",
+      "query_type_name": "IssueFieldsSearchQuery",
+      "condition_prefix": "IssueFields",
+      "condition_type_name": "IssueFieldsCondition",
+      "fields": [
+        {
+          "name": "clauseNames",
+          "python_name": "clause_names",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "The names that can be used to reference the field in an advanced search"
+        },
+        {
+          "name": "custom",
+          "python_name": "custom",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the field is a custom field"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the field"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The key of the field"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the field"
+        },
+        {
+          "name": "navigable",
+          "python_name": "navigable",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the field can be used as a column on the issue navigator"
+        },
+        {
+          "name": "orderable",
+          "python_name": "orderable",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the content of the field can be used to order lists"
+        },
+        {
+          "name": "schema",
+          "python_name": "schema_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The data schema for the field"
+        },
+        {
+          "name": "scope",
+          "python_name": "scope",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The scope of the field"
+        },
+        {
+          "name": "searchable",
+          "python_name": "searchable",
+          "type": "bool",
+          "json_type": "boolean",
+          "example_value_json": "True",
+          "description": "Whether the content of the field can be searched"
+        },
+        {
+          "name": "untranslatedName",
+          "python_name": "untranslated_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The untranslated name of the field"
+        }
+      ]
+    },
+    "issue_worklogs": {
+      "entity": "issue_worklogs",
+      "data_type_name": "IssueWorklogsSearchData",
+      "filter_type_name": "IssueWorklogsSearchFilter",
+      "in_filter_type_name": "IssueWorklogsInFilter",
+      "any_value_filter_type_name": "IssueWorklogsAnyValueFilter",
+      "string_filter_type_name": "IssueWorklogsStringFilter",
+      "sort_filter_type_name": "IssueWorklogsSortFilter",
+      "result_type_name": "IssueWorklogsSearchResult",
+      "query_type_name": "IssueWorklogsSearchQuery",
+      "condition_prefix": "IssueWorklogs",
+      "condition_type_name": "IssueWorklogsCondition",
+      "fields": [
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Details of the user who created the worklog"
+        },
+        {
+          "name": "comment",
+          "python_name": "comment",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "A comment about the worklog in Atlassian Document Format"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The datetime on which the worklog was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the worklog record"
+        },
+        {
+          "name": "issueId",
+          "python_name": "issue_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the issue this worklog is for"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "list[Any]",
+          "json_type": "array",
+          "example_value_json": "[]",
+          "description": "Details of properties for the worklog"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the worklog item"
+        },
+        {
+          "name": "started",
+          "python_name": "started",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The datetime on which the worklog effort was started"
+        },
+        {
+          "name": "timeSpent",
+          "python_name": "time_spent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The time spent working on the issue as days, hours, or minutes"
+        },
+        {
+          "name": "timeSpentSeconds",
+          "python_name": "time_spent_seconds",
+          "type": "int",
+          "json_type": "integer",
+          "example_value_json": "0",
+          "description": "The time in seconds spent working on the issue"
+        },
+        {
+          "name": "updateAuthor",
+          "python_name": "update_author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the user who last updated the worklog"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "The datetime on which the worklog was last updated"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details about any restrictions in the visibility of the worklog"
+        }
+      ]
+    }
+  }
+}

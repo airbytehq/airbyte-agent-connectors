@@ -1,0 +1,1350 @@
+{
+  "connector_name": "monday",
+  "class_name": "MondayConnector",
+  "package_name": "airbyte_agent_monday",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://developer.monday.com/api-reference/docs",
+  "commit_sha": "unknown",
+  "auth_example": "MondayAuthConfig(access_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", MondayAuthConfig",
+  "auth_config": {
+    "type_name": "MondayAuthConfig",
+    "base_name": "Monday",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Access token obtained via OAuth 2.0 flow"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "The Client ID of your Monday.com OAuth application"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "The Client Secret of your Monday.com OAuth application"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication",
+        "scheme_name": "mondayOAuth"
+      },
+      {
+        "title": "API Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "Your Monday.com personal API token"
+          }
+        ],
+        "type_suffix": "ApiTokenAuthentication",
+        "scheme_name": "mondayApiToken"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": null,
+  "custom_description": "Connector for the Monday.com platform API. Monday.com is a work operating system that enables teams to build workflows for project management, CRM, software development, and more. This connector provides read access to boards, items, users, teams, tags, updates, workspaces, and activity logs via the Monday.com GraphQL API (v2).\n",
+  "supported_questions": "- List all users in the Monday.com account\n- Show me all boards\n- Get the details of board 18395979459\n- List all teams\n- Show me all tags\n- List recent updates\n- Which boards were updated in the last week?\n- Find all items assigned to a specific group\n- What are the most active boards by update count?\n- Show me all users who are admins\n- List items with their column values from a specific board",
+  "unsupported_questions": "- Create a new board\n- Delete an item\n- Update a column value\n- Add a new user to the account\n- Create a webhook subscription",
+  "first_operation": {
+    "method_name": "list_users",
+    "http_method": "post",
+    "path": "/graphql:users:list",
+    "entity": "users",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "UsersListParams",
+    "response_type": "UsersListResult",
+    "description": "Returns all users in the Monday.com account",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "dict[str, Any]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "post",
+        "path": "/graphql:users:list",
+        "entity": "users",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns all users in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "post",
+        "path": "/graphql:users:get",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single user by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "boards": [
+      {
+        "method_name": "list_boards",
+        "http_method": "post",
+        "path": "/graphql:boards:list",
+        "entity": "boards",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "BoardsListParams",
+        "response_type": "BoardsListResult",
+        "description": "Returns all boards in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_board",
+        "http_method": "post",
+        "path": "/graphql:boards:get",
+        "entity": "boards",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Board ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BoardsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single board by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "items": [
+      {
+        "method_name": "list_items",
+        "http_method": "post",
+        "path": "/graphql:items:list",
+        "entity": "items",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "board_id",
+            "python_name": "board_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Board ID to fetch items from",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ItemsListParams",
+        "response_type": "ItemsListResult",
+        "description": "Returns items from boards. Queries items through the boards endpoint using items_page for pagination.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_item",
+        "http_method": "post",
+        "path": "/graphql:items:get",
+        "entity": "items",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Item ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ItemsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single item by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "post",
+        "path": "/graphql:teams:list",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Returns all teams in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_team",
+        "http_method": "post",
+        "path": "/graphql:teams:get",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single team by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "list_tags",
+        "http_method": "post",
+        "path": "/graphql:tags:list",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Returns all tags in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "updates": [
+      {
+        "method_name": "list_updates",
+        "http_method": "post",
+        "path": "/graphql:updates:list",
+        "entity": "updates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 25
+            },
+            "required": null,
+            "description": "Number of updates to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UpdatesListParams",
+        "response_type": "UpdatesListResult",
+        "description": "Returns all updates (comments/posts) in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_update",
+        "http_method": "post",
+        "path": "/graphql:updates:get",
+        "entity": "updates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Update ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UpdatesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single update by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "workspaces": [
+      {
+        "method_name": "list_workspaces",
+        "http_method": "post",
+        "path": "/graphql:workspaces:list",
+        "entity": "workspaces",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "WorkspacesListParams",
+        "response_type": "WorkspacesListResult",
+        "description": "Returns all workspaces in the Monday.com account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_workspace",
+        "http_method": "post",
+        "path": "/graphql:workspaces:get",
+        "entity": "workspaces",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspacesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns a single workspace by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "activity_logs": [
+      {
+        "method_name": "list_activity_logs",
+        "http_method": "post",
+        "path": "/graphql:activity_logs:list",
+        "entity": "activity_logs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "board_id",
+            "python_name": "board_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Board ID to fetch activity logs from",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ActivityLogsListParams",
+        "response_type": "ActivityLogsListResult",
+        "description": "Returns activity logs from boards. Requires a board_id parameter.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "activity_logs": {
+      "entity": "activity_logs",
+      "data_type_name": "ActivityLogsSearchData",
+      "filter_type_name": "ActivityLogsSearchFilter",
+      "in_filter_type_name": "ActivityLogsInFilter",
+      "any_value_filter_type_name": "ActivityLogsAnyValueFilter",
+      "string_filter_type_name": "ActivityLogsStringFilter",
+      "sort_filter_type_name": "ActivityLogsSortFilter",
+      "result_type_name": "ActivityLogsSearchResult",
+      "query_type_name": "ActivityLogsSearchQuery",
+      "condition_prefix": "ActivityLogs",
+      "condition_type_name": "ActivityLogsCondition",
+      "fields": [
+        {
+          "name": "board_id",
+          "python_name": "board_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Board ID the activity belongs to"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the activity occurred"
+        },
+        {
+          "name": "created_at_int",
+          "python_name": "created_at_int",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "When the activity occurred (Unix timestamp)"
+        },
+        {
+          "name": "data",
+          "python_name": "data",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event data (JSON string)"
+        },
+        {
+          "name": "entity",
+          "python_name": "entity",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Entity type that was affected"
+        },
+        {
+          "name": "event",
+          "python_name": "event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event type"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique activity log identifier"
+        },
+        {
+          "name": "pulse_id",
+          "python_name": "pulse_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Item (pulse) ID the activity belongs to"
+        },
+        {
+          "name": "user_id",
+          "python_name": "user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who performed the action"
+        }
+      ]
+    },
+    "boards": {
+      "entity": "boards",
+      "data_type_name": "BoardsSearchData",
+      "filter_type_name": "BoardsSearchFilter",
+      "in_filter_type_name": "BoardsInFilter",
+      "any_value_filter_type_name": "BoardsAnyValueFilter",
+      "string_filter_type_name": "BoardsStringFilter",
+      "sort_filter_type_name": "BoardsSortFilter",
+      "result_type_name": "BoardsSearchResult",
+      "query_type_name": "BoardsSearchQuery",
+      "condition_prefix": "Boards",
+      "condition_type_name": "BoardsCondition",
+      "fields": [
+        {
+          "name": "board_kind",
+          "python_name": "board_kind",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board kind (public, private, share)"
+        },
+        {
+          "name": "columns",
+          "python_name": "columns",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board columns"
+        },
+        {
+          "name": "communication",
+          "python_name": "communication",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board communication value"
+        },
+        {
+          "name": "creator",
+          "python_name": "creator",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Board creator"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board description"
+        },
+        {
+          "name": "groups",
+          "python_name": "groups",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board groups"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique board identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board name"
+        },
+        {
+          "name": "owners",
+          "python_name": "owners",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board owners"
+        },
+        {
+          "name": "permissions",
+          "python_name": "permissions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board permissions"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board state (active, archived, deleted)"
+        },
+        {
+          "name": "subscribers",
+          "python_name": "subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board subscribers"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board tags"
+        },
+        {
+          "name": "top_group",
+          "python_name": "top_group",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Top group on the board"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Board type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the board was last updated"
+        },
+        {
+          "name": "updated_at_int",
+          "python_name": "updated_at_int",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "When the board was last updated (Unix timestamp)"
+        },
+        {
+          "name": "updates",
+          "python_name": "updates",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board updates"
+        },
+        {
+          "name": "views",
+          "python_name": "views",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Board views"
+        },
+        {
+          "name": "workspace",
+          "python_name": "workspace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Workspace the board belongs to"
+        }
+      ]
+    },
+    "items": {
+      "entity": "items",
+      "data_type_name": "ItemsSearchData",
+      "filter_type_name": "ItemsSearchFilter",
+      "in_filter_type_name": "ItemsInFilter",
+      "any_value_filter_type_name": "ItemsAnyValueFilter",
+      "string_filter_type_name": "ItemsStringFilter",
+      "sort_filter_type_name": "ItemsSortFilter",
+      "result_type_name": "ItemsSearchResult",
+      "query_type_name": "ItemsSearchQuery",
+      "condition_prefix": "Items",
+      "condition_type_name": "ItemsCondition",
+      "fields": [
+        {
+          "name": "assets",
+          "python_name": "assets",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Files attached to the item"
+        },
+        {
+          "name": "board",
+          "python_name": "board",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Board the item belongs to"
+        },
+        {
+          "name": "column_values",
+          "python_name": "column_values",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Item column values"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the item was created"
+        },
+        {
+          "name": "creator_id",
+          "python_name": "creator_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created the item"
+        },
+        {
+          "name": "group",
+          "python_name": "group",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Group the item belongs to"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique item identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Item name"
+        },
+        {
+          "name": "parent_item",
+          "python_name": "parent_item",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Parent item (for subitems)"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Item state (active, archived, deleted)"
+        },
+        {
+          "name": "subscribers",
+          "python_name": "subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Item subscribers"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the item was last updated"
+        },
+        {
+          "name": "updated_at_int",
+          "python_name": "updated_at_int",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "When the item was last updated (Unix timestamp)"
+        },
+        {
+          "name": "updates",
+          "python_name": "updates",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Item updates"
+        }
+      ]
+    },
+    "tags": {
+      "entity": "tags",
+      "data_type_name": "TagsSearchData",
+      "filter_type_name": "TagsSearchFilter",
+      "in_filter_type_name": "TagsInFilter",
+      "any_value_filter_type_name": "TagsAnyValueFilter",
+      "string_filter_type_name": "TagsStringFilter",
+      "sort_filter_type_name": "TagsSortFilter",
+      "result_type_name": "TagsSearchResult",
+      "query_type_name": "TagsSearchQuery",
+      "condition_prefix": "Tags",
+      "condition_type_name": "TagsCondition",
+      "fields": [
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tag color"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique tag identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tag name"
+        }
+      ]
+    },
+    "teams": {
+      "entity": "teams",
+      "data_type_name": "TeamsSearchData",
+      "filter_type_name": "TeamsSearchFilter",
+      "in_filter_type_name": "TeamsInFilter",
+      "any_value_filter_type_name": "TeamsAnyValueFilter",
+      "string_filter_type_name": "TeamsStringFilter",
+      "sort_filter_type_name": "TeamsSortFilter",
+      "result_type_name": "TeamsSearchResult",
+      "query_type_name": "TeamsSearchQuery",
+      "condition_prefix": "Teams",
+      "condition_type_name": "TeamsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique team identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Team name"
+        },
+        {
+          "name": "picture_url",
+          "python_name": "picture_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Team picture URL"
+        },
+        {
+          "name": "users",
+          "python_name": "users",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Team members"
+        }
+      ]
+    },
+    "updates": {
+      "entity": "updates",
+      "data_type_name": "UpdatesSearchData",
+      "filter_type_name": "UpdatesSearchFilter",
+      "in_filter_type_name": "UpdatesInFilter",
+      "any_value_filter_type_name": "UpdatesAnyValueFilter",
+      "string_filter_type_name": "UpdatesStringFilter",
+      "sort_filter_type_name": "UpdatesSortFilter",
+      "result_type_name": "UpdatesSearchResult",
+      "query_type_name": "UpdatesSearchQuery",
+      "condition_prefix": "Updates",
+      "condition_type_name": "UpdatesCondition",
+      "fields": [
+        {
+          "name": "assets",
+          "python_name": "assets",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Files attached to this update"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Update body (HTML)"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the update was created"
+        },
+        {
+          "name": "creator_id",
+          "python_name": "creator_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created the update"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique update identifier"
+        },
+        {
+          "name": "item_id",
+          "python_name": "item_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the item this update belongs to"
+        },
+        {
+          "name": "replies",
+          "python_name": "replies",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Replies to this update"
+        },
+        {
+          "name": "text_body",
+          "python_name": "text_body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Update body (plain text)"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the update was last modified"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "birthday",
+          "python_name": "birthday",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's birthday"
+        },
+        {
+          "name": "country_code",
+          "python_name": "country_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's country code"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the user was created"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's email address"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user account is enabled"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique user identifier"
+        },
+        {
+          "name": "is_admin",
+          "python_name": "is_admin",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is an admin"
+        },
+        {
+          "name": "is_guest",
+          "python_name": "is_guest",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is a guest"
+        },
+        {
+          "name": "is_pending",
+          "python_name": "is_pending",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is pending"
+        },
+        {
+          "name": "is_view_only",
+          "python_name": "is_view_only",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is view-only"
+        },
+        {
+          "name": "is_verified",
+          "python_name": "is_verified",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user is verified"
+        },
+        {
+          "name": "join_date",
+          "python_name": "join_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the user joined"
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's location"
+        },
+        {
+          "name": "mobile_phone",
+          "python_name": "mobile_phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's mobile phone number"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's display name"
+        },
+        {
+          "name": "phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's phone number"
+        },
+        {
+          "name": "photo_original",
+          "python_name": "photo_original",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to original size photo"
+        },
+        {
+          "name": "photo_small",
+          "python_name": "photo_small",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to small photo"
+        },
+        {
+          "name": "photo_thumb",
+          "python_name": "photo_thumb",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to thumbnail photo"
+        },
+        {
+          "name": "photo_thumb_small",
+          "python_name": "photo_thumb_small",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to small thumbnail photo"
+        },
+        {
+          "name": "photo_tiny",
+          "python_name": "photo_tiny",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to tiny photo"
+        },
+        {
+          "name": "time_zone_identifier",
+          "python_name": "time_zone_identifier",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's timezone identifier"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's job title"
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's Monday.com profile URL"
+        },
+        {
+          "name": "utc_hours_diff",
+          "python_name": "utc_hours_diff",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "UTC hours difference for the user's timezone"
+        }
+      ]
+    },
+    "workspaces": {
+      "entity": "workspaces",
+      "data_type_name": "WorkspacesSearchData",
+      "filter_type_name": "WorkspacesSearchFilter",
+      "in_filter_type_name": "WorkspacesInFilter",
+      "any_value_filter_type_name": "WorkspacesAnyValueFilter",
+      "string_filter_type_name": "WorkspacesStringFilter",
+      "sort_filter_type_name": "WorkspacesSortFilter",
+      "result_type_name": "WorkspacesSearchResult",
+      "query_type_name": "WorkspacesSearchQuery",
+      "condition_prefix": "Workspaces",
+      "condition_type_name": "WorkspacesCondition",
+      "fields": [
+        {
+          "name": "account_product",
+          "python_name": "account_product",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Account product info"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the workspace was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Workspace description"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique workspace identifier"
+        },
+        {
+          "name": "kind",
+          "python_name": "kind",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Workspace kind (open, closed)"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Workspace name"
+        },
+        {
+          "name": "owners_subscribers",
+          "python_name": "owners_subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Owner subscribers"
+        },
+        {
+          "name": "settings",
+          "python_name": "settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Workspace settings"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Workspace state"
+        },
+        {
+          "name": "team_owners_subscribers",
+          "python_name": "team_owners_subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Team owner subscribers"
+        },
+        {
+          "name": "teams_subscribers",
+          "python_name": "teams_subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Team subscribers"
+        },
+        {
+          "name": "users_subscribers",
+          "python_name": "users_subscribers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "User subscribers"
+        }
+      ]
+    }
+  }
+}

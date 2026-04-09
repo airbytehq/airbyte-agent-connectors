@@ -1,0 +1,2201 @@
+{
+  "connector_name": "hubspot",
+  "class_name": "HubspotConnector",
+  "package_name": "airbyte_agent_hubspot",
+  "package_version": "0.1.18",
+  "yaml_version": "0.1.18",
+  "api_reference_url": "https://developers.hubspot.com/docs/api/crm/understanding-the-crm",
+  "commit_sha": "unknown",
+  "auth_example": "HubspotAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", access_token=\"...\")",
+  "auth_import": ", HubspotAuthConfig",
+  "auth_config": {
+    "type_name": "HubspotAuthConfig",
+    "base_name": "Hubspot",
+    "options": [
+      {
+        "title": "OAuth2",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your HubSpot OAuth2 Client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your HubSpot OAuth2 Client Secret"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your HubSpot OAuth2 Refresh Token"
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your HubSpot OAuth2 Access Token (optional if refresh_token is provided)"
+          }
+        ],
+        "type_suffix": "Oauth2",
+        "scheme_name": "oauth2"
+      },
+      {
+        "title": "Private App",
+        "description": "",
+        "fields": [
+          {
+            "name": "private_app_token",
+            "type": "str",
+            "required": true,
+            "title": "Private App Token",
+            "description": "Access token from a HubSpot Private App"
+          }
+        ],
+        "type_suffix": "PrivateApp",
+        "scheme_name": "hubspotPrivateApp"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": null,
+  "custom_description": "HubSpot is a CRM platform that provides tools for marketing, sales, customer service,\nand content management. This connector provides access to contacts, companies, deals,\ntickets, and custom objects for customer relationship management and sales analytics.\n",
+  "supported_questions": "- List recent deals\n- List recent tickets\n- List companies in my CRM\n- List contacts in my CRM\n- Show me all deals from {company} this quarter\n- What are the top 5 most valuable deals in my pipeline right now?\n- Search for contacts in the marketing department at {company}\n- Give me an overview of my sales team's deals in the last 30 days\n- Identify the most active companies in our CRM this month\n- Compare the number of deals closed by different sales representatives\n- Find all tickets related to a specific product issue and summarize their status",
+  "unsupported_questions": "- Create a new contact record for {person}\n- Update the contact information for {customer}\n- Delete the ticket from last week's support case\n- Schedule a follow-up task for this deal\n- Send an email to all contacts in the sales pipeline",
+  "first_operation": {
+    "method_name": "list_contacts",
+    "http_method": "get",
+    "path": "/crm/v3/objects/contacts",
+    "entity": "contacts",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 25
+        },
+        "required": null,
+        "description": "The maximum number of results to display per page.",
+        "is_deep_object": false
+      },
+      {
+        "name": "after",
+        "python_name": "after",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+        "is_deep_object": false
+      },
+      {
+        "name": "associations",
+        "python_name": "associations",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., \"p12345_cars\").",
+        "is_deep_object": false
+      },
+      {
+        "name": "properties",
+        "python_name": "properties",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+        "is_deep_object": false
+      },
+      {
+        "name": "propertiesWithHistory",
+        "python_name": "properties_with_history",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.",
+        "is_deep_object": false
+      },
+      {
+        "name": "archived",
+        "python_name": "archived",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": null,
+        "description": "Whether to return only results that have been archived.",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ContactsListParams",
+    "response_type": "ContactsListResult",
+    "description": "Returns a paginated list of contacts",
+    "record_extractor": "$.results",
+    "meta_extractor": {
+      "next_cursor": "$.paging.next.after",
+      "next_link": "$.paging.next.link"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Contact]",
+    "meta_fields": [
+      {
+        "name": "next_cursor",
+        "python_name": "next_cursor",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "Cursor for next page"
+        }
+      },
+      {
+        "name": "next_link",
+        "python_name": "next_link",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "URL for next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/crm/v3/objects/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., \"p12345_cars\").",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a paginated list of contacts",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/crm/v3/objects/contacts/{contactId}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "contactId",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_contacts",
+        "http_method": "post",
+        "path": "/crm/v3/objects/contacts/search",
+        "entity": "contacts",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "filterGroups",
+            "python_name": "filter_groups",
+            "type": "list[ContactsApiSearchParamsFiltergroupsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Up to 6 groups of filters defining additional query criteria.",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "operator": {
+                          "type": "string",
+                          "enum": [
+                            "BETWEEN",
+                            "CONTAINS_TOKEN",
+                            "EQ",
+                            "GT",
+                            "GTE",
+                            "HAS_PROPERTY",
+                            "IN",
+                            "LT",
+                            "LTE",
+                            "NEQ",
+                            "NOT_CONTAINS_TOKEN",
+                            "NOT_HAS_PROPERTY",
+                            "NOT_IN"
+                          ],
+                          "required": true
+                        },
+                        "propertyName": {
+                          "type": "string",
+                          "description": "The name of the property to apply the filter on.",
+                          "required": true
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "The value to match against the property."
+                        },
+                        "values": {
+                          "type": "array",
+                          "description": "The values to match against the property.",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Up to 6 groups of filters defining additional query criteria."
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "A list of property names to include in the response.",
+              "required": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "A list of property names to include in the response."
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results to return",
+              "required": true,
+              "minimum": 1,
+              "maximum": 200,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A paging cursor token for retrieving subsequent pages."
+            },
+            "required": false,
+            "description": "A paging cursor token for retrieving subsequent pages."
+          },
+          {
+            "name": "sorts",
+            "python_name": "sorts",
+            "type": "list[ContactsApiSearchParamsSortsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "propertyName": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "ASCENDING",
+                      "DESCENDING"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Sort criteria"
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The search query string, up to 3000 characters."
+            },
+            "required": false,
+            "description": "The search query string, up to 3000 characters."
+          }
+        ],
+        "params_type_name": "ContactsApiSearchParams",
+        "response_type": "ContactsApiSearchResult",
+        "description": "Search for contacts by filtering on properties, searching through associations, and sorting results.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "total": "$.total",
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of results (search only)"
+            }
+          },
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "companies": [
+      {
+        "method_name": "list_companies",
+        "http_method": "get",
+        "path": "/crm/v3/objects/companies",
+        "entity": "companies",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., \"p12345_cars\").",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CompaniesListParams",
+        "response_type": "CompaniesListResult",
+        "description": "Retrieve all companies, using query parameters to control the information that gets returned.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Company]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_company",
+        "http_method": "get",
+        "path": "/crm/v3/objects/companies/{companyId}",
+        "entity": "companies",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "companyId",
+            "python_name": "company_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Company ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CompaniesGetParams",
+        "response_type": "Company",
+        "description": "Get a single company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_companies",
+        "http_method": "post",
+        "path": "/crm/v3/objects/companies/search",
+        "entity": "companies",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "filterGroups",
+            "python_name": "filter_groups",
+            "type": "list[CompaniesApiSearchParamsFiltergroupsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Up to 6 groups of filters defining additional query criteria.",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "operator": {
+                          "type": "string",
+                          "enum": [
+                            "BETWEEN",
+                            "CONTAINS_TOKEN",
+                            "EQ",
+                            "GT",
+                            "GTE",
+                            "HAS_PROPERTY",
+                            "IN",
+                            "LT",
+                            "LTE",
+                            "NEQ",
+                            "NOT_CONTAINS_TOKEN",
+                            "NOT_HAS_PROPERTY",
+                            "NOT_IN"
+                          ],
+                          "required": true
+                        },
+                        "propertyName": {
+                          "type": "string",
+                          "description": "The name of the property to apply the filter on.",
+                          "required": true
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "The value to match against the property."
+                        },
+                        "values": {
+                          "type": "array",
+                          "description": "The values to match against the property.",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Up to 6 groups of filters defining additional query criteria."
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "A list of property names to include in the response.",
+              "required": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "A list of property names to include in the response."
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results to return",
+              "required": true,
+              "minimum": 1,
+              "maximum": 200,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A paging cursor token for retrieving subsequent pages."
+            },
+            "required": false,
+            "description": "A paging cursor token for retrieving subsequent pages."
+          },
+          {
+            "name": "sorts",
+            "python_name": "sorts",
+            "type": "list[CompaniesApiSearchParamsSortsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "propertyName": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "ASCENDING",
+                      "DESCENDING"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Sort criteria"
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The search query string, up to 3000 characters."
+            },
+            "required": false,
+            "description": "The search query string, up to 3000 characters."
+          }
+        ],
+        "params_type_name": "CompaniesApiSearchParams",
+        "response_type": "CompaniesApiSearchResult",
+        "description": "Search for companies by filtering on properties, searching through associations, and sorting results.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "total": "$.total",
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Company]",
+        "meta_fields": [
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of results (search only)"
+            }
+          },
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "deals": [
+      {
+        "method_name": "list_deals",
+        "http_method": "get",
+        "path": "/crm/v3/objects/deals",
+        "entity": "deals",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., \"p12345_cars\").",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DealsListParams",
+        "response_type": "DealsListResult",
+        "description": "Returns a paginated list of deals",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Deal]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_deal",
+        "http_method": "get",
+        "path": "/crm/v3/objects/deals/{dealId}",
+        "entity": "deals",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "dealId",
+            "python_name": "deal_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Deal ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DealsGetParams",
+        "response_type": "Deal",
+        "description": "Get a single deal by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Deal",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_deals",
+        "http_method": "post",
+        "path": "/crm/v3/objects/deals/search",
+        "entity": "deals",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "filterGroups",
+            "python_name": "filter_groups",
+            "type": "list[DealsApiSearchParamsFiltergroupsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Up to 6 groups of filters defining additional query criteria.",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "operator": {
+                          "type": "string",
+                          "enum": [
+                            "BETWEEN",
+                            "CONTAINS_TOKEN",
+                            "EQ",
+                            "GT",
+                            "GTE",
+                            "HAS_PROPERTY",
+                            "IN",
+                            "LT",
+                            "LTE",
+                            "NEQ",
+                            "NOT_CONTAINS_TOKEN",
+                            "NOT_HAS_PROPERTY",
+                            "NOT_IN"
+                          ],
+                          "required": true
+                        },
+                        "propertyName": {
+                          "type": "string",
+                          "description": "The name of the property to apply the filter on.",
+                          "required": true
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "The value to match against the property."
+                        },
+                        "values": {
+                          "type": "array",
+                          "description": "The values to match against the property.",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Up to 6 groups of filters defining additional query criteria."
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "A list of property names to include in the response.",
+              "required": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "A list of property names to include in the response."
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results to return",
+              "required": true,
+              "minimum": 1,
+              "maximum": 200,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A paging cursor token for retrieving subsequent pages."
+            },
+            "required": false,
+            "description": "A paging cursor token for retrieving subsequent pages."
+          },
+          {
+            "name": "sorts",
+            "python_name": "sorts",
+            "type": "list[DealsApiSearchParamsSortsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "propertyName": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "ASCENDING",
+                      "DESCENDING"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Sort criteria"
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The search query string, up to 3000 characters."
+            },
+            "required": false,
+            "description": "The search query string, up to 3000 characters."
+          }
+        ],
+        "params_type_name": "DealsApiSearchParams",
+        "response_type": "DealsApiSearchResult",
+        "description": "Search deals with filters and sorting",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "total": "$.total",
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Deal]",
+        "meta_fields": [
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of results (search only)"
+            }
+          },
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "tickets": [
+      {
+        "method_name": "list_tickets",
+        "http_method": "get",
+        "path": "/crm/v3/objects/tickets",
+        "entity": "tickets",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the paging.next.after JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of associated object types to include in the response. Valid values are contacts, deals, tickets, and custom object type IDs or fully qualified names (e.g., \"p12345_cars\").",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored. Usage of this parameter will reduce the maximum number of companies that can be read by a single request.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TicketsListParams",
+        "response_type": "TicketsListResult",
+        "description": "Returns a paginated list of tickets",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ticket]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ticket",
+        "http_method": "get",
+        "path": "/crm/v3/objects/tickets/{ticketId}",
+        "entity": "tickets",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "ticketId",
+            "python_name": "ticket_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ticket ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TicketsGetParams",
+        "response_type": "Ticket",
+        "description": "Get a single ticket by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ticket",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_tickets",
+        "http_method": "post",
+        "path": "/crm/v3/objects/tickets/search",
+        "entity": "tickets",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "filterGroups",
+            "python_name": "filter_groups",
+            "type": "list[TicketsApiSearchParamsFiltergroupsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Up to 6 groups of filters defining additional query criteria.",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "array",
+                    "required": true,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "operator": {
+                          "type": "string",
+                          "enum": [
+                            "BETWEEN",
+                            "CONTAINS_TOKEN",
+                            "EQ",
+                            "GT",
+                            "GTE",
+                            "HAS_PROPERTY",
+                            "IN",
+                            "LT",
+                            "LTE",
+                            "NEQ",
+                            "NOT_CONTAINS_TOKEN",
+                            "NOT_HAS_PROPERTY",
+                            "NOT_IN"
+                          ],
+                          "required": true
+                        },
+                        "propertyName": {
+                          "type": "string",
+                          "description": "The name of the property to apply the filter on.",
+                          "required": true
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "The value to match against the property."
+                        },
+                        "values": {
+                          "type": "array",
+                          "description": "The values to match against the property.",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Up to 6 groups of filters defining additional query criteria."
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "description": "A list of property names to include in the response.",
+              "required": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "A list of property names to include in the response."
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results to return",
+              "required": true,
+              "minimum": 1,
+              "maximum": 200,
+              "default": 25
+            },
+            "required": false,
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A paging cursor token for retrieving subsequent pages."
+            },
+            "required": false,
+            "description": "A paging cursor token for retrieving subsequent pages."
+          },
+          {
+            "name": "sorts",
+            "python_name": "sorts",
+            "type": "list[TicketsApiSearchParamsSortsItem]",
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria",
+              "required": true,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "propertyName": {
+                    "type": "string"
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "ASCENDING",
+                      "DESCENDING"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Sort criteria"
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The search query string, up to 3000 characters."
+            },
+            "required": false,
+            "description": "The search query string, up to 3000 characters."
+          }
+        ],
+        "params_type_name": "TicketsApiSearchParams",
+        "response_type": "TicketsApiSearchResult",
+        "description": "Search for tickets by filtering on properties, searching through associations, and sorting results.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "total": "$.total",
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ticket]",
+        "meta_fields": [
+          {
+            "name": "total",
+            "python_name": "total",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of results (search only)"
+            }
+          },
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "schemas": [
+      {
+        "method_name": "list_schemas",
+        "http_method": "get",
+        "path": "/crm-object-schemas/v3/schemas",
+        "entity": "schemas",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SchemasListParams",
+        "response_type": "SchemasListResult",
+        "description": "Returns all custom object schemas to discover available custom objects",
+        "record_extractor": "$.results",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Schema]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_schema",
+        "http_method": "get",
+        "path": "/crm-object-schemas/v3/schemas/{objectType}",
+        "entity": "schemas",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "objectType",
+            "python_name": "object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Fully qualified name or object type ID of your schema."
+          }
+        ],
+        "params_type_name": "SchemasGetParams",
+        "response_type": "Schema",
+        "description": "Get the schema for a specific custom object type",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Schema",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "objects": [
+      {
+        "method_name": "list_objects",
+        "http_method": "get",
+        "path": "/crm/v3/objects/{objectType}",
+        "entity": "objects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "objectType",
+            "python_name": "object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type ID or fully qualified name (e.g., \"cars\" or \"p12345_cars\")"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": null,
+            "description": "The maximum number of results to display per page.",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The paging cursor token of the last successfully read resource will be returned as the `paging.next.after` JSON property of a paged response containing more results.",
+            "is_deep_object": false
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ObjectsListParams",
+        "response_type": "ObjectsListResult",
+        "description": "Read a page of objects. Control what is returned via the properties query param.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.paging.next.after",
+          "next_link": "$.paging.next.link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CRMObject]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_object",
+        "http_method": "get",
+        "path": "/crm/v3/objects/{objectType}/{objectId}",
+        "entity": "objects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "objectType",
+            "python_name": "object_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object type ID or fully qualified name"
+          },
+          {
+            "name": "objectId",
+            "python_name": "object_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Object record ID"
+          },
+          {
+            "name": "properties",
+            "python_name": "properties",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned in the response. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Whether to return only results that have been archived.",
+            "is_deep_object": false
+          },
+          {
+            "name": "associations",
+            "python_name": "associations",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of object types to retrieve associated IDs for. If any of the specified associations do not exist, they will be ignored.",
+            "is_deep_object": false
+          },
+          {
+            "name": "idProperty",
+            "python_name": "id_property",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a property whose values are unique for this object.",
+            "is_deep_object": false
+          },
+          {
+            "name": "propertiesWithHistory",
+            "python_name": "properties_with_history",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "A comma separated list of the properties to be returned along with their history of previous values. If any of the specified properties are not present on the requested object(s), they will be ignored.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ObjectsGetParams",
+        "response_type": "CRMObject",
+        "description": "Read an Object identified by {objectId}. {objectId} refers to the internal object ID by default, or optionally any unique property value as specified by the idProperty query param. Control what is returned via the properties query param.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CRMObject",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "companies": {
+      "entity": "companies",
+      "data_type_name": "CompaniesSearchData",
+      "filter_type_name": "CompaniesSearchFilter",
+      "in_filter_type_name": "CompaniesInFilter",
+      "any_value_filter_type_name": "CompaniesAnyValueFilter",
+      "string_filter_type_name": "CompaniesStringFilter",
+      "sort_filter_type_name": "CompaniesSortFilter",
+      "result_type_name": "CompaniesSearchResult",
+      "query_type_name": "CompaniesSearchQuery",
+      "condition_prefix": "Companies",
+      "condition_type_name": "CompaniesCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the company has been deleted and moved to the recycling bin"
+        },
+        {
+          "name": "contacts",
+          "python_name": "contacts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Associated contact records linked to this company"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the company record was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the company record"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Object containing all property values for the company"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the company record was last modified"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Boolean flag indicating whether the contact has been archived or deleted."
+        },
+        {
+          "name": "companies",
+          "python_name": "companies",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Associated company records linked to this contact."
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the contact was first created in the system."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the contact record."
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Key-value object storing all contact properties and their values."
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the contact record was last modified."
+        }
+      ]
+    },
+    "deals": {
+      "entity": "deals",
+      "data_type_name": "DealsSearchData",
+      "filter_type_name": "DealsSearchFilter",
+      "in_filter_type_name": "DealsInFilter",
+      "any_value_filter_type_name": "DealsAnyValueFilter",
+      "string_filter_type_name": "DealsStringFilter",
+      "sort_filter_type_name": "DealsSortFilter",
+      "result_type_name": "DealsSearchResult",
+      "query_type_name": "DealsSearchQuery",
+      "condition_prefix": "Deals",
+      "condition_type_name": "DealsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the deal has been deleted and moved to the recycling bin"
+        },
+        {
+          "name": "companies",
+          "python_name": "companies",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Collection of company records associated with the deal"
+        },
+        {
+          "name": "contacts",
+          "python_name": "contacts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Collection of contact records associated with the deal"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the deal record was originally created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the deal record"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Collection of product line items associated with the deal"
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "dict[str, Any]",
+          "json_type": "object",
+          "example_value_json": "{}",
+          "description": "Key-value object containing all deal properties and custom fields"
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the deal record was last modified"
+        }
+      ]
+    }
+  }
+}

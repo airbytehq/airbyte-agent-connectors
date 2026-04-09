@@ -1,0 +1,3405 @@
+{
+  "connector_name": "shopify",
+  "class_name": "ShopifyConnector",
+  "package_name": "airbyte_agent_shopify",
+  "package_version": "0.1.12",
+  "yaml_version": "0.1.12",
+  "api_reference_url": "https://shopify.dev/docs/api/admin-rest",
+  "commit_sha": "unknown",
+  "auth_example": "ShopifyAuthConfig(api_key=\"...\")",
+  "auth_import": ", ShopifyAuthConfig",
+  "auth_config": {
+    "type_name": "ShopifyAuthConfig",
+    "base_name": "Shopify",
+    "options": [
+      {
+        "title": "Access Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Your Shopify Admin API access token"
+          }
+        ],
+        "type_suffix": "AccessTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Shopify is an e-commerce platform that enables businesses to create online stores,\nmanage products, process orders, and handle customer relationships. This connector\nprovides access to Shopify Admin REST API for reading store data including customers,\norders, products, inventory, and more.\n",
+  "supported_questions": "- List all customers in my Shopify store\n- Show me details for a recent customer\n- What products do I have in my store?\n- List all locations for my store\n- Show me inventory levels for a recent location\n- Show me all draft orders\n- List all custom collections in my store\n- Show me details for a recent order\n- Show me product variants for a recent product\n- Show me orders from the last 30 days\n- Show me abandoned checkouts from this week\n- What price rules are currently active?",
+  "unsupported_questions": "- Create a new customer in Shopify\n- Update product pricing\n- Delete an order\n- Process a refund\n- Send shipping notification to customer\n- Create a new discount code",
+  "first_operation": {
+    "method_name": "customers__list",
+    "http_method": "get",
+    "path": "/customers.json",
+    "entity": "customers",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 50
+        },
+        "required": null,
+        "description": "Maximum number of results to return (max 250)",
+        "is_deep_object": false
+      },
+      {
+        "name": "since_id",
+        "python_name": "since_id",
+        "type": "int",
+        "schema": {
+          "type": "integer"
+        },
+        "required": null,
+        "description": "Restrict results to after the specified ID",
+        "is_deep_object": false
+      },
+      {
+        "name": "created_at_min",
+        "python_name": "created_at_min",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "Show customers created after date (ISO 8601 format)",
+        "is_deep_object": false
+      },
+      {
+        "name": "created_at_max",
+        "python_name": "created_at_max",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "Show customers created before date (ISO 8601 format)",
+        "is_deep_object": false
+      },
+      {
+        "name": "updated_at_min",
+        "python_name": "updated_at_min",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "Show customers last updated after date (ISO 8601 format)",
+        "is_deep_object": false
+      },
+      {
+        "name": "updated_at_max",
+        "python_name": "updated_at_max",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "Show customers last updated before date (ISO 8601 format)",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "CustomersListParams",
+    "response_type": "CustomersListResult",
+    "description": "Returns a list of customers from the store",
+    "record_extractor": "$.customers",
+    "meta_extractor": {
+      "next_page_url": "@link.next"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Customer]",
+    "meta_fields": [
+      {
+        "name": "next_page_url",
+        "python_name": "next_page_url",
+        "type": "str | None",
+        "schema": {
+          "type": "string",
+          "nullable": true
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "customers": [
+      {
+        "method_name": "customers__list",
+        "http_method": "get",
+        "path": "/customers.json",
+        "entity": "customers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show customers created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show customers created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show customers last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show customers last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomersListParams",
+        "response_type": "CustomersListResult",
+        "description": "Returns a list of customers from the store",
+        "record_extractor": "$.customers",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Customer]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "customers__get",
+        "http_method": "get",
+        "path": "/customers/{customer_id}.json",
+        "entity": "customers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The customer ID"
+          }
+        ],
+        "params_type_name": "CustomersGetParams",
+        "response_type": "Customer",
+        "description": "Retrieves a single customer by ID",
+        "record_extractor": "$.customer",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Customer",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "orders": [
+      {
+        "method_name": "orders__list",
+        "http_method": "get",
+        "path": "/orders.json",
+        "entity": "orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show orders created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show orders created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show orders last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show orders last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed",
+                "cancelled",
+                "any"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Filter orders by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "financial_status",
+            "python_name": "financial_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "authorized",
+                "pending",
+                "paid",
+                "partially_paid",
+                "refunded",
+                "voided",
+                "partially_refunded",
+                "any",
+                "unpaid"
+              ]
+            },
+            "required": null,
+            "description": "Filter orders by financial status",
+            "is_deep_object": false
+          },
+          {
+            "name": "fulfillment_status",
+            "python_name": "fulfillment_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "shipped",
+                "partial",
+                "unshipped",
+                "any",
+                "unfulfilled"
+              ]
+            },
+            "required": null,
+            "description": "Filter orders by fulfillment status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrdersListParams",
+        "response_type": "OrdersListResult",
+        "description": "Returns a list of orders from the store",
+        "record_extractor": "$.orders",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Order]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "orders__get",
+        "http_method": "get",
+        "path": "/orders/{order_id}.json",
+        "entity": "orders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          }
+        ],
+        "params_type_name": "OrdersGetParams",
+        "response_type": "Order",
+        "description": "Retrieves a single order by ID",
+        "record_extractor": "$.order",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Order",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "products": [
+      {
+        "method_name": "products__list",
+        "http_method": "get",
+        "path": "/products.json",
+        "entity": "products",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show products created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show products created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show products last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show products last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "archived",
+                "draft"
+              ]
+            },
+            "required": null,
+            "description": "Filter products by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "product_type",
+            "python_name": "product_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by product type",
+            "is_deep_object": false
+          },
+          {
+            "name": "vendor",
+            "python_name": "vendor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by vendor",
+            "is_deep_object": false
+          },
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by collection ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductsListParams",
+        "response_type": "ProductsListResult",
+        "description": "Returns a list of products from the store",
+        "record_extractor": "$.products",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Product]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "products__get",
+        "http_method": "get",
+        "path": "/products/{product_id}.json",
+        "entity": "products",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          }
+        ],
+        "params_type_name": "ProductsGetParams",
+        "response_type": "Product",
+        "description": "Retrieves a single product by ID",
+        "record_extractor": "$.product",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Product",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_variants": [
+      {
+        "method_name": "product_variants__list",
+        "http_method": "get",
+        "path": "/products/{product_id}/variants.json",
+        "entity": "product_variants",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductVariantsListParams",
+        "response_type": "ProductVariantsListResult",
+        "description": "Returns a list of variants for a product",
+        "record_extractor": "$.variants",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProductVariant]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "product_variants__get",
+        "http_method": "get",
+        "path": "/variants/{variant_id}.json",
+        "entity": "product_variants",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "variant_id",
+            "python_name": "variant_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The variant ID"
+          }
+        ],
+        "params_type_name": "ProductVariantsGetParams",
+        "response_type": "ProductVariant",
+        "description": "Retrieves a single product variant by ID",
+        "record_extractor": "$.variant",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductVariant",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_images": [
+      {
+        "method_name": "product_images__list",
+        "http_method": "get",
+        "path": "/products/{product_id}/images.json",
+        "entity": "product_images",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductImagesListParams",
+        "response_type": "ProductImagesListResult",
+        "description": "Returns a list of images for a product",
+        "record_extractor": "$.images",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProductImage]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "product_images__get",
+        "http_method": "get",
+        "path": "/products/{product_id}/images/{image_id}.json",
+        "entity": "product_images",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          },
+          {
+            "name": "image_id",
+            "python_name": "image_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The image ID"
+          }
+        ],
+        "params_type_name": "ProductImagesGetParams",
+        "response_type": "ProductImage",
+        "description": "Retrieves a single product image by ID",
+        "record_extractor": "$.image",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductImage",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "abandoned_checkouts": [
+      {
+        "method_name": "abandoned_checkouts__list",
+        "http_method": "get",
+        "path": "/checkouts.json",
+        "entity": "abandoned_checkouts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show checkouts created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show checkouts created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show checkouts last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show checkouts last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "closed",
+                "any"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Filter checkouts by status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AbandonedCheckoutsListParams",
+        "response_type": "AbandonedCheckoutsListResult",
+        "description": "Returns a list of abandoned checkouts",
+        "record_extractor": "$.checkouts",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AbandonedCheckout]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "locations": [
+      {
+        "method_name": "locations__list",
+        "http_method": "get",
+        "path": "/locations.json",
+        "entity": "locations",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "LocationsListParams",
+        "response_type": "LocationsListResult",
+        "description": "Returns a list of locations for the store",
+        "record_extractor": "$.locations",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Location]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "locations__get",
+        "http_method": "get",
+        "path": "/locations/{location_id}.json",
+        "entity": "locations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "location_id",
+            "python_name": "location_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The location ID"
+          }
+        ],
+        "params_type_name": "LocationsGetParams",
+        "response_type": "Location",
+        "description": "Retrieves a single location by ID",
+        "record_extractor": "$.location",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Location",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "inventory_levels": [
+      {
+        "method_name": "inventory_levels__list_by_location",
+        "http_method": "get",
+        "path": "/locations/{location_id}/inventory_levels.json",
+        "entity": "inventory_levels",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "location_id",
+            "python_name": "location_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The location ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InventoryLevelsListParams",
+        "response_type": "InventoryLevelsListResult",
+        "description": "Returns a list of inventory levels for a specific location",
+        "record_extractor": "$.inventory_levels",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[InventoryLevel]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "inventory_items": [
+      {
+        "method_name": "inventory_items__list",
+        "http_method": "get",
+        "path": "/inventory_items.json",
+        "entity": "inventory_items",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ids",
+            "python_name": "ids",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Comma-separated list of inventory item IDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InventoryItemsListParams",
+        "response_type": "InventoryItemsListResult",
+        "description": "Returns a list of inventory items",
+        "record_extractor": "$.inventory_items",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[InventoryItem]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "inventory_items__get",
+        "http_method": "get",
+        "path": "/inventory_items/{inventory_item_id}.json",
+        "entity": "inventory_items",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "inventory_item_id",
+            "python_name": "inventory_item_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The inventory item ID"
+          }
+        ],
+        "params_type_name": "InventoryItemsGetParams",
+        "response_type": "InventoryItem",
+        "description": "Retrieves a single inventory item by ID",
+        "record_extractor": "$.inventory_item",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InventoryItem",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "shop": [
+      {
+        "method_name": "shop__get",
+        "http_method": "get",
+        "path": "/shop.json",
+        "entity": "shop",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "ShopGetParams",
+        "response_type": "Shop",
+        "description": "Retrieves the shop's configuration",
+        "record_extractor": "$.shop",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Shop",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "price_rules": [
+      {
+        "method_name": "price_rules__list",
+        "http_method": "get",
+        "path": "/price_rules.json",
+        "entity": "price_rules",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show price rules created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show price rules created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show price rules last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show price rules last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PriceRulesListParams",
+        "response_type": "PriceRulesListResult",
+        "description": "Returns a list of price rules",
+        "record_extractor": "$.price_rules",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[PriceRule]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "price_rules__get",
+        "http_method": "get",
+        "path": "/price_rules/{price_rule_id}.json",
+        "entity": "price_rules",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "price_rule_id",
+            "python_name": "price_rule_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The price rule ID"
+          }
+        ],
+        "params_type_name": "PriceRulesGetParams",
+        "response_type": "PriceRule",
+        "description": "Retrieves a single price rule by ID",
+        "record_extractor": "$.price_rule",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PriceRule",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "discount_codes": [
+      {
+        "method_name": "discount_codes__list",
+        "http_method": "get",
+        "path": "/price_rules/{price_rule_id}/discount_codes.json",
+        "entity": "discount_codes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "price_rule_id",
+            "python_name": "price_rule_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The price rule ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DiscountCodesListParams",
+        "response_type": "DiscountCodesListResult",
+        "description": "Returns a list of discount codes for a price rule",
+        "record_extractor": "$.discount_codes",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[DiscountCode]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "discount_codes__get",
+        "http_method": "get",
+        "path": "/price_rules/{price_rule_id}/discount_codes/{discount_code_id}.json",
+        "entity": "discount_codes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "price_rule_id",
+            "python_name": "price_rule_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The price rule ID"
+          },
+          {
+            "name": "discount_code_id",
+            "python_name": "discount_code_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The discount code ID"
+          }
+        ],
+        "params_type_name": "DiscountCodesGetParams",
+        "response_type": "DiscountCode",
+        "description": "Retrieves a single discount code by ID",
+        "record_extractor": "$.discount_code",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DiscountCode",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "custom_collections": [
+      {
+        "method_name": "custom_collections__list",
+        "http_method": "get",
+        "path": "/custom_collections.json",
+        "entity": "custom_collections",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by collection title",
+            "is_deep_object": false
+          },
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by product ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show collections last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show collections last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomCollectionsListParams",
+        "response_type": "CustomCollectionsListResult",
+        "description": "Returns a list of custom collections",
+        "record_extractor": "$.custom_collections",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CustomCollection]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "custom_collections__get",
+        "http_method": "get",
+        "path": "/custom_collections/{collection_id}.json",
+        "entity": "custom_collections",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collection ID"
+          }
+        ],
+        "params_type_name": "CustomCollectionsGetParams",
+        "response_type": "CustomCollection",
+        "description": "Retrieves a single custom collection by ID",
+        "record_extractor": "$.custom_collection",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomCollection",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "smart_collections": [
+      {
+        "method_name": "smart_collections__list",
+        "http_method": "get",
+        "path": "/smart_collections.json",
+        "entity": "smart_collections",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by collection title",
+            "is_deep_object": false
+          },
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by product ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show collections last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show collections last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SmartCollectionsListParams",
+        "response_type": "SmartCollectionsListResult",
+        "description": "Returns a list of smart collections",
+        "record_extractor": "$.smart_collections",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SmartCollection]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "smart_collections__get",
+        "http_method": "get",
+        "path": "/smart_collections/{collection_id}.json",
+        "entity": "smart_collections",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collection ID"
+          }
+        ],
+        "params_type_name": "SmartCollectionsGetParams",
+        "response_type": "SmartCollection",
+        "description": "Retrieves a single smart collection by ID",
+        "record_extractor": "$.smart_collection",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SmartCollection",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "collects": [
+      {
+        "method_name": "collects__list",
+        "http_method": "get",
+        "path": "/collects.json",
+        "entity": "collects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by collection ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Filter by product ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CollectsListParams",
+        "response_type": "CollectsListResult",
+        "description": "Returns a list of collects (links between products and collections)",
+        "record_extractor": "$.collects",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Collect]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "collects__get",
+        "http_method": "get",
+        "path": "/collects/{collect_id}.json",
+        "entity": "collects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "collect_id",
+            "python_name": "collect_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collect ID"
+          }
+        ],
+        "params_type_name": "CollectsGetParams",
+        "response_type": "Collect",
+        "description": "Retrieves a single collect by ID",
+        "record_extractor": "$.collect",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Collect",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "draft_orders": [
+      {
+        "method_name": "draft_orders__list",
+        "http_method": "get",
+        "path": "/draft_orders.json",
+        "entity": "draft_orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "open",
+                "invoice_sent",
+                "completed"
+              ]
+            },
+            "required": null,
+            "description": "Filter draft orders by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show draft orders last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show draft orders last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DraftOrdersListParams",
+        "response_type": "DraftOrdersListResult",
+        "description": "Returns a list of draft orders",
+        "record_extractor": "$.draft_orders",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[DraftOrder]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "draft_orders__get",
+        "http_method": "get",
+        "path": "/draft_orders/{draft_order_id}.json",
+        "entity": "draft_orders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "draft_order_id",
+            "python_name": "draft_order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The draft order ID"
+          }
+        ],
+        "params_type_name": "DraftOrdersGetParams",
+        "response_type": "DraftOrder",
+        "description": "Retrieves a single draft order by ID",
+        "record_extractor": "$.draft_order",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DraftOrder",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "fulfillments": [
+      {
+        "method_name": "fulfillments__list",
+        "http_method": "get",
+        "path": "/orders/{order_id}/fulfillments.json",
+        "entity": "fulfillments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_min",
+            "python_name": "created_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show fulfillments created after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at_max",
+            "python_name": "created_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show fulfillments created before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_min",
+            "python_name": "updated_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show fulfillments last updated after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_at_max",
+            "python_name": "updated_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show fulfillments last updated before date (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FulfillmentsListParams",
+        "response_type": "FulfillmentsListResult",
+        "description": "Returns a list of fulfillments for an order",
+        "record_extractor": "$.fulfillments",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Fulfillment]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "fulfillments__get",
+        "http_method": "get",
+        "path": "/orders/{order_id}/fulfillments/{fulfillment_id}.json",
+        "entity": "fulfillments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "fulfillment_id",
+            "python_name": "fulfillment_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The fulfillment ID"
+          }
+        ],
+        "params_type_name": "FulfillmentsGetParams",
+        "response_type": "Fulfillment",
+        "description": "Retrieves a single fulfillment by ID",
+        "record_extractor": "$.fulfillment",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Fulfillment",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "order_refunds": [
+      {
+        "method_name": "order_refunds__list",
+        "http_method": "get",
+        "path": "/orders/{order_id}/refunds.json",
+        "entity": "order_refunds",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrderRefundsListParams",
+        "response_type": "OrderRefundsListResult",
+        "description": "Returns a list of refunds for an order",
+        "record_extractor": "$.refunds",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Refund]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "order_refunds__get",
+        "http_method": "get",
+        "path": "/orders/{order_id}/refunds/{refund_id}.json",
+        "entity": "order_refunds",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "refund_id",
+            "python_name": "refund_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The refund ID"
+          }
+        ],
+        "params_type_name": "OrderRefundsGetParams",
+        "response_type": "Refund",
+        "description": "Retrieves a single refund by ID",
+        "record_extractor": "$.refund",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Refund",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactions": [
+      {
+        "method_name": "transactions__list",
+        "http_method": "get",
+        "path": "/orders/{order_id}/transactions.json",
+        "entity": "transactions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TransactionsListParams",
+        "response_type": "TransactionsListResult",
+        "description": "Returns a list of transactions for an order",
+        "record_extractor": "$.transactions",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Transaction]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "transactions__get",
+        "http_method": "get",
+        "path": "/orders/{order_id}/transactions/{transaction_id}.json",
+        "entity": "transactions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "transaction_id",
+            "python_name": "transaction_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The transaction ID"
+          }
+        ],
+        "params_type_name": "TransactionsGetParams",
+        "response_type": "Transaction",
+        "description": "Retrieves a single transaction by ID",
+        "record_extractor": "$.transaction",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Transaction",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tender_transactions": [
+      {
+        "method_name": "tender_transactions__list",
+        "http_method": "get",
+        "path": "/tender_transactions.json",
+        "entity": "tender_transactions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "processed_at_min",
+            "python_name": "processed_at_min",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show tender transactions processed after date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "processed_at_max",
+            "python_name": "processed_at_max",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Show tender transactions processed before date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "processed_at ASC",
+                "processed_at DESC"
+              ]
+            },
+            "required": null,
+            "description": "Order of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TenderTransactionsListParams",
+        "response_type": "TenderTransactionsListResult",
+        "description": "Returns a list of tender transactions",
+        "record_extractor": "$.tender_transactions",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TenderTransaction]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "countries": [
+      {
+        "method_name": "countries__list",
+        "http_method": "get",
+        "path": "/countries.json",
+        "entity": "countries",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CountriesListParams",
+        "response_type": "CountriesListResult",
+        "description": "Returns a list of countries",
+        "record_extractor": "$.countries",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Country]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "countries__get",
+        "http_method": "get",
+        "path": "/countries/{country_id}.json",
+        "entity": "countries",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "country_id",
+            "python_name": "country_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The country ID"
+          }
+        ],
+        "params_type_name": "CountriesGetParams",
+        "response_type": "Country",
+        "description": "Retrieves a single country by ID",
+        "record_extractor": "$.country",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Country",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "metafield_shops": [
+      {
+        "method_name": "metafield_shops__list",
+        "http_method": "get",
+        "path": "/metafields.json",
+        "entity": "metafield_shops",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by type",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldShopsListParams",
+        "response_type": "MetafieldShopsListResult",
+        "description": "Returns a list of metafields for the shop",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "metafield_shops__get",
+        "http_method": "get",
+        "path": "/metafields/{metafield_id}.json",
+        "entity": "metafield_shops",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "metafield_id",
+            "python_name": "metafield_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The metafield ID"
+          }
+        ],
+        "params_type_name": "MetafieldShopsGetParams",
+        "response_type": "Metafield",
+        "description": "Retrieves a single metafield by ID",
+        "record_extractor": "$.metafield",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Metafield",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "metafield_customers": [
+      {
+        "method_name": "metafield_customers__list",
+        "http_method": "get",
+        "path": "/customers/{customer_id}/metafields.json",
+        "entity": "metafield_customers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The customer ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldCustomersListParams",
+        "response_type": "MetafieldCustomersListResult",
+        "description": "Returns a list of metafields for a customer",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_products": [
+      {
+        "method_name": "metafield_products__list",
+        "http_method": "get",
+        "path": "/products/{product_id}/metafields.json",
+        "entity": "metafield_products",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldProductsListParams",
+        "response_type": "MetafieldProductsListResult",
+        "description": "Returns a list of metafields for a product",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_orders": [
+      {
+        "method_name": "metafield_orders__list",
+        "http_method": "get",
+        "path": "/orders/{order_id}/metafields.json",
+        "entity": "metafield_orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldOrdersListParams",
+        "response_type": "MetafieldOrdersListResult",
+        "description": "Returns a list of metafields for an order",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_draft_orders": [
+      {
+        "method_name": "metafield_draft_orders__list",
+        "http_method": "get",
+        "path": "/draft_orders/{draft_order_id}/metafields.json",
+        "entity": "metafield_draft_orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "draft_order_id",
+            "python_name": "draft_order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The draft order ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldDraftOrdersListParams",
+        "response_type": "MetafieldDraftOrdersListResult",
+        "description": "Returns a list of metafields for a draft order",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_locations": [
+      {
+        "method_name": "metafield_locations__list",
+        "http_method": "get",
+        "path": "/locations/{location_id}/metafields.json",
+        "entity": "metafield_locations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "location_id",
+            "python_name": "location_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The location ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldLocationsListParams",
+        "response_type": "MetafieldLocationsListResult",
+        "description": "Returns a list of metafields for a location",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_product_variants": [
+      {
+        "method_name": "metafield_product_variants__list",
+        "http_method": "get",
+        "path": "/variants/{variant_id}/metafields.json",
+        "entity": "metafield_product_variants",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "variant_id",
+            "python_name": "variant_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The variant ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldProductVariantsListParams",
+        "response_type": "MetafieldProductVariantsListResult",
+        "description": "Returns a list of metafields for a product variant",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_smart_collections": [
+      {
+        "method_name": "metafield_smart_collections__list",
+        "http_method": "get",
+        "path": "/smart_collections/{collection_id}/metafields.json",
+        "entity": "metafield_smart_collections",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "collection_id",
+            "python_name": "collection_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The collection ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldSmartCollectionsListParams",
+        "response_type": "MetafieldSmartCollectionsListResult",
+        "description": "Returns a list of metafields for a smart collection",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "metafield_product_images": [
+      {
+        "method_name": "metafield_product_images__list",
+        "http_method": "get",
+        "path": "/products/{product_id}/images/{image_id}/metafields.json",
+        "entity": "metafield_product_images",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The product ID"
+          },
+          {
+            "name": "image_id",
+            "python_name": "image_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The image ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "since_id",
+            "python_name": "since_id",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Restrict results to after the specified ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "namespace",
+            "python_name": "namespace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by namespace",
+            "is_deep_object": false
+          },
+          {
+            "name": "key",
+            "python_name": "key",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by key",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetafieldProductImagesListParams",
+        "response_type": "MetafieldProductImagesListResult",
+        "description": "Returns a list of metafields for a product image",
+        "record_extractor": "$.metafields",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Metafield]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "customer_address": [
+      {
+        "method_name": "customer_addresses__list",
+        "http_method": "get",
+        "path": "/customers/{customer_id}/addresses.json",
+        "entity": "customer_address",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The customer ID"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of results to return (max 250)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomerAddressListParams",
+        "response_type": "CustomerAddressListResult",
+        "description": "Returns a list of addresses for a customer",
+        "record_extractor": "$.addresses",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CustomerAddress]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "customer_addresses__get",
+        "http_method": "get",
+        "path": "/customers/{customer_id}/addresses/{address_id}.json",
+        "entity": "customer_address",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The customer ID"
+          },
+          {
+            "name": "address_id",
+            "python_name": "address_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The address ID"
+          }
+        ],
+        "params_type_name": "CustomerAddressGetParams",
+        "response_type": "CustomerAddress",
+        "description": "Retrieves a single customer address by ID",
+        "record_extractor": "$.customer_address",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomerAddress",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "fulfillment_orders": [
+      {
+        "method_name": "fulfillment_orders__list",
+        "http_method": "get",
+        "path": "/orders/{order_id}/fulfillment_orders.json",
+        "entity": "fulfillment_orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The order ID"
+          }
+        ],
+        "params_type_name": "FulfillmentOrdersListParams",
+        "response_type": "FulfillmentOrdersListResult",
+        "description": "Returns a list of fulfillment orders for a specific order",
+        "record_extractor": "$.fulfillment_orders",
+        "meta_extractor": {
+          "next_page_url": "@link.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[FulfillmentOrder]",
+        "meta_fields": [
+          {
+            "name": "next_page_url",
+            "python_name": "next_page_url",
+            "type": "str | None",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "fulfillment_orders__get",
+        "http_method": "get",
+        "path": "/fulfillment_orders/{fulfillment_order_id}.json",
+        "entity": "fulfillment_orders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fulfillment_order_id",
+            "python_name": "fulfillment_order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The fulfillment order ID"
+          }
+        ],
+        "params_type_name": "FulfillmentOrdersGetParams",
+        "response_type": "FulfillmentOrder",
+        "description": "Retrieves a single fulfillment order by ID",
+        "record_extractor": "$.fulfillment_order",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "FulfillmentOrder",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

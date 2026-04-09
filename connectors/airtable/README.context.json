@@ -1,0 +1,369 @@
+{
+  "connector_name": "airtable",
+  "class_name": "AirtableConnector",
+  "package_name": "airbyte_agent_airtable",
+  "package_version": "1.0.8",
+  "yaml_version": "1.0.8",
+  "api_reference_url": "https://airtable.com/developers/web/api/introduction",
+  "commit_sha": "unknown",
+  "auth_example": "AirtableAuthConfig(personal_access_token=\"...\")",
+  "auth_import": ", AirtableAuthConfig",
+  "auth_config": {
+    "type_name": "AirtableAuthConfig",
+    "base_name": "Airtable",
+    "options": [
+      {
+        "title": "Personal Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "personal_access_token",
+            "type": "str",
+            "required": true,
+            "title": "Personal Access Token",
+            "description": "Airtable Personal Access Token. See https://airtable.com/developers/web/guides/personal-access-tokens"
+          }
+        ],
+        "type_suffix": "PersonalAccessToken"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Airtable is a cloud-based platform that combines the simplicity of a spreadsheet with the \npower of a database. This connector provides access to bases, tables, and records for \ndata analysis and workflow automation.\n",
+  "supported_questions": "- List all my Airtable bases\n- What tables are in my first base?\n- Show me the schema for tables in a base\n- List records from a table in my base\n- Show me recent records from a table\n- What fields are in a table?\n- List records where Status is 'Done' in table tblXXX\n- Find records created last week in table tblXXX\n- Show me records updated in the last 30 days in base appXXX",
+  "unsupported_questions": "- Create a new record in Airtable\n- Update a record in Airtable\n- Delete a record from Airtable\n- Create a new table\n- Modify table schema",
+  "first_operation": {
+    "method_name": "list_bases",
+    "http_method": "get",
+    "path": "/meta/bases",
+    "entity": "bases",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "offset",
+        "python_name": "offset",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Pagination offset from previous response",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "BasesListParams",
+    "response_type": "BasesListResult",
+    "description": "Returns a list of all bases the user has access to",
+    "record_extractor": "$.bases",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Base]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "bases": [
+      {
+        "method_name": "list_bases",
+        "http_method": "get",
+        "path": "/meta/bases",
+        "entity": "bases",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset from previous response",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BasesListParams",
+        "response_type": "BasesListResult",
+        "description": "Returns a list of all bases the user has access to",
+        "record_extractor": "$.bases",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Base]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tables": [
+      {
+        "method_name": "list_tables",
+        "http_method": "get",
+        "path": "/meta/bases/{base_id}/tables",
+        "entity": "tables",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "base_id",
+            "python_name": "base_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the base"
+          }
+        ],
+        "params_type_name": "TablesListParams",
+        "response_type": "TablesListResult",
+        "description": "Returns a list of all tables in the specified base with their schema information",
+        "record_extractor": "$.tables",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Table]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "records": [
+      {
+        "method_name": "list_records",
+        "http_method": "get",
+        "path": "/{base_id}/{table_id_or_name}",
+        "entity": "records",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "base_id",
+            "python_name": "base_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the base"
+          },
+          {
+            "name": "table_id_or_name",
+            "python_name": "table_id_or_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or name of the table"
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset from previous response",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": null,
+            "description": "Number of records per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "view",
+            "python_name": "view",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Name or ID of a view to filter records",
+            "is_deep_object": false
+          },
+          {
+            "name": "filterByFormula",
+            "python_name": "filter_by_formula",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Airtable formula to filter records",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Sort configuration as JSON array",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RecordsListParams",
+        "response_type": "RecordsListResult",
+        "description": "Returns a paginated list of records from the specified table",
+        "record_extractor": "$.records",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Record]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_record",
+        "http_method": "get",
+        "path": "/{base_id}/{table_id_or_name}/{record_id}",
+        "entity": "records",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "base_id",
+            "python_name": "base_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the base"
+          },
+          {
+            "name": "table_id_or_name",
+            "python_name": "table_id_or_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or name of the table"
+          },
+          {
+            "name": "record_id",
+            "python_name": "record_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the record"
+          }
+        ],
+        "params_type_name": "RecordsGetParams",
+        "response_type": "Record",
+        "description": "Returns a single record by ID from the specified table",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Record",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "bases": {
+      "entity": "bases",
+      "data_type_name": "BasesSearchData",
+      "filter_type_name": "BasesSearchFilter",
+      "in_filter_type_name": "BasesInFilter",
+      "any_value_filter_type_name": "BasesAnyValueFilter",
+      "string_filter_type_name": "BasesStringFilter",
+      "sort_filter_type_name": "BasesSortFilter",
+      "result_type_name": "BasesSearchResult",
+      "query_type_name": "BasesSearchQuery",
+      "condition_prefix": "Bases",
+      "condition_type_name": "BasesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the base"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the base"
+        },
+        {
+          "name": "permissionLevel",
+          "python_name": "permission_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Permission level for the base"
+        }
+      ]
+    },
+    "tables": {
+      "entity": "tables",
+      "data_type_name": "TablesSearchData",
+      "filter_type_name": "TablesSearchFilter",
+      "in_filter_type_name": "TablesInFilter",
+      "any_value_filter_type_name": "TablesAnyValueFilter",
+      "string_filter_type_name": "TablesStringFilter",
+      "sort_filter_type_name": "TablesSortFilter",
+      "result_type_name": "TablesSearchResult",
+      "query_type_name": "TablesSearchQuery",
+      "condition_prefix": "Tables",
+      "condition_type_name": "TablesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the table"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the table"
+        },
+        {
+          "name": "primaryFieldId",
+          "python_name": "primary_field_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the primary field"
+        },
+        {
+          "name": "fields",
+          "python_name": "fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of fields in the table"
+        },
+        {
+          "name": "views",
+          "python_name": "views",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of views in the table"
+        }
+      ]
+    }
+  }
+}

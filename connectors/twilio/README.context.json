@@ -1,0 +1,2551 @@
+{
+  "connector_name": "twilio",
+  "class_name": "TwilioConnector",
+  "package_name": "airbyte_agent_twilio",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://www.twilio.com/docs/usage/api",
+  "commit_sha": "unknown",
+  "auth_example": "TwilioAuthConfig(account_sid=\"...\", auth_token=\"...\")",
+  "auth_import": ", TwilioAuthConfig",
+  "auth_config": {
+    "type_name": "TwilioAuthConfig",
+    "base_name": "Twilio",
+    "options": [
+      {
+        "title": "Twilio Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "account_sid",
+            "type": "str",
+            "required": true,
+            "title": "Account SID",
+            "description": "Your Twilio Account SID (starts with AC)"
+          },
+          {
+            "name": "auth_token",
+            "type": "str",
+            "required": true,
+            "title": "Auth Token",
+            "description": "Your Twilio Auth Token"
+          }
+        ],
+        "type_suffix": "TwilioAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "TwilioReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Twilio.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ. Any data before this date will not be replicated.\n",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Twilio REST API. Provides read access to core Twilio resources including accounts, calls, messages, recordings, conferences, incoming phone numbers, usage records, addresses, queues, transcriptions, and outgoing caller IDs. Uses HTTP Basic authentication with Account SID and Auth Token.\n",
+  "supported_questions": "- List all calls from the last 7 days\n- Show me recent inbound SMS messages\n- List all active phone numbers on my account\n- Show me details for a specific call\n- List all recordings\n- Show me conference calls\n- List usage records for my account\n- Show me all queues\n- List outgoing caller IDs\n- Show me addresses on my account\n- List transcriptions\n- What are my top 10 most expensive calls this month?\n- How many SMS messages did I send vs receive in the last 30 days?\n- Summarize my usage costs by category\n- Which phone numbers have the most incoming calls?\n- Show me all failed messages and their error codes\n- What is the average call duration for outbound calls?",
+  "unsupported_questions": "- Send a new SMS message\n- Make a phone call\n- Purchase a new phone number\n- Delete a recording\n- Create a new queue",
+  "first_operation": {
+    "method_name": "list_accounts",
+    "http_method": "get",
+    "path": "/Accounts.json",
+    "entity": "accounts",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "PageSize",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "default": 50
+        },
+        "required": null,
+        "description": "Number of items to return per page",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "AccountsListParams",
+    "response_type": "AccountsListResult",
+    "description": "Returns a list of accounts associated with the authenticated account",
+    "record_extractor": "$.accounts",
+    "meta_extractor": {
+      "next_page_uri": "$.next_page_uri",
+      "first_page_uri": "$.first_page_uri",
+      "page": "$.page",
+      "page_size": "$.page_size"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Account]",
+    "meta_fields": [
+      {
+        "name": "next_page_uri",
+        "python_name": "next_page_uri",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      {
+        "name": "first_page_uri",
+        "python_name": "first_page_uri",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      },
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int | None",
+        "schema": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        }
+      },
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int | None",
+        "schema": {
+          "type": [
+            "null",
+            "integer"
+          ]
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "get",
+        "path": "/Accounts.json",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Returns a list of accounts associated with the authenticated account",
+        "record_extractor": "$.accounts",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/Accounts/{sid}.json",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          }
+        ],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "Account",
+        "description": "Get a single account by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls": [
+      {
+        "method_name": "list_calls",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Calls.json",
+        "entity": "calls",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsListParams",
+        "response_type": "CallsListResult",
+        "description": "Returns a list of calls made to and from an account",
+        "record_extractor": "$.calls",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Call]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_call",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Calls/{sid}.json",
+        "entity": "calls",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call SID"
+          }
+        ],
+        "params_type_name": "CallsGetParams",
+        "response_type": "Call",
+        "description": "Get a single call by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages": [
+      {
+        "method_name": "list_messages",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Messages.json",
+        "entity": "messages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MessagesListParams",
+        "response_type": "MessagesListResult",
+        "description": "Returns a list of messages associated with an account",
+        "record_extractor": "$.messages",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Message]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_message",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Messages/{sid}.json",
+        "entity": "messages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Message SID"
+          }
+        ],
+        "params_type_name": "MessagesGetParams",
+        "response_type": "Message",
+        "description": "Get a single message by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "incoming_phone_numbers": [
+      {
+        "method_name": "list_incoming_phone_numbers",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/IncomingPhoneNumbers.json",
+        "entity": "incoming_phone_numbers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IncomingPhoneNumbersListParams",
+        "response_type": "IncomingPhoneNumbersListResult",
+        "description": "Returns a list of incoming phone numbers for an account",
+        "record_extractor": "$.incoming_phone_numbers",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[IncomingPhoneNumber]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_incoming_phone_number",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/IncomingPhoneNumbers/{sid}.json",
+        "entity": "incoming_phone_numbers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Incoming phone number SID"
+          }
+        ],
+        "params_type_name": "IncomingPhoneNumbersGetParams",
+        "response_type": "IncomingPhoneNumber",
+        "description": "Get a single incoming phone number by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IncomingPhoneNumber",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "recordings": [
+      {
+        "method_name": "list_recordings",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Recordings.json",
+        "entity": "recordings",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RecordingsListParams",
+        "response_type": "RecordingsListResult",
+        "description": "Returns a list of recordings for an account",
+        "record_extractor": "$.recordings",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Recording]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_recording",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Recordings/{sid}.json",
+        "entity": "recordings",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Recording SID"
+          }
+        ],
+        "params_type_name": "RecordingsGetParams",
+        "response_type": "Recording",
+        "description": "Get a single recording by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Recording",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "conferences": [
+      {
+        "method_name": "list_conferences",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Conferences.json",
+        "entity": "conferences",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ConferencesListParams",
+        "response_type": "ConferencesListResult",
+        "description": "Returns a list of conferences for an account",
+        "record_extractor": "$.conferences",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Conference]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_conference",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Conferences/{sid}.json",
+        "entity": "conferences",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Conference SID"
+          }
+        ],
+        "params_type_name": "ConferencesGetParams",
+        "response_type": "Conference",
+        "description": "Get a single conference by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Conference",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "usage_records": [
+      {
+        "method_name": "list_usage_records",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Usage/Records.json",
+        "entity": "usage_records",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsageRecordsListParams",
+        "response_type": "UsageRecordsListResult",
+        "description": "Returns a list of usage records for an account",
+        "record_extractor": "$.usage_records",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UsageRecord]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "addresses": [
+      {
+        "method_name": "list_addresses",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Addresses.json",
+        "entity": "addresses",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AddressesListParams",
+        "response_type": "AddressesListResult",
+        "description": "Returns a list of addresses for an account",
+        "record_extractor": "$.addresses",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Address]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_address",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Addresses/{sid}.json",
+        "entity": "addresses",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Address SID"
+          }
+        ],
+        "params_type_name": "AddressesGetParams",
+        "response_type": "Address",
+        "description": "Get a single address by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Address",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "queues": [
+      {
+        "method_name": "list_queues",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Queues.json",
+        "entity": "queues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "QueuesListParams",
+        "response_type": "QueuesListResult",
+        "description": "Returns a list of queues for an account",
+        "record_extractor": "$.queues",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Queue]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_queue",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Queues/{sid}.json",
+        "entity": "queues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Queue SID"
+          }
+        ],
+        "params_type_name": "QueuesGetParams",
+        "response_type": "Queue",
+        "description": "Get a single queue by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Queue",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transcriptions": [
+      {
+        "method_name": "list_transcriptions",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Transcriptions.json",
+        "entity": "transcriptions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TranscriptionsListParams",
+        "response_type": "TranscriptionsListResult",
+        "description": "Returns a list of transcriptions for an account",
+        "record_extractor": "$.transcriptions",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Transcription]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_transcription",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/Transcriptions/{sid}.json",
+        "entity": "transcriptions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Transcription SID"
+          }
+        ],
+        "params_type_name": "TranscriptionsGetParams",
+        "response_type": "Transcription",
+        "description": "Get a single transcription by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Transcription",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "outgoing_caller_ids": [
+      {
+        "method_name": "list_outgoing_caller_ids",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/OutgoingCallerIds.json",
+        "entity": "outgoing_caller_ids",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "PageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OutgoingCallerIdsListParams",
+        "response_type": "OutgoingCallerIdsListResult",
+        "description": "Returns a list of outgoing caller IDs for an account",
+        "record_extractor": "$.outgoing_caller_ids",
+        "meta_extractor": {
+          "next_page_uri": "$.next_page_uri",
+          "first_page_uri": "$.first_page_uri",
+          "page": "$.page",
+          "page_size": "$.page_size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[OutgoingCallerId]",
+        "meta_fields": [
+          {
+            "name": "next_page_uri",
+            "python_name": "next_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "first_page_uri",
+            "python_name": "first_page_uri",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_outgoing_caller_id",
+        "http_method": "get",
+        "path": "/Accounts/{AccountSid}/OutgoingCallerIds/{sid}.json",
+        "entity": "outgoing_caller_ids",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "AccountSid",
+            "python_name": "account_sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Account SID"
+          },
+          {
+            "name": "sid",
+            "python_name": "sid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Outgoing caller ID SID"
+          }
+        ],
+        "params_type_name": "OutgoingCallerIdsGetParams",
+        "response_type": "OutgoingCallerId",
+        "description": "Get a single outgoing caller ID by SID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OutgoingCallerId",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "accounts": {
+      "entity": "accounts",
+      "data_type_name": "AccountsSearchData",
+      "filter_type_name": "AccountsSearchFilter",
+      "in_filter_type_name": "AccountsInFilter",
+      "any_value_filter_type_name": "AccountsAnyValueFilter",
+      "string_filter_type_name": "AccountsStringFilter",
+      "sort_filter_type_name": "AccountsSortFilter",
+      "result_type_name": "AccountsSearchResult",
+      "query_type_name": "AccountsSearchQuery",
+      "condition_prefix": "Accounts",
+      "condition_type_name": "AccountsCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the account"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A user-defined friendly name for the account"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the account"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of the account"
+        },
+        {
+          "name": "owner_account_sid",
+          "python_name": "owner_account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SID of the owner account"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the account was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the account was last updated"
+        },
+        {
+          "name": "uri",
+          "python_name": "uri",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URI for accessing the account resource"
+        }
+      ]
+    },
+    "calls": {
+      "entity": "calls",
+      "data_type_name": "CallsSearchData",
+      "filter_type_name": "CallsSearchFilter",
+      "in_filter_type_name": "CallsInFilter",
+      "any_value_filter_type_name": "CallsAnyValueFilter",
+      "string_filter_type_name": "CallsStringFilter",
+      "sort_filter_type_name": "CallsSortFilter",
+      "result_type_name": "CallsSearchResult",
+      "query_type_name": "CallsSearchQuery",
+      "condition_prefix": "Calls",
+      "condition_type_name": "CallsCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the call"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the account associated with the call"
+        },
+        {
+          "name": "to",
+          "python_name": "to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number that received the call"
+        },
+        {
+          "name": "from",
+          "python_name": "from_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number that made the call"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the call"
+        },
+        {
+          "name": "direction",
+          "python_name": "direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The direction of the call (inbound or outbound)"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The duration of the call in seconds"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cost of the call"
+        },
+        {
+          "name": "price_unit",
+          "python_name": "price_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency unit of the call cost"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the call started"
+        },
+        {
+          "name": "end_time",
+          "python_name": "end_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the call ended"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the call record was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the call record was last updated"
+        }
+      ]
+    },
+    "messages": {
+      "entity": "messages",
+      "data_type_name": "MessagesSearchData",
+      "filter_type_name": "MessagesSearchFilter",
+      "in_filter_type_name": "MessagesInFilter",
+      "any_value_filter_type_name": "MessagesAnyValueFilter",
+      "string_filter_type_name": "MessagesStringFilter",
+      "sort_filter_type_name": "MessagesSortFilter",
+      "result_type_name": "MessagesSearchResult",
+      "query_type_name": "MessagesSearchQuery",
+      "condition_prefix": "Messages",
+      "condition_type_name": "MessagesCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for this message"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the account associated with this message"
+        },
+        {
+          "name": "to",
+          "python_name": "to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number or recipient ID the message was sent to"
+        },
+        {
+          "name": "from",
+          "python_name": "from_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number or sender ID that sent the message"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The text body of the message"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the message"
+        },
+        {
+          "name": "direction",
+          "python_name": "direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The direction of the message"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cost of the message"
+        },
+        {
+          "name": "price_unit",
+          "python_name": "price_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency unit used for pricing"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the message was created"
+        },
+        {
+          "name": "date_sent",
+          "python_name": "date_sent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the message was sent"
+        },
+        {
+          "name": "error_code",
+          "python_name": "error_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The error code associated with the message if any"
+        },
+        {
+          "name": "error_message",
+          "python_name": "error_message",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The error message description if the message failed"
+        },
+        {
+          "name": "num_segments",
+          "python_name": "num_segments",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The number of message segments"
+        },
+        {
+          "name": "num_media",
+          "python_name": "num_media",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The number of media files included in the message"
+        }
+      ]
+    },
+    "incoming_phone_numbers": {
+      "entity": "incoming_phone_numbers",
+      "data_type_name": "IncomingPhoneNumbersSearchData",
+      "filter_type_name": "IncomingPhoneNumbersSearchFilter",
+      "in_filter_type_name": "IncomingPhoneNumbersInFilter",
+      "any_value_filter_type_name": "IncomingPhoneNumbersAnyValueFilter",
+      "string_filter_type_name": "IncomingPhoneNumbersStringFilter",
+      "sort_filter_type_name": "IncomingPhoneNumbersSortFilter",
+      "result_type_name": "IncomingPhoneNumbersSearchResult",
+      "query_type_name": "IncomingPhoneNumbersSearchQuery",
+      "condition_prefix": "IncomingPhoneNumbers",
+      "condition_type_name": "IncomingPhoneNumbersCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SID of this phone number"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SID of the account that owns this phone number"
+        },
+        {
+          "name": "phone_number",
+          "python_name": "phone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number in E.164 format"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A user-assigned friendly name for this phone number"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the phone number"
+        },
+        {
+          "name": "capabilities",
+          "python_name": "capabilities",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Capabilities of this phone number"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the phone number was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the phone number was last updated"
+        }
+      ]
+    },
+    "recordings": {
+      "entity": "recordings",
+      "data_type_name": "RecordingsSearchData",
+      "filter_type_name": "RecordingsSearchFilter",
+      "in_filter_type_name": "RecordingsInFilter",
+      "any_value_filter_type_name": "RecordingsAnyValueFilter",
+      "string_filter_type_name": "RecordingsStringFilter",
+      "sort_filter_type_name": "RecordingsSortFilter",
+      "result_type_name": "RecordingsSearchResult",
+      "query_type_name": "RecordingsSearchQuery",
+      "condition_prefix": "Recordings",
+      "condition_type_name": "RecordingsCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the recording"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID that owns the recording"
+        },
+        {
+          "name": "call_sid",
+          "python_name": "call_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SID of the associated call"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Duration in seconds"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the recording"
+        },
+        {
+          "name": "channels",
+          "python_name": "channels",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of audio channels"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cost of storing the recording"
+        },
+        {
+          "name": "price_unit",
+          "python_name": "price_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency unit"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the recording was created"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the recording started"
+        }
+      ]
+    },
+    "conferences": {
+      "entity": "conferences",
+      "data_type_name": "ConferencesSearchData",
+      "filter_type_name": "ConferencesSearchFilter",
+      "in_filter_type_name": "ConferencesInFilter",
+      "any_value_filter_type_name": "ConferencesAnyValueFilter",
+      "string_filter_type_name": "ConferencesStringFilter",
+      "sort_filter_type_name": "ConferencesSortFilter",
+      "result_type_name": "ConferencesSearchResult",
+      "query_type_name": "ConferencesSearchQuery",
+      "condition_prefix": "Conferences",
+      "condition_type_name": "ConferencesCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the conference"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID associated with the conference"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A friendly name for the conference"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the conference"
+        },
+        {
+          "name": "region",
+          "python_name": "region",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The region where the conference is hosted"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the conference was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the conference was last updated"
+        }
+      ]
+    },
+    "usage_records": {
+      "entity": "usage_records",
+      "data_type_name": "UsageRecordsSearchData",
+      "filter_type_name": "UsageRecordsSearchFilter",
+      "in_filter_type_name": "UsageRecordsInFilter",
+      "any_value_filter_type_name": "UsageRecordsAnyValueFilter",
+      "string_filter_type_name": "UsageRecordsStringFilter",
+      "sort_filter_type_name": "UsageRecordsSortFilter",
+      "result_type_name": "UsageRecordsSearchResult",
+      "query_type_name": "UsageRecordsSearchQuery",
+      "condition_prefix": "UsageRecords",
+      "condition_type_name": "UsageRecordsCondition",
+      "fields": [
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID associated with this usage record"
+        },
+        {
+          "name": "category",
+          "python_name": "category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The usage category (calls, SMS, recordings, etc.)"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A description of the usage record"
+        },
+        {
+          "name": "usage",
+          "python_name": "usage",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The total usage value"
+        },
+        {
+          "name": "usage_unit",
+          "python_name": "usage_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unit of measurement for usage"
+        },
+        {
+          "name": "count",
+          "python_name": "count",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The number of units consumed"
+        },
+        {
+          "name": "count_unit",
+          "python_name": "count_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unit of measurement for count"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The total price for consumed units"
+        },
+        {
+          "name": "price_unit",
+          "python_name": "price_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency unit"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The start date of the usage period"
+        },
+        {
+          "name": "end_date",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The end date of the usage period"
+        }
+      ]
+    },
+    "addresses": {
+      "entity": "addresses",
+      "data_type_name": "AddressesSearchData",
+      "filter_type_name": "AddressesSearchFilter",
+      "in_filter_type_name": "AddressesInFilter",
+      "any_value_filter_type_name": "AddressesAnyValueFilter",
+      "string_filter_type_name": "AddressesStringFilter",
+      "sort_filter_type_name": "AddressesSortFilter",
+      "result_type_name": "AddressesSearchResult",
+      "query_type_name": "AddressesSearchQuery",
+      "condition_prefix": "Addresses",
+      "condition_type_name": "AddressesCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the address"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID associated with this address"
+        },
+        {
+          "name": "customer_name",
+          "python_name": "customer_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The customer name associated with this address"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A friendly name for the address"
+        },
+        {
+          "name": "street",
+          "python_name": "street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The street address"
+        },
+        {
+          "name": "city",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The city of the address"
+        },
+        {
+          "name": "region",
+          "python_name": "region",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The region or state"
+        },
+        {
+          "name": "postal_code",
+          "python_name": "postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The postal code"
+        },
+        {
+          "name": "iso_country",
+          "python_name": "iso_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ISO 3166-1 alpha-2 country code"
+        },
+        {
+          "name": "validated",
+          "python_name": "validated",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the address has been validated"
+        },
+        {
+          "name": "verified",
+          "python_name": "verified",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the address has been verified"
+        }
+      ]
+    },
+    "queues": {
+      "entity": "queues",
+      "data_type_name": "QueuesSearchData",
+      "filter_type_name": "QueuesSearchFilter",
+      "in_filter_type_name": "QueuesInFilter",
+      "any_value_filter_type_name": "QueuesAnyValueFilter",
+      "string_filter_type_name": "QueuesStringFilter",
+      "sort_filter_type_name": "QueuesSortFilter",
+      "result_type_name": "QueuesSearchResult",
+      "query_type_name": "QueuesSearchQuery",
+      "condition_prefix": "Queues",
+      "condition_type_name": "QueuesCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the queue"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID that owns this queue"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A friendly name for the queue"
+        },
+        {
+          "name": "current_size",
+          "python_name": "current_size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Current number of callers waiting"
+        },
+        {
+          "name": "max_size",
+          "python_name": "max_size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Maximum number of callers allowed"
+        },
+        {
+          "name": "average_wait_time",
+          "python_name": "average_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average wait time in seconds"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the queue was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the queue was last updated"
+        }
+      ]
+    },
+    "transcriptions": {
+      "entity": "transcriptions",
+      "data_type_name": "TranscriptionsSearchData",
+      "filter_type_name": "TranscriptionsSearchFilter",
+      "in_filter_type_name": "TranscriptionsInFilter",
+      "any_value_filter_type_name": "TranscriptionsAnyValueFilter",
+      "string_filter_type_name": "TranscriptionsStringFilter",
+      "sort_filter_type_name": "TranscriptionsSortFilter",
+      "result_type_name": "TranscriptionsSearchResult",
+      "query_type_name": "TranscriptionsSearchQuery",
+      "condition_prefix": "Transcriptions",
+      "condition_type_name": "TranscriptionsCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the transcription"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID"
+        },
+        {
+          "name": "recording_sid",
+          "python_name": "recording_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SID of the associated recording"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the transcription"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Duration of the audio recording in seconds"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cost of the transcription"
+        },
+        {
+          "name": "price_unit",
+          "python_name": "price_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency unit"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the transcription was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the transcription was last updated"
+        }
+      ]
+    },
+    "outgoing_caller_ids": {
+      "entity": "outgoing_caller_ids",
+      "data_type_name": "OutgoingCallerIdsSearchData",
+      "filter_type_name": "OutgoingCallerIdsSearchFilter",
+      "in_filter_type_name": "OutgoingCallerIdsInFilter",
+      "any_value_filter_type_name": "OutgoingCallerIdsAnyValueFilter",
+      "string_filter_type_name": "OutgoingCallerIdsStringFilter",
+      "sort_filter_type_name": "OutgoingCallerIdsSortFilter",
+      "result_type_name": "OutgoingCallerIdsSearchResult",
+      "query_type_name": "OutgoingCallerIdsSearchQuery",
+      "condition_prefix": "OutgoingCallerIds",
+      "condition_type_name": "OutgoingCallerIdsCondition",
+      "fields": [
+        {
+          "name": "sid",
+          "python_name": "sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier"
+        },
+        {
+          "name": "account_sid",
+          "python_name": "account_sid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The account SID"
+        },
+        {
+          "name": "phone_number",
+          "python_name": "phone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number"
+        },
+        {
+          "name": "friendly_name",
+          "python_name": "friendly_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A friendly name"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the outgoing caller ID was created"
+        },
+        {
+          "name": "date_updated",
+          "python_name": "date_updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the outgoing caller ID was last updated"
+        }
+      ]
+    }
+  }
+}

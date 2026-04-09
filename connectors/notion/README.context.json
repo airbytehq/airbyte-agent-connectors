@@ -1,0 +1,1417 @@
+{
+  "connector_name": "notion",
+  "class_name": "NotionConnector",
+  "package_name": "airbyte_agent_notion",
+  "package_version": "0.1.11",
+  "yaml_version": "0.1.11",
+  "api_reference_url": "https://developers.notion.com/reference/intro",
+  "commit_sha": "unknown",
+  "auth_example": "NotionAuthConfig(client_id=\"...\", client_secret=\"...\", access_token=\"...\")",
+  "auth_import": ", NotionAuthConfig",
+  "auth_config": {
+    "type_name": "NotionAuthConfig",
+    "base_name": "Notion",
+    "options": [
+      {
+        "title": "OAuth2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "Your Notion OAuth integration's client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "Your Notion OAuth integration's client secret"
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "OAuth access token obtained through the Notion authorization flow"
+          }
+        ],
+        "type_suffix": "Oauth20",
+        "scheme_name": "notionOAuth"
+      },
+      {
+        "title": "Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "token",
+            "type": "str",
+            "required": true,
+            "title": "Integration Token",
+            "description": "Notion internal integration token (starts with ntn_ or secret_)"
+          }
+        ],
+        "type_suffix": "AccessToken",
+        "scheme_name": "notionBearerToken"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": null,
+  "custom_description": "Notion is an all-in-one workspace for notes, docs, wikis, projects, and collaboration.\nThis connector provides read access to Notion workspaces including users, pages, data sources,\nblocks, and comments through the Notion REST API (version 2025-09-03). It enables querying\nworkspace structure, page content, data source schemas, and collaboration data for productivity\nanalysis and content management insights.\n",
+  "supported_questions": "- List all users in my Notion workspace\n- Show me all pages in my Notion workspace\n- What data sources exist in my Notion workspace?\n- Get the details of a specific page by ID\n- List child blocks of a specific page\n- Show me comments on a specific page\n- What is the schema of a specific data source?\n- Who are the bot users in my workspace?\n- Find pages created in the last week\n- List data sources that have been recently edited\n- Show me all archived pages",
+  "unsupported_questions": "- Create a new page in Notion\n- Update a data source property\n- Delete a block\n- Add a comment to a page",
+  "first_operation": {
+    "method_name": "list_users",
+    "http_method": "get",
+    "path": "/v1/users",
+    "entity": "users",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "start_cursor",
+        "python_name": "start_cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Pagination cursor for next page",
+        "is_deep_object": false
+      },
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "required": false,
+        "description": "Number of items per page (max 100)",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "UsersListParams",
+    "response_type": "UsersListResult",
+    "description": "Returns a paginated list of users for the workspace",
+    "record_extractor": "$.results",
+    "meta_extractor": {
+      "next_cursor": "$.next_cursor",
+      "has_more": "$.has_more"
+    },
+    "needs_envelope": true,
+    "record_type": "list[User]",
+    "meta_fields": [
+      {
+        "name": "next_cursor",
+        "python_name": "next_cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cursor for next page"
+        }
+      },
+      {
+        "name": "has_more",
+        "python_name": "has_more",
+        "type": "bool | None",
+        "schema": {
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "description": "Whether more results exist"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/v1/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_cursor",
+            "python_name": "start_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of users for the workspace",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor",
+          "has_more": "$.has_more"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether more results exist"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/v1/users/{user_id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "user_id",
+            "python_name": "user_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Retrieves a single user by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pages": [
+      {
+        "method_name": "list_pages",
+        "http_method": "post",
+        "path": "/v1/search:pages",
+        "entity": "pages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "PagesListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "property": {
+                  "type": "string",
+                  "default": "object"
+                },
+                "value": {
+                  "type": "string",
+                  "default": "page"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "PagesListParamsSort",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "direction": {
+                  "type": "string",
+                  "default": "descending"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "default": "last_edited_time"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "start_cursor",
+            "python_name": "start_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor"
+            },
+            "required": false,
+            "description": "Pagination cursor"
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "PagesListParams",
+        "response_type": "PagesListResult",
+        "description": "Returns pages shared with the integration using the search endpoint",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor",
+          "has_more": "$.has_more"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Page]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether more results exist"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_page",
+        "http_method": "get",
+        "path": "/v1/pages/{page_id}",
+        "entity": "pages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "page_id",
+            "python_name": "page_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Page ID"
+          }
+        ],
+        "params_type_name": "PagesGetParams",
+        "response_type": "Page",
+        "description": "Retrieves a page object using the ID specified",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Page",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "data_sources": [
+      {
+        "method_name": "list_data_sources",
+        "http_method": "post",
+        "path": "/v1/search:data_sources",
+        "entity": "data_sources",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "DataSourcesListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "property": {
+                  "type": "string",
+                  "default": "object"
+                },
+                "value": {
+                  "type": "string",
+                  "default": "data_source"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "DataSourcesListParamsSort",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "direction": {
+                  "type": "string",
+                  "default": "descending"
+                },
+                "timestamp": {
+                  "type": "string",
+                  "default": "last_edited_time"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "start_cursor",
+            "python_name": "start_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor"
+            },
+            "required": false,
+            "description": "Pagination cursor"
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "DataSourcesListParams",
+        "response_type": "DataSourcesListResult",
+        "description": "Returns data sources shared with the integration using the search endpoint",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor",
+          "has_more": "$.has_more"
+        },
+        "needs_envelope": true,
+        "record_type": "list[DataSource]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether more results exist"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_data_source",
+        "http_method": "get",
+        "path": "/v1/data_sources/{data_source_id}",
+        "entity": "data_sources",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "data_source_id",
+            "python_name": "data_source_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Data Source ID"
+          }
+        ],
+        "params_type_name": "DataSourcesGetParams",
+        "response_type": "DataSource",
+        "description": "Retrieves a data source object using the ID specified",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "DataSource",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "blocks": [
+      {
+        "method_name": "list_block_children",
+        "http_method": "get",
+        "path": "/v1/blocks/{block_id}/children",
+        "entity": "blocks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "block_id",
+            "python_name": "block_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Block or page ID"
+          },
+          {
+            "name": "start_cursor",
+            "python_name": "start_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BlocksListParams",
+        "response_type": "BlocksListResult",
+        "description": "Returns a paginated list of child blocks for the specified block",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor",
+          "has_more": "$.has_more"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Block]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether more results exist"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_block",
+        "http_method": "get",
+        "path": "/v1/blocks/{block_id}",
+        "entity": "blocks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "block_id",
+            "python_name": "block_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Block ID"
+          }
+        ],
+        "params_type_name": "BlocksGetParams",
+        "response_type": "Block",
+        "description": "Retrieves a block object using the ID specified",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Block",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "comments": [
+      {
+        "method_name": "list_comments",
+        "http_method": "get",
+        "path": "/v1/comments",
+        "entity": "comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "block_id",
+            "python_name": "block_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Block or page ID to retrieve comments for",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_cursor",
+            "python_name": "start_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": false,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsListParams",
+        "response_type": "CommentsListResult",
+        "description": "Returns a list of comments for a specified block or page",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_cursor": "$.next_cursor",
+          "has_more": "$.has_more"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Comment]",
+        "meta_fields": [
+          {
+            "name": "next_cursor",
+            "python_name": "next_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool | None",
+            "schema": {
+              "type": [
+                "boolean",
+                "null"
+              ],
+              "description": "Whether more results exist"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "pages": {
+      "entity": "pages",
+      "data_type_name": "PagesSearchData",
+      "filter_type_name": "PagesSearchFilter",
+      "in_filter_type_name": "PagesInFilter",
+      "any_value_filter_type_name": "PagesAnyValueFilter",
+      "string_filter_type_name": "PagesStringFilter",
+      "sort_filter_type_name": "PagesSortFilter",
+      "result_type_name": "PagesSearchResult",
+      "query_type_name": "PagesSearchQuery",
+      "condition_prefix": "Pages",
+      "condition_type_name": "PagesCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the page is archived or not."
+        },
+        {
+          "name": "cover",
+          "python_name": "cover",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "URL or reference to the page cover image."
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User ID or name of the creator of the page."
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the page was created."
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "URL or reference to the page icon."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the page."
+        },
+        {
+          "name": "in_trash",
+          "python_name": "in_trash",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether the page is in trash or not."
+        },
+        {
+          "name": "last_edited_by",
+          "python_name": "last_edited_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User ID or name of the last editor of the page."
+        },
+        {
+          "name": "last_edited_time",
+          "python_name": "last_edited_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the page was last edited."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Type or category of the page object."
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "ID or reference to the parent page."
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom properties associated with the page."
+        },
+        {
+          "name": "public_url",
+          "python_name": "public_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Publicly accessible URL of the page."
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the page within the service."
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the user's avatar"
+        },
+        {
+          "name": "bot",
+          "python_name": "bot",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Bot-specific data"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User's display name"
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Always user"
+        },
+        {
+          "name": "person",
+          "python_name": "person",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Person-specific data"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Type of user (person or bot)"
+        }
+      ]
+    },
+    "data_sources": {
+      "entity": "data_sources",
+      "data_type_name": "DataSourcesSearchData",
+      "filter_type_name": "DataSourcesSearchFilter",
+      "in_filter_type_name": "DataSourcesInFilter",
+      "any_value_filter_type_name": "DataSourcesAnyValueFilter",
+      "string_filter_type_name": "DataSourcesStringFilter",
+      "sort_filter_type_name": "DataSourcesSortFilter",
+      "result_type_name": "DataSourcesSearchResult",
+      "query_type_name": "DataSourcesSearchQuery",
+      "condition_prefix": "DataSources",
+      "condition_type_name": "DataSourcesCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the data source is archived or not."
+        },
+        {
+          "name": "cover",
+          "python_name": "cover",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "URL or reference to the cover image of the data source."
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who created the data source."
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the data source was created."
+        },
+        {
+          "name": "database_parent",
+          "python_name": "database_parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The grandparent of the data source (parent of the database)."
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Description text associated with the data source."
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "URL or reference to the icon of the data source."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the data source."
+        },
+        {
+          "name": "is_inline",
+          "python_name": "is_inline",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the data source is displayed inline."
+        },
+        {
+          "name": "last_edited_by",
+          "python_name": "last_edited_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who last edited the data source."
+        },
+        {
+          "name": "last_edited_time",
+          "python_name": "last_edited_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the data source was last edited."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The type of object (data_source)."
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The parent database of the data source."
+        },
+        {
+          "name": "properties",
+          "python_name": "properties",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Schema of properties for the data source."
+        },
+        {
+          "name": "public_url",
+          "python_name": "public_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Public URL to access the data source."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Title or name of the data source."
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL or reference to access the data source."
+        }
+      ]
+    },
+    "blocks": {
+      "entity": "blocks",
+      "data_type_name": "BlocksSearchData",
+      "filter_type_name": "BlocksSearchFilter",
+      "in_filter_type_name": "BlocksInFilter",
+      "any_value_filter_type_name": "BlocksAnyValueFilter",
+      "string_filter_type_name": "BlocksStringFilter",
+      "sort_filter_type_name": "BlocksSortFilter",
+      "result_type_name": "BlocksSearchResult",
+      "query_type_name": "BlocksSearchQuery",
+      "condition_prefix": "Blocks",
+      "condition_type_name": "BlocksCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the block is archived or not."
+        },
+        {
+          "name": "bookmark",
+          "python_name": "bookmark",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a bookmark within the block"
+        },
+        {
+          "name": "breadcrumb",
+          "python_name": "breadcrumb",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a breadcrumb block."
+        },
+        {
+          "name": "bulleted_list_item",
+          "python_name": "bulleted_list_item",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an item in a bulleted list."
+        },
+        {
+          "name": "callout",
+          "python_name": "callout",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Describes a callout message or content in the block"
+        },
+        {
+          "name": "child_database",
+          "python_name": "child_database",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a child database block."
+        },
+        {
+          "name": "child_page",
+          "python_name": "child_page",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a child page block."
+        },
+        {
+          "name": "code",
+          "python_name": "code",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contains code snippets or blocks in the block content"
+        },
+        {
+          "name": "column",
+          "python_name": "column",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a column block."
+        },
+        {
+          "name": "column_list",
+          "python_name": "column_list",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a list of columns."
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who created the block."
+        },
+        {
+          "name": "created_time",
+          "python_name": "created_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the block was created."
+        },
+        {
+          "name": "divider",
+          "python_name": "divider",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a divider block."
+        },
+        {
+          "name": "embed",
+          "python_name": "embed",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contains embedded content such as videos, tweets, etc."
+        },
+        {
+          "name": "equation",
+          "python_name": "equation",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an equation or mathematical formula in the block"
+        },
+        {
+          "name": "file",
+          "python_name": "file",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a file block."
+        },
+        {
+          "name": "has_children",
+          "python_name": "has_children",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the block has children or not."
+        },
+        {
+          "name": "heading_1",
+          "python_name": "heading_1",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a level 1 heading."
+        },
+        {
+          "name": "heading_2",
+          "python_name": "heading_2",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a level 2 heading."
+        },
+        {
+          "name": "heading_3",
+          "python_name": "heading_3",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a level 3 heading."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the block."
+        },
+        {
+          "name": "image",
+          "python_name": "image",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an image block."
+        },
+        {
+          "name": "last_edited_by",
+          "python_name": "last_edited_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who last edited the block."
+        },
+        {
+          "name": "last_edited_time",
+          "python_name": "last_edited_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the block was last edited."
+        },
+        {
+          "name": "link_preview",
+          "python_name": "link_preview",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Displays a preview of an external link within the block"
+        },
+        {
+          "name": "link_to_page",
+          "python_name": "link_to_page",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Provides a link to another page within the block"
+        },
+        {
+          "name": "numbered_list_item",
+          "python_name": "numbered_list_item",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an item in a numbered list."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an object block."
+        },
+        {
+          "name": "paragraph",
+          "python_name": "paragraph",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a paragraph block."
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The parent block of the current block."
+        },
+        {
+          "name": "pdf",
+          "python_name": "pdf",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a PDF document block."
+        },
+        {
+          "name": "quote",
+          "python_name": "quote",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a quote block."
+        },
+        {
+          "name": "synced_block",
+          "python_name": "synced_block",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a block synced from another source"
+        },
+        {
+          "name": "table",
+          "python_name": "table",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a table within the block"
+        },
+        {
+          "name": "table_of_contents",
+          "python_name": "table_of_contents",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contains information regarding the table of contents"
+        },
+        {
+          "name": "table_row",
+          "python_name": "table_row",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a row in a table within the block"
+        },
+        {
+          "name": "template",
+          "python_name": "template",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Specifies a template used within the block"
+        },
+        {
+          "name": "to_do",
+          "python_name": "to_do",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a to-do list or task content"
+        },
+        {
+          "name": "toggle",
+          "python_name": "toggle",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a toggle block."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The type of the block."
+        },
+        {
+          "name": "unsupported",
+          "python_name": "unsupported",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents an unsupported block."
+        },
+        {
+          "name": "video",
+          "python_name": "video",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Represents a video block."
+        }
+      ]
+    }
+  }
+}

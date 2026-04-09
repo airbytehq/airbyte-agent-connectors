@@ -1,0 +1,2438 @@
+{
+  "connector_name": "zendesk-talk",
+  "class_name": "ZendeskTalkConnector",
+  "package_name": "airbyte_agent_zendesk_talk",
+  "package_version": "1.0.2",
+  "yaml_version": "1.0.2",
+  "api_reference_url": "https://developer.zendesk.com/api-reference/voice/talk-api/introduction/",
+  "commit_sha": "unknown",
+  "auth_example": "ZendeskTalkAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", ZendeskTalkAuthConfig",
+  "auth_config": {
+    "type_name": "ZendeskTalkAuthConfig",
+    "base_name": "ZendeskTalk",
+    "options": [
+      {
+        "title": "OAuth 2.0",
+        "description": "Zendesk OAuth 2.0 authentication",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "OAuth 2.0 access token"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": false,
+            "title": "Refresh Token",
+            "description": "OAuth 2.0 refresh token (optional)"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "OAuth client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "OAuth client secret"
+          }
+        ],
+        "type_suffix": "Oauth20",
+        "scheme_name": "zendeskOAuth"
+      },
+      {
+        "title": "API Token",
+        "description": "Authenticate using email and API token",
+        "fields": [
+          {
+            "name": "email",
+            "type": "str",
+            "required": true,
+            "title": "Email Address",
+            "description": "Your Zendesk account email address"
+          },
+          {
+            "name": "api_token",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "Your Zendesk API token from Admin Center"
+          }
+        ],
+        "type_suffix": "ApiToken",
+        "scheme_name": "zendeskAPIToken"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": {
+    "type_name": "ZendeskTalkReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Zendesk Talk.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDT00:00:00Z from which to start replicating data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Zendesk Talk (Voice) API. Provides access to phone numbers,\naddresses, greetings, IVR configurations, call data, and agent/account statistics\nfor Zendesk Talk voice support channels.\n",
+  "supported_questions": "- List all phone numbers in our Zendesk Talk account\n- Show all addresses on file\n- List all IVR configurations\n- Show all greetings\n- List greeting categories\n- Show agent activity statistics\n- Show the account overview stats\n- Show current queue activity\n- Which phone numbers have SMS enabled?\n- Find agents who have missed the most calls today\n- What is the average call duration across all calls?\n- Which phone numbers are toll-free?",
+  "unsupported_questions": "- Create a new phone number\n- Delete an IVR configuration\n- Update a greeting\n- Make an outbound call",
+  "first_operation": {
+    "method_name": "list_phone_numbers",
+    "http_method": "get",
+    "path": "/phone_numbers",
+    "entity": "phone_numbers",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "PhoneNumbersListParams",
+    "response_type": "PhoneNumbersListResult",
+    "description": "Returns a list of all phone numbers in the Zendesk Talk account",
+    "record_extractor": "$.phone_numbers",
+    "meta_extractor": {
+      "next_page": "$.next_page"
+    },
+    "needs_envelope": true,
+    "record_type": "list[PhoneNumber]",
+    "meta_fields": [
+      {
+        "name": "next_page",
+        "python_name": "next_page",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "URL for the next page of results"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "phone_numbers": [
+      {
+        "method_name": "list_phone_numbers",
+        "http_method": "get",
+        "path": "/phone_numbers",
+        "entity": "phone_numbers",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "PhoneNumbersListParams",
+        "response_type": "PhoneNumbersListResult",
+        "description": "Returns a list of all phone numbers in the Zendesk Talk account",
+        "record_extractor": "$.phone_numbers",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[PhoneNumber]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL for the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_phone_number",
+        "http_method": "get",
+        "path": "/phone_numbers/{phone_number_id}",
+        "entity": "phone_numbers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "phone_number_id",
+            "python_name": "phone_number_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID of the phone number"
+          }
+        ],
+        "params_type_name": "PhoneNumbersGetParams",
+        "response_type": "PhoneNumber",
+        "description": "Retrieves a single phone number by ID",
+        "record_extractor": "$.phone_number",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PhoneNumber",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "addresses": [
+      {
+        "method_name": "list_addresses",
+        "http_method": "get",
+        "path": "/addresses",
+        "entity": "addresses",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AddressesListParams",
+        "response_type": "AddressesListResult",
+        "description": "Returns a list of all addresses in the Zendesk Talk account",
+        "record_extractor": "$.addresses",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Address]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_address",
+        "http_method": "get",
+        "path": "/addresses/{address_id}",
+        "entity": "addresses",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "address_id",
+            "python_name": "address_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID of the address"
+          }
+        ],
+        "params_type_name": "AddressesGetParams",
+        "response_type": "Address",
+        "description": "Retrieves a single address by ID",
+        "record_extractor": "$.address",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Address",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "greetings": [
+      {
+        "method_name": "list_greetings",
+        "http_method": "get",
+        "path": "/greetings",
+        "entity": "greetings",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "GreetingsListParams",
+        "response_type": "GreetingsListResult",
+        "description": "Returns a list of all greetings in the Zendesk Talk account",
+        "record_extractor": "$.greetings",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Greeting]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_greeting",
+        "http_method": "get",
+        "path": "/greetings/{greeting_id}",
+        "entity": "greetings",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "greeting_id",
+            "python_name": "greeting_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID of the greeting"
+          }
+        ],
+        "params_type_name": "GreetingsGetParams",
+        "response_type": "Greeting",
+        "description": "Retrieves a single greeting by ID",
+        "record_extractor": "$.greeting",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Greeting",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "greeting_categories": [
+      {
+        "method_name": "list_greeting_categories",
+        "http_method": "get",
+        "path": "/greeting_categories",
+        "entity": "greeting_categories",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "GreetingCategoriesListParams",
+        "response_type": "GreetingCategoriesListResult",
+        "description": "Returns a list of all greeting categories",
+        "record_extractor": "$.greeting_categories",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[GreetingCategory]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_greeting_category",
+        "http_method": "get",
+        "path": "/greeting_categories/{greeting_category_id}",
+        "entity": "greeting_categories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "greeting_category_id",
+            "python_name": "greeting_category_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID of the greeting category"
+          }
+        ],
+        "params_type_name": "GreetingCategoriesGetParams",
+        "response_type": "GreetingCategory",
+        "description": "Retrieves a single greeting category by ID",
+        "record_extractor": "$.greeting_category",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "GreetingCategory",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ivrs": [
+      {
+        "method_name": "list_ivrs",
+        "http_method": "get",
+        "path": "/ivr",
+        "entity": "ivrs",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "IvrsListParams",
+        "response_type": "IvrsListResult",
+        "description": "Returns a list of all IVR configurations",
+        "record_extractor": "$.ivrs",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ivr]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ivr",
+        "http_method": "get",
+        "path": "/ivr/{ivr_id}",
+        "entity": "ivrs",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "ivr_id",
+            "python_name": "ivr_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "ID of the IVR"
+          }
+        ],
+        "params_type_name": "IvrsGetParams",
+        "response_type": "Ivr",
+        "description": "Retrieves a single IVR configuration by ID",
+        "record_extractor": "$.ivr",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ivr",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "agents_activity": [
+      {
+        "method_name": "list_agents_activity",
+        "http_method": "get",
+        "path": "/stats/agents_activity",
+        "entity": "agents_activity",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AgentsActivityListParams",
+        "response_type": "AgentsActivityListResult",
+        "description": "Returns activity statistics for all agents for the current day",
+        "record_extractor": "$.agents_activity",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AgentActivity]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "agents_overview": [
+      {
+        "method_name": "list_agents_overview",
+        "http_method": "get",
+        "path": "/stats/agents_overview",
+        "entity": "agents_overview",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AgentsOverviewListParams",
+        "response_type": "AgentsOverviewListResult",
+        "description": "Returns overview statistics for all agents for the current day",
+        "record_extractor": "$.agents_overview",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "AgentsOverview",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "account_overview": [
+      {
+        "method_name": "list_account_overview",
+        "http_method": "get",
+        "path": "/stats/account_overview",
+        "entity": "account_overview",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AccountOverviewListParams",
+        "response_type": "AccountOverviewListResult",
+        "description": "Returns overview statistics for the account for the current day",
+        "record_extractor": "$.account_overview",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "AccountOverview",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "current_queue_activity": [
+      {
+        "method_name": "list_current_queue_activity",
+        "http_method": "get",
+        "path": "/stats/current_queue_activity",
+        "entity": "current_queue_activity",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CurrentQueueActivityListParams",
+        "response_type": "CurrentQueueActivityListResult",
+        "description": "Returns current queue activity statistics",
+        "record_extractor": "$.current_queue_activity",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "CurrentQueueActivity",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls": [
+      {
+        "method_name": "list_calls",
+        "http_method": "get",
+        "path": "/stats/incremental/calls",
+        "entity": "calls",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unix epoch time to start from (e.g. 1704067200 for 2024-01-01)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsListParams",
+        "response_type": "CallsListResult",
+        "description": "Returns incremental call data. Requires a start_time parameter (Unix epoch timestamp).",
+        "record_extractor": "$.calls",
+        "meta_extractor": {
+          "next_page": "$.next_page",
+          "count": "$.count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Call]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "call_legs": [
+      {
+        "method_name": "list_call_legs",
+        "http_method": "get",
+        "path": "/stats/incremental/legs",
+        "entity": "call_legs",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unix epoch time to start from (e.g. 1704067200 for 2024-01-01)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallLegsListParams",
+        "response_type": "CallLegsListResult",
+        "description": "Returns incremental call leg data. Requires a start_time parameter (Unix epoch timestamp).",
+        "record_extractor": "$.legs",
+        "meta_extractor": {
+          "next_page": "$.next_page",
+          "count": "$.count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CallLeg]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "addresses": {
+      "entity": "addresses",
+      "data_type_name": "AddressesSearchData",
+      "filter_type_name": "AddressesSearchFilter",
+      "in_filter_type_name": "AddressesInFilter",
+      "any_value_filter_type_name": "AddressesAnyValueFilter",
+      "string_filter_type_name": "AddressesStringFilter",
+      "sort_filter_type_name": "AddressesSortFilter",
+      "result_type_name": "AddressesSearchResult",
+      "query_type_name": "AddressesSearchQuery",
+      "condition_prefix": "Addresses",
+      "condition_type_name": "AddressesCondition",
+      "fields": [
+        {
+          "name": "city",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City of the address"
+        },
+        {
+          "name": "country_code",
+          "python_name": "country_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ISO country code"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique address identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the address"
+        },
+        {
+          "name": "provider_reference",
+          "python_name": "provider_reference",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Provider reference of the address"
+        },
+        {
+          "name": "province",
+          "python_name": "province",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Province of the address"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the address"
+        },
+        {
+          "name": "street",
+          "python_name": "street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street of the address"
+        },
+        {
+          "name": "zip",
+          "python_name": "zip",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Zip code of the address"
+        }
+      ]
+    },
+    "agents_activity": {
+      "entity": "agents_activity",
+      "data_type_name": "AgentsActivitySearchData",
+      "filter_type_name": "AgentsActivitySearchFilter",
+      "in_filter_type_name": "AgentsActivityInFilter",
+      "any_value_filter_type_name": "AgentsActivityAnyValueFilter",
+      "string_filter_type_name": "AgentsActivityStringFilter",
+      "sort_filter_type_name": "AgentsActivitySortFilter",
+      "result_type_name": "AgentsActivitySearchResult",
+      "query_type_name": "AgentsActivitySearchQuery",
+      "condition_prefix": "AgentsActivity",
+      "condition_type_name": "AgentsActivityCondition",
+      "fields": [
+        {
+          "name": "accepted_third_party_conferences",
+          "python_name": "accepted_third_party_conferences",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Accepted third party conferences"
+        },
+        {
+          "name": "accepted_transfers",
+          "python_name": "accepted_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total transfers accepted"
+        },
+        {
+          "name": "agent_id",
+          "python_name": "agent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Agent ID"
+        },
+        {
+          "name": "agent_state",
+          "python_name": "agent_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent state: online, offline, away, or transfers_only"
+        },
+        {
+          "name": "available_time",
+          "python_name": "available_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total time agent was available to answer calls"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to agent avatar"
+        },
+        {
+          "name": "average_hold_time",
+          "python_name": "average_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average hold time per call"
+        },
+        {
+          "name": "average_talk_time",
+          "python_name": "average_talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average talk time per call"
+        },
+        {
+          "name": "average_wrap_up_time",
+          "python_name": "average_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average wrap-up time per call"
+        },
+        {
+          "name": "away_time",
+          "python_name": "away_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total time agent was set to away"
+        },
+        {
+          "name": "call_status",
+          "python_name": "call_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent call status: on_call, wrap_up, or null"
+        },
+        {
+          "name": "calls_accepted",
+          "python_name": "calls_accepted",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls accepted"
+        },
+        {
+          "name": "calls_denied",
+          "python_name": "calls_denied",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls denied"
+        },
+        {
+          "name": "calls_missed",
+          "python_name": "calls_missed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls missed"
+        },
+        {
+          "name": "calls_put_on_hold",
+          "python_name": "calls_put_on_hold",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls placed on hold"
+        },
+        {
+          "name": "forwarding_number",
+          "python_name": "forwarding_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Forwarding number set by the agent"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent name"
+        },
+        {
+          "name": "online_time",
+          "python_name": "online_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total online time"
+        },
+        {
+          "name": "started_third_party_conferences",
+          "python_name": "started_third_party_conferences",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Started third party conferences"
+        },
+        {
+          "name": "started_transfers",
+          "python_name": "started_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total transfers started"
+        },
+        {
+          "name": "total_call_duration",
+          "python_name": "total_call_duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total call duration"
+        },
+        {
+          "name": "total_hold_time",
+          "python_name": "total_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total hold time across all calls"
+        },
+        {
+          "name": "total_talk_time",
+          "python_name": "total_talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total talk time (excludes hold)"
+        },
+        {
+          "name": "total_wrap_up_time",
+          "python_name": "total_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total wrap-up time"
+        },
+        {
+          "name": "transfers_only_time",
+          "python_name": "transfers_only_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total time in transfers-only mode"
+        },
+        {
+          "name": "via",
+          "python_name": "via",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel the agent is registered on"
+        }
+      ]
+    },
+    "agents_overview": {
+      "entity": "agents_overview",
+      "data_type_name": "AgentsOverviewSearchData",
+      "filter_type_name": "AgentsOverviewSearchFilter",
+      "in_filter_type_name": "AgentsOverviewInFilter",
+      "any_value_filter_type_name": "AgentsOverviewAnyValueFilter",
+      "string_filter_type_name": "AgentsOverviewStringFilter",
+      "sort_filter_type_name": "AgentsOverviewSortFilter",
+      "result_type_name": "AgentsOverviewSearchResult",
+      "query_type_name": "AgentsOverviewSearchQuery",
+      "condition_prefix": "AgentsOverview",
+      "condition_type_name": "AgentsOverviewCondition",
+      "fields": [
+        {
+          "name": "average_accepted_transfers",
+          "python_name": "average_accepted_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average accepted transfers"
+        },
+        {
+          "name": "average_available_time",
+          "python_name": "average_available_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average available time"
+        },
+        {
+          "name": "average_away_time",
+          "python_name": "average_away_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average away time"
+        },
+        {
+          "name": "average_calls_accepted",
+          "python_name": "average_calls_accepted",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average calls accepted"
+        },
+        {
+          "name": "average_calls_denied",
+          "python_name": "average_calls_denied",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average calls denied"
+        },
+        {
+          "name": "average_calls_missed",
+          "python_name": "average_calls_missed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average calls missed"
+        },
+        {
+          "name": "average_calls_put_on_hold",
+          "python_name": "average_calls_put_on_hold",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average calls put on hold"
+        },
+        {
+          "name": "average_hold_time",
+          "python_name": "average_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average hold time"
+        },
+        {
+          "name": "average_online_time",
+          "python_name": "average_online_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average online time"
+        },
+        {
+          "name": "average_started_transfers",
+          "python_name": "average_started_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average started transfers"
+        },
+        {
+          "name": "average_talk_time",
+          "python_name": "average_talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average talk time"
+        },
+        {
+          "name": "average_transfers_only_time",
+          "python_name": "average_transfers_only_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average transfers-only time"
+        },
+        {
+          "name": "average_wrap_up_time",
+          "python_name": "average_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average wrap-up time"
+        },
+        {
+          "name": "current_timestamp",
+          "python_name": "current_timestamp",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Current timestamp"
+        },
+        {
+          "name": "total_accepted_transfers",
+          "python_name": "total_accepted_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total accepted transfers"
+        },
+        {
+          "name": "total_calls_accepted",
+          "python_name": "total_calls_accepted",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls accepted"
+        },
+        {
+          "name": "total_calls_denied",
+          "python_name": "total_calls_denied",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls denied"
+        },
+        {
+          "name": "total_calls_missed",
+          "python_name": "total_calls_missed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls missed"
+        },
+        {
+          "name": "total_calls_put_on_hold",
+          "python_name": "total_calls_put_on_hold",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls put on hold"
+        },
+        {
+          "name": "total_hold_time",
+          "python_name": "total_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total hold time"
+        },
+        {
+          "name": "total_started_transfers",
+          "python_name": "total_started_transfers",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total started transfers"
+        },
+        {
+          "name": "total_talk_time",
+          "python_name": "total_talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total talk time"
+        },
+        {
+          "name": "total_wrap_up_time",
+          "python_name": "total_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total wrap-up time"
+        }
+      ]
+    },
+    "greeting_categories": {
+      "entity": "greeting_categories",
+      "data_type_name": "GreetingCategoriesSearchData",
+      "filter_type_name": "GreetingCategoriesSearchFilter",
+      "in_filter_type_name": "GreetingCategoriesInFilter",
+      "any_value_filter_type_name": "GreetingCategoriesAnyValueFilter",
+      "string_filter_type_name": "GreetingCategoriesStringFilter",
+      "sort_filter_type_name": "GreetingCategoriesSortFilter",
+      "result_type_name": "GreetingCategoriesSearchResult",
+      "query_type_name": "GreetingCategoriesSearchQuery",
+      "condition_prefix": "GreetingCategories",
+      "condition_type_name": "GreetingCategoriesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Greeting category ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the greeting category"
+        }
+      ]
+    },
+    "greetings": {
+      "entity": "greetings",
+      "data_type_name": "GreetingsSearchData",
+      "filter_type_name": "GreetingsSearchFilter",
+      "in_filter_type_name": "GreetingsInFilter",
+      "any_value_filter_type_name": "GreetingsAnyValueFilter",
+      "string_filter_type_name": "GreetingsStringFilter",
+      "sort_filter_type_name": "GreetingsSortFilter",
+      "result_type_name": "GreetingsSearchResult",
+      "query_type_name": "GreetingsSearchQuery",
+      "condition_prefix": "Greetings",
+      "condition_type_name": "GreetingsCondition",
+      "fields": [
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the greeting is associated with phone numbers"
+        },
+        {
+          "name": "audio_name",
+          "python_name": "audio_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Audio file name"
+        },
+        {
+          "name": "audio_url",
+          "python_name": "audio_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Path to the greeting sound file"
+        },
+        {
+          "name": "category_id",
+          "python_name": "category_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the greeting category"
+        },
+        {
+          "name": "default",
+          "python_name": "default",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a system default greeting"
+        },
+        {
+          "name": "default_lang",
+          "python_name": "default_lang",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the greeting has a default language"
+        },
+        {
+          "name": "has_sub_settings",
+          "python_name": "has_sub_settings",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Sub-settings for categorized greetings"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Greeting ID"
+        },
+        {
+          "name": "ivr_ids",
+          "python_name": "ivr_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of IVRs associated with the greeting"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the greeting"
+        },
+        {
+          "name": "pending",
+          "python_name": "pending",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the greeting is pending"
+        },
+        {
+          "name": "phone_number_ids",
+          "python_name": "phone_number_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of phone numbers associated with the greeting"
+        },
+        {
+          "name": "upload_id",
+          "python_name": "upload_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Upload ID associated with the greeting"
+        }
+      ]
+    },
+    "phone_numbers": {
+      "entity": "phone_numbers",
+      "data_type_name": "PhoneNumbersSearchData",
+      "filter_type_name": "PhoneNumbersSearchFilter",
+      "in_filter_type_name": "PhoneNumbersInFilter",
+      "any_value_filter_type_name": "PhoneNumbersAnyValueFilter",
+      "string_filter_type_name": "PhoneNumbersStringFilter",
+      "sort_filter_type_name": "PhoneNumbersSortFilter",
+      "result_type_name": "PhoneNumbersSearchResult",
+      "query_type_name": "PhoneNumbersSearchQuery",
+      "condition_prefix": "PhoneNumbers",
+      "condition_type_name": "PhoneNumbersCondition",
+      "fields": [
+        {
+          "name": "call_recording_consent",
+          "python_name": "call_recording_consent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "What call recording consent is set to"
+        },
+        {
+          "name": "capabilities",
+          "python_name": "capabilities",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Phone number capabilities (sms, mms, voice)"
+        },
+        {
+          "name": "categorised_greetings",
+          "python_name": "categorised_greetings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Greeting category IDs and names"
+        },
+        {
+          "name": "categorised_greetings_with_sub_settings",
+          "python_name": "categorised_greetings_with_sub_settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Greeting categories with associated settings"
+        },
+        {
+          "name": "country_code",
+          "python_name": "country_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ISO country code for the number"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time the phone number was created"
+        },
+        {
+          "name": "default_greeting_ids",
+          "python_name": "default_greeting_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Names of default system greetings"
+        },
+        {
+          "name": "default_group_id",
+          "python_name": "default_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Default group ID"
+        },
+        {
+          "name": "display_number",
+          "python_name": "display_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Formatted phone number"
+        },
+        {
+          "name": "external",
+          "python_name": "external",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is an external caller ID number"
+        },
+        {
+          "name": "failover_number",
+          "python_name": "failover_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Failover number associated with the phone number"
+        },
+        {
+          "name": "greeting_ids",
+          "python_name": "greeting_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom greeting IDs associated with the phone number"
+        },
+        {
+          "name": "group_ids",
+          "python_name": "group_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Array of associated group IDs"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique phone number identifier"
+        },
+        {
+          "name": "ivr_id",
+          "python_name": "ivr_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of IVR associated with the phone number"
+        },
+        {
+          "name": "line_type",
+          "python_name": "line_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of line (phone or digital)"
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Geographical location of the number"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Nickname if set, otherwise the display number"
+        },
+        {
+          "name": "nickname",
+          "python_name": "nickname",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Nickname of the phone number"
+        },
+        {
+          "name": "number",
+          "python_name": "number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number digits"
+        },
+        {
+          "name": "outbound_enabled",
+          "python_name": "outbound_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether outbound calls are enabled"
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Priority level of the phone number"
+        },
+        {
+          "name": "recorded",
+          "python_name": "recorded",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether calls are recorded"
+        },
+        {
+          "name": "schedule_id",
+          "python_name": "schedule_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of schedule associated with the phone number"
+        },
+        {
+          "name": "sms_enabled",
+          "python_name": "sms_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether SMS is enabled"
+        },
+        {
+          "name": "sms_group_id",
+          "python_name": "sms_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Group associated with SMS"
+        },
+        {
+          "name": "token",
+          "python_name": "token",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Generated token unique for the phone number"
+        },
+        {
+          "name": "toll_free",
+          "python_name": "toll_free",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the number is toll-free"
+        },
+        {
+          "name": "transcription",
+          "python_name": "transcription",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether voicemail transcription is enabled"
+        },
+        {
+          "name": "voice_enabled",
+          "python_name": "voice_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether voice is enabled"
+        }
+      ]
+    },
+    "call_legs": {
+      "entity": "call_legs",
+      "data_type_name": "CallLegsSearchData",
+      "filter_type_name": "CallLegsSearchFilter",
+      "in_filter_type_name": "CallLegsInFilter",
+      "any_value_filter_type_name": "CallLegsAnyValueFilter",
+      "string_filter_type_name": "CallLegsStringFilter",
+      "sort_filter_type_name": "CallLegsSortFilter",
+      "result_type_name": "CallLegsSearchResult",
+      "query_type_name": "CallLegsSearchQuery",
+      "condition_prefix": "CallLegs",
+      "condition_type_name": "CallLegsCondition",
+      "fields": [
+        {
+          "name": "agent_id",
+          "python_name": "agent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Agent ID"
+        },
+        {
+          "name": "available_via",
+          "python_name": "available_via",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel agent was available through"
+        },
+        {
+          "name": "call_charge",
+          "python_name": "call_charge",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call charge amount"
+        },
+        {
+          "name": "call_id",
+          "python_name": "call_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Associated call ID"
+        },
+        {
+          "name": "completion_status",
+          "python_name": "completion_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Completion status"
+        },
+        {
+          "name": "conference_from",
+          "python_name": "conference_from",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Conference from time"
+        },
+        {
+          "name": "conference_time",
+          "python_name": "conference_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Conference duration"
+        },
+        {
+          "name": "conference_to",
+          "python_name": "conference_to",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Conference to time"
+        },
+        {
+          "name": "consultation_from",
+          "python_name": "consultation_from",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Consultation from time"
+        },
+        {
+          "name": "consultation_time",
+          "python_name": "consultation_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Consultation duration"
+        },
+        {
+          "name": "consultation_to",
+          "python_name": "consultation_to",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Consultation to time"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration in seconds"
+        },
+        {
+          "name": "forwarded_to",
+          "python_name": "forwarded_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number forwarded to"
+        },
+        {
+          "name": "hold_time",
+          "python_name": "hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Hold time in seconds"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Call leg ID"
+        },
+        {
+          "name": "minutes_billed",
+          "python_name": "minutes_billed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Minutes billed"
+        },
+        {
+          "name": "quality_issues",
+          "python_name": "quality_issues",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Quality issues detected"
+        },
+        {
+          "name": "talk_time",
+          "python_name": "talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Talk time in seconds"
+        },
+        {
+          "name": "transferred_from",
+          "python_name": "transferred_from",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Transferred from agent ID"
+        },
+        {
+          "name": "transferred_to",
+          "python_name": "transferred_to",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Transferred to agent ID"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of call leg"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "user_id",
+          "python_name": "user_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "User ID"
+        },
+        {
+          "name": "wrap_up_time",
+          "python_name": "wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Wrap-up time in seconds"
+        }
+      ]
+    },
+    "calls": {
+      "entity": "calls",
+      "data_type_name": "CallsSearchData",
+      "filter_type_name": "CallsSearchFilter",
+      "in_filter_type_name": "CallsInFilter",
+      "any_value_filter_type_name": "CallsAnyValueFilter",
+      "string_filter_type_name": "CallsStringFilter",
+      "sort_filter_type_name": "CallsSortFilter",
+      "result_type_name": "CallsSearchResult",
+      "query_type_name": "CallsSearchQuery",
+      "condition_prefix": "Calls",
+      "condition_type_name": "CallsCondition",
+      "fields": [
+        {
+          "name": "agent_id",
+          "python_name": "agent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Agent ID"
+        },
+        {
+          "name": "call_charge",
+          "python_name": "call_charge",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call charge amount"
+        },
+        {
+          "name": "call_group_id",
+          "python_name": "call_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Call group ID"
+        },
+        {
+          "name": "call_recording_consent",
+          "python_name": "call_recording_consent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call recording consent status"
+        },
+        {
+          "name": "call_recording_consent_action",
+          "python_name": "call_recording_consent_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Recording consent action"
+        },
+        {
+          "name": "call_recording_consent_keypress",
+          "python_name": "call_recording_consent_keypress",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Recording consent keypress"
+        },
+        {
+          "name": "callback",
+          "python_name": "callback",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this was a callback"
+        },
+        {
+          "name": "callback_source",
+          "python_name": "callback_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source of the callback"
+        },
+        {
+          "name": "completion_status",
+          "python_name": "completion_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call completion status"
+        },
+        {
+          "name": "consultation_time",
+          "python_name": "consultation_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Consultation time"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "customer_requested_voicemail",
+          "python_name": "customer_requested_voicemail",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether customer requested voicemail"
+        },
+        {
+          "name": "default_group",
+          "python_name": "default_group",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether default group was used"
+        },
+        {
+          "name": "direction",
+          "python_name": "direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call direction (inbound/outbound)"
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Call duration in seconds"
+        },
+        {
+          "name": "exceeded_queue_time",
+          "python_name": "exceeded_queue_time",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether queue time was exceeded"
+        },
+        {
+          "name": "exceeded_queue_wait_time",
+          "python_name": "exceeded_queue_wait_time",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether max queue wait time was exceeded"
+        },
+        {
+          "name": "hold_time",
+          "python_name": "hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Hold time in seconds"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Call ID"
+        },
+        {
+          "name": "ivr_action",
+          "python_name": "ivr_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "IVR action taken"
+        },
+        {
+          "name": "ivr_destination_group_name",
+          "python_name": "ivr_destination_group_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "IVR destination group name"
+        },
+        {
+          "name": "ivr_hops",
+          "python_name": "ivr_hops",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of IVR hops"
+        },
+        {
+          "name": "ivr_routed_to",
+          "python_name": "ivr_routed_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Where IVR routed the call"
+        },
+        {
+          "name": "ivr_time_spent",
+          "python_name": "ivr_time_spent",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Time spent in IVR"
+        },
+        {
+          "name": "minutes_billed",
+          "python_name": "minutes_billed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Minutes billed"
+        },
+        {
+          "name": "not_recording_time",
+          "python_name": "not_recording_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Time not recording"
+        },
+        {
+          "name": "outside_business_hours",
+          "python_name": "outside_business_hours",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether call was outside business hours"
+        },
+        {
+          "name": "overflowed",
+          "python_name": "overflowed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether call overflowed"
+        },
+        {
+          "name": "overflowed_to",
+          "python_name": "overflowed_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Where call overflowed to"
+        },
+        {
+          "name": "phone_number",
+          "python_name": "phone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number used"
+        },
+        {
+          "name": "phone_number_id",
+          "python_name": "phone_number_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Phone number ID"
+        },
+        {
+          "name": "quality_issues",
+          "python_name": "quality_issues",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Quality issues detected"
+        },
+        {
+          "name": "recording_control_interactions",
+          "python_name": "recording_control_interactions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Recording control interactions count"
+        },
+        {
+          "name": "recording_time",
+          "python_name": "recording_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Recording time"
+        },
+        {
+          "name": "talk_time",
+          "python_name": "talk_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Talk time in seconds"
+        },
+        {
+          "name": "ticket_id",
+          "python_name": "ticket_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Associated ticket ID"
+        },
+        {
+          "name": "time_to_answer",
+          "python_name": "time_to_answer",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Time to answer in seconds"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "voicemail",
+          "python_name": "voicemail",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether it was a voicemail"
+        },
+        {
+          "name": "wait_time",
+          "python_name": "wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Wait time in seconds"
+        },
+        {
+          "name": "wrap_up_time",
+          "python_name": "wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Wrap-up time in seconds"
+        }
+      ]
+    },
+    "current_queue_activity": {
+      "entity": "current_queue_activity",
+      "data_type_name": "CurrentQueueActivitySearchData",
+      "filter_type_name": "CurrentQueueActivitySearchFilter",
+      "in_filter_type_name": "CurrentQueueActivityInFilter",
+      "any_value_filter_type_name": "CurrentQueueActivityAnyValueFilter",
+      "string_filter_type_name": "CurrentQueueActivityStringFilter",
+      "sort_filter_type_name": "CurrentQueueActivitySortFilter",
+      "result_type_name": "CurrentQueueActivitySearchResult",
+      "query_type_name": "CurrentQueueActivitySearchQuery",
+      "condition_prefix": "CurrentQueueActivity",
+      "condition_type_name": "CurrentQueueActivityCondition",
+      "fields": [
+        {
+          "name": "agents_online",
+          "python_name": "agents_online",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Current number of agents online"
+        },
+        {
+          "name": "average_wait_time",
+          "python_name": "average_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average wait time for callers in queue (seconds)"
+        },
+        {
+          "name": "callbacks_waiting",
+          "python_name": "callbacks_waiting",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of callers in callback queue"
+        },
+        {
+          "name": "calls_waiting",
+          "python_name": "calls_waiting",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of callers waiting in queue"
+        },
+        {
+          "name": "current_timestamp",
+          "python_name": "current_timestamp",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Current timestamp"
+        },
+        {
+          "name": "embeddable_callbacks_waiting",
+          "python_name": "embeddable_callbacks_waiting",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of Web Widget callback requests waiting"
+        },
+        {
+          "name": "longest_wait_time",
+          "python_name": "longest_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Longest wait time for any caller (seconds)"
+        }
+      ]
+    },
+    "account_overview": {
+      "entity": "account_overview",
+      "data_type_name": "AccountOverviewSearchData",
+      "filter_type_name": "AccountOverviewSearchFilter",
+      "in_filter_type_name": "AccountOverviewInFilter",
+      "any_value_filter_type_name": "AccountOverviewAnyValueFilter",
+      "string_filter_type_name": "AccountOverviewStringFilter",
+      "sort_filter_type_name": "AccountOverviewSortFilter",
+      "result_type_name": "AccountOverviewSearchResult",
+      "query_type_name": "AccountOverviewSearchQuery",
+      "condition_prefix": "AccountOverview",
+      "condition_type_name": "AccountOverviewCondition",
+      "fields": [
+        {
+          "name": "average_call_duration",
+          "python_name": "average_call_duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average call duration"
+        },
+        {
+          "name": "average_callback_wait_time",
+          "python_name": "average_callback_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average callback wait time"
+        },
+        {
+          "name": "average_hold_time",
+          "python_name": "average_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average hold time per call"
+        },
+        {
+          "name": "average_queue_wait_time",
+          "python_name": "average_queue_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average queue wait time"
+        },
+        {
+          "name": "average_time_to_answer",
+          "python_name": "average_time_to_answer",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average time to answer"
+        },
+        {
+          "name": "average_wrap_up_time",
+          "python_name": "average_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Average wrap-up time"
+        },
+        {
+          "name": "current_timestamp",
+          "python_name": "current_timestamp",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Current timestamp"
+        },
+        {
+          "name": "max_calls_waiting",
+          "python_name": "max_calls_waiting",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Max calls waiting in queue"
+        },
+        {
+          "name": "max_queue_wait_time",
+          "python_name": "max_queue_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Max queue wait time"
+        },
+        {
+          "name": "total_call_duration",
+          "python_name": "total_call_duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total call duration"
+        },
+        {
+          "name": "total_callback_calls",
+          "python_name": "total_callback_calls",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total callback calls"
+        },
+        {
+          "name": "total_calls",
+          "python_name": "total_calls",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls"
+        },
+        {
+          "name": "total_calls_abandoned_in_queue",
+          "python_name": "total_calls_abandoned_in_queue",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls abandoned in queue"
+        },
+        {
+          "name": "total_calls_outside_business_hours",
+          "python_name": "total_calls_outside_business_hours",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls outside business hours"
+        },
+        {
+          "name": "total_calls_with_exceeded_queue_wait_time",
+          "python_name": "total_calls_with_exceeded_queue_wait_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls exceeding max queue wait time"
+        },
+        {
+          "name": "total_calls_with_requested_voicemail",
+          "python_name": "total_calls_with_requested_voicemail",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total calls requesting voicemail"
+        },
+        {
+          "name": "total_embeddable_callback_calls",
+          "python_name": "total_embeddable_callback_calls",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total embeddable callback calls"
+        },
+        {
+          "name": "total_hold_time",
+          "python_name": "total_hold_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total hold time"
+        },
+        {
+          "name": "total_inbound_calls",
+          "python_name": "total_inbound_calls",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total inbound calls"
+        },
+        {
+          "name": "total_outbound_calls",
+          "python_name": "total_outbound_calls",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total outbound calls"
+        },
+        {
+          "name": "total_textback_requests",
+          "python_name": "total_textback_requests",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total textback requests"
+        },
+        {
+          "name": "total_voicemails",
+          "python_name": "total_voicemails",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total voicemails"
+        },
+        {
+          "name": "total_wrap_up_time",
+          "python_name": "total_wrap_up_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total wrap-up time"
+        }
+      ]
+    },
+    "ivrs": {
+      "entity": "ivrs",
+      "data_type_name": "IvrsSearchData",
+      "filter_type_name": "IvrsSearchFilter",
+      "in_filter_type_name": "IvrsInFilter",
+      "any_value_filter_type_name": "IvrsAnyValueFilter",
+      "string_filter_type_name": "IvrsStringFilter",
+      "sort_filter_type_name": "IvrsSortFilter",
+      "result_type_name": "IvrsSearchResult",
+      "query_type_name": "IvrsSearchQuery",
+      "condition_prefix": "Ivrs",
+      "condition_type_name": "IvrsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "IVR ID"
+        },
+        {
+          "name": "menus",
+          "python_name": "menus",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of IVR menus"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the IVR"
+        },
+        {
+          "name": "phone_number_ids",
+          "python_name": "phone_number_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of phone numbers configured with this IVR"
+        },
+        {
+          "name": "phone_number_names",
+          "python_name": "phone_number_names",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Names of phone numbers configured with this IVR"
+        }
+      ]
+    }
+  }
+}

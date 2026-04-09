@@ -1,0 +1,1324 @@
+{
+  "connector_name": "freshdesk",
+  "class_name": "FreshdeskConnector",
+  "package_name": "airbyte_agent_freshdesk",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://developers.freshdesk.com/api/",
+  "commit_sha": "unknown",
+  "auth_example": "FreshdeskAuthConfig(api_key=\"...\")",
+  "auth_import": ", FreshdeskAuthConfig",
+  "auth_config": {
+    "type_name": "FreshdeskAuthConfig",
+    "base_name": "Freshdesk",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Freshdesk API key (found in Profile Settings)"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Connector for the Freshdesk customer support platform API (v2). Provides read access to helpdesk data including tickets, contacts, agents, groups, companies, roles, satisfaction ratings, surveys, time entries, and ticket fields. Freshdesk is a cloud-based customer support solution that enables companies to manage customer conversations across email, phone, chat, and social media.\n",
+  "supported_questions": "- List all open tickets in Freshdesk\n- Show me all agents in the support team\n- List all groups configured in Freshdesk\n- Get the details of ticket #26\n- Show me all companies in Freshdesk\n- List all roles defined in the helpdesk\n- Show me the ticket fields and their options\n- List time entries for tickets\n- What are the high priority tickets from last week?\n- Which tickets have breached their SLA due date?\n- Show me tickets assigned to agent {agent_name}\n- Find all tickets from company {company_name}\n- How many tickets were created this month by status?\n- What are the satisfaction ratings for resolved tickets?",
+  "unsupported_questions": "- Create a new ticket in Freshdesk\n- Update the status of ticket #{ticket_id}\n- Delete a contact from Freshdesk\n- Assign a ticket to a different agent",
+  "first_operation": {
+    "method_name": "list_tickets",
+    "http_method": "get",
+    "path": "/tickets",
+    "entity": "tickets",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "required": null,
+        "description": "Number of items per page (max 100)",
+        "is_deep_object": false
+      },
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number (starts at 1)",
+        "is_deep_object": false
+      },
+      {
+        "name": "updated_since",
+        "python_name": "updated_since",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "required": null,
+        "description": "Return tickets updated since this timestamp (ISO 8601)",
+        "is_deep_object": false
+      },
+      {
+        "name": "order_by",
+        "python_name": "order_by",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "created_at",
+            "due_by",
+            "updated_at",
+            "status"
+          ],
+          "default": "updated_at"
+        },
+        "required": null,
+        "description": "Sort field",
+        "is_deep_object": false
+      },
+      {
+        "name": "order_type",
+        "python_name": "order_type",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "default": "desc"
+        },
+        "required": null,
+        "description": "Sort order",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "TicketsListParams",
+    "response_type": "TicketsListResult",
+    "description": "Returns a paginated list of tickets. By default returns tickets created in the past 30 days. Use updated_since to get older tickets.",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Ticket]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "tickets": [
+      {
+        "method_name": "list_tickets",
+        "http_method": "get",
+        "path": "/tickets",
+        "entity": "tickets",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_since",
+            "python_name": "updated_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return tickets updated since this timestamp (ISO 8601)",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "due_by",
+                "updated_at",
+                "status"
+              ],
+              "default": "updated_at"
+            },
+            "required": null,
+            "description": "Sort field",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_type",
+            "python_name": "order_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TicketsListParams",
+        "response_type": "TicketsListResult",
+        "description": "Returns a paginated list of tickets. By default returns tickets created in the past 30 days. Use updated_since to get older tickets.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Ticket]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_ticket",
+        "http_method": "get",
+        "path": "/tickets/{id}",
+        "entity": "tickets",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Ticket ID"
+          }
+        ],
+        "params_type_name": "TicketsGetParams",
+        "response_type": "Ticket",
+        "description": "Get a single ticket by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Ticket",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_since",
+            "python_name": "updated_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return contacts updated since this timestamp (ISO 8601)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a paginated list of contacts",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "agents": [
+      {
+        "method_name": "list_agents",
+        "http_method": "get",
+        "path": "/agents",
+        "entity": "agents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AgentsListParams",
+        "response_type": "AgentsListResult",
+        "description": "Returns a paginated list of agents",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Agent]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_agent",
+        "http_method": "get",
+        "path": "/agents/{id}",
+        "entity": "agents",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Agent ID"
+          }
+        ],
+        "params_type_name": "AgentsGetParams",
+        "response_type": "Agent",
+        "description": "Get a single agent by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Agent",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "groups": [
+      {
+        "method_name": "list_groups",
+        "http_method": "get",
+        "path": "/groups",
+        "entity": "groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GroupsListParams",
+        "response_type": "GroupsListResult",
+        "description": "Returns a paginated list of groups",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Group]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_group",
+        "http_method": "get",
+        "path": "/groups/{id}",
+        "entity": "groups",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Group ID"
+          }
+        ],
+        "params_type_name": "GroupsGetParams",
+        "response_type": "Group",
+        "description": "Get a single group by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Group",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "companies": [
+      {
+        "method_name": "list_companies",
+        "http_method": "get",
+        "path": "/companies",
+        "entity": "companies",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CompaniesListParams",
+        "response_type": "CompaniesListResult",
+        "description": "Returns a paginated list of companies",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Company]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_company",
+        "http_method": "get",
+        "path": "/companies/{id}",
+        "entity": "companies",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Company ID"
+          }
+        ],
+        "params_type_name": "CompaniesGetParams",
+        "response_type": "Company",
+        "description": "Get a single company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "roles": [
+      {
+        "method_name": "list_roles",
+        "http_method": "get",
+        "path": "/roles",
+        "entity": "roles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RolesListParams",
+        "response_type": "RolesListResult",
+        "description": "Returns a paginated list of roles",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Role]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_role",
+        "http_method": "get",
+        "path": "/roles/{id}",
+        "entity": "roles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Role ID"
+          }
+        ],
+        "params_type_name": "RolesGetParams",
+        "response_type": "Role",
+        "description": "Get a single role by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Role",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "satisfaction_ratings": [
+      {
+        "method_name": "list_satisfaction_ratings",
+        "http_method": "get",
+        "path": "/surveys/satisfaction_ratings",
+        "entity": "satisfaction_ratings",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_since",
+            "python_name": "created_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return ratings created since this timestamp (ISO 8601)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SatisfactionRatingsListParams",
+        "response_type": "SatisfactionRatingsListResult",
+        "description": "Returns a paginated list of satisfaction ratings",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SatisfactionRating]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "surveys": [
+      {
+        "method_name": "list_surveys",
+        "http_method": "get",
+        "path": "/surveys",
+        "entity": "surveys",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SurveysListParams",
+        "response_type": "SurveysListResult",
+        "description": "Returns a paginated list of surveys",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Survey]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "time_entries": [
+      {
+        "method_name": "list_time_entries",
+        "http_method": "get",
+        "path": "/time_entries",
+        "entity": "time_entries",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TimeEntriesListParams",
+        "response_type": "TimeEntriesListResult",
+        "description": "Returns a paginated list of time entries",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TimeEntry]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ticket_fields": [
+      {
+        "method_name": "list_ticket_fields",
+        "http_method": "get",
+        "path": "/ticket_fields",
+        "entity": "ticket_fields",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (starts at 1)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TicketFieldsListParams",
+        "response_type": "TicketFieldsListResult",
+        "description": "Returns a list of all ticket fields",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TicketField]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "tickets": {
+      "entity": "tickets",
+      "data_type_name": "TicketsSearchData",
+      "filter_type_name": "TicketsSearchFilter",
+      "in_filter_type_name": "TicketsInFilter",
+      "any_value_filter_type_name": "TicketsAnyValueFilter",
+      "string_filter_type_name": "TicketsStringFilter",
+      "sort_filter_type_name": "TicketsSortFilter",
+      "result_type_name": "TicketsSearchResult",
+      "query_type_name": "TicketsSearchQuery",
+      "condition_prefix": "Tickets",
+      "condition_type_name": "TicketsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Unique ticket ID"
+        },
+        {
+          "name": "subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject of the ticket"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "HTML content of the ticket"
+        },
+        {
+          "name": "description_text",
+          "python_name": "description_text",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Plain text content of the ticket"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Status: 2=Open, 3=Pending, 4=Resolved, 5=Closed"
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Priority: 1=Low, 2=Medium, 3=High, 4=Urgent"
+        },
+        {
+          "name": "source",
+          "python_name": "source",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Source: 1=Email, 2=Portal, 3=Phone, 7=Chat, 9=Feedback Widget, 10=Outbound Email"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Ticket type"
+        },
+        {
+          "name": "requester_id",
+          "python_name": "requester_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the requester"
+        },
+        {
+          "name": "requester",
+          "python_name": "requester",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Requester details including name, email, and contact info"
+        },
+        {
+          "name": "responder_id",
+          "python_name": "responder_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the agent to whom the ticket is assigned"
+        },
+        {
+          "name": "group_id",
+          "python_name": "group_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the group to which the ticket is assigned"
+        },
+        {
+          "name": "company_id",
+          "python_name": "company_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Company ID of the requester"
+        },
+        {
+          "name": "product_id",
+          "python_name": "product_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the product associated with the ticket"
+        },
+        {
+          "name": "email_config_id",
+          "python_name": "email_config_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the email config used for the ticket"
+        },
+        {
+          "name": "cc_emails",
+          "python_name": "cc_emails",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "CC email addresses"
+        },
+        {
+          "name": "ticket_cc_emails",
+          "python_name": "ticket_cc_emails",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Ticket CC email addresses"
+        },
+        {
+          "name": "to_emails",
+          "python_name": "to_emails",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "To email addresses"
+        },
+        {
+          "name": "fwd_emails",
+          "python_name": "fwd_emails",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Forwarded email addresses"
+        },
+        {
+          "name": "reply_cc_emails",
+          "python_name": "reply_cc_emails",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Reply CC email addresses"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Tags associated with the ticket"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Custom fields associated with the ticket"
+        },
+        {
+          "name": "due_by",
+          "python_name": "due_by",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Resolution due by timestamp"
+        },
+        {
+          "name": "fr_due_by",
+          "python_name": "fr_due_by",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "First response due by timestamp"
+        },
+        {
+          "name": "fr_escalated",
+          "python_name": "fr_escalated",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the first response time was breached"
+        },
+        {
+          "name": "is_escalated",
+          "python_name": "is_escalated",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the ticket is escalated"
+        },
+        {
+          "name": "nr_due_by",
+          "python_name": "nr_due_by",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Next response due by timestamp"
+        },
+        {
+          "name": "nr_escalated",
+          "python_name": "nr_escalated",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the next response time was breached"
+        },
+        {
+          "name": "spam",
+          "python_name": "spam",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the ticket is marked as spam"
+        },
+        {
+          "name": "association_type",
+          "python_name": "association_type",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Association type for parent/child tickets"
+        },
+        {
+          "name": "associated_tickets_count",
+          "python_name": "associated_tickets_count",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Number of associated tickets"
+        },
+        {
+          "name": "stats",
+          "python_name": "stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Ticket statistics including response and resolution times"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Ticket creation timestamp"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Ticket last update timestamp"
+        }
+      ]
+    },
+    "agents": {
+      "entity": "agents",
+      "data_type_name": "AgentsSearchData",
+      "filter_type_name": "AgentsSearchFilter",
+      "in_filter_type_name": "AgentsInFilter",
+      "any_value_filter_type_name": "AgentsAnyValueFilter",
+      "string_filter_type_name": "AgentsStringFilter",
+      "sort_filter_type_name": "AgentsSortFilter",
+      "result_type_name": "AgentsSearchResult",
+      "query_type_name": "AgentsSearchQuery",
+      "condition_prefix": "Agents",
+      "condition_type_name": "AgentsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Unique agent ID"
+        },
+        {
+          "name": "available",
+          "python_name": "available",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the agent is available"
+        },
+        {
+          "name": "available_since",
+          "python_name": "available_since",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp since the agent has been available"
+        },
+        {
+          "name": "contact",
+          "python_name": "contact",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contact details of the agent including name, email, phone, and job title"
+        },
+        {
+          "name": "occasional",
+          "python_name": "occasional",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the agent is an occasional agent"
+        },
+        {
+          "name": "signature",
+          "python_name": "signature",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Signature of the agent (HTML)"
+        },
+        {
+          "name": "ticket_scope",
+          "python_name": "ticket_scope",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Ticket scope: 1=Global, 2=Group, 3=Restricted"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent type: support_agent, field_agent, collaborator"
+        },
+        {
+          "name": "last_active_at",
+          "python_name": "last_active_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of last agent activity"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent creation timestamp"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Agent last update timestamp"
+        }
+      ]
+    },
+    "groups": {
+      "entity": "groups",
+      "data_type_name": "GroupsSearchData",
+      "filter_type_name": "GroupsSearchFilter",
+      "in_filter_type_name": "GroupsInFilter",
+      "any_value_filter_type_name": "GroupsAnyValueFilter",
+      "string_filter_type_name": "GroupsStringFilter",
+      "sort_filter_type_name": "GroupsSortFilter",
+      "result_type_name": "GroupsSearchResult",
+      "query_type_name": "GroupsSearchQuery",
+      "condition_prefix": "Groups",
+      "condition_type_name": "GroupsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique group ID"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the group"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the group"
+        },
+        {
+          "name": "auto_ticket_assign",
+          "python_name": "auto_ticket_assign",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Auto ticket assignment: 0=Disabled, 1=Round Robin, 2=Skill Based, 3=Load Based"
+        },
+        {
+          "name": "business_hour_id",
+          "python_name": "business_hour_id",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "ID of the associated business hour"
+        },
+        {
+          "name": "escalate_to",
+          "python_name": "escalate_to",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "User ID for escalation"
+        },
+        {
+          "name": "group_type",
+          "python_name": "group_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the group (e.g., support_agent_group)"
+        },
+        {
+          "name": "unassigned_for",
+          "python_name": "unassigned_for",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Time after which escalation triggers"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Group creation timestamp"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Group last update timestamp"
+        }
+      ]
+    }
+  }
+}

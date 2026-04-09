@@ -1,0 +1,1878 @@
+{
+  "connector_name": "snapchat-marketing",
+  "class_name": "SnapchatMarketingConnector",
+  "package_name": "airbyte_agent_snapchat_marketing",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://developers.snap.com/api/marketing-api/Ads-API/introduction",
+  "commit_sha": "unknown",
+  "auth_example": "SnapchatMarketingAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\")",
+  "auth_import": ", SnapchatMarketingAuthConfig",
+  "auth_config": {
+    "type_name": "SnapchatMarketingAuthConfig",
+    "base_name": "SnapchatMarketing",
+    "options": [
+      {
+        "title": "Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "The Client ID of your Snapchat developer application"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "The Client Secret of your Snapchat developer application"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Refresh Token to renew the expired Access Token"
+          }
+        ],
+        "type_suffix": "Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "SnapchatMarketingReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Snapchat Marketing.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "Date in YYYY-MM-DD format. Data before this date will not be replicated.",
+        "format": "date",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Snapchat Marketing API (Ads API). Provides access to Snapchat advertising entities including organizations, ad accounts, campaigns, ad squads, ads, creatives, media, and audience segments. Supports OAuth2 authentication with automatic token refresh.\n",
+  "supported_questions": "- List all organizations I belong to\n- Show me all ad accounts for my organization\n- List all campaigns in my ad account\n- Show me the ad squads for my ad account\n- List all ads in my ad account\n- Show me the creatives for my ad account\n- List all media files in my ad account\n- Show me the audience segments in my ad account\n- Which campaigns are currently active?\n- What ad squads have the highest daily budget?\n- Show me ads that are pending review\n- Find campaigns created in the last month",
+  "unsupported_questions": "- Create a new campaign\n- Update an ad's status\n- Delete a creative\n- Show me ad performance statistics",
+  "first_operation": {
+    "method_name": "list_organizations",
+    "http_method": "get",
+    "path": "/me/organizations",
+    "entity": "organizations",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "OrganizationsListParams",
+    "response_type": "OrganizationsListResult",
+    "description": "Returns the organizations the authenticated user belongs to",
+    "record_extractor": "$.organizations[*].organization",
+    "meta_extractor": {
+      "next_link": "$.paging.next_link"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Organization]",
+    "meta_fields": [
+      {
+        "name": "next_link",
+        "python_name": "next_link",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "organizations": [
+      {
+        "method_name": "list_organizations",
+        "http_method": "get",
+        "path": "/me/organizations",
+        "entity": "organizations",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "OrganizationsListParams",
+        "response_type": "OrganizationsListResult",
+        "description": "Returns the organizations the authenticated user belongs to",
+        "record_extractor": "$.organizations[*].organization",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Organization]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_organization",
+        "http_method": "get",
+        "path": "/organizations/{id}",
+        "entity": "organizations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Organization ID"
+          }
+        ],
+        "params_type_name": "OrganizationsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single organization by ID",
+        "record_extractor": "$.organizations[0].organization",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "adaccounts": [
+      {
+        "method_name": "list_ad_accounts",
+        "http_method": "get",
+        "path": "/organizations/{organization_id}/adaccounts",
+        "entity": "adaccounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "python_name": "organization_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Organization ID"
+          }
+        ],
+        "params_type_name": "AdaccountsListParams",
+        "response_type": "AdaccountsListResult",
+        "description": "Returns ad accounts belonging to an organization",
+        "record_extractor": "$.adaccounts[*].adaccount",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdAccount]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ad_account",
+        "http_method": "get",
+        "path": "/adaccounts/{id}",
+        "entity": "adaccounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "AdaccountsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single ad account by ID",
+        "record_extractor": "$.adaccounts[0].adaccount",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns campaigns belonging to an ad account",
+        "record_extractor": "$.campaigns[*].campaign",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/campaigns/{id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Campaign ID"
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single campaign by ID",
+        "record_extractor": "$.campaigns[0].campaign",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "adsquads": [
+      {
+        "method_name": "list_ad_squads",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/adsquads",
+        "entity": "adsquads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "AdsquadsListParams",
+        "response_type": "AdsquadsListResult",
+        "description": "Returns ad squads belonging to an ad account",
+        "record_extractor": "$.adsquads[*].adsquad",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdSquad]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ad_squad",
+        "http_method": "get",
+        "path": "/adsquads/{id}",
+        "entity": "adsquads",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Squad ID"
+          }
+        ],
+        "params_type_name": "AdsquadsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single ad squad by ID",
+        "record_extractor": "$.adsquads[0].adsquad",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ads": [
+      {
+        "method_name": "list_ads",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/ads",
+        "entity": "ads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "AdsListParams",
+        "response_type": "AdsListResult",
+        "description": "Returns ads belonging to an ad account",
+        "record_extractor": "$.ads[*].ad",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ad]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_ad",
+        "http_method": "get",
+        "path": "/ads/{id}",
+        "entity": "ads",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad ID"
+          }
+        ],
+        "params_type_name": "AdsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single ad by ID",
+        "record_extractor": "$.ads[0].ad",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "creatives": [
+      {
+        "method_name": "list_creatives",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/creatives",
+        "entity": "creatives",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "CreativesListParams",
+        "response_type": "CreativesListResult",
+        "description": "Returns creatives belonging to an ad account",
+        "record_extractor": "$.creatives[*].creative",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Creative]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_creative",
+        "http_method": "get",
+        "path": "/creatives/{id}",
+        "entity": "creatives",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Creative ID"
+          }
+        ],
+        "params_type_name": "CreativesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single creative by ID",
+        "record_extractor": "$.creatives[0].creative",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "media": [
+      {
+        "method_name": "list_media",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/media",
+        "entity": "media",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "MediaListParams",
+        "response_type": "MediaListResult",
+        "description": "Returns media belonging to an ad account",
+        "record_extractor": "$.media[*].media",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Media]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_media",
+        "http_method": "get",
+        "path": "/media/{id}",
+        "entity": "media",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Media ID"
+          }
+        ],
+        "params_type_name": "MediaGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single media item by ID",
+        "record_extractor": "$.media[0].media",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "segments": [
+      {
+        "method_name": "list_segments",
+        "http_method": "get",
+        "path": "/adaccounts/{ad_account_id}/segments",
+        "entity": "segments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "ad_account_id",
+            "python_name": "ad_account_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Ad Account ID"
+          }
+        ],
+        "params_type_name": "SegmentsListParams",
+        "response_type": "SegmentsListResult",
+        "description": "Returns audience segments belonging to an ad account",
+        "record_extractor": "$.segments[*].segment",
+        "meta_extractor": {
+          "next_link": "$.paging.next_link"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Segment]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_segment",
+        "http_method": "get",
+        "path": "/segments/{id}",
+        "entity": "segments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Segment ID"
+          }
+        ],
+        "params_type_name": "SegmentsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Get a single audience segment by ID",
+        "record_extractor": "$.segments[0].segment",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "organizations": {
+      "entity": "organizations",
+      "data_type_name": "OrganizationsSearchData",
+      "filter_type_name": "OrganizationsSearchFilter",
+      "in_filter_type_name": "OrganizationsInFilter",
+      "any_value_filter_type_name": "OrganizationsAnyValueFilter",
+      "string_filter_type_name": "OrganizationsStringFilter",
+      "sort_filter_type_name": "OrganizationsSortFilter",
+      "result_type_name": "OrganizationsSearchResult",
+      "query_type_name": "OrganizationsSearchQuery",
+      "condition_prefix": "Organizations",
+      "condition_type_name": "OrganizationsCondition",
+      "fields": [
+        {
+          "name": "accepted_term_version",
+          "python_name": "accepted_term_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Version of accepted terms"
+        },
+        {
+          "name": "address_line_1",
+          "python_name": "address_line_1",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address"
+        },
+        {
+          "name": "administrative_district_level_1",
+          "python_name": "administrative_district_level_1",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province"
+        },
+        {
+          "name": "configuration_settings",
+          "python_name": "configuration_settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Organization configuration settings"
+        },
+        {
+          "name": "contact_email",
+          "python_name": "contact_email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact email address"
+        },
+        {
+          "name": "contact_name",
+          "python_name": "contact_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact person name"
+        },
+        {
+          "name": "contact_phone",
+          "python_name": "contact_phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact phone number"
+        },
+        {
+          "name": "contact_phone_optin",
+          "python_name": "contact_phone_optin",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the contact opted in for phone communications"
+        },
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country code"
+        },
+        {
+          "name": "createdByCaller",
+          "python_name": "created_by_caller",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the organization was created by the caller"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique organization identifier"
+        },
+        {
+          "name": "locality",
+          "python_name": "locality",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City or locality"
+        },
+        {
+          "name": "my_display_name",
+          "python_name": "my_display_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display name of the authenticated user in the organization"
+        },
+        {
+          "name": "my_invited_email",
+          "python_name": "my_invited_email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email used to invite the authenticated user"
+        },
+        {
+          "name": "my_member_id",
+          "python_name": "my_member_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Member ID of the authenticated user"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Organization name"
+        },
+        {
+          "name": "postal_code",
+          "python_name": "postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code"
+        },
+        {
+          "name": "roles",
+          "python_name": "roles",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Roles of the authenticated user in this organization"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Organization state"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Organization type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        }
+      ]
+    },
+    "adaccounts": {
+      "entity": "adaccounts",
+      "data_type_name": "AdaccountsSearchData",
+      "filter_type_name": "AdaccountsSearchFilter",
+      "in_filter_type_name": "AdaccountsInFilter",
+      "any_value_filter_type_name": "AdaccountsAnyValueFilter",
+      "string_filter_type_name": "AdaccountsStringFilter",
+      "sort_filter_type_name": "AdaccountsSortFilter",
+      "result_type_name": "AdaccountsSearchResult",
+      "query_type_name": "AdaccountsSearchQuery",
+      "condition_prefix": "Adaccounts",
+      "condition_type_name": "AdaccountsCondition",
+      "fields": [
+        {
+          "name": "advertiser_organization_id",
+          "python_name": "advertiser_organization_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Advertiser organization ID"
+        },
+        {
+          "name": "agency_representing_client",
+          "python_name": "agency_representing_client",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the account is managed by an agency"
+        },
+        {
+          "name": "billing_center_id",
+          "python_name": "billing_center_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing center ID"
+        },
+        {
+          "name": "billing_type",
+          "python_name": "billing_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing type"
+        },
+        {
+          "name": "client_paying_invoices",
+          "python_name": "client_paying_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the client pays invoices directly"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account currency code"
+        },
+        {
+          "name": "funding_source_ids",
+          "python_name": "funding_source_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Associated funding source IDs"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ad account identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account name"
+        },
+        {
+          "name": "organization_id",
+          "python_name": "organization_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent organization ID"
+        },
+        {
+          "name": "regulations",
+          "python_name": "regulations",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Regulatory settings"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account status"
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account timezone"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad account type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent ad account ID"
+        },
+        {
+          "name": "buy_model",
+          "python_name": "buy_model",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Buy model type"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "creation_state",
+          "python_name": "creation_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation state"
+        },
+        {
+          "name": "delivery_status",
+          "python_name": "delivery_status",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Delivery status messages"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique campaign identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "objective",
+          "python_name": "objective",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign objective"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign start time"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign status"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        }
+      ]
+    },
+    "adsquads": {
+      "entity": "adsquads",
+      "data_type_name": "AdsquadsSearchData",
+      "filter_type_name": "AdsquadsSearchFilter",
+      "in_filter_type_name": "AdsquadsInFilter",
+      "any_value_filter_type_name": "AdsquadsAnyValueFilter",
+      "string_filter_type_name": "AdsquadsStringFilter",
+      "sort_filter_type_name": "AdsquadsSortFilter",
+      "result_type_name": "AdsquadsSearchResult",
+      "query_type_name": "AdsquadsSearchQuery",
+      "condition_prefix": "Adsquads",
+      "condition_type_name": "AdsquadsCondition",
+      "fields": [
+        {
+          "name": "auto_bid",
+          "python_name": "auto_bid",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether auto bidding is enabled"
+        },
+        {
+          "name": "bid_strategy",
+          "python_name": "bid_strategy",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Bid strategy"
+        },
+        {
+          "name": "billing_event",
+          "python_name": "billing_event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Billing event type"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent campaign ID"
+        },
+        {
+          "name": "child_ad_type",
+          "python_name": "child_ad_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Child ad type"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "creation_state",
+          "python_name": "creation_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation state"
+        },
+        {
+          "name": "daily_budget_micro",
+          "python_name": "daily_budget_micro",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Daily budget in micro-currency"
+        },
+        {
+          "name": "delivery_constraint",
+          "python_name": "delivery_constraint",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Delivery constraint"
+        },
+        {
+          "name": "delivery_properties_version",
+          "python_name": "delivery_properties_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Delivery properties version"
+        },
+        {
+          "name": "delivery_status",
+          "python_name": "delivery_status",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Delivery status messages"
+        },
+        {
+          "name": "end_time",
+          "python_name": "end_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad squad end time"
+        },
+        {
+          "name": "event_sources",
+          "python_name": "event_sources",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Event sources configuration"
+        },
+        {
+          "name": "forced_view_setting",
+          "python_name": "forced_view_setting",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Forced view setting"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ad squad identifier"
+        },
+        {
+          "name": "lifetime_budget_micro",
+          "python_name": "lifetime_budget_micro",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Lifetime budget in micro-currency"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad squad name"
+        },
+        {
+          "name": "optimization_goal",
+          "python_name": "optimization_goal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Optimization goal"
+        },
+        {
+          "name": "pacing_type",
+          "python_name": "pacing_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Pacing type"
+        },
+        {
+          "name": "placement",
+          "python_name": "placement",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Placement type"
+        },
+        {
+          "name": "skadnetwork_properties",
+          "python_name": "skadnetwork_properties",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "SKAdNetwork properties"
+        },
+        {
+          "name": "start_time",
+          "python_name": "start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad squad start time"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad squad status"
+        },
+        {
+          "name": "target_bid",
+          "python_name": "target_bid",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether target bid is enabled"
+        },
+        {
+          "name": "targeting",
+          "python_name": "targeting",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Targeting specification"
+        },
+        {
+          "name": "targeting_reach_status",
+          "python_name": "targeting_reach_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Targeting reach status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad squad type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        }
+      ]
+    },
+    "ads": {
+      "entity": "ads",
+      "data_type_name": "AdsSearchData",
+      "filter_type_name": "AdsSearchFilter",
+      "in_filter_type_name": "AdsInFilter",
+      "any_value_filter_type_name": "AdsAnyValueFilter",
+      "string_filter_type_name": "AdsStringFilter",
+      "sort_filter_type_name": "AdsSortFilter",
+      "result_type_name": "AdsSearchResult",
+      "query_type_name": "AdsSearchQuery",
+      "condition_prefix": "Ads",
+      "condition_type_name": "AdsCondition",
+      "fields": [
+        {
+          "name": "ad_squad_id",
+          "python_name": "ad_squad_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent ad squad ID"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "creative_id",
+          "python_name": "creative_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Associated creative ID"
+        },
+        {
+          "name": "delivery_status",
+          "python_name": "delivery_status",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Delivery status messages"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ad identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad name"
+        },
+        {
+          "name": "render_type",
+          "python_name": "render_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Render type"
+        },
+        {
+          "name": "review_status",
+          "python_name": "review_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Review status"
+        },
+        {
+          "name": "review_status_reasons",
+          "python_name": "review_status_reasons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Reasons for review status"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad status"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        }
+      ]
+    },
+    "creatives": {
+      "entity": "creatives",
+      "data_type_name": "CreativesSearchData",
+      "filter_type_name": "CreativesSearchFilter",
+      "in_filter_type_name": "CreativesInFilter",
+      "any_value_filter_type_name": "CreativesAnyValueFilter",
+      "string_filter_type_name": "CreativesStringFilter",
+      "sort_filter_type_name": "CreativesSortFilter",
+      "result_type_name": "CreativesSearchResult",
+      "query_type_name": "CreativesSearchQuery",
+      "condition_prefix": "Creatives",
+      "condition_type_name": "CreativesCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent ad account ID"
+        },
+        {
+          "name": "ad_product",
+          "python_name": "ad_product",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad product type"
+        },
+        {
+          "name": "ad_to_place_properties",
+          "python_name": "ad_to_place_properties",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Ad-to-place properties"
+        },
+        {
+          "name": "brand_name",
+          "python_name": "brand_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Brand name displayed in the creative"
+        },
+        {
+          "name": "call_to_action",
+          "python_name": "call_to_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call to action text"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "forced_view_eligibility",
+          "python_name": "forced_view_eligibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Forced view eligibility status"
+        },
+        {
+          "name": "headline",
+          "python_name": "headline",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative headline"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique creative identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative name"
+        },
+        {
+          "name": "packaging_status",
+          "python_name": "packaging_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Packaging status"
+        },
+        {
+          "name": "render_type",
+          "python_name": "render_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Render type"
+        },
+        {
+          "name": "review_status",
+          "python_name": "review_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Review status"
+        },
+        {
+          "name": "review_status_details",
+          "python_name": "review_status_details",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Details about the review status"
+        },
+        {
+          "name": "shareable",
+          "python_name": "shareable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the creative is shareable"
+        },
+        {
+          "name": "top_snap_crop_position",
+          "python_name": "top_snap_crop_position",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Top snap crop position"
+        },
+        {
+          "name": "top_snap_media_id",
+          "python_name": "top_snap_media_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Top snap media ID"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creative type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "web_view_properties",
+          "python_name": "web_view_properties",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Web view properties"
+        }
+      ]
+    },
+    "media": {
+      "entity": "media",
+      "data_type_name": "MediaSearchData",
+      "filter_type_name": "MediaSearchFilter",
+      "in_filter_type_name": "MediaInFilter",
+      "any_value_filter_type_name": "MediaAnyValueFilter",
+      "string_filter_type_name": "MediaStringFilter",
+      "sort_filter_type_name": "MediaSortFilter",
+      "result_type_name": "MediaSearchResult",
+      "query_type_name": "MediaSearchQuery",
+      "condition_prefix": "Media",
+      "condition_type_name": "MediaCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent ad account ID"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "download_link",
+          "python_name": "download_link",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Download URL for the media"
+        },
+        {
+          "name": "duration_in_seconds",
+          "python_name": "duration_in_seconds",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Duration in seconds for video media"
+        },
+        {
+          "name": "file_name",
+          "python_name": "file_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Original file name"
+        },
+        {
+          "name": "file_size_in_bytes",
+          "python_name": "file_size_in_bytes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "File size in bytes"
+        },
+        {
+          "name": "hash",
+          "python_name": "hash",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media file hash"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique media identifier"
+        },
+        {
+          "name": "image_metadata",
+          "python_name": "image_metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Image-specific metadata"
+        },
+        {
+          "name": "is_demo_media",
+          "python_name": "is_demo_media",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is demo media"
+        },
+        {
+          "name": "media_status",
+          "python_name": "media_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media processing status"
+        },
+        {
+          "name": "media_usages",
+          "python_name": "media_usages",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Where the media is used"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media name"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media type"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "video_metadata",
+          "python_name": "video_metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Video-specific metadata"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media visibility setting"
+        }
+      ]
+    },
+    "segments": {
+      "entity": "segments",
+      "data_type_name": "SegmentsSearchData",
+      "filter_type_name": "SegmentsSearchFilter",
+      "in_filter_type_name": "SegmentsInFilter",
+      "any_value_filter_type_name": "SegmentsAnyValueFilter",
+      "string_filter_type_name": "SegmentsStringFilter",
+      "sort_filter_type_name": "SegmentsSortFilter",
+      "result_type_name": "SegmentsSearchResult",
+      "query_type_name": "SegmentsSearchQuery",
+      "condition_prefix": "Segments",
+      "condition_type_name": "SegmentsCondition",
+      "fields": [
+        {
+          "name": "ad_account_id",
+          "python_name": "ad_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent ad account ID"
+        },
+        {
+          "name": "approximate_number_users",
+          "python_name": "approximate_number_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Approximate number of users in the segment"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Creation timestamp"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Segment description"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique segment identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Segment name"
+        },
+        {
+          "name": "organization_id",
+          "python_name": "organization_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent organization ID"
+        },
+        {
+          "name": "retention_in_days",
+          "python_name": "retention_in_days",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Data retention period in days"
+        },
+        {
+          "name": "source_type",
+          "python_name": "source_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Segment source type"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Segment status"
+        },
+        {
+          "name": "targetable_status",
+          "python_name": "targetable_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Whether the segment is targetable"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last update timestamp"
+        },
+        {
+          "name": "upload_status",
+          "python_name": "upload_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Upload processing status"
+        },
+        {
+          "name": "visible_to",
+          "python_name": "visible_to",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Visibility settings"
+        }
+      ]
+    }
+  }
+}

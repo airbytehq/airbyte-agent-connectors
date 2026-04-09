@@ -1,0 +1,5178 @@
+{
+  "connector_name": "chargebee",
+  "class_name": "ChargebeeConnector",
+  "package_name": "airbyte_agent_chargebee",
+  "package_version": "1.0.2",
+  "yaml_version": "1.0.2",
+  "api_reference_url": "https://apidocs.chargebee.com/docs/api",
+  "commit_sha": "unknown",
+  "auth_example": "ChargebeeAuthConfig(api_key=\"...\")",
+  "auth_import": ", ChargebeeAuthConfig",
+  "auth_config": {
+    "type_name": "ChargebeeAuthConfig",
+    "base_name": "Chargebee",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Chargebee API key (used as the HTTP Basic username)"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "ChargebeeReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Chargebee.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ. Data before this date is excluded.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Chargebee billing and subscription management API. Supports reading subscriptions, customers, invoices, credit notes, coupons, transactions, events, orders, items, item prices, and payment sources. Chargebee is a recurring billing platform that helps SaaS and subscription businesses manage the full subscription lifecycle.\n",
+  "supported_questions": "- List all active subscriptions\n- Show me details for a specific customer\n- List recent invoices\n- Show me details for a specific subscription\n- List all coupons\n- List recent transactions\n- List recent events\n- Show me customers with the highest monthly recurring revenue\n- Which subscriptions are set to cancel in the next 30 days?\n- List all overdue invoices and their amounts\n- Analyze subscription churn trends over the past quarter\n- What are the most popular items by number of subscriptions?\n- Show me total revenue breakdown by currency\n- Identify customers with expiring payment sources\n- Compare subscription plan distribution across item prices\n- List all credit notes issued in the past month\n- What is the average subscription lifetime for each plan?",
+  "unsupported_questions": "- Create a new subscription in Chargebee\n- Update a customer's billing address\n- Cancel a subscription\n- Apply a coupon to a subscription\n- Issue a refund for an invoice",
+  "first_operation": {
+    "method_name": "list_customers",
+    "http_method": "get",
+    "path": "/customers",
+    "entity": "customer",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "required": null,
+        "description": "Number of items to return (max 100)",
+        "is_deep_object": false
+      },
+      {
+        "name": "offset",
+        "python_name": "offset",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "CustomerListParams",
+    "response_type": "CustomerListResult",
+    "description": "List customers",
+    "record_extractor": "$.list[*].customer",
+    "meta_extractor": {
+      "next_offset": "$.next_offset"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Customer]",
+    "meta_fields": [
+      {
+        "name": "next_offset",
+        "python_name": "next_offset",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "Cursor for next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "customer": [
+      {
+        "method_name": "list_customers",
+        "http_method": "get",
+        "path": "/customers",
+        "entity": "customer",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items to return (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomerListParams",
+        "response_type": "CustomerListResult",
+        "description": "List customers",
+        "record_extractor": "$.list[*].customer",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Customer]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_customer",
+        "http_method": "get",
+        "path": "/customers/{id}",
+        "entity": "customer",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Customer ID"
+          }
+        ],
+        "params_type_name": "CustomerGetParams",
+        "response_type": "Customer",
+        "description": "Retrieve a customer",
+        "record_extractor": "$.customer",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Customer",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "subscription": [
+      {
+        "method_name": "list_subscriptions",
+        "http_method": "get",
+        "path": "/subscriptions",
+        "entity": "subscription",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SubscriptionListParams",
+        "response_type": "SubscriptionListResult",
+        "description": "List subscriptions",
+        "record_extractor": "$.list[*].subscription",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Subscription]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_subscription",
+        "http_method": "get",
+        "path": "/subscriptions/{id}",
+        "entity": "subscription",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Subscription ID"
+          }
+        ],
+        "params_type_name": "SubscriptionGetParams",
+        "response_type": "Subscription",
+        "description": "Retrieve a subscription",
+        "record_extractor": "$.subscription",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Subscription",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoice": [
+      {
+        "method_name": "list_invoices",
+        "http_method": "get",
+        "path": "/invoices",
+        "entity": "invoice",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvoiceListParams",
+        "response_type": "InvoiceListResult",
+        "description": "List invoices",
+        "record_extractor": "$.list[*].invoice",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Invoice]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_invoice",
+        "http_method": "get",
+        "path": "/invoices/{id}",
+        "entity": "invoice",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Invoice ID"
+          }
+        ],
+        "params_type_name": "InvoiceGetParams",
+        "response_type": "Invoice",
+        "description": "Retrieve an invoice",
+        "record_extractor": "$.invoice",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "credit_note": [
+      {
+        "method_name": "list_credit_notes",
+        "http_method": "get",
+        "path": "/credit_notes",
+        "entity": "credit_note",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CreditNoteListParams",
+        "response_type": "CreditNoteListResult",
+        "description": "List credit notes",
+        "record_extractor": "$.list[*].credit_note",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CreditNote]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_credit_note",
+        "http_method": "get",
+        "path": "/credit_notes/{id}",
+        "entity": "credit_note",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Credit note ID"
+          }
+        ],
+        "params_type_name": "CreditNoteGetParams",
+        "response_type": "CreditNote",
+        "description": "Retrieve a credit note",
+        "record_extractor": "$.credit_note",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CreditNote",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "coupon": [
+      {
+        "method_name": "list_coupons",
+        "http_method": "get",
+        "path": "/coupons",
+        "entity": "coupon",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CouponListParams",
+        "response_type": "CouponListResult",
+        "description": "List coupons",
+        "record_extractor": "$.list[*].coupon",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Coupon]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_coupon",
+        "http_method": "get",
+        "path": "/coupons/{id}",
+        "entity": "coupon",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Coupon ID"
+          }
+        ],
+        "params_type_name": "CouponGetParams",
+        "response_type": "Coupon",
+        "description": "Retrieve a coupon",
+        "record_extractor": "$.coupon",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Coupon",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transaction": [
+      {
+        "method_name": "list_transactions",
+        "http_method": "get",
+        "path": "/transactions",
+        "entity": "transaction",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TransactionListParams",
+        "response_type": "TransactionListResult",
+        "description": "List transactions",
+        "record_extractor": "$.list[*].transaction",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Transaction]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_transaction",
+        "http_method": "get",
+        "path": "/transactions/{id}",
+        "entity": "transaction",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Transaction ID"
+          }
+        ],
+        "params_type_name": "TransactionGetParams",
+        "response_type": "Transaction",
+        "description": "Retrieve a transaction",
+        "record_extractor": "$.transaction",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Transaction",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "event": [
+      {
+        "method_name": "list_events",
+        "http_method": "get",
+        "path": "/events",
+        "entity": "event",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventListParams",
+        "response_type": "EventListResult",
+        "description": "List events",
+        "record_extractor": "$.list[*].event",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Event]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_event",
+        "http_method": "get",
+        "path": "/events/{id}",
+        "entity": "event",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Event ID"
+          }
+        ],
+        "params_type_name": "EventGetParams",
+        "response_type": "Event",
+        "description": "Retrieve an event",
+        "record_extractor": "$.event",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Event",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "order": [
+      {
+        "method_name": "list_orders",
+        "http_method": "get",
+        "path": "/orders",
+        "entity": "order",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrderListParams",
+        "response_type": "OrderListResult",
+        "description": "List orders",
+        "record_extractor": "$.list[*].order",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Order]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_order",
+        "http_method": "get",
+        "path": "/orders/{id}",
+        "entity": "order",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Order ID"
+          }
+        ],
+        "params_type_name": "OrderGetParams",
+        "response_type": "Order",
+        "description": "Retrieve an order",
+        "record_extractor": "$.order",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Order",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "item": [
+      {
+        "method_name": "list_items",
+        "http_method": "get",
+        "path": "/items",
+        "entity": "item",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ItemListParams",
+        "response_type": "ItemListResult",
+        "description": "List items",
+        "record_extractor": "$.list[*].item",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Item]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_item",
+        "http_method": "get",
+        "path": "/items/{id}",
+        "entity": "item",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Item ID"
+          }
+        ],
+        "params_type_name": "ItemGetParams",
+        "response_type": "Item",
+        "description": "Retrieve an item",
+        "record_extractor": "$.item",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Item",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "item_price": [
+      {
+        "method_name": "list_item_prices",
+        "http_method": "get",
+        "path": "/item_prices",
+        "entity": "item_price",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ItemPriceListParams",
+        "response_type": "ItemPriceListResult",
+        "description": "List item prices",
+        "record_extractor": "$.list[*].item_price",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ItemPrice]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_item_price",
+        "http_method": "get",
+        "path": "/item_prices/{id}",
+        "entity": "item_price",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Item price ID"
+          }
+        ],
+        "params_type_name": "ItemPriceGetParams",
+        "response_type": "ItemPrice",
+        "description": "Retrieve an item price",
+        "record_extractor": "$.item_price",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ItemPrice",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "payment_source": [
+      {
+        "method_name": "list_payment_sources",
+        "http_method": "get",
+        "path": "/payment_sources",
+        "entity": "payment_source",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PaymentSourceListParams",
+        "response_type": "PaymentSourceListResult",
+        "description": "List payment sources",
+        "record_extractor": "$.list[*].payment_source",
+        "meta_extractor": {
+          "next_offset": "$.next_offset"
+        },
+        "needs_envelope": true,
+        "record_type": "list[PaymentSource]",
+        "meta_fields": [
+          {
+            "name": "next_offset",
+            "python_name": "next_offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_payment_source",
+        "http_method": "get",
+        "path": "/payment_sources/{id}",
+        "entity": "payment_source",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Payment source ID"
+          }
+        ],
+        "params_type_name": "PaymentSourceGetParams",
+        "response_type": "PaymentSource",
+        "description": "Retrieve a payment source",
+        "record_extractor": "$.payment_source",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentSource",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "subscription": {
+      "entity": "subscription",
+      "data_type_name": "SubscriptionSearchData",
+      "filter_type_name": "SubscriptionSearchFilter",
+      "in_filter_type_name": "SubscriptionInFilter",
+      "any_value_filter_type_name": "SubscriptionAnyValueFilter",
+      "string_filter_type_name": "SubscriptionStringFilter",
+      "sort_filter_type_name": "SubscriptionSortFilter",
+      "result_type_name": "SubscriptionSearchResult",
+      "query_type_name": "SubscriptionSearchQuery",
+      "condition_prefix": "Subscription",
+      "condition_type_name": "SubscriptionCondition",
+      "fields": [
+        {
+          "name": "activated_at",
+          "python_name": "activated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the subscription was activated."
+        },
+        {
+          "name": "addons",
+          "python_name": "addons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Represents any additional features or services added to the subscription"
+        },
+        {
+          "name": "affiliate_token",
+          "python_name": "affiliate_token",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The affiliate token associated with the subscription."
+        },
+        {
+          "name": "auto_close_invoices",
+          "python_name": "auto_close_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Defines if the invoices are automatically closed or not."
+        },
+        {
+          "name": "auto_collection",
+          "python_name": "auto_collection",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Indicates if auto-collection is enabled for the subscription."
+        },
+        {
+          "name": "base_currency_code",
+          "python_name": "base_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The base currency code used for the subscription."
+        },
+        {
+          "name": "billing_period",
+          "python_name": "billing_period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The billing period duration for the subscription."
+        },
+        {
+          "name": "billing_period_unit",
+          "python_name": "billing_period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unit of the billing period."
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the business entity to which the subscription belongs."
+        },
+        {
+          "name": "cancel_reason",
+          "python_name": "cancel_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason for the cancellation of the subscription."
+        },
+        {
+          "name": "cancel_reason_code",
+          "python_name": "cancel_reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The code associated with the cancellation reason."
+        },
+        {
+          "name": "cancel_schedule_created_at",
+          "python_name": "cancel_schedule_created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the cancellation schedule was created."
+        },
+        {
+          "name": "cancelled_at",
+          "python_name": "cancelled_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the subscription was cancelled."
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The channel through which the subscription was acquired."
+        },
+        {
+          "name": "charged_event_based_addons",
+          "python_name": "charged_event_based_addons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of addons charged based on events"
+        },
+        {
+          "name": "charged_items",
+          "python_name": "charged_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Lists the items that have been charged as part of the subscription"
+        },
+        {
+          "name": "contract_term",
+          "python_name": "contract_term",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contains details about the contract term of the subscription"
+        },
+        {
+          "name": "contract_term_billing_cycle_on_renewal",
+          "python_name": "contract_term_billing_cycle_on_renewal",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Indicates if the contract term billing cycle is applied on renewal."
+        },
+        {
+          "name": "coupon",
+          "python_name": "coupon",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The coupon applied to the subscription."
+        },
+        {
+          "name": "coupons",
+          "python_name": "coupons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of applied coupons"
+        },
+        {
+          "name": "create_pending_invoices",
+          "python_name": "create_pending_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if pending invoices are created."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time of the creation of the subscription."
+        },
+        {
+          "name": "created_from_ip",
+          "python_name": "created_from_ip",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The IP address from which the subscription was created."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency code used for the subscription."
+        },
+        {
+          "name": "current_term_end",
+          "python_name": "current_term_end",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The end date of the current term for the subscription."
+        },
+        {
+          "name": "current_term_start",
+          "python_name": "current_term_start",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The start date of the current term for the subscription."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the customer associated with the subscription."
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the subscription has been deleted."
+        },
+        {
+          "name": "discounts",
+          "python_name": "discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Includes any discounts applied to the subscription"
+        },
+        {
+          "name": "due_invoices_count",
+          "python_name": "due_invoices_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The count of due invoices for the subscription."
+        },
+        {
+          "name": "due_since",
+          "python_name": "due_since",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date since which the invoices are due."
+        },
+        {
+          "name": "event_based_addons",
+          "python_name": "event_based_addons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Specifies any event-based addons associated with the subscription"
+        },
+        {
+          "name": "exchange_rate",
+          "python_name": "exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The exchange rate used for currency conversion."
+        },
+        {
+          "name": "free_period",
+          "python_name": "free_period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The duration of the free period for the subscription."
+        },
+        {
+          "name": "free_period_unit",
+          "python_name": "free_period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unit of the free period duration."
+        },
+        {
+          "name": "gift_id",
+          "python_name": "gift_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the gift associated with the subscription."
+        },
+        {
+          "name": "has_scheduled_advance_invoices",
+          "python_name": "has_scheduled_advance_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if there are scheduled advance invoices for the subscription."
+        },
+        {
+          "name": "has_scheduled_changes",
+          "python_name": "has_scheduled_changes",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if there are scheduled changes for the subscription."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique ID of the subscription."
+        },
+        {
+          "name": "invoice_notes",
+          "python_name": "invoice_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Any notes added to the invoices of the subscription."
+        },
+        {
+          "name": "item_tiers",
+          "python_name": "item_tiers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Provides information about tiers or levels for specific subscription items"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional metadata associated with subscription"
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional metadata associated with subscription"
+        },
+        {
+          "name": "mrr",
+          "python_name": "mrr",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The monthly recurring revenue generated by the subscription."
+        },
+        {
+          "name": "next_billing_at",
+          "python_name": "next_billing_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time of the next billing event for the subscription."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of object (subscription)."
+        },
+        {
+          "name": "offline_payment_method",
+          "python_name": "offline_payment_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The offline payment method used for the subscription."
+        },
+        {
+          "name": "override_relationship",
+          "python_name": "override_relationship",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the existing relationship is overridden by this subscription."
+        },
+        {
+          "name": "pause_date",
+          "python_name": "pause_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date on which the subscription was paused."
+        },
+        {
+          "name": "payment_source_id",
+          "python_name": "payment_source_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the payment source used for the subscription."
+        },
+        {
+          "name": "plan_amount",
+          "python_name": "plan_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total amount charged for the plan of the subscription."
+        },
+        {
+          "name": "plan_amount_in_decimal",
+          "python_name": "plan_amount_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The total amount charged for the plan in decimal format."
+        },
+        {
+          "name": "plan_free_quantity",
+          "python_name": "plan_free_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The free quantity included in the plan of the subscription."
+        },
+        {
+          "name": "plan_free_quantity_in_decimal",
+          "python_name": "plan_free_quantity_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The free quantity included in the plan in decimal format."
+        },
+        {
+          "name": "plan_id",
+          "python_name": "plan_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the plan associated with the subscription."
+        },
+        {
+          "name": "plan_quantity",
+          "python_name": "plan_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The quantity of the plan included in the subscription."
+        },
+        {
+          "name": "plan_quantity_in_decimal",
+          "python_name": "plan_quantity_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The quantity of the plan in decimal format."
+        },
+        {
+          "name": "plan_unit_price",
+          "python_name": "plan_unit_price",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unit price of the plan for the subscription."
+        },
+        {
+          "name": "plan_unit_price_in_decimal",
+          "python_name": "plan_unit_price_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unit price of the plan in decimal format."
+        },
+        {
+          "name": "po_number",
+          "python_name": "po_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The purchase order number associated with the subscription."
+        },
+        {
+          "name": "referral_info",
+          "python_name": "referral_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Contains details related to any referral information associated with the subscription"
+        },
+        {
+          "name": "remaining_billing_cycles",
+          "python_name": "remaining_billing_cycles",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The count of remaining billing cycles for the subscription."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The version of the resource (subscription)."
+        },
+        {
+          "name": "resume_date",
+          "python_name": "resume_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date on which the subscription was resumed."
+        },
+        {
+          "name": "setup_fee",
+          "python_name": "setup_fee",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The setup fee charged for the subscription."
+        },
+        {
+          "name": "shipping_address",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Stores the shipping address related to the subscription"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The start date of the subscription."
+        },
+        {
+          "name": "started_at",
+          "python_name": "started_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the subscription started."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the subscription."
+        },
+        {
+          "name": "subscription_items",
+          "python_name": "subscription_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Lists individual items included in the subscription"
+        },
+        {
+          "name": "total_dues",
+          "python_name": "total_dues",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total amount of dues for the subscription."
+        },
+        {
+          "name": "trial_end",
+          "python_name": "trial_end",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The end date of the trial period for the subscription."
+        },
+        {
+          "name": "trial_end_action",
+          "python_name": "trial_end_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The action to be taken at the end of the trial period."
+        },
+        {
+          "name": "trial_start",
+          "python_name": "trial_start",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The start date of the trial period for the subscription."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the subscription was last updated."
+        }
+      ]
+    },
+    "customer": {
+      "entity": "customer",
+      "data_type_name": "CustomerSearchData",
+      "filter_type_name": "CustomerSearchFilter",
+      "in_filter_type_name": "CustomerInFilter",
+      "any_value_filter_type_name": "CustomerAnyValueFilter",
+      "string_filter_type_name": "CustomerStringFilter",
+      "sort_filter_type_name": "CustomerSortFilter",
+      "result_type_name": "CustomerSearchResult",
+      "query_type_name": "CustomerSearchQuery",
+      "condition_prefix": "Customer",
+      "condition_type_name": "CustomerCondition",
+      "fields": [
+        {
+          "name": "allow_direct_debit",
+          "python_name": "allow_direct_debit",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if direct debit is allowed for the customer."
+        },
+        {
+          "name": "auto_close_invoices",
+          "python_name": "auto_close_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag to automatically close invoices for the customer."
+        },
+        {
+          "name": "auto_collection",
+          "python_name": "auto_collection",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Configures the automatic collection settings for the customer."
+        },
+        {
+          "name": "backup_payment_source_id",
+          "python_name": "backup_payment_source_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the backup payment source for the customer."
+        },
+        {
+          "name": "balances",
+          "python_name": "balances",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Customer's balance information related to their account."
+        },
+        {
+          "name": "billing_address",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Customer's billing address details."
+        },
+        {
+          "name": "billing_date",
+          "python_name": "billing_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date for billing cycle."
+        },
+        {
+          "name": "billing_date_mode",
+          "python_name": "billing_date_mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mode for billing date calculation."
+        },
+        {
+          "name": "billing_day_of_week",
+          "python_name": "billing_day_of_week",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Day of the week for billing cycle."
+        },
+        {
+          "name": "billing_day_of_week_mode",
+          "python_name": "billing_day_of_week_mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mode for billing day of the week calculation."
+        },
+        {
+          "name": "billing_month",
+          "python_name": "billing_month",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Month for billing cycle."
+        },
+        {
+          "name": "business_customer_without_vat_number",
+          "python_name": "business_customer_without_vat_number",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating business customer without a VAT number."
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the business entity."
+        },
+        {
+          "name": "card_status",
+          "python_name": "card_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of payment card associated with the customer."
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel through which the customer was acquired."
+        },
+        {
+          "name": "child_account_access",
+          "python_name": "child_account_access",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information regarding the access rights of child accounts linked to the customer's account."
+        },
+        {
+          "name": "client_profile_id",
+          "python_name": "client_profile_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Client profile ID of the customer."
+        },
+        {
+          "name": "company",
+          "python_name": "company",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Company or organization name."
+        },
+        {
+          "name": "consolidated_invoicing",
+          "python_name": "consolidated_invoicing",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag for consolidated invoicing setting."
+        },
+        {
+          "name": "contacts",
+          "python_name": "contacts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of contact details associated with the customer."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the customer was created."
+        },
+        {
+          "name": "created_from_ip",
+          "python_name": "created_from_ip",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "IP address from which the customer was created."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_type",
+          "python_name": "customer_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of customer (e.g., individual, business)."
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the customer is deleted."
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address of the customer."
+        },
+        {
+          "name": "entity_code",
+          "python_name": "entity_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Code for the customer entity."
+        },
+        {
+          "name": "excess_payments",
+          "python_name": "excess_payments",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of excess payments by the customer."
+        },
+        {
+          "name": "exempt_number",
+          "python_name": "exempt_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Exemption number for tax purposes."
+        },
+        {
+          "name": "exemption_details",
+          "python_name": "exemption_details",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details about any exemptions applicable to the customer's account."
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name of the customer."
+        },
+        {
+          "name": "fraud_flag",
+          "python_name": "fraud_flag",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Flag indicating if fraud is associated with the customer."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ID of the customer."
+        },
+        {
+          "name": "invoice_notes",
+          "python_name": "invoice_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Notes added to the customer's invoices."
+        },
+        {
+          "name": "is_location_valid",
+          "python_name": "is_location_valid",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the customer location is valid."
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name of the customer."
+        },
+        {
+          "name": "locale",
+          "python_name": "locale",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Locale setting for the customer."
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional metadata associated with the customer."
+        },
+        {
+          "name": "mrr",
+          "python_name": "mrr",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Monthly recurring revenue generated from the customer."
+        },
+        {
+          "name": "net_term_days",
+          "python_name": "net_term_days",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of days for net terms."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Object type for the customer."
+        },
+        {
+          "name": "offline_payment_method",
+          "python_name": "offline_payment_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Offline payment method used by the customer."
+        },
+        {
+          "name": "parent_account_access",
+          "python_name": "parent_account_access",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information regarding the access rights of the parent account, if applicable."
+        },
+        {
+          "name": "payment_method",
+          "python_name": "payment_method",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Customer's preferred payment method details."
+        },
+        {
+          "name": "phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number of the customer."
+        },
+        {
+          "name": "pii_cleared",
+          "python_name": "pii_cleared",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Flag indicating if PII (Personally Identifiable Information) is cleared."
+        },
+        {
+          "name": "preferred_currency_code",
+          "python_name": "preferred_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Preferred currency code for transactions."
+        },
+        {
+          "name": "primary_payment_source_id",
+          "python_name": "primary_payment_source_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the primary payment source for the customer."
+        },
+        {
+          "name": "promotional_credits",
+          "python_name": "promotional_credits",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of promotional credits used."
+        },
+        {
+          "name": "referral_urls",
+          "python_name": "referral_urls",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of referral URLs associated with the customer."
+        },
+        {
+          "name": "refundable_credits",
+          "python_name": "refundable_credits",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of refundable credits."
+        },
+        {
+          "name": "registered_for_gst",
+          "python_name": "registered_for_gst",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the customer is registered for GST."
+        },
+        {
+          "name": "relationship",
+          "python_name": "relationship",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details about the relationship of the customer to other entities, if any."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the customer's resource."
+        },
+        {
+          "name": "tax_providers_fields",
+          "python_name": "tax_providers_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Fields related to tax providers."
+        },
+        {
+          "name": "taxability",
+          "python_name": "taxability",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Taxability status of the customer."
+        },
+        {
+          "name": "unbilled_charges",
+          "python_name": "unbilled_charges",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of unbilled charges."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the customer record was last updated."
+        },
+        {
+          "name": "use_default_hierarchy_settings",
+          "python_name": "use_default_hierarchy_settings",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if default hierarchy settings are used."
+        },
+        {
+          "name": "vat_number",
+          "python_name": "vat_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "VAT number associated with the customer."
+        },
+        {
+          "name": "vat_number_prefix",
+          "python_name": "vat_number_prefix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prefix for the VAT number."
+        },
+        {
+          "name": "vat_number_status",
+          "python_name": "vat_number_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the VAT number validation."
+        },
+        {
+          "name": "vat_number_validated_time",
+          "python_name": "vat_number_validated_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the VAT number was validated."
+        }
+      ]
+    },
+    "invoice": {
+      "entity": "invoice",
+      "data_type_name": "InvoiceSearchData",
+      "filter_type_name": "InvoiceSearchFilter",
+      "in_filter_type_name": "InvoiceInFilter",
+      "any_value_filter_type_name": "InvoiceAnyValueFilter",
+      "string_filter_type_name": "InvoiceStringFilter",
+      "sort_filter_type_name": "InvoiceSortFilter",
+      "result_type_name": "InvoiceSearchResult",
+      "query_type_name": "InvoiceSearchQuery",
+      "condition_prefix": "Invoice",
+      "condition_type_name": "InvoiceCondition",
+      "fields": [
+        {
+          "name": "adjustment_credit_notes",
+          "python_name": "adjustment_credit_notes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of adjustment credit notes applied to the invoice"
+        },
+        {
+          "name": "amount_adjusted",
+          "python_name": "amount_adjusted",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount adjusted in the invoice"
+        },
+        {
+          "name": "amount_due",
+          "python_name": "amount_due",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount due for payment"
+        },
+        {
+          "name": "amount_paid",
+          "python_name": "amount_paid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount already paid"
+        },
+        {
+          "name": "amount_to_collect",
+          "python_name": "amount_to_collect",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount yet to be collected"
+        },
+        {
+          "name": "applied_credits",
+          "python_name": "applied_credits",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of credits applied to the invoice"
+        },
+        {
+          "name": "base_currency_code",
+          "python_name": "base_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code used as base for the invoice"
+        },
+        {
+          "name": "billing_address",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the billing address associated with the invoice"
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the business entity"
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel through which the invoice was generated"
+        },
+        {
+          "name": "credits_applied",
+          "python_name": "credits_applied",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total credits applied to the invoice"
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code of the invoice"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the customer"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of the invoice"
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the invoice is deleted"
+        },
+        {
+          "name": "discounts",
+          "python_name": "discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Discount details applied to the invoice"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Due date for payment"
+        },
+        {
+          "name": "dunning_attempts",
+          "python_name": "dunning_attempts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of dunning attempts made"
+        },
+        {
+          "name": "dunning_status",
+          "python_name": "dunning_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of dunning for the invoice"
+        },
+        {
+          "name": "einvoice",
+          "python_name": "einvoice",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of electronic invoice"
+        },
+        {
+          "name": "exchange_rate",
+          "python_name": "exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Exchange rate used for currency conversion"
+        },
+        {
+          "name": "expected_payment_date",
+          "python_name": "expected_payment_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Expected date of payment"
+        },
+        {
+          "name": "first_invoice",
+          "python_name": "first_invoice",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating whether it's the first invoice"
+        },
+        {
+          "name": "generated_at",
+          "python_name": "generated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the invoice was generated"
+        },
+        {
+          "name": "has_advance_charges",
+          "python_name": "has_advance_charges",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if there are advance charges"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ID of the invoice"
+        },
+        {
+          "name": "is_digital",
+          "python_name": "is_digital",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the invoice is digital"
+        },
+        {
+          "name": "is_gifted",
+          "python_name": "is_gifted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the invoice is gifted"
+        },
+        {
+          "name": "issued_credit_notes",
+          "python_name": "issued_credit_notes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of credit notes issued"
+        },
+        {
+          "name": "line_item_discounts",
+          "python_name": "line_item_discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of line item discounts"
+        },
+        {
+          "name": "line_item_taxes",
+          "python_name": "line_item_taxes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tax details applied to each line item in the invoice"
+        },
+        {
+          "name": "line_item_tiers",
+          "python_name": "line_item_tiers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tiers information for each line item in the invoice"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of individual line items in the invoice"
+        },
+        {
+          "name": "linked_orders",
+          "python_name": "linked_orders",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of linked orders to the invoice"
+        },
+        {
+          "name": "linked_payments",
+          "python_name": "linked_payments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of linked payments"
+        },
+        {
+          "name": "linked_taxes_withheld",
+          "python_name": "linked_taxes_withheld",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of linked taxes withheld on the invoice"
+        },
+        {
+          "name": "local_currency_code",
+          "python_name": "local_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Local currency code of the invoice"
+        },
+        {
+          "name": "local_currency_exchange_rate",
+          "python_name": "local_currency_exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Exchange rate for local currency conversion"
+        },
+        {
+          "name": "net_term_days",
+          "python_name": "net_term_days",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Net term days for payment"
+        },
+        {
+          "name": "new_sales_amount",
+          "python_name": "new_sales_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "New sales amount in the invoice"
+        },
+        {
+          "name": "next_retry_at",
+          "python_name": "next_retry_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of the next payment retry"
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Notes associated with the invoice"
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object"
+        },
+        {
+          "name": "paid_at",
+          "python_name": "paid_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the invoice was paid"
+        },
+        {
+          "name": "payment_owner",
+          "python_name": "payment_owner",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Owner of the payment"
+        },
+        {
+          "name": "po_number",
+          "python_name": "po_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Purchase order number"
+        },
+        {
+          "name": "price_type",
+          "python_name": "price_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of pricing"
+        },
+        {
+          "name": "recurring",
+          "python_name": "recurring",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if it's a recurring invoice"
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Resource version of the invoice"
+        },
+        {
+          "name": "round_off_amount",
+          "python_name": "round_off_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount rounded off"
+        },
+        {
+          "name": "shipping_address",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the shipping address associated with the invoice"
+        },
+        {
+          "name": "statement_descriptor",
+          "python_name": "statement_descriptor",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Descriptor for the statement"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the invoice"
+        },
+        {
+          "name": "sub_total",
+          "python_name": "sub_total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Subtotal amount"
+        },
+        {
+          "name": "sub_total_in_local_currency",
+          "python_name": "sub_total_in_local_currency",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Subtotal amount in local currency"
+        },
+        {
+          "name": "subscription_id",
+          "python_name": "subscription_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the subscription associated"
+        },
+        {
+          "name": "tax",
+          "python_name": "tax",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total tax amount"
+        },
+        {
+          "name": "tax_category",
+          "python_name": "tax_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax category"
+        },
+        {
+          "name": "taxes",
+          "python_name": "taxes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of taxes applied"
+        },
+        {
+          "name": "term_finalized",
+          "python_name": "term_finalized",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the term is finalized"
+        },
+        {
+          "name": "total",
+          "python_name": "total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of the invoice"
+        },
+        {
+          "name": "total_in_local_currency",
+          "python_name": "total_in_local_currency",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount in local currency"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of last update"
+        },
+        {
+          "name": "vat_number",
+          "python_name": "vat_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "VAT number"
+        },
+        {
+          "name": "vat_number_prefix",
+          "python_name": "vat_number_prefix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prefix for the VAT number"
+        },
+        {
+          "name": "void_reason_code",
+          "python_name": "void_reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason code for voiding the invoice"
+        },
+        {
+          "name": "voided_at",
+          "python_name": "voided_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the invoice was voided"
+        },
+        {
+          "name": "write_off_amount",
+          "python_name": "write_off_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount written off"
+        }
+      ]
+    },
+    "credit_note": {
+      "entity": "credit_note",
+      "data_type_name": "CreditNoteSearchData",
+      "filter_type_name": "CreditNoteSearchFilter",
+      "in_filter_type_name": "CreditNoteInFilter",
+      "any_value_filter_type_name": "CreditNoteAnyValueFilter",
+      "string_filter_type_name": "CreditNoteStringFilter",
+      "sort_filter_type_name": "CreditNoteSortFilter",
+      "result_type_name": "CreditNoteSearchResult",
+      "query_type_name": "CreditNoteSearchQuery",
+      "condition_prefix": "CreditNote",
+      "condition_type_name": "CreditNoteCondition",
+      "fields": [
+        {
+          "name": "allocations",
+          "python_name": "allocations",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of allocations associated with the credit note"
+        },
+        {
+          "name": "amount_allocated",
+          "python_name": "amount_allocated",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The amount of credits allocated."
+        },
+        {
+          "name": "amount_available",
+          "python_name": "amount_available",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The amount of credits available."
+        },
+        {
+          "name": "amount_refunded",
+          "python_name": "amount_refunded",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The amount of credits refunded."
+        },
+        {
+          "name": "base_currency_code",
+          "python_name": "base_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The base currency code for the credit note."
+        },
+        {
+          "name": "billing_address",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the billing address associated with the credit note"
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the business entity associated with the credit note."
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The channel through which the credit note was created."
+        },
+        {
+          "name": "create_reason_code",
+          "python_name": "create_reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason code for creating the credit note."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency code for the credit note."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the customer associated with the credit note."
+        },
+        {
+          "name": "customer_notes",
+          "python_name": "customer_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Notes provided by the customer for the credit note."
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date when the credit note was created."
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the credit note has been deleted."
+        },
+        {
+          "name": "discounts",
+          "python_name": "discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of discounts applied to the credit note"
+        },
+        {
+          "name": "exchange_rate",
+          "python_name": "exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The exchange rate used for currency conversion."
+        },
+        {
+          "name": "fractional_correction",
+          "python_name": "fractional_correction",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Fractional correction for rounding off decimals."
+        },
+        {
+          "name": "generated_at",
+          "python_name": "generated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date when the credit note was generated."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the credit note."
+        },
+        {
+          "name": "is_digital",
+          "python_name": "is_digital",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the credit note is in digital format."
+        },
+        {
+          "name": "is_vat_moss_registered",
+          "python_name": "is_vat_moss_registered",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if VAT MOSS registration applies."
+        },
+        {
+          "name": "line_item_discounts",
+          "python_name": "line_item_discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of discounts applied at the line item level in the credit note"
+        },
+        {
+          "name": "line_item_taxes",
+          "python_name": "line_item_taxes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of taxes applied at the line item level in the credit note"
+        },
+        {
+          "name": "line_item_tiers",
+          "python_name": "line_item_tiers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of tiers applied to line items in the credit note"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of line items in the credit note"
+        },
+        {
+          "name": "linked_refunds",
+          "python_name": "linked_refunds",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of linked refunds to the credit note"
+        },
+        {
+          "name": "linked_tax_withheld_refunds",
+          "python_name": "linked_tax_withheld_refunds",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of linked tax withheld refunds to the credit note"
+        },
+        {
+          "name": "local_currency_code",
+          "python_name": "local_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The local currency code for the credit note."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The object type of the credit note."
+        },
+        {
+          "name": "price_type",
+          "python_name": "price_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of pricing used for the credit note."
+        },
+        {
+          "name": "reason_code",
+          "python_name": "reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason code for creating the credit note."
+        },
+        {
+          "name": "reference_invoice_id",
+          "python_name": "reference_invoice_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the invoice this credit note references."
+        },
+        {
+          "name": "refunded_at",
+          "python_name": "refunded_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date when the credit note was refunded."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The version of the credit note resource."
+        },
+        {
+          "name": "round_off_amount",
+          "python_name": "round_off_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount rounded off for currency conversions."
+        },
+        {
+          "name": "shipping_address",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the shipping address associated with the credit note"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the credit note."
+        },
+        {
+          "name": "sub_total",
+          "python_name": "sub_total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The subtotal amount of the credit note."
+        },
+        {
+          "name": "sub_total_in_local_currency",
+          "python_name": "sub_total_in_local_currency",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The subtotal amount in local currency."
+        },
+        {
+          "name": "subscription_id",
+          "python_name": "subscription_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the subscription associated with the credit note."
+        },
+        {
+          "name": "taxes",
+          "python_name": "taxes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of taxes applied to the credit note"
+        },
+        {
+          "name": "total",
+          "python_name": "total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total amount of the credit note."
+        },
+        {
+          "name": "total_in_local_currency",
+          "python_name": "total_in_local_currency",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total amount in local currency."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of credit note."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date when the credit note was last updated."
+        },
+        {
+          "name": "vat_number",
+          "python_name": "vat_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "VAT number associated with the credit note."
+        },
+        {
+          "name": "vat_number_prefix",
+          "python_name": "vat_number_prefix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prefix for the VAT number."
+        },
+        {
+          "name": "voided_at",
+          "python_name": "voided_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date when the credit note was voided."
+        }
+      ]
+    },
+    "coupon": {
+      "entity": "coupon",
+      "data_type_name": "CouponSearchData",
+      "filter_type_name": "CouponSearchFilter",
+      "in_filter_type_name": "CouponInFilter",
+      "any_value_filter_type_name": "CouponAnyValueFilter",
+      "string_filter_type_name": "CouponStringFilter",
+      "sort_filter_type_name": "CouponSortFilter",
+      "result_type_name": "CouponSearchResult",
+      "query_type_name": "CouponSearchQuery",
+      "condition_prefix": "Coupon",
+      "condition_type_name": "CouponCondition",
+      "fields": [
+        {
+          "name": "apply_discount_on",
+          "python_name": "apply_discount_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Determines where the discount is applied on (e.g. subtotal, total)."
+        },
+        {
+          "name": "apply_on",
+          "python_name": "apply_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Specify on what type of items the coupon applies (e.g. subscription, addon)."
+        },
+        {
+          "name": "archived_at",
+          "python_name": "archived_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the coupon was archived."
+        },
+        {
+          "name": "coupon_constraints",
+          "python_name": "coupon_constraints",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Represents the constraints associated with the coupon"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp of the coupon creation."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency code for the coupon (e.g. USD, EUR)."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "discount_amount",
+          "python_name": "discount_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The fixed discount amount applied by the coupon."
+        },
+        {
+          "name": "discount_percentage",
+          "python_name": "discount_percentage",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage discount applied by the coupon."
+        },
+        {
+          "name": "discount_quantity",
+          "python_name": "discount_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Specifies the number of free units provided for the item price, without affecting the total quantity sold. This parameter is applicable only when the discount_type is set to offer_quantity."
+        },
+        {
+          "name": "discount_type",
+          "python_name": "discount_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of discount (e.g. fixed, percentage)."
+        },
+        {
+          "name": "duration_month",
+          "python_name": "duration_month",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the coupon in months."
+        },
+        {
+          "name": "duration_type",
+          "python_name": "duration_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of duration (e.g. forever, one-time)."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the coupon."
+        },
+        {
+          "name": "invoice_name",
+          "python_name": "invoice_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name displayed on invoices when the coupon is used."
+        },
+        {
+          "name": "invoice_notes",
+          "python_name": "invoice_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional notes displayed on invoices when the coupon is used."
+        },
+        {
+          "name": "item_constraint_criteria",
+          "python_name": "item_constraint_criteria",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Criteria for item constraints"
+        },
+        {
+          "name": "item_constraints",
+          "python_name": "item_constraints",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Constraints related to the items"
+        },
+        {
+          "name": "max_redemptions",
+          "python_name": "max_redemptions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Maximum number of times the coupon can be redeemed."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the coupon."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object (usually 'coupon')."
+        },
+        {
+          "name": "period",
+          "python_name": "period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration or frequency for which the coupon is valid."
+        },
+        {
+          "name": "period_unit",
+          "python_name": "period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit of the period (e.g. days, weeks)."
+        },
+        {
+          "name": "redemptions",
+          "python_name": "redemptions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of times the coupon has been redeemed."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the resource."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the coupon (e.g. active, inactive)."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the coupon was last updated."
+        },
+        {
+          "name": "valid_till",
+          "python_name": "valid_till",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date until which the coupon is valid for use."
+        }
+      ]
+    },
+    "transaction": {
+      "entity": "transaction",
+      "data_type_name": "TransactionSearchData",
+      "filter_type_name": "TransactionSearchFilter",
+      "in_filter_type_name": "TransactionInFilter",
+      "any_value_filter_type_name": "TransactionAnyValueFilter",
+      "string_filter_type_name": "TransactionStringFilter",
+      "sort_filter_type_name": "TransactionSortFilter",
+      "result_type_name": "TransactionSearchResult",
+      "query_type_name": "TransactionSearchQuery",
+      "condition_prefix": "Transaction",
+      "condition_type_name": "TransactionCondition",
+      "fields": [
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total amount of the transaction."
+        },
+        {
+          "name": "amount_capturable",
+          "python_name": "amount_capturable",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The remaining amount that can be captured in the transaction."
+        },
+        {
+          "name": "amount_unused",
+          "python_name": "amount_unused",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The amount in the transaction that remains unused."
+        },
+        {
+          "name": "authorization_reason",
+          "python_name": "authorization_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for authorization of the transaction."
+        },
+        {
+          "name": "base_currency_code",
+          "python_name": "base_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The base currency code of the transaction."
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the business entity related to the transaction."
+        },
+        {
+          "name": "cn_create_reason_code",
+          "python_name": "cn_create_reason_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason code for creating a credit note."
+        },
+        {
+          "name": "cn_date",
+          "python_name": "cn_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of the credit note."
+        },
+        {
+          "name": "cn_reference_invoice_id",
+          "python_name": "cn_reference_invoice_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the invoice referenced in the credit note."
+        },
+        {
+          "name": "cn_status",
+          "python_name": "cn_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the credit note."
+        },
+        {
+          "name": "cn_total",
+          "python_name": "cn_total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount of the credit note."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency code of the transaction."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the customer associated with the transaction."
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of the transaction."
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the transaction is deleted."
+        },
+        {
+          "name": "error_code",
+          "python_name": "error_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Error code associated with the transaction."
+        },
+        {
+          "name": "error_detail",
+          "python_name": "error_detail",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Detailed error information related to the transaction."
+        },
+        {
+          "name": "error_text",
+          "python_name": "error_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Error message text of the transaction."
+        },
+        {
+          "name": "exchange_rate",
+          "python_name": "exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Exchange rate used in the transaction."
+        },
+        {
+          "name": "fraud_flag",
+          "python_name": "fraud_flag",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Flag indicating if the transaction is flagged for fraud."
+        },
+        {
+          "name": "fraud_reason",
+          "python_name": "fraud_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for flagging the transaction as fraud."
+        },
+        {
+          "name": "gateway",
+          "python_name": "gateway",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The payment gateway used in the transaction."
+        },
+        {
+          "name": "gateway_account_id",
+          "python_name": "gateway_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the gateway account used in the transaction."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the transaction."
+        },
+        {
+          "name": "id_at_gateway",
+          "python_name": "id_at_gateway",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Transaction ID assigned by the gateway."
+        },
+        {
+          "name": "iin",
+          "python_name": "iin",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Bank identification number of the transaction."
+        },
+        {
+          "name": "initiator_type",
+          "python_name": "initiator_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of initiator involved in the transaction."
+        },
+        {
+          "name": "last4",
+          "python_name": "last4",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last 4 digits of the card used in the transaction."
+        },
+        {
+          "name": "linked_credit_notes",
+          "python_name": "linked_credit_notes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Linked credit notes associated with the transaction."
+        },
+        {
+          "name": "linked_invoices",
+          "python_name": "linked_invoices",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Linked invoices associated with the transaction."
+        },
+        {
+          "name": "linked_payments",
+          "python_name": "linked_payments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Linked payments associated with the transaction."
+        },
+        {
+          "name": "linked_refunds",
+          "python_name": "linked_refunds",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Linked refunds associated with the transaction."
+        },
+        {
+          "name": "masked_card_number",
+          "python_name": "masked_card_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Masked card number used in the transaction."
+        },
+        {
+          "name": "merchant_reference_id",
+          "python_name": "merchant_reference_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Merchant reference ID of the transaction."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object representing the transaction."
+        },
+        {
+          "name": "payment_method",
+          "python_name": "payment_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment method used in the transaction."
+        },
+        {
+          "name": "payment_method_details",
+          "python_name": "payment_method_details",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Details of the payment method used in the transaction."
+        },
+        {
+          "name": "payment_source_id",
+          "python_name": "payment_source_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the payment source used in the transaction."
+        },
+        {
+          "name": "reference_authorization_id",
+          "python_name": "reference_authorization_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference authorization ID of the transaction."
+        },
+        {
+          "name": "reference_number",
+          "python_name": "reference_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference number associated with the transaction."
+        },
+        {
+          "name": "reference_transaction_id",
+          "python_name": "reference_transaction_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the reference transaction."
+        },
+        {
+          "name": "refrence_number",
+          "python_name": "refrence_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference number of the transaction."
+        },
+        {
+          "name": "refunded_txn_id",
+          "python_name": "refunded_txn_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the refunded transaction."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Resource version of the transaction."
+        },
+        {
+          "name": "reversal_transaction_id",
+          "python_name": "reversal_transaction_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the reversal transaction, if any."
+        },
+        {
+          "name": "settled_at",
+          "python_name": "settled_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the transaction was settled."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the transaction."
+        },
+        {
+          "name": "subscription_id",
+          "python_name": "subscription_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the subscription related to the transaction."
+        },
+        {
+          "name": "three_d_secure",
+          "python_name": "three_d_secure",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if 3D secure was used in the transaction."
+        },
+        {
+          "name": "txn_amount",
+          "python_name": "txn_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount of the transaction."
+        },
+        {
+          "name": "txn_date",
+          "python_name": "txn_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date of the transaction."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the transaction."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the transaction was last updated."
+        },
+        {
+          "name": "voided_at",
+          "python_name": "voided_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the transaction was voided."
+        }
+      ]
+    },
+    "event": {
+      "entity": "event",
+      "data_type_name": "EventSearchData",
+      "filter_type_name": "EventSearchFilter",
+      "in_filter_type_name": "EventInFilter",
+      "any_value_filter_type_name": "EventAnyValueFilter",
+      "string_filter_type_name": "EventStringFilter",
+      "sort_filter_type_name": "EventSortFilter",
+      "result_type_name": "EventSearchResult",
+      "query_type_name": "EventSearchQuery",
+      "condition_prefix": "Event",
+      "condition_type_name": "EventCondition",
+      "fields": [
+        {
+          "name": "api_version",
+          "python_name": "api_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The version of the Chargebee API being used to fetch the event data."
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The specific content or information associated with the event."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "event_type",
+          "python_name": "event_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type or category of the event."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the event data record."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The object or entity that the event is triggered for."
+        },
+        {
+          "name": "occurred_at",
+          "python_name": "occurred_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The datetime when the event occurred."
+        },
+        {
+          "name": "source",
+          "python_name": "source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The source or origin of the event data."
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Information about the user or entity associated with the event."
+        },
+        {
+          "name": "webhook_status",
+          "python_name": "webhook_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the webhook execution for the event."
+        },
+        {
+          "name": "webhooks",
+          "python_name": "webhooks",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of webhooks associated with the event."
+        }
+      ]
+    },
+    "order": {
+      "entity": "order",
+      "data_type_name": "OrderSearchData",
+      "filter_type_name": "OrderSearchFilter",
+      "in_filter_type_name": "OrderInFilter",
+      "any_value_filter_type_name": "OrderAnyValueFilter",
+      "string_filter_type_name": "OrderStringFilter",
+      "sort_filter_type_name": "OrderSortFilter",
+      "result_type_name": "OrderSearchResult",
+      "query_type_name": "OrderSearchQuery",
+      "condition_prefix": "Order",
+      "condition_type_name": "OrderCondition",
+      "fields": [
+        {
+          "name": "amount_adjusted",
+          "python_name": "amount_adjusted",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Adjusted amount for the order."
+        },
+        {
+          "name": "amount_paid",
+          "python_name": "amount_paid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount paid for the order."
+        },
+        {
+          "name": "base_currency_code",
+          "python_name": "base_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The base currency code used for the order."
+        },
+        {
+          "name": "batch_id",
+          "python_name": "batch_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the batch the order belongs to."
+        },
+        {
+          "name": "billing_address",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The billing address associated with the order"
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the business entity associated with the order."
+        },
+        {
+          "name": "cancellation_reason",
+          "python_name": "cancellation_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for order cancellation."
+        },
+        {
+          "name": "cancelled_at",
+          "python_name": "cancelled_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order was cancelled."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order was created."
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User or system that created the order."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code used for the order."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the customer placing the order."
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the order has been deleted."
+        },
+        {
+          "name": "delivered_at",
+          "python_name": "delivered_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order was delivered."
+        },
+        {
+          "name": "discount",
+          "python_name": "discount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Discount amount applied to the order."
+        },
+        {
+          "name": "document_number",
+          "python_name": "document_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique document number associated with the order."
+        },
+        {
+          "name": "exchange_rate",
+          "python_name": "exchange_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Rate used for currency exchange in the order."
+        },
+        {
+          "name": "fulfillment_status",
+          "python_name": "fulfillment_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of fulfillment for the order."
+        },
+        {
+          "name": "gift_id",
+          "python_name": "gift_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for any gift associated with the order."
+        },
+        {
+          "name": "gift_note",
+          "python_name": "gift_note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Note attached to any gift in the order."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the order."
+        },
+        {
+          "name": "invoice_id",
+          "python_name": "invoice_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the invoice associated with the order."
+        },
+        {
+          "name": "invoice_round_off_amount",
+          "python_name": "invoice_round_off_amount",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Round-off amount applied to the invoice."
+        },
+        {
+          "name": "is_gifted",
+          "python_name": "is_gifted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the order is a gift."
+        },
+        {
+          "name": "is_resent",
+          "python_name": "is_resent",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the order has been resent."
+        },
+        {
+          "name": "line_item_discounts",
+          "python_name": "line_item_discounts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Discounts applied to individual line items"
+        },
+        {
+          "name": "line_item_taxes",
+          "python_name": "line_item_taxes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Taxes applied to individual line items"
+        },
+        {
+          "name": "linked_credit_notes",
+          "python_name": "linked_credit_notes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Credit notes linked to the order"
+        },
+        {
+          "name": "note",
+          "python_name": "note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional notes or comments for the order."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object representing an order in the system."
+        },
+        {
+          "name": "order_date",
+          "python_name": "order_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the order was created."
+        },
+        {
+          "name": "order_line_items",
+          "python_name": "order_line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of line items in the order"
+        },
+        {
+          "name": "order_type",
+          "python_name": "order_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of order such as purchase order or sales order."
+        },
+        {
+          "name": "original_order_id",
+          "python_name": "original_order_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the original order if this is a modified order."
+        },
+        {
+          "name": "paid_on",
+          "python_name": "paid_on",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order was paid for."
+        },
+        {
+          "name": "payment_status",
+          "python_name": "payment_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of payment for the order."
+        },
+        {
+          "name": "price_type",
+          "python_name": "price_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of pricing used for the order."
+        },
+        {
+          "name": "reference_id",
+          "python_name": "reference_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference identifier for the order."
+        },
+        {
+          "name": "refundable_credits",
+          "python_name": "refundable_credits",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Credits that can be refunded for the whole order."
+        },
+        {
+          "name": "refundable_credits_issued",
+          "python_name": "refundable_credits_issued",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Credits already issued for refund for the whole order."
+        },
+        {
+          "name": "resend_reason",
+          "python_name": "resend_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for resending the order."
+        },
+        {
+          "name": "resent_orders",
+          "python_name": "resent_orders",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Orders that were resent to the customer"
+        },
+        {
+          "name": "resent_status",
+          "python_name": "resent_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the resent order."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the resource or order data."
+        },
+        {
+          "name": "rounding_adjustement",
+          "python_name": "rounding_adjustement",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Adjustment made for rounding off the order amount."
+        },
+        {
+          "name": "shipment_carrier",
+          "python_name": "shipment_carrier",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Carrier for shipping the order."
+        },
+        {
+          "name": "shipped_at",
+          "python_name": "shipped_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order was shipped."
+        },
+        {
+          "name": "shipping_address",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The shipping address for the order"
+        },
+        {
+          "name": "shipping_cut_off_date",
+          "python_name": "shipping_cut_off_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date indicating the shipping cut-off for the order."
+        },
+        {
+          "name": "shipping_date",
+          "python_name": "shipping_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date when the order is scheduled for shipping."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the order."
+        },
+        {
+          "name": "status_update_at",
+          "python_name": "status_update_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the status of the order was last updated."
+        },
+        {
+          "name": "sub_total",
+          "python_name": "sub_total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Sub-total amount for the order before applying taxes or discounts."
+        },
+        {
+          "name": "subscription_id",
+          "python_name": "subscription_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the subscription associated with the order."
+        },
+        {
+          "name": "tax",
+          "python_name": "tax",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total tax amount for the order."
+        },
+        {
+          "name": "total",
+          "python_name": "total",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total amount including taxes and discounts for the order."
+        },
+        {
+          "name": "tracking_id",
+          "python_name": "tracking_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tracking identifier for the order shipment."
+        },
+        {
+          "name": "tracking_url",
+          "python_name": "tracking_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL for tracking the order shipment."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the order data was last updated."
+        }
+      ]
+    },
+    "payment_source": {
+      "entity": "payment_source",
+      "data_type_name": "PaymentSourceSearchData",
+      "filter_type_name": "PaymentSourceSearchFilter",
+      "in_filter_type_name": "PaymentSourceInFilter",
+      "any_value_filter_type_name": "PaymentSourceAnyValueFilter",
+      "string_filter_type_name": "PaymentSourceStringFilter",
+      "sort_filter_type_name": "PaymentSourceSortFilter",
+      "result_type_name": "PaymentSourceSearchResult",
+      "query_type_name": "PaymentSourceSearchQuery",
+      "condition_prefix": "PaymentSource",
+      "condition_type_name": "PaymentSourceCondition",
+      "fields": [
+        {
+          "name": "amazon_payment",
+          "python_name": "amazon_payment",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to Amazon Pay payment source"
+        },
+        {
+          "name": "bank_account",
+          "python_name": "bank_account",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to bank account payment source"
+        },
+        {
+          "name": "business_entity_id",
+          "python_name": "business_entity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the business entity associated with the payment source"
+        },
+        {
+          "name": "card",
+          "python_name": "card",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to card payment source"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp indicating when the payment source was created"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the customer associated with the payment source"
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the payment source has been deleted"
+        },
+        {
+          "name": "gateway",
+          "python_name": "gateway",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the payment gateway used for the payment source"
+        },
+        {
+          "name": "gateway_account_id",
+          "python_name": "gateway_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the gateway account tied to the payment source"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the payment source"
+        },
+        {
+          "name": "ip_address",
+          "python_name": "ip_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "IP address associated with the payment source"
+        },
+        {
+          "name": "issuing_country",
+          "python_name": "issuing_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country where the payment source was issued"
+        },
+        {
+          "name": "mandates",
+          "python_name": "mandates",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to mandates for payments"
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object, e.g., payment_source"
+        },
+        {
+          "name": "paypal",
+          "python_name": "paypal",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to PayPal payment source"
+        },
+        {
+          "name": "reference_id",
+          "python_name": "reference_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reference identifier for the payment source"
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the payment source resource"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the payment source, e.g., active or inactive"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of payment source, e.g., card, bank_account"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp indicating when the payment source was last updated"
+        },
+        {
+          "name": "upi",
+          "python_name": "upi",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to UPI payment source"
+        }
+      ]
+    },
+    "item": {
+      "entity": "item",
+      "data_type_name": "ItemSearchData",
+      "filter_type_name": "ItemSearchFilter",
+      "in_filter_type_name": "ItemInFilter",
+      "any_value_filter_type_name": "ItemAnyValueFilter",
+      "string_filter_type_name": "ItemStringFilter",
+      "sort_filter_type_name": "ItemSortFilter",
+      "result_type_name": "ItemSearchResult",
+      "query_type_name": "ItemSearchQuery",
+      "condition_prefix": "Item",
+      "condition_type_name": "ItemCondition",
+      "fields": [
+        {
+          "name": "applicable_items",
+          "python_name": "applicable_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Items associated with the item"
+        },
+        {
+          "name": "archived_at",
+          "python_name": "archived_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the item was archived"
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Channel the item belongs to"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom field entries for the item"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the item"
+        },
+        {
+          "name": "enabled_for_checkout",
+          "python_name": "enabled_for_checkout",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is enabled for checkout"
+        },
+        {
+          "name": "enabled_in_portal",
+          "python_name": "enabled_in_portal",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is enabled in the portal"
+        },
+        {
+          "name": "external_name",
+          "python_name": "external_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the item in an external system"
+        },
+        {
+          "name": "gift_claim_redirect_url",
+          "python_name": "gift_claim_redirect_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to redirect for gift claim"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the item"
+        },
+        {
+          "name": "included_in_mrr",
+          "python_name": "included_in_mrr",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is included in Monthly Recurring Revenue"
+        },
+        {
+          "name": "is_giftable",
+          "python_name": "is_giftable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is giftable"
+        },
+        {
+          "name": "is_shippable",
+          "python_name": "is_shippable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is shippable"
+        },
+        {
+          "name": "item_applicability",
+          "python_name": "item_applicability",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Applicability of the item"
+        },
+        {
+          "name": "item_family_id",
+          "python_name": "item_family_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the item's family"
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional data associated with the item"
+        },
+        {
+          "name": "metered",
+          "python_name": "metered",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the item is metered"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the item"
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of object"
+        },
+        {
+          "name": "redirect_url",
+          "python_name": "redirect_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to redirect for the item"
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the resource"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the item"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the item"
+        },
+        {
+          "name": "unit",
+          "python_name": "unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit associated with the item"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the item was last updated"
+        },
+        {
+          "name": "usage_calculation",
+          "python_name": "usage_calculation",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Calculation method used for item usage"
+        }
+      ]
+    },
+    "item_price": {
+      "entity": "item_price",
+      "data_type_name": "ItemPriceSearchData",
+      "filter_type_name": "ItemPriceSearchFilter",
+      "in_filter_type_name": "ItemPriceInFilter",
+      "any_value_filter_type_name": "ItemPriceAnyValueFilter",
+      "string_filter_type_name": "ItemPriceStringFilter",
+      "sort_filter_type_name": "ItemPriceSortFilter",
+      "result_type_name": "ItemPriceSearchResult",
+      "query_type_name": "ItemPriceSearchQuery",
+      "condition_prefix": "ItemPrice",
+      "condition_type_name": "ItemPriceCondition",
+      "fields": [
+        {
+          "name": "accounting_detail",
+          "python_name": "accounting_detail",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details related to accounting such as cost, revenue, expenses, etc."
+        },
+        {
+          "name": "archived_at",
+          "python_name": "archived_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the item was archived."
+        },
+        {
+          "name": "billing_cycles",
+          "python_name": "billing_cycles",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of billing cycles for the item."
+        },
+        {
+          "name": "channel",
+          "python_name": "channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The channel through which the item is sold."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the item was created."
+        },
+        {
+          "name": "currency_code",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency code used for pricing the item."
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom field entries for the item price."
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the item."
+        },
+        {
+          "name": "external_name",
+          "python_name": "external_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External name of the item."
+        },
+        {
+          "name": "free_quantity",
+          "python_name": "free_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Free quantity allowed for the item."
+        },
+        {
+          "name": "free_quantity_in_decimal",
+          "python_name": "free_quantity_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Free quantity allowed represented in decimal format."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the item price."
+        },
+        {
+          "name": "invoice_notes",
+          "python_name": "invoice_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Notes to be included in the invoice for the item."
+        },
+        {
+          "name": "is_taxable",
+          "python_name": "is_taxable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating whether the item is taxable."
+        },
+        {
+          "name": "item_family_id",
+          "python_name": "item_family_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the item family to which the item belongs."
+        },
+        {
+          "name": "item_id",
+          "python_name": "item_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the parent item."
+        },
+        {
+          "name": "item_type",
+          "python_name": "item_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the item (e.g., product, service)."
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional metadata associated with the item."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the item price."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Object type representing the item price."
+        },
+        {
+          "name": "period",
+          "python_name": "period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the item's billing period."
+        },
+        {
+          "name": "period_unit",
+          "python_name": "period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit of measurement for the billing period duration."
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Price of the item."
+        },
+        {
+          "name": "price_in_decimal",
+          "python_name": "price_in_decimal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Price of the item represented in decimal format."
+        },
+        {
+          "name": "pricing_model",
+          "python_name": "pricing_model",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The pricing model used for the item (e.g., flat fee, usage-based)."
+        },
+        {
+          "name": "resource_version",
+          "python_name": "resource_version",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Version of the item price resource."
+        },
+        {
+          "name": "shipping_period",
+          "python_name": "shipping_period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the item's shipping period."
+        },
+        {
+          "name": "shipping_period_unit",
+          "python_name": "shipping_period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit of measurement for the shipping period duration."
+        },
+        {
+          "name": "show_description_in_invoices",
+          "python_name": "show_description_in_invoices",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating whether to show the description in invoices."
+        },
+        {
+          "name": "show_description_in_quotes",
+          "python_name": "show_description_in_quotes",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating whether to show the description in quotes."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the item price (e.g., active, inactive)."
+        },
+        {
+          "name": "tax_detail",
+          "python_name": "tax_detail",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about taxes associated with the item price."
+        },
+        {
+          "name": "tiers",
+          "python_name": "tiers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Different pricing tiers for the item."
+        },
+        {
+          "name": "trial_end_action",
+          "python_name": "trial_end_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Action to be taken at the end of the trial period."
+        },
+        {
+          "name": "trial_period",
+          "python_name": "trial_period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the trial period."
+        },
+        {
+          "name": "trial_period_unit",
+          "python_name": "trial_period_unit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit of measurement for the trial period duration."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Date and time when the item price was last updated."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2469 @@
+{
+  "connector_name": "linear",
+  "class_name": "LinearConnector",
+  "package_name": "airbyte_agent_linear",
+  "package_version": "0.1.19",
+  "yaml_version": "0.1.19",
+  "api_reference_url": "https://linear.app/developers/graphql",
+  "commit_sha": "unknown",
+  "auth_example": "LinearAuthConfig(api_key=\"...\")",
+  "auth_import": ", LinearAuthConfig",
+  "auth_config": {
+    "type_name": "LinearAuthConfig",
+    "base_name": "Linear",
+    "options": [
+      {
+        "title": "Linear API Key Authentication",
+        "description": "Authenticate using your Linear API key",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Linear API key from Settings > API > Personal API keys"
+          }
+        ],
+        "type_suffix": "LinearApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Linear is a modern issue tracking and project management tool built for software\ndevelopment teams. This connector provides access to issues, projects, and teams\nfor sprint planning, backlog management, and development workflow analysis.\n",
+  "supported_questions": "- Show me the open issues assigned to my team this week\n- List out all projects I'm currently involved in\n- List all users in my Linear workspace\n- Who is assigned to the most recently updated issue?\n- Create a new issue titled 'Fix login bug'\n- Update the priority of a recent issue to urgent\n- Change the title of a recent issue to 'Updated feature request'\n- Add a comment to a recent issue saying 'This is ready for review'\n- Update my most recent comment to say 'Revised feedback after testing'\n- Create a high priority issue about API performance\n- Assign a recent issue to a teammate\n- Unassign the current assignee from a recent issue\n- Reassign a recent issue from one teammate to another\n- Create a new issue in the 'Backend Improvements' project\n- Add a recent issue to a specific project\n- Move an issue to a different project\n- Analyze the workload distribution across my development team\n- What are the top priority issues in our current sprint?\n- Identify the most active projects in our organization right now\n- Summarize the recent issues for {team_member} in the last two weeks\n- Compare the issue complexity across different teams\n- Which projects have the most unresolved issues?\n- Give me an overview of my team's current project backlog",
+  "unsupported_questions": "- Delete an outdated project from our workspace\n- Schedule a sprint planning meeting\n- Delete this issue\n- Remove a comment from an issue",
+  "first_operation": {
+    "method_name": "list_issues",
+    "http_method": "post",
+    "path": "/graphql:listIssues",
+    "entity": "issues",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "first",
+        "python_name": "first",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 50
+        },
+        "required": null,
+        "description": "Number of items to return (max 250)",
+        "is_deep_object": false
+      },
+      {
+        "name": "after",
+        "python_name": "after",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Cursor to start after (for pagination)",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "IssuesListParams",
+    "response_type": "IssuesListResult",
+    "description": "Returns a paginated list of issues via GraphQL with pagination support",
+    "record_extractor": "$.data.issues.nodes",
+    "meta_extractor": {
+      "hasNextPage": "$.data.issues.pageInfo.hasNextPage",
+      "endCursor": "$.data.issues.pageInfo.endCursor"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Issue]",
+    "meta_fields": [
+      {
+        "name": "hasNextPage",
+        "python_name": "has_next_page",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "description": "Whether there are more items available"
+        }
+      },
+      {
+        "name": "endCursor",
+        "python_name": "end_cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cursor to fetch next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "issues": [
+      {
+        "method_name": "list_issues",
+        "http_method": "post",
+        "path": "/graphql:listIssues",
+        "entity": "issues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesListParams",
+        "response_type": "IssuesListResult",
+        "description": "Returns a paginated list of issues via GraphQL with pagination support",
+        "record_extractor": "$.data.issues.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.issues.pageInfo.hasNextPage",
+          "endCursor": "$.data.issues.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Issue]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue",
+        "http_method": "post",
+        "path": "/graphql:getIssue",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Issue ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "Issue",
+        "description": "Get a single issue by ID via GraphQL",
+        "record_extractor": "$.data.issue",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_issue",
+        "http_method": "post",
+        "path": "/graphql:createIssue",
+        "entity": "issues",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "teamId",
+            "python_name": "team_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the team to create the issue in"
+            },
+            "required": true,
+            "description": "The ID of the team to create the issue in"
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the issue"
+            },
+            "required": true,
+            "description": "The title of the issue"
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The description of the issue (supports markdown)"
+            },
+            "required": false,
+            "description": "The description of the issue (supports markdown)"
+          },
+          {
+            "name": "stateId",
+            "python_name": "state_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the workflow state for the issue"
+            },
+            "required": false,
+            "description": "The ID of the workflow state for the issue"
+          },
+          {
+            "name": "priority",
+            "python_name": "priority",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4,
+              "description": "The priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)"
+            },
+            "required": false,
+            "description": "The priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)"
+          },
+          {
+            "name": "projectId",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the project to add the issue to. Get project IDs from the projects list."
+            },
+            "required": false,
+            "description": "The ID of the project to add the issue to. Get project IDs from the projects list."
+          }
+        ],
+        "params_type_name": "IssuesCreateParams",
+        "response_type": "IssueMutationPayload",
+        "description": "Create a new issue via GraphQL mutation",
+        "record_extractor": "$.data.issueCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueMutationPayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_issue",
+        "http_method": "post",
+        "path": "/graphql:updateIssue",
+        "entity": "issues",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the issue to update"
+            },
+            "required": true,
+            "description": "The ID of the issue to update"
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new title of the issue"
+            },
+            "required": false,
+            "description": "The new title of the issue"
+          },
+          {
+            "name": "description",
+            "python_name": "description",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new description of the issue (supports markdown)"
+            },
+            "required": false,
+            "description": "The new description of the issue (supports markdown)"
+          },
+          {
+            "name": "stateId",
+            "python_name": "state_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the new workflow state for the issue"
+            },
+            "required": false,
+            "description": "The ID of the new workflow state for the issue"
+          },
+          {
+            "name": "priority",
+            "python_name": "priority",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4,
+              "description": "The new priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)"
+            },
+            "required": false,
+            "description": "The new priority of the issue (0=No priority, 1=Urgent, 2=High, 3=Medium, 4=Low)"
+          },
+          {
+            "name": "assigneeId",
+            "python_name": "assignee_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the user to assign to this issue. Get user IDs from the users list."
+            },
+            "required": false,
+            "description": "The ID of the user to assign to this issue. Get user IDs from the users list."
+          },
+          {
+            "name": "projectId",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the project to add this issue to. Get project IDs from the projects list."
+            },
+            "required": false,
+            "description": "The ID of the project to add this issue to. Get project IDs from the projects list."
+          }
+        ],
+        "params_type_name": "IssuesUpdateParams",
+        "response_type": "IssueMutationPayload",
+        "description": "Update an existing issue via GraphQL mutation. All fields except id are optional for partial updates.\nTo assign a user, provide assigneeId with the user's ID (get user IDs from the users list).\nOmit assigneeId to leave the current assignee unchanged.\n",
+        "record_extractor": "$.data.issueUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IssueMutationPayload",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "list_projects",
+        "http_method": "post",
+        "path": "/graphql:listProjects",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Returns a paginated list of projects via GraphQL with pagination support",
+        "record_extractor": "$.data.projects.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.projects.pageInfo.hasNextPage",
+          "endCursor": "$.data.projects.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Project]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_project",
+        "http_method": "post",
+        "path": "/graphql:getProject",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Project ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "Project",
+        "description": "Get a single project by ID via GraphQL",
+        "record_extractor": "$.data.project",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Project",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "post",
+        "path": "/graphql:listTeams",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Returns a list of teams via GraphQL with pagination support",
+        "record_extractor": "$.data.teams.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.teams.pageInfo.hasNextPage",
+          "endCursor": "$.data.teams.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Team]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_team",
+        "http_method": "post",
+        "path": "/graphql:getTeam",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "Team",
+        "description": "Get a single team by ID via GraphQL",
+        "record_extractor": "$.data.team",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Team",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "workflow_states": [
+      {
+        "method_name": "list_workflow_states",
+        "http_method": "post",
+        "path": "/graphql:listWorkflowStates",
+        "entity": "workflow_states",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkflowStatesListParams",
+        "response_type": "WorkflowStatesListResult",
+        "description": "Returns workflow states for a team via GraphQL, including name and UUID for status transitions",
+        "record_extractor": "$.data.workflowStates.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.workflowStates.pageInfo.hasNextPage",
+          "endCursor": "$.data.workflowStates.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[WorkflowState]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "post",
+        "path": "/graphql:listUsers",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of users in the organization via GraphQL",
+        "record_extractor": "$.data.users.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.users.pageInfo.hasNextPage",
+          "endCursor": "$.data.users.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "post",
+        "path": "/graphql:getUser",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID via GraphQL",
+        "record_extractor": "$.data.user",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "comments": [
+      {
+        "method_name": "list_comments",
+        "http_method": "post",
+        "path": "/graphql:listComments",
+        "entity": "comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "issueId",
+            "python_name": "issue_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Issue ID to get comments for",
+            "is_deep_object": false
+          },
+          {
+            "name": "first",
+            "python_name": "first",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of items to return (max 250)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor to start after (for pagination)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsListParams",
+        "response_type": "CommentsListResult",
+        "description": "Returns a paginated list of comments for an issue via GraphQL",
+        "record_extractor": "$.data.issue.comments.nodes",
+        "meta_extractor": {
+          "hasNextPage": "$.data.issue.comments.pageInfo.hasNextPage",
+          "endCursor": "$.data.issue.comments.pageInfo.endCursor"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Comment]",
+        "meta_fields": [
+          {
+            "name": "hasNextPage",
+            "python_name": "has_next_page",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more items available"
+            }
+          },
+          {
+            "name": "endCursor",
+            "python_name": "end_cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor to fetch next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_comment",
+        "http_method": "post",
+        "path": "/graphql:getComment",
+        "entity": "comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Comment ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsGetParams",
+        "response_type": "Comment",
+        "description": "Get a single comment by ID via GraphQL",
+        "record_extractor": "$.data.comment",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Comment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_comment",
+        "http_method": "post",
+        "path": "/graphql:createComment",
+        "entity": "comments",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "issueId",
+            "python_name": "issue_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the issue to add the comment to"
+            },
+            "required": true,
+            "description": "The ID of the issue to add the comment to"
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The comment content in markdown"
+            },
+            "required": true,
+            "description": "The comment content in markdown"
+          }
+        ],
+        "params_type_name": "CommentsCreateParams",
+        "response_type": "CommentMutationPayload",
+        "description": "Create a new comment on an issue via GraphQL mutation",
+        "record_extractor": "$.data.commentCreate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CommentMutationPayload",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_comment",
+        "http_method": "post",
+        "path": "/graphql:updateComment",
+        "entity": "comments",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the comment to update"
+            },
+            "required": true,
+            "description": "The ID of the comment to update"
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new comment content in markdown"
+            },
+            "required": true,
+            "description": "The new comment content in markdown"
+          }
+        ],
+        "params_type_name": "CommentsUpdateParams",
+        "response_type": "CommentMutationPayload",
+        "description": "Update an existing comment via GraphQL mutation",
+        "record_extractor": "$.data.commentUpdate",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CommentMutationPayload",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "comments": {
+      "entity": "comments",
+      "data_type_name": "CommentsSearchData",
+      "filter_type_name": "CommentsSearchFilter",
+      "in_filter_type_name": "CommentsInFilter",
+      "any_value_filter_type_name": "CommentsAnyValueFilter",
+      "string_filter_type_name": "CommentsStringFilter",
+      "sort_filter_type_name": "CommentsSortFilter",
+      "result_type_name": "CommentsSearchResult",
+      "query_type_name": "CommentsSearchQuery",
+      "condition_prefix": "Comments",
+      "condition_type_name": "CommentsCondition",
+      "fields": [
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "bodyData",
+          "python_name": "body_data",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "editedAt",
+          "python_name": "edited_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "issue",
+          "python_name": "issue",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "issueId",
+          "python_name": "issue_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "parentCommentId",
+          "python_name": "parent_comment_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resolvingCommentId",
+          "python_name": "resolving_comment_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resolvingUserId",
+          "python_name": "resolving_user_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "userId",
+          "python_name": "user_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "issues": {
+      "entity": "issues",
+      "data_type_name": "IssuesSearchData",
+      "filter_type_name": "IssuesSearchFilter",
+      "in_filter_type_name": "IssuesInFilter",
+      "any_value_filter_type_name": "IssuesAnyValueFilter",
+      "string_filter_type_name": "IssuesStringFilter",
+      "sort_filter_type_name": "IssuesSortFilter",
+      "result_type_name": "IssuesSearchResult",
+      "query_type_name": "IssuesSearchQuery",
+      "condition_prefix": "Issues",
+      "condition_type_name": "IssuesCondition",
+      "fields": [
+        {
+          "name": "addedToCycleAt",
+          "python_name": "added_to_cycle_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "addedToProjectAt",
+          "python_name": "added_to_project_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "addedToTeamAt",
+          "python_name": "added_to_team_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "assignee",
+          "python_name": "assignee",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "assigneeId",
+          "python_name": "assignee_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "attachmentIds",
+          "python_name": "attachment_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "attachments",
+          "python_name": "attachments",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "branchName",
+          "python_name": "branch_name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "canceledAt",
+          "python_name": "canceled_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "completedAt",
+          "python_name": "completed_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "creator",
+          "python_name": "creator",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "creatorId",
+          "python_name": "creator_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "customerTicketCount",
+          "python_name": "customer_ticket_count",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "cycle",
+          "python_name": "cycle",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "cycleId",
+          "python_name": "cycle_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "descriptionState",
+          "python_name": "description_state",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "dueDate",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "estimate",
+          "python_name": "estimate",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "identifier",
+          "python_name": "identifier",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "integrationSourceType",
+          "python_name": "integration_source_type",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "labelIds",
+          "python_name": "label_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "labels",
+          "python_name": "labels",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "milestoneId",
+          "python_name": "milestone_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "number",
+          "python_name": "number",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "parentId",
+          "python_name": "parent_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "previousIdentifiers",
+          "python_name": "previous_identifiers",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "priorityLabel",
+          "python_name": "priority_label",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "prioritySortOrder",
+          "python_name": "priority_sort_order",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "projectId",
+          "python_name": "project_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "projectMilestone",
+          "python_name": "project_milestone",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "reactionData",
+          "python_name": "reaction_data",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "relationIds",
+          "python_name": "relation_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "relations",
+          "python_name": "relations",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "slaType",
+          "python_name": "sla_type",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "sortOrder",
+          "python_name": "sort_order",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "sourceCommentId",
+          "python_name": "source_comment_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "startedAt",
+          "python_name": "started_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "stateId",
+          "python_name": "state_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "subIssueSortOrder",
+          "python_name": "sub_issue_sort_order",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "subscriberIds",
+          "python_name": "subscriber_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "subscribers",
+          "python_name": "subscribers",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "team",
+          "python_name": "team",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "teamId",
+          "python_name": "team_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "canceledAt",
+          "python_name": "canceled_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "completedAt",
+          "python_name": "completed_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "completedIssueCountHistory",
+          "python_name": "completed_issue_count_history",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "completedScopeHistory",
+          "python_name": "completed_scope_history",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "contentState",
+          "python_name": "content_state",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "convertedFromIssue",
+          "python_name": "converted_from_issue",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "convertedFromIssueId",
+          "python_name": "converted_from_issue_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "creator",
+          "python_name": "creator",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "creatorId",
+          "python_name": "creator_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "health",
+          "python_name": "health",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "healthUpdatedAt",
+          "python_name": "health_updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "inProgressScopeHistory",
+          "python_name": "in_progress_scope_history",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "issueCountHistory",
+          "python_name": "issue_count_history",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "lead",
+          "python_name": "lead",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "leadId",
+          "python_name": "lead_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "prioritySortOrder",
+          "python_name": "priority_sort_order",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "progress",
+          "python_name": "progress",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "scope",
+          "python_name": "scope",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "scopeHistory",
+          "python_name": "scope_history",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "slugId",
+          "python_name": "slug_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "sortOrder",
+          "python_name": "sort_order",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "startedAt",
+          "python_name": "started_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "statusId",
+          "python_name": "status_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "targetDate",
+          "python_name": "target_date",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "teamIds",
+          "python_name": "team_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "teams",
+          "python_name": "teams",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "updateRemindersDay",
+          "python_name": "update_reminders_day",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updateRemindersHour",
+          "python_name": "update_reminders_hour",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "teams": {
+      "entity": "teams",
+      "data_type_name": "TeamsSearchData",
+      "filter_type_name": "TeamsSearchFilter",
+      "in_filter_type_name": "TeamsInFilter",
+      "any_value_filter_type_name": "TeamsAnyValueFilter",
+      "string_filter_type_name": "TeamsStringFilter",
+      "sort_filter_type_name": "TeamsSortFilter",
+      "result_type_name": "TeamsSearchResult",
+      "query_type_name": "TeamsSearchQuery",
+      "condition_prefix": "Teams",
+      "condition_type_name": "TeamsCondition",
+      "fields": [
+        {
+          "name": "activeCycle",
+          "python_name": "active_cycle",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "activeCycleId",
+          "python_name": "active_cycle_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "autoArchivePeriod",
+          "python_name": "auto_archive_period",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "autoClosePeriod",
+          "python_name": "auto_close_period",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "autoCloseStateId",
+          "python_name": "auto_close_state_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "cycleCalenderUrl",
+          "python_name": "cycle_calender_url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "cycleCooldownTime",
+          "python_name": "cycle_cooldown_time",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "cycleDuration",
+          "python_name": "cycle_duration",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "cycleIssueAutoAssignCompleted",
+          "python_name": "cycle_issue_auto_assign_completed",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "cycleIssueAutoAssignStarted",
+          "python_name": "cycle_issue_auto_assign_started",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "cycleLockToActive",
+          "python_name": "cycle_lock_to_active",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "cycleStartDay",
+          "python_name": "cycle_start_day",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "cyclesEnabled",
+          "python_name": "cycles_enabled",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "defaultIssueEstimate",
+          "python_name": "default_issue_estimate",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "defaultIssueState",
+          "python_name": "default_issue_state",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "defaultIssueStateId",
+          "python_name": "default_issue_state_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "groupIssueHistory",
+          "python_name": "group_issue_history",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "inviteHash",
+          "python_name": "invite_hash",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "issueCount",
+          "python_name": "issue_count",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "issueEstimationAllowZero",
+          "python_name": "issue_estimation_allow_zero",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "issueEstimationExtended",
+          "python_name": "issue_estimation_extended",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "issueEstimationType",
+          "python_name": "issue_estimation_type",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "markedAsDuplicateWorkflowState",
+          "python_name": "marked_as_duplicate_workflow_state",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "markedAsDuplicateWorkflowStateId",
+          "python_name": "marked_as_duplicate_workflow_state_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "parentTeamId",
+          "python_name": "parent_team_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "private",
+          "python_name": "private",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "requirePriorityToLeaveTriage",
+          "python_name": "require_priority_to_leave_triage",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "scimManaged",
+          "python_name": "scim_managed",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "setIssueSortOrderOnStateChange",
+          "python_name": "set_issue_sort_order_on_state_change",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "triageEnabled",
+          "python_name": "triage_enabled",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "triageIssueStateId",
+          "python_name": "triage_issue_state_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "upcomingCycleCount",
+          "python_name": "upcoming_cycle_count",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "admin",
+          "python_name": "admin",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "avatarBackgroundColor",
+          "python_name": "avatar_background_color",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "avatarUrl",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdIssueCount",
+          "python_name": "created_issue_count",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "displayName",
+          "python_name": "display_name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "guest",
+          "python_name": "guest",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "initials",
+          "python_name": "initials",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "inviteHash",
+          "python_name": "invite_hash",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "isMe",
+          "python_name": "is_me",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "lastSeen",
+          "python_name": "last_seen",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "teamIds",
+          "python_name": "team_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "teams",
+          "python_name": "teams",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "workflow_states": {
+      "entity": "workflow_states",
+      "data_type_name": "WorkflowStatesSearchData",
+      "filter_type_name": "WorkflowStatesSearchFilter",
+      "in_filter_type_name": "WorkflowStatesInFilter",
+      "any_value_filter_type_name": "WorkflowStatesAnyValueFilter",
+      "string_filter_type_name": "WorkflowStatesStringFilter",
+      "sort_filter_type_name": "WorkflowStatesSortFilter",
+      "result_type_name": "WorkflowStatesSearchResult",
+      "query_type_name": "WorkflowStatesSearchQuery",
+      "condition_prefix": "WorkflowStates",
+      "condition_type_name": "WorkflowStatesCondition",
+      "fields": [
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "inheritedFromId",
+          "python_name": "inherited_from_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "position",
+          "python_name": "position",
+          "type": "float | None",
+          "json_type": "number | null",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "team",
+          "python_name": "team",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "teamId",
+          "python_name": "team_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updatedAt",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

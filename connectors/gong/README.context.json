@@ -1,0 +1,1778 @@
+{
+  "connector_name": "gong",
+  "class_name": "GongConnector",
+  "package_name": "airbyte_agent_gong",
+  "package_version": "0.1.21",
+  "yaml_version": "0.1.21",
+  "api_reference_url": "https://gong.app.gong.io/settings/api/documentation",
+  "commit_sha": "unknown",
+  "auth_example": "GongAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", GongAuthConfig",
+  "auth_config": {
+    "type_name": "GongAuthConfig",
+    "base_name": "Gong",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your Gong OAuth2 Access Token."
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Gong OAuth2 Refresh Token. Note: Gong uses single-use refresh tokens."
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your Gong OAuth App Client ID."
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your Gong OAuth App Client Secret."
+          }
+        ],
+        "type_suffix": "Oauth20Authentication",
+        "scheme_name": "oauth2"
+      },
+      {
+        "title": "Access Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_key",
+            "type": "str",
+            "required": true,
+            "title": "Access Key",
+            "description": "Your Gong API Access Key"
+          },
+          {
+            "name": "access_key_secret",
+            "type": "str",
+            "required": true,
+            "title": "Access Key Secret",
+            "description": "Your Gong API Access Key Secret"
+          }
+        ],
+        "type_suffix": "AccessKeyAuthentication",
+        "scheme_name": "basicAuth"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": null,
+  "custom_description": "Gong is a revenue intelligence platform that captures and analyzes customer interactions\nacross calls, emails, and web conferences. This connector provides access to users,\nrecorded calls with transcripts, activity statistics, scorecards, trackers, workspaces,\ncoaching metrics, and library content for sales performance analysis and revenue insights.\n",
+  "supported_questions": "- List all users in my Gong account\n- Show me calls from last week\n- Get the transcript for a recent call\n- List all workspaces in Gong\n- Show me the scorecard configurations\n- What trackers are set up in my account?\n- Get coaching metrics for a manager\n- What are the activity stats for our sales team?\n- Find calls mentioning {keyword} this month\n- Show me calls for rep {user_id} in the last 30 days\n- Which calls had the longest duration last week?",
+  "unsupported_questions": "- Create a new user in Gong\n- Delete a call recording\n- Update scorecard questions\n- Schedule a new meeting\n- Send feedback to a team member\n- Modify tracker keywords",
+  "first_operation": {
+    "method_name": "list_users",
+    "http_method": "get",
+    "path": "/v2/users",
+    "entity": "users",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "UsersListParams",
+    "response_type": "UsersListResult",
+    "description": "Returns a list of all users in the Gong account",
+    "record_extractor": "$.users",
+    "meta_extractor": {
+      "pagination": "$.records"
+    },
+    "needs_envelope": true,
+    "record_type": "list[User]",
+    "meta_fields": [
+      {
+        "name": "pagination",
+        "python_name": "pagination",
+        "type": "PaginationRecords",
+        "schema": {
+          "$ref": "#/components/schemas/PaginationRecords"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/v2/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a list of all users in the Gong account",
+        "record_extractor": "$.users",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/v2/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID",
+        "record_extractor": "$.user",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls": [
+      {
+        "method_name": "list_calls",
+        "http_method": "get",
+        "path": "/v2/calls",
+        "entity": "calls",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "fromDateTime",
+            "python_name": "from_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": "Start date in ISO 8601 format",
+            "is_deep_object": false
+          },
+          {
+            "name": "toDateTime",
+            "python_name": "to_date_time",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": false,
+            "description": "End date in ISO 8601 format",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CallsListParams",
+        "response_type": "CallsListResult",
+        "description": "Retrieve calls data by date range",
+        "record_extractor": "$.calls",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Call]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_call",
+        "http_method": "get",
+        "path": "/v2/calls/{id}",
+        "entity": "calls",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Call ID"
+          }
+        ],
+        "params_type_name": "CallsGetParams",
+        "response_type": "Call",
+        "description": "Get specific call data by ID",
+        "record_extractor": "$.call",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Call",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "calls_extensive": [
+      {
+        "method_name": "list_calls_extensive",
+        "http_method": "post",
+        "path": "/v2/calls/extensive",
+        "entity": "calls_extensive",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "CallsExtensiveListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Start date in ISO 8601 format"
+                },
+                "toDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "End date in ISO 8601 format"
+                },
+                "callIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of specific call IDs to retrieve"
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Filter by workspace ID"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "contentSelector",
+            "python_name": "content_selector",
+            "type": "CallsExtensiveListParamsContentselector",
+            "schema": {
+              "type": "object",
+              "description": "Select which content to include in the response",
+              "properties": {
+                "context": {
+                  "type": "string",
+                  "description": "Context level for the data",
+                  "enum": [
+                    "Extended"
+                  ]
+                },
+                "contextTiming": {
+                  "type": "array",
+                  "description": "Context timing options",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "Now",
+                      "TimeOfCall"
+                    ]
+                  }
+                },
+                "exposedFields": {
+                  "type": "object",
+                  "description": "Specify which fields to include in the response",
+                  "properties": {
+                    "collaboration": {
+                      "type": "object",
+                      "properties": {
+                        "publicComments": {
+                          "type": "boolean",
+                          "description": "Include public comments"
+                        }
+                      }
+                    },
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "pointsOfInterest": {
+                          "type": "boolean",
+                          "description": "Include points of interest (deprecated, use highlights)"
+                        },
+                        "structure": {
+                          "type": "boolean",
+                          "description": "Include call structure"
+                        },
+                        "topics": {
+                          "type": "boolean",
+                          "description": "Include topics discussed"
+                        },
+                        "trackers": {
+                          "type": "boolean",
+                          "description": "Include trackers"
+                        },
+                        "trackerOccurrences": {
+                          "type": "boolean",
+                          "description": "Include tracker occurrences"
+                        },
+                        "brief": {
+                          "type": "boolean",
+                          "description": "Include call brief"
+                        },
+                        "outline": {
+                          "type": "boolean",
+                          "description": "Include call outline"
+                        },
+                        "highlights": {
+                          "type": "boolean",
+                          "description": "Include call highlights"
+                        },
+                        "callOutcome": {
+                          "type": "boolean",
+                          "description": "Include call outcome"
+                        },
+                        "keyPoints": {
+                          "type": "boolean",
+                          "description": "Include key points"
+                        }
+                      }
+                    },
+                    "interaction": {
+                      "type": "object",
+                      "properties": {
+                        "personInteractionStats": {
+                          "type": "boolean",
+                          "description": "Include person interaction statistics"
+                        },
+                        "questions": {
+                          "type": "boolean",
+                          "description": "Include questions asked"
+                        },
+                        "speakers": {
+                          "type": "boolean",
+                          "description": "Include speaker information"
+                        },
+                        "video": {
+                          "type": "boolean",
+                          "description": "Include video interaction data"
+                        }
+                      }
+                    },
+                    "media": {
+                      "type": "boolean",
+                      "description": "Include media URLs (audio/video)"
+                    },
+                    "parties": {
+                      "type": "boolean",
+                      "description": "Include participant information"
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": "Select which content to include in the response"
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for pagination"
+            },
+            "required": false,
+            "description": "Cursor for pagination"
+          }
+        ],
+        "params_type_name": "CallsExtensiveListParams",
+        "response_type": "CallsExtensiveListResult",
+        "description": "Retrieve detailed call data including participants, interaction stats, and content",
+        "record_extractor": "$.calls",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ExtensiveCall]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "call_audio": [
+      {
+        "method_name": "download_call_audio",
+        "http_method": "post",
+        "path": "/v2/calls:audio/download",
+        "entity": "call_audio",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "CallAudioDownloadParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "callIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List containing the single call ID"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "contentSelector",
+            "python_name": "content_selector",
+            "type": "CallAudioDownloadParamsContentselector",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "exposedFields": {
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "boolean",
+                      "description": "Must be true to get media URLs",
+                      "default": true
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "CallAudioDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "ALWAYS configure the request with the exposedFields: {\"media\": true}. If you don't the call won't work.\nDownloads the audio media file for a call. Temporarily, the request body must be configured with:\n{\"filter\": {\"callIds\": [CALL_ID]}, \"contentSelector\": {\"exposedFields\": {\"media\": true}}}\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ExtensiveCallsResponse",
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "call_video": [
+      {
+        "method_name": "download_call_video",
+        "http_method": "post",
+        "path": "/v2/calls:video/download",
+        "entity": "call_video",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "CallVideoDownloadParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "callIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List containing the single call ID"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "contentSelector",
+            "python_name": "content_selector",
+            "type": "CallVideoDownloadParamsContentselector",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "exposedFields": {
+                  "type": "object",
+                  "properties": {
+                    "media": {
+                      "type": "boolean",
+                      "description": "Must be true to get media URLs",
+                      "default": true
+                    }
+                  }
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "CallVideoDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "ALWAYS configure the request with the exposedFields: {\"media\": true}. If you don't the call won't work.\nDownloads the video media file for a call. Temporarily, the request body must be configured with:\n{\"filter\": {\"callIds\": [CALL_ID]}, \"contentSelector\": {\"exposedFields\": {\"media\": true}}}\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ExtensiveCallsResponse",
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "workspaces": [
+      {
+        "method_name": "list_workspaces",
+        "http_method": "get",
+        "path": "/v2/workspaces",
+        "entity": "workspaces",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "WorkspacesListParams",
+        "response_type": "WorkspacesListResult",
+        "description": "List all company workspaces",
+        "record_extractor": "$.workspaces",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Workspace]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "call_transcripts": [
+      {
+        "method_name": "get_call_transcripts",
+        "http_method": "post",
+        "path": "/v2/calls/transcript",
+        "entity": "call_transcripts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "CallTranscriptsListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Start date in ISO 8601 format (optional if callIds provided)"
+                },
+                "toDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "End date in ISO 8601 format (optional if callIds provided)"
+                },
+                "callIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of specific call IDs to retrieve transcripts for"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for pagination"
+            },
+            "required": false,
+            "description": "Cursor for pagination"
+          }
+        ],
+        "params_type_name": "CallTranscriptsListParams",
+        "response_type": "CallTranscriptsListResult",
+        "description": "Returns transcripts for calls in a specified date range or specific call IDs",
+        "record_extractor": "$.callTranscripts",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CallTranscript]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "stats_activity_aggregate": [
+      {
+        "method_name": "get_activity_aggregate",
+        "http_method": "post",
+        "path": "/v2/stats/activity/aggregate",
+        "entity": "stats_activity_aggregate",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "StatsActivityAggregateListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Start date (YYYY-MM-DD)"
+                },
+                "toDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "End date (YYYY-MM-DD)"
+                },
+                "userIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of user IDs to retrieve stats for"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "StatsActivityAggregateListParams",
+        "response_type": "StatsActivityAggregateListResult",
+        "description": "Provides aggregated user activity metrics across a specified period",
+        "record_extractor": "$.usersAggregateActivityStats",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserAggregateActivity]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "stats_activity_day_by_day": [
+      {
+        "method_name": "get_activity_day_by_day",
+        "http_method": "post",
+        "path": "/v2/stats/activity/day-by-day",
+        "entity": "stats_activity_day_by_day",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "StatsActivityDayByDayListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Start date (YYYY-MM-DD)"
+                },
+                "toDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "End date (YYYY-MM-DD)"
+                },
+                "userIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of user IDs to retrieve stats for"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "StatsActivityDayByDayListParams",
+        "response_type": "StatsActivityDayByDayListResult",
+        "description": "Delivers daily user activity metrics across a specified date range",
+        "record_extractor": "$.usersDetailedActivities",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserDetailedActivity]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "stats_interaction": [
+      {
+        "method_name": "get_interaction_stats",
+        "http_method": "post",
+        "path": "/v2/stats/interaction",
+        "entity": "stats_interaction",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "StatsInteractionListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Start date (YYYY-MM-DD)"
+                },
+                "toDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "End date (YYYY-MM-DD)"
+                },
+                "userIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of user IDs to retrieve stats for"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          }
+        ],
+        "params_type_name": "StatsInteractionListParams",
+        "response_type": "StatsInteractionListResult",
+        "description": "Returns interaction stats for users based on calls that have Whisper turned on",
+        "record_extractor": "$.peopleInteractionStats",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserInteractionStats]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "settings_scorecards": [
+      {
+        "method_name": "list_scorecards",
+        "http_method": "get",
+        "path": "/v2/settings/scorecards",
+        "entity": "settings_scorecards",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter scorecards by workspace ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SettingsScorecardsListParams",
+        "response_type": "SettingsScorecardsListResult",
+        "description": "Retrieve all scorecard configurations in the company",
+        "record_extractor": "$.scorecards",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Scorecard]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "settings_trackers": [
+      {
+        "method_name": "list_trackers",
+        "http_method": "get",
+        "path": "/v2/settings/trackers",
+        "entity": "settings_trackers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter trackers by workspace ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SettingsTrackersListParams",
+        "response_type": "SettingsTrackersListResult",
+        "description": "Retrieve all keyword tracker configurations in the company",
+        "record_extractor": "$.keywordTrackers",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Tracker]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "library_folders": [
+      {
+        "method_name": "list_library_folders",
+        "http_method": "get",
+        "path": "/v2/library/folders",
+        "entity": "library_folders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspaceId",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace ID to retrieve folders from",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LibraryFoldersListParams",
+        "response_type": "LibraryFoldersListResult",
+        "description": "Retrieve the folder structure of the call library",
+        "record_extractor": "$.folders",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[LibraryFolder]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "library_folder_content": [
+      {
+        "method_name": "list_folder_content",
+        "http_method": "get",
+        "path": "/v2/library/folder-content",
+        "entity": "library_folder_content",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "folderId",
+            "python_name": "folder_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Folder ID to retrieve content from",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LibraryFolderContentListParams",
+        "response_type": "LibraryFolderContentListResult",
+        "description": "Retrieve calls in a specific library folder",
+        "record_extractor": "$.calls",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[FolderCall]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "coaching": [
+      {
+        "method_name": "list_coaching_metrics",
+        "http_method": "get",
+        "path": "/v2/coaching",
+        "entity": "coaching",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace-id",
+            "python_name": "workspace_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "manager-id",
+            "python_name": "manager_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Manager user ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": "Start date in ISO 8601 format",
+            "is_deep_object": false
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": true,
+            "description": "End date in ISO 8601 format",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CoachingListParams",
+        "response_type": "CoachingListResult",
+        "description": "Retrieve coaching metrics for a manager and their direct reports",
+        "record_extractor": "$.coachingData",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[CoachingData]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "stats_activity_scorecards": [
+      {
+        "method_name": "list_answered_scorecards",
+        "http_method": "post",
+        "path": "/v2/stats/activity/scorecards",
+        "entity": "stats_activity_scorecards",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "StatsActivityScorecardsListParamsFilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "fromDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "Start date in ISO 8601 format"
+                },
+                "toDateTime": {
+                  "type": "string",
+                  "format": "date-time",
+                  "description": "End date in ISO 8601 format"
+                },
+                "scorecardIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of scorecard IDs to filter by"
+                },
+                "reviewedUserIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of reviewed user IDs to filter by"
+                },
+                "reviewerUserIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of reviewer user IDs to filter by"
+                },
+                "callIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "List of call IDs to filter by"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Cursor for pagination"
+            },
+            "required": false,
+            "description": "Cursor for pagination"
+          }
+        ],
+        "params_type_name": "StatsActivityScorecardsListParams",
+        "response_type": "StatsActivityScorecardsListResult",
+        "description": "Retrieve answered scorecards for applicable reviewed users or scorecards for a date range",
+        "record_extractor": "$.answeredScorecards",
+        "meta_extractor": {
+          "pagination": "$.records"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AnsweredScorecard]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationRecords",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationRecords"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "active",
+          "python_name": "active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the user is currently active or not"
+        },
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp denoting when the user account was created"
+        },
+        {
+          "name": "emailAddress",
+          "python_name": "email_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The primary email address associated with the user"
+        },
+        {
+          "name": "emailAliases",
+          "python_name": "email_aliases",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Additional email addresses that can be used to reach the user"
+        },
+        {
+          "name": "extension",
+          "python_name": "extension",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone extension number for the user"
+        },
+        {
+          "name": "firstName",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The first name of the user"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user"
+        },
+        {
+          "name": "lastName",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The last name of the user"
+        },
+        {
+          "name": "managerId",
+          "python_name": "manager_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the user's manager"
+        },
+        {
+          "name": "meetingConsentPageUrl",
+          "python_name": "meeting_consent_page_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL for the consent page related to meetings"
+        },
+        {
+          "name": "personalMeetingUrls",
+          "python_name": "personal_meeting_urls",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "URLs for personal meeting rooms assigned to the user"
+        },
+        {
+          "name": "phoneNumber",
+          "python_name": "phone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number associated with the user"
+        },
+        {
+          "name": "settings",
+          "python_name": "settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User-specific settings and configurations"
+        },
+        {
+          "name": "spokenLanguages",
+          "python_name": "spoken_languages",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Languages spoken by the user"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The job title or position of the user"
+        },
+        {
+          "name": "trustedEmailAddress",
+          "python_name": "trusted_email_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "An email address that is considered trusted for the user"
+        }
+      ]
+    },
+    "calls": {
+      "entity": "calls",
+      "data_type_name": "CallsSearchData",
+      "filter_type_name": "CallsSearchFilter",
+      "in_filter_type_name": "CallsInFilter",
+      "any_value_filter_type_name": "CallsAnyValueFilter",
+      "string_filter_type_name": "CallsStringFilter",
+      "sort_filter_type_name": "CallsSortFilter",
+      "result_type_name": "CallsSearchResult",
+      "query_type_name": "CallsSearchQuery",
+      "condition_prefix": "Calls",
+      "condition_type_name": "CallsCondition",
+      "fields": [
+        {
+          "name": "calendarEventId",
+          "python_name": "calendar_event_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the calendar event associated with the call."
+        },
+        {
+          "name": "clientUniqueId",
+          "python_name": "client_unique_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the client related to the call."
+        },
+        {
+          "name": "customData",
+          "python_name": "custom_data",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Custom data associated with the call."
+        },
+        {
+          "name": "direction",
+          "python_name": "direction",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Direction of the call (inbound/outbound)."
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the call in seconds."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the call."
+        },
+        {
+          "name": "isPrivate",
+          "python_name": "is_private",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the call is private or not."
+        },
+        {
+          "name": "language",
+          "python_name": "language",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Language used in the call."
+        },
+        {
+          "name": "media",
+          "python_name": "media",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Media type used for communication (voice, video, etc.)."
+        },
+        {
+          "name": "meetingUrl",
+          "python_name": "meeting_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL for accessing the meeting associated with the call."
+        },
+        {
+          "name": "primaryUserId",
+          "python_name": "primary_user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the primary user involved in the call."
+        },
+        {
+          "name": "purpose",
+          "python_name": "purpose",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Purpose or topic of the call."
+        },
+        {
+          "name": "scheduled",
+          "python_name": "scheduled",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Scheduled date and time of the call."
+        },
+        {
+          "name": "scope",
+          "python_name": "scope",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Scope or extent of the call."
+        },
+        {
+          "name": "sdrDisposition",
+          "python_name": "sdr_disposition",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Disposition set by the sales development representative."
+        },
+        {
+          "name": "started",
+          "python_name": "started",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date and time of the call."
+        },
+        {
+          "name": "system",
+          "python_name": "system",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System information related to the call."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title or headline of the call."
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL associated with the call."
+        },
+        {
+          "name": "workspaceId",
+          "python_name": "workspace_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier for the workspace to which the call belongs."
+        }
+      ]
+    },
+    "calls_extensive": {
+      "entity": "calls_extensive",
+      "data_type_name": "CallsExtensiveSearchData",
+      "filter_type_name": "CallsExtensiveSearchFilter",
+      "in_filter_type_name": "CallsExtensiveInFilter",
+      "any_value_filter_type_name": "CallsExtensiveAnyValueFilter",
+      "string_filter_type_name": "CallsExtensiveStringFilter",
+      "sort_filter_type_name": "CallsExtensiveSortFilter",
+      "result_type_name": "CallsExtensiveSearchResult",
+      "query_type_name": "CallsExtensiveSearchQuery",
+      "condition_prefix": "CallsExtensive",
+      "condition_type_name": "CallsExtensiveCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the call (from metaData.id)."
+        },
+        {
+          "name": "startdatetime",
+          "python_name": "startdatetime",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Datetime for extensive calls."
+        },
+        {
+          "name": "collaboration",
+          "python_name": "collaboration",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Collaboration information added to the call"
+        },
+        {
+          "name": "content",
+          "python_name": "content",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Analysis of the interaction content."
+        },
+        {
+          "name": "context",
+          "python_name": "context",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "A list of the agenda of each part of the call."
+        },
+        {
+          "name": "interaction",
+          "python_name": "interaction",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Metrics collected around the interaction during the call."
+        },
+        {
+          "name": "media",
+          "python_name": "media",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The media urls of the call."
+        },
+        {
+          "name": "metaData",
+          "python_name": "meta_data",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "call's metadata."
+        },
+        {
+          "name": "parties",
+          "python_name": "parties",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "A list of the call's participants"
+        }
+      ]
+    },
+    "settings_scorecards": {
+      "entity": "settings_scorecards",
+      "data_type_name": "SettingsScorecardsSearchData",
+      "filter_type_name": "SettingsScorecardsSearchFilter",
+      "in_filter_type_name": "SettingsScorecardsInFilter",
+      "any_value_filter_type_name": "SettingsScorecardsAnyValueFilter",
+      "string_filter_type_name": "SettingsScorecardsStringFilter",
+      "sort_filter_type_name": "SettingsScorecardsSortFilter",
+      "result_type_name": "SettingsScorecardsSearchResult",
+      "query_type_name": "SettingsScorecardsSearchQuery",
+      "condition_prefix": "SettingsScorecards",
+      "condition_type_name": "SettingsScorecardsCondition",
+      "fields": [
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the scorecard was created"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the scorecard is enabled or disabled"
+        },
+        {
+          "name": "questions",
+          "python_name": "questions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "An array of questions related to the scorecard"
+        },
+        {
+          "name": "scorecardId",
+          "python_name": "scorecard_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the scorecard"
+        },
+        {
+          "name": "scorecardName",
+          "python_name": "scorecard_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the scorecard"
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the scorecard was last updated"
+        },
+        {
+          "name": "updaterUserId",
+          "python_name": "updater_user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The user ID of the person who last updated the scorecard"
+        },
+        {
+          "name": "workspaceId",
+          "python_name": "workspace_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the workspace associated with the scorecard"
+        }
+      ]
+    },
+    "stats_activity_scorecards": {
+      "entity": "stats_activity_scorecards",
+      "data_type_name": "StatsActivityScorecardsSearchData",
+      "filter_type_name": "StatsActivityScorecardsSearchFilter",
+      "in_filter_type_name": "StatsActivityScorecardsInFilter",
+      "any_value_filter_type_name": "StatsActivityScorecardsAnyValueFilter",
+      "string_filter_type_name": "StatsActivityScorecardsStringFilter",
+      "sort_filter_type_name": "StatsActivityScorecardsSortFilter",
+      "result_type_name": "StatsActivityScorecardsSearchResult",
+      "query_type_name": "StatsActivityScorecardsSearchQuery",
+      "condition_prefix": "StatsActivityScorecards",
+      "condition_type_name": "StatsActivityScorecardsCondition",
+      "fields": [
+        {
+          "name": "answeredScorecardId",
+          "python_name": "answered_scorecard_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the answered scorecard instance."
+        },
+        {
+          "name": "answers",
+          "python_name": "answers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Contains the answered questions in the scorecards"
+        },
+        {
+          "name": "callId",
+          "python_name": "call_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the call associated with the answered scorecard."
+        },
+        {
+          "name": "callStartTime",
+          "python_name": "call_start_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating the start time of the call."
+        },
+        {
+          "name": "reviewTime",
+          "python_name": "review_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the review of the answered scorecard was completed."
+        },
+        {
+          "name": "reviewedUserId",
+          "python_name": "reviewed_user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user whose performance was reviewed."
+        },
+        {
+          "name": "reviewerUserId",
+          "python_name": "reviewer_user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user who performed the review."
+        },
+        {
+          "name": "scorecardId",
+          "python_name": "scorecard_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the scorecard template used."
+        },
+        {
+          "name": "scorecardName",
+          "python_name": "scorecard_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name or title of the scorecard template used."
+        },
+        {
+          "name": "visibilityType",
+          "python_name": "visibility_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type indicating the visibility permissions for the answered scorecard."
+        }
+      ]
+    }
+  }
+}

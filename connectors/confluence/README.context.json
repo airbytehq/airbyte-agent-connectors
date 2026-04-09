@@ -1,0 +1,1373 @@
+{
+  "connector_name": "confluence",
+  "class_name": "ConfluenceConnector",
+  "package_name": "airbyte_agent_confluence",
+  "package_version": "1.0.1",
+  "yaml_version": "1.0.1",
+  "api_reference_url": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",
+  "commit_sha": "unknown",
+  "auth_example": "ConfluenceAuthConfig(username=\"...\", password=\"...\")",
+  "auth_import": ", ConfluenceAuthConfig",
+  "auth_config": {
+    "type_name": "ConfluenceAuthConfig",
+    "base_name": "Confluence",
+    "options": [
+      {
+        "title": "Confluence API Token Authentication",
+        "description": "Authenticate using your Atlassian account email and API token",
+        "fields": [
+          {
+            "name": "username",
+            "type": "str",
+            "required": true,
+            "title": "Email Address",
+            "description": "Your Atlassian account email address"
+          },
+          {
+            "name": "password",
+            "type": "str",
+            "required": true,
+            "title": "API Token",
+            "description": "Your Confluence API token from https://id.atlassian.com/manage-profile/security/api-tokens"
+          }
+        ],
+        "type_suffix": "ConfluenceApiTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Connector for the Confluence Cloud REST API. Provides read access to Confluence spaces, pages, blog posts, groups, and audit logs. Uses the Confluence Cloud REST API v2 for spaces, pages, and blog posts, and the v1 API for groups and audit records. Authenticates via HTTP Basic using an Atlassian account email and API token.",
+  "supported_questions": "- List all spaces in my Confluence instance\n- Show me the most recently created pages\n- List all blog posts\n- Show me details for a specific page\n- List all groups in Confluence\n- Show me recent audit log entries\n- Get details about a specific space\n- Show me blog post details\n- Find pages created in the last 7 days\n- What spaces have the most pages?\n- Show me all pages in a specific space\n- Find blog posts by a specific author\n- What audit events happened this week?",
+  "unsupported_questions": "- Create a new page in Confluence\n- Update an existing page\n- Delete a space\n- Upload an attachment to a page\n- Manage space permissions",
+  "first_operation": {
+    "method_name": "list_spaces",
+    "http_method": "get",
+    "path": "/wiki/api/v2/spaces",
+    "entity": "spaces",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      },
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 25
+        },
+        "required": null,
+        "description": "Maximum number of spaces to return",
+        "is_deep_object": false
+      },
+      {
+        "name": "type",
+        "python_name": "type",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "global",
+            "personal"
+          ]
+        },
+        "required": null,
+        "description": "Filter by space type (global or personal)",
+        "is_deep_object": false
+      },
+      {
+        "name": "status",
+        "python_name": "status",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "current",
+            "archived"
+          ]
+        },
+        "required": null,
+        "description": "Filter by space status (current or archived)",
+        "is_deep_object": false
+      },
+      {
+        "name": "keys",
+        "python_name": "keys",
+        "type": "list[str]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": null,
+        "description": "Filter by space keys",
+        "is_deep_object": false
+      },
+      {
+        "name": "sort",
+        "python_name": "sort",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "id",
+            "-id",
+            "key",
+            "-key",
+            "name",
+            "-name"
+          ]
+        },
+        "required": null,
+        "description": "Sort order for results",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "SpacesListParams",
+    "response_type": "SpacesListResult",
+    "description": "Returns all spaces. Only spaces that the user has permission to view will be returned.",
+    "record_extractor": "$.results",
+    "meta_extractor": {
+      "next": "$._links.next"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Space]",
+    "meta_fields": [
+      {
+        "name": "next",
+        "python_name": "next",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "description": "URL for the next page of results"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "spaces": [
+      {
+        "method_name": "list_spaces",
+        "http_method": "get",
+        "path": "/wiki/api/v2/spaces",
+        "entity": "spaces",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": null,
+            "description": "Maximum number of spaces to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "global",
+                "personal"
+              ]
+            },
+            "required": null,
+            "description": "Filter by space type (global or personal)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "current",
+                "archived"
+              ]
+            },
+            "required": null,
+            "description": "Filter by space status (current or archived)",
+            "is_deep_object": false
+          },
+          {
+            "name": "keys",
+            "python_name": "keys",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": null,
+            "description": "Filter by space keys",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "key",
+                "-key",
+                "name",
+                "-name"
+              ]
+            },
+            "required": null,
+            "description": "Sort order for results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SpacesListParams",
+        "response_type": "SpacesListResult",
+        "description": "Returns all spaces. Only spaces that the user has permission to view will be returned.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next": "$._links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Space]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_space",
+        "http_method": "get",
+        "path": "/wiki/api/v2/spaces/{id}",
+        "entity": "spaces",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the space"
+          },
+          {
+            "name": "description-format",
+            "python_name": "description_format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "plain",
+                "view"
+              ]
+            },
+            "required": null,
+            "description": "The format of the space description in the response",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SpacesGetParams",
+        "response_type": "Space",
+        "description": "Returns a specific space.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Space",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pages": [
+      {
+        "method_name": "list_pages",
+        "http_method": "get",
+        "path": "/wiki/api/v2/pages",
+        "entity": "pages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": null,
+            "description": "Maximum number of pages to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "space-id",
+            "python_name": "space_id",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "required": null,
+            "description": "Filter pages by space ID(s)",
+            "is_deep_object": false
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter pages by title (exact match)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "archived",
+                  "trashed",
+                  "draft"
+                ]
+              }
+            },
+            "required": null,
+            "description": "Filter pages by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "title",
+                "-title",
+                "created-date",
+                "-created-date",
+                "modified-date",
+                "-modified-date"
+              ]
+            },
+            "required": null,
+            "description": "Sort order for results",
+            "is_deep_object": false
+          },
+          {
+            "name": "body-format",
+            "python_name": "body_format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "storage",
+                "atlas_doc_format",
+                "view"
+              ]
+            },
+            "required": null,
+            "description": "The format of the page body in the response",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PagesListParams",
+        "response_type": "PagesListResult",
+        "description": "Returns all pages. Only pages that the user has permission to view will be returned.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next": "$._links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Page]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_page",
+        "http_method": "get",
+        "path": "/wiki/api/v2/pages/{id}",
+        "entity": "pages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the page"
+          },
+          {
+            "name": "body-format",
+            "python_name": "body_format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "storage",
+                "atlas_doc_format",
+                "view"
+              ]
+            },
+            "required": null,
+            "description": "The format of the page body in the response",
+            "is_deep_object": false
+          },
+          {
+            "name": "version",
+            "python_name": "version",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Specific version number to retrieve",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PagesGetParams",
+        "response_type": "Page",
+        "description": "Returns a specific page.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Page",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "blog_posts": [
+      {
+        "method_name": "list_blog_posts",
+        "http_method": "get",
+        "path": "/wiki/api/v2/blogposts",
+        "entity": "blog_posts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": null,
+            "description": "Maximum number of blog posts to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "space-id",
+            "python_name": "space_id",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "required": null,
+            "description": "Filter blog posts by space ID(s)",
+            "is_deep_object": false
+          },
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter blog posts by title (exact match)",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "draft",
+                  "trashed"
+                ]
+              }
+            },
+            "required": null,
+            "description": "Filter blog posts by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "-id",
+                "title",
+                "-title",
+                "created-date",
+                "-created-date",
+                "modified-date",
+                "-modified-date"
+              ]
+            },
+            "required": null,
+            "description": "Sort order for results",
+            "is_deep_object": false
+          },
+          {
+            "name": "body-format",
+            "python_name": "body_format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "storage",
+                "atlas_doc_format",
+                "view"
+              ]
+            },
+            "required": null,
+            "description": "The format of the blog post body in the response",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BlogPostsListParams",
+        "response_type": "BlogPostsListResult",
+        "description": "Returns all blog posts. Only blog posts that the user has permission to view will be returned.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next": "$._links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[BlogPost]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL for the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_blog_post",
+        "http_method": "get",
+        "path": "/wiki/api/v2/blogposts/{id}",
+        "entity": "blog_posts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the blog post"
+          },
+          {
+            "name": "body-format",
+            "python_name": "body_format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "storage",
+                "atlas_doc_format",
+                "view"
+              ]
+            },
+            "required": null,
+            "description": "The format of the blog post body in the response",
+            "is_deep_object": false
+          },
+          {
+            "name": "version",
+            "python_name": "version",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Specific version number to retrieve",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BlogPostsGetParams",
+        "response_type": "BlogPost",
+        "description": "Returns a specific blog post.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "BlogPost",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "groups": [
+      {
+        "method_name": "list_groups",
+        "http_method": "get",
+        "path": "/wiki/rest/api/group",
+        "entity": "groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Starting index for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 25
+            },
+            "required": null,
+            "description": "Maximum number of groups to return",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GroupsListParams",
+        "response_type": "GroupsListResult",
+        "description": "Returns all user groups.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "start": "$.start",
+          "limit": "$.limit",
+          "size": "$.size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Group]",
+        "meta_fields": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Starting index"
+            }
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page"
+            }
+          },
+          {
+            "name": "size",
+            "python_name": "size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results returned"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "audit": [
+      {
+        "method_name": "list_audit_records",
+        "http_method": "get",
+        "path": "/wiki/rest/api/audit",
+        "entity": "audit",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Starting index for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 25
+            },
+            "required": null,
+            "description": "Maximum number of audit records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "startDate",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Start date for filtering audit records (ISO 8601)",
+            "is_deep_object": false
+          },
+          {
+            "name": "endDate",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "End date for filtering audit records (ISO 8601)",
+            "is_deep_object": false
+          },
+          {
+            "name": "searchString",
+            "python_name": "search_string",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search string to filter audit records",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AuditListParams",
+        "response_type": "AuditListResult",
+        "description": "Returns audit log records.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "start": "$.start",
+          "limit": "$.limit",
+          "size": "$.size"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AuditRecord]",
+        "meta_fields": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Starting index"
+            }
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page"
+            }
+          },
+          {
+            "name": "size",
+            "python_name": "size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results returned"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "audit": {
+      "entity": "audit",
+      "data_type_name": "AuditSearchData",
+      "filter_type_name": "AuditSearchFilter",
+      "in_filter_type_name": "AuditInFilter",
+      "any_value_filter_type_name": "AuditAnyValueFilter",
+      "string_filter_type_name": "AuditStringFilter",
+      "sort_filter_type_name": "AuditSortFilter",
+      "result_type_name": "AuditSearchResult",
+      "query_type_name": "AuditSearchQuery",
+      "condition_prefix": "Audit",
+      "condition_type_name": "AuditCondition",
+      "fields": [
+        {
+          "name": "affectedObject",
+          "python_name": "affected_object",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The object that was affected by the audit event."
+        },
+        {
+          "name": "associatedObjects",
+          "python_name": "associated_objects",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Any associated objects related to the audit event."
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who triggered the audit event."
+        },
+        {
+          "name": "category",
+          "python_name": "category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The category under which the audit event falls."
+        },
+        {
+          "name": "changedValues",
+          "python_name": "changed_values",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of the values that were changed during the audit event."
+        },
+        {
+          "name": "creationDate",
+          "python_name": "creation_date",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the audit event was created."
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A detailed description of the audit event."
+        },
+        {
+          "name": "remoteAddress",
+          "python_name": "remote_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The IP address from which the audit event originated."
+        },
+        {
+          "name": "summary",
+          "python_name": "summary",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A brief summary or title describing the audit event."
+        },
+        {
+          "name": "superAdmin",
+          "python_name": "super_admin",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the user triggering the audit event is a super admin."
+        },
+        {
+          "name": "sysAdmin",
+          "python_name": "sys_admin",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the user triggering the audit event is a system admin."
+        }
+      ]
+    },
+    "blog_posts": {
+      "entity": "blog_posts",
+      "data_type_name": "BlogPostsSearchData",
+      "filter_type_name": "BlogPostsSearchFilter",
+      "in_filter_type_name": "BlogPostsInFilter",
+      "any_value_filter_type_name": "BlogPostsAnyValueFilter",
+      "string_filter_type_name": "BlogPostsStringFilter",
+      "sort_filter_type_name": "BlogPostsSortFilter",
+      "result_type_name": "BlogPostsSearchResult",
+      "query_type_name": "BlogPostsSearchQuery",
+      "condition_prefix": "BlogPosts",
+      "condition_type_name": "BlogPostsCondition",
+      "fields": [
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Links related to the blog post"
+        },
+        {
+          "name": "authorId",
+          "python_name": "author_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created the blog post"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Blog post body content"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the blog post was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique blog post identifier"
+        },
+        {
+          "name": "spaceId",
+          "python_name": "space_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the space containing this blog post"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Blog post status (current, draft, trashed)"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Blog post title"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Version information"
+        }
+      ]
+    },
+    "groups": {
+      "entity": "groups",
+      "data_type_name": "GroupsSearchData",
+      "filter_type_name": "GroupsSearchFilter",
+      "in_filter_type_name": "GroupsInFilter",
+      "any_value_filter_type_name": "GroupsAnyValueFilter",
+      "string_filter_type_name": "GroupsStringFilter",
+      "sort_filter_type_name": "GroupsSortFilter",
+      "result_type_name": "GroupsSearchResult",
+      "query_type_name": "GroupsSearchQuery",
+      "condition_prefix": "Groups",
+      "condition_type_name": "GroupsCondition",
+      "fields": [
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Links related to the group"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the group"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the group"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of group"
+        }
+      ]
+    },
+    "pages": {
+      "entity": "pages",
+      "data_type_name": "PagesSearchData",
+      "filter_type_name": "PagesSearchFilter",
+      "in_filter_type_name": "PagesInFilter",
+      "any_value_filter_type_name": "PagesAnyValueFilter",
+      "string_filter_type_name": "PagesStringFilter",
+      "sort_filter_type_name": "PagesSortFilter",
+      "result_type_name": "PagesSearchResult",
+      "query_type_name": "PagesSearchQuery",
+      "condition_prefix": "Pages",
+      "condition_type_name": "PagesCondition",
+      "fields": [
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Links related to the page"
+        },
+        {
+          "name": "authorId",
+          "python_name": "author_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created the page"
+        },
+        {
+          "name": "body",
+          "python_name": "body",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Page body content"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the page was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique page identifier"
+        },
+        {
+          "name": "lastOwnerId",
+          "python_name": "last_owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the previous page owner"
+        },
+        {
+          "name": "ownerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the current page owner"
+        },
+        {
+          "name": "parentId",
+          "python_name": "parent_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the parent page"
+        },
+        {
+          "name": "parentType",
+          "python_name": "parent_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the parent (page or space)"
+        },
+        {
+          "name": "position",
+          "python_name": "position",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Position of the page among siblings"
+        },
+        {
+          "name": "spaceId",
+          "python_name": "space_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the space containing this page"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Page status (current, archived, trashed, draft)"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Page title"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Version information"
+        }
+      ]
+    },
+    "spaces": {
+      "entity": "spaces",
+      "data_type_name": "SpacesSearchData",
+      "filter_type_name": "SpacesSearchFilter",
+      "in_filter_type_name": "SpacesInFilter",
+      "any_value_filter_type_name": "SpacesAnyValueFilter",
+      "string_filter_type_name": "SpacesStringFilter",
+      "sort_filter_type_name": "SpacesSortFilter",
+      "result_type_name": "SpacesSearchResult",
+      "query_type_name": "SpacesSearchQuery",
+      "condition_prefix": "Spaces",
+      "condition_type_name": "SpacesCondition",
+      "fields": [
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Links related to the space"
+        },
+        {
+          "name": "authorId",
+          "python_name": "author_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created the space"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the space was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Space description in various formats"
+        },
+        {
+          "name": "homepageId",
+          "python_name": "homepage_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the space homepage"
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Space icon information"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique space identifier"
+        },
+        {
+          "name": "key",
+          "python_name": "key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Space key"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Space name"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Space status (current or archived)"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Space type (global or personal)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "connector_name": "granola",
+  "class_name": "GranolaConnector",
+  "package_name": "airbyte_agent_granola",
+  "package_version": "1.0.6",
+  "yaml_version": "1.0.6",
+  "api_reference_url": "https://docs.granola.ai/introduction",
+  "commit_sha": "unknown",
+  "auth_example": "GranolaAuthConfig(api_key=\"...\")",
+  "auth_import": ", GranolaAuthConfig",
+  "auth_config": {
+    "type_name": "GranolaAuthConfig",
+    "base_name": "Granola",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Granola Enterprise API key generated from Settings > Workspaces > API tab"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "The Granola API connector provides read access to meeting notes from Granola,\nan AI-powered meeting notes platform. This connector integrates with the Granola\nEnterprise API to list and retrieve notes, including summaries, transcripts,\nattendees, and calendar event details. Requires an Enterprise plan API key.\n",
+  "supported_questions": "- List all meeting notes from Granola\n- Show me recent meeting notes\n- Get the details of a specific note\n- List notes created in the last week\n- Find meeting notes from last month\n- Which meetings had the most attendees?\n- Show me notes that mention budget reviews\n- What meetings happened this quarter?",
+  "unsupported_questions": "- Create a new meeting note\n- Delete a meeting note\n- Update an existing note\n- Share a note with someone",
+  "first_operation": {
+    "method_name": "list_notes",
+    "http_method": "get",
+    "path": "/v1/notes",
+    "entity": "notes",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30,
+          "default": 10
+        },
+        "required": false,
+        "description": "Maximum number of notes to return per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Pagination cursor for next page",
+        "is_deep_object": false
+      },
+      {
+        "name": "created_before",
+        "python_name": "created_before",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        },
+        "required": false,
+        "description": "Return notes created before this date (YYYY-MM-DD)",
+        "is_deep_object": false
+      },
+      {
+        "name": "created_after",
+        "python_name": "created_after",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date"
+        },
+        "required": false,
+        "description": "Return notes created after this date (YYYY-MM-DD)",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "NotesListParams",
+    "response_type": "NotesListResult",
+    "description": "Returns a paginated list of meeting notes",
+    "record_extractor": "$.notes",
+    "meta_extractor": {
+      "cursor": "$.cursor",
+      "has_more": "$.hasMore"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Note]",
+    "meta_fields": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cursor for fetching the next page"
+        }
+      },
+      {
+        "name": "has_more",
+        "python_name": "has_more",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "description": "Whether there are more notes to fetch"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "notes": [
+      {
+        "method_name": "list_notes",
+        "http_method": "get",
+        "path": "/v1/notes",
+        "entity": "notes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 30,
+              "default": 10
+            },
+            "required": false,
+            "description": "Maximum number of notes to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Return notes created before this date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": false,
+            "description": "Return notes created after this date (YYYY-MM-DD)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesListParams",
+        "response_type": "NotesListResult",
+        "description": "Returns a paginated list of meeting notes",
+        "record_extractor": "$.notes",
+        "meta_extractor": {
+          "cursor": "$.cursor",
+          "has_more": "$.hasMore"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Note]",
+        "meta_fields": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for fetching the next page"
+            }
+          },
+          {
+            "name": "has_more",
+            "python_name": "has_more",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether there are more notes to fetch"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_note",
+        "http_method": "get",
+        "path": "/v1/notes/{note_id}",
+        "entity": "notes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "note_id",
+            "python_name": "note_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the note"
+          },
+          {
+            "name": "include",
+            "python_name": "include",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "transcript"
+              ]
+            },
+            "required": false,
+            "description": "Include the note transcript in the response",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesGetParams",
+        "response_type": "Note",
+        "description": "Get a single note by ID, including full details and optionally the transcript",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "notes": {
+      "entity": "notes",
+      "data_type_name": "NotesSearchData",
+      "filter_type_name": "NotesSearchFilter",
+      "in_filter_type_name": "NotesInFilter",
+      "any_value_filter_type_name": "NotesAnyValueFilter",
+      "string_filter_type_name": "NotesStringFilter",
+      "sort_filter_type_name": "NotesSortFilter",
+      "result_type_name": "NotesSearchResult",
+      "query_type_name": "NotesSearchQuery",
+      "condition_prefix": "Notes",
+      "condition_type_name": "NotesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the note."
+        },
+        {
+          "name": "object",
+          "python_name": "object_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The object type, always \"note\"."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The title of the note."
+        },
+        {
+          "name": "owner",
+          "python_name": "owner",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The owner of the note."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The creation time of the note in ISO 8601 format."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The last update time of the note in ISO 8601 format."
+        },
+        {
+          "name": "summary_text",
+          "python_name": "summary_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Plain text summary of the note."
+        },
+        {
+          "name": "summary_markdown",
+          "python_name": "summary_markdown",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Markdown formatted summary of the note."
+        },
+        {
+          "name": "attendees",
+          "python_name": "attendees",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "The attendees of the meeting."
+        },
+        {
+          "name": "calendar_event",
+          "python_name": "calendar_event",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated calendar event details."
+        },
+        {
+          "name": "folder_membership",
+          "python_name": "folder_membership",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "The folder membership of the note."
+        },
+        {
+          "name": "transcript",
+          "python_name": "transcript",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Transcript of the meeting."
+        }
+      ]
+    }
+  }
+}

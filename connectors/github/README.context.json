@@ -1,0 +1,3316 @@
+{
+  "connector_name": "github",
+  "class_name": "GithubConnector",
+  "package_name": "airbyte_agent_github",
+  "package_version": "0.1.18",
+  "yaml_version": "0.1.18",
+  "api_reference_url": "https://docs.github.com/en/rest",
+  "commit_sha": "unknown",
+  "auth_example": "GithubAuthConfig(access_token=\"...\")",
+  "auth_import": ", GithubAuthConfig",
+  "auth_config": {
+    "type_name": "GithubAuthConfig",
+    "base_name": "Github",
+    "options": [
+      {
+        "title": "OAuth 2",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "OAuth 2.0 access token"
+          }
+        ],
+        "type_suffix": "Oauth2",
+        "scheme_name": "githubOAuth"
+      },
+      {
+        "title": "Personal Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "token",
+            "type": "str",
+            "required": true,
+            "title": "Personal Access Token",
+            "description": "GitHub personal access token (fine-grained or classic)"
+          }
+        ],
+        "type_suffix": "PersonalAccessToken",
+        "scheme_name": "githubPAT"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": {
+    "type_name": "GithubReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from GitHub.",
+    "fields": [
+      {
+        "name": "repositories",
+        "type": "str",
+        "required": true,
+        "title": "GitHub Repositories",
+        "description": "List of GitHub organizations/repositories, e.g. `airbytehq/airbyte` for single repository, `airbytehq/*` for all repositories from organization",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "GitHub is a platform for version control and collaborative software development\nusing Git. This connector provides access to repositories, branches, commits, issues,\npull requests, reviews, comments, releases, discussions, organizations, teams, and users for\ndevelopment workflow analysis and project management insights.\n",
+  "supported_questions": "- Show me all open issues in my repositories this month\n- List the top 5 repositories I've starred recently\n- Analyze the commit trends in my main project over the last quarter\n- Find all pull requests created in the past two weeks\n- Search for repositories related to machine learning in my organizations\n- Compare the number of contributors across my different team projects\n- Identify the most active branches in my main repository\n- Get details about the most recent releases in my organization\n- List all milestones for our current development sprint\n- Show me insights about pull request review patterns in our team\n- List all unanswered discussions in a repository\n- Show me recent discussions in the General category",
+  "unsupported_questions": "- Create a new issue in the project repository\n- Update the status of this pull request\n- Delete an old branch from the repository\n- Schedule a team review for this code\n- Assign a new label to this issue",
+  "first_operation": {
+    "method_name": "repositories__get",
+    "http_method": "post",
+    "path": "/graphql:repositories:get",
+    "entity": "repositories",
+    "action": "get",
+    "parameters": [
+      {
+        "name": "owner",
+        "python_name": "owner",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "The account owner of the repository (username or organization)",
+        "is_deep_object": false
+      },
+      {
+        "name": "repo",
+        "python_name": "repo",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "The name of the repository",
+        "is_deep_object": false
+      },
+      {
+        "name": "fields",
+        "python_name": "fields",
+        "type": "list[str]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": false,
+        "description": "Optional array of field names to select.\nIf not provided, uses default fields.\n",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "RepositoriesGetParams",
+    "response_type": "dict[str, Any]",
+    "description": "Gets information about a specific GitHub repository using GraphQL",
+    "record_extractor": "$.data.repository",
+    "meta_extractor": null,
+    "needs_envelope": null,
+    "record_type": "dict[str, Any]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "repositories": [
+      {
+        "method_name": "repositories__get",
+        "http_method": "post",
+        "path": "/graphql:repositories:get",
+        "entity": "repositories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository (username or organization)",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select.\nIf not provided, uses default fields.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RepositoriesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific GitHub repository using GraphQL",
+        "record_extractor": "$.data.repository",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "repositories__list",
+        "http_method": "post",
+        "path": "/graphql:repositories:list",
+        "entity": "repositories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "username",
+            "python_name": "username",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The username of the user whose repositories to list",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination (from previous response's endCursor)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select.\nIf not provided, uses default fields.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RepositoriesListParams",
+        "response_type": "RepositoriesListResult",
+        "description": "Returns a list of repositories for the specified user using GraphQL",
+        "record_extractor": "$.data.user.repositories.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "repositories__search",
+        "http_method": "post",
+        "path": "/graphql:repositories",
+        "entity": "repositories",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GitHub repository search query using GitHub's search syntax",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": false,
+            "description": "Number of results to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination (from previous response's endCursor)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select.\nIf not provided, uses default fields.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RepositoriesApiSearchParams",
+        "response_type": "RepositoriesApiSearchResult",
+        "description": "Search for GitHub repositories using GitHub's powerful search syntax.\nExamples: \"language:python stars:>1000\", \"topic:machine-learning\", \"org:facebook is:public\"\n",
+        "record_extractor": "$.data.search.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "org_repositories": [
+      {
+        "method_name": "org_repositories__list",
+        "http_method": "post",
+        "path": "/graphql:org_repositories:list",
+        "entity": "org_repositories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrgRepositoriesListParams",
+        "response_type": "OrgRepositoriesListResult",
+        "description": "Returns a list of repositories for the specified organization using GraphQL",
+        "record_extractor": "$.data.organization.repositories.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "branches": [
+      {
+        "method_name": "branches__list",
+        "http_method": "post",
+        "path": "/graphql:branches:list",
+        "entity": "branches",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BranchesListParams",
+        "response_type": "BranchesListResult",
+        "description": "Returns a list of branches for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.refs.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "branches__get",
+        "http_method": "post",
+        "path": "/graphql:branches:get",
+        "entity": "branches",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "branch",
+            "python_name": "branch",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The branch name",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BranchesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific branch using GraphQL",
+        "record_extractor": "$.data.repository.ref",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "commits": [
+      {
+        "method_name": "commits__list",
+        "http_method": "post",
+        "path": "/graphql:commits:list",
+        "entity": "commits",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "path",
+            "python_name": "path",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Only include commits that modified this file path (e.g. \"airbyte-integrations/connectors/source-stripe/\")",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommitsListParams",
+        "response_type": "CommitsListResult",
+        "description": "Returns a list of commits for the default branch using GraphQL",
+        "record_extractor": "$.data.repository.defaultBranchRef.target.history.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "commits__get",
+        "http_method": "post",
+        "path": "/graphql:commits:get",
+        "entity": "commits",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "sha",
+            "python_name": "sha",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The commit SHA",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommitsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific commit by SHA using GraphQL",
+        "record_extractor": "$.data.repository.object",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "releases": [
+      {
+        "method_name": "releases__list",
+        "http_method": "post",
+        "path": "/graphql:releases:list",
+        "entity": "releases",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReleasesListParams",
+        "response_type": "ReleasesListResult",
+        "description": "Returns a list of releases for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.releases.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "releases__get",
+        "http_method": "post",
+        "path": "/graphql:releases:get",
+        "entity": "releases",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "tag",
+            "python_name": "tag",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The release tag name",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReleasesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific release by tag name using GraphQL",
+        "record_extractor": "$.data.repository.release",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issues": [
+      {
+        "method_name": "issues__list",
+        "http_method": "post",
+        "path": "/graphql:issues:list",
+        "entity": "issues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "states",
+            "python_name": "states",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "OPEN",
+                  "CLOSED"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by issue state",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesListParams",
+        "response_type": "IssuesListResult",
+        "description": "Returns a list of issues for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.issues.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "issues__get",
+        "http_method": "post",
+        "path": "/graphql:issues:get",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The issue number",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific issue using GraphQL",
+        "record_extractor": "$.data.repository.issue",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "issues__search",
+        "http_method": "post",
+        "path": "/graphql:issues:search",
+        "entity": "issues",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GitHub issue search query using GitHub's search syntax",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesApiSearchParams",
+        "response_type": "IssuesApiSearchResult",
+        "description": "Search for issues using GitHub's search syntax",
+        "record_extractor": "$.data.search.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pull_requests": [
+      {
+        "method_name": "pull_requests__list",
+        "http_method": "post",
+        "path": "/graphql:pull_requests:list",
+        "entity": "pull_requests",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "states",
+            "python_name": "states",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "OPEN",
+                  "CLOSED",
+                  "MERGED"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by pull request state",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PullRequestsListParams",
+        "response_type": "PullRequestsListResult",
+        "description": "Returns a list of pull requests for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.pullRequests.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "pull_requests__get",
+        "http_method": "post",
+        "path": "/graphql:pull_requests:get",
+        "entity": "pull_requests",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The pull request number",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PullRequestsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific pull request using GraphQL",
+        "record_extractor": "$.data.repository.pullRequest",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "pull_requests__search",
+        "http_method": "post",
+        "path": "/graphql:pull_requests:search",
+        "entity": "pull_requests",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GitHub pull request search query using GitHub's search syntax",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PullRequestsApiSearchParams",
+        "response_type": "PullRequestsApiSearchResult",
+        "description": "Search for pull requests using GitHub's search syntax",
+        "record_extractor": "$.data.search.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "reviews": [
+      {
+        "method_name": "reviews__list",
+        "http_method": "post",
+        "path": "/graphql:reviews:list",
+        "entity": "reviews",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The pull request number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReviewsListParams",
+        "response_type": "ReviewsListResult",
+        "description": "Returns a list of reviews for the specified pull request using GraphQL",
+        "record_extractor": "$.data.repository.pullRequest.reviews.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "comments": [
+      {
+        "method_name": "comments__list",
+        "http_method": "post",
+        "path": "/graphql:comments:list",
+        "entity": "comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The issue number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsListParams",
+        "response_type": "CommentsListResult",
+        "description": "Returns a list of comments for the specified issue using GraphQL",
+        "record_extractor": "$.data.repository.issue.comments.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "comments__get",
+        "http_method": "post",
+        "path": "/graphql:comments:get",
+        "entity": "comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The GraphQL node ID of the comment",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommentsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific issue comment by its GraphQL node ID.\n\nNote: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),\nnot a numeric database ID. You can obtain node IDs from the Comments_List response,\nwhere each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).\n",
+        "record_extractor": "$.data.node",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pr_comments": [
+      {
+        "method_name": "pr_comments__list",
+        "http_method": "post",
+        "path": "/graphql:pr_comments:list",
+        "entity": "pr_comments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The pull request number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PrCommentsListParams",
+        "response_type": "PrCommentsListResult",
+        "description": "Returns a list of comments for the specified pull request using GraphQL",
+        "record_extractor": "$.data.repository.pullRequest.comments.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "pr_comments__get",
+        "http_method": "post",
+        "path": "/graphql:pr_comments:get",
+        "entity": "pr_comments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The GraphQL node ID of the comment",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PrCommentsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific pull request comment by its GraphQL node ID.\n\nNote: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),\nnot a numeric database ID. You can obtain node IDs from the PRComments_List response,\nwhere each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).\n",
+        "record_extractor": "$.data.node",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "labels": [
+      {
+        "method_name": "labels__list",
+        "http_method": "post",
+        "path": "/graphql:labels:list",
+        "entity": "labels",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LabelsListParams",
+        "response_type": "LabelsListResult",
+        "description": "Returns a list of labels for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.labels.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "labels__get",
+        "http_method": "post",
+        "path": "/graphql:labels:get",
+        "entity": "labels",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The label name",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LabelsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific label by name using GraphQL",
+        "record_extractor": "$.data.repository.label",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "milestones": [
+      {
+        "method_name": "milestones__list",
+        "http_method": "post",
+        "path": "/graphql:milestones:list",
+        "entity": "milestones",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "states",
+            "python_name": "states",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "OPEN",
+                  "CLOSED"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by milestone state",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MilestonesListParams",
+        "response_type": "MilestonesListResult",
+        "description": "Returns a list of milestones for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.milestones.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "milestones__get",
+        "http_method": "post",
+        "path": "/graphql:milestones:get",
+        "entity": "milestones",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The milestone number",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MilestonesGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific milestone by number using GraphQL",
+        "record_extractor": "$.data.repository.milestone",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "organizations": [
+      {
+        "method_name": "organizations__get",
+        "http_method": "post",
+        "path": "/graphql:organizations:get",
+        "entity": "organizations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrganizationsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific organization using GraphQL",
+        "record_extractor": "$.data.organization",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "organizations__list",
+        "http_method": "post",
+        "path": "/graphql:organizations:list",
+        "entity": "organizations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "username",
+            "python_name": "username",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The username of the user",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrganizationsListParams",
+        "response_type": "OrganizationsListResult",
+        "description": "Returns a list of organizations the user belongs to using GraphQL",
+        "record_extractor": "$.data.user.organizations.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "users__get",
+        "http_method": "post",
+        "path": "/graphql:users:get",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "username",
+            "python_name": "username",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The username of the user",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific user using GraphQL",
+        "record_extractor": "$.data.user",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "users__list",
+        "http_method": "post",
+        "path": "/graphql:users:list",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a list of members for the specified organization using GraphQL",
+        "record_extractor": "$.data.organization.membersWithRole.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "users__search",
+        "http_method": "post",
+        "path": "/graphql:users:search",
+        "entity": "users",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GitHub user search query using GitHub's search syntax",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": false,
+            "description": "Number of results to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersApiSearchParams",
+        "response_type": "UsersApiSearchResult",
+        "description": "Search for GitHub users using search syntax",
+        "record_extractor": "$.data.search.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "teams__list",
+        "http_method": "post",
+        "path": "/graphql:teams:list",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Returns a list of teams for the specified organization using GraphQL",
+        "record_extractor": "$.data.organization.teams.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "teams__get",
+        "http_method": "post",
+        "path": "/graphql:teams:get",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "team_slug",
+            "python_name": "team_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The team slug",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific team using GraphQL",
+        "record_extractor": "$.data.organization.team",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "tags__list",
+        "http_method": "post",
+        "path": "/graphql:tags:list",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Returns a list of tags for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.refs.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "tags__get",
+        "http_method": "post",
+        "path": "/graphql:tags:get",
+        "entity": "tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "tag",
+            "python_name": "tag",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The tag name",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TagsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific tag by name using GraphQL",
+        "record_extractor": "$.data.repository.ref",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "stargazers": [
+      {
+        "method_name": "stargazers__list",
+        "http_method": "post",
+        "path": "/graphql:stargazers:list",
+        "entity": "stargazers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "StargazersListParams",
+        "response_type": "StargazersListResult",
+        "description": "Returns a list of users who have starred the repository using GraphQL",
+        "record_extractor": "$.data.repository.stargazers.edges",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "viewer": [
+      {
+        "method_name": "viewer__get",
+        "http_method": "post",
+        "path": "/graphql:viewer:get",
+        "entity": "viewer",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ViewerGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about the currently authenticated user.\nThis is useful when you don't know the username but need to access\nthe current user's profile, permissions, or associated resources.\n",
+        "record_extractor": "$.data.viewer",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "viewer_repositories": [
+      {
+        "method_name": "viewer_repositories__list",
+        "http_method": "post",
+        "path": "/graphql:viewer_repositories:list",
+        "entity": "viewer_repositories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination (from previous response's endCursor)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ViewerRepositoriesListParams",
+        "response_type": "ViewerRepositoriesListResult",
+        "description": "Returns a list of repositories owned by the authenticated user.\nUnlike Repositories_List which requires a username, this endpoint\nautomatically lists repositories for the current authenticated user.\n",
+        "record_extractor": "$.data.viewer.repositories.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "projects__list",
+        "http_method": "post",
+        "path": "/graphql:projects:list",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination (from previous response's endCursor)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Returns a list of GitHub Projects V2 for the specified organization.\nProjects V2 are the new project boards that replaced classic projects.\n",
+        "record_extractor": "$.data.organization.projectsV2.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "projects__get",
+        "http_method": "post",
+        "path": "/graphql:projects:get",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "project_number",
+            "python_name": "project_number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The project number",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific GitHub Project V2 by number",
+        "record_extractor": "$.data.organization.projectV2",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_items": [
+      {
+        "method_name": "project_items__list",
+        "http_method": "post",
+        "path": "/graphql:project_items:list",
+        "entity": "project_items",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "org",
+            "python_name": "org",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The organization login/username",
+            "is_deep_object": false
+          },
+          {
+            "name": "project_number",
+            "python_name": "project_number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The project number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination (from previous response's endCursor)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectItemsListParams",
+        "response_type": "ProjectItemsListResult",
+        "description": "Returns a list of items (issues, pull requests, draft issues) in a GitHub Project V2.\nEach item includes its field values like Status, Priority, etc.\n",
+        "record_extractor": "$.data.organization.projectV2.items.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "discussions": [
+      {
+        "method_name": "discussions__list",
+        "http_method": "post",
+        "path": "/graphql:discussions:list",
+        "entity": "discussions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "states",
+            "python_name": "states",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "OPEN",
+                  "CLOSED"
+                ]
+              }
+            },
+            "required": false,
+            "description": "Filter by discussion state",
+            "is_deep_object": false
+          },
+          {
+            "name": "answered",
+            "python_name": "answered",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "Filter by answered/unanswered status",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DiscussionsListParams",
+        "response_type": "DiscussionsListResult",
+        "description": "Returns a list of discussions for the specified repository using GraphQL",
+        "record_extractor": "$.data.repository.discussions.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "discussions__get",
+        "http_method": "post",
+        "path": "/graphql:discussions:get",
+        "entity": "discussions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "number",
+            "python_name": "number",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The discussion number",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DiscussionsGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Gets information about a specific discussion by number using GraphQL",
+        "record_extractor": "$.data.repository.discussion",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "discussions__search",
+        "http_method": "post",
+        "path": "/graphql:discussions:search",
+        "entity": "discussions",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GitHub discussion search query using GitHub's search syntax",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "required": false,
+            "description": "The number of results per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DiscussionsApiSearchParams",
+        "response_type": "DiscussionsApiSearchResult",
+        "description": "Search for discussions using GitHub's search syntax",
+        "record_extractor": "$.data.search.nodes",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "file_content": [
+      {
+        "method_name": "file_content__get",
+        "http_method": "post",
+        "path": "/graphql:file_content:get",
+        "entity": "file_content",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "path",
+            "python_name": "path",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The file path within the repository (e.g. 'README.md' or 'src/main.py')",
+            "is_deep_object": false
+          },
+          {
+            "name": "ref",
+            "python_name": "ref",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "HEAD"
+            },
+            "required": false,
+            "description": "The git ref to read from \u2014 branch name, tag, or commit SHA. Defaults to 'HEAD' (default branch)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FileContentGetParams",
+        "response_type": "dict[str, Any]",
+        "description": "Returns the text content of a file at a specific path and git ref (branch, tag, or commit SHA).\nOnly works for text files. Binary files will have text as null and isBinary as true.\n",
+        "record_extractor": "$.data.repository.object",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "directory_content": [
+      {
+        "method_name": "directory_content__list",
+        "http_method": "post",
+        "path": "/graphql:directory_content:list",
+        "entity": "directory_content",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "owner",
+            "python_name": "owner",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The account owner of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "repo",
+            "python_name": "repo",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the repository",
+            "is_deep_object": false
+          },
+          {
+            "name": "path",
+            "python_name": "path",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The directory path within the repository (e.g. 'src' or 'airbyte-integrations/connectors/source-stripe')",
+            "is_deep_object": false
+          },
+          {
+            "name": "ref",
+            "python_name": "ref",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "HEAD"
+            },
+            "required": false,
+            "description": "The git ref \u2014 branch name, tag, or commit SHA. Defaults to 'HEAD' (default branch)",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "Optional array of field names to select",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DirectoryContentListParams",
+        "response_type": "DirectoryContentListResult",
+        "description": "Returns a list of files and subdirectories at a specific path in the repository.\nEach entry includes the name, type (blob for files, tree for directories), and object ID.\nUse this to explore repository structure before reading specific files.\n",
+        "record_extractor": "$.data.repository.object.entries",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

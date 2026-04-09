@@ -1,0 +1,2678 @@
+{
+  "connector_name": "salesforce",
+  "class_name": "SalesforceConnector",
+  "package_name": "airbyte_agent_salesforce",
+  "package_version": "1.0.16",
+  "yaml_version": "1.0.16",
+  "api_reference_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",
+  "commit_sha": "unknown",
+  "auth_example": "SalesforceAuthConfig(refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", SalesforceAuthConfig",
+  "auth_config": {
+    "type_name": "SalesforceAuthConfig",
+    "base_name": "Salesforce",
+    "options": [
+      {
+        "title": "Salesforce OAuth 2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth refresh token for automatic token renewal"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Connected App Consumer Key"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Connected App Consumer Secret"
+          }
+        ],
+        "type_suffix": "SalesforceOauth20"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Salesforce is a cloud-based CRM platform that helps businesses manage customer\nrelationships, sales pipelines, and business operations. This connector provides\naccess to accounts, contacts, leads, opportunities, tasks, events, campaigns, cases,\nnotes, and attachments for sales analytics and customer relationship management.\n",
+  "supported_questions": "- List recent contacts in my Salesforce account\n- List open cases in my Salesforce account\n- Show me the notes and attachments for a recent account\n- Show me my top 5 opportunities this month\n- List all contacts from {company} in the last quarter\n- Search for leads in the technology sector with revenue over $10M\n- What trends can you identify in my recent sales pipeline?\n- Summarize the open cases for my key accounts\n- Find upcoming events related to my most important opportunities\n- Analyze the performance of my recent marketing campaigns\n- Identify the highest value opportunities I'm currently tracking",
+  "unsupported_questions": "- Create a new lead for {person}\n- Update the status of my sales opportunity\n- Schedule a follow-up meeting with {customer}\n- Delete this old contact record\n- Send an email to all contacts in this campaign",
+  "first_operation": {
+    "method_name": "list_s_objects",
+    "http_method": "get",
+    "path": "/sobjects",
+    "entity": "sobjects",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "SobjectsListParams",
+    "response_type": "SobjectsListResult",
+    "description": "Returns a list of all available Salesforce objects (sObjects) in the organization.\nThis endpoint is used for health checks to verify authentication and connectivity.\n",
+    "record_extractor": "$.sobjects",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[SObject]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "sobjects": [
+      {
+        "method_name": "list_s_objects",
+        "http_method": "get",
+        "path": "/sobjects",
+        "entity": "sobjects",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SobjectsListParams",
+        "response_type": "SobjectsListResult",
+        "description": "Returns a list of all available Salesforce objects (sObjects) in the organization.\nThis endpoint is used for health checks to verify authentication and connectivity.\n",
+        "record_extractor": "$.sobjects",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SObject]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "get",
+        "path": "/query:accounts",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for accounts. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Account ORDER BY LastModifiedDate DESC LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Returns a list of accounts via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether all records have been returned"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to fetch next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_account",
+        "http_method": "get",
+        "path": "/sobjects/Account/{id}",
+        "entity": "accounts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Account ID (18-character ID starting with '001')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Name,Industry,AnnualRevenue,Website\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsGetParams",
+        "response_type": "Account",
+        "description": "Get a single account by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Account",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_accounts",
+        "http_method": "get",
+        "path": "/search:accounts",
+        "entity": "accounts",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} IN scope RETURNING Object(fields) [LIMIT n]\nExamples:\n- \"FIND {Acme} IN ALL FIELDS RETURNING Account(Id,Name)\"\n- \"FIND {tech*} IN NAME FIELDS RETURNING Account(Id,Name,Industry) LIMIT 50\"\n- \"FIND {\\\"exact phrase\\\"} RETURNING Account(Id,Name,Website)\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AccountsApiSearchParams",
+        "response_type": "AccountsApiSearchResult",
+        "description": "Search for accounts using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields and objects.\nUse SOQL (list action) for structured queries with specific field conditions.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/query:contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Contact ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for contacts. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a list of contacts via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/sobjects/Contact/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Contact ID (18-character ID starting with '003')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,FirstName,LastName,Email,Phone,AccountId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_contacts",
+        "http_method": "get",
+        "path": "/search:contacts",
+        "entity": "contacts",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Contact(fields) [LIMIT n]\nExamples:\n- \"FIND {John} IN NAME FIELDS RETURNING Contact(Id,FirstName,LastName,Email)\"\n- \"FIND {*@example.com} IN EMAIL FIELDS RETURNING Contact(Id,Name,Email) LIMIT 25\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsApiSearchParams",
+        "response_type": "ContactsApiSearchResult",
+        "description": "Search for contacts using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "leads": [
+      {
+        "method_name": "list_leads",
+        "http_method": "get",
+        "path": "/query:leads",
+        "entity": "leads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Lead ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for leads. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Lead WHERE Status = 'Open' LIMIT 100\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LeadsListParams",
+        "response_type": "LeadsListResult",
+        "description": "Returns a list of leads via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Lead]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_lead",
+        "http_method": "get",
+        "path": "/sobjects/Lead/{id}",
+        "entity": "leads",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Lead ID (18-character ID starting with '00Q')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,FirstName,LastName,Email,Company,Status,LeadSource\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LeadsGetParams",
+        "response_type": "Lead",
+        "description": "Get a single lead by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Lead",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_leads",
+        "http_method": "get",
+        "path": "/search:leads",
+        "entity": "leads",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Lead(fields) [LIMIT n]\nExamples:\n- \"FIND {Smith} IN NAME FIELDS RETURNING Lead(Id,FirstName,LastName,Company,Status)\"\n- \"FIND {marketing} IN ALL FIELDS RETURNING Lead(Id,Name,LeadSource) LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "LeadsApiSearchParams",
+        "response_type": "LeadsApiSearchResult",
+        "description": "Search for leads using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "opportunities": [
+      {
+        "method_name": "list_opportunities",
+        "http_method": "get",
+        "path": "/query:opportunities",
+        "entity": "opportunities",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Opportunity ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for opportunities. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Opportunity WHERE StageName = 'Closed Won' LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OpportunitiesListParams",
+        "response_type": "OpportunitiesListResult",
+        "description": "Returns a list of opportunities via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Opportunity]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_opportunity",
+        "http_method": "get",
+        "path": "/sobjects/Opportunity/{id}",
+        "entity": "opportunities",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Opportunity ID (18-character ID starting with '006')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Name,Amount,StageName,CloseDate,AccountId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OpportunitiesGetParams",
+        "response_type": "Opportunity",
+        "description": "Get a single opportunity by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Opportunity",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_opportunities",
+        "http_method": "get",
+        "path": "/search:opportunities",
+        "entity": "opportunities",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Opportunity(fields) [LIMIT n]\nExamples:\n- \"FIND {Enterprise} IN NAME FIELDS RETURNING Opportunity(Id,Name,Amount,StageName)\"\n- \"FIND {renewal} IN ALL FIELDS RETURNING Opportunity(Id,Name,CloseDate) LIMIT 25\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OpportunitiesApiSearchParams",
+        "response_type": "OpportunitiesApiSearchResult",
+        "description": "Search for opportunities using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/query:tasks",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Task ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for tasks. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Task WHERE Status = 'Not Started' LIMIT 100\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Returns a list of tasks via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/sobjects/Task/{id}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Task ID (18-character ID starting with '00T')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Subject,Status,Priority,ActivityDate,WhoId,WhatId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "Task",
+        "description": "Get a single task by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_tasks",
+        "http_method": "get",
+        "path": "/search:tasks",
+        "entity": "tasks",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Task(fields) [LIMIT n]\nExamples:\n- \"FIND {follow up} IN ALL FIELDS RETURNING Task(Id,Subject,Status,Priority)\"\n- \"FIND {call} IN NAME FIELDS RETURNING Task(Id,Subject,ActivityDate) LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksApiSearchParams",
+        "response_type": "TasksApiSearchResult",
+        "description": "Search for tasks using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "events": [
+      {
+        "method_name": "list_events",
+        "http_method": "get",
+        "path": "/query:events",
+        "entity": "events",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Event ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for events. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Event WHERE StartDateTime > TODAY LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsListParams",
+        "response_type": "EventsListResult",
+        "description": "Returns a list of events via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Event]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_event",
+        "http_method": "get",
+        "path": "/sobjects/Event/{id}",
+        "entity": "events",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Event ID (18-character ID starting with '00U')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Subject,StartDateTime,EndDateTime,Location,WhoId,WhatId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsGetParams",
+        "response_type": "Event",
+        "description": "Get a single event by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Event",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_events",
+        "http_method": "get",
+        "path": "/search:events",
+        "entity": "events",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Event(fields) [LIMIT n]\nExamples:\n- \"FIND {meeting} IN ALL FIELDS RETURNING Event(Id,Subject,StartDateTime,Location)\"\n- \"FIND {demo} IN NAME FIELDS RETURNING Event(Id,Subject,EndDateTime) LIMIT 25\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsApiSearchParams",
+        "response_type": "EventsApiSearchResult",
+        "description": "Search for events using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/query:campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Campaign ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for campaigns. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Campaign WHERE IsActive = true LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns a list of campaigns via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/sobjects/Campaign/{id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Campaign ID (18-character ID starting with '701')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Name,Type,Status,StartDate,EndDate,IsActive\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "Campaign",
+        "description": "Get a single campaign by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Campaign",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_campaigns",
+        "http_method": "get",
+        "path": "/search:campaigns",
+        "entity": "campaigns",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Campaign(fields) [LIMIT n]\nExamples:\n- \"FIND {webinar} IN ALL FIELDS RETURNING Campaign(Id,Name,Type,Status)\"\n- \"FIND {2024} IN NAME FIELDS RETURNING Campaign(Id,Name,StartDate,IsActive) LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsApiSearchParams",
+        "response_type": "CampaignsApiSearchResult",
+        "description": "Search for campaigns using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "cases": [
+      {
+        "method_name": "list_cases",
+        "http_method": "get",
+        "path": "/query:cases",
+        "entity": "cases",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Case ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for cases. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Case WHERE Status = 'New' LIMIT 100\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CasesListParams",
+        "response_type": "CasesListResult",
+        "description": "Returns a list of cases via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Case]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_case",
+        "http_method": "get",
+        "path": "/sobjects/Case/{id}",
+        "entity": "cases",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Case ID (18-character ID starting with '500')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,CaseNumber,Subject,Status,Priority,ContactId,AccountId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CasesGetParams",
+        "response_type": "Case",
+        "description": "Get a single case by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Case",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_cases",
+        "http_method": "get",
+        "path": "/search:cases",
+        "entity": "cases",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Case(fields) [LIMIT n]\nExamples:\n- \"FIND {login issue} IN ALL FIELDS RETURNING Case(Id,CaseNumber,Subject,Status)\"\n- \"FIND {urgent} IN NAME FIELDS RETURNING Case(Id,Subject,Priority) LIMIT 25\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CasesApiSearchParams",
+        "response_type": "CasesApiSearchResult",
+        "description": "Search for cases using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "notes": [
+      {
+        "method_name": "list_notes",
+        "http_method": "get",
+        "path": "/query:notes",
+        "entity": "notes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT FIELDS(STANDARD) FROM Note ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for notes. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT FIELDS(STANDARD) FROM Note WHERE ParentId = '001xx...' LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesListParams",
+        "response_type": "NotesListResult",
+        "description": "Returns a list of notes via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Note]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_note",
+        "http_method": "get",
+        "path": "/sobjects/Note/{id}",
+        "entity": "notes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Note ID (18-character ID starting with '002')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Title,Body,ParentId,OwnerId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesGetParams",
+        "response_type": "Note",
+        "description": "Get a single note by ID. Returns all accessible fields by default.\nUse the `fields` parameter to retrieve only specific fields for better performance.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "search_notes",
+        "http_method": "get",
+        "path": "/search:notes",
+        "entity": "notes",
+        "action": "api_search",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOSL search query. Format: FIND {searchTerm} RETURNING Note(fields) [LIMIT n]\nExamples:\n- \"FIND {important} IN ALL FIELDS RETURNING Note(Id,Title,ParentId)\"\n- \"FIND {action items} IN NAME FIELDS RETURNING Note(Id,Title,Body) LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "NotesApiSearchParams",
+        "response_type": "NotesApiSearchResult",
+        "description": "Search for notes using SOSL (Salesforce Object Search Language).\nSOSL is optimized for text-based searches across multiple fields.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "SearchResult",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "content_versions": [
+      {
+        "method_name": "list_content_versions",
+        "http_method": "get",
+        "path": "/query:content_versions",
+        "entity": "content_versions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT Id, Title, FileExtension, ContentSize, ContentDocumentId, VersionNumber, IsLatest, CreatedDate, LastModifiedDate FROM ContentVersion ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for content versions. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT Id, Title, FileExtension, ContentSize FROM ContentVersion WHERE IsLatest = true LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContentVersionsListParams",
+        "response_type": "ContentVersionsListResult",
+        "description": "Returns a list of content versions (file metadata) via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\nNote: ContentVersion does not support FIELDS(STANDARD), so specific fields must be listed.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ContentVersion]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_content_version",
+        "http_method": "get",
+        "path": "/sobjects/ContentVersion/{id}",
+        "entity": "content_versions",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce ContentVersion ID (18-character ID starting with '068')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Title,FileExtension,ContentSize,ContentDocumentId,IsLatest\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContentVersionsGetParams",
+        "response_type": "ContentVersion",
+        "description": "Get a single content version's metadata by ID. Returns file metadata, not the file content.\nUse the download action to retrieve the actual file binary.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ContentVersion",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "download_content_version",
+        "http_method": "get",
+        "path": "/sobjects/ContentVersion/{id}/VersionData",
+        "entity": "content_versions",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce ContentVersion ID (18-character ID starting with '068').\nObtain this ID from the list or get action.\n"
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "ContentVersionsDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads the binary file content of a content version.\nFirst use the list or get action to retrieve the ContentVersion ID and file metadata (size, type, etc.),\nthen use this action to download the actual file content.\nThe response is the raw binary file data.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "attachments": [
+      {
+        "method_name": "list_attachments",
+        "http_method": "get",
+        "path": "/query:attachments",
+        "entity": "attachments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "SELECT Id, Name, ContentType, BodyLength, ParentId, CreatedDate, LastModifiedDate FROM Attachment ORDER BY LastModifiedDate DESC LIMIT 200"
+            },
+            "required": true,
+            "description": "SOQL query for attachments. Default returns up to 200 records.\nTo change the limit, provide your own query with a LIMIT clause.\nExample: \"SELECT Id, Name, ContentType, BodyLength, ParentId FROM Attachment WHERE ParentId = '001xx...' LIMIT 50\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AttachmentsListParams",
+        "response_type": "AttachmentsListResult",
+        "description": "Returns a list of attachments (legacy) via SOQL query. Default returns up to 200 records.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\nNote: Attachments are a legacy feature; consider using ContentVersion (Salesforce Files) for new implementations.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Attachment]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_attachment",
+        "http_method": "get",
+        "path": "/sobjects/Attachment/{id}",
+        "entity": "attachments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Attachment ID (18-character ID starting with '00P')"
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of fields to retrieve. If omitted, returns all accessible fields.\nExample: \"Id,Name,ContentType,BodyLength,ParentId\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AttachmentsGetParams",
+        "response_type": "Attachment",
+        "description": "Get a single attachment's metadata by ID. Returns file metadata, not the file content.\nUse the download action to retrieve the actual file binary.\nNote: Attachments are a legacy feature; consider using ContentVersion for new implementations.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Attachment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "download_attachment",
+        "http_method": "get",
+        "path": "/sobjects/Attachment/{id}/Body",
+        "entity": "attachments",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Salesforce Attachment ID (18-character ID starting with '00P').\nObtain this ID from the list or get action.\n"
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "AttachmentsDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads the binary file content of an attachment (legacy).\nFirst use the list or get action to retrieve the Attachment ID and file metadata,\nthen use this action to download the actual file content.\nNote: Attachments are a legacy feature; consider using ContentVersion for new implementations.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "query": [
+      {
+        "method_name": "execute_query",
+        "http_method": "get",
+        "path": "/query",
+        "entity": "query",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "SOQL query string. Include LIMIT clause to control the number of records returned.\nExamples:\n- \"SELECT Id, Name FROM Account LIMIT 100\"\n- \"SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMIT 50\"\n- \"SELECT Id, Subject, Status FROM Case WHERE CreatedDate = TODAY\"\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "QueryListParams",
+        "response_type": "QueryListResult",
+        "description": "Execute a custom SOQL query and return results. Use this for querying any Salesforce object.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n",
+        "record_extractor": "$.records",
+        "meta_extractor": {
+          "done": "$.done",
+          "nextRecordsUrl": "$.nextRecordsUrl"
+        },
+        "needs_envelope": true,
+        "record_type": "list[dict[str, Any]]",
+        "meta_fields": [
+          {
+            "name": "done",
+            "python_name": "done",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether all records have been returned"
+            }
+          },
+          {
+            "name": "nextRecordsUrl",
+            "python_name": "next_records_url",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "URL to fetch next page of results (if done is false)"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "accounts": {
+      "entity": "accounts",
+      "data_type_name": "AccountsSearchData",
+      "filter_type_name": "AccountsSearchFilter",
+      "in_filter_type_name": "AccountsInFilter",
+      "any_value_filter_type_name": "AccountsAnyValueFilter",
+      "string_filter_type_name": "AccountsStringFilter",
+      "sort_filter_type_name": "AccountsSortFilter",
+      "result_type_name": "AccountsSearchResult",
+      "query_type_name": "AccountsSearchQuery",
+      "condition_prefix": "Accounts",
+      "condition_type_name": "AccountsCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the account record"
+        },
+        {
+          "name": "Name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the account or company"
+        },
+        {
+          "name": "AccountSource",
+          "python_name": "account_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source of the account record (e.g., Web, Referral)"
+        },
+        {
+          "name": "BillingAddress",
+          "python_name": "billing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Complete billing address as a compound field"
+        },
+        {
+          "name": "BillingCity",
+          "python_name": "billing_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City portion of the billing address"
+        },
+        {
+          "name": "BillingCountry",
+          "python_name": "billing_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country portion of the billing address"
+        },
+        {
+          "name": "BillingPostalCode",
+          "python_name": "billing_postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code portion of the billing address"
+        },
+        {
+          "name": "BillingState",
+          "python_name": "billing_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province portion of the billing address"
+        },
+        {
+          "name": "BillingStreet",
+          "python_name": "billing_street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address portion of the billing address"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this account"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the account was created"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Text description of the account"
+        },
+        {
+          "name": "Industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Primary business industry of the account"
+        },
+        {
+          "name": "IsDeleted",
+          "python_name": "is_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the account has been moved to the Recycle Bin"
+        },
+        {
+          "name": "LastActivityDate",
+          "python_name": "last_activity_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the last activity associated with this account"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this account"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the account was last modified"
+        },
+        {
+          "name": "NumberOfEmployees",
+          "python_name": "number_of_employees",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of employees at the account"
+        },
+        {
+          "name": "OwnerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who owns this account"
+        },
+        {
+          "name": "ParentId",
+          "python_name": "parent_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the parent account, if this is a subsidiary"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Primary phone number for the account"
+        },
+        {
+          "name": "ShippingAddress",
+          "python_name": "shipping_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Complete shipping address as a compound field"
+        },
+        {
+          "name": "ShippingCity",
+          "python_name": "shipping_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City portion of the shipping address"
+        },
+        {
+          "name": "ShippingCountry",
+          "python_name": "shipping_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country portion of the shipping address"
+        },
+        {
+          "name": "ShippingPostalCode",
+          "python_name": "shipping_postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code portion of the shipping address"
+        },
+        {
+          "name": "ShippingState",
+          "python_name": "shipping_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province portion of the shipping address"
+        },
+        {
+          "name": "ShippingStreet",
+          "python_name": "shipping_street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address portion of the shipping address"
+        },
+        {
+          "name": "Type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of account (e.g., Customer, Partner, Competitor)"
+        },
+        {
+          "name": "Website",
+          "python_name": "website",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Website URL for the account"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the contact record"
+        },
+        {
+          "name": "AccountId",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the account this contact is associated with"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this contact"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the contact was created"
+        },
+        {
+          "name": "Department",
+          "python_name": "department",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Department within the account where the contact works"
+        },
+        {
+          "name": "Email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address of the contact"
+        },
+        {
+          "name": "FirstName",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name of the contact"
+        },
+        {
+          "name": "IsDeleted",
+          "python_name": "is_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the contact has been moved to the Recycle Bin"
+        },
+        {
+          "name": "LastActivityDate",
+          "python_name": "last_activity_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the last activity associated with this contact"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this contact"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the contact was last modified"
+        },
+        {
+          "name": "LastName",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name of the contact"
+        },
+        {
+          "name": "LeadSource",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which this contact originated"
+        },
+        {
+          "name": "MailingAddress",
+          "python_name": "mailing_address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Complete mailing address as a compound field"
+        },
+        {
+          "name": "MailingCity",
+          "python_name": "mailing_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City portion of the mailing address"
+        },
+        {
+          "name": "MailingCountry",
+          "python_name": "mailing_country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country portion of the mailing address"
+        },
+        {
+          "name": "MailingPostalCode",
+          "python_name": "mailing_postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code portion of the mailing address"
+        },
+        {
+          "name": "MailingState",
+          "python_name": "mailing_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province portion of the mailing address"
+        },
+        {
+          "name": "MailingStreet",
+          "python_name": "mailing_street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address portion of the mailing address"
+        },
+        {
+          "name": "MobilePhone",
+          "python_name": "mobile_phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mobile phone number of the contact"
+        },
+        {
+          "name": "Name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the contact (read-only, concatenation of first and last name)"
+        },
+        {
+          "name": "OwnerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who owns this contact"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Business phone number of the contact"
+        },
+        {
+          "name": "ReportsToId",
+          "python_name": "reports_to_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the contact this contact reports to"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Job title of the contact"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "leads": {
+      "entity": "leads",
+      "data_type_name": "LeadsSearchData",
+      "filter_type_name": "LeadsSearchFilter",
+      "in_filter_type_name": "LeadsInFilter",
+      "any_value_filter_type_name": "LeadsAnyValueFilter",
+      "string_filter_type_name": "LeadsStringFilter",
+      "sort_filter_type_name": "LeadsSortFilter",
+      "result_type_name": "LeadsSearchResult",
+      "query_type_name": "LeadsSearchQuery",
+      "condition_prefix": "Leads",
+      "condition_type_name": "LeadsCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the lead record"
+        },
+        {
+          "name": "Address",
+          "python_name": "address",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Complete address as a compound field"
+        },
+        {
+          "name": "City",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City portion of the address"
+        },
+        {
+          "name": "Company",
+          "python_name": "company",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Company or organization the lead works for"
+        },
+        {
+          "name": "ConvertedAccountId",
+          "python_name": "converted_account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the account created when lead was converted"
+        },
+        {
+          "name": "ConvertedContactId",
+          "python_name": "converted_contact_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the contact created when lead was converted"
+        },
+        {
+          "name": "ConvertedDate",
+          "python_name": "converted_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date when the lead was converted"
+        },
+        {
+          "name": "ConvertedOpportunityId",
+          "python_name": "converted_opportunity_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the opportunity created when lead was converted"
+        },
+        {
+          "name": "Country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country portion of the address"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this lead"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the lead was created"
+        },
+        {
+          "name": "Email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address of the lead"
+        },
+        {
+          "name": "FirstName",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name of the lead"
+        },
+        {
+          "name": "Industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Industry the lead's company operates in"
+        },
+        {
+          "name": "IsConverted",
+          "python_name": "is_converted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the lead has been converted to an account, contact, and opportunity"
+        },
+        {
+          "name": "IsDeleted",
+          "python_name": "is_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the lead has been moved to the Recycle Bin"
+        },
+        {
+          "name": "LastActivityDate",
+          "python_name": "last_activity_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the last activity associated with this lead"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this lead"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the lead was last modified"
+        },
+        {
+          "name": "LastName",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name of the lead"
+        },
+        {
+          "name": "LeadSource",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which this lead originated"
+        },
+        {
+          "name": "MobilePhone",
+          "python_name": "mobile_phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mobile phone number of the lead"
+        },
+        {
+          "name": "Name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the lead (read-only, concatenation of first and last name)"
+        },
+        {
+          "name": "NumberOfEmployees",
+          "python_name": "number_of_employees",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of employees at the lead's company"
+        },
+        {
+          "name": "OwnerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who owns this lead"
+        },
+        {
+          "name": "Phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number of the lead"
+        },
+        {
+          "name": "PostalCode",
+          "python_name": "postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code portion of the address"
+        },
+        {
+          "name": "Rating",
+          "python_name": "rating",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rating of the lead (e.g., Hot, Warm, Cold)"
+        },
+        {
+          "name": "State",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State or province portion of the address"
+        },
+        {
+          "name": "Status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the lead in the sales process"
+        },
+        {
+          "name": "Street",
+          "python_name": "street",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Street address portion of the address"
+        },
+        {
+          "name": "Title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Job title of the lead"
+        },
+        {
+          "name": "Website",
+          "python_name": "website",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Website URL for the lead's company"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "opportunities": {
+      "entity": "opportunities",
+      "data_type_name": "OpportunitiesSearchData",
+      "filter_type_name": "OpportunitiesSearchFilter",
+      "in_filter_type_name": "OpportunitiesInFilter",
+      "any_value_filter_type_name": "OpportunitiesAnyValueFilter",
+      "string_filter_type_name": "OpportunitiesStringFilter",
+      "sort_filter_type_name": "OpportunitiesSortFilter",
+      "result_type_name": "OpportunitiesSearchResult",
+      "query_type_name": "OpportunitiesSearchQuery",
+      "condition_prefix": "Opportunities",
+      "condition_type_name": "OpportunitiesCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the opportunity record"
+        },
+        {
+          "name": "AccountId",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the account associated with this opportunity"
+        },
+        {
+          "name": "Amount",
+          "python_name": "amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Estimated total sale amount"
+        },
+        {
+          "name": "CampaignId",
+          "python_name": "campaign_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the campaign that generated this opportunity"
+        },
+        {
+          "name": "CloseDate",
+          "python_name": "close_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expected close date for the opportunity"
+        },
+        {
+          "name": "ContactId",
+          "python_name": "contact_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the primary contact for this opportunity"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this opportunity"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the opportunity was created"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Text description of the opportunity"
+        },
+        {
+          "name": "ExpectedRevenue",
+          "python_name": "expected_revenue",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Expected revenue based on amount and probability"
+        },
+        {
+          "name": "ForecastCategory",
+          "python_name": "forecast_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Forecast category for this opportunity"
+        },
+        {
+          "name": "ForecastCategoryName",
+          "python_name": "forecast_category_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the forecast category"
+        },
+        {
+          "name": "IsClosed",
+          "python_name": "is_closed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the opportunity is closed"
+        },
+        {
+          "name": "IsDeleted",
+          "python_name": "is_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the opportunity has been moved to the Recycle Bin"
+        },
+        {
+          "name": "IsWon",
+          "python_name": "is_won",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the opportunity was won"
+        },
+        {
+          "name": "LastActivityDate",
+          "python_name": "last_activity_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the last activity associated with this opportunity"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this opportunity"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the opportunity was last modified"
+        },
+        {
+          "name": "LeadSource",
+          "python_name": "lead_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source from which this opportunity originated"
+        },
+        {
+          "name": "Name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the opportunity"
+        },
+        {
+          "name": "NextStep",
+          "python_name": "next_step",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the next step in closing the opportunity"
+        },
+        {
+          "name": "OwnerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who owns this opportunity"
+        },
+        {
+          "name": "Probability",
+          "python_name": "probability",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Likelihood of closing the opportunity (percentage)"
+        },
+        {
+          "name": "StageName",
+          "python_name": "stage_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current stage of the opportunity in the sales process"
+        },
+        {
+          "name": "Type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of opportunity (e.g., New Business, Existing Business)"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    },
+    "tasks": {
+      "entity": "tasks",
+      "data_type_name": "TasksSearchData",
+      "filter_type_name": "TasksSearchFilter",
+      "in_filter_type_name": "TasksInFilter",
+      "any_value_filter_type_name": "TasksAnyValueFilter",
+      "string_filter_type_name": "TasksStringFilter",
+      "sort_filter_type_name": "TasksSortFilter",
+      "result_type_name": "TasksSearchResult",
+      "query_type_name": "TasksSearchQuery",
+      "condition_prefix": "Tasks",
+      "condition_type_name": "TasksCondition",
+      "fields": [
+        {
+          "name": "Id",
+          "python_name": "id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the task record"
+        },
+        {
+          "name": "AccountId",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the account associated with this task"
+        },
+        {
+          "name": "ActivityDate",
+          "python_name": "activity_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date for the task"
+        },
+        {
+          "name": "CallDisposition",
+          "python_name": "call_disposition",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Result of the call, if this task represents a call"
+        },
+        {
+          "name": "CallDurationInSeconds",
+          "python_name": "call_duration_in_seconds",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Duration of the call in seconds"
+        },
+        {
+          "name": "CallType",
+          "python_name": "call_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of call (Inbound, Outbound, Internal)"
+        },
+        {
+          "name": "CompletedDateTime",
+          "python_name": "completed_date_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the task was completed"
+        },
+        {
+          "name": "CreatedById",
+          "python_name": "created_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who created this task"
+        },
+        {
+          "name": "CreatedDate",
+          "python_name": "created_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the task was created"
+        },
+        {
+          "name": "Description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Text description or notes about the task"
+        },
+        {
+          "name": "IsClosed",
+          "python_name": "is_closed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the task has been completed"
+        },
+        {
+          "name": "IsDeleted",
+          "python_name": "is_deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the task has been moved to the Recycle Bin"
+        },
+        {
+          "name": "IsHighPriority",
+          "python_name": "is_high_priority",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the task is marked as high priority"
+        },
+        {
+          "name": "LastModifiedById",
+          "python_name": "last_modified_by_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who last modified this task"
+        },
+        {
+          "name": "LastModifiedDate",
+          "python_name": "last_modified_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the task was last modified"
+        },
+        {
+          "name": "OwnerId",
+          "python_name": "owner_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the user who owns this task"
+        },
+        {
+          "name": "Priority",
+          "python_name": "priority",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Priority level of the task (High, Normal, Low)"
+        },
+        {
+          "name": "Status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the task"
+        },
+        {
+          "name": "Subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject or title of the task"
+        },
+        {
+          "name": "TaskSubtype",
+          "python_name": "task_subtype",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subtype of the task (e.g., Call, Email, Task)"
+        },
+        {
+          "name": "Type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of task"
+        },
+        {
+          "name": "WhatId",
+          "python_name": "what_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the related object (Account, Opportunity, etc.)"
+        },
+        {
+          "name": "WhoId",
+          "python_name": "who_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the related person (Contact or Lead)"
+        },
+        {
+          "name": "SystemModstamp",
+          "python_name": "system_modstamp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "System timestamp when the record was last modified"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1147 @@
+{
+  "connector_name": "gmail",
+  "class_name": "GmailConnector",
+  "package_name": "airbyte_agent_gmail",
+  "package_version": "0.1.4",
+  "yaml_version": "0.1.4",
+  "api_reference_url": "https://developers.google.com/gmail/api/reference/rest",
+  "commit_sha": "unknown",
+  "auth_example": "GmailAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", GmailAuthConfig",
+  "auth_config": {
+    "type_name": "GmailAuthConfig",
+    "base_name": "Gmail",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "Your Google OAuth2 Access Token (optional, will be obtained via refresh)"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Google OAuth2 Refresh Token"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Your Google OAuth2 Client ID"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Your Google OAuth2 Client Secret"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "GmailReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Gmail.",
+    "fields": [
+      {
+        "name": "include_spam_and_trash",
+        "type": "bool",
+        "required": false,
+        "title": "Include Spam & Trash",
+        "description": "Include messages from SPAM and TRASH in the results. Defaults to false.",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Gmail is Google's email service that provides email sending, receiving, and organization\ncapabilities. This connector provides access to messages, threads, labels, drafts, and\nuser profile information. It supports read operations for listing and retrieving email\ndata, as well as write operations including sending messages, managing drafts, modifying\nmessage labels, and creating or updating labels.\n",
+  "supported_questions": "- List my recent emails\n- Show me unread messages in my inbox\n- Get the details of a specific email\n- List all my Gmail labels\n- Show me details for a specific label\n- List my email drafts\n- Get the content of a specific draft\n- List my email threads\n- Show me the full thread for a conversation\n- Get my Gmail profile information\n- Send an email to someone\n- Create a new email draft\n- Archive a message by removing the INBOX label\n- Mark a message as read\n- Mark a message as unread\n- Move a message to trash\n- Create a new label\n- Update a label name or settings\n- Delete a label\n- Search for messages matching a query\n- Find emails from a specific sender\n- Show me emails with attachments",
+  "unsupported_questions": "- Attach a file to an email\n- Forward an email to someone\n- Create a filter or rule\n- Manage Gmail settings\n- Access Google Calendar events\n- Manage contacts",
+  "first_operation": {
+    "method_name": "get_profile",
+    "http_method": "get",
+    "path": "/gmail/v1/users/me/profile",
+    "entity": "profile",
+    "action": "get",
+    "parameters": [],
+    "params_type_name": "ProfileGetParams",
+    "response_type": "Profile",
+    "description": "Gets the current user's Gmail profile including email address and mailbox statistics",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": null,
+    "record_type": "Profile",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "profile": [
+      {
+        "method_name": "get_profile",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/profile",
+        "entity": "profile",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "ProfileGetParams",
+        "response_type": "Profile",
+        "description": "Gets the current user's Gmail profile including email address and mailbox statistics",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Profile",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages": [
+      {
+        "method_name": "list_messages",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/messages",
+        "entity": "messages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of messages to return (1-500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Page token to retrieve a specific page of results",
+            "is_deep_object": false
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Gmail search query (same format as Gmail search box, e.g. \"from:user@example.com\", \"is:unread\", \"subject:hello\")",
+            "is_deep_object": false
+          },
+          {
+            "name": "labelIds",
+            "python_name": "label_ids",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Only return messages with labels matching all of the specified label IDs (comma-separated)",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeSpamTrash",
+            "python_name": "include_spam_trash",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Include messages from SPAM and TRASH in the results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MessagesListParams",
+        "response_type": "MessagesListResult",
+        "description": "Lists the messages in the user's mailbox. Returns message IDs and thread IDs.",
+        "record_extractor": "$.messages",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "resultSizeEstimate": "$.resultSizeEstimate"
+        },
+        "needs_envelope": true,
+        "record_type": "list[MessageRef]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Token to retrieve the next page of results"
+            }
+          },
+          {
+            "name": "resultSizeEstimate",
+            "python_name": "result_size_estimate",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Estimated total number of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_message",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/messages/{messageId}",
+        "entity": "messages",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "messageId",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the message to retrieve"
+          },
+          {
+            "name": "format",
+            "python_name": "format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "full",
+                "metadata",
+                "minimal",
+                "raw"
+              ],
+              "default": "full"
+            },
+            "required": false,
+            "description": "The format to return the message in (full, metadata, minimal, raw)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metadataHeaders",
+            "python_name": "metadata_headers",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "When format is METADATA, only include headers specified (comma-separated)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MessagesGetParams",
+        "response_type": "Message",
+        "description": "Gets the full email message content including headers, body, and attachments metadata",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "send_message",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/messages/send",
+        "entity": "messages",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "raw",
+            "python_name": "raw",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The entire email message in RFC 2822 format, base64url encoded"
+            },
+            "required": true,
+            "description": "The entire email message in RFC 2822 format, base64url encoded"
+          },
+          {
+            "name": "threadId",
+            "python_name": "thread_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The thread ID to reply to (for threading replies in a conversation)"
+            },
+            "required": false,
+            "description": "The thread ID to reply to (for threading replies in a conversation)"
+          }
+        ],
+        "params_type_name": "MessagesCreateParams",
+        "response_type": "Message",
+        "description": "Sends a new email message. The message should be provided as a base64url-encoded\nRFC 2822 formatted string in the 'raw' field.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "modify_message",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/messages/{messageId}/modify",
+        "entity": "messages",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "addLabelIds",
+            "python_name": "add_label_ids",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of label IDs to add to the message (e.g. STARRED, UNREAD, or custom label IDs)"
+            },
+            "required": false,
+            "description": "A list of label IDs to add to the message (e.g. STARRED, UNREAD, or custom label IDs)"
+          },
+          {
+            "name": "removeLabelIds",
+            "python_name": "remove_label_ids",
+            "type": "list[str]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of label IDs to remove from the message (e.g. INBOX to archive, UNREAD to mark as read)"
+            },
+            "required": false,
+            "description": "A list of label IDs to remove from the message (e.g. INBOX to archive, UNREAD to mark as read)"
+          },
+          {
+            "name": "messageId",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the message to modify"
+          }
+        ],
+        "params_type_name": "MessagesUpdateParams",
+        "response_type": "Message",
+        "description": "Modifies the labels on a message. Use this to archive (remove INBOX label),\nmark as read (remove UNREAD label), mark as unread (add UNREAD label),\nstar (add STARRED label), or apply custom labels.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "labels": [
+      {
+        "method_name": "list_labels",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/labels",
+        "entity": "labels",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "LabelsListParams",
+        "response_type": "LabelsListResult",
+        "description": "Lists all labels in the user's mailbox including system and user-created labels",
+        "record_extractor": "$.labels",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Label]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "create_label",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/labels",
+        "entity": "labels",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The display name of the label"
+            },
+            "required": true,
+            "description": "The display name of the label"
+          },
+          {
+            "name": "messageListVisibility",
+            "python_name": "message_list_visibility",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The visibility of messages with this label in the message list (show or hide)",
+              "enum": [
+                "show",
+                "hide"
+              ]
+            },
+            "required": false,
+            "description": "The visibility of messages with this label in the message list (show or hide)"
+          },
+          {
+            "name": "labelListVisibility",
+            "python_name": "label_list_visibility",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The visibility of the label in the label list",
+              "enum": [
+                "labelShow",
+                "labelShowIfUnread",
+                "labelHide"
+              ]
+            },
+            "required": false,
+            "description": "The visibility of the label in the label list"
+          },
+          {
+            "name": "color",
+            "python_name": "color",
+            "type": "LabelsCreateParamsColor",
+            "schema": {
+              "type": "object",
+              "description": "The color to assign to the label",
+              "properties": {
+                "textColor": {
+                  "type": "string",
+                  "description": "The text color of the label as a hex string (#RRGGBB)"
+                },
+                "backgroundColor": {
+                  "type": "string",
+                  "description": "The background color of the label as a hex string (#RRGGBB)"
+                }
+              }
+            },
+            "required": false,
+            "description": "The color to assign to the label"
+          }
+        ],
+        "params_type_name": "LabelsCreateParams",
+        "response_type": "Label",
+        "description": "Creates a new label in the user's mailbox",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Label",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_label",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/labels/{labelId}",
+        "entity": "labels",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "labelId",
+            "python_name": "label_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the label to retrieve"
+          }
+        ],
+        "params_type_name": "LabelsGetParams",
+        "response_type": "Label",
+        "description": "Gets a specific label by ID including message and thread counts",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Label",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_label",
+        "http_method": "put",
+        "path": "/gmail/v1/users/me/labels/{labelId}",
+        "entity": "labels",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the label (must match the path parameter)"
+            },
+            "required": false,
+            "description": "The ID of the label (must match the path parameter)"
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The new display name of the label"
+            },
+            "required": false,
+            "description": "The new display name of the label"
+          },
+          {
+            "name": "messageListVisibility",
+            "python_name": "message_list_visibility",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The visibility of messages with this label in the message list",
+              "enum": [
+                "show",
+                "hide"
+              ]
+            },
+            "required": false,
+            "description": "The visibility of messages with this label in the message list"
+          },
+          {
+            "name": "labelListVisibility",
+            "python_name": "label_list_visibility",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The visibility of the label in the label list",
+              "enum": [
+                "labelShow",
+                "labelShowIfUnread",
+                "labelHide"
+              ]
+            },
+            "required": false,
+            "description": "The visibility of the label in the label list"
+          },
+          {
+            "name": "color",
+            "python_name": "color",
+            "type": "LabelsUpdateParamsColor",
+            "schema": {
+              "type": "object",
+              "description": "The color to assign to the label",
+              "properties": {
+                "textColor": {
+                  "type": "string",
+                  "description": "The text color of the label as a hex string (#RRGGBB)"
+                },
+                "backgroundColor": {
+                  "type": "string",
+                  "description": "The background color of the label as a hex string (#RRGGBB)"
+                }
+              }
+            },
+            "required": false,
+            "description": "The color to assign to the label"
+          },
+          {
+            "name": "labelId",
+            "python_name": "label_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the label to update"
+          }
+        ],
+        "params_type_name": "LabelsUpdateParams",
+        "response_type": "Label",
+        "description": "Updates the specified label",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Label",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_label",
+        "http_method": "delete",
+        "path": "/gmail/v1/users/me/labels/{labelId}",
+        "entity": "labels",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "labelId",
+            "python_name": "label_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the label to delete"
+          }
+        ],
+        "params_type_name": "LabelsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Deletes the specified label and removes it from any messages and threads",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "drafts": [
+      {
+        "method_name": "list_drafts",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/drafts",
+        "entity": "drafts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of drafts to return (1-500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Page token to retrieve a specific page of results",
+            "is_deep_object": false
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Gmail search query to filter drafts",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeSpamTrash",
+            "python_name": "include_spam_trash",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Include drafts from SPAM and TRASH in the results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DraftsListParams",
+        "response_type": "DraftsListResult",
+        "description": "Lists the drafts in the user's mailbox",
+        "record_extractor": "$.drafts",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "resultSizeEstimate": "$.resultSizeEstimate"
+        },
+        "needs_envelope": true,
+        "record_type": "list[DraftRef]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Token to retrieve the next page of results"
+            }
+          },
+          {
+            "name": "resultSizeEstimate",
+            "python_name": "result_size_estimate",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Estimated total number of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_draft",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/drafts",
+        "entity": "drafts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "message",
+            "python_name": "message",
+            "type": "DraftsCreateParamsMessage",
+            "schema": {
+              "type": "object",
+              "description": "The draft message content",
+              "required": [
+                "raw"
+              ],
+              "properties": {
+                "raw": {
+                  "type": "string",
+                  "description": "The draft message in RFC 2822 format, base64url encoded"
+                },
+                "threadId": {
+                  "type": "string",
+                  "description": "The thread ID for the draft (for threading in a conversation)"
+                }
+              }
+            },
+            "required": true,
+            "description": "The draft message content"
+          }
+        ],
+        "params_type_name": "DraftsCreateParams",
+        "response_type": "Draft",
+        "description": "Creates a new draft with the specified message content",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Draft",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_draft",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/drafts/{draftId}",
+        "entity": "drafts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "draftId",
+            "python_name": "draft_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the draft to retrieve"
+          },
+          {
+            "name": "format",
+            "python_name": "format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "full",
+                "metadata",
+                "minimal",
+                "raw"
+              ],
+              "default": "full"
+            },
+            "required": false,
+            "description": "The format to return the draft message in (full, metadata, minimal, raw)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "DraftsGetParams",
+        "response_type": "Draft",
+        "description": "Gets the specified draft including its message content",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Draft",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_draft",
+        "http_method": "put",
+        "path": "/gmail/v1/users/me/drafts/{draftId}",
+        "entity": "drafts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "message",
+            "python_name": "message",
+            "type": "DraftsUpdateParamsMessage",
+            "schema": {
+              "type": "object",
+              "description": "The draft message content",
+              "required": [
+                "raw"
+              ],
+              "properties": {
+                "raw": {
+                  "type": "string",
+                  "description": "The draft message in RFC 2822 format, base64url encoded"
+                },
+                "threadId": {
+                  "type": "string",
+                  "description": "The thread ID for the draft (for threading in a conversation)"
+                }
+              }
+            },
+            "required": true,
+            "description": "The draft message content"
+          },
+          {
+            "name": "draftId",
+            "python_name": "draft_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the draft to update"
+          }
+        ],
+        "params_type_name": "DraftsUpdateParams",
+        "response_type": "Draft",
+        "description": "Replaces a draft's content with the specified message content",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Draft",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_draft",
+        "http_method": "delete",
+        "path": "/gmail/v1/users/me/drafts/{draftId}",
+        "entity": "drafts",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "draftId",
+            "python_name": "draft_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the draft to delete"
+          }
+        ],
+        "params_type_name": "DraftsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Immediately and permanently deletes the specified draft (does not move to trash)",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "drafts_send": [
+      {
+        "method_name": "send_draft",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/drafts/send",
+        "entity": "drafts_send",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the draft to send"
+            },
+            "required": true,
+            "description": "The ID of the draft to send"
+          }
+        ],
+        "params_type_name": "DraftsSendCreateParams",
+        "response_type": "Message",
+        "description": "Sends the specified existing draft to its recipients",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "threads": [
+      {
+        "method_name": "list_threads",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/threads",
+        "entity": "threads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of threads to return (1-500)",
+            "is_deep_object": false
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Page token to retrieve a specific page of results",
+            "is_deep_object": false
+          },
+          {
+            "name": "q",
+            "python_name": "q",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Gmail search query to filter threads",
+            "is_deep_object": false
+          },
+          {
+            "name": "labelIds",
+            "python_name": "label_ids",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Only return threads with labels matching all of the specified label IDs (comma-separated)",
+            "is_deep_object": false
+          },
+          {
+            "name": "includeSpamTrash",
+            "python_name": "include_spam_trash",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Include threads from SPAM and TRASH in the results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ThreadsListParams",
+        "response_type": "ThreadsListResult",
+        "description": "Lists the threads in the user's mailbox",
+        "record_extractor": "$.threads",
+        "meta_extractor": {
+          "nextPageToken": "$.nextPageToken",
+          "resultSizeEstimate": "$.resultSizeEstimate"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ThreadRef]",
+        "meta_fields": [
+          {
+            "name": "nextPageToken",
+            "python_name": "next_page_token",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Token to retrieve the next page of results"
+            }
+          },
+          {
+            "name": "resultSizeEstimate",
+            "python_name": "result_size_estimate",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "description": "Estimated total number of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_thread",
+        "http_method": "get",
+        "path": "/gmail/v1/users/me/threads/{threadId}",
+        "entity": "threads",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "threadId",
+            "python_name": "thread_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the thread to retrieve"
+          },
+          {
+            "name": "format",
+            "python_name": "format",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "full",
+                "metadata",
+                "minimal"
+              ],
+              "default": "full"
+            },
+            "required": false,
+            "description": "The format to return the messages in (full, metadata, minimal)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metadataHeaders",
+            "python_name": "metadata_headers",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "When format is METADATA, only include headers specified (comma-separated)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ThreadsGetParams",
+        "response_type": "Thread",
+        "description": "Gets the specified thread including all messages in the conversation",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Thread",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages_trash": [
+      {
+        "method_name": "trash_message",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/messages/{messageId}/trash",
+        "entity": "messages_trash",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "messageId",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the message to trash"
+          }
+        ],
+        "params_type_name": "MessagesTrashCreateParams",
+        "response_type": "Message",
+        "description": "Moves the specified message to the trash",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "messages_untrash": [
+      {
+        "method_name": "untrash_message",
+        "http_method": "post",
+        "path": "/gmail/v1/users/me/messages/{messageId}/untrash",
+        "entity": "messages_untrash",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "messageId",
+            "python_name": "message_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the message to untrash"
+          }
+        ],
+        "params_type_name": "MessagesUntrashCreateParams",
+        "response_type": "Message",
+        "description": "Removes the specified message from the trash",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Message",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {}
+}

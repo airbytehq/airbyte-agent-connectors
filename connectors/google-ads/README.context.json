@@ -1,0 +1,1972 @@
+{
+  "connector_name": "google-ads",
+  "class_name": "GoogleAdsConnector",
+  "package_name": "airbyte_agent_google_ads",
+  "package_version": "1.0.8",
+  "yaml_version": "1.0.8",
+  "api_reference_url": "https://developers.google.com/google-ads/api/rest/reference/rest",
+  "commit_sha": "unknown",
+  "auth_example": "GoogleAdsAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", developer_token=\"...\")",
+  "auth_import": ", GoogleAdsAuthConfig",
+  "auth_config": {
+    "type_name": "GoogleAdsAuthConfig",
+    "base_name": "GoogleAds",
+    "options": [
+      {
+        "title": "OAuth2 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "OAuth2 client ID from Google Cloud Console"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "OAuth2 client secret from Google Cloud Console"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth2 refresh token"
+          },
+          {
+            "name": "developer_token",
+            "type": "str",
+            "required": true,
+            "title": "Developer Token",
+            "description": "Google Ads API developer token"
+          }
+        ],
+        "type_suffix": "Oauth2Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "GoogleAdsReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Google Ads.",
+    "fields": [
+      {
+        "name": "customer_id",
+        "type": "str",
+        "required": true,
+        "title": "Customer ID",
+        "description": "Comma-separated list of Google Ads customer IDs (10 digits each, no dashes).",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": false,
+        "title": "Start Date",
+        "description": "UTC date in YYYY-MM-DD format from which to start replicating data. Defaults to 2 years ago if not specified.",
+        "format": "date",
+        "default": null
+      },
+      {
+        "name": "conversion_window_days",
+        "type": "int",
+        "required": false,
+        "title": "Conversion Window Days",
+        "description": "Number of days for the conversion attribution window. Default is 14.",
+        "format": null,
+        "default": 14
+      }
+    ]
+  },
+  "custom_description": "Google Ads API connector for accessing advertising account data including campaigns, ad groups, ads, and labels. This connector uses the Google Ads Query Language (GAQL) via the REST search endpoint to retrieve structured advertising data. Requires OAuth2 credentials and a Google Ads developer token for authentication. All data retrieval is read-only.",
+  "supported_questions": "- List all accessible Google Ads customer accounts\n- Show me all campaigns and their statuses\n- List all ad groups across my campaigns\n- What ads are running in my ad groups?\n- Show me campaign labels\n- List all ad group labels\n- What labels are applied to my ads?\n- Pause campaign 'Summer Sale 2025'\n- Enable the ad group 'Brand Keywords'\n- Create a label called 'High Priority'\n- Apply the 'Q4 Campaigns' label to my search campaign\n- Update the name of campaign 123456 to 'Winter Promo'\n- Which campaigns have the highest cost this month?\n- Show me all paused campaigns\n- Find ad groups with the most impressions\n- What are my top performing ads by click-through rate?\n- Show campaigns with budget over $100 per day",
+  "unsupported_questions": "- Create a new campaign\n- Delete an ad\n- Delete a campaign\n- Delete a label",
+  "first_operation": {
+    "method_name": "list_accessible_customers",
+    "http_method": "get",
+    "path": "/v20/customers:listAccessibleCustomers",
+    "entity": "accessible_customers",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "AccessibleCustomersListParams",
+    "response_type": "AccessibleCustomersListResult",
+    "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "AccessibleCustomersList",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "accessible_customers": [
+      {
+        "method_name": "list_accessible_customers",
+        "http_method": "get",
+        "path": "/v20/customers:listAccessibleCustomers",
+        "entity": "accessible_customers",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AccessibleCustomersListParams",
+        "response_type": "AccessibleCustomersListResult",
+        "description": "Returns resource names of customers directly accessible by the user authenticating the call. No customer_id is required for this endpoint.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "AccessibleCustomersList",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "accounts": [
+      {
+        "method_name": "list_accounts",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search",
+        "entity": "accounts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Google Ads Query Language (GAQL) query",
+              "default": "SELECT\n  customer.auto_tagging_enabled,\n  customer.call_reporting_setting.call_conversion_action,\n  customer.call_reporting_setting.call_conversion_reporting_enabled,\n  customer.call_reporting_setting.call_reporting_enabled,\n  customer.conversion_tracking_setting.conversion_tracking_id,\n  customer.conversion_tracking_setting.cross_account_conversion_tracking_id,\n  customer.currency_code,\n  customer.descriptive_name,\n  customer.final_url_suffix,\n  customer.has_partners_badge,\n  customer.id,\n  customer.manager,\n  customer.optimization_score,\n  customer.optimization_score_weight,\n  customer.pay_per_conversion_eligibility_failure_reasons,\n  customer.remarketing_setting.google_global_site_tag,\n  customer.resource_name,\n  customer.test_account,\n  customer.time_zone,\n  customer.tracking_url_template\nFROM customer"
+            },
+            "required": false,
+            "description": "Google Ads Query Language (GAQL) query"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AccountsListParams",
+        "response_type": "AccountsListResult",
+        "description": "Retrieves customer account details using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Account]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for retrieving the next page"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for campaigns",
+              "default": "SELECT\n  campaign.id,\n  campaign.name,\n  campaign.status,\n  campaign.advertising_channel_type,\n  campaign.advertising_channel_sub_type,\n  campaign.bidding_strategy,\n  campaign.bidding_strategy_type,\n  campaign.campaign_budget,\n  campaign_budget.amount_micros,\n  campaign.start_date,\n  campaign.end_date,\n  campaign.serving_status,\n  campaign.resource_name,\n  campaign.labels,\n  campaign.network_settings.target_google_search,\n  campaign.network_settings.target_search_network,\n  campaign.network_settings.target_content_network,\n  campaign.network_settings.target_partner_search_network\nFROM campaign"
+            },
+            "required": false,
+            "description": "GAQL query for campaigns"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Retrieves campaign data using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "update_campaign",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/campaigns:mutate",
+        "entity": "campaigns",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "operations",
+            "python_name": "operations",
+            "type": "list[CampaignsUpdateParamsOperationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of campaign operations to perform",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "updateMask": {
+                    "type": "string",
+                    "description": "Comma-separated list of field paths to update (e.g., name,status)"
+                  },
+                  "update": {
+                    "type": "object",
+                    "description": "Campaign fields to update",
+                    "properties": {
+                      "resourceName": {
+                        "type": "string",
+                        "description": "Resource name of the campaign to update (e.g., customers/1234567890/campaigns/111222333)"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "New campaign name"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "ENABLED",
+                          "PAUSED"
+                        ],
+                        "description": "Campaign status (ENABLED or PAUSED)"
+                      }
+                    },
+                    "required": [
+                      "resourceName"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of campaign operations to perform"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "CampaignsUpdateParams",
+        "response_type": "CampaignMutateResponse",
+        "description": "Updates campaign properties such as status (enable/pause), name, or other mutable fields using the Google Ads CampaignService mutate endpoint.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CampaignMutateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_groups": [
+      {
+        "method_name": "list_ad_groups",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_groups",
+        "entity": "ad_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for ad groups",
+              "default": "SELECT\n  campaign.id,\n  ad_group.id,\n  ad_group.name,\n  ad_group.status,\n  ad_group.type,\n  ad_group.ad_rotation_mode,\n  ad_group.base_ad_group,\n  ad_group.campaign,\n  ad_group.cpc_bid_micros,\n  ad_group.cpm_bid_micros,\n  ad_group.cpv_bid_micros,\n  ad_group.effective_target_cpa_micros,\n  ad_group.effective_target_cpa_source,\n  ad_group.effective_target_roas,\n  ad_group.effective_target_roas_source,\n  ad_group.labels,\n  ad_group.resource_name,\n  ad_group.target_cpa_micros,\n  ad_group.target_roas,\n  ad_group.tracking_url_template\nFROM ad_group"
+            },
+            "required": false,
+            "description": "GAQL query for ad groups"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupsListParams",
+        "response_type": "AdGroupsListResult",
+        "description": "Retrieves ad group data using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroup]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "update_ad_group",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/adGroups:mutate",
+        "entity": "ad_groups",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "operations",
+            "python_name": "operations",
+            "type": "list[AdGroupsUpdateParamsOperationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of ad group operations to perform",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "updateMask": {
+                    "type": "string",
+                    "description": "Comma-separated list of field paths to update (e.g., name,status,cpcBidMicros)"
+                  },
+                  "update": {
+                    "type": "object",
+                    "description": "Ad group fields to update",
+                    "properties": {
+                      "resourceName": {
+                        "type": "string",
+                        "description": "Resource name of the ad group to update (e.g., customers/1234567890/adGroups/111222333)"
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "New ad group name"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "ENABLED",
+                          "PAUSED"
+                        ],
+                        "description": "Ad group status (ENABLED or PAUSED)"
+                      },
+                      "cpcBidMicros": {
+                        "type": "string",
+                        "description": "CPC bid amount in micros (1,000,000 micros = 1 currency unit)"
+                      }
+                    },
+                    "required": [
+                      "resourceName"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of ad group operations to perform"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupsUpdateParams",
+        "response_type": "AdGroupMutateResponse",
+        "description": "Updates ad group properties such as status (enable/pause), name, or bid amounts using the Google Ads AdGroupService mutate endpoint.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AdGroupMutateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_group_ads": [
+      {
+        "method_name": "list_ad_group_ads",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ads",
+        "entity": "ad_group_ads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for ad group ads",
+              "default": "SELECT\n  ad_group.id,\n  ad_group_ad.ad.id,\n  ad_group_ad.ad.name,\n  ad_group_ad.ad.type,\n  ad_group_ad.status,\n  ad_group_ad.ad_strength,\n  ad_group_ad.ad.display_url,\n  ad_group_ad.ad.final_urls,\n  ad_group_ad.ad.final_mobile_urls,\n  ad_group_ad.ad.final_url_suffix,\n  ad_group_ad.ad.tracking_url_template,\n  ad_group_ad.ad.resource_name,\n  ad_group_ad.ad_group,\n  ad_group_ad.resource_name,\n  ad_group_ad.labels,\n  ad_group_ad.policy_summary.approval_status,\n  ad_group_ad.policy_summary.review_status\nFROM ad_group_ad"
+            },
+            "required": false,
+            "description": "GAQL query for ad group ads"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupAdsListParams",
+        "response_type": "AdGroupAdsListResult",
+        "description": "Retrieves ad group ad data using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroupAd]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "campaign_labels": [
+      {
+        "method_name": "list_campaign_labels",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=campaign_labels",
+        "entity": "campaign_labels",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for campaign labels",
+              "default": "SELECT\n  campaign.id,\n  campaign_label.campaign,\n  campaign_label.label,\n  campaign_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM campaign_label"
+            },
+            "required": false,
+            "description": "GAQL query for campaign labels"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "CampaignLabelsListParams",
+        "response_type": "CampaignLabelsListResult",
+        "description": "Retrieves campaign label associations using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CampaignLabel]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_campaign_label",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/campaignLabels:mutate",
+        "entity": "campaign_labels",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "operations",
+            "python_name": "operations",
+            "type": "list[CampaignLabelsCreateParamsOperationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of campaign label operations to perform",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "create": {
+                    "type": "object",
+                    "description": "Campaign label association to create",
+                    "properties": {
+                      "campaign": {
+                        "type": "string",
+                        "description": "Resource name of the campaign (e.g., customers/1234567890/campaigns/111222333)"
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "Resource name of the label (e.g., customers/1234567890/labels/444555666)"
+                      }
+                    },
+                    "required": [
+                      "campaign",
+                      "label"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of campaign label operations to perform"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "CampaignLabelsCreateParams",
+        "response_type": "CampaignLabelMutateResponse",
+        "description": "Creates a campaign-label association, applying an existing label to a campaign for organization and filtering.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CampaignLabelMutateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_group_labels": [
+      {
+        "method_name": "list_ad_group_labels",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_labels",
+        "entity": "ad_group_labels",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for ad group labels",
+              "default": "SELECT\n  ad_group.id,\n  ad_group_label.ad_group,\n  ad_group_label.label,\n  ad_group_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM ad_group_label"
+            },
+            "required": false,
+            "description": "GAQL query for ad group labels"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupLabelsListParams",
+        "response_type": "AdGroupLabelsListResult",
+        "description": "Retrieves ad group label associations using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroupLabel]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "create_ad_group_label",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/adGroupLabels:mutate",
+        "entity": "ad_group_labels",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "operations",
+            "python_name": "operations",
+            "type": "list[AdGroupLabelsCreateParamsOperationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of ad group label operations to perform",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "create": {
+                    "type": "object",
+                    "description": "Ad group label association to create",
+                    "properties": {
+                      "adGroup": {
+                        "type": "string",
+                        "description": "Resource name of the ad group (e.g., customers/1234567890/adGroups/111222333)"
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "Resource name of the label (e.g., customers/1234567890/labels/444555666)"
+                      }
+                    },
+                    "required": [
+                      "adGroup",
+                      "label"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of ad group label operations to perform"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupLabelsCreateParams",
+        "response_type": "AdGroupLabelMutateResponse",
+        "description": "Creates an ad group-label association, applying an existing label to an ad group for organization and filtering.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AdGroupLabelMutateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "ad_group_ad_labels": [
+      {
+        "method_name": "list_ad_group_ad_labels",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/googleAds:search?entity=ad_group_ad_labels",
+        "entity": "ad_group_ad_labels",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "GAQL query for ad group ad labels",
+              "default": "SELECT\n  ad_group_ad.ad.id,\n  ad_group_ad_label.ad_group_ad,\n  ad_group_ad_label.label,\n  ad_group_ad_label.resource_name,\n  label.id,\n  label.name,\n  label.resource_name\nFROM ad_group_ad_label"
+            },
+            "required": false,
+            "description": "GAQL query for ad group ad labels"
+          },
+          {
+            "name": "pageToken",
+            "python_name": "page_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          },
+          {
+            "name": "pageSize",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Number of results per page (max 10000)"
+            },
+            "required": false,
+            "description": "Number of results per page (max 10000)"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "AdGroupAdLabelsListParams",
+        "response_type": "AdGroupAdLabelsListResult",
+        "description": "Retrieves ad group ad label associations using GAQL query.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_page_token": "$.nextPageToken"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroupAdLabel]",
+        "meta_fields": [
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "labels": [
+      {
+        "method_name": "create_label",
+        "http_method": "post",
+        "path": "/v20/customers/{customer_id}/labels:mutate",
+        "entity": "labels",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "operations",
+            "python_name": "operations",
+            "type": "list[LabelsCreateParamsOperationsItem]",
+            "schema": {
+              "type": "array",
+              "description": "List of label operations to perform",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "create": {
+                    "type": "object",
+                    "description": "Label to create",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Name for the new label"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Description for the label"
+                      },
+                      "textLabel": {
+                        "type": "object",
+                        "description": "Text label styling",
+                        "properties": {
+                          "backgroundColor": {
+                            "type": "string",
+                            "description": "Background color in hex format (e.g., #FF0000)"
+                          },
+                          "description": {
+                            "type": "string",
+                            "description": "Description of the text label"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ]
+                  }
+                }
+              }
+            },
+            "required": true,
+            "description": "List of label operations to perform"
+          },
+          {
+            "name": "customer_id",
+            "python_name": "customer_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{10}$"
+            },
+            "required": true,
+            "description": "Google Ads customer ID (10 digits, no dashes)"
+          }
+        ],
+        "params_type_name": "LabelsCreateParams",
+        "response_type": "LabelMutateResponse",
+        "description": "Creates a new label that can be applied to campaigns, ad groups, or ads for organization and reporting purposes.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "LabelMutateResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "accounts": {
+      "entity": "accounts",
+      "data_type_name": "AccountsSearchData",
+      "filter_type_name": "AccountsSearchFilter",
+      "in_filter_type_name": "AccountsInFilter",
+      "any_value_filter_type_name": "AccountsAnyValueFilter",
+      "string_filter_type_name": "AccountsStringFilter",
+      "sort_filter_type_name": "AccountsSortFilter",
+      "result_type_name": "AccountsSearchResult",
+      "query_type_name": "AccountsSearchQuery",
+      "condition_prefix": "Accounts",
+      "condition_type_name": "AccountsCondition",
+      "fields": [
+        {
+          "name": "customer.auto_tagging_enabled",
+          "python_name": "customer_auto_tagging_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether auto-tagging is enabled for the account"
+        },
+        {
+          "name": "customer.call_reporting_setting.call_conversion_action",
+          "python_name": "customer_call_reporting_setting_call_conversion_action",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Call conversion action resource name"
+        },
+        {
+          "name": "customer.call_reporting_setting.call_conversion_reporting_enabled",
+          "python_name": "customer_call_reporting_setting_call_conversion_reporting_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether call conversion reporting is enabled"
+        },
+        {
+          "name": "customer.call_reporting_setting.call_reporting_enabled",
+          "python_name": "customer_call_reporting_setting_call_reporting_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether call reporting is enabled"
+        },
+        {
+          "name": "customer.conversion_tracking_setting.conversion_tracking_id",
+          "python_name": "customer_conversion_tracking_setting_conversion_tracking_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Conversion tracking ID"
+        },
+        {
+          "name": "customer.conversion_tracking_setting.cross_account_conversion_tracking_id",
+          "python_name": "customer_conversion_tracking_setting_cross_account_conversion_tracking_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Cross-account conversion tracking ID"
+        },
+        {
+          "name": "customer.currency_code",
+          "python_name": "customer_currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code for the account (e.g., USD)"
+        },
+        {
+          "name": "customer.descriptive_name",
+          "python_name": "customer_descriptive_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Descriptive name of the customer account"
+        },
+        {
+          "name": "customer.final_url_suffix",
+          "python_name": "customer_final_url_suffix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL suffix appended to final URLs"
+        },
+        {
+          "name": "customer.has_partners_badge",
+          "python_name": "customer_has_partners_badge",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the account has a Google Partners badge"
+        },
+        {
+          "name": "customer.id",
+          "python_name": "customer_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique customer account ID"
+        },
+        {
+          "name": "customer.manager",
+          "python_name": "customer_manager",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a manager (MCC) account"
+        },
+        {
+          "name": "customer.optimization_score",
+          "python_name": "customer_optimization_score",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Optimization score for the account (0.0 to 1.0)"
+        },
+        {
+          "name": "customer.optimization_score_weight",
+          "python_name": "customer_optimization_score_weight",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Weight of the optimization score"
+        },
+        {
+          "name": "customer.pay_per_conversion_eligibility_failure_reasons",
+          "python_name": "customer_pay_per_conversion_eligibility_failure_reasons",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Reasons why pay-per-conversion is not eligible"
+        },
+        {
+          "name": "customer.remarketing_setting.google_global_site_tag",
+          "python_name": "customer_remarketing_setting_google_global_site_tag",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Google global site tag snippet"
+        },
+        {
+          "name": "customer.resource_name",
+          "python_name": "customer_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the customer"
+        },
+        {
+          "name": "customer.test_account",
+          "python_name": "customer_test_account",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a test account"
+        },
+        {
+          "name": "customer.time_zone",
+          "python_name": "customer_time_zone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Time zone of the account"
+        },
+        {
+          "name": "customer.tracking_url_template",
+          "python_name": "customer_tracking_url_template",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tracking URL template for the account"
+        },
+        {
+          "name": "segments.date",
+          "python_name": "segments_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date segment for the report row"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "campaign.id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Campaign ID"
+        },
+        {
+          "name": "campaign.name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "campaign.status",
+          "python_name": "campaign_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign status (ENABLED, PAUSED, REMOVED)"
+        },
+        {
+          "name": "campaign.advertising_channel_type",
+          "python_name": "campaign_advertising_channel_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Advertising channel type (SEARCH, DISPLAY, etc.)"
+        },
+        {
+          "name": "campaign.advertising_channel_sub_type",
+          "python_name": "campaign_advertising_channel_sub_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Advertising channel sub-type"
+        },
+        {
+          "name": "campaign.bidding_strategy",
+          "python_name": "campaign_bidding_strategy",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Bidding strategy resource name"
+        },
+        {
+          "name": "campaign.bidding_strategy_type",
+          "python_name": "campaign_bidding_strategy_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Bidding strategy type"
+        },
+        {
+          "name": "campaign.campaign_budget",
+          "python_name": "campaign_campaign_budget",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign budget resource name"
+        },
+        {
+          "name": "campaign_budget.amount_micros",
+          "python_name": "campaign_budget_amount_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Campaign budget amount in micros"
+        },
+        {
+          "name": "campaign.start_date",
+          "python_name": "campaign_start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign start date"
+        },
+        {
+          "name": "campaign.end_date",
+          "python_name": "campaign_end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign end date"
+        },
+        {
+          "name": "campaign.serving_status",
+          "python_name": "campaign_serving_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign serving status"
+        },
+        {
+          "name": "campaign.resource_name",
+          "python_name": "campaign_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the campaign"
+        },
+        {
+          "name": "campaign.labels",
+          "python_name": "campaign_labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Labels applied to the campaign"
+        },
+        {
+          "name": "campaign.network_settings.target_google_search",
+          "python_name": "campaign_network_settings_target_google_search",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether targeting Google Search"
+        },
+        {
+          "name": "campaign.network_settings.target_search_network",
+          "python_name": "campaign_network_settings_target_search_network",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether targeting search network"
+        },
+        {
+          "name": "campaign.network_settings.target_content_network",
+          "python_name": "campaign_network_settings_target_content_network",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether targeting content network"
+        },
+        {
+          "name": "campaign.network_settings.target_partner_search_network",
+          "python_name": "campaign_network_settings_target_partner_search_network",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether targeting partner search network"
+        },
+        {
+          "name": "metrics.clicks",
+          "python_name": "metrics_clicks",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of clicks"
+        },
+        {
+          "name": "metrics.ctr",
+          "python_name": "metrics_ctr",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Click-through rate"
+        },
+        {
+          "name": "metrics.conversions",
+          "python_name": "metrics_conversions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of conversions"
+        },
+        {
+          "name": "metrics.conversions_value",
+          "python_name": "metrics_conversions_value",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total conversions value"
+        },
+        {
+          "name": "metrics.cost_micros",
+          "python_name": "metrics_cost_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Cost in micros"
+        },
+        {
+          "name": "metrics.impressions",
+          "python_name": "metrics_impressions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of impressions"
+        },
+        {
+          "name": "metrics.average_cpc",
+          "python_name": "metrics_average_cpc",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average cost per click"
+        },
+        {
+          "name": "metrics.average_cpm",
+          "python_name": "metrics_average_cpm",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average cost per thousand impressions"
+        },
+        {
+          "name": "metrics.interactions",
+          "python_name": "metrics_interactions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of interactions"
+        },
+        {
+          "name": "segments.date",
+          "python_name": "segments_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date segment for the report row"
+        },
+        {
+          "name": "segments.hour",
+          "python_name": "segments_hour",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Hour segment"
+        },
+        {
+          "name": "segments.ad_network_type",
+          "python_name": "segments_ad_network_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad network type segment"
+        }
+      ]
+    },
+    "ad_groups": {
+      "entity": "ad_groups",
+      "data_type_name": "AdGroupsSearchData",
+      "filter_type_name": "AdGroupsSearchFilter",
+      "in_filter_type_name": "AdGroupsInFilter",
+      "any_value_filter_type_name": "AdGroupsAnyValueFilter",
+      "string_filter_type_name": "AdGroupsStringFilter",
+      "sort_filter_type_name": "AdGroupsSortFilter",
+      "result_type_name": "AdGroupsSearchResult",
+      "query_type_name": "AdGroupsSearchQuery",
+      "condition_prefix": "AdGroups",
+      "condition_type_name": "AdGroupsCondition",
+      "fields": [
+        {
+          "name": "campaign.id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Parent campaign ID"
+        },
+        {
+          "name": "ad_group.id",
+          "python_name": "ad_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Ad group ID"
+        },
+        {
+          "name": "ad_group.name",
+          "python_name": "ad_group_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group name"
+        },
+        {
+          "name": "ad_group.status",
+          "python_name": "ad_group_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group status (ENABLED, PAUSED, REMOVED)"
+        },
+        {
+          "name": "ad_group.type",
+          "python_name": "ad_group_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group type"
+        },
+        {
+          "name": "ad_group.ad_rotation_mode",
+          "python_name": "ad_group_ad_rotation_mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad rotation mode"
+        },
+        {
+          "name": "ad_group.base_ad_group",
+          "python_name": "ad_group_base_ad_group",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Base ad group resource name"
+        },
+        {
+          "name": "ad_group.campaign",
+          "python_name": "ad_group_campaign",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Parent campaign resource name"
+        },
+        {
+          "name": "ad_group.cpc_bid_micros",
+          "python_name": "ad_group_cpc_bid_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "CPC bid in micros"
+        },
+        {
+          "name": "ad_group.cpm_bid_micros",
+          "python_name": "ad_group_cpm_bid_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "CPM bid in micros"
+        },
+        {
+          "name": "ad_group.cpv_bid_micros",
+          "python_name": "ad_group_cpv_bid_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "CPV bid in micros"
+        },
+        {
+          "name": "ad_group.effective_target_cpa_micros",
+          "python_name": "ad_group_effective_target_cpa_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Effective target CPA in micros"
+        },
+        {
+          "name": "ad_group.effective_target_cpa_source",
+          "python_name": "ad_group_effective_target_cpa_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source of the effective target CPA"
+        },
+        {
+          "name": "ad_group.effective_target_roas",
+          "python_name": "ad_group_effective_target_roas",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Effective target ROAS"
+        },
+        {
+          "name": "ad_group.effective_target_roas_source",
+          "python_name": "ad_group_effective_target_roas_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source of the effective target ROAS"
+        },
+        {
+          "name": "ad_group.labels",
+          "python_name": "ad_group_labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Labels applied to the ad group"
+        },
+        {
+          "name": "ad_group.resource_name",
+          "python_name": "ad_group_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the ad group"
+        },
+        {
+          "name": "ad_group.target_cpa_micros",
+          "python_name": "ad_group_target_cpa_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Target CPA in micros"
+        },
+        {
+          "name": "ad_group.target_roas",
+          "python_name": "ad_group_target_roas",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Target ROAS"
+        },
+        {
+          "name": "ad_group.tracking_url_template",
+          "python_name": "ad_group_tracking_url_template",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tracking URL template"
+        },
+        {
+          "name": "metrics.cost_micros",
+          "python_name": "metrics_cost_micros",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Cost in micros"
+        },
+        {
+          "name": "segments.date",
+          "python_name": "segments_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date segment for the report row"
+        }
+      ]
+    },
+    "ad_group_ads": {
+      "entity": "ad_group_ads",
+      "data_type_name": "AdGroupAdsSearchData",
+      "filter_type_name": "AdGroupAdsSearchFilter",
+      "in_filter_type_name": "AdGroupAdsInFilter",
+      "any_value_filter_type_name": "AdGroupAdsAnyValueFilter",
+      "string_filter_type_name": "AdGroupAdsStringFilter",
+      "sort_filter_type_name": "AdGroupAdsSortFilter",
+      "result_type_name": "AdGroupAdsSearchResult",
+      "query_type_name": "AdGroupAdsSearchQuery",
+      "condition_prefix": "AdGroupAds",
+      "condition_type_name": "AdGroupAdsCondition",
+      "fields": [
+        {
+          "name": "ad_group.id",
+          "python_name": "ad_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Parent ad group ID"
+        },
+        {
+          "name": "ad_group_ad.ad.id",
+          "python_name": "ad_group_ad_ad_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Ad ID"
+        },
+        {
+          "name": "ad_group_ad.ad.name",
+          "python_name": "ad_group_ad_ad_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad name"
+        },
+        {
+          "name": "ad_group_ad.ad.type",
+          "python_name": "ad_group_ad_ad_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad type"
+        },
+        {
+          "name": "ad_group_ad.status",
+          "python_name": "ad_group_ad_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group ad status (ENABLED, PAUSED, REMOVED)"
+        },
+        {
+          "name": "ad_group_ad.ad_strength",
+          "python_name": "ad_group_ad_ad_strength",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad strength rating"
+        },
+        {
+          "name": "ad_group_ad.ad.display_url",
+          "python_name": "ad_group_ad_ad_display_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display URL of the ad"
+        },
+        {
+          "name": "ad_group_ad.ad.final_urls",
+          "python_name": "ad_group_ad_ad_final_urls",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Final URLs for the ad"
+        },
+        {
+          "name": "ad_group_ad.ad.final_mobile_urls",
+          "python_name": "ad_group_ad_ad_final_mobile_urls",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Final mobile URLs for the ad"
+        },
+        {
+          "name": "ad_group_ad.ad.final_url_suffix",
+          "python_name": "ad_group_ad_ad_final_url_suffix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Final URL suffix"
+        },
+        {
+          "name": "ad_group_ad.ad.tracking_url_template",
+          "python_name": "ad_group_ad_ad_tracking_url_template",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tracking URL template"
+        },
+        {
+          "name": "ad_group_ad.ad.resource_name",
+          "python_name": "ad_group_ad_ad_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the ad"
+        },
+        {
+          "name": "ad_group_ad.ad_group",
+          "python_name": "ad_group_ad_ad_group",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Ad group resource name"
+        },
+        {
+          "name": "ad_group_ad.resource_name",
+          "python_name": "ad_group_ad_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the ad group ad"
+        },
+        {
+          "name": "ad_group_ad.labels",
+          "python_name": "ad_group_ad_labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Labels applied to the ad group ad"
+        },
+        {
+          "name": "ad_group_ad.policy_summary.approval_status",
+          "python_name": "ad_group_ad_policy_summary_approval_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Policy approval status"
+        },
+        {
+          "name": "ad_group_ad.policy_summary.review_status",
+          "python_name": "ad_group_ad_policy_summary_review_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Policy review status"
+        },
+        {
+          "name": "segments.date",
+          "python_name": "segments_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date segment for the report row"
+        }
+      ]
+    },
+    "campaign_labels": {
+      "entity": "campaign_labels",
+      "data_type_name": "CampaignLabelsSearchData",
+      "filter_type_name": "CampaignLabelsSearchFilter",
+      "in_filter_type_name": "CampaignLabelsInFilter",
+      "any_value_filter_type_name": "CampaignLabelsAnyValueFilter",
+      "string_filter_type_name": "CampaignLabelsStringFilter",
+      "sort_filter_type_name": "CampaignLabelsSortFilter",
+      "result_type_name": "CampaignLabelsSearchResult",
+      "query_type_name": "CampaignLabelsSearchQuery",
+      "condition_prefix": "CampaignLabels",
+      "condition_type_name": "CampaignLabelsCondition",
+      "fields": [
+        {
+          "name": "campaign.id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Campaign ID"
+        },
+        {
+          "name": "campaign_label.resource_name",
+          "python_name": "campaign_label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the campaign label"
+        },
+        {
+          "name": "label.id",
+          "python_name": "label_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Label ID"
+        },
+        {
+          "name": "label.name",
+          "python_name": "label_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Label name"
+        },
+        {
+          "name": "label.resource_name",
+          "python_name": "label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the label"
+        }
+      ]
+    },
+    "ad_group_labels": {
+      "entity": "ad_group_labels",
+      "data_type_name": "AdGroupLabelsSearchData",
+      "filter_type_name": "AdGroupLabelsSearchFilter",
+      "in_filter_type_name": "AdGroupLabelsInFilter",
+      "any_value_filter_type_name": "AdGroupLabelsAnyValueFilter",
+      "string_filter_type_name": "AdGroupLabelsStringFilter",
+      "sort_filter_type_name": "AdGroupLabelsSortFilter",
+      "result_type_name": "AdGroupLabelsSearchResult",
+      "query_type_name": "AdGroupLabelsSearchQuery",
+      "condition_prefix": "AdGroupLabels",
+      "condition_type_name": "AdGroupLabelsCondition",
+      "fields": [
+        {
+          "name": "ad_group.id",
+          "python_name": "ad_group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Ad group ID"
+        },
+        {
+          "name": "ad_group_label.resource_name",
+          "python_name": "ad_group_label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the ad group label"
+        },
+        {
+          "name": "label.id",
+          "python_name": "label_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Label ID"
+        },
+        {
+          "name": "label.name",
+          "python_name": "label_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Label name"
+        },
+        {
+          "name": "label.resource_name",
+          "python_name": "label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the label"
+        }
+      ]
+    },
+    "ad_group_ad_labels": {
+      "entity": "ad_group_ad_labels",
+      "data_type_name": "AdGroupAdLabelsSearchData",
+      "filter_type_name": "AdGroupAdLabelsSearchFilter",
+      "in_filter_type_name": "AdGroupAdLabelsInFilter",
+      "any_value_filter_type_name": "AdGroupAdLabelsAnyValueFilter",
+      "string_filter_type_name": "AdGroupAdLabelsStringFilter",
+      "sort_filter_type_name": "AdGroupAdLabelsSortFilter",
+      "result_type_name": "AdGroupAdLabelsSearchResult",
+      "query_type_name": "AdGroupAdLabelsSearchQuery",
+      "condition_prefix": "AdGroupAdLabels",
+      "condition_type_name": "AdGroupAdLabelsCondition",
+      "fields": [
+        {
+          "name": "ad_group_ad.ad.id",
+          "python_name": "ad_group_ad_ad_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Ad ID"
+        },
+        {
+          "name": "ad_group_ad_label.resource_name",
+          "python_name": "ad_group_ad_label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the ad group ad label"
+        },
+        {
+          "name": "label.id",
+          "python_name": "label_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Label ID"
+        },
+        {
+          "name": "label.name",
+          "python_name": "label_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Label name"
+        },
+        {
+          "name": "label.resource_name",
+          "python_name": "label_resource_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Resource name of the label"
+        }
+      ]
+    }
+  }
+}

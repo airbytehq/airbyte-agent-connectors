@@ -1,0 +1,1660 @@
+{
+  "connector_name": "sendgrid",
+  "class_name": "SendgridConnector",
+  "package_name": "airbyte_agent_sendgrid",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://docs.sendgrid.com/api-reference",
+  "commit_sha": "unknown",
+  "auth_example": "SendgridAuthConfig(api_key=\"...\")",
+  "auth_import": ", SendgridAuthConfig",
+  "auth_config": {
+    "type_name": "SendgridAuthConfig",
+    "base_name": "Sendgrid",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your SendGrid API key (generated at https://app.sendgrid.com/settings/api_keys)"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "SendgridReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from SendGrid.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format 2017-01-25T00:00:00Z. Any data before this date will not be replicated.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Twilio SendGrid v3 API. Provides read access to marketing campaigns, contacts, lists, segments, single sends, transactional templates, and suppression management (bounces, blocks, spam reports, invalid emails, global suppressions, suppression groups, and suppression group members).\n",
+  "supported_questions": "- List all marketing contacts\n- Get the details of a specific contact\n- Show me all marketing lists\n- List all transactional templates\n- Show all single sends\n- List all bounced emails\n- Show all blocked email addresses\n- List all spam reports\n- Show all suppression groups\n- How many contacts are in each marketing list?\n- Which single sends were scheduled in the last month?\n- What are the most common bounce reasons?\n- Show me contacts created in the last 7 days",
+  "unsupported_questions": "- Send an email\n- Create a new contact\n- Delete a bounce record\n- Update a marketing list",
+  "first_operation": {
+    "method_name": "list_contacts",
+    "http_method": "get",
+    "path": "/v3/marketing/contacts",
+    "entity": "contacts",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "ContactsListParams",
+    "response_type": "ContactsListResult",
+    "description": "Returns a sample of contacts. Use the export endpoint for full lists.",
+    "record_extractor": "$.result",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Contact]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/v3/marketing/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a sample of contacts. Use the export endpoint for full lists.",
+        "record_extractor": "$.result",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/v3/marketing/contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the contact"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Returns the full details and all fields for the specified contact.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "lists": [
+      {
+        "method_name": "list_lists",
+        "http_method": "get",
+        "path": "/v3/marketing/lists",
+        "entity": "lists",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            },
+            "required": null,
+            "description": "Maximum number of lists to return",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListsListParams",
+        "response_type": "ListsListResult",
+        "description": "Returns all marketing contact lists.",
+        "record_extractor": "$.result",
+        "meta_extractor": {
+          "next": "$._metadata.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[List]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_list",
+        "http_method": "get",
+        "path": "/v3/marketing/lists/{id}",
+        "entity": "lists",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the list"
+          }
+        ],
+        "params_type_name": "ListsGetParams",
+        "response_type": "List",
+        "description": "Returns a specific marketing list by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "List",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "segments": [
+      {
+        "method_name": "list_segments",
+        "http_method": "get",
+        "path": "/v3/marketing/segments/2.0",
+        "entity": "segments",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SegmentsListParams",
+        "response_type": "SegmentsListResult",
+        "description": "Returns all segments (v2).",
+        "record_extractor": "$.results",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Segment]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_segment",
+        "http_method": "get",
+        "path": "/v3/marketing/segments/2.0/{segment_id}",
+        "entity": "segments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "segment_id",
+            "python_name": "segment_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the segment"
+          }
+        ],
+        "params_type_name": "SegmentsGetParams",
+        "response_type": "Segment",
+        "description": "Returns a specific segment by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Segment",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/v3/marketing/campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of campaigns to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns all marketing campaigns.",
+        "record_extractor": "$.result",
+        "meta_extractor": {
+          "next": "$._metadata.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "singlesends": [
+      {
+        "method_name": "list_single_sends",
+        "http_method": "get",
+        "path": "/v3/marketing/singlesends",
+        "entity": "singlesends",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of single sends to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SinglesendsListParams",
+        "response_type": "SinglesendsListResult",
+        "description": "Returns all single sends.",
+        "record_extractor": "$.result",
+        "meta_extractor": {
+          "next": "$._metadata.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SingleSend]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_single_send",
+        "http_method": "get",
+        "path": "/v3/marketing/singlesends/{id}",
+        "entity": "singlesends",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the single send"
+          }
+        ],
+        "params_type_name": "SinglesendsGetParams",
+        "response_type": "SingleSend",
+        "description": "Returns details about one single send.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SingleSend",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "templates": [
+      {
+        "method_name": "list_templates",
+        "http_method": "get",
+        "path": "/v3/templates",
+        "entity": "templates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "generations",
+            "python_name": "generations",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "legacy,dynamic"
+            },
+            "required": null,
+            "description": "Template generations to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of templates per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TemplatesListParams",
+        "response_type": "TemplatesListResult",
+        "description": "Returns paged transactional templates (legacy and dynamic).",
+        "record_extractor": "$.templates",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Template]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_template",
+        "http_method": "get",
+        "path": "/v3/templates/{template_id}",
+        "entity": "templates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "template_id",
+            "python_name": "template_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the template"
+          }
+        ],
+        "params_type_name": "TemplatesGetParams",
+        "response_type": "Template",
+        "description": "Returns a single transactional template.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Template",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "singlesend_stats": [
+      {
+        "method_name": "list_single_send_stats",
+        "http_method": "get",
+        "path": "/v3/marketing/stats/singlesends",
+        "entity": "singlesend_stats",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 50
+            },
+            "required": null,
+            "description": "Maximum number of stats to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SinglesendStatsListParams",
+        "response_type": "SinglesendStatsListResult",
+        "description": "Returns stats for all single sends.",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next": "$._metadata.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SingleSendStats]",
+        "meta_fields": [
+          {
+            "name": "next",
+            "python_name": "next",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "bounces": [
+      {
+        "method_name": "list_bounces",
+        "http_method": "get",
+        "path": "/v3/suppression/bounces",
+        "entity": "bounces",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BouncesListParams",
+        "response_type": "BouncesListResult",
+        "description": "Returns all bounced email records.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Bounce]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "blocks": [
+      {
+        "method_name": "list_blocks",
+        "http_method": "get",
+        "path": "/v3/suppression/blocks",
+        "entity": "blocks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BlocksListParams",
+        "response_type": "BlocksListResult",
+        "description": "Returns all blocked email records.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Block]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "spam_reports": [
+      {
+        "method_name": "list_spam_reports",
+        "http_method": "get",
+        "path": "/v3/suppression/spam_reports",
+        "entity": "spam_reports",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SpamReportsListParams",
+        "response_type": "SpamReportsListResult",
+        "description": "Returns all spam report records.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SpamReport]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invalid_emails": [
+      {
+        "method_name": "list_invalid_emails",
+        "http_method": "get",
+        "path": "/v3/suppression/invalid_emails",
+        "entity": "invalid_emails",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvalidEmailsListParams",
+        "response_type": "InvalidEmailsListResult",
+        "description": "Returns all invalid email records.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[InvalidEmail]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "global_suppressions": [
+      {
+        "method_name": "list_global_suppressions",
+        "http_method": "get",
+        "path": "/v3/suppression/unsubscribes",
+        "entity": "global_suppressions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GlobalSuppressionsListParams",
+        "response_type": "GlobalSuppressionsListResult",
+        "description": "Returns all globally unsubscribed email addresses.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[GlobalSuppression]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "suppression_groups": [
+      {
+        "method_name": "list_suppression_groups",
+        "http_method": "get",
+        "path": "/v3/asm/groups",
+        "entity": "suppression_groups",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SuppressionGroupsListParams",
+        "response_type": "SuppressionGroupsListResult",
+        "description": "Returns all suppression (unsubscribe) groups.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SuppressionGroup]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_suppression_group",
+        "http_method": "get",
+        "path": "/v3/asm/groups/{group_id}",
+        "entity": "suppression_groups",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "group_id",
+            "python_name": "group_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the suppression group"
+          }
+        ],
+        "params_type_name": "SuppressionGroupsGetParams",
+        "response_type": "SuppressionGroup",
+        "description": "Returns information about a single suppression group.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SuppressionGroup",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "suppression_group_members": [
+      {
+        "method_name": "list_suppression_group_members",
+        "http_method": "get",
+        "path": "/v3/asm/suppressions",
+        "entity": "suppression_group_members",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 500
+            },
+            "required": null,
+            "description": "Number of records to return",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            },
+            "required": null,
+            "description": "Number of records to skip for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SuppressionGroupMembersListParams",
+        "response_type": "SuppressionGroupMembersListResult",
+        "description": "Returns all suppressions across all groups.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[SuppressionGroupMember]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "bounces": {
+      "entity": "bounces",
+      "data_type_name": "BouncesSearchData",
+      "filter_type_name": "BouncesSearchFilter",
+      "in_filter_type_name": "BouncesInFilter",
+      "any_value_filter_type_name": "BouncesAnyValueFilter",
+      "string_filter_type_name": "BouncesStringFilter",
+      "sort_filter_type_name": "BouncesSortFilter",
+      "result_type_name": "BouncesSearchResult",
+      "query_type_name": "BouncesSearchQuery",
+      "condition_prefix": "Bounces",
+      "condition_type_name": "BouncesCondition",
+      "fields": [
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unix timestamp when the bounce occurred"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address that bounced"
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason for the bounce"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The enhanced status code for the bounce"
+        }
+      ]
+    },
+    "blocks": {
+      "entity": "blocks",
+      "data_type_name": "BlocksSearchData",
+      "filter_type_name": "BlocksSearchFilter",
+      "in_filter_type_name": "BlocksInFilter",
+      "any_value_filter_type_name": "BlocksAnyValueFilter",
+      "string_filter_type_name": "BlocksStringFilter",
+      "sort_filter_type_name": "BlocksSortFilter",
+      "result_type_name": "BlocksSearchResult",
+      "query_type_name": "BlocksSearchQuery",
+      "condition_prefix": "Blocks",
+      "condition_type_name": "BlocksCondition",
+      "fields": [
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unix timestamp when the block occurred"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The blocked email address"
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason for the block"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status code for the block"
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "channels",
+          "python_name": "channels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Channels for this campaign"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the campaign was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique campaign identifier"
+        },
+        {
+          "name": "is_abtest",
+          "python_name": "is_abtest",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this campaign is an A/B test"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign name"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign status"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the campaign was last updated"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "address_line_1",
+          "python_name": "address_line_1",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Address line 1"
+        },
+        {
+          "name": "address_line_2",
+          "python_name": "address_line_2",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Address line 2"
+        },
+        {
+          "name": "alternate_emails",
+          "python_name": "alternate_emails",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Alternate email addresses"
+        },
+        {
+          "name": "city",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City"
+        },
+        {
+          "name": "contact_id",
+          "python_name": "contact_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique contact identifier used by Airbyte"
+        },
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the contact was created"
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom field values"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact email address"
+        },
+        {
+          "name": "facebook",
+          "python_name": "facebook",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Facebook ID"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact first name"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Contact last name"
+        },
+        {
+          "name": "line",
+          "python_name": "line",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "LINE ID"
+        },
+        {
+          "name": "list_ids",
+          "python_name": "list_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of lists the contact belongs to"
+        },
+        {
+          "name": "phone_number",
+          "python_name": "phone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number"
+        },
+        {
+          "name": "postal_code",
+          "python_name": "postal_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postal code"
+        },
+        {
+          "name": "state_province_region",
+          "python_name": "state_province_region",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State, province, or region"
+        },
+        {
+          "name": "unique_name",
+          "python_name": "unique_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique name for the contact"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the contact was last updated"
+        },
+        {
+          "name": "whatsapp",
+          "python_name": "whatsapp",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "WhatsApp number"
+        }
+      ]
+    },
+    "global_suppressions": {
+      "entity": "global_suppressions",
+      "data_type_name": "GlobalSuppressionsSearchData",
+      "filter_type_name": "GlobalSuppressionsSearchFilter",
+      "in_filter_type_name": "GlobalSuppressionsInFilter",
+      "any_value_filter_type_name": "GlobalSuppressionsAnyValueFilter",
+      "string_filter_type_name": "GlobalSuppressionsStringFilter",
+      "sort_filter_type_name": "GlobalSuppressionsSortFilter",
+      "result_type_name": "GlobalSuppressionsSearchResult",
+      "query_type_name": "GlobalSuppressionsSearchQuery",
+      "condition_prefix": "GlobalSuppressions",
+      "condition_type_name": "GlobalSuppressionsCondition",
+      "fields": [
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unix timestamp when the global suppression was created"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The globally suppressed email address"
+        }
+      ]
+    },
+    "invalid_emails": {
+      "entity": "invalid_emails",
+      "data_type_name": "InvalidEmailsSearchData",
+      "filter_type_name": "InvalidEmailsSearchFilter",
+      "in_filter_type_name": "InvalidEmailsInFilter",
+      "any_value_filter_type_name": "InvalidEmailsAnyValueFilter",
+      "string_filter_type_name": "InvalidEmailsStringFilter",
+      "sort_filter_type_name": "InvalidEmailsSortFilter",
+      "result_type_name": "InvalidEmailsSearchResult",
+      "query_type_name": "InvalidEmailsSearchQuery",
+      "condition_prefix": "InvalidEmails",
+      "condition_type_name": "InvalidEmailsCondition",
+      "fields": [
+        {
+          "name": "created",
+          "python_name": "created",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unix timestamp when the invalid email was recorded"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The invalid email address"
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason the email is invalid"
+        }
+      ]
+    },
+    "lists": {
+      "entity": "lists",
+      "data_type_name": "ListsSearchData",
+      "filter_type_name": "ListsSearchFilter",
+      "in_filter_type_name": "ListsInFilter",
+      "any_value_filter_type_name": "ListsAnyValueFilter",
+      "string_filter_type_name": "ListsStringFilter",
+      "sort_filter_type_name": "ListsSortFilter",
+      "result_type_name": "ListsSearchResult",
+      "query_type_name": "ListsSearchQuery",
+      "condition_prefix": "Lists",
+      "condition_type_name": "ListsCondition",
+      "fields": [
+        {
+          "name": "_metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Metadata about the list resource"
+        },
+        {
+          "name": "contact_count",
+          "python_name": "contact_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of contacts in the list"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique list identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the list"
+        }
+      ]
+    },
+    "segments": {
+      "entity": "segments",
+      "data_type_name": "SegmentsSearchData",
+      "filter_type_name": "SegmentsSearchFilter",
+      "in_filter_type_name": "SegmentsInFilter",
+      "any_value_filter_type_name": "SegmentsAnyValueFilter",
+      "string_filter_type_name": "SegmentsStringFilter",
+      "sort_filter_type_name": "SegmentsSortFilter",
+      "result_type_name": "SegmentsSearchResult",
+      "query_type_name": "SegmentsSearchQuery",
+      "condition_prefix": "Segments",
+      "condition_type_name": "SegmentsCondition",
+      "fields": [
+        {
+          "name": "contacts_count",
+          "python_name": "contacts_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of contacts in the segment"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the segment was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique segment identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Segment name"
+        },
+        {
+          "name": "next_sample_update",
+          "python_name": "next_sample_update",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the next sample update will occur"
+        },
+        {
+          "name": "parent_list_ids",
+          "python_name": "parent_list_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "IDs of parent lists"
+        },
+        {
+          "name": "query_version",
+          "python_name": "query_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Query version used"
+        },
+        {
+          "name": "sample_updated_at",
+          "python_name": "sample_updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the sample was last updated"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Segment status details"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the segment was last updated"
+        }
+      ]
+    },
+    "singlesend_stats": {
+      "entity": "singlesend_stats",
+      "data_type_name": "SinglesendStatsSearchData",
+      "filter_type_name": "SinglesendStatsSearchFilter",
+      "in_filter_type_name": "SinglesendStatsInFilter",
+      "any_value_filter_type_name": "SinglesendStatsAnyValueFilter",
+      "string_filter_type_name": "SinglesendStatsStringFilter",
+      "sort_filter_type_name": "SinglesendStatsSortFilter",
+      "result_type_name": "SinglesendStatsSearchResult",
+      "query_type_name": "SinglesendStatsSearchQuery",
+      "condition_prefix": "SinglesendStats",
+      "condition_type_name": "SinglesendStatsCondition",
+      "fields": [
+        {
+          "name": "ab_phase",
+          "python_name": "ab_phase",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The A/B test phase"
+        },
+        {
+          "name": "ab_variation",
+          "python_name": "ab_variation",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The A/B test variation"
+        },
+        {
+          "name": "aggregation",
+          "python_name": "aggregation",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The aggregation type"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The single send ID"
+        },
+        {
+          "name": "stats",
+          "python_name": "stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Email statistics for the single send"
+        }
+      ]
+    },
+    "singlesends": {
+      "entity": "singlesends",
+      "data_type_name": "SinglesendsSearchData",
+      "filter_type_name": "SinglesendsSearchFilter",
+      "in_filter_type_name": "SinglesendsInFilter",
+      "any_value_filter_type_name": "SinglesendsAnyValueFilter",
+      "string_filter_type_name": "SinglesendsStringFilter",
+      "sort_filter_type_name": "SinglesendsSortFilter",
+      "result_type_name": "SinglesendsSearchResult",
+      "query_type_name": "SinglesendsSearchQuery",
+      "condition_prefix": "Singlesends",
+      "condition_type_name": "SinglesendsCondition",
+      "fields": [
+        {
+          "name": "categories",
+          "python_name": "categories",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Categories associated with this single send"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the single send was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique single send identifier"
+        },
+        {
+          "name": "is_abtest",
+          "python_name": "is_abtest",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is an A/B test"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Single send name"
+        },
+        {
+          "name": "send_at",
+          "python_name": "send_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Scheduled send time"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status: draft, scheduled, or triggered"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the single send was last updated"
+        }
+      ]
+    },
+    "suppression_group_members": {
+      "entity": "suppression_group_members",
+      "data_type_name": "SuppressionGroupMembersSearchData",
+      "filter_type_name": "SuppressionGroupMembersSearchFilter",
+      "in_filter_type_name": "SuppressionGroupMembersInFilter",
+      "any_value_filter_type_name": "SuppressionGroupMembersAnyValueFilter",
+      "string_filter_type_name": "SuppressionGroupMembersStringFilter",
+      "sort_filter_type_name": "SuppressionGroupMembersSortFilter",
+      "result_type_name": "SuppressionGroupMembersSearchResult",
+      "query_type_name": "SuppressionGroupMembersSearchQuery",
+      "condition_prefix": "SuppressionGroupMembers",
+      "condition_type_name": "SuppressionGroupMembersCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unix timestamp when the suppression was created"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The suppressed email address"
+        },
+        {
+          "name": "group_id",
+          "python_name": "group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the suppression group"
+        },
+        {
+          "name": "group_name",
+          "python_name": "group_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the suppression group"
+        }
+      ]
+    },
+    "suppression_groups": {
+      "entity": "suppression_groups",
+      "data_type_name": "SuppressionGroupsSearchData",
+      "filter_type_name": "SuppressionGroupsSearchFilter",
+      "in_filter_type_name": "SuppressionGroupsInFilter",
+      "any_value_filter_type_name": "SuppressionGroupsAnyValueFilter",
+      "string_filter_type_name": "SuppressionGroupsStringFilter",
+      "sort_filter_type_name": "SuppressionGroupsSortFilter",
+      "result_type_name": "SuppressionGroupsSearchResult",
+      "query_type_name": "SuppressionGroupsSearchQuery",
+      "condition_prefix": "SuppressionGroups",
+      "condition_type_name": "SuppressionGroupsCondition",
+      "fields": [
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the suppression group"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique suppression group identifier"
+        },
+        {
+          "name": "is_default",
+          "python_name": "is_default",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is the default suppression group"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Suppression group name"
+        },
+        {
+          "name": "unsubscribes",
+          "python_name": "unsubscribes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of unsubscribes in this group"
+        }
+      ]
+    },
+    "templates": {
+      "entity": "templates",
+      "data_type_name": "TemplatesSearchData",
+      "filter_type_name": "TemplatesSearchFilter",
+      "in_filter_type_name": "TemplatesInFilter",
+      "any_value_filter_type_name": "TemplatesAnyValueFilter",
+      "string_filter_type_name": "TemplatesStringFilter",
+      "sort_filter_type_name": "TemplatesSortFilter",
+      "result_type_name": "TemplatesSearchResult",
+      "query_type_name": "TemplatesSearchQuery",
+      "condition_prefix": "Templates",
+      "condition_type_name": "TemplatesCondition",
+      "fields": [
+        {
+          "name": "generation",
+          "python_name": "generation",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Template generation (legacy or dynamic)"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique template identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Template name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the template was last updated"
+        },
+        {
+          "name": "versions",
+          "python_name": "versions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Template versions"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,1438 @@
+{
+  "connector_name": "sentry",
+  "class_name": "SentryConnector",
+  "package_name": "airbyte_agent_sentry",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://docs.sentry.io/api/",
+  "commit_sha": "unknown",
+  "auth_example": "SentryAuthConfig(auth_token=\"...\")",
+  "auth_import": ", SentryAuthConfig",
+  "auth_config": {
+    "type_name": "SentryAuthConfig",
+    "base_name": "Sentry",
+    "options": [
+      {
+        "title": "Authentication Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "auth_token",
+            "type": "str",
+            "required": true,
+            "title": "Authentication Token",
+            "description": "Sentry authentication token. Log into Sentry and create one at Settings > Account > API > Auth Tokens."
+          }
+        ],
+        "type_suffix": "AuthenticationToken"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "SentryReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Sentry.",
+    "fields": [
+      {
+        "name": "organization",
+        "type": "str",
+        "required": true,
+        "title": "Organization",
+        "description": "The slug of the organization to replicate data from.",
+        "format": null,
+        "default": null
+      },
+      {
+        "name": "project",
+        "type": "str",
+        "required": true,
+        "title": "Project",
+        "description": "The slug of the project to replicate data from.",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Sentry error monitoring and performance tracking API. Provides access to projects, issues, events, and releases within your Sentry organization. Supports listing and retrieving detailed information about error tracking data, project configurations, and software releases.",
+  "supported_questions": "- List all projects in my Sentry organization\n- Show me the issues for a specific project\n- List recent events from a project\n- Show me all releases for my organization\n- Get the details of a specific project\n- What are the most common unresolved issues?\n- Which projects have the most events?\n- Show me issues that were first seen this week\n- Find releases created in the last month",
+  "unsupported_questions": "- Create a new project in Sentry\n- Delete an issue\n- Update a release\n- Resolve all issues in a project",
+  "first_operation": {
+    "method_name": "projects__list",
+    "http_method": "get",
+    "path": "/projects/",
+    "entity": "projects",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "cursor",
+        "python_name": "cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Pagination cursor for next page of results.",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ProjectsListParams",
+    "response_type": "ProjectsListResult",
+    "description": "Return a list of projects available to the authenticated user.",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Project]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "projects": [
+      {
+        "method_name": "projects__list",
+        "http_method": "get",
+        "path": "/projects/",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page of results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Return a list of projects available to the authenticated user.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Project]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "projects__get",
+        "http_method": "get",
+        "path": "/projects/{organization_slug}/{project_slug}/",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the project belongs to."
+          },
+          {
+            "name": "project_slug",
+            "python_name": "project_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the project to retrieve."
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "ProjectDetail",
+        "description": "Return details on an individual project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProjectDetail",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issues": [
+      {
+        "method_name": "issues__list",
+        "http_method": "get",
+        "path": "/projects/{organization_slug}/{project_slug}/issues/",
+        "entity": "issues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the issues belong to."
+          },
+          {
+            "name": "project_slug",
+            "python_name": "project_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the project the issues belong to."
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "An optional Sentry structured search query. If not provided an implied \"is:unresolved\" is assumed.",
+            "is_deep_object": false
+          },
+          {
+            "name": "statsPeriod",
+            "python_name": "stats_period",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "An optional stat period (can be one of \"24h\", \"14d\", and \"\").",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page of results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesListParams",
+        "response_type": "IssuesListResult",
+        "description": "Return a list of issues (groups) bound to a project. A default query of is:unresolved is applied. To return results with other statuses send a new query value (i.e. ?query= for all results).",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Issue]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "issues__get",
+        "http_method": "get",
+        "path": "/organizations/{organization_slug}/issues/{issue_id}/",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the issue belongs to."
+          },
+          {
+            "name": "issue_id",
+            "python_name": "issue_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the issue to retrieve."
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "Issue",
+        "description": "Return details on an individual issue. This returns the basic stats for the issue (title, last seen, first seen), some overall numbers (number of comments, user reports) as well as the summarized event data.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "events": [
+      {
+        "method_name": "events__list",
+        "http_method": "get",
+        "path": "/projects/{organization_slug}/{project_slug}/events/",
+        "entity": "events",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the events belong to."
+          },
+          {
+            "name": "project_slug",
+            "python_name": "project_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the project the events belong to."
+          },
+          {
+            "name": "full",
+            "python_name": "full",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "true"
+            },
+            "required": false,
+            "description": "If set to true, the event payload will include the full event body.",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page of results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsListParams",
+        "response_type": "EventsListResult",
+        "description": "Return a list of events bound to a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Event]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "events__get",
+        "http_method": "get",
+        "path": "/projects/{organization_slug}/{project_slug}/events/{event_id}/",
+        "entity": "events",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the event belongs to."
+          },
+          {
+            "name": "project_slug",
+            "python_name": "project_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the project the event belongs to."
+          },
+          {
+            "name": "event_id",
+            "python_name": "event_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the event to retrieve (hexadecimal)."
+          }
+        ],
+        "params_type_name": "EventsGetParams",
+        "response_type": "Event",
+        "description": "Return details on an individual event.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Event",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "releases": [
+      {
+        "method_name": "releases__list",
+        "http_method": "get",
+        "path": "/organizations/{organization_slug}/releases/",
+        "entity": "releases",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization."
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "This parameter can be used to create a \"starts with\" filter for the version.",
+            "is_deep_object": false
+          },
+          {
+            "name": "cursor",
+            "python_name": "cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Pagination cursor for next page of results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReleasesListParams",
+        "response_type": "ReleasesListResult",
+        "description": "Return a list of releases for a given organization.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Release]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "releases__get",
+        "http_method": "get",
+        "path": "/organizations/{organization_slug}/releases/{version}/",
+        "entity": "releases",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization."
+          },
+          {
+            "name": "version",
+            "python_name": "version",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The version identifier of the release."
+          }
+        ],
+        "params_type_name": "ReleasesGetParams",
+        "response_type": "Release",
+        "description": "Return a release for a given organization.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Release",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_detail": [
+      {
+        "method_name": "project_detail__get",
+        "http_method": "get",
+        "path": "/projects/{organization_slug}/{project_slug}/detail/",
+        "entity": "project_detail",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "organization_slug",
+            "python_name": "organization_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the organization the project belongs to."
+          },
+          {
+            "name": "project_slug",
+            "python_name": "project_slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The slug of the project."
+          }
+        ],
+        "params_type_name": "ProjectDetailGetParams",
+        "response_type": "ProjectDetail",
+        "description": "Return detailed information about a specific project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProjectDetail",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "events": {
+      "entity": "events",
+      "data_type_name": "EventsSearchData",
+      "filter_type_name": "EventsSearchFilter",
+      "in_filter_type_name": "EventsInFilter",
+      "any_value_filter_type_name": "EventsAnyValueFilter",
+      "string_filter_type_name": "EventsStringFilter",
+      "sort_filter_type_name": "EventsSortFilter",
+      "result_type_name": "EventsSearchResult",
+      "query_type_name": "EventsSearchQuery",
+      "condition_prefix": "Events",
+      "condition_type_name": "EventsCondition",
+      "fields": [
+        {
+          "name": "_meta",
+          "python_name": "meta",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Meta information for data scrubbing."
+        },
+        {
+          "name": "context",
+          "python_name": "context",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional context data."
+        },
+        {
+          "name": "contexts",
+          "python_name": "contexts",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Structured context information."
+        },
+        {
+          "name": "crashFile",
+          "python_name": "crash_file",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Crash file reference."
+        },
+        {
+          "name": "culprit",
+          "python_name": "culprit",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The culprit (source) of the event."
+        },
+        {
+          "name": "dateCreated",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "When the event was created."
+        },
+        {
+          "name": "dateReceived",
+          "python_name": "date_received",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the event was received by Sentry."
+        },
+        {
+          "name": "dist",
+          "python_name": "dist",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Distribution information."
+        },
+        {
+          "name": "entries",
+          "python_name": "entries",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Event entries (exception, breadcrumbs, request, etc.)."
+        },
+        {
+          "name": "errors",
+          "python_name": "errors",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Processing errors."
+        },
+        {
+          "name": "event.type",
+          "python_name": "event_type",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of the event."
+        },
+        {
+          "name": "eventID",
+          "python_name": "event_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Event ID as reported by the client."
+        },
+        {
+          "name": "fingerprints",
+          "python_name": "fingerprints",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Fingerprints used for grouping."
+        },
+        {
+          "name": "groupID",
+          "python_name": "group_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the issue group this event belongs to."
+        },
+        {
+          "name": "groupingConfig",
+          "python_name": "grouping_config",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Grouping configuration."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique event identifier."
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Location in source code."
+        },
+        {
+          "name": "message",
+          "python_name": "message",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Event message."
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Event metadata."
+        },
+        {
+          "name": "occurrence",
+          "python_name": "occurrence",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Occurrence information for the event."
+        },
+        {
+          "name": "packages",
+          "python_name": "packages",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Package information."
+        },
+        {
+          "name": "platform",
+          "python_name": "platform",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Platform the event was generated on."
+        },
+        {
+          "name": "projectID",
+          "python_name": "project_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Project ID this event belongs to."
+        },
+        {
+          "name": "sdk",
+          "python_name": "sdk",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SDK information."
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Event payload size in bytes."
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Tags associated with the event."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Event title."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Event type."
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User associated with the event."
+        }
+      ]
+    },
+    "issues": {
+      "entity": "issues",
+      "data_type_name": "IssuesSearchData",
+      "filter_type_name": "IssuesSearchFilter",
+      "in_filter_type_name": "IssuesInFilter",
+      "any_value_filter_type_name": "IssuesAnyValueFilter",
+      "string_filter_type_name": "IssuesStringFilter",
+      "sort_filter_type_name": "IssuesSortFilter",
+      "result_type_name": "IssuesSearchResult",
+      "query_type_name": "IssuesSearchQuery",
+      "condition_prefix": "Issues",
+      "condition_type_name": "IssuesCondition",
+      "fields": [
+        {
+          "name": "annotations",
+          "python_name": "annotations",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Annotations on the issue."
+        },
+        {
+          "name": "assignedTo",
+          "python_name": "assigned_to",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User or team assigned to this issue."
+        },
+        {
+          "name": "count",
+          "python_name": "count",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of events for this issue."
+        },
+        {
+          "name": "culprit",
+          "python_name": "culprit",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "The culprit (source) of the issue."
+        },
+        {
+          "name": "firstSeen",
+          "python_name": "first_seen",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "When the issue was first seen."
+        },
+        {
+          "name": "hasSeen",
+          "python_name": "has_seen",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the authenticated user has seen the issue."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique issue identifier."
+        },
+        {
+          "name": "isBookmarked",
+          "python_name": "is_bookmarked",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the issue is bookmarked."
+        },
+        {
+          "name": "isPublic",
+          "python_name": "is_public",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the issue is public."
+        },
+        {
+          "name": "isSubscribed",
+          "python_name": "is_subscribed",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the user is subscribed to the issue."
+        },
+        {
+          "name": "isUnhandled",
+          "python_name": "is_unhandled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the issue is from an unhandled error."
+        },
+        {
+          "name": "issueCategory",
+          "python_name": "issue_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The category classification of the issue."
+        },
+        {
+          "name": "issueType",
+          "python_name": "issue_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type classification of the issue."
+        },
+        {
+          "name": "lastSeen",
+          "python_name": "last_seen",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "When the issue was last seen."
+        },
+        {
+          "name": "level",
+          "python_name": "level",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue severity level."
+        },
+        {
+          "name": "logger",
+          "python_name": "logger",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Logger that generated the issue."
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Issue metadata."
+        },
+        {
+          "name": "numComments",
+          "python_name": "num_comments",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Number of comments on the issue."
+        },
+        {
+          "name": "permalink",
+          "python_name": "permalink",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Permalink to the issue in the Sentry UI."
+        },
+        {
+          "name": "platform",
+          "python_name": "platform",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Platform for this issue."
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Project this issue belongs to."
+        },
+        {
+          "name": "shareId",
+          "python_name": "share_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Share ID if the issue is shared."
+        },
+        {
+          "name": "shortId",
+          "python_name": "short_id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Short human-readable identifier."
+        },
+        {
+          "name": "stats",
+          "python_name": "stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Issue event statistics."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue status (resolved, unresolved, ignored)."
+        },
+        {
+          "name": "statusDetails",
+          "python_name": "status_details",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Status detail information."
+        },
+        {
+          "name": "subscriptionDetails",
+          "python_name": "subscription_details",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Subscription details."
+        },
+        {
+          "name": "substatus",
+          "python_name": "substatus",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue substatus."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue title."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue type."
+        },
+        {
+          "name": "userCount",
+          "python_name": "user_count",
+          "type": "int | None",
+          "json_type": "integer | null",
+          "example_value_json": "0",
+          "description": "Number of users affected."
+        }
+      ]
+    },
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "access",
+          "python_name": "access",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of access permissions for the authenticated user."
+        },
+        {
+          "name": "avatar",
+          "python_name": "avatar",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Project avatar information."
+        },
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Project color code."
+        },
+        {
+          "name": "dateCreated",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Date the project was created."
+        },
+        {
+          "name": "features",
+          "python_name": "features",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "List of enabled features."
+        },
+        {
+          "name": "firstEvent",
+          "python_name": "first_event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of the first event."
+        },
+        {
+          "name": "firstTransactionEvent",
+          "python_name": "first_transaction_event",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether a transaction event has been received."
+        },
+        {
+          "name": "hasAccess",
+          "python_name": "has_access",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the user has access to this project."
+        },
+        {
+          "name": "hasCustomMetrics",
+          "python_name": "has_custom_metrics",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has custom metrics."
+        },
+        {
+          "name": "hasFeedbacks",
+          "python_name": "has_feedbacks",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has user feedback."
+        },
+        {
+          "name": "hasMinifiedStackTrace",
+          "python_name": "has_minified_stack_trace",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has minified stack traces."
+        },
+        {
+          "name": "hasMonitors",
+          "python_name": "has_monitors",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has cron monitors."
+        },
+        {
+          "name": "hasNewFeedbacks",
+          "python_name": "has_new_feedbacks",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has new user feedback."
+        },
+        {
+          "name": "hasProfiles",
+          "python_name": "has_profiles",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has profiling data."
+        },
+        {
+          "name": "hasReplays",
+          "python_name": "has_replays",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has session replays."
+        },
+        {
+          "name": "hasSessions",
+          "python_name": "has_sessions",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project has session data."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique project identifier."
+        },
+        {
+          "name": "isBookmarked",
+          "python_name": "is_bookmarked",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the project is bookmarked."
+        },
+        {
+          "name": "isInternal",
+          "python_name": "is_internal",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the project is internal."
+        },
+        {
+          "name": "isMember",
+          "python_name": "is_member",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the authenticated user is a member."
+        },
+        {
+          "name": "isPublic",
+          "python_name": "is_public",
+          "type": "bool | None",
+          "json_type": "boolean | null",
+          "example_value_json": "True",
+          "description": "Whether the project is public."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Human-readable project name."
+        },
+        {
+          "name": "organization",
+          "python_name": "organization",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": "Organization this project belongs to."
+        },
+        {
+          "name": "platform",
+          "python_name": "platform",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The platform for this project."
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "URL-friendly project identifier."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "string | null",
+          "example_value_json": "\"<str>\"",
+          "description": "Project status."
+        }
+      ]
+    },
+    "releases": {
+      "entity": "releases",
+      "data_type_name": "ReleasesSearchData",
+      "filter_type_name": "ReleasesSearchFilter",
+      "in_filter_type_name": "ReleasesInFilter",
+      "any_value_filter_type_name": "ReleasesAnyValueFilter",
+      "string_filter_type_name": "ReleasesStringFilter",
+      "sort_filter_type_name": "ReleasesSortFilter",
+      "result_type_name": "ReleasesSearchResult",
+      "query_type_name": "ReleasesSearchQuery",
+      "condition_prefix": "Releases",
+      "condition_type_name": "ReleasesCondition",
+      "fields": [
+        {
+          "name": "authors",
+          "python_name": "authors",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Authors of commits in this release."
+        },
+        {
+          "name": "commitCount",
+          "python_name": "commit_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of commits in this release."
+        },
+        {
+          "name": "currentProjectMeta",
+          "python_name": "current_project_meta",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Metadata for the current project context."
+        },
+        {
+          "name": "data",
+          "python_name": "data",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Additional release data."
+        },
+        {
+          "name": "dateCreated",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the release was created."
+        },
+        {
+          "name": "dateReleased",
+          "python_name": "date_released",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the release was deployed."
+        },
+        {
+          "name": "deployCount",
+          "python_name": "deploy_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of deploys for this release."
+        },
+        {
+          "name": "firstEvent",
+          "python_name": "first_event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of the first event in this release."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique release identifier."
+        },
+        {
+          "name": "lastCommit",
+          "python_name": "last_commit",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Last commit in this release."
+        },
+        {
+          "name": "lastDeploy",
+          "python_name": "last_deploy",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Last deploy of this release."
+        },
+        {
+          "name": "lastEvent",
+          "python_name": "last_event",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of the last event in this release."
+        },
+        {
+          "name": "newGroups",
+          "python_name": "new_groups",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of new issue groups in this release."
+        },
+        {
+          "name": "owner",
+          "python_name": "owner",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Owner of the release."
+        },
+        {
+          "name": "projects",
+          "python_name": "projects",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Projects associated with this release."
+        },
+        {
+          "name": "ref",
+          "python_name": "ref",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Git reference (commit SHA, tag, etc.)."
+        },
+        {
+          "name": "shortVersion",
+          "python_name": "short_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Short version string."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Release status."
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL associated with the release."
+        },
+        {
+          "name": "userAgent",
+          "python_name": "user_agent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User agent that created the release."
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Release version string."
+        },
+        {
+          "name": "versionInfo",
+          "python_name": "version_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Parsed version information."
+        }
+      ]
+    }
+  }
+}

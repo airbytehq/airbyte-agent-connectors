@@ -1,0 +1,2912 @@
+{
+  "connector_name": "harvest",
+  "class_name": "HarvestConnector",
+  "package_name": "airbyte_agent_harvest",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://help.getharvest.com/api-v2/",
+  "commit_sha": "unknown",
+  "auth_example": "HarvestAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\", account_id=\"...\")",
+  "auth_import": ", HarvestAuthConfig",
+  "auth_config": {
+    "type_name": "HarvestAuthConfig",
+    "base_name": "Harvest",
+    "options": [
+      {
+        "title": "OAuth 2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": ""
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": ""
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "Your Harvest OAuth2 refresh token"
+          },
+          {
+            "name": "account_id",
+            "type": "str",
+            "required": true,
+            "title": "Account ID",
+            "description": "Your Harvest account ID"
+          }
+        ],
+        "type_suffix": "Oauth20",
+        "scheme_name": "oauth2"
+      },
+      {
+        "title": "Personal Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "token",
+            "type": "str",
+            "required": true,
+            "title": "Personal Access Token",
+            "description": "Your Harvest personal access token"
+          },
+          {
+            "name": "account_id",
+            "type": "str",
+            "required": true,
+            "title": "Account ID",
+            "description": "Your Harvest account ID"
+          }
+        ],
+        "type_suffix": "PersonalAccessToken",
+        "scheme_name": "bearer"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": {
+    "type_name": "HarvestReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Harvest.",
+    "fields": [
+      {
+        "name": "replication_start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in YYYY-MM-DDTHH:mm:ssZ format from which to start replicating data. Data before this date will not be replicated.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Harvest time-tracking and invoicing API (v2). Provides read access\nto time tracking data including users, clients, projects, tasks, time entries, invoices,\nestimates, expenses, and more. Harvest is a cloud-based time tracking and invoicing\nsolution that helps teams track time, manage projects, and streamline invoicing.\n",
+  "supported_questions": "- List all users in Harvest\n- Show me all active projects\n- List all clients\n- Show me recent time entries\n- List all invoices\n- Show me all tasks\n- List all expense categories\n- Get company information\n- How many hours were logged last week?\n- Which projects have the most time entries?\n- Show me all unbilled time entries\n- What are the active projects for a specific client?\n- List all overdue invoices\n- Which users logged the most hours this month?",
+  "unsupported_questions": "- Create a new time entry in Harvest\n- Update a project budget\n- Delete an invoice\n- Start a timer for a task",
+  "first_operation": {
+    "method_name": "list_users",
+    "http_method": "get",
+    "path": "/users",
+    "entity": "users",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000,
+          "default": 50
+        },
+        "required": null,
+        "description": "Number of records per page (max 2000)",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "UsersListParams",
+    "response_type": "UsersListResult",
+    "description": "Returns a paginated list of users in the Harvest account",
+    "record_extractor": "$.users",
+    "meta_extractor": {
+      "next_link": "$.links.next"
+    },
+    "needs_envelope": true,
+    "record_type": "list[User]",
+    "meta_fields": [
+      {
+        "name": "next_link",
+        "python_name": "next_link",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "URL to the next page of results"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of users in the Harvest account",
+        "record_extractor": "$.users",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "clients": [
+      {
+        "method_name": "list_clients",
+        "http_method": "get",
+        "path": "/clients",
+        "entity": "clients",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ClientsListParams",
+        "response_type": "ClientsListResult",
+        "description": "Returns a paginated list of clients",
+        "record_extractor": "$.clients",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Client]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_client",
+        "http_method": "get",
+        "path": "/clients/{id}",
+        "entity": "clients",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Client ID"
+          }
+        ],
+        "params_type_name": "ClientsGetParams",
+        "response_type": "Client",
+        "description": "Get a single client by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Client",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a paginated list of contacts",
+        "record_extractor": "$.contacts",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "company": [
+      {
+        "method_name": "get_company",
+        "http_method": "get",
+        "path": "/company",
+        "entity": "company",
+        "action": "get",
+        "parameters": [],
+        "params_type_name": "CompanyGetParams",
+        "response_type": "Company",
+        "description": "Returns the company information for the authenticated account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "list_projects",
+        "http_method": "get",
+        "path": "/projects",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Returns a paginated list of projects",
+        "record_extractor": "$.projects",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Project]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_project",
+        "http_method": "get",
+        "path": "/projects/{id}",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Project ID"
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "Project",
+        "description": "Get a single project by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Project",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/tasks",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Returns a paginated list of tasks",
+        "record_extractor": "$.tasks",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Task]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/tasks/{id}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Task ID"
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "Task",
+        "description": "Get a single task by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "time_entries": [
+      {
+        "method_name": "list_time_entries",
+        "http_method": "get",
+        "path": "/time_entries",
+        "entity": "time_entries",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TimeEntriesListParams",
+        "response_type": "TimeEntriesListResult",
+        "description": "Returns a paginated list of time entries",
+        "record_extractor": "$.time_entries",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TimeEntry]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_time_entry",
+        "http_method": "get",
+        "path": "/time_entries/{id}",
+        "entity": "time_entries",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Time entry ID"
+          }
+        ],
+        "params_type_name": "TimeEntriesGetParams",
+        "response_type": "TimeEntry",
+        "description": "Get a single time entry by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TimeEntry",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoices": [
+      {
+        "method_name": "list_invoices",
+        "http_method": "get",
+        "path": "/invoices",
+        "entity": "invoices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvoicesListParams",
+        "response_type": "InvoicesListResult",
+        "description": "Returns a paginated list of invoices",
+        "record_extractor": "$.invoices",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Invoice]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_invoice",
+        "http_method": "get",
+        "path": "/invoices/{id}",
+        "entity": "invoices",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Invoice ID"
+          }
+        ],
+        "params_type_name": "InvoicesGetParams",
+        "response_type": "Invoice",
+        "description": "Get a single invoice by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Invoice",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "invoice_item_categories": [
+      {
+        "method_name": "list_invoice_item_categories",
+        "http_method": "get",
+        "path": "/invoice_item_categories",
+        "entity": "invoice_item_categories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "InvoiceItemCategoriesListParams",
+        "response_type": "InvoiceItemCategoriesListResult",
+        "description": "Returns a paginated list of invoice item categories",
+        "record_extractor": "$.invoice_item_categories",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[InvoiceItemCategory]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_invoice_item_category",
+        "http_method": "get",
+        "path": "/invoice_item_categories/{id}",
+        "entity": "invoice_item_categories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Invoice item category ID"
+          }
+        ],
+        "params_type_name": "InvoiceItemCategoriesGetParams",
+        "response_type": "InvoiceItemCategory",
+        "description": "Get a single invoice item category by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InvoiceItemCategory",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "estimates": [
+      {
+        "method_name": "list_estimates",
+        "http_method": "get",
+        "path": "/estimates",
+        "entity": "estimates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EstimatesListParams",
+        "response_type": "EstimatesListResult",
+        "description": "Returns a paginated list of estimates",
+        "record_extractor": "$.estimates",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Estimate]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_estimate",
+        "http_method": "get",
+        "path": "/estimates/{id}",
+        "entity": "estimates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Estimate ID"
+          }
+        ],
+        "params_type_name": "EstimatesGetParams",
+        "response_type": "Estimate",
+        "description": "Get a single estimate by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Estimate",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "estimate_item_categories": [
+      {
+        "method_name": "list_estimate_item_categories",
+        "http_method": "get",
+        "path": "/estimate_item_categories",
+        "entity": "estimate_item_categories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EstimateItemCategoriesListParams",
+        "response_type": "EstimateItemCategoriesListResult",
+        "description": "Returns a paginated list of estimate item categories",
+        "record_extractor": "$.estimate_item_categories",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[EstimateItemCategory]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_estimate_item_category",
+        "http_method": "get",
+        "path": "/estimate_item_categories/{id}",
+        "entity": "estimate_item_categories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Estimate item category ID"
+          }
+        ],
+        "params_type_name": "EstimateItemCategoriesGetParams",
+        "response_type": "EstimateItemCategory",
+        "description": "Get a single estimate item category by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "EstimateItemCategory",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "expenses": [
+      {
+        "method_name": "list_expenses",
+        "http_method": "get",
+        "path": "/expenses",
+        "entity": "expenses",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ExpensesListParams",
+        "response_type": "ExpensesListResult",
+        "description": "Returns a paginated list of expenses",
+        "record_extractor": "$.expenses",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Expense]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_expense",
+        "http_method": "get",
+        "path": "/expenses/{id}",
+        "entity": "expenses",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Expense ID"
+          }
+        ],
+        "params_type_name": "ExpensesGetParams",
+        "response_type": "Expense",
+        "description": "Get a single expense by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Expense",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "expense_categories": [
+      {
+        "method_name": "list_expense_categories",
+        "http_method": "get",
+        "path": "/expense_categories",
+        "entity": "expense_categories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ExpenseCategoriesListParams",
+        "response_type": "ExpenseCategoriesListResult",
+        "description": "Returns a paginated list of expense categories",
+        "record_extractor": "$.expense_categories",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ExpenseCategory]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_expense_category",
+        "http_method": "get",
+        "path": "/expense_categories/{id}",
+        "entity": "expense_categories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Expense category ID"
+          }
+        ],
+        "params_type_name": "ExpenseCategoriesGetParams",
+        "response_type": "ExpenseCategory",
+        "description": "Get a single expense category by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ExpenseCategory",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "roles": [
+      {
+        "method_name": "list_roles",
+        "http_method": "get",
+        "path": "/roles",
+        "entity": "roles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RolesListParams",
+        "response_type": "RolesListResult",
+        "description": "Returns a paginated list of roles",
+        "record_extractor": "$.roles",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Role]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_role",
+        "http_method": "get",
+        "path": "/roles/{id}",
+        "entity": "roles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Role ID"
+          }
+        ],
+        "params_type_name": "RolesGetParams",
+        "response_type": "Role",
+        "description": "Get a single role by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Role",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "user_assignments": [
+      {
+        "method_name": "list_user_assignments",
+        "http_method": "get",
+        "path": "/user_assignments",
+        "entity": "user_assignments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UserAssignmentsListParams",
+        "response_type": "UserAssignmentsListResult",
+        "description": "Returns a paginated list of user assignments across all projects",
+        "record_extractor": "$.user_assignments",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserAssignment]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "task_assignments": [
+      {
+        "method_name": "list_task_assignments",
+        "http_method": "get",
+        "path": "/task_assignments",
+        "entity": "task_assignments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaskAssignmentsListParams",
+        "response_type": "TaskAssignmentsListResult",
+        "description": "Returns a paginated list of task assignments across all projects",
+        "record_extractor": "$.task_assignments",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskAssignment]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "time_projects": [
+      {
+        "method_name": "list_time_projects",
+        "http_method": "get",
+        "path": "/reports/time/projects",
+        "entity": "time_projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "20200101"
+            },
+            "required": true,
+            "description": "Start date for the report in YYYYMMDD format",
+            "is_deep_object": false
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "21000101"
+            },
+            "required": true,
+            "description": "End date for the report in YYYYMMDD format",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TimeProjectsListParams",
+        "response_type": "TimeProjectsListResult",
+        "description": "Returns time report data grouped by project for a given date range",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TimeProject]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "time_tasks": [
+      {
+        "method_name": "list_time_tasks",
+        "http_method": "get",
+        "path": "/reports/time/tasks",
+        "entity": "time_tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "from",
+            "python_name": "from_",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "20200101"
+            },
+            "required": true,
+            "description": "Start date for the report in YYYYMMDD format",
+            "is_deep_object": false
+          },
+          {
+            "name": "to",
+            "python_name": "to",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "21000101"
+            },
+            "required": true,
+            "description": "End date for the report in YYYYMMDD format",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2000,
+              "default": 50
+            },
+            "required": null,
+            "description": "Number of records per page (max 2000)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TimeTasksListParams",
+        "response_type": "TimeTasksListResult",
+        "description": "Returns time report data grouped by task for a given date range",
+        "record_extractor": "$.results",
+        "meta_extractor": {
+          "next_link": "$.links.next"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TimeTask]",
+        "meta_fields": [
+          {
+            "name": "next_link",
+            "python_name": "next_link",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "null",
+                "string"
+              ],
+              "description": "URL to the next page of results"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "clients": {
+      "entity": "clients",
+      "data_type_name": "ClientsSearchData",
+      "filter_type_name": "ClientsSearchFilter",
+      "in_filter_type_name": "ClientsInFilter",
+      "any_value_filter_type_name": "ClientsAnyValueFilter",
+      "string_filter_type_name": "ClientsStringFilter",
+      "sort_filter_type_name": "ClientsSortFilter",
+      "result_type_name": "ClientsSearchResult",
+      "query_type_name": "ClientsSearchQuery",
+      "condition_prefix": "Clients",
+      "condition_type_name": "ClientsCondition",
+      "fields": [
+        {
+          "name": "address",
+          "python_name": "address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The client's postal address"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the client record was created"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency used by the client"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the client"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the client is active"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The client's name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the client record was last updated"
+        }
+      ]
+    },
+    "company": {
+      "entity": "company",
+      "data_type_name": "CompanySearchData",
+      "filter_type_name": "CompanySearchFilter",
+      "in_filter_type_name": "CompanyInFilter",
+      "any_value_filter_type_name": "CompanyAnyValueFilter",
+      "string_filter_type_name": "CompanyStringFilter",
+      "sort_filter_type_name": "CompanySortFilter",
+      "result_type_name": "CompanySearchResult",
+      "query_type_name": "CompanySearchQuery",
+      "condition_prefix": "Company",
+      "condition_type_name": "CompanyCondition",
+      "fields": [
+        {
+          "name": "base_uri",
+          "python_name": "base_uri",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The base URI"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency used by the company"
+        },
+        {
+          "name": "full_domain",
+          "python_name": "full_domain",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The full domain name"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the company is active"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the company"
+        },
+        {
+          "name": "plan_type",
+          "python_name": "plan_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The plan type"
+        },
+        {
+          "name": "weekly_capacity",
+          "python_name": "weekly_capacity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Weekly capacity in seconds"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Client associated with the contact"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Job title"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "estimate_item_categories": {
+      "entity": "estimate_item_categories",
+      "data_type_name": "EstimateItemCategoriesSearchData",
+      "filter_type_name": "EstimateItemCategoriesSearchFilter",
+      "in_filter_type_name": "EstimateItemCategoriesInFilter",
+      "any_value_filter_type_name": "EstimateItemCategoriesAnyValueFilter",
+      "string_filter_type_name": "EstimateItemCategoriesStringFilter",
+      "sort_filter_type_name": "EstimateItemCategoriesSortFilter",
+      "result_type_name": "EstimateItemCategoriesSearchResult",
+      "query_type_name": "EstimateItemCategoriesSearchQuery",
+      "condition_prefix": "EstimateItemCategories",
+      "condition_type_name": "EstimateItemCategoriesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "estimates": {
+      "entity": "estimates",
+      "data_type_name": "EstimatesSearchData",
+      "filter_type_name": "EstimatesSearchFilter",
+      "in_filter_type_name": "EstimatesInFilter",
+      "any_value_filter_type_name": "EstimatesAnyValueFilter",
+      "string_filter_type_name": "EstimatesStringFilter",
+      "sort_filter_type_name": "EstimatesSortFilter",
+      "result_type_name": "EstimatesSearchResult",
+      "query_type_name": "EstimatesSearchQuery",
+      "condition_prefix": "Estimates",
+      "condition_type_name": "EstimatesCondition",
+      "fields": [
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total amount"
+        },
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Client details"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "issue_date",
+          "python_name": "issue_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue date"
+        },
+        {
+          "name": "number",
+          "python_name": "number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Estimate number"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current state"
+        },
+        {
+          "name": "subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "expense_categories": {
+      "entity": "expense_categories",
+      "data_type_name": "ExpenseCategoriesSearchData",
+      "filter_type_name": "ExpenseCategoriesSearchFilter",
+      "in_filter_type_name": "ExpenseCategoriesInFilter",
+      "any_value_filter_type_name": "ExpenseCategoriesAnyValueFilter",
+      "string_filter_type_name": "ExpenseCategoriesStringFilter",
+      "sort_filter_type_name": "ExpenseCategoriesSortFilter",
+      "result_type_name": "ExpenseCategoriesSearchResult",
+      "query_type_name": "ExpenseCategoriesSearchQuery",
+      "condition_prefix": "ExpenseCategories",
+      "condition_type_name": "ExpenseCategoriesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category name"
+        },
+        {
+          "name": "unit_name",
+          "python_name": "unit_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unit name"
+        },
+        {
+          "name": "unit_price",
+          "python_name": "unit_price",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Unit price"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "expenses": {
+      "entity": "expenses",
+      "data_type_name": "ExpensesSearchData",
+      "filter_type_name": "ExpensesSearchFilter",
+      "in_filter_type_name": "ExpensesInFilter",
+      "any_value_filter_type_name": "ExpensesAnyValueFilter",
+      "string_filter_type_name": "ExpensesStringFilter",
+      "sort_filter_type_name": "ExpensesSortFilter",
+      "result_type_name": "ExpensesSearchResult",
+      "query_type_name": "ExpensesSearchQuery",
+      "condition_prefix": "Expenses",
+      "condition_type_name": "ExpensesCondition",
+      "fields": [
+        {
+          "name": "billable",
+          "python_name": "billable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billable"
+        },
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated client"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "expense_category",
+          "python_name": "expense_category",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Expense category"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_billed",
+          "python_name": "is_billed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billed"
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Notes"
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated project"
+        },
+        {
+          "name": "spent_date",
+          "python_name": "spent_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date spent"
+        },
+        {
+          "name": "total_cost",
+          "python_name": "total_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total cost"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated user"
+        }
+      ]
+    },
+    "invoice_item_categories": {
+      "entity": "invoice_item_categories",
+      "data_type_name": "InvoiceItemCategoriesSearchData",
+      "filter_type_name": "InvoiceItemCategoriesSearchFilter",
+      "in_filter_type_name": "InvoiceItemCategoriesInFilter",
+      "any_value_filter_type_name": "InvoiceItemCategoriesAnyValueFilter",
+      "string_filter_type_name": "InvoiceItemCategoriesStringFilter",
+      "sort_filter_type_name": "InvoiceItemCategoriesSortFilter",
+      "result_type_name": "InvoiceItemCategoriesSearchResult",
+      "query_type_name": "InvoiceItemCategoriesSearchQuery",
+      "condition_prefix": "InvoiceItemCategories",
+      "condition_type_name": "InvoiceItemCategoriesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "use_as_expense",
+          "python_name": "use_as_expense",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether used as expense type"
+        },
+        {
+          "name": "use_as_service",
+          "python_name": "use_as_service",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether used as service type"
+        }
+      ]
+    },
+    "invoices": {
+      "entity": "invoices",
+      "data_type_name": "InvoicesSearchData",
+      "filter_type_name": "InvoicesSearchFilter",
+      "in_filter_type_name": "InvoicesInFilter",
+      "any_value_filter_type_name": "InvoicesAnyValueFilter",
+      "string_filter_type_name": "InvoicesStringFilter",
+      "sort_filter_type_name": "InvoicesSortFilter",
+      "result_type_name": "InvoicesSearchResult",
+      "query_type_name": "InvoicesSearchQuery",
+      "condition_prefix": "Invoices",
+      "condition_type_name": "InvoicesCondition",
+      "fields": [
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total amount"
+        },
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Client details"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency"
+        },
+        {
+          "name": "due_amount",
+          "python_name": "due_amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Amount due"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "issue_date",
+          "python_name": "issue_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Issue date"
+        },
+        {
+          "name": "number",
+          "python_name": "number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Invoice number"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current state"
+        },
+        {
+          "name": "subject",
+          "python_name": "subject",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Subject"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "budget",
+          "python_name": "budget",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Budget amount"
+        },
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Client details"
+        },
+        {
+          "name": "code",
+          "python_name": "code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Project code"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "hourly_rate",
+          "python_name": "hourly_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Hourly rate"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "is_billable",
+          "python_name": "is_billable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billable"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Project name"
+        },
+        {
+          "name": "starts_on",
+          "python_name": "starts_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "roles": {
+      "entity": "roles",
+      "data_type_name": "RolesSearchData",
+      "filter_type_name": "RolesSearchFilter",
+      "in_filter_type_name": "RolesInFilter",
+      "any_value_filter_type_name": "RolesAnyValueFilter",
+      "string_filter_type_name": "RolesStringFilter",
+      "sort_filter_type_name": "RolesSortFilter",
+      "result_type_name": "RolesSearchResult",
+      "query_type_name": "RolesSearchQuery",
+      "condition_prefix": "Roles",
+      "condition_type_name": "RolesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Role name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "user_ids",
+          "python_name": "user_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "User IDs with this role"
+        }
+      ]
+    },
+    "task_assignments": {
+      "entity": "task_assignments",
+      "data_type_name": "TaskAssignmentsSearchData",
+      "filter_type_name": "TaskAssignmentsSearchFilter",
+      "in_filter_type_name": "TaskAssignmentsInFilter",
+      "any_value_filter_type_name": "TaskAssignmentsAnyValueFilter",
+      "string_filter_type_name": "TaskAssignmentsStringFilter",
+      "sort_filter_type_name": "TaskAssignmentsSortFilter",
+      "result_type_name": "TaskAssignmentsSearchResult",
+      "query_type_name": "TaskAssignmentsSearchQuery",
+      "condition_prefix": "TaskAssignments",
+      "condition_type_name": "TaskAssignmentsCondition",
+      "fields": [
+        {
+          "name": "billable",
+          "python_name": "billable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billable"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "hourly_rate",
+          "python_name": "hourly_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Hourly rate"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated project"
+        },
+        {
+          "name": "task",
+          "python_name": "task",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated task"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "tasks": {
+      "entity": "tasks",
+      "data_type_name": "TasksSearchData",
+      "filter_type_name": "TasksSearchFilter",
+      "in_filter_type_name": "TasksInFilter",
+      "any_value_filter_type_name": "TasksAnyValueFilter",
+      "string_filter_type_name": "TasksStringFilter",
+      "sort_filter_type_name": "TasksSortFilter",
+      "result_type_name": "TasksSearchResult",
+      "query_type_name": "TasksSearchQuery",
+      "condition_prefix": "Tasks",
+      "condition_type_name": "TasksCondition",
+      "fields": [
+        {
+          "name": "billable_by_default",
+          "python_name": "billable_by_default",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billable by default"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "default_hourly_rate",
+          "python_name": "default_hourly_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Default hourly rate"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Task name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        }
+      ]
+    },
+    "time_entries": {
+      "entity": "time_entries",
+      "data_type_name": "TimeEntriesSearchData",
+      "filter_type_name": "TimeEntriesSearchFilter",
+      "in_filter_type_name": "TimeEntriesInFilter",
+      "any_value_filter_type_name": "TimeEntriesAnyValueFilter",
+      "string_filter_type_name": "TimeEntriesStringFilter",
+      "sort_filter_type_name": "TimeEntriesSortFilter",
+      "result_type_name": "TimeEntriesSearchResult",
+      "query_type_name": "TimeEntriesSearchQuery",
+      "condition_prefix": "TimeEntries",
+      "condition_type_name": "TimeEntriesCondition",
+      "fields": [
+        {
+          "name": "billable",
+          "python_name": "billable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billable"
+        },
+        {
+          "name": "client",
+          "python_name": "client",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated client"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "hours",
+          "python_name": "hours",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Hours logged"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_billed",
+          "python_name": "is_billed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether billed"
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Notes"
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated project"
+        },
+        {
+          "name": "spent_date",
+          "python_name": "spent_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date time was spent"
+        },
+        {
+          "name": "task",
+          "python_name": "task",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated task"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated user"
+        }
+      ]
+    },
+    "time_projects": {
+      "entity": "time_projects",
+      "data_type_name": "TimeProjectsSearchData",
+      "filter_type_name": "TimeProjectsSearchFilter",
+      "in_filter_type_name": "TimeProjectsInFilter",
+      "any_value_filter_type_name": "TimeProjectsAnyValueFilter",
+      "string_filter_type_name": "TimeProjectsStringFilter",
+      "sort_filter_type_name": "TimeProjectsSortFilter",
+      "result_type_name": "TimeProjectsSearchResult",
+      "query_type_name": "TimeProjectsSearchQuery",
+      "condition_prefix": "TimeProjects",
+      "condition_type_name": "TimeProjectsCondition",
+      "fields": [
+        {
+          "name": "billable_amount",
+          "python_name": "billable_amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total billable amount"
+        },
+        {
+          "name": "billable_hours",
+          "python_name": "billable_hours",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of billable hours"
+        },
+        {
+          "name": "client_id",
+          "python_name": "client_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Client identifier"
+        },
+        {
+          "name": "client_name",
+          "python_name": "client_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Client name"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Project identifier"
+        },
+        {
+          "name": "project_name",
+          "python_name": "project_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Project name"
+        },
+        {
+          "name": "total_hours",
+          "python_name": "total_hours",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total hours spent"
+        }
+      ]
+    },
+    "time_tasks": {
+      "entity": "time_tasks",
+      "data_type_name": "TimeTasksSearchData",
+      "filter_type_name": "TimeTasksSearchFilter",
+      "in_filter_type_name": "TimeTasksInFilter",
+      "any_value_filter_type_name": "TimeTasksAnyValueFilter",
+      "string_filter_type_name": "TimeTasksStringFilter",
+      "sort_filter_type_name": "TimeTasksSortFilter",
+      "result_type_name": "TimeTasksSearchResult",
+      "query_type_name": "TimeTasksSearchQuery",
+      "condition_prefix": "TimeTasks",
+      "condition_type_name": "TimeTasksCondition",
+      "fields": [
+        {
+          "name": "billable_amount",
+          "python_name": "billable_amount",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total billable amount"
+        },
+        {
+          "name": "billable_hours",
+          "python_name": "billable_hours",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of billable hours"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency code"
+        },
+        {
+          "name": "task_id",
+          "python_name": "task_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Task identifier"
+        },
+        {
+          "name": "task_name",
+          "python_name": "task_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Task name"
+        },
+        {
+          "name": "total_hours",
+          "python_name": "total_hours",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total hours spent"
+        }
+      ]
+    },
+    "user_assignments": {
+      "entity": "user_assignments",
+      "data_type_name": "UserAssignmentsSearchData",
+      "filter_type_name": "UserAssignmentsSearchFilter",
+      "in_filter_type_name": "UserAssignmentsInFilter",
+      "any_value_filter_type_name": "UserAssignmentsAnyValueFilter",
+      "string_filter_type_name": "UserAssignmentsStringFilter",
+      "sort_filter_type_name": "UserAssignmentsSortFilter",
+      "result_type_name": "UserAssignmentsSearchResult",
+      "query_type_name": "UserAssignmentsSearchQuery",
+      "condition_prefix": "UserAssignments",
+      "condition_type_name": "UserAssignmentsCondition",
+      "fields": [
+        {
+          "name": "budget",
+          "python_name": "budget",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Budget"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "hourly_rate",
+          "python_name": "hourly_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Hourly rate"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "is_project_manager",
+          "python_name": "is_project_manager",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether project manager"
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated project"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Associated user"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Avatar URL"
+        },
+        {
+          "name": "cost_rate",
+          "python_name": "cost_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Cost rate"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When created"
+        },
+        {
+          "name": "default_hourly_rate",
+          "python_name": "default_hourly_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Default hourly rate"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "First name"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "is_active",
+          "python_name": "is_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether active"
+        },
+        {
+          "name": "is_contractor",
+          "python_name": "is_contractor",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether contractor"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Last name"
+        },
+        {
+          "name": "roles",
+          "python_name": "roles",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Assigned roles"
+        },
+        {
+          "name": "telephone",
+          "python_name": "telephone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Phone number"
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timezone"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When last updated"
+        },
+        {
+          "name": "weekly_capacity",
+          "python_name": "weekly_capacity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Weekly capacity in seconds"
+        }
+      ]
+    }
+  }
+}

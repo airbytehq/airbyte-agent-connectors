@@ -1,0 +1,2158 @@
+{
+  "connector_name": "intercom",
+  "class_name": "IntercomConnector",
+  "package_name": "airbyte_agent_intercom",
+  "package_version": "0.1.10",
+  "yaml_version": "0.1.10",
+  "api_reference_url": "https://developers.intercom.com/docs/references/rest-api/api.intercom.io",
+  "commit_sha": "unknown",
+  "auth_example": "IntercomAuthConfig(access_token=\"...\")",
+  "auth_import": ", IntercomAuthConfig",
+  "auth_config": {
+    "type_name": "IntercomAuthConfig",
+    "base_name": "Intercom",
+    "options": [
+      {
+        "title": "Access Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Your Intercom API Access Token"
+          }
+        ],
+        "type_suffix": "AccessTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "IntercomReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Intercom.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Intercom is a customer messaging platform that enables businesses to communicate with\ncustomers through chat, email, and in-app messaging. This connector provides access\nto core Intercom entities including contacts, conversations, companies, teams,\nadmins, tags, and segments for customer support analytics and insights. It also supports\ncreating and updating contacts, creating notes, creating internal articles, creating\nand updating companies, and creating tags.\n",
+  "supported_questions": "- List all contacts in my Intercom workspace\n- List all companies in Intercom\n- What teams are configured in my workspace?\n- Show me all admins in my Intercom account\n- List all tags used in Intercom\n- Show me all customer segments\n- Show me details for a recent contact\n- Show me details for a recent company\n- Show me details for a recent conversation\n- Create a new lead contact named 'Jane Smith' with email jane@example.com\n- Create an internal article titled 'Onboarding Guide' with instructions for new team members\n- Create a company named 'Acme Corp' with company_id 'acme-001'\n- Create a tag named 'VIP Customer'\n- Update the name of contact {id} to 'John Updated'\n- Add a note to contact {id} saying 'Followed up on support request'\n- Show me conversations from the last week\n- List conversations assigned to team {team_id}\n- Show me open conversations",
+  "unsupported_questions": "- Send a message to a customer\n- Delete a conversation\n- Delete a contact\n- Delete a company\n- Assign a conversation to an admin",
+  "first_operation": {
+    "method_name": "list_contacts",
+    "http_method": "get",
+    "path": "/contacts",
+    "entity": "contacts",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 150,
+          "default": 50
+        },
+        "required": false,
+        "description": "Number of contacts to return per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "starting_after",
+        "python_name": "starting_after",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor for pagination - get contacts after this ID",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ContactsListParams",
+    "response_type": "ContactsListResult",
+    "description": "Returns a paginated list of contacts in the workspace",
+    "record_extractor": "$.data",
+    "meta_extractor": {
+      "next_page": "$.pages.next.starting_after"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Contact]",
+    "meta_fields": [
+      {
+        "name": "next_page",
+        "python_name": "next_page",
+        "type": "str | None",
+        "schema": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Cursor for next page"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "contacts": [
+      {
+        "method_name": "list_contacts",
+        "http_method": "get",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 150,
+              "default": 50
+            },
+            "required": false,
+            "description": "Number of contacts to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "starting_after",
+            "python_name": "starting_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination - get contacts after this ID",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ContactsListParams",
+        "response_type": "ContactsListResult",
+        "description": "Returns a paginated list of contacts in the workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.pages.next.starting_after"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Contact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "contact__create",
+        "http_method": "post",
+        "path": "/contacts",
+        "entity": "contacts",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The role of the contact (user or lead)"
+            },
+            "required": true,
+            "description": "The role of the contact (user or lead)"
+          },
+          {
+            "name": "external_id",
+            "python_name": "external_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A unique identifier for the contact from your system"
+            },
+            "required": false,
+            "description": "A unique identifier for the contact from your system"
+          },
+          {
+            "name": "email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's email address"
+            },
+            "required": false,
+            "description": "The contact's email address"
+          },
+          {
+            "name": "phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's phone number"
+            },
+            "required": false,
+            "description": "The contact's phone number"
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's full name"
+            },
+            "required": false,
+            "description": "The contact's full name"
+          },
+          {
+            "name": "avatar",
+            "python_name": "avatar",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "An image URL for the contact's avatar"
+            },
+            "required": false,
+            "description": "An image URL for the contact's avatar"
+          },
+          {
+            "name": "signed_up_at",
+            "python_name": "signed_up_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Sign up timestamp (Unix)"
+            },
+            "required": false,
+            "description": "Sign up timestamp (Unix)"
+          },
+          {
+            "name": "last_seen_at",
+            "python_name": "last_seen_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Last seen timestamp (Unix)"
+            },
+            "required": false,
+            "description": "Last seen timestamp (Unix)"
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the admin assigned as owner"
+            },
+            "required": false,
+            "description": "The ID of the admin assigned as owner"
+          },
+          {
+            "name": "unsubscribed_from_emails",
+            "python_name": "unsubscribed_from_emails",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the contact is unsubscribed from emails"
+            },
+            "required": false,
+            "description": "Whether the contact is unsubscribed from emails"
+          },
+          {
+            "name": "custom_attributes",
+            "python_name": "custom_attributes",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom attributes for the contact",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Custom attributes for the contact"
+          }
+        ],
+        "params_type_name": "ContactsCreateParams",
+        "response_type": "Contact",
+        "description": "Create a new contact (user or lead)",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_contact",
+        "http_method": "get",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsGetParams",
+        "response_type": "Contact",
+        "description": "Get a single contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "contact__update",
+        "http_method": "put",
+        "path": "/contacts/{id}",
+        "entity": "contacts",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The role of the contact (user or lead)"
+            },
+            "required": false,
+            "description": "The role of the contact (user or lead)"
+          },
+          {
+            "name": "external_id",
+            "python_name": "external_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A unique identifier for the contact from your system"
+            },
+            "required": false,
+            "description": "A unique identifier for the contact from your system"
+          },
+          {
+            "name": "email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's email address"
+            },
+            "required": false,
+            "description": "The contact's email address"
+          },
+          {
+            "name": "phone",
+            "python_name": "phone",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's phone number"
+            },
+            "required": false,
+            "description": "The contact's phone number"
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The contact's full name"
+            },
+            "required": false,
+            "description": "The contact's full name"
+          },
+          {
+            "name": "avatar",
+            "python_name": "avatar",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "An image URL for the contact's avatar"
+            },
+            "required": false,
+            "description": "An image URL for the contact's avatar"
+          },
+          {
+            "name": "signed_up_at",
+            "python_name": "signed_up_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Sign up timestamp (Unix)"
+            },
+            "required": false,
+            "description": "Sign up timestamp (Unix)"
+          },
+          {
+            "name": "last_seen_at",
+            "python_name": "last_seen_at",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Last seen timestamp (Unix)"
+            },
+            "required": false,
+            "description": "Last seen timestamp (Unix)"
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the admin assigned as owner"
+            },
+            "required": false,
+            "description": "The ID of the admin assigned as owner"
+          },
+          {
+            "name": "unsubscribed_from_emails",
+            "python_name": "unsubscribed_from_emails",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "description": "Whether the contact is unsubscribed from emails"
+            },
+            "required": false,
+            "description": "Whether the contact is unsubscribed from emails"
+          },
+          {
+            "name": "custom_attributes",
+            "python_name": "custom_attributes",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom attributes for the contact",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Custom attributes for the contact"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID"
+          }
+        ],
+        "params_type_name": "ContactsUpdateParams",
+        "response_type": "Contact",
+        "description": "Update an existing contact by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Contact",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "conversations": [
+      {
+        "method_name": "list_conversations",
+        "http_method": "get",
+        "path": "/conversations",
+        "entity": "conversations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 150,
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of conversations to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "starting_after",
+            "python_name": "starting_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ConversationsListParams",
+        "response_type": "ConversationsListResult",
+        "description": "Returns a paginated list of conversations",
+        "record_extractor": "$.conversations",
+        "meta_extractor": {
+          "next_page": "$.pages.next.starting_after"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Conversation]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_conversation",
+        "http_method": "get",
+        "path": "/conversations/{id}",
+        "entity": "conversations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Conversation ID"
+          }
+        ],
+        "params_type_name": "ConversationsGetParams",
+        "response_type": "Conversation",
+        "description": "Get a single conversation by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Conversation",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "companies": [
+      {
+        "method_name": "list_companies",
+        "http_method": "get",
+        "path": "/companies",
+        "entity": "companies",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 150,
+              "default": 50
+            },
+            "required": false,
+            "description": "Number of companies to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "starting_after",
+            "python_name": "starting_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CompaniesListParams",
+        "response_type": "CompaniesListResult",
+        "description": "Returns a paginated list of companies",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.pages.next.starting_after"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Company]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "str | None",
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Cursor for next page"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "company__create",
+        "http_method": "post",
+        "path": "/companies",
+        "entity": "companies",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "company_id",
+            "python_name": "company_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "A unique identifier for the company from your system"
+            },
+            "required": true,
+            "description": "A unique identifier for the company from your system"
+          },
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the company"
+            },
+            "required": false,
+            "description": "The name of the company"
+          },
+          {
+            "name": "plan",
+            "python_name": "plan",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the plan the company is on"
+            },
+            "required": false,
+            "description": "The name of the plan the company is on"
+          },
+          {
+            "name": "monthly_spend",
+            "python_name": "monthly_spend",
+            "type": "float",
+            "schema": {
+              "type": "number",
+              "description": "The monthly spend of the company"
+            },
+            "required": false,
+            "description": "The monthly spend of the company"
+          },
+          {
+            "name": "size",
+            "python_name": "size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The number of employees in the company"
+            },
+            "required": false,
+            "description": "The number of employees in the company"
+          },
+          {
+            "name": "website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL of the company website"
+            },
+            "required": false,
+            "description": "The URL of the company website"
+          },
+          {
+            "name": "industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The industry the company operates in"
+            },
+            "required": false,
+            "description": "The industry the company operates in"
+          },
+          {
+            "name": "custom_attributes",
+            "python_name": "custom_attributes",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom attributes for the company",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Custom attributes for the company"
+          }
+        ],
+        "params_type_name": "CompaniesCreateParams",
+        "response_type": "Company",
+        "description": "Create a new company or update an existing one by company_id",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_company",
+        "http_method": "get",
+        "path": "/companies/{id}",
+        "entity": "companies",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Company ID"
+          }
+        ],
+        "params_type_name": "CompaniesGetParams",
+        "response_type": "Company",
+        "description": "Get a single company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "company__update",
+        "http_method": "put",
+        "path": "/companies/{id}",
+        "entity": "companies",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the company"
+            },
+            "required": false,
+            "description": "The name of the company"
+          },
+          {
+            "name": "plan",
+            "python_name": "plan",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the plan the company is on"
+            },
+            "required": false,
+            "description": "The name of the plan the company is on"
+          },
+          {
+            "name": "monthly_spend",
+            "python_name": "monthly_spend",
+            "type": "float",
+            "schema": {
+              "type": "number",
+              "description": "The monthly spend of the company"
+            },
+            "required": false,
+            "description": "The monthly spend of the company"
+          },
+          {
+            "name": "size",
+            "python_name": "size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The number of employees in the company"
+            },
+            "required": false,
+            "description": "The number of employees in the company"
+          },
+          {
+            "name": "website",
+            "python_name": "website",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The URL of the company website"
+            },
+            "required": false,
+            "description": "The URL of the company website"
+          },
+          {
+            "name": "industry",
+            "python_name": "industry",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The industry the company operates in"
+            },
+            "required": false,
+            "description": "The industry the company operates in"
+          },
+          {
+            "name": "custom_attributes",
+            "python_name": "custom_attributes",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "description": "Custom attributes for the company",
+              "additionalProperties": true
+            },
+            "required": false,
+            "description": "Custom attributes for the company"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Company ID"
+          }
+        ],
+        "params_type_name": "CompaniesUpdateParams",
+        "response_type": "Company",
+        "description": "Update an existing company by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Company",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "list_teams",
+        "http_method": "get",
+        "path": "/teams",
+        "entity": "teams",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TeamsListParams",
+        "response_type": "TeamsListResult",
+        "description": "Returns a list of all teams in the workspace",
+        "record_extractor": "$.teams",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Team]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_team",
+        "http_method": "get",
+        "path": "/teams/{id}",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team ID"
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "Team",
+        "description": "Get a single team by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Team",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "admins": [
+      {
+        "method_name": "list_admins",
+        "http_method": "get",
+        "path": "/admins",
+        "entity": "admins",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AdminsListParams",
+        "response_type": "AdminsListResult",
+        "description": "Returns a list of all admins in the workspace",
+        "record_extractor": "$.admins",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Admin]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_admin",
+        "http_method": "get",
+        "path": "/admins/{id}",
+        "entity": "admins",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Admin ID"
+          }
+        ],
+        "params_type_name": "AdminsGetParams",
+        "response_type": "Admin",
+        "description": "Get a single admin by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Admin",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "list_tags",
+        "http_method": "get",
+        "path": "/tags",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Returns a list of all tags in the workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Tag]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "tag__create",
+        "http_method": "post",
+        "path": "/tags",
+        "entity": "tags",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "name",
+            "python_name": "name",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The name of the tag"
+            },
+            "required": true,
+            "description": "The name of the tag"
+          }
+        ],
+        "params_type_name": "TagsCreateParams",
+        "response_type": "Tag",
+        "description": "Create a new tag or update an existing one",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_tag",
+        "http_method": "get",
+        "path": "/tags/{id}",
+        "entity": "tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Tag ID"
+          }
+        ],
+        "params_type_name": "TagsGetParams",
+        "response_type": "Tag",
+        "description": "Get a single tag by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "notes": [
+      {
+        "method_name": "note__create",
+        "http_method": "post",
+        "path": "/contacts/{contact_id}/notes",
+        "entity": "notes",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The body of the note in HTML format"
+            },
+            "required": true,
+            "description": "The body of the note in HTML format"
+          },
+          {
+            "name": "admin_id",
+            "python_name": "admin_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The ID of the admin creating the note"
+            },
+            "required": false,
+            "description": "The ID of the admin creating the note"
+          },
+          {
+            "name": "contact_id",
+            "python_name": "contact_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Contact ID to add note to"
+          }
+        ],
+        "params_type_name": "NotesCreateParams",
+        "response_type": "Note",
+        "description": "Create a note on an existing contact",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Note",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "segments": [
+      {
+        "method_name": "list_segments",
+        "http_method": "get",
+        "path": "/segments",
+        "entity": "segments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "include_count",
+            "python_name": "include_count",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": "Include count of contacts in each segment",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SegmentsListParams",
+        "response_type": "SegmentsListResult",
+        "description": "Returns a list of all segments in the workspace",
+        "record_extractor": "$.segments",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Segment]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_segment",
+        "http_method": "get",
+        "path": "/segments/{id}",
+        "entity": "segments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Segment ID"
+          }
+        ],
+        "params_type_name": "SegmentsGetParams",
+        "response_type": "Segment",
+        "description": "Get a single segment by ID",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Segment",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "internal_articles": [
+      {
+        "method_name": "internal_article__create",
+        "http_method": "post",
+        "path": "/internal_articles",
+        "entity": "internal_articles",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "title",
+            "python_name": "title",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The title of the article"
+            },
+            "required": true,
+            "description": "The title of the article"
+          },
+          {
+            "name": "body",
+            "python_name": "body",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "The content of the article in HTML"
+            },
+            "required": false,
+            "description": "The content of the article in HTML"
+          },
+          {
+            "name": "owner_id",
+            "python_name": "owner_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the owner of the article"
+            },
+            "required": true,
+            "description": "The ID of the owner of the article"
+          },
+          {
+            "name": "author_id",
+            "python_name": "author_id",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "The ID of the author of the article"
+            },
+            "required": true,
+            "description": "The ID of the author of the article"
+          }
+        ],
+        "params_type_name": "InternalArticlesCreateParams",
+        "response_type": "InternalArticle",
+        "description": "Create a new internal article in the workspace",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "InternalArticle",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "companies": {
+      "entity": "companies",
+      "data_type_name": "CompaniesSearchData",
+      "filter_type_name": "CompaniesSearchFilter",
+      "in_filter_type_name": "CompaniesInFilter",
+      "any_value_filter_type_name": "CompaniesAnyValueFilter",
+      "string_filter_type_name": "CompaniesStringFilter",
+      "sort_filter_type_name": "CompaniesSortFilter",
+      "result_type_name": "CompaniesSearchResult",
+      "query_type_name": "CompaniesSearchQuery",
+      "condition_prefix": "Companies",
+      "condition_type_name": "CompaniesCondition",
+      "fields": [
+        {
+          "name": "app_id",
+          "python_name": "app_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the application associated with the company"
+        },
+        {
+          "name": "company_id",
+          "python_name": "company_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the company"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the company was created"
+        },
+        {
+          "name": "custom_attributes",
+          "python_name": "custom_attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom attributes specific to the company"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID of the company"
+        },
+        {
+          "name": "industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The industry in which the company operates"
+        },
+        {
+          "name": "monthly_spend",
+          "python_name": "monthly_spend",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The monthly spend of the company"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the company"
+        },
+        {
+          "name": "plan",
+          "python_name": "plan",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the company's subscription plan"
+        },
+        {
+          "name": "remote_created_at",
+          "python_name": "remote_created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The remote date and time when the company was created"
+        },
+        {
+          "name": "segments",
+          "python_name": "segments",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Segments associated with the company"
+        },
+        {
+          "name": "session_count",
+          "python_name": "session_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The number of sessions related to the company"
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The size of the company"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tags associated with the company"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of the company"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the company was last updated"
+        },
+        {
+          "name": "user_count",
+          "python_name": "user_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The number of users associated with the company"
+        },
+        {
+          "name": "website",
+          "python_name": "website",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The website of the company"
+        }
+      ]
+    },
+    "contacts": {
+      "entity": "contacts",
+      "data_type_name": "ContactsSearchData",
+      "filter_type_name": "ContactsSearchFilter",
+      "in_filter_type_name": "ContactsInFilter",
+      "any_value_filter_type_name": "ContactsAnyValueFilter",
+      "string_filter_type_name": "ContactsStringFilter",
+      "sort_filter_type_name": "ContactsSortFilter",
+      "result_type_name": "ContactsSearchResult",
+      "query_type_name": "ContactsSearchQuery",
+      "condition_prefix": "Contacts",
+      "condition_type_name": "ContactsCondition",
+      "fields": [
+        {
+          "name": "android_app_name",
+          "python_name": "android_app_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the Android app associated with the contact."
+        },
+        {
+          "name": "android_app_version",
+          "python_name": "android_app_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The version of the Android app associated with the contact."
+        },
+        {
+          "name": "android_device",
+          "python_name": "android_device",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The device used by the contact for Android."
+        },
+        {
+          "name": "android_last_seen_at",
+          "python_name": "android_last_seen_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the contact was last seen on Android."
+        },
+        {
+          "name": "android_os_version",
+          "python_name": "android_os_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The operating system version of the Android device."
+        },
+        {
+          "name": "android_sdk_version",
+          "python_name": "android_sdk_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SDK version of the Android device."
+        },
+        {
+          "name": "avatar",
+          "python_name": "avatar",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL pointing to the contact's avatar image."
+        },
+        {
+          "name": "browser",
+          "python_name": "browser",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The browser used by the contact."
+        },
+        {
+          "name": "browser_language",
+          "python_name": "browser_language",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The language preference set in the contact's browser."
+        },
+        {
+          "name": "browser_version",
+          "python_name": "browser_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The version of the browser used by the contact."
+        },
+        {
+          "name": "companies",
+          "python_name": "companies",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Companies associated with the contact."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact was created."
+        },
+        {
+          "name": "custom_attributes",
+          "python_name": "custom_attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom attributes defined for the contact."
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address of the contact."
+        },
+        {
+          "name": "external_id",
+          "python_name": "external_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External identifier for the contact."
+        },
+        {
+          "name": "has_hard_bounced",
+          "python_name": "has_hard_bounced",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the contact has hard bounced."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the contact."
+        },
+        {
+          "name": "ios_app_name",
+          "python_name": "ios_app_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the iOS app associated with the contact."
+        },
+        {
+          "name": "ios_app_version",
+          "python_name": "ios_app_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The version of the iOS app associated with the contact."
+        },
+        {
+          "name": "ios_device",
+          "python_name": "ios_device",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The device used by the contact for iOS."
+        },
+        {
+          "name": "ios_last_seen_at",
+          "python_name": "ios_last_seen_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact was last seen on iOS."
+        },
+        {
+          "name": "ios_os_version",
+          "python_name": "ios_os_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The operating system version of the iOS device."
+        },
+        {
+          "name": "ios_sdk_version",
+          "python_name": "ios_sdk_version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The SDK version of the iOS device."
+        },
+        {
+          "name": "language_override",
+          "python_name": "language_override",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Language override set for the contact."
+        },
+        {
+          "name": "last_contacted_at",
+          "python_name": "last_contacted_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact was last contacted."
+        },
+        {
+          "name": "last_email_clicked_at",
+          "python_name": "last_email_clicked_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact last clicked an email."
+        },
+        {
+          "name": "last_email_opened_at",
+          "python_name": "last_email_opened_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact last opened an email."
+        },
+        {
+          "name": "last_replied_at",
+          "python_name": "last_replied_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact last replied."
+        },
+        {
+          "name": "last_seen_at",
+          "python_name": "last_seen_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact was last seen overall."
+        },
+        {
+          "name": "location",
+          "python_name": "location",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Location details of the contact."
+        },
+        {
+          "name": "marked_email_as_spam",
+          "python_name": "marked_email_as_spam",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the contact's email was marked as spam."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the contact."
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Notes associated with the contact."
+        },
+        {
+          "name": "opted_in_subscription_types",
+          "python_name": "opted_in_subscription_types",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Subscription types the contact opted into."
+        },
+        {
+          "name": "opted_out_subscription_types",
+          "python_name": "opted_out_subscription_types",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Subscription types the contact opted out from."
+        },
+        {
+          "name": "os",
+          "python_name": "os",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Operating system of the contact's device."
+        },
+        {
+          "name": "owner_id",
+          "python_name": "owner_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the contact's owner."
+        },
+        {
+          "name": "phone",
+          "python_name": "phone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The phone number of the contact."
+        },
+        {
+          "name": "referrer",
+          "python_name": "referrer",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Referrer information related to the contact."
+        },
+        {
+          "name": "role",
+          "python_name": "role",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Role or position of the contact."
+        },
+        {
+          "name": "signed_up_at",
+          "python_name": "signed_up_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact signed up."
+        },
+        {
+          "name": "sms_consent",
+          "python_name": "sms_consent",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Consent status for SMS communication."
+        },
+        {
+          "name": "social_profiles",
+          "python_name": "social_profiles",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Social profiles associated with the contact."
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tags associated with the contact."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of contact."
+        },
+        {
+          "name": "unsubscribed_from_emails",
+          "python_name": "unsubscribed_from_emails",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the contact unsubscribed from emails."
+        },
+        {
+          "name": "unsubscribed_from_sms",
+          "python_name": "unsubscribed_from_sms",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the contact unsubscribed from SMS."
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The date and time when the contact was last updated."
+        },
+        {
+          "name": "utm_campaign",
+          "python_name": "utm_campaign",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Campaign data from UTM parameters."
+        },
+        {
+          "name": "utm_content",
+          "python_name": "utm_content",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Content data from UTM parameters."
+        },
+        {
+          "name": "utm_medium",
+          "python_name": "utm_medium",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Medium data from UTM parameters."
+        },
+        {
+          "name": "utm_source",
+          "python_name": "utm_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source data from UTM parameters."
+        },
+        {
+          "name": "utm_term",
+          "python_name": "utm_term",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Term data from UTM parameters."
+        },
+        {
+          "name": "workspace_id",
+          "python_name": "workspace_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the workspace associated with the contact."
+        }
+      ]
+    },
+    "conversations": {
+      "entity": "conversations",
+      "data_type_name": "ConversationsSearchData",
+      "filter_type_name": "ConversationsSearchFilter",
+      "in_filter_type_name": "ConversationsInFilter",
+      "any_value_filter_type_name": "ConversationsAnyValueFilter",
+      "string_filter_type_name": "ConversationsStringFilter",
+      "sort_filter_type_name": "ConversationsSortFilter",
+      "result_type_name": "ConversationsSearchResult",
+      "query_type_name": "ConversationsSearchQuery",
+      "condition_prefix": "Conversations",
+      "condition_type_name": "ConversationsCondition",
+      "fields": [
+        {
+          "name": "admin_assignee_id",
+          "python_name": "admin_assignee_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The ID of the administrator assigned to the conversation"
+        },
+        {
+          "name": "ai_agent",
+          "python_name": "ai_agent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Data related to AI Agent involvement in the conversation"
+        },
+        {
+          "name": "ai_agent_participated",
+          "python_name": "ai_agent_participated",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates whether AI Agent participated in the conversation"
+        },
+        {
+          "name": "assignee",
+          "python_name": "assignee",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The assigned user responsible for the conversation."
+        },
+        {
+          "name": "contacts",
+          "python_name": "contacts",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "List of contacts involved in the conversation."
+        },
+        {
+          "name": "conversation_message",
+          "python_name": "conversation_message",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The main message content of the conversation."
+        },
+        {
+          "name": "conversation_rating",
+          "python_name": "conversation_rating",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Ratings given to the conversation by the customer and teammate."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The timestamp when the conversation was created"
+        },
+        {
+          "name": "custom_attributes",
+          "python_name": "custom_attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Custom attributes associated with the conversation"
+        },
+        {
+          "name": "customer_first_reply",
+          "python_name": "customer_first_reply",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Timestamp indicating when the customer first replied."
+        },
+        {
+          "name": "customers",
+          "python_name": "customers",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "List of customers involved in the conversation"
+        },
+        {
+          "name": "first_contact_reply",
+          "python_name": "first_contact_reply",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Timestamp indicating when the first contact replied."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique ID of the conversation"
+        },
+        {
+          "name": "linked_objects",
+          "python_name": "linked_objects",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Linked objects associated with the conversation"
+        },
+        {
+          "name": "open",
+          "python_name": "open",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the conversation is open or closed"
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The priority level of the conversation"
+        },
+        {
+          "name": "read",
+          "python_name": "read",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the conversation has been read"
+        },
+        {
+          "name": "redacted",
+          "python_name": "redacted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the conversation is redacted"
+        },
+        {
+          "name": "sent_at",
+          "python_name": "sent_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The timestamp when the conversation was sent"
+        },
+        {
+          "name": "sla_applied",
+          "python_name": "sla_applied",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Service Level Agreement details applied to the conversation."
+        },
+        {
+          "name": "snoozed_until",
+          "python_name": "snoozed_until",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp until the conversation is snoozed"
+        },
+        {
+          "name": "source",
+          "python_name": "source",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Source details of the conversation."
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The state of the conversation (e.g., new, in progress)"
+        },
+        {
+          "name": "statistics",
+          "python_name": "statistics",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Statistics related to the conversation."
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Tags applied to the conversation."
+        },
+        {
+          "name": "team_assignee_id",
+          "python_name": "team_assignee_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The ID of the team assigned to the conversation"
+        },
+        {
+          "name": "teammates",
+          "python_name": "teammates",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "List of teammates involved in the conversation."
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The title of the conversation"
+        },
+        {
+          "name": "topics",
+          "python_name": "topics",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Topics associated with the conversation."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of the conversation"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The timestamp when the conversation was last updated"
+        },
+        {
+          "name": "user",
+          "python_name": "user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user related to the conversation."
+        },
+        {
+          "name": "waiting_since",
+          "python_name": "waiting_since",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp since waiting for a response"
+        }
+      ]
+    },
+    "teams": {
+      "entity": "teams",
+      "data_type_name": "TeamsSearchData",
+      "filter_type_name": "TeamsSearchFilter",
+      "in_filter_type_name": "TeamsInFilter",
+      "any_value_filter_type_name": "TeamsAnyValueFilter",
+      "string_filter_type_name": "TeamsStringFilter",
+      "sort_filter_type_name": "TeamsSortFilter",
+      "result_type_name": "TeamsSearchResult",
+      "query_type_name": "TeamsSearchQuery",
+      "condition_prefix": "Teams",
+      "condition_type_name": "TeamsCondition",
+      "fields": [
+        {
+          "name": "admin_ids",
+          "python_name": "admin_ids",
+          "type": "list[Any] | None",
+          "json_type": "array | null",
+          "example_value_json": "[]",
+          "description": "Array of user IDs representing the admins of the team."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the team."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the team."
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of team (e.g., 'internal', 'external')."
+        }
+      ]
+    }
+  }
+}

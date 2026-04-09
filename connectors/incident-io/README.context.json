@@ -1,0 +1,1968 @@
+{
+  "connector_name": "incident-io",
+  "class_name": "IncidentIoConnector",
+  "package_name": "airbyte_agent_incident_io",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://api-docs.incident.io/",
+  "commit_sha": "unknown",
+  "auth_example": "IncidentIoAuthConfig(api_key=\"...\")",
+  "auth_import": ", IncidentIoAuthConfig",
+  "auth_config": {
+    "type_name": "IncidentIoAuthConfig",
+    "base_name": "IncidentIo",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your incident.io API key. Create one at https://app.incident.io/settings/api-keys"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Connect to the incident.io API to access incident management data including\nincidents, alerts, escalations, users, schedules, and more. incident.io is an\non-call, status pages, and incident response platform. This connector provides\nread-only access to core incident management entities via the v1 and v2 APIs.\nRequires an API key from your incident.io dashboard (Pro plan or above).\n",
+  "supported_questions": "- List all incidents\n- Show all open incidents\n- List all alerts\n- Show all users\n- List all escalations\n- Show all on-call schedules\n- List all severities\n- Show all incident statuses\n- List all custom fields\n- Which incidents were created this week?\n- What are the most recent high-severity incidents?\n- Who is currently on-call?\n- How many incidents are in triage status?\n- What incidents were updated today?",
+  "unsupported_questions": "- Create a new incident\n- Update an incident's severity\n- Delete an alert\n- Assign someone to an incident role",
+  "first_operation": {
+    "method_name": "list_incidents",
+    "http_method": "get",
+    "path": "/v2/incidents",
+    "entity": "incidents",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 250,
+          "default": 25
+        },
+        "required": false,
+        "description": "Number of incidents per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "after",
+        "python_name": "after",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "Cursor for the next page of results",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "IncidentsListParams",
+    "response_type": "IncidentsListResult",
+    "description": "List all incidents for the organisation with cursor-based pagination.",
+    "record_extractor": "$.incidents",
+    "meta_extractor": {
+      "pagination": "$.pagination_meta"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Incident]",
+    "meta_fields": [
+      {
+        "name": "pagination",
+        "python_name": "pagination",
+        "type": "PaginationMeta",
+        "schema": {
+          "$ref": "#/components/schemas/PaginationMeta"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "incidents": [
+      {
+        "method_name": "list_incidents",
+        "http_method": "get",
+        "path": "/v2/incidents",
+        "entity": "incidents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 250,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of incidents per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IncidentsListParams",
+        "response_type": "IncidentsListResult",
+        "description": "List all incidents for the organisation with cursor-based pagination.",
+        "record_extractor": "$.incidents",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Incident]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_incident",
+        "http_method": "get",
+        "path": "/v2/incidents/{id}",
+        "entity": "incidents",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Incident ID or numeric reference"
+          }
+        ],
+        "params_type_name": "IncidentsGetParams",
+        "response_type": "Incident",
+        "description": "Get a single incident by ID or numeric reference.",
+        "record_extractor": "$.incident",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Incident",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "alerts": [
+      {
+        "method_name": "list_alerts",
+        "http_method": "get",
+        "path": "/v2/alerts",
+        "entity": "alerts",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of alerts per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AlertsListParams",
+        "response_type": "AlertsListResult",
+        "description": "List all alerts for the account with cursor-based pagination.",
+        "record_extractor": "$.alerts",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Alert]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_alert",
+        "http_method": "get",
+        "path": "/v2/alerts/{id}",
+        "entity": "alerts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Alert ID"
+          }
+        ],
+        "params_type_name": "AlertsGetParams",
+        "response_type": "Alert",
+        "description": "Show a single alert by ID.",
+        "record_extractor": "$.alert",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Alert",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "escalations": [
+      {
+        "method_name": "list_escalations",
+        "http_method": "get",
+        "path": "/v2/escalations",
+        "entity": "escalations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of escalations per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EscalationsListParams",
+        "response_type": "EscalationsListResult",
+        "description": "List all escalations for the account with cursor-based pagination.",
+        "record_extractor": "$.escalations",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Escalation]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_escalation",
+        "http_method": "get",
+        "path": "/v2/escalations/{id}",
+        "entity": "escalations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Escalation ID"
+          }
+        ],
+        "params_type_name": "EscalationsGetParams",
+        "response_type": "Escalation",
+        "description": "Show a specific escalation by ID.",
+        "record_extractor": "$.escalation",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Escalation",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/v2/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of users per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "List all users for the organisation with cursor-based pagination.",
+        "record_extractor": "$.users",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/v2/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User ID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID.",
+        "record_extractor": "$.user",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "incident_updates": [
+      {
+        "method_name": "list_incident_updates",
+        "http_method": "get",
+        "path": "/v2/incident_updates",
+        "entity": "incident_updates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of incident updates per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IncidentUpdatesListParams",
+        "response_type": "IncidentUpdatesListResult",
+        "description": "List all incident updates for the organisation with cursor-based pagination.",
+        "record_extractor": "$.incident_updates",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[IncidentUpdate]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "incident_roles": [
+      {
+        "method_name": "list_incident_roles",
+        "http_method": "get",
+        "path": "/v1/incident_roles",
+        "entity": "incident_roles",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "IncidentRolesListParams",
+        "response_type": "IncidentRolesListResult",
+        "description": "List all incident roles for the organisation.",
+        "record_extractor": "$.incident_roles",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[IncidentRole]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_incident_role",
+        "http_method": "get",
+        "path": "/v1/incident_roles/{id}",
+        "entity": "incident_roles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Incident role ID"
+          }
+        ],
+        "params_type_name": "IncidentRolesGetParams",
+        "response_type": "IncidentRole",
+        "description": "Get a single incident role by ID.",
+        "record_extractor": "$.incident_role",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IncidentRole",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "incident_statuses": [
+      {
+        "method_name": "list_incident_statuses",
+        "http_method": "get",
+        "path": "/v1/incident_statuses",
+        "entity": "incident_statuses",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "IncidentStatusesListParams",
+        "response_type": "IncidentStatusesListResult",
+        "description": "List all incident statuses for the organisation.",
+        "record_extractor": "$.incident_statuses",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[IncidentStatus]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_incident_status",
+        "http_method": "get",
+        "path": "/v1/incident_statuses/{id}",
+        "entity": "incident_statuses",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Incident status ID"
+          }
+        ],
+        "params_type_name": "IncidentStatusesGetParams",
+        "response_type": "IncidentStatus",
+        "description": "Get a single incident status by ID.",
+        "record_extractor": "$.incident_status",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IncidentStatus",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "incident_timestamps": [
+      {
+        "method_name": "list_incident_timestamps",
+        "http_method": "get",
+        "path": "/v2/incident_timestamps",
+        "entity": "incident_timestamps",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "IncidentTimestampsListParams",
+        "response_type": "IncidentTimestampsListResult",
+        "description": "List all incident timestamps for the organisation.",
+        "record_extractor": "$.incident_timestamps",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[IncidentTimestamp]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_incident_timestamp",
+        "http_method": "get",
+        "path": "/v2/incident_timestamps/{id}",
+        "entity": "incident_timestamps",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Incident timestamp ID"
+          }
+        ],
+        "params_type_name": "IncidentTimestampsGetParams",
+        "response_type": "IncidentTimestamp",
+        "description": "Get a single incident timestamp by ID.",
+        "record_extractor": "$.incident_timestamp",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "IncidentTimestamp",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "severities": [
+      {
+        "method_name": "list_severities",
+        "http_method": "get",
+        "path": "/v1/severities",
+        "entity": "severities",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "SeveritiesListParams",
+        "response_type": "SeveritiesListResult",
+        "description": "List all severities for the organisation.",
+        "record_extractor": "$.severities",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Severity]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_severity",
+        "http_method": "get",
+        "path": "/v1/severities/{id}",
+        "entity": "severities",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Severity ID"
+          }
+        ],
+        "params_type_name": "SeveritiesGetParams",
+        "response_type": "Severity",
+        "description": "Get a single severity by ID.",
+        "record_extractor": "$.severity",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Severity",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "custom_fields": [
+      {
+        "method_name": "list_custom_fields",
+        "http_method": "get",
+        "path": "/v2/custom_fields",
+        "entity": "custom_fields",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CustomFieldsListParams",
+        "response_type": "CustomFieldsListResult",
+        "description": "List all custom fields for the organisation.",
+        "record_extractor": "$.custom_fields",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[CustomField]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_custom_field",
+        "http_method": "get",
+        "path": "/v2/custom_fields/{id}",
+        "entity": "custom_fields",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Custom field ID"
+          }
+        ],
+        "params_type_name": "CustomFieldsGetParams",
+        "response_type": "CustomField",
+        "description": "Get a single custom field by ID.",
+        "record_extractor": "$.custom_field",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CustomField",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "catalog_types": [
+      {
+        "method_name": "list_catalog_types",
+        "http_method": "get",
+        "path": "/v2/catalog_types",
+        "entity": "catalog_types",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CatalogTypesListParams",
+        "response_type": "CatalogTypesListResult",
+        "description": "List all catalog types for the organisation.",
+        "record_extractor": "$.catalog_types",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[CatalogType]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_catalog_type",
+        "http_method": "get",
+        "path": "/v2/catalog_types/{id}",
+        "entity": "catalog_types",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Catalog type ID"
+          }
+        ],
+        "params_type_name": "CatalogTypesGetParams",
+        "response_type": "CatalogType",
+        "description": "Show a single catalog type by ID.",
+        "record_extractor": "$.catalog_type",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "CatalogType",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "schedules": [
+      {
+        "method_name": "list_schedules",
+        "http_method": "get",
+        "path": "/v2/schedules",
+        "entity": "schedules",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 25
+            },
+            "required": false,
+            "description": "Number of schedules per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Cursor for the next page of results",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SchedulesListParams",
+        "response_type": "SchedulesListResult",
+        "description": "List all on-call schedules with cursor-based pagination.",
+        "record_extractor": "$.schedules",
+        "meta_extractor": {
+          "pagination": "$.pagination_meta"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Schedule]",
+        "meta_fields": [
+          {
+            "name": "pagination",
+            "python_name": "pagination",
+            "type": "PaginationMeta",
+            "schema": {
+              "$ref": "#/components/schemas/PaginationMeta"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_schedule",
+        "http_method": "get",
+        "path": "/v2/schedules/{id}",
+        "entity": "schedules",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Schedule ID"
+          }
+        ],
+        "params_type_name": "SchedulesGetParams",
+        "response_type": "Schedule",
+        "description": "Get a single on-call schedule by ID.",
+        "record_extractor": "$.schedule",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Schedule",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "incidents": {
+      "entity": "incidents",
+      "data_type_name": "IncidentsSearchData",
+      "filter_type_name": "IncidentsSearchFilter",
+      "in_filter_type_name": "IncidentsInFilter",
+      "any_value_filter_type_name": "IncidentsAnyValueFilter",
+      "string_filter_type_name": "IncidentsStringFilter",
+      "sort_filter_type_name": "IncidentsSortFilter",
+      "result_type_name": "IncidentsSearchResult",
+      "query_type_name": "IncidentsSearchQuery",
+      "condition_prefix": "Incidents",
+      "condition_type_name": "IncidentsCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the incident was created"
+        },
+        {
+          "name": "creator",
+          "python_name": "creator",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The user who created the incident"
+        },
+        {
+          "name": "custom_field_entries",
+          "python_name": "custom_field_entries",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom field values for the incident"
+        },
+        {
+          "name": "duration_metrics",
+          "python_name": "duration_metrics",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Duration metrics associated with the incident"
+        },
+        {
+          "name": "has_debrief",
+          "python_name": "has_debrief",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the incident has had a debrief"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the incident"
+        },
+        {
+          "name": "incident_role_assignments",
+          "python_name": "incident_role_assignments",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Role assignments for the incident"
+        },
+        {
+          "name": "incident_status",
+          "python_name": "incident_status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Current status of the incident"
+        },
+        {
+          "name": "incident_timestamp_values",
+          "python_name": "incident_timestamp_values",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Timestamp values for the incident"
+        },
+        {
+          "name": "incident_type",
+          "python_name": "incident_type",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Type of the incident"
+        },
+        {
+          "name": "mode",
+          "python_name": "mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mode of the incident: standard, retrospective, test, or tutorial"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name/title of the incident"
+        },
+        {
+          "name": "permalink",
+          "python_name": "permalink",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Link to the incident in the dashboard"
+        },
+        {
+          "name": "reference",
+          "python_name": "reference",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Human-readable reference (e.g. INC-123)"
+        },
+        {
+          "name": "severity",
+          "python_name": "severity",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Severity of the incident"
+        },
+        {
+          "name": "slack_channel_id",
+          "python_name": "slack_channel_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Slack channel ID for the incident"
+        },
+        {
+          "name": "slack_channel_name",
+          "python_name": "slack_channel_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Slack channel name for the incident"
+        },
+        {
+          "name": "slack_team_id",
+          "python_name": "slack_team_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Slack team/workspace ID"
+        },
+        {
+          "name": "summary",
+          "python_name": "summary",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Detailed summary of the incident"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the incident was last updated"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Whether the incident is public or private"
+        },
+        {
+          "name": "workload_minutes_late",
+          "python_name": "workload_minutes_late",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Minutes of workload classified as late"
+        },
+        {
+          "name": "workload_minutes_sleeping",
+          "python_name": "workload_minutes_sleeping",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Minutes of workload classified as sleeping"
+        },
+        {
+          "name": "workload_minutes_total",
+          "python_name": "workload_minutes_total",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total workload minutes"
+        },
+        {
+          "name": "workload_minutes_working",
+          "python_name": "workload_minutes_working",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Minutes of workload classified as working"
+        }
+      ]
+    },
+    "alerts": {
+      "entity": "alerts",
+      "data_type_name": "AlertsSearchData",
+      "filter_type_name": "AlertsSearchFilter",
+      "in_filter_type_name": "AlertsInFilter",
+      "any_value_filter_type_name": "AlertsAnyValueFilter",
+      "string_filter_type_name": "AlertsStringFilter",
+      "sort_filter_type_name": "AlertsSortFilter",
+      "result_type_name": "AlertsSearchResult",
+      "query_type_name": "AlertsSearchQuery",
+      "condition_prefix": "Alerts",
+      "condition_type_name": "AlertsCondition",
+      "fields": [
+        {
+          "name": "alert_source_id",
+          "python_name": "alert_source_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the alert source that generated this alert"
+        },
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Structured alert attributes"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the alert was created"
+        },
+        {
+          "name": "deduplication_key",
+          "python_name": "deduplication_key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deduplication key uniquely referencing this alert"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the alert"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the alert"
+        },
+        {
+          "name": "resolved_at",
+          "python_name": "resolved_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the alert was resolved"
+        },
+        {
+          "name": "source_url",
+          "python_name": "source_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Link to the alert in the upstream system"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the alert: firing or resolved"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the alert"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the alert was last updated"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "base_role",
+          "python_name": "base_role",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Base role assigned to the user"
+        },
+        {
+          "name": "custom_roles",
+          "python_name": "custom_roles",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Custom roles assigned to the user"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address of the user"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the user"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the user"
+        },
+        {
+          "name": "role",
+          "python_name": "role",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Deprecated role field"
+        },
+        {
+          "name": "slack_user_id",
+          "python_name": "slack_user_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Slack user ID"
+        }
+      ]
+    },
+    "incident_updates": {
+      "entity": "incident_updates",
+      "data_type_name": "IncidentUpdatesSearchData",
+      "filter_type_name": "IncidentUpdatesSearchFilter",
+      "in_filter_type_name": "IncidentUpdatesInFilter",
+      "any_value_filter_type_name": "IncidentUpdatesAnyValueFilter",
+      "string_filter_type_name": "IncidentUpdatesStringFilter",
+      "sort_filter_type_name": "IncidentUpdatesSortFilter",
+      "result_type_name": "IncidentUpdatesSearchResult",
+      "query_type_name": "IncidentUpdatesSearchQuery",
+      "condition_prefix": "IncidentUpdates",
+      "condition_type_name": "IncidentUpdatesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the update was created"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the incident update"
+        },
+        {
+          "name": "incident_id",
+          "python_name": "incident_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the incident this update belongs to"
+        },
+        {
+          "name": "message",
+          "python_name": "message",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Update message content"
+        },
+        {
+          "name": "new_incident_status",
+          "python_name": "new_incident_status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "New incident status set by this update"
+        },
+        {
+          "name": "new_severity",
+          "python_name": "new_severity",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "New severity set by this update"
+        },
+        {
+          "name": "updater",
+          "python_name": "updater",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Who made this update"
+        }
+      ]
+    },
+    "incident_roles": {
+      "entity": "incident_roles",
+      "data_type_name": "IncidentRolesSearchData",
+      "filter_type_name": "IncidentRolesSearchFilter",
+      "in_filter_type_name": "IncidentRolesInFilter",
+      "any_value_filter_type_name": "IncidentRolesAnyValueFilter",
+      "string_filter_type_name": "IncidentRolesStringFilter",
+      "sort_filter_type_name": "IncidentRolesSortFilter",
+      "result_type_name": "IncidentRolesSearchResult",
+      "query_type_name": "IncidentRolesSearchQuery",
+      "condition_prefix": "IncidentRoles",
+      "condition_type_name": "IncidentRolesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the role was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the role"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the incident role"
+        },
+        {
+          "name": "instructions",
+          "python_name": "instructions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Instructions for the role holder"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the role"
+        },
+        {
+          "name": "required",
+          "python_name": "required",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this role must be assigned"
+        },
+        {
+          "name": "role_type",
+          "python_name": "role_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of role"
+        },
+        {
+          "name": "shortform",
+          "python_name": "shortform",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Short form label for the role"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the role was last updated"
+        }
+      ]
+    },
+    "incident_statuses": {
+      "entity": "incident_statuses",
+      "data_type_name": "IncidentStatusesSearchData",
+      "filter_type_name": "IncidentStatusesSearchFilter",
+      "in_filter_type_name": "IncidentStatusesInFilter",
+      "any_value_filter_type_name": "IncidentStatusesAnyValueFilter",
+      "string_filter_type_name": "IncidentStatusesStringFilter",
+      "sort_filter_type_name": "IncidentStatusesSortFilter",
+      "result_type_name": "IncidentStatusesSearchResult",
+      "query_type_name": "IncidentStatusesSearchQuery",
+      "condition_prefix": "IncidentStatuses",
+      "condition_type_name": "IncidentStatusesCondition",
+      "fields": [
+        {
+          "name": "category",
+          "python_name": "category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category: triage, active, post-incident, closed, etc."
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the status was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the status"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the status"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the status"
+        },
+        {
+          "name": "rank",
+          "python_name": "rank",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Rank for ordering"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the status was last updated"
+        }
+      ]
+    },
+    "incident_timestamps": {
+      "entity": "incident_timestamps",
+      "data_type_name": "IncidentTimestampsSearchData",
+      "filter_type_name": "IncidentTimestampsSearchFilter",
+      "in_filter_type_name": "IncidentTimestampsInFilter",
+      "any_value_filter_type_name": "IncidentTimestampsAnyValueFilter",
+      "string_filter_type_name": "IncidentTimestampsStringFilter",
+      "sort_filter_type_name": "IncidentTimestampsSortFilter",
+      "result_type_name": "IncidentTimestampsSearchResult",
+      "query_type_name": "IncidentTimestampsSearchQuery",
+      "condition_prefix": "IncidentTimestamps",
+      "condition_type_name": "IncidentTimestampsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the timestamp"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the timestamp"
+        },
+        {
+          "name": "rank",
+          "python_name": "rank",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Rank for ordering"
+        }
+      ]
+    },
+    "severities": {
+      "entity": "severities",
+      "data_type_name": "SeveritiesSearchData",
+      "filter_type_name": "SeveritiesSearchFilter",
+      "in_filter_type_name": "SeveritiesInFilter",
+      "any_value_filter_type_name": "SeveritiesAnyValueFilter",
+      "string_filter_type_name": "SeveritiesStringFilter",
+      "sort_filter_type_name": "SeveritiesSortFilter",
+      "result_type_name": "SeveritiesSearchResult",
+      "query_type_name": "SeveritiesSearchQuery",
+      "condition_prefix": "Severities",
+      "condition_type_name": "SeveritiesCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the severity was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the severity"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the severity"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the severity"
+        },
+        {
+          "name": "rank",
+          "python_name": "rank",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Rank for ordering"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the severity was last updated"
+        }
+      ]
+    },
+    "custom_fields": {
+      "entity": "custom_fields",
+      "data_type_name": "CustomFieldsSearchData",
+      "filter_type_name": "CustomFieldsSearchFilter",
+      "in_filter_type_name": "CustomFieldsInFilter",
+      "any_value_filter_type_name": "CustomFieldsAnyValueFilter",
+      "string_filter_type_name": "CustomFieldsStringFilter",
+      "sort_filter_type_name": "CustomFieldsSortFilter",
+      "result_type_name": "CustomFieldsSearchResult",
+      "query_type_name": "CustomFieldsSearchQuery",
+      "condition_prefix": "CustomFields",
+      "condition_type_name": "CustomFieldsCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the custom field was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the custom field"
+        },
+        {
+          "name": "field_type",
+          "python_name": "field_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of field"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the custom field"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the custom field"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the custom field was last updated"
+        }
+      ]
+    },
+    "catalog_types": {
+      "entity": "catalog_types",
+      "data_type_name": "CatalogTypesSearchData",
+      "filter_type_name": "CatalogTypesSearchFilter",
+      "in_filter_type_name": "CatalogTypesInFilter",
+      "any_value_filter_type_name": "CatalogTypesAnyValueFilter",
+      "string_filter_type_name": "CatalogTypesStringFilter",
+      "sort_filter_type_name": "CatalogTypesSortFilter",
+      "result_type_name": "CatalogTypesSearchResult",
+      "query_type_name": "CatalogTypesSearchQuery",
+      "condition_prefix": "CatalogTypes",
+      "condition_type_name": "CatalogTypesCondition",
+      "fields": [
+        {
+          "name": "annotations",
+          "python_name": "annotations",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Annotations metadata"
+        },
+        {
+          "name": "categories",
+          "python_name": "categories",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Categories this type belongs to"
+        },
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display color"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the catalog type was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the catalog type"
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display icon"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the catalog type"
+        },
+        {
+          "name": "is_editable",
+          "python_name": "is_editable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether entries can be edited"
+        },
+        {
+          "name": "last_synced_at",
+          "python_name": "last_synced_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the catalog type was last synced"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the catalog type"
+        },
+        {
+          "name": "ranked",
+          "python_name": "ranked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether entries are ranked"
+        },
+        {
+          "name": "registry_type",
+          "python_name": "registry_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Registry type if synced from an integration"
+        },
+        {
+          "name": "required_integrations",
+          "python_name": "required_integrations",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Integrations required for this type"
+        },
+        {
+          "name": "schema",
+          "python_name": "schema_",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Schema definition for the catalog type"
+        },
+        {
+          "name": "semantic_type",
+          "python_name": "semantic_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Semantic type for special behavior"
+        },
+        {
+          "name": "type_name",
+          "python_name": "type_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Programmatic type name"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the catalog type was last updated"
+        }
+      ]
+    },
+    "schedules": {
+      "entity": "schedules",
+      "data_type_name": "SchedulesSearchData",
+      "filter_type_name": "SchedulesSearchFilter",
+      "in_filter_type_name": "SchedulesInFilter",
+      "any_value_filter_type_name": "SchedulesAnyValueFilter",
+      "string_filter_type_name": "SchedulesStringFilter",
+      "sort_filter_type_name": "SchedulesSortFilter",
+      "result_type_name": "SchedulesSearchResult",
+      "query_type_name": "SchedulesSearchQuery",
+      "condition_prefix": "Schedules",
+      "condition_type_name": "SchedulesCondition",
+      "fields": [
+        {
+          "name": "annotations",
+          "python_name": "annotations",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Annotations metadata"
+        },
+        {
+          "name": "config",
+          "python_name": "config",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Schedule configuration with rotations"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the schedule was created"
+        },
+        {
+          "name": "current_shifts",
+          "python_name": "current_shifts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Currently active shifts"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the schedule"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the schedule"
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timezone for the schedule"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the schedule was last updated"
+        }
+      ]
+    },
+    "escalations": {
+      "entity": "escalations",
+      "data_type_name": "EscalationsSearchData",
+      "filter_type_name": "EscalationsSearchFilter",
+      "in_filter_type_name": "EscalationsInFilter",
+      "any_value_filter_type_name": "EscalationsAnyValueFilter",
+      "string_filter_type_name": "EscalationsStringFilter",
+      "sort_filter_type_name": "EscalationsSortFilter",
+      "result_type_name": "EscalationsSearchResult",
+      "query_type_name": "EscalationsSearchQuery",
+      "condition_prefix": "Escalations",
+      "condition_type_name": "EscalationsCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the escalation was created"
+        },
+        {
+          "name": "creator",
+          "python_name": "creator",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The creator of this escalation"
+        },
+        {
+          "name": "escalation_path_id",
+          "python_name": "escalation_path_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the escalation path used"
+        },
+        {
+          "name": "events",
+          "python_name": "events",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "History of escalation events"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the escalation"
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Priority of the escalation"
+        },
+        {
+          "name": "related_alerts",
+          "python_name": "related_alerts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Alerts related to this escalation"
+        },
+        {
+          "name": "related_incidents",
+          "python_name": "related_incidents",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Incidents related to this escalation"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status: pending, triggered, acked, resolved, expired, cancelled"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the escalation"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "When the escalation was last updated"
+        }
+      ]
+    }
+  }
+}

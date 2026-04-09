@@ -1,0 +1,3628 @@
+{
+  "connector_name": "tiktok-marketing",
+  "class_name": "TiktokMarketingConnector",
+  "package_name": "airbyte_agent_tiktok_marketing",
+  "package_version": "1.1.5",
+  "yaml_version": "1.1.5",
+  "api_reference_url": "https://business-api.tiktok.com/portal/docs?id=1740302848670722",
+  "commit_sha": "unknown",
+  "auth_example": "TiktokMarketingAuthConfig(access_token=\"...\")",
+  "auth_import": ", TiktokMarketingAuthConfig",
+  "auth_config": {
+    "type_name": "TiktokMarketingAuthConfig",
+    "base_name": "TiktokMarketing",
+    "options": [
+      {
+        "title": "OAuth Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Your TikTok Marketing API access token"
+          }
+        ],
+        "type_suffix": "OauthAccessToken"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "TiktokMarketingReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from TikTok Marketing.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Replication Start Date",
+        "description": "The start date in YYYY-MM-DD format. Any data before this date will not be replicated. If not set, defaults to 2016-09-01.",
+        "format": "date",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the TikTok Marketing API (Business API v1.3). Provides access to advertiser accounts, campaigns, ad groups, ads, audiences, creative assets (images and videos), and daily performance reports at the advertiser, campaign, ad group, and ad levels. Requires an Access Token from the TikTok for Business platform. All list operations require an advertiser_id parameter to scope results to a specific advertiser account.",
+  "supported_questions": "- List all my TikTok advertisers\n- Show me all campaigns for my advertiser account\n- List all ad groups\n- Show me all ads\n- List my custom audiences\n- Show me all creative asset images\n- List creative asset videos\n- Show me daily ad performance reports\n- Get campaign performance metrics for the last 30 days\n- Show me advertiser spend reports\n- Which campaigns have the highest budget?\n- Find all paused ad groups\n- What ads were created last month?\n- Show campaigns with lifetime budget mode\n- Which ads had the most impressions yesterday?\n- What is my total ad spend this month?\n- Which campaigns have the highest click-through rate?",
+  "unsupported_questions": "- Create a new campaign\n- Update ad group targeting\n- Delete an ad",
+  "first_operation": {
+    "method_name": "list_advertisers",
+    "http_method": "get",
+    "path": "/advertiser/info/",
+    "entity": "advertisers",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "advertiser_ids",
+        "python_name": "advertiser_ids",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "Advertiser IDs (JSON array of strings)",
+        "is_deep_object": false
+      },
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number",
+        "is_deep_object": false
+      },
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "required": null,
+        "description": "Number of items per page",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "AdvertisersListParams",
+    "response_type": "AdvertisersListResult",
+    "description": "Get advertiser account information",
+    "record_extractor": "$.data.list",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Advertiser]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "advertisers": [
+      {
+        "method_name": "list_advertisers",
+        "http_method": "get",
+        "path": "/advertiser/info/",
+        "entity": "advertisers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_ids",
+            "python_name": "advertiser_ids",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser IDs (JSON array of strings)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdvertisersListParams",
+        "response_type": "AdvertisersListResult",
+        "description": "Get advertiser account information",
+        "record_extractor": "$.data.list",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Advertiser]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/campaign/get/",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Get campaigns for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ad_groups": [
+      {
+        "method_name": "list_ad_groups",
+        "http_method": "get",
+        "path": "/adgroup/get/",
+        "entity": "ad_groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdGroupsListParams",
+        "response_type": "AdGroupsListResult",
+        "description": "Get ad groups for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroup]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ads": [
+      {
+        "method_name": "list_ads",
+        "http_method": "get",
+        "path": "/ad/get/",
+        "entity": "ads",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdsListParams",
+        "response_type": "AdsListResult",
+        "description": "Get ads for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Ad]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "audiences": [
+      {
+        "method_name": "list_audiences",
+        "http_method": "get",
+        "path": "/dmp/custom_audience/list/",
+        "entity": "audiences",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AudiencesListParams",
+        "response_type": "AudiencesListResult",
+        "description": "Get custom audiences for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Audience]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "creative_assets_images": [
+      {
+        "method_name": "list_creative_assets_images",
+        "http_method": "get",
+        "path": "/file/image/ad/search/",
+        "entity": "creative_assets_images",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CreativeAssetsImagesListParams",
+        "response_type": "CreativeAssetsImagesListResult",
+        "description": "Search creative asset images for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CreativeAssetImage]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "creative_assets_videos": [
+      {
+        "method_name": "list_creative_assets_videos",
+        "http_method": "get",
+        "path": "/file/video/ad/search/",
+        "entity": "creative_assets_videos",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CreativeAssetsVideosListParams",
+        "response_type": "CreativeAssetsVideosListResult",
+        "description": "Search creative asset videos for an advertiser",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CreativeAssetVideo]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "advertisers_reports_daily": [
+      {
+        "method_name": "list_advertisers_reports_daily",
+        "http_method": "get",
+        "path": "/report/integrated/get/:advertisers_reports_daily",
+        "entity": "advertisers_reports_daily",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "service_type",
+            "python_name": "service_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION"
+            },
+            "required": true,
+            "description": "Service type",
+            "is_deep_object": false
+          },
+          {
+            "name": "report_type",
+            "python_name": "report_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "BASIC"
+            },
+            "required": true,
+            "description": "Report type",
+            "is_deep_object": false
+          },
+          {
+            "name": "data_level",
+            "python_name": "data_level",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION_ADVERTISER"
+            },
+            "required": true,
+            "description": "Data level for the report",
+            "is_deep_object": false
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"advertiser_id\", \"stat_time_day\"]"
+            },
+            "required": true,
+            "description": "Dimensions for the report (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"cash_spend\", \"voucher_spend\", \"spend\", \"cpc\", \"cpm\", \"impressions\", \"clicks\", \"ctr\", \"reach\", \"cost_per_1000_reached\", \"frequency\", \"video_play_actions\", \"video_watched_2s\", \"video_watched_6s\", \"average_video_play\", \"average_video_play_per_user\", \"video_views_p25\", \"video_views_p50\", \"video_views_p75\", \"video_views_p100\", \"profile_visits\", \"likes\", \"comments\", \"shares\", \"follows\", \"clicks_on_music_disc\", \"real_time_app_install\", \"real_time_app_install_cost\", \"app_install\"]"
+            },
+            "required": true,
+            "description": "Metrics to retrieve (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report start date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report end date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdvertisersReportsDailyListParams",
+        "response_type": "AdvertisersReportsDailyListResult",
+        "description": "Get daily performance reports at the advertiser level",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdvertisersReportDaily]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "campaigns_reports_daily": [
+      {
+        "method_name": "list_campaigns_reports_daily",
+        "http_method": "get",
+        "path": "/report/integrated/get/:campaigns_reports_daily",
+        "entity": "campaigns_reports_daily",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "service_type",
+            "python_name": "service_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION"
+            },
+            "required": true,
+            "description": "Service type",
+            "is_deep_object": false
+          },
+          {
+            "name": "report_type",
+            "python_name": "report_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "BASIC"
+            },
+            "required": true,
+            "description": "Report type",
+            "is_deep_object": false
+          },
+          {
+            "name": "data_level",
+            "python_name": "data_level",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION_CAMPAIGN"
+            },
+            "required": true,
+            "description": "Data level for the report",
+            "is_deep_object": false
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"campaign_id\", \"stat_time_day\"]"
+            },
+            "required": true,
+            "description": "Dimensions for the report (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"campaign_name\", \"spend\", \"cpc\", \"cpm\", \"impressions\", \"clicks\", \"ctr\", \"reach\", \"cost_per_1000_reached\", \"frequency\", \"video_play_actions\", \"video_watched_2s\", \"video_watched_6s\", \"average_video_play\", \"average_video_play_per_user\", \"video_views_p25\", \"video_views_p50\", \"video_views_p75\", \"video_views_p100\", \"profile_visits\", \"likes\", \"comments\", \"shares\", \"follows\", \"clicks_on_music_disc\", \"real_time_app_install\", \"real_time_app_install_cost\", \"app_install\"]"
+            },
+            "required": true,
+            "description": "Metrics to retrieve (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report start date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report end date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsReportsDailyListParams",
+        "response_type": "CampaignsReportsDailyListResult",
+        "description": "Get daily performance reports at the campaign level",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[CampaignsReportDaily]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ad_groups_reports_daily": [
+      {
+        "method_name": "list_ad_groups_reports_daily",
+        "http_method": "get",
+        "path": "/report/integrated/get/:ad_groups_reports_daily",
+        "entity": "ad_groups_reports_daily",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "service_type",
+            "python_name": "service_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION"
+            },
+            "required": true,
+            "description": "Service type",
+            "is_deep_object": false
+          },
+          {
+            "name": "report_type",
+            "python_name": "report_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "BASIC"
+            },
+            "required": true,
+            "description": "Report type",
+            "is_deep_object": false
+          },
+          {
+            "name": "data_level",
+            "python_name": "data_level",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION_ADGROUP"
+            },
+            "required": true,
+            "description": "Data level for the report",
+            "is_deep_object": false
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"adgroup_id\", \"stat_time_day\"]"
+            },
+            "required": true,
+            "description": "Dimensions for the report (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"campaign_name\", \"campaign_id\", \"adgroup_name\", \"placement_type\", \"spend\", \"cpc\", \"cpm\", \"impressions\", \"clicks\", \"ctr\", \"reach\", \"cost_per_1000_reached\", \"conversion\", \"cost_per_conversion\", \"conversion_rate\", \"real_time_conversion\", \"real_time_cost_per_conversion\", \"real_time_conversion_rate\", \"result\", \"cost_per_result\", \"result_rate\", \"real_time_result\", \"real_time_cost_per_result\", \"real_time_result_rate\", \"secondary_goal_result\", \"cost_per_secondary_goal_result\", \"secondary_goal_result_rate\", \"frequency\", \"video_play_actions\", \"video_watched_2s\", \"video_watched_6s\", \"average_video_play\", \"average_video_play_per_user\", \"video_views_p25\", \"video_views_p50\", \"video_views_p75\", \"video_views_p100\", \"profile_visits\", \"likes\", \"comments\", \"shares\", \"follows\", \"clicks_on_music_disc\", \"real_time_app_install\", \"real_time_app_install_cost\", \"app_install\"]"
+            },
+            "required": true,
+            "description": "Metrics to retrieve (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report start date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report end date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdGroupsReportsDailyListParams",
+        "response_type": "AdGroupsReportsDailyListResult",
+        "description": "Get daily performance reports at the ad group level",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdGroupsReportDaily]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "ads_reports_daily": [
+      {
+        "method_name": "list_ads_reports_daily",
+        "http_method": "get",
+        "path": "/report/integrated/get/:ads_reports_daily",
+        "entity": "ads_reports_daily",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "advertiser_id",
+            "python_name": "advertiser_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Advertiser ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "service_type",
+            "python_name": "service_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION"
+            },
+            "required": true,
+            "description": "Service type",
+            "is_deep_object": false
+          },
+          {
+            "name": "report_type",
+            "python_name": "report_type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "BASIC"
+            },
+            "required": true,
+            "description": "Report type",
+            "is_deep_object": false
+          },
+          {
+            "name": "data_level",
+            "python_name": "data_level",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "AUCTION_AD"
+            },
+            "required": true,
+            "description": "Data level for the report",
+            "is_deep_object": false
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"ad_id\", \"stat_time_day\"]"
+            },
+            "required": true,
+            "description": "Dimensions for the report (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "[\"campaign_name\", \"campaign_id\", \"adgroup_name\", \"adgroup_id\", \"ad_name\", \"ad_text\", \"placement_type\", \"spend\", \"cpc\", \"cpm\", \"impressions\", \"clicks\", \"ctr\", \"reach\", \"cost_per_1000_reached\", \"conversion\", \"cost_per_conversion\", \"conversion_rate\", \"real_time_conversion\", \"real_time_cost_per_conversion\", \"real_time_conversion_rate\", \"result\", \"cost_per_result\", \"result_rate\", \"real_time_result\", \"real_time_cost_per_result\", \"real_time_result_rate\", \"secondary_goal_result\", \"cost_per_secondary_goal_result\", \"secondary_goal_result_rate\", \"frequency\", \"video_play_actions\", \"video_watched_2s\", \"video_watched_6s\", \"average_video_play\", \"average_video_play_per_user\", \"video_views_p25\", \"video_views_p50\", \"video_views_p75\", \"video_views_p100\", \"profile_visits\", \"likes\", \"comments\", \"shares\", \"follows\", \"clicks_on_music_disc\", \"real_time_app_install\", \"real_time_app_install_cost\", \"app_install\"]"
+            },
+            "required": true,
+            "description": "Metrics to retrieve (JSON array)",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report start date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": true,
+            "description": "Report end date (YYYY-MM-DD)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 1000
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AdsReportsDailyListParams",
+        "response_type": "AdsReportsDailyListResult",
+        "description": "Get daily performance reports at the ad level",
+        "record_extractor": "$.data.list",
+        "meta_extractor": {
+          "page_info": "$.data.page_info"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AdsReportDaily]",
+        "meta_fields": [
+          {
+            "name": "page_info",
+            "python_name": "page_info",
+            "type": "dict[str, Any]",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_number": {
+                  "type": "integer"
+                },
+                "page": {
+                  "type": "integer"
+                },
+                "page_size": {
+                  "type": "integer"
+                },
+                "total_page": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "advertisers": {
+      "entity": "advertisers",
+      "data_type_name": "AdvertisersSearchData",
+      "filter_type_name": "AdvertisersSearchFilter",
+      "in_filter_type_name": "AdvertisersInFilter",
+      "any_value_filter_type_name": "AdvertisersAnyValueFilter",
+      "string_filter_type_name": "AdvertisersStringFilter",
+      "sort_filter_type_name": "AdvertisersSortFilter",
+      "result_type_name": "AdvertisersSearchResult",
+      "query_type_name": "AdvertisersSearchQuery",
+      "condition_prefix": "Advertisers",
+      "condition_type_name": "AdvertisersCondition",
+      "fields": [
+        {
+          "name": "address",
+          "python_name": "address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The physical address of the advertiser."
+        },
+        {
+          "name": "advertiser_account_type",
+          "python_name": "advertiser_account_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of advertiser's account (e.g., individual, business)."
+        },
+        {
+          "name": "advertiser_id",
+          "python_name": "advertiser_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the advertiser."
+        },
+        {
+          "name": "balance",
+          "python_name": "balance",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The current balance in the advertiser's account."
+        },
+        {
+          "name": "brand",
+          "python_name": "brand",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The brand name associated with the advertiser."
+        },
+        {
+          "name": "cellphone_number",
+          "python_name": "cellphone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cellphone number of the advertiser."
+        },
+        {
+          "name": "company",
+          "python_name": "company",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the company associated with the advertiser."
+        },
+        {
+          "name": "contacter",
+          "python_name": "contacter",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The contact person for the advertiser."
+        },
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The country where the advertiser is located."
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The timestamp when the advertiser account was created."
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The currency used for transactions in the account."
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A brief description or bio of the advertiser or company."
+        },
+        {
+          "name": "display_timezone",
+          "python_name": "display_timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timezone for display purposes."
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address associated with the advertiser."
+        },
+        {
+          "name": "industry",
+          "python_name": "industry",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The industry or sector the advertiser operates in."
+        },
+        {
+          "name": "language",
+          "python_name": "language",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The preferred language of communication for the advertiser."
+        },
+        {
+          "name": "license_city",
+          "python_name": "license_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The city where the advertiser's license is registered."
+        },
+        {
+          "name": "license_no",
+          "python_name": "license_no",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The license number of the advertiser."
+        },
+        {
+          "name": "license_province",
+          "python_name": "license_province",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The province or state where the advertiser's license is registered."
+        },
+        {
+          "name": "license_url",
+          "python_name": "license_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL link to the advertiser's license documentation."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the advertiser or company."
+        },
+        {
+          "name": "promotion_area",
+          "python_name": "promotion_area",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The specific area or region where the advertiser focuses promotion."
+        },
+        {
+          "name": "promotion_center_city",
+          "python_name": "promotion_center_city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The city at the center of the advertiser's promotion activities."
+        },
+        {
+          "name": "promotion_center_province",
+          "python_name": "promotion_center_province",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The province or state at the center of the advertiser's promotion activities."
+        },
+        {
+          "name": "rejection_reason",
+          "python_name": "rejection_reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for any advertisement rejection by the platform."
+        },
+        {
+          "name": "role",
+          "python_name": "role",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The role or position of the advertiser within the company."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the advertiser's account."
+        },
+        {
+          "name": "telephone_number",
+          "python_name": "telephone_number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The telephone number of the advertiser."
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timezone setting for the advertiser's activities."
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "advertiser_id",
+          "python_name": "advertiser_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the advertiser associated with the campaign"
+        },
+        {
+          "name": "app_promotion_type",
+          "python_name": "app_promotion_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of app promotion being used in the campaign"
+        },
+        {
+          "name": "bid_type",
+          "python_name": "bid_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of bid strategy being used in the campaign"
+        },
+        {
+          "name": "budget",
+          "python_name": "budget",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total budget allocated for the campaign"
+        },
+        {
+          "name": "budget_mode",
+          "python_name": "budget_mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Mode in which the budget is being managed (e.g., daily, lifetime)"
+        },
+        {
+          "name": "budget_optimize_on",
+          "python_name": "budget_optimize_on",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "The metric or event that the budget optimization is based on"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the campaign"
+        },
+        {
+          "name": "campaign_name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the campaign for easy identification"
+        },
+        {
+          "name": "campaign_type",
+          "python_name": "campaign_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of campaign (e.g., awareness, conversion)"
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the campaign was created"
+        },
+        {
+          "name": "deep_bid_type",
+          "python_name": "deep_bid_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Advanced bid type used for campaign optimization"
+        },
+        {
+          "name": "is_new_structure",
+          "python_name": "is_new_structure",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the campaign utilizes a new campaign structure"
+        },
+        {
+          "name": "is_search_campaign",
+          "python_name": "is_search_campaign",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the campaign is a search campaign"
+        },
+        {
+          "name": "is_smart_performance_campaign",
+          "python_name": "is_smart_performance_campaign",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the campaign uses smart performance optimization"
+        },
+        {
+          "name": "modify_time",
+          "python_name": "modify_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the campaign was last modified"
+        },
+        {
+          "name": "objective",
+          "python_name": "objective",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The objective or goal of the campaign"
+        },
+        {
+          "name": "objective_type",
+          "python_name": "objective_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of objective selected for the campaign"
+        },
+        {
+          "name": "operation_status",
+          "python_name": "operation_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current operational status of the campaign"
+        },
+        {
+          "name": "optimization_goal",
+          "python_name": "optimization_goal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Specific goal to be optimized for in the campaign"
+        },
+        {
+          "name": "rf_campaign_type",
+          "python_name": "rf_campaign_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of RF (reach and frequency) campaign being run"
+        },
+        {
+          "name": "roas_bid",
+          "python_name": "roas_bid",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Return on ad spend goal set for the campaign"
+        },
+        {
+          "name": "secondary_status",
+          "python_name": "secondary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional status information of the campaign"
+        },
+        {
+          "name": "split_test_variable",
+          "python_name": "split_test_variable",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variable being tested in a split test campaign"
+        }
+      ]
+    },
+    "ad_groups": {
+      "entity": "ad_groups",
+      "data_type_name": "AdGroupsSearchData",
+      "filter_type_name": "AdGroupsSearchFilter",
+      "in_filter_type_name": "AdGroupsInFilter",
+      "any_value_filter_type_name": "AdGroupsAnyValueFilter",
+      "string_filter_type_name": "AdGroupsStringFilter",
+      "sort_filter_type_name": "AdGroupsSortFilter",
+      "result_type_name": "AdGroupsSearchResult",
+      "query_type_name": "AdGroupsSearchQuery",
+      "condition_prefix": "AdGroups",
+      "condition_type_name": "AdGroupsCondition",
+      "fields": [
+        {
+          "name": "adgroup_id",
+          "python_name": "adgroup_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the ad group"
+        },
+        {
+          "name": "adgroup_name",
+          "python_name": "adgroup_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad group"
+        },
+        {
+          "name": "advertiser_id",
+          "python_name": "advertiser_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the advertiser"
+        },
+        {
+          "name": "budget",
+          "python_name": "budget",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The allocated budget for the ad group"
+        },
+        {
+          "name": "budget_mode",
+          "python_name": "budget_mode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The mode for managing the budget"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the campaign"
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp for when the ad group was created"
+        },
+        {
+          "name": "modify_time",
+          "python_name": "modify_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp for when the ad group was last modified"
+        },
+        {
+          "name": "operation_status",
+          "python_name": "operation_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The status of the operation"
+        },
+        {
+          "name": "optimization_goal",
+          "python_name": "optimization_goal",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The goal set for optimization"
+        },
+        {
+          "name": "placement_type",
+          "python_name": "placement_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of ad placement"
+        },
+        {
+          "name": "promotion_type",
+          "python_name": "promotion_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type of promotion"
+        },
+        {
+          "name": "secondary_status",
+          "python_name": "secondary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The secondary status of the ad group"
+        }
+      ]
+    },
+    "ads": {
+      "entity": "ads",
+      "data_type_name": "AdsSearchData",
+      "filter_type_name": "AdsSearchFilter",
+      "in_filter_type_name": "AdsInFilter",
+      "any_value_filter_type_name": "AdsAnyValueFilter",
+      "string_filter_type_name": "AdsStringFilter",
+      "sort_filter_type_name": "AdsSortFilter",
+      "result_type_name": "AdsSearchResult",
+      "query_type_name": "AdsSearchQuery",
+      "condition_prefix": "Ads",
+      "condition_type_name": "AdsCondition",
+      "fields": [
+        {
+          "name": "ad_format",
+          "python_name": "ad_format",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The format of the ad"
+        },
+        {
+          "name": "ad_id",
+          "python_name": "ad_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the ad"
+        },
+        {
+          "name": "ad_name",
+          "python_name": "ad_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad"
+        },
+        {
+          "name": "ad_text",
+          "python_name": "ad_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The text content of the ad"
+        },
+        {
+          "name": "adgroup_id",
+          "python_name": "adgroup_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the ad group"
+        },
+        {
+          "name": "adgroup_name",
+          "python_name": "adgroup_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad group"
+        },
+        {
+          "name": "advertiser_id",
+          "python_name": "advertiser_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the advertiser"
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the campaign"
+        },
+        {
+          "name": "campaign_name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the campaign"
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the ad was created"
+        },
+        {
+          "name": "landing_page_url",
+          "python_name": "landing_page_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL of the landing page for the ad"
+        },
+        {
+          "name": "modify_time",
+          "python_name": "modify_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the ad was last modified"
+        },
+        {
+          "name": "operation_status",
+          "python_name": "operation_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The operational status of the ad"
+        },
+        {
+          "name": "secondary_status",
+          "python_name": "secondary_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The secondary status of the ad"
+        },
+        {
+          "name": "video_id",
+          "python_name": "video_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the video"
+        }
+      ]
+    },
+    "audiences": {
+      "entity": "audiences",
+      "data_type_name": "AudiencesSearchData",
+      "filter_type_name": "AudiencesSearchFilter",
+      "in_filter_type_name": "AudiencesInFilter",
+      "any_value_filter_type_name": "AudiencesAnyValueFilter",
+      "string_filter_type_name": "AudiencesStringFilter",
+      "sort_filter_type_name": "AudiencesSortFilter",
+      "result_type_name": "AudiencesSearchResult",
+      "query_type_name": "AudiencesSearchQuery",
+      "condition_prefix": "Audiences",
+      "condition_type_name": "AudiencesCondition",
+      "fields": [
+        {
+          "name": "audience_id",
+          "python_name": "audience_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the audience"
+        },
+        {
+          "name": "audience_type",
+          "python_name": "audience_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of audience"
+        },
+        {
+          "name": "cover_num",
+          "python_name": "cover_num",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of audience members covered"
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp indicating when the audience was created"
+        },
+        {
+          "name": "is_valid",
+          "python_name": "is_valid",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the audience data is valid"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the audience"
+        },
+        {
+          "name": "shared",
+          "python_name": "shared",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag indicating if the audience is shared"
+        }
+      ]
+    },
+    "creative_assets_images": {
+      "entity": "creative_assets_images",
+      "data_type_name": "CreativeAssetsImagesSearchData",
+      "filter_type_name": "CreativeAssetsImagesSearchFilter",
+      "in_filter_type_name": "CreativeAssetsImagesInFilter",
+      "any_value_filter_type_name": "CreativeAssetsImagesAnyValueFilter",
+      "string_filter_type_name": "CreativeAssetsImagesStringFilter",
+      "sort_filter_type_name": "CreativeAssetsImagesSortFilter",
+      "result_type_name": "CreativeAssetsImagesSearchResult",
+      "query_type_name": "CreativeAssetsImagesSearchQuery",
+      "condition_prefix": "CreativeAssetsImages",
+      "condition_type_name": "CreativeAssetsImagesCondition",
+      "fields": [
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the image was created."
+        },
+        {
+          "name": "file_name",
+          "python_name": "file_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the image file."
+        },
+        {
+          "name": "format",
+          "python_name": "format",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The format type of the image file."
+        },
+        {
+          "name": "height",
+          "python_name": "height",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The height dimension of the image."
+        },
+        {
+          "name": "image_id",
+          "python_name": "image_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the image."
+        },
+        {
+          "name": "image_url",
+          "python_name": "image_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL to access the image."
+        },
+        {
+          "name": "modify_time",
+          "python_name": "modify_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the image was last modified."
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The size of the image file."
+        },
+        {
+          "name": "width",
+          "python_name": "width",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The width dimension of the image."
+        }
+      ]
+    },
+    "creative_assets_videos": {
+      "entity": "creative_assets_videos",
+      "data_type_name": "CreativeAssetsVideosSearchData",
+      "filter_type_name": "CreativeAssetsVideosSearchFilter",
+      "in_filter_type_name": "CreativeAssetsVideosInFilter",
+      "any_value_filter_type_name": "CreativeAssetsVideosAnyValueFilter",
+      "string_filter_type_name": "CreativeAssetsVideosStringFilter",
+      "sort_filter_type_name": "CreativeAssetsVideosSortFilter",
+      "result_type_name": "CreativeAssetsVideosSearchResult",
+      "query_type_name": "CreativeAssetsVideosSearchQuery",
+      "condition_prefix": "CreativeAssetsVideos",
+      "condition_type_name": "CreativeAssetsVideosCondition",
+      "fields": [
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the video was created."
+        },
+        {
+          "name": "duration",
+          "python_name": "duration",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Duration of the video in seconds."
+        },
+        {
+          "name": "file_name",
+          "python_name": "file_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the video file."
+        },
+        {
+          "name": "format",
+          "python_name": "format",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Format of the video file."
+        },
+        {
+          "name": "height",
+          "python_name": "height",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Height of the video in pixels."
+        },
+        {
+          "name": "modify_time",
+          "python_name": "modify_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the video was last modified."
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Size of the video file in bytes."
+        },
+        {
+          "name": "video_cover_url",
+          "python_name": "video_cover_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL for the cover image of the video."
+        },
+        {
+          "name": "video_id",
+          "python_name": "video_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the video."
+        },
+        {
+          "name": "width",
+          "python_name": "width",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Width of the video in pixels."
+        }
+      ]
+    },
+    "advertisers_reports_daily": {
+      "entity": "advertisers_reports_daily",
+      "data_type_name": "AdvertisersReportsDailySearchData",
+      "filter_type_name": "AdvertisersReportsDailySearchFilter",
+      "in_filter_type_name": "AdvertisersReportsDailyInFilter",
+      "any_value_filter_type_name": "AdvertisersReportsDailyAnyValueFilter",
+      "string_filter_type_name": "AdvertisersReportsDailyStringFilter",
+      "sort_filter_type_name": "AdvertisersReportsDailySortFilter",
+      "result_type_name": "AdvertisersReportsDailySearchResult",
+      "query_type_name": "AdvertisersReportsDailySearchQuery",
+      "condition_prefix": "AdvertisersReportsDaily",
+      "condition_type_name": "AdvertisersReportsDailyCondition",
+      "fields": [
+        {
+          "name": "advertiser_id",
+          "python_name": "advertiser_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the advertiser."
+        },
+        {
+          "name": "stat_time_day",
+          "python_name": "stat_time_day",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
+        },
+        {
+          "name": "spend",
+          "python_name": "spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total amount of money spent."
+        },
+        {
+          "name": "cash_spend",
+          "python_name": "cash_spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The amount of money spent in cash."
+        },
+        {
+          "name": "voucher_spend",
+          "python_name": "voucher_spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Amount spent using vouchers."
+        },
+        {
+          "name": "cpc",
+          "python_name": "cpc",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per click."
+        },
+        {
+          "name": "cpm",
+          "python_name": "cpm",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per thousand impressions."
+        },
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of times the ad was displayed."
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of clicks on the ad."
+        },
+        {
+          "name": "ctr",
+          "python_name": "ctr",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Click-through rate."
+        },
+        {
+          "name": "reach",
+          "python_name": "reach",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total number of unique users reached."
+        },
+        {
+          "name": "cost_per_1000_reached",
+          "python_name": "cost_per_1000_reached",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per 1000 unique users reached."
+        },
+        {
+          "name": "frequency",
+          "python_name": "frequency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Average number of times each person saw the ad."
+        },
+        {
+          "name": "video_play_actions",
+          "python_name": "video_play_actions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video play actions."
+        },
+        {
+          "name": "video_watched_2s",
+          "python_name": "video_watched_2s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 2 seconds."
+        },
+        {
+          "name": "video_watched_6s",
+          "python_name": "video_watched_6s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 6 seconds."
+        },
+        {
+          "name": "average_video_play",
+          "python_name": "average_video_play",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration."
+        },
+        {
+          "name": "average_video_play_per_user",
+          "python_name": "average_video_play_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration per user."
+        },
+        {
+          "name": "video_views_p25",
+          "python_name": "video_views_p25",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 25%."
+        },
+        {
+          "name": "video_views_p50",
+          "python_name": "video_views_p50",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 50%."
+        },
+        {
+          "name": "video_views_p75",
+          "python_name": "video_views_p75",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 75%."
+        },
+        {
+          "name": "video_views_p100",
+          "python_name": "video_views_p100",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 100%."
+        },
+        {
+          "name": "profile_visits",
+          "python_name": "profile_visits",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of profile visits."
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes."
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments."
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares."
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows."
+        },
+        {
+          "name": "clicks_on_music_disc",
+          "python_name": "clicks_on_music_disc",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the music disc."
+        },
+        {
+          "name": "real_time_app_install",
+          "python_name": "real_time_app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Real-time app installations."
+        },
+        {
+          "name": "real_time_app_install_cost",
+          "python_name": "real_time_app_install_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Cost of real-time app installations."
+        },
+        {
+          "name": "app_install",
+          "python_name": "app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of app installations."
+        }
+      ]
+    },
+    "campaigns_reports_daily": {
+      "entity": "campaigns_reports_daily",
+      "data_type_name": "CampaignsReportsDailySearchData",
+      "filter_type_name": "CampaignsReportsDailySearchFilter",
+      "in_filter_type_name": "CampaignsReportsDailyInFilter",
+      "any_value_filter_type_name": "CampaignsReportsDailyAnyValueFilter",
+      "string_filter_type_name": "CampaignsReportsDailyStringFilter",
+      "sort_filter_type_name": "CampaignsReportsDailySortFilter",
+      "result_type_name": "CampaignsReportsDailySearchResult",
+      "query_type_name": "CampaignsReportsDailySearchQuery",
+      "condition_prefix": "CampaignsReportsDaily",
+      "condition_type_name": "CampaignsReportsDailyCondition",
+      "fields": [
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the campaign."
+        },
+        {
+          "name": "stat_time_day",
+          "python_name": "stat_time_day",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
+        },
+        {
+          "name": "campaign_name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the marketing campaign."
+        },
+        {
+          "name": "spend",
+          "python_name": "spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total amount of money spent."
+        },
+        {
+          "name": "cpc",
+          "python_name": "cpc",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per click."
+        },
+        {
+          "name": "cpm",
+          "python_name": "cpm",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per thousand impressions."
+        },
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of times the ad was displayed."
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of clicks on the ad."
+        },
+        {
+          "name": "ctr",
+          "python_name": "ctr",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Click-through rate."
+        },
+        {
+          "name": "reach",
+          "python_name": "reach",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total number of unique users reached."
+        },
+        {
+          "name": "cost_per_1000_reached",
+          "python_name": "cost_per_1000_reached",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per 1000 unique users reached."
+        },
+        {
+          "name": "frequency",
+          "python_name": "frequency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Average number of times each person saw the ad."
+        },
+        {
+          "name": "video_play_actions",
+          "python_name": "video_play_actions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video play actions."
+        },
+        {
+          "name": "video_watched_2s",
+          "python_name": "video_watched_2s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 2 seconds."
+        },
+        {
+          "name": "video_watched_6s",
+          "python_name": "video_watched_6s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 6 seconds."
+        },
+        {
+          "name": "average_video_play",
+          "python_name": "average_video_play",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration."
+        },
+        {
+          "name": "average_video_play_per_user",
+          "python_name": "average_video_play_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration per user."
+        },
+        {
+          "name": "video_views_p25",
+          "python_name": "video_views_p25",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 25%."
+        },
+        {
+          "name": "video_views_p50",
+          "python_name": "video_views_p50",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 50%."
+        },
+        {
+          "name": "video_views_p75",
+          "python_name": "video_views_p75",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 75%."
+        },
+        {
+          "name": "video_views_p100",
+          "python_name": "video_views_p100",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 100%."
+        },
+        {
+          "name": "profile_visits",
+          "python_name": "profile_visits",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of profile visits."
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes."
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments."
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares."
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows."
+        },
+        {
+          "name": "clicks_on_music_disc",
+          "python_name": "clicks_on_music_disc",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the music disc."
+        },
+        {
+          "name": "real_time_app_install",
+          "python_name": "real_time_app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Real-time app installations."
+        },
+        {
+          "name": "real_time_app_install_cost",
+          "python_name": "real_time_app_install_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Cost of real-time app installations."
+        },
+        {
+          "name": "app_install",
+          "python_name": "app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of app installations."
+        }
+      ]
+    },
+    "ad_groups_reports_daily": {
+      "entity": "ad_groups_reports_daily",
+      "data_type_name": "AdGroupsReportsDailySearchData",
+      "filter_type_name": "AdGroupsReportsDailySearchFilter",
+      "in_filter_type_name": "AdGroupsReportsDailyInFilter",
+      "any_value_filter_type_name": "AdGroupsReportsDailyAnyValueFilter",
+      "string_filter_type_name": "AdGroupsReportsDailyStringFilter",
+      "sort_filter_type_name": "AdGroupsReportsDailySortFilter",
+      "result_type_name": "AdGroupsReportsDailySearchResult",
+      "query_type_name": "AdGroupsReportsDailySearchQuery",
+      "condition_prefix": "AdGroupsReportsDaily",
+      "condition_type_name": "AdGroupsReportsDailyCondition",
+      "fields": [
+        {
+          "name": "adgroup_id",
+          "python_name": "adgroup_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the ad group."
+        },
+        {
+          "name": "stat_time_day",
+          "python_name": "stat_time_day",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
+        },
+        {
+          "name": "campaign_name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the marketing campaign."
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the campaign."
+        },
+        {
+          "name": "adgroup_name",
+          "python_name": "adgroup_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad group."
+        },
+        {
+          "name": "placement_type",
+          "python_name": "placement_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of ad placement."
+        },
+        {
+          "name": "spend",
+          "python_name": "spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total amount of money spent."
+        },
+        {
+          "name": "cpc",
+          "python_name": "cpc",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per click."
+        },
+        {
+          "name": "cpm",
+          "python_name": "cpm",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per thousand impressions."
+        },
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of times the ad was displayed."
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of clicks on the ad."
+        },
+        {
+          "name": "ctr",
+          "python_name": "ctr",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Click-through rate."
+        },
+        {
+          "name": "reach",
+          "python_name": "reach",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total number of unique users reached."
+        },
+        {
+          "name": "cost_per_1000_reached",
+          "python_name": "cost_per_1000_reached",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per 1000 unique users reached."
+        },
+        {
+          "name": "conversion",
+          "python_name": "conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of conversions."
+        },
+        {
+          "name": "cost_per_conversion",
+          "python_name": "cost_per_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per conversion."
+        },
+        {
+          "name": "conversion_rate",
+          "python_name": "conversion_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of conversions."
+        },
+        {
+          "name": "real_time_conversion",
+          "python_name": "real_time_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time conversions."
+        },
+        {
+          "name": "real_time_cost_per_conversion",
+          "python_name": "real_time_cost_per_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time cost per conversion."
+        },
+        {
+          "name": "real_time_conversion_rate",
+          "python_name": "real_time_conversion_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time conversion rate."
+        },
+        {
+          "name": "result",
+          "python_name": "result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of results."
+        },
+        {
+          "name": "cost_per_result",
+          "python_name": "cost_per_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per result."
+        },
+        {
+          "name": "result_rate",
+          "python_name": "result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of results."
+        },
+        {
+          "name": "real_time_result",
+          "python_name": "real_time_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time results."
+        },
+        {
+          "name": "real_time_cost_per_result",
+          "python_name": "real_time_cost_per_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time cost per result."
+        },
+        {
+          "name": "real_time_result_rate",
+          "python_name": "real_time_result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time result rate."
+        },
+        {
+          "name": "secondary_goal_result",
+          "python_name": "secondary_goal_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Results for secondary goals."
+        },
+        {
+          "name": "cost_per_secondary_goal_result",
+          "python_name": "cost_per_secondary_goal_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per secondary goal result."
+        },
+        {
+          "name": "secondary_goal_result_rate",
+          "python_name": "secondary_goal_result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of secondary goal results."
+        },
+        {
+          "name": "frequency",
+          "python_name": "frequency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Average number of times each person saw the ad."
+        },
+        {
+          "name": "video_play_actions",
+          "python_name": "video_play_actions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video play actions."
+        },
+        {
+          "name": "video_watched_2s",
+          "python_name": "video_watched_2s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 2 seconds."
+        },
+        {
+          "name": "video_watched_6s",
+          "python_name": "video_watched_6s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 6 seconds."
+        },
+        {
+          "name": "average_video_play",
+          "python_name": "average_video_play",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration."
+        },
+        {
+          "name": "average_video_play_per_user",
+          "python_name": "average_video_play_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration per user."
+        },
+        {
+          "name": "video_views_p25",
+          "python_name": "video_views_p25",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 25%."
+        },
+        {
+          "name": "video_views_p50",
+          "python_name": "video_views_p50",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 50%."
+        },
+        {
+          "name": "video_views_p75",
+          "python_name": "video_views_p75",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 75%."
+        },
+        {
+          "name": "video_views_p100",
+          "python_name": "video_views_p100",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 100%."
+        },
+        {
+          "name": "profile_visits",
+          "python_name": "profile_visits",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of profile visits."
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes."
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments."
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares."
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows."
+        },
+        {
+          "name": "clicks_on_music_disc",
+          "python_name": "clicks_on_music_disc",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the music disc."
+        },
+        {
+          "name": "real_time_app_install",
+          "python_name": "real_time_app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Real-time app installations."
+        },
+        {
+          "name": "real_time_app_install_cost",
+          "python_name": "real_time_app_install_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Cost of real-time app installations."
+        },
+        {
+          "name": "app_install",
+          "python_name": "app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of app installations."
+        }
+      ]
+    },
+    "ads_reports_daily": {
+      "entity": "ads_reports_daily",
+      "data_type_name": "AdsReportsDailySearchData",
+      "filter_type_name": "AdsReportsDailySearchFilter",
+      "in_filter_type_name": "AdsReportsDailyInFilter",
+      "any_value_filter_type_name": "AdsReportsDailyAnyValueFilter",
+      "string_filter_type_name": "AdsReportsDailyStringFilter",
+      "sort_filter_type_name": "AdsReportsDailySortFilter",
+      "result_type_name": "AdsReportsDailySearchResult",
+      "query_type_name": "AdsReportsDailySearchQuery",
+      "condition_prefix": "AdsReportsDaily",
+      "condition_type_name": "AdsReportsDailyCondition",
+      "fields": [
+        {
+          "name": "ad_id",
+          "python_name": "ad_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the ad."
+        },
+        {
+          "name": "stat_time_day",
+          "python_name": "stat_time_day",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date for which the statistical data is recorded (YYYY-MM-DD HH:MM:SS format)."
+        },
+        {
+          "name": "campaign_name",
+          "python_name": "campaign_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the marketing campaign."
+        },
+        {
+          "name": "campaign_id",
+          "python_name": "campaign_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the campaign."
+        },
+        {
+          "name": "adgroup_name",
+          "python_name": "adgroup_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad group."
+        },
+        {
+          "name": "adgroup_id",
+          "python_name": "adgroup_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the ad group."
+        },
+        {
+          "name": "ad_name",
+          "python_name": "ad_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the ad."
+        },
+        {
+          "name": "ad_text",
+          "python_name": "ad_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The text content of the ad."
+        },
+        {
+          "name": "placement_type",
+          "python_name": "placement_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of ad placement."
+        },
+        {
+          "name": "spend",
+          "python_name": "spend",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total amount of money spent."
+        },
+        {
+          "name": "cpc",
+          "python_name": "cpc",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per click."
+        },
+        {
+          "name": "cpm",
+          "python_name": "cpm",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per thousand impressions."
+        },
+        {
+          "name": "impressions",
+          "python_name": "impressions",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of times the ad was displayed."
+        },
+        {
+          "name": "clicks",
+          "python_name": "clicks",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of clicks on the ad."
+        },
+        {
+          "name": "ctr",
+          "python_name": "ctr",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Click-through rate."
+        },
+        {
+          "name": "reach",
+          "python_name": "reach",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total number of unique users reached."
+        },
+        {
+          "name": "cost_per_1000_reached",
+          "python_name": "cost_per_1000_reached",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per 1000 unique users reached."
+        },
+        {
+          "name": "conversion",
+          "python_name": "conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of conversions."
+        },
+        {
+          "name": "cost_per_conversion",
+          "python_name": "cost_per_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per conversion."
+        },
+        {
+          "name": "conversion_rate",
+          "python_name": "conversion_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of conversions."
+        },
+        {
+          "name": "real_time_conversion",
+          "python_name": "real_time_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time conversions."
+        },
+        {
+          "name": "real_time_cost_per_conversion",
+          "python_name": "real_time_cost_per_conversion",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time cost per conversion."
+        },
+        {
+          "name": "real_time_conversion_rate",
+          "python_name": "real_time_conversion_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time conversion rate."
+        },
+        {
+          "name": "result",
+          "python_name": "result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Number of results."
+        },
+        {
+          "name": "cost_per_result",
+          "python_name": "cost_per_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per result."
+        },
+        {
+          "name": "result_rate",
+          "python_name": "result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of results."
+        },
+        {
+          "name": "real_time_result",
+          "python_name": "real_time_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time results."
+        },
+        {
+          "name": "real_time_cost_per_result",
+          "python_name": "real_time_cost_per_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time cost per result."
+        },
+        {
+          "name": "real_time_result_rate",
+          "python_name": "real_time_result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Real-time result rate."
+        },
+        {
+          "name": "secondary_goal_result",
+          "python_name": "secondary_goal_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Results for secondary goals."
+        },
+        {
+          "name": "cost_per_secondary_goal_result",
+          "python_name": "cost_per_secondary_goal_result",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Cost per secondary goal result."
+        },
+        {
+          "name": "secondary_goal_result_rate",
+          "python_name": "secondary_goal_result_rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rate of secondary goal results."
+        },
+        {
+          "name": "frequency",
+          "python_name": "frequency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Average number of times each person saw the ad."
+        },
+        {
+          "name": "video_play_actions",
+          "python_name": "video_play_actions",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of video play actions."
+        },
+        {
+          "name": "video_watched_2s",
+          "python_name": "video_watched_2s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 2 seconds."
+        },
+        {
+          "name": "video_watched_6s",
+          "python_name": "video_watched_6s",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched for at least 6 seconds."
+        },
+        {
+          "name": "average_video_play",
+          "python_name": "average_video_play",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration."
+        },
+        {
+          "name": "average_video_play_per_user",
+          "python_name": "average_video_play_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average video play duration per user."
+        },
+        {
+          "name": "video_views_p25",
+          "python_name": "video_views_p25",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 25%."
+        },
+        {
+          "name": "video_views_p50",
+          "python_name": "video_views_p50",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 50%."
+        },
+        {
+          "name": "video_views_p75",
+          "python_name": "video_views_p75",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 75%."
+        },
+        {
+          "name": "video_views_p100",
+          "python_name": "video_views_p100",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of times video was watched to 100%."
+        },
+        {
+          "name": "profile_visits",
+          "python_name": "profile_visits",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of profile visits."
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of likes."
+        },
+        {
+          "name": "comments",
+          "python_name": "comments",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of comments."
+        },
+        {
+          "name": "shares",
+          "python_name": "shares",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of shares."
+        },
+        {
+          "name": "follows",
+          "python_name": "follows",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of follows."
+        },
+        {
+          "name": "clicks_on_music_disc",
+          "python_name": "clicks_on_music_disc",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of clicks on the music disc."
+        },
+        {
+          "name": "real_time_app_install",
+          "python_name": "real_time_app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Real-time app installations."
+        },
+        {
+          "name": "real_time_app_install_cost",
+          "python_name": "real_time_app_install_cost",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Cost of real-time app installations."
+        },
+        {
+          "name": "app_install",
+          "python_name": "app_install",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Number of app installations."
+        }
+      ]
+    }
+  }
+}

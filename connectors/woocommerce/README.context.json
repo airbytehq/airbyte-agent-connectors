@@ -1,0 +1,4575 @@
+{
+  "connector_name": "woocommerce",
+  "class_name": "WoocommerceConnector",
+  "package_name": "airbyte_agent_woocommerce",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://woocommerce.github.io/woocommerce-rest-api-docs/",
+  "commit_sha": "unknown",
+  "auth_example": "WoocommerceAuthConfig(api_key=\"...\", api_secret=\"...\")",
+  "auth_import": ", WoocommerceAuthConfig",
+  "auth_config": {
+    "type_name": "WoocommerceAuthConfig",
+    "base_name": "Woocommerce",
+    "options": [
+      {
+        "title": "WooCommerce API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "Consumer Key",
+            "description": "WooCommerce REST API consumer key (starts with ck_)"
+          },
+          {
+            "name": "api_secret",
+            "type": "str",
+            "required": true,
+            "title": "Consumer Secret",
+            "description": "WooCommerce REST API consumer secret (starts with cs_)"
+          }
+        ],
+        "type_suffix": "WoocommerceApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "WoocommerceReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from WooCommerce.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the WooCommerce REST API (v3). Provides read access to a WooCommerce store's\ncustomers, orders, products, coupons, product categories, tags, reviews, attributes,\nvariations, order notes, refunds, payment gateways, shipping methods, shipping zones,\ntax rates, and tax classes. Requires a WooCommerce store URL and REST API consumer\nkey / consumer secret for authentication.\n",
+  "supported_questions": "- List all customers in WooCommerce\n- Show me all orders\n- List all products\n- Show me all coupons\n- List all product categories\n- Show me the product reviews\n- List all shipping zones\n- Show me the tax rates\n- List all payment gateways\n- Find orders placed this month\n- What are the top-selling products?\n- Show me customers who have made purchases\n- Find all coupons expiring this year\n- What orders are still processing?",
+  "unsupported_questions": "- Create a new product\n- Update an order status\n- Delete a customer\n- Apply a coupon to an order\n- Process a refund",
+  "first_operation": {
+    "method_name": "list_customers",
+    "http_method": "get",
+    "path": "/customers",
+    "entity": "customers",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Current page of the collection",
+        "is_deep_object": false
+      },
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 10
+        },
+        "required": null,
+        "description": "Maximum number of items to return per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "search",
+        "python_name": "search",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Limit results to those matching a string",
+        "is_deep_object": false
+      },
+      {
+        "name": "orderby",
+        "python_name": "orderby",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "id",
+            "include",
+            "name",
+            "registered_date"
+          ],
+          "default": "name"
+        },
+        "required": null,
+        "description": "Sort collection by attribute",
+        "is_deep_object": false
+      },
+      {
+        "name": "order",
+        "python_name": "order",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ],
+          "default": "asc"
+        },
+        "required": null,
+        "description": "Order sort attribute ascending or descending",
+        "is_deep_object": false
+      },
+      {
+        "name": "email",
+        "python_name": "email",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Limit result set to resources with a specific email",
+        "is_deep_object": false
+      },
+      {
+        "name": "role",
+        "python_name": "role",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "all",
+            "administrator",
+            "editor",
+            "author",
+            "contributor",
+            "subscriber",
+            "customer",
+            "shop_manager"
+          ],
+          "default": "customer"
+        },
+        "required": null,
+        "description": "Limit result set to resources with a specific role",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "CustomersListParams",
+    "response_type": "CustomersListResult",
+    "description": "List customers",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Customer]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "customers": [
+      {
+        "method_name": "list_customers",
+        "http_method": "get",
+        "path": "/customers",
+        "entity": "customers",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "registered_date"
+              ],
+              "default": "name"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          },
+          {
+            "name": "email",
+            "python_name": "email",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to resources with a specific email",
+            "is_deep_object": false
+          },
+          {
+            "name": "role",
+            "python_name": "role",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "administrator",
+                "editor",
+                "author",
+                "contributor",
+                "subscriber",
+                "customer",
+                "shop_manager"
+              ],
+              "default": "customer"
+            },
+            "required": null,
+            "description": "Limit result set to resources with a specific role",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CustomersListParams",
+        "response_type": "CustomersListResult",
+        "description": "List customers",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Customer]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_customer",
+        "http_method": "get",
+        "path": "/customers/{id}",
+        "entity": "customers",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the customer"
+          }
+        ],
+        "params_type_name": "CustomersGetParams",
+        "response_type": "Customer",
+        "description": "Retrieve a customer",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Customer",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "orders": [
+      {
+        "method_name": "list_orders",
+        "http_method": "get",
+        "path": "/orders",
+        "entity": "orders",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "before",
+            "python_name": "before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_after",
+            "python_name": "modified_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_before",
+            "python_name": "modified_before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "any",
+                "pending",
+                "processing",
+                "on-hold",
+                "completed",
+                "cancelled",
+                "refunded",
+                "failed",
+                "trash"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Limit result set to orders with a specific status",
+            "is_deep_object": false
+          },
+          {
+            "name": "customer",
+            "python_name": "customer",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Limit result set to orders assigned to a specific customer ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Limit result set to orders that include a specific product ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "id",
+                "include",
+                "title",
+                "slug",
+                "modified"
+              ],
+              "default": "date"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrdersListParams",
+        "response_type": "OrdersListResult",
+        "description": "List orders",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Order]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_order",
+        "http_method": "get",
+        "path": "/orders/{id}",
+        "entity": "orders",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the order"
+          }
+        ],
+        "params_type_name": "OrdersGetParams",
+        "response_type": "Order",
+        "description": "Retrieve an order",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Order",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "products": [
+      {
+        "method_name": "list_products",
+        "http_method": "get",
+        "path": "/products",
+        "entity": "products",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "before",
+            "python_name": "before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_after",
+            "python_name": "modified_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_before",
+            "python_name": "modified_before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "any",
+                "draft",
+                "pending",
+                "private",
+                "publish"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Limit result set to products with a specific status",
+            "is_deep_object": false
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "simple",
+                "grouped",
+                "external",
+                "variable"
+              ]
+            },
+            "required": null,
+            "description": "Limit result set to products with a specific type",
+            "is_deep_object": false
+          },
+          {
+            "name": "sku",
+            "python_name": "sku",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to products with a specific SKU",
+            "is_deep_object": false
+          },
+          {
+            "name": "featured",
+            "python_name": "featured",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit result set to featured products",
+            "is_deep_object": false
+          },
+          {
+            "name": "category",
+            "python_name": "category",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to products assigned a specific category ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "tag",
+            "python_name": "tag",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to products assigned a specific tag ID",
+            "is_deep_object": false
+          },
+          {
+            "name": "on_sale",
+            "python_name": "on_sale",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit result set to products on sale",
+            "is_deep_object": false
+          },
+          {
+            "name": "min_price",
+            "python_name": "min_price",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to products based on a minimum price",
+            "is_deep_object": false
+          },
+          {
+            "name": "max_price",
+            "python_name": "max_price",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to products based on a maximum price",
+            "is_deep_object": false
+          },
+          {
+            "name": "stock_status",
+            "python_name": "stock_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "instock",
+                "outofstock",
+                "onbackorder"
+              ]
+            },
+            "required": null,
+            "description": "Limit result set to products with specified stock status",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "id",
+                "include",
+                "title",
+                "slug",
+                "price",
+                "popularity",
+                "rating",
+                "menu_order",
+                "modified"
+              ],
+              "default": "date"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductsListParams",
+        "response_type": "ProductsListResult",
+        "description": "List products",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Product]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product",
+        "http_method": "get",
+        "path": "/products/{id}",
+        "entity": "products",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the product"
+          }
+        ],
+        "params_type_name": "ProductsGetParams",
+        "response_type": "Product",
+        "description": "Retrieve a product",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Product",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "coupons": [
+      {
+        "method_name": "list_coupons",
+        "http_method": "get",
+        "path": "/coupons",
+        "entity": "coupons",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "before",
+            "python_name": "before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources published before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_after",
+            "python_name": "modified_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_before",
+            "python_name": "modified_before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to resources modified before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "code",
+            "python_name": "code",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to resources with a specific code",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "id",
+                "include",
+                "title",
+                "slug",
+                "modified"
+              ],
+              "default": "date"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CouponsListParams",
+        "response_type": "CouponsListResult",
+        "description": "List coupons",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Coupon]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_coupon",
+        "http_method": "get",
+        "path": "/coupons/{id}",
+        "entity": "coupons",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the coupon"
+          }
+        ],
+        "params_type_name": "CouponsGetParams",
+        "response_type": "Coupon",
+        "description": "Retrieve a coupon",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Coupon",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_categories": [
+      {
+        "method_name": "list_product_categories",
+        "http_method": "get",
+        "path": "/products/categories",
+        "entity": "product_categories",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "slug",
+                "term_group",
+                "description",
+                "count"
+              ],
+              "default": "name"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          },
+          {
+            "name": "hide_empty",
+            "python_name": "hide_empty",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to hide categories not assigned to any products",
+            "is_deep_object": false
+          },
+          {
+            "name": "parent",
+            "python_name": "parent",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Limit result set to categories assigned a specific parent",
+            "is_deep_object": false
+          },
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Limit result set to categories assigned to a specific product",
+            "is_deep_object": false
+          },
+          {
+            "name": "slug",
+            "python_name": "slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to categories with a specific slug",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductCategoriesListParams",
+        "response_type": "ProductCategoriesListResult",
+        "description": "List product categories",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ProductCategory]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product_category",
+        "http_method": "get",
+        "path": "/products/categories/{id}",
+        "entity": "product_categories",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the category"
+          }
+        ],
+        "params_type_name": "ProductCategoriesGetParams",
+        "response_type": "ProductCategory",
+        "description": "Retrieve a product category",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductCategory",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_tags": [
+      {
+        "method_name": "list_product_tags",
+        "http_method": "get",
+        "path": "/products/tags",
+        "entity": "product_tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "include",
+                "name",
+                "slug",
+                "term_group",
+                "description",
+                "count"
+              ],
+              "default": "name"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          },
+          {
+            "name": "hide_empty",
+            "python_name": "hide_empty",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": null,
+            "description": "Whether to hide tags not assigned to any products",
+            "is_deep_object": false
+          },
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "int",
+            "schema": {
+              "type": "integer"
+            },
+            "required": null,
+            "description": "Limit result set to tags assigned to a specific product",
+            "is_deep_object": false
+          },
+          {
+            "name": "slug",
+            "python_name": "slug",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to tags with a specific slug",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductTagsListParams",
+        "response_type": "ProductTagsListResult",
+        "description": "List product tags",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ProductTag]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product_tag",
+        "http_method": "get",
+        "path": "/products/tags/{id}",
+        "entity": "product_tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the tag"
+          }
+        ],
+        "params_type_name": "ProductTagsGetParams",
+        "response_type": "ProductTag",
+        "description": "Retrieve a product tag",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductTag",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_reviews": [
+      {
+        "method_name": "list_product_reviews",
+        "http_method": "get",
+        "path": "/products/reviews",
+        "entity": "product_reviews",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to reviews published after a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "before",
+            "python_name": "before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit response to reviews published before a given ISO8601 date",
+            "is_deep_object": false
+          },
+          {
+            "name": "product",
+            "python_name": "product",
+            "type": "list[int]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "required": null,
+            "description": "Limit result set to reviews assigned to specific product IDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "hold",
+                "approved",
+                "spam",
+                "trash"
+              ],
+              "default": "approved"
+            },
+            "required": null,
+            "description": "Limit result set to reviews assigned a specific status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductReviewsListParams",
+        "response_type": "ProductReviewsListResult",
+        "description": "List product reviews",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ProductReview]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product_review",
+        "http_method": "get",
+        "path": "/products/reviews/{id}",
+        "entity": "product_reviews",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the review"
+          }
+        ],
+        "params_type_name": "ProductReviewsGetParams",
+        "response_type": "ProductReview",
+        "description": "Retrieve a product review",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductReview",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_attributes": [
+      {
+        "method_name": "list_product_attributes",
+        "http_method": "get",
+        "path": "/products/attributes",
+        "entity": "product_attributes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductAttributesListParams",
+        "response_type": "ProductAttributesListResult",
+        "description": "List product attributes",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ProductAttribute]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product_attribute",
+        "http_method": "get",
+        "path": "/products/attributes/{id}",
+        "entity": "product_attributes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the attribute"
+          }
+        ],
+        "params_type_name": "ProductAttributesGetParams",
+        "response_type": "ProductAttribute",
+        "description": "Retrieve a product attribute",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductAttribute",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "product_variations": [
+      {
+        "method_name": "list_product_variations",
+        "http_method": "get",
+        "path": "/products/{product_id}/variations",
+        "entity": "product_variations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the parent product"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit results to those matching a string",
+            "is_deep_object": false
+          },
+          {
+            "name": "sku",
+            "python_name": "sku",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to variations with a specific SKU",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "any",
+                "draft",
+                "pending",
+                "private",
+                "publish"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Limit result set to variations with a specific status",
+            "is_deep_object": false
+          },
+          {
+            "name": "stock_status",
+            "python_name": "stock_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "instock",
+                "outofstock",
+                "onbackorder"
+              ]
+            },
+            "required": null,
+            "description": "Limit result set to variations with specified stock status",
+            "is_deep_object": false
+          },
+          {
+            "name": "on_sale",
+            "python_name": "on_sale",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit result set to variations on sale",
+            "is_deep_object": false
+          },
+          {
+            "name": "min_price",
+            "python_name": "min_price",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to variations based on a minimum price",
+            "is_deep_object": false
+          },
+          {
+            "name": "max_price",
+            "python_name": "max_price",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit result set to variations based on a maximum price",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "date",
+                "id",
+                "include",
+                "title",
+                "slug",
+                "menu_order",
+                "modified"
+              ],
+              "default": "date"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProductVariationsListParams",
+        "response_type": "ProductVariationsListResult",
+        "description": "List product variations",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ProductVariation]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_product_variation",
+        "http_method": "get",
+        "path": "/products/{product_id}/variations/{id}",
+        "entity": "product_variations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "product_id",
+            "python_name": "product_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the parent product"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the variation"
+          }
+        ],
+        "params_type_name": "ProductVariationsGetParams",
+        "response_type": "ProductVariation",
+        "description": "Retrieve a product variation",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductVariation",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "order_notes": [
+      {
+        "method_name": "list_order_notes",
+        "http_method": "get",
+        "path": "/orders/{order_id}/notes",
+        "entity": "order_notes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the order"
+          },
+          {
+            "name": "type",
+            "python_name": "type",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "any",
+                "customer",
+                "internal"
+              ],
+              "default": "any"
+            },
+            "required": null,
+            "description": "Limit result set to a specific note type",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "OrderNotesListParams",
+        "response_type": "OrderNotesListResult",
+        "description": "List order notes",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[OrderNote]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_order_note",
+        "http_method": "get",
+        "path": "/orders/{order_id}/notes/{id}",
+        "entity": "order_notes",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the order"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the note"
+          }
+        ],
+        "params_type_name": "OrderNotesGetParams",
+        "response_type": "OrderNote",
+        "description": "Retrieve an order note",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "OrderNote",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "refunds": [
+      {
+        "method_name": "list_refunds",
+        "http_method": "get",
+        "path": "/orders/{order_id}/refunds",
+        "entity": "refunds",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the order"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "RefundsListParams",
+        "response_type": "RefundsListResult",
+        "description": "List order refunds",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Refund]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_refund",
+        "http_method": "get",
+        "path": "/orders/{order_id}/refunds/{id}",
+        "entity": "refunds",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "order_id",
+            "python_name": "order_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the order"
+          },
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the refund"
+          }
+        ],
+        "params_type_name": "RefundsGetParams",
+        "response_type": "Refund",
+        "description": "Retrieve a refund",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Refund",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "payment_gateways": [
+      {
+        "method_name": "list_payment_gateways",
+        "http_method": "get",
+        "path": "/payment_gateways",
+        "entity": "payment_gateways",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "PaymentGatewaysListParams",
+        "response_type": "PaymentGatewaysListResult",
+        "description": "List payment gateways",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[PaymentGateway]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_payment_gateway",
+        "http_method": "get",
+        "path": "/payment_gateways/{id}",
+        "entity": "payment_gateways",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier for the payment gateway"
+          }
+        ],
+        "params_type_name": "PaymentGatewaysGetParams",
+        "response_type": "PaymentGateway",
+        "description": "Retrieve a payment gateway",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "PaymentGateway",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "shipping_methods": [
+      {
+        "method_name": "list_shipping_methods",
+        "http_method": "get",
+        "path": "/shipping_methods",
+        "entity": "shipping_methods",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ShippingMethodsListParams",
+        "response_type": "ShippingMethodsListResult",
+        "description": "List shipping methods",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ShippingMethod]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_shipping_method",
+        "http_method": "get",
+        "path": "/shipping_methods/{id}",
+        "entity": "shipping_methods",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique identifier for the shipping method"
+          }
+        ],
+        "params_type_name": "ShippingMethodsGetParams",
+        "response_type": "ShippingMethod",
+        "description": "Retrieve a shipping method",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ShippingMethod",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "shipping_zones": [
+      {
+        "method_name": "list_shipping_zones",
+        "http_method": "get",
+        "path": "/shipping/zones",
+        "entity": "shipping_zones",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ShippingZonesListParams",
+        "response_type": "ShippingZonesListResult",
+        "description": "List shipping zones",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[ShippingZone]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_shipping_zone",
+        "http_method": "get",
+        "path": "/shipping/zones/{id}",
+        "entity": "shipping_zones",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the shipping zone"
+          }
+        ],
+        "params_type_name": "ShippingZonesGetParams",
+        "response_type": "ShippingZone",
+        "description": "Retrieve a shipping zone",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ShippingZone",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tax_rates": [
+      {
+        "method_name": "list_tax_rates",
+        "http_method": "get",
+        "path": "/taxes",
+        "entity": "tax_rates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Current page of the collection",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "required": null,
+            "description": "Maximum number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "class",
+            "python_name": "class_",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Sort by tax class",
+            "is_deep_object": false
+          },
+          {
+            "name": "orderby",
+            "python_name": "orderby",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "order",
+                "priority"
+              ],
+              "default": "order"
+            },
+            "required": null,
+            "description": "Sort collection by attribute",
+            "is_deep_object": false
+          },
+          {
+            "name": "order",
+            "python_name": "order",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "required": null,
+            "description": "Order sort attribute ascending or descending",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaxRatesListParams",
+        "response_type": "TaxRatesListResult",
+        "description": "List tax rates",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TaxRate]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_tax_rate",
+        "http_method": "get",
+        "path": "/taxes/{id}",
+        "entity": "tax_rates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Unique identifier for the tax rate"
+          }
+        ],
+        "params_type_name": "TaxRatesGetParams",
+        "response_type": "TaxRate",
+        "description": "Retrieve a tax rate",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "TaxRate",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tax_classes": [
+      {
+        "method_name": "list_tax_classes",
+        "http_method": "get",
+        "path": "/taxes/classes",
+        "entity": "tax_classes",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "TaxClassesListParams",
+        "response_type": "TaxClassesListResult",
+        "description": "List tax classes",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[TaxClass]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "customers": {
+      "entity": "customers",
+      "data_type_name": "CustomersSearchData",
+      "filter_type_name": "CustomersSearchFilter",
+      "in_filter_type_name": "CustomersInFilter",
+      "any_value_filter_type_name": "CustomersAnyValueFilter",
+      "string_filter_type_name": "CustomersStringFilter",
+      "sort_filter_type_name": "CustomersSortFilter",
+      "result_type_name": "CustomersSearchResult",
+      "query_type_name": "CustomersSearchQuery",
+      "condition_prefix": "Customers",
+      "condition_type_name": "CustomersCondition",
+      "fields": [
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Avatar URL"
+        },
+        {
+          "name": "billing",
+          "python_name": "billing",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "List of billing address data"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the customer was created, in the site's timezone"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the customer was created, as GMT"
+        },
+        {
+          "name": "date_modified",
+          "python_name": "date_modified",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the customer was last modified, in the site's timezone"
+        },
+        {
+          "name": "date_modified_gmt",
+          "python_name": "date_modified_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the customer was last modified, as GMT"
+        },
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The email address for the customer"
+        },
+        {
+          "name": "first_name",
+          "python_name": "first_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer first name"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the resource"
+        },
+        {
+          "name": "is_paying_customer",
+          "python_name": "is_paying_customer",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Is the customer a paying customer"
+        },
+        {
+          "name": "last_name",
+          "python_name": "last_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer last name"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "role",
+          "python_name": "role",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer role"
+        },
+        {
+          "name": "shipping",
+          "python_name": "shipping",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "List of shipping address data"
+        },
+        {
+          "name": "username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer login name"
+        }
+      ]
+    },
+    "orders": {
+      "entity": "orders",
+      "data_type_name": "OrdersSearchData",
+      "filter_type_name": "OrdersSearchFilter",
+      "in_filter_type_name": "OrdersInFilter",
+      "any_value_filter_type_name": "OrdersAnyValueFilter",
+      "string_filter_type_name": "OrdersStringFilter",
+      "sort_filter_type_name": "OrdersSortFilter",
+      "result_type_name": "OrdersSearchResult",
+      "query_type_name": "OrdersSearchQuery",
+      "condition_prefix": "Orders",
+      "condition_type_name": "OrdersCondition",
+      "fields": [
+        {
+          "name": "billing",
+          "python_name": "billing",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Billing address"
+        },
+        {
+          "name": "cart_hash",
+          "python_name": "cart_hash",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "MD5 hash of cart items to ensure orders are not modified"
+        },
+        {
+          "name": "cart_tax",
+          "python_name": "cart_tax",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Sum of line item taxes only"
+        },
+        {
+          "name": "coupon_lines",
+          "python_name": "coupon_lines",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Coupons line data"
+        },
+        {
+          "name": "created_via",
+          "python_name": "created_via",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shows where the order was created"
+        },
+        {
+          "name": "currency",
+          "python_name": "currency",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Currency the order was created with, in ISO format"
+        },
+        {
+          "name": "customer_id",
+          "python_name": "customer_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "User ID who owns the order (0 for guests)"
+        },
+        {
+          "name": "customer_ip_address",
+          "python_name": "customer_ip_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Customer's IP address"
+        },
+        {
+          "name": "customer_note",
+          "python_name": "customer_note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Note left by the customer during checkout"
+        },
+        {
+          "name": "customer_user_agent",
+          "python_name": "customer_user_agent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "User agent of the customer"
+        },
+        {
+          "name": "date_completed",
+          "python_name": "date_completed",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was completed, in the site's timezone"
+        },
+        {
+          "name": "date_completed_gmt",
+          "python_name": "date_completed_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was completed, as GMT"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was created, in the site's timezone"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was created, as GMT"
+        },
+        {
+          "name": "date_modified",
+          "python_name": "date_modified",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was last modified, in the site's timezone"
+        },
+        {
+          "name": "date_modified_gmt",
+          "python_name": "date_modified_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was last modified, as GMT"
+        },
+        {
+          "name": "date_paid",
+          "python_name": "date_paid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was paid, in the site's timezone"
+        },
+        {
+          "name": "date_paid_gmt",
+          "python_name": "date_paid_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order was paid, as GMT"
+        },
+        {
+          "name": "discount_tax",
+          "python_name": "discount_tax",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total discount tax amount for the order"
+        },
+        {
+          "name": "discount_total",
+          "python_name": "discount_total",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total discount amount for the order"
+        },
+        {
+          "name": "fee_lines",
+          "python_name": "fee_lines",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Fee lines data"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the resource"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Line items data"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "number",
+          "python_name": "number",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order number"
+        },
+        {
+          "name": "order_key",
+          "python_name": "order_key",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order key"
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Parent order ID"
+        },
+        {
+          "name": "payment_method",
+          "python_name": "payment_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment method ID"
+        },
+        {
+          "name": "payment_method_title",
+          "python_name": "payment_method_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment method title"
+        },
+        {
+          "name": "prices_include_tax",
+          "python_name": "prices_include_tax",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "True if the prices included tax during checkout"
+        },
+        {
+          "name": "refunds",
+          "python_name": "refunds",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of refunds"
+        },
+        {
+          "name": "shipping",
+          "python_name": "shipping",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Shipping address"
+        },
+        {
+          "name": "shipping_lines",
+          "python_name": "shipping_lines",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Shipping lines data"
+        },
+        {
+          "name": "shipping_tax",
+          "python_name": "shipping_tax",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total shipping tax amount for the order"
+        },
+        {
+          "name": "shipping_total",
+          "python_name": "shipping_total",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Total shipping amount for the order"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order status"
+        },
+        {
+          "name": "tax_lines",
+          "python_name": "tax_lines",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Tax lines data"
+        },
+        {
+          "name": "total",
+          "python_name": "total",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Grand total"
+        },
+        {
+          "name": "total_tax",
+          "python_name": "total_tax",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Sum of all taxes"
+        },
+        {
+          "name": "transaction_id",
+          "python_name": "transaction_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique transaction ID"
+        },
+        {
+          "name": "version",
+          "python_name": "version",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Version of WooCommerce which last updated the order"
+        }
+      ]
+    },
+    "products": {
+      "entity": "products",
+      "data_type_name": "ProductsSearchData",
+      "filter_type_name": "ProductsSearchFilter",
+      "in_filter_type_name": "ProductsInFilter",
+      "any_value_filter_type_name": "ProductsAnyValueFilter",
+      "string_filter_type_name": "ProductsStringFilter",
+      "sort_filter_type_name": "ProductsSortFilter",
+      "result_type_name": "ProductsSearchResult",
+      "query_type_name": "ProductsSearchQuery",
+      "condition_prefix": "Products",
+      "condition_type_name": "ProductsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of attributes"
+        },
+        {
+          "name": "average_rating",
+          "python_name": "average_rating",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reviews average rating"
+        },
+        {
+          "name": "backordered",
+          "python_name": "backordered",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if the product is on backordered"
+        },
+        {
+          "name": "backorders",
+          "python_name": "backorders",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "If managing stock, this controls if backorders are allowed"
+        },
+        {
+          "name": "backorders_allowed",
+          "python_name": "backorders_allowed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if backorders are allowed"
+        },
+        {
+          "name": "button_text",
+          "python_name": "button_text",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product external button text"
+        },
+        {
+          "name": "catalog_visibility",
+          "python_name": "catalog_visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Catalog visibility"
+        },
+        {
+          "name": "categories",
+          "python_name": "categories",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of categories"
+        },
+        {
+          "name": "cross_sell_ids",
+          "python_name": "cross_sell_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of cross-sell products IDs"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the product was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the product was created, as GMT"
+        },
+        {
+          "name": "date_modified",
+          "python_name": "date_modified",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the product was last modified"
+        },
+        {
+          "name": "date_modified_gmt",
+          "python_name": "date_modified_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the product was last modified, as GMT"
+        },
+        {
+          "name": "date_on_sale_from",
+          "python_name": "date_on_sale_from",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of sale price"
+        },
+        {
+          "name": "date_on_sale_from_gmt",
+          "python_name": "date_on_sale_from_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of sale price, as GMT"
+        },
+        {
+          "name": "date_on_sale_to",
+          "python_name": "date_on_sale_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of sale price"
+        },
+        {
+          "name": "date_on_sale_to_gmt",
+          "python_name": "date_on_sale_to_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of sale price, as GMT"
+        },
+        {
+          "name": "default_attributes",
+          "python_name": "default_attributes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Defaults variation attributes"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product description"
+        },
+        {
+          "name": "dimensions",
+          "python_name": "dimensions",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Product dimensions"
+        },
+        {
+          "name": "download_expiry",
+          "python_name": "download_expiry",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of days until access to downloadable files expires"
+        },
+        {
+          "name": "download_limit",
+          "python_name": "download_limit",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of times downloadable files can be downloaded"
+        },
+        {
+          "name": "downloadable",
+          "python_name": "downloadable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If the product is downloadable"
+        },
+        {
+          "name": "downloads",
+          "python_name": "downloads",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of downloadable files"
+        },
+        {
+          "name": "external_url",
+          "python_name": "external_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product external URL"
+        },
+        {
+          "name": "grouped_products",
+          "python_name": "grouped_products",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of grouped products ID"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the resource"
+        },
+        {
+          "name": "images",
+          "python_name": "images",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of images"
+        },
+        {
+          "name": "manage_stock",
+          "python_name": "manage_stock",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Stock management at product level"
+        },
+        {
+          "name": "menu_order",
+          "python_name": "menu_order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Menu order"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product name"
+        },
+        {
+          "name": "on_sale",
+          "python_name": "on_sale",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if the product is on sale"
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Product parent ID"
+        },
+        {
+          "name": "permalink",
+          "python_name": "permalink",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product URL"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current product price"
+        },
+        {
+          "name": "price_html",
+          "python_name": "price_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Price formatted in HTML"
+        },
+        {
+          "name": "purchasable",
+          "python_name": "purchasable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if the product can be bought"
+        },
+        {
+          "name": "purchase_note",
+          "python_name": "purchase_note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Note to send customer after purchase"
+        },
+        {
+          "name": "rating_count",
+          "python_name": "rating_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount of reviews"
+        },
+        {
+          "name": "regular_price",
+          "python_name": "regular_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product regular price"
+        },
+        {
+          "name": "related_ids",
+          "python_name": "related_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of related products IDs"
+        },
+        {
+          "name": "reviews_allowed",
+          "python_name": "reviews_allowed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Allow reviews"
+        },
+        {
+          "name": "sale_price",
+          "python_name": "sale_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product sale price"
+        },
+        {
+          "name": "shipping_class",
+          "python_name": "shipping_class",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping class slug"
+        },
+        {
+          "name": "shipping_class_id",
+          "python_name": "shipping_class_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Shipping class ID"
+        },
+        {
+          "name": "shipping_required",
+          "python_name": "shipping_required",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if the product needs to be shipped"
+        },
+        {
+          "name": "shipping_taxable",
+          "python_name": "shipping_taxable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if product shipping is taxable"
+        },
+        {
+          "name": "short_description",
+          "python_name": "short_description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product short description"
+        },
+        {
+          "name": "sku",
+          "python_name": "sku",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier (SKU)"
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product slug"
+        },
+        {
+          "name": "sold_individually",
+          "python_name": "sold_individually",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Allow one item per order"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product status"
+        },
+        {
+          "name": "stock_quantity",
+          "python_name": "stock_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Stock quantity"
+        },
+        {
+          "name": "stock_status",
+          "python_name": "stock_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Controls the stock status"
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of tags"
+        },
+        {
+          "name": "tax_class",
+          "python_name": "tax_class",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax class"
+        },
+        {
+          "name": "tax_status",
+          "python_name": "tax_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax status"
+        },
+        {
+          "name": "total_sales",
+          "python_name": "total_sales",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Amount of sales"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product type"
+        },
+        {
+          "name": "upsell_ids",
+          "python_name": "upsell_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of up-sell products IDs"
+        },
+        {
+          "name": "variations",
+          "python_name": "variations",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of variations IDs"
+        },
+        {
+          "name": "virtual",
+          "python_name": "virtual",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If the product is virtual"
+        },
+        {
+          "name": "weight",
+          "python_name": "weight",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Product weight"
+        }
+      ]
+    },
+    "coupons": {
+      "entity": "coupons",
+      "data_type_name": "CouponsSearchData",
+      "filter_type_name": "CouponsSearchFilter",
+      "in_filter_type_name": "CouponsInFilter",
+      "any_value_filter_type_name": "CouponsAnyValueFilter",
+      "string_filter_type_name": "CouponsStringFilter",
+      "sort_filter_type_name": "CouponsSortFilter",
+      "result_type_name": "CouponsSearchResult",
+      "query_type_name": "CouponsSearchQuery",
+      "condition_prefix": "Coupons",
+      "condition_type_name": "CouponsCondition",
+      "fields": [
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The amount of discount"
+        },
+        {
+          "name": "code",
+          "python_name": "code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Coupon code"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon was created, as GMT"
+        },
+        {
+          "name": "date_expires",
+          "python_name": "date_expires",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon expires"
+        },
+        {
+          "name": "date_expires_gmt",
+          "python_name": "date_expires_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon expires, as GMT"
+        },
+        {
+          "name": "date_modified",
+          "python_name": "date_modified",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon was last modified"
+        },
+        {
+          "name": "date_modified_gmt",
+          "python_name": "date_modified_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the coupon was last modified, as GMT"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Coupon description"
+        },
+        {
+          "name": "discount_type",
+          "python_name": "discount_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Determines the type of discount"
+        },
+        {
+          "name": "email_restrictions",
+          "python_name": "email_restrictions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of email addresses that can use this coupon"
+        },
+        {
+          "name": "exclude_sale_items",
+          "python_name": "exclude_sale_items",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If true, not applied to sale items"
+        },
+        {
+          "name": "excluded_product_categories",
+          "python_name": "excluded_product_categories",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Excluded category IDs"
+        },
+        {
+          "name": "excluded_product_ids",
+          "python_name": "excluded_product_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Excluded product IDs"
+        },
+        {
+          "name": "free_shipping",
+          "python_name": "free_shipping",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Enables free shipping"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "individual_use",
+          "python_name": "individual_use",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Can only be used individually"
+        },
+        {
+          "name": "limit_usage_to_x_items",
+          "python_name": "limit_usage_to_x_items",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Max cart items coupon applies to"
+        },
+        {
+          "name": "maximum_amount",
+          "python_name": "maximum_amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Maximum order amount"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "minimum_amount",
+          "python_name": "minimum_amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Minimum order amount"
+        },
+        {
+          "name": "product_categories",
+          "python_name": "product_categories",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Applicable category IDs"
+        },
+        {
+          "name": "product_ids",
+          "python_name": "product_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Applicable product IDs"
+        },
+        {
+          "name": "usage_count",
+          "python_name": "usage_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Times used"
+        },
+        {
+          "name": "usage_limit",
+          "python_name": "usage_limit",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total usage limit"
+        },
+        {
+          "name": "usage_limit_per_user",
+          "python_name": "usage_limit_per_user",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Per-customer usage limit"
+        },
+        {
+          "name": "used_by",
+          "python_name": "used_by",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Users who have used the coupon"
+        }
+      ]
+    },
+    "product_categories": {
+      "entity": "product_categories",
+      "data_type_name": "ProductCategoriesSearchData",
+      "filter_type_name": "ProductCategoriesSearchFilter",
+      "in_filter_type_name": "ProductCategoriesInFilter",
+      "any_value_filter_type_name": "ProductCategoriesAnyValueFilter",
+      "string_filter_type_name": "ProductCategoriesStringFilter",
+      "sort_filter_type_name": "ProductCategoriesSortFilter",
+      "result_type_name": "ProductCategoriesSearchResult",
+      "query_type_name": "ProductCategoriesSearchQuery",
+      "condition_prefix": "ProductCategories",
+      "condition_type_name": "ProductCategoriesCondition",
+      "fields": [
+        {
+          "name": "count",
+          "python_name": "count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of published products for the resource"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "HTML description of the resource"
+        },
+        {
+          "name": "display",
+          "python_name": "display",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category archive display type"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier for the resource"
+        },
+        {
+          "name": "image",
+          "python_name": "image",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Image data"
+        },
+        {
+          "name": "menu_order",
+          "python_name": "menu_order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Menu order"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Category name"
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The ID for the parent of the resource"
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "An alphanumeric identifier"
+        }
+      ]
+    },
+    "product_tags": {
+      "entity": "product_tags",
+      "data_type_name": "ProductTagsSearchData",
+      "filter_type_name": "ProductTagsSearchFilter",
+      "in_filter_type_name": "ProductTagsInFilter",
+      "any_value_filter_type_name": "ProductTagsAnyValueFilter",
+      "string_filter_type_name": "ProductTagsStringFilter",
+      "sort_filter_type_name": "ProductTagsSortFilter",
+      "result_type_name": "ProductTagsSearchResult",
+      "query_type_name": "ProductTagsSearchQuery",
+      "condition_prefix": "ProductTags",
+      "condition_type_name": "ProductTagsCondition",
+      "fields": [
+        {
+          "name": "count",
+          "python_name": "count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of published products"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "HTML description"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tag name"
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Alphanumeric identifier"
+        }
+      ]
+    },
+    "product_reviews": {
+      "entity": "product_reviews",
+      "data_type_name": "ProductReviewsSearchData",
+      "filter_type_name": "ProductReviewsSearchFilter",
+      "in_filter_type_name": "ProductReviewsInFilter",
+      "any_value_filter_type_name": "ProductReviewsAnyValueFilter",
+      "string_filter_type_name": "ProductReviewsStringFilter",
+      "sort_filter_type_name": "ProductReviewsSortFilter",
+      "result_type_name": "ProductReviewsSearchResult",
+      "query_type_name": "ProductReviewsSearchQuery",
+      "condition_prefix": "ProductReviews",
+      "condition_type_name": "ProductReviewsCondition",
+      "fields": [
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the review was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the review was created, as GMT"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "product_id",
+          "python_name": "product_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Product the review belongs to"
+        },
+        {
+          "name": "rating",
+          "python_name": "rating",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Review rating (0 to 5)"
+        },
+        {
+          "name": "review",
+          "python_name": "review",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The content of the review"
+        },
+        {
+          "name": "reviewer",
+          "python_name": "reviewer",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reviewer name"
+        },
+        {
+          "name": "reviewer_email",
+          "python_name": "reviewer_email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reviewer email"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the review"
+        },
+        {
+          "name": "verified",
+          "python_name": "verified",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if the reviewer bought the product"
+        }
+      ]
+    },
+    "product_attributes": {
+      "entity": "product_attributes",
+      "data_type_name": "ProductAttributesSearchData",
+      "filter_type_name": "ProductAttributesSearchFilter",
+      "in_filter_type_name": "ProductAttributesInFilter",
+      "any_value_filter_type_name": "ProductAttributesAnyValueFilter",
+      "string_filter_type_name": "ProductAttributesStringFilter",
+      "sort_filter_type_name": "ProductAttributesSortFilter",
+      "result_type_name": "ProductAttributesSearchResult",
+      "query_type_name": "ProductAttributesSearchQuery",
+      "condition_prefix": "ProductAttributes",
+      "condition_type_name": "ProductAttributesCondition",
+      "fields": [
+        {
+          "name": "has_archives",
+          "python_name": "has_archives",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Enable/Disable attribute archives"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Attribute name"
+        },
+        {
+          "name": "order_by",
+          "python_name": "order_by",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default sort order"
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Alphanumeric identifier"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of attribute"
+        }
+      ]
+    },
+    "product_variations": {
+      "entity": "product_variations",
+      "data_type_name": "ProductVariationsSearchData",
+      "filter_type_name": "ProductVariationsSearchFilter",
+      "in_filter_type_name": "ProductVariationsInFilter",
+      "any_value_filter_type_name": "ProductVariationsAnyValueFilter",
+      "string_filter_type_name": "ProductVariationsStringFilter",
+      "sort_filter_type_name": "ProductVariationsSortFilter",
+      "result_type_name": "ProductVariationsSearchResult",
+      "query_type_name": "ProductVariationsSearchQuery",
+      "condition_prefix": "ProductVariations",
+      "condition_type_name": "ProductVariationsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of attributes"
+        },
+        {
+          "name": "backordered",
+          "python_name": "backordered",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "On backordered"
+        },
+        {
+          "name": "backorders",
+          "python_name": "backorders",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Backorders allowed setting"
+        },
+        {
+          "name": "backorders_allowed",
+          "python_name": "backorders_allowed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if backorders are allowed"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the variation was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the variation was created, as GMT"
+        },
+        {
+          "name": "date_modified",
+          "python_name": "date_modified",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the variation was last modified"
+        },
+        {
+          "name": "date_modified_gmt",
+          "python_name": "date_modified_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the variation was last modified, as GMT"
+        },
+        {
+          "name": "date_on_sale_from",
+          "python_name": "date_on_sale_from",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of sale price"
+        },
+        {
+          "name": "date_on_sale_from_gmt",
+          "python_name": "date_on_sale_from_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of sale price, as GMT"
+        },
+        {
+          "name": "date_on_sale_to",
+          "python_name": "date_on_sale_to",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of sale price"
+        },
+        {
+          "name": "date_on_sale_to_gmt",
+          "python_name": "date_on_sale_to_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of sale price, as GMT"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation description"
+        },
+        {
+          "name": "dimensions",
+          "python_name": "dimensions",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Variation dimensions"
+        },
+        {
+          "name": "download_expiry",
+          "python_name": "download_expiry",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Days until access expires"
+        },
+        {
+          "name": "download_limit",
+          "python_name": "download_limit",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Download limit"
+        },
+        {
+          "name": "downloadable",
+          "python_name": "downloadable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If downloadable"
+        },
+        {
+          "name": "downloads",
+          "python_name": "downloads",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Downloadable files"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "image",
+          "python_name": "image",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Variation image data"
+        },
+        {
+          "name": "manage_stock",
+          "python_name": "manage_stock",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Stock management at variation level"
+        },
+        {
+          "name": "menu_order",
+          "python_name": "menu_order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Menu order"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "on_sale",
+          "python_name": "on_sale",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Shows if on sale"
+        },
+        {
+          "name": "permalink",
+          "python_name": "permalink",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation URL"
+        },
+        {
+          "name": "price",
+          "python_name": "price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current variation price"
+        },
+        {
+          "name": "purchasable",
+          "python_name": "purchasable",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Can be bought"
+        },
+        {
+          "name": "regular_price",
+          "python_name": "regular_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation regular price"
+        },
+        {
+          "name": "sale_price",
+          "python_name": "sale_price",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation sale price"
+        },
+        {
+          "name": "shipping_class",
+          "python_name": "shipping_class",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping class slug"
+        },
+        {
+          "name": "shipping_class_id",
+          "python_name": "shipping_class_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Shipping class ID"
+        },
+        {
+          "name": "sku",
+          "python_name": "sku",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier (SKU)"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation status"
+        },
+        {
+          "name": "stock_quantity",
+          "python_name": "stock_quantity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Stock quantity"
+        },
+        {
+          "name": "stock_status",
+          "python_name": "stock_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Controls the stock status"
+        },
+        {
+          "name": "tax_class",
+          "python_name": "tax_class",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax class"
+        },
+        {
+          "name": "tax_status",
+          "python_name": "tax_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax status"
+        },
+        {
+          "name": "virtual",
+          "python_name": "virtual",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If virtual"
+        },
+        {
+          "name": "weight",
+          "python_name": "weight",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Variation weight"
+        }
+      ]
+    },
+    "order_notes": {
+      "entity": "order_notes",
+      "data_type_name": "OrderNotesSearchData",
+      "filter_type_name": "OrderNotesSearchFilter",
+      "in_filter_type_name": "OrderNotesInFilter",
+      "any_value_filter_type_name": "OrderNotesAnyValueFilter",
+      "string_filter_type_name": "OrderNotesStringFilter",
+      "sort_filter_type_name": "OrderNotesSortFilter",
+      "result_type_name": "OrderNotesSearchResult",
+      "query_type_name": "OrderNotesSearchQuery",
+      "condition_prefix": "OrderNotes",
+      "condition_type_name": "OrderNotesCondition",
+      "fields": [
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order note author"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order note was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the order note was created, as GMT"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "note",
+          "python_name": "note",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Order note content"
+        }
+      ]
+    },
+    "refunds": {
+      "entity": "refunds",
+      "data_type_name": "RefundsSearchData",
+      "filter_type_name": "RefundsSearchFilter",
+      "in_filter_type_name": "RefundsInFilter",
+      "any_value_filter_type_name": "RefundsAnyValueFilter",
+      "string_filter_type_name": "RefundsStringFilter",
+      "sort_filter_type_name": "RefundsSortFilter",
+      "result_type_name": "RefundsSearchResult",
+      "query_type_name": "RefundsSearchQuery",
+      "condition_prefix": "Refunds",
+      "condition_type_name": "RefundsCondition",
+      "fields": [
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Refund amount"
+        },
+        {
+          "name": "date_created",
+          "python_name": "date_created",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the refund was created"
+        },
+        {
+          "name": "date_created_gmt",
+          "python_name": "date_created_gmt",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date the refund was created, as GMT"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "line_items",
+          "python_name": "line_items",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Line items data"
+        },
+        {
+          "name": "meta_data",
+          "python_name": "meta_data",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Meta data"
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Reason for refund"
+        },
+        {
+          "name": "refunded_by",
+          "python_name": "refunded_by",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "User ID of user who created the refund"
+        },
+        {
+          "name": "refunded_payment",
+          "python_name": "refunded_payment",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "If the payment was refunded via the API"
+        }
+      ]
+    },
+    "payment_gateways": {
+      "entity": "payment_gateways",
+      "data_type_name": "PaymentGatewaysSearchData",
+      "filter_type_name": "PaymentGatewaysSearchFilter",
+      "in_filter_type_name": "PaymentGatewaysInFilter",
+      "any_value_filter_type_name": "PaymentGatewaysAnyValueFilter",
+      "string_filter_type_name": "PaymentGatewaysStringFilter",
+      "sort_filter_type_name": "PaymentGatewaysSortFilter",
+      "result_type_name": "PaymentGatewaysSearchResult",
+      "query_type_name": "PaymentGatewaysSearchQuery",
+      "condition_prefix": "PaymentGateways",
+      "condition_type_name": "PaymentGatewaysCondition",
+      "fields": [
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway description on checkout"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Payment gateway enabled status"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway ID"
+        },
+        {
+          "name": "method_description",
+          "python_name": "method_description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway method description"
+        },
+        {
+          "name": "method_supports",
+          "python_name": "method_supports",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Supported features"
+        },
+        {
+          "name": "method_title",
+          "python_name": "method_title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway method title"
+        },
+        {
+          "name": "order",
+          "python_name": "order",
+          "type": "Any",
+          "json_type": "null | string | integer",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway sort order"
+        },
+        {
+          "name": "settings",
+          "python_name": "settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Payment gateway settings"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Payment gateway title on checkout"
+        }
+      ]
+    },
+    "shipping_methods": {
+      "entity": "shipping_methods",
+      "data_type_name": "ShippingMethodsSearchData",
+      "filter_type_name": "ShippingMethodsSearchFilter",
+      "in_filter_type_name": "ShippingMethodsInFilter",
+      "any_value_filter_type_name": "ShippingMethodsAnyValueFilter",
+      "string_filter_type_name": "ShippingMethodsStringFilter",
+      "sort_filter_type_name": "ShippingMethodsSortFilter",
+      "result_type_name": "ShippingMethodsSearchResult",
+      "query_type_name": "ShippingMethodsSearchQuery",
+      "condition_prefix": "ShippingMethods",
+      "condition_type_name": "ShippingMethodsCondition",
+      "fields": [
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping method description"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Method ID"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping method title"
+        }
+      ]
+    },
+    "shipping_zones": {
+      "entity": "shipping_zones",
+      "data_type_name": "ShippingZonesSearchData",
+      "filter_type_name": "ShippingZonesSearchFilter",
+      "in_filter_type_name": "ShippingZonesInFilter",
+      "any_value_filter_type_name": "ShippingZonesAnyValueFilter",
+      "string_filter_type_name": "ShippingZonesStringFilter",
+      "sort_filter_type_name": "ShippingZonesSortFilter",
+      "result_type_name": "ShippingZonesSearchResult",
+      "query_type_name": "ShippingZonesSearchQuery",
+      "condition_prefix": "ShippingZones",
+      "condition_type_name": "ShippingZonesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Shipping zone name"
+        },
+        {
+          "name": "order",
+          "python_name": "order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Shipping zone order"
+        }
+      ]
+    },
+    "tax_rates": {
+      "entity": "tax_rates",
+      "data_type_name": "TaxRatesSearchData",
+      "filter_type_name": "TaxRatesSearchFilter",
+      "in_filter_type_name": "TaxRatesInFilter",
+      "any_value_filter_type_name": "TaxRatesAnyValueFilter",
+      "string_filter_type_name": "TaxRatesStringFilter",
+      "sort_filter_type_name": "TaxRatesSortFilter",
+      "result_type_name": "TaxRatesSearchResult",
+      "query_type_name": "TaxRatesSearchQuery",
+      "condition_prefix": "TaxRates",
+      "condition_type_name": "TaxRatesCondition",
+      "fields": [
+        {
+          "name": "cities",
+          "python_name": "cities",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "City names"
+        },
+        {
+          "name": "city",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "City name"
+        },
+        {
+          "name": "class",
+          "python_name": "class_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax class"
+        },
+        {
+          "name": "compound",
+          "python_name": "compound",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is a compound rate"
+        },
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Country ISO 3166 code"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Unique identifier"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax rate name"
+        },
+        {
+          "name": "order",
+          "python_name": "order",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Order in queries"
+        },
+        {
+          "name": "postcode",
+          "python_name": "postcode",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Postcode/ZIP"
+        },
+        {
+          "name": "postcodes",
+          "python_name": "postcodes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Postcodes/ZIPs"
+        },
+        {
+          "name": "priority",
+          "python_name": "priority",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Tax priority"
+        },
+        {
+          "name": "rate",
+          "python_name": "rate",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax rate"
+        },
+        {
+          "name": "shipping",
+          "python_name": "shipping",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Applied to shipping"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State code"
+        }
+      ]
+    },
+    "tax_classes": {
+      "entity": "tax_classes",
+      "data_type_name": "TaxClassesSearchData",
+      "filter_type_name": "TaxClassesSearchFilter",
+      "in_filter_type_name": "TaxClassesInFilter",
+      "any_value_filter_type_name": "TaxClassesAnyValueFilter",
+      "string_filter_type_name": "TaxClassesStringFilter",
+      "sort_filter_type_name": "TaxClassesSortFilter",
+      "result_type_name": "TaxClassesSearchResult",
+      "query_type_name": "TaxClassesSearchQuery",
+      "condition_prefix": "TaxClasses",
+      "condition_type_name": "TaxClassesCondition",
+      "fields": [
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tax class name"
+        },
+        {
+          "name": "slug",
+          "python_name": "slug",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier"
+        }
+      ]
+    }
+  }
+}

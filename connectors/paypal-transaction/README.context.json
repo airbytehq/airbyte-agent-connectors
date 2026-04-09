@@ -1,0 +1,1242 @@
+{
+  "connector_name": "paypal-transaction",
+  "class_name": "PaypalTransactionConnector",
+  "package_name": "airbyte_agent_paypal_transaction",
+  "package_version": "1.0.2",
+  "yaml_version": "1.0.2",
+  "api_reference_url": "https://developer.paypal.com/docs/api/transaction-search/v1/",
+  "commit_sha": "unknown",
+  "auth_example": "PaypalTransactionAuthConfig(client_id=\"...\", client_secret=\"...\", access_token=\"...\")",
+  "auth_import": ", PaypalTransactionAuthConfig",
+  "auth_config": {
+    "type_name": "PaypalTransactionAuthConfig",
+    "base_name": "PaypalTransaction",
+    "options": [
+      {
+        "title": "PayPal OAuth2 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "The Client ID of your PayPal developer application."
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "The Client Secret of your PayPal developer application."
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "OAuth2 access token obtained via client credentials grant. Use the PayPal token endpoint with your client_id and client_secret to obtain this.\n"
+          }
+        ],
+        "type_suffix": "PaypalOauth2Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "PaypalTransactionReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from PayPal.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "Start date for data extraction in ISO 8601 format. Date must be in range from 3 years till 12 hours before present time.\n",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the PayPal Transaction Search API. Provides access to transaction history, account balances, payments, disputes, catalog products, and invoices for a PayPal account. Uses OAuth2 client credentials for authentication.\n",
+  "supported_questions": "- List all balances for my PayPal account\n- Show recent transactions from the last 7 days\n- List all catalog products\n- Show details for a specific product\n- List all disputes\n- Show recent payments\n- What transactions had the highest amounts last month?\n- Find all declined transactions\n- Show disputes grouped by status\n- What is the total balance across all currencies?",
+  "unsupported_questions": "- Create a new payment\n- Refund a transaction\n- Delete a dispute\n- Update product details",
+  "first_operation": {
+    "method_name": "list_balances",
+    "http_method": "get",
+    "path": "/v1/reporting/balances",
+    "entity": "balances",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "as_of_time",
+        "python_name": "as_of_time",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": false,
+        "description": "List balances at the date time provided in ISO 8601 format. Returns the last refreshed balance when not provided.\n",
+        "is_deep_object": false
+      },
+      {
+        "name": "currency_code",
+        "python_name": "currency_code",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 3
+        },
+        "required": false,
+        "description": "Three-character ISO-4217 currency code to filter balances.\n",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "BalancesListParams",
+    "response_type": "BalancesListResult",
+    "description": "List all balances for a PayPal account. Specify date time to list balances for that time. It takes a maximum of three hours for balances to appear. Lists balances up to the previous three years.\n",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "BalancesResponse",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "balances": [
+      {
+        "method_name": "list_balances",
+        "http_method": "get",
+        "path": "/v1/reporting/balances",
+        "entity": "balances",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "as_of_time",
+            "python_name": "as_of_time",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "List balances at the date time provided in ISO 8601 format. Returns the last refreshed balance when not provided.\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "currency_code",
+            "python_name": "currency_code",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            },
+            "required": false,
+            "description": "Three-character ISO-4217 currency code to filter balances.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BalancesListParams",
+        "response_type": "BalancesListResult",
+        "description": "List all balances for a PayPal account. Specify date time to list balances for that time. It takes a maximum of three hours for balances to appear. Lists balances up to the previous three years.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "BalancesResponse",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "transactions": [
+      {
+        "method_name": "list_transactions",
+        "http_method": "get",
+        "path": "/v1/reporting/transactions",
+        "entity": "transactions",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_date",
+            "python_name": "start_date",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Start date and time in ISO 8601 format. Seconds are required.\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_date",
+            "python_name": "end_date",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "End date and time in ISO 8601 format. Seconds are required. Maximum supported range is 31 days.\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "transaction_id",
+            "python_name": "transaction_id",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "minLength": 17,
+              "maxLength": 19
+            },
+            "required": false,
+            "description": "Filters by PayPal transaction ID (17-19 characters).",
+            "is_deep_object": false
+          },
+          {
+            "name": "transaction_type",
+            "python_name": "transaction_type",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filters by PayPal transaction event code.",
+            "is_deep_object": false
+          },
+          {
+            "name": "transaction_status",
+            "python_name": "transaction_status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "D",
+                "P",
+                "S",
+                "V"
+              ]
+            },
+            "required": false,
+            "description": "Filters by PayPal transaction status code. D=Denied, P=Pending, S=Successful, V=Reversed.\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "transaction_currency",
+            "python_name": "transaction_currency",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 3
+            },
+            "required": false,
+            "description": "Three-character ISO-4217 currency code.",
+            "is_deep_object": false
+          },
+          {
+            "name": "fields",
+            "python_name": "fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "all"
+            },
+            "required": false,
+            "description": "Fields to include in the response. Comma-separated list. Use 'all' to include all fields. Default is transaction_info.\n",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            },
+            "required": false,
+            "description": "Number of items per page (1-500).",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number to return.",
+            "is_deep_object": false
+          },
+          {
+            "name": "balance_affecting_records_only",
+            "python_name": "balance_affecting_records_only",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "Y",
+                "N"
+              ],
+              "default": "Y"
+            },
+            "required": false,
+            "description": "Y to include only balance-impacting transactions (default). N to include all transactions.\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TransactionsListParams",
+        "response_type": "TransactionsListResult",
+        "description": "Lists transactions for a PayPal account. Specify one or more query parameters to filter the transactions. Requires start_date and end_date parameters. The maximum supported date range is 31 days. It takes a maximum of three hours for executed transactions to appear.\n",
+        "record_extractor": "$.transaction_details",
+        "meta_extractor": {
+          "total_items": "$.total_items",
+          "total_pages": "$.total_pages",
+          "page": "$.page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Transaction]",
+        "meta_fields": [
+          {
+            "name": "total_items",
+            "python_name": "total_items",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of items."
+            }
+          },
+          {
+            "name": "total_pages",
+            "python_name": "total_pages",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Total number of pages."
+            }
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Current page number."
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "list_payments": [
+      {
+        "method_name": "list_payments",
+        "http_method": "get",
+        "path": "/v1/payments/payment",
+        "entity": "list_payments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start_time",
+            "python_name": "start_time",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Start time in ISO 8601 format.",
+            "is_deep_object": false
+          },
+          {
+            "name": "end_time",
+            "python_name": "end_time",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "End time in ISO 8601 format.",
+            "is_deep_object": false
+          },
+          {
+            "name": "count",
+            "python_name": "count",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 10
+            },
+            "required": false,
+            "description": "Number of items per page (max 20).",
+            "is_deep_object": false
+          },
+          {
+            "name": "start_id",
+            "python_name": "start_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Starting resource ID for pagination.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListPaymentsListParams",
+        "response_type": "ListPaymentsListResult",
+        "description": "Lists payments for the PayPal account. Supports filtering by start and end times.\n",
+        "record_extractor": "$.payments",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Payment]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "list_disputes": [
+      {
+        "method_name": "list_disputes",
+        "http_method": "get",
+        "path": "/v1/customer/disputes",
+        "entity": "list_disputes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "update_time_after",
+            "python_name": "update_time_after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter disputes updated after this time in ISO 8601 format.",
+            "is_deep_object": false
+          },
+          {
+            "name": "update_time_before",
+            "python_name": "update_time_before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Filter disputes updated before this time in ISO 8601 format.",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 10
+            },
+            "required": false,
+            "description": "Number of items per page (max 50).",
+            "is_deep_object": false
+          },
+          {
+            "name": "next_page_token",
+            "python_name": "next_page_token",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Token for retrieving the next page of results.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListDisputesListParams",
+        "response_type": "ListDisputesListResult",
+        "description": "Lists disputes for the PayPal account. Supports filtering by update time range.\n",
+        "record_extractor": "$.items",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Dispute]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "list_products": [
+      {
+        "method_name": "list_products",
+        "http_method": "get",
+        "path": "/v1/catalogs/products",
+        "entity": "list_products",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20,
+              "default": 10
+            },
+            "required": false,
+            "description": "Number of items per page (max 20).",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number starting from 1.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListProductsListParams",
+        "response_type": "ListProductsListResult",
+        "description": "Lists all catalog products for the PayPal account.",
+        "record_extractor": "$.products",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Product]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "show_product_details": [
+      {
+        "method_name": "get_product_details",
+        "http_method": "get",
+        "path": "/v1/catalogs/products/{id}",
+        "entity": "show_product_details",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Product ID."
+          }
+        ],
+        "params_type_name": "ShowProductDetailsGetParams",
+        "response_type": "ProductDetails",
+        "description": "Shows details for a catalog product by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "ProductDetails",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "search_invoices": [
+      {
+        "method_name": "search_invoices",
+        "http_method": "post",
+        "path": "/v2/invoicing/search-invoices",
+        "entity": "search_invoices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "creation_date_range",
+            "python_name": "creation_date_range",
+            "type": "SearchInvoicesListParamsCreationDateRange",
+            "schema": {
+              "type": "object",
+              "description": "Filter by invoice creation date range.",
+              "properties": {
+                "start": {
+                  "type": "string",
+                  "description": "Start date in ISO 8601 format."
+                },
+                "end": {
+                  "type": "string",
+                  "description": "End date in ISO 8601 format."
+                }
+              }
+            },
+            "required": false,
+            "description": "Filter by invoice creation date range."
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "description": "Number of items per page (max 100).",
+            "is_deep_object": false
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": false,
+            "description": "Page number starting from 1.",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SearchInvoicesListParams",
+        "response_type": "SearchInvoicesListResult",
+        "description": "Searches for invoices matching the specified criteria. Uses POST with a JSON body for filtering.\n",
+        "record_extractor": "$.items",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Invoice]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "transactions": {
+      "entity": "transactions",
+      "data_type_name": "TransactionsSearchData",
+      "filter_type_name": "TransactionsSearchFilter",
+      "in_filter_type_name": "TransactionsInFilter",
+      "any_value_filter_type_name": "TransactionsAnyValueFilter",
+      "string_filter_type_name": "TransactionsStringFilter",
+      "sort_filter_type_name": "TransactionsSortFilter",
+      "result_type_name": "TransactionsSearchResult",
+      "query_type_name": "TransactionsSearchQuery",
+      "condition_prefix": "Transactions",
+      "condition_type_name": "TransactionsCondition",
+      "fields": [
+        {
+          "name": "auction_info",
+          "python_name": "auction_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information related to an auction"
+        },
+        {
+          "name": "cart_info",
+          "python_name": "cart_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of items in the cart"
+        },
+        {
+          "name": "incentive_info",
+          "python_name": "incentive_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of any incentives applied"
+        },
+        {
+          "name": "payer_info",
+          "python_name": "payer_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the payer"
+        },
+        {
+          "name": "shipping_info",
+          "python_name": "shipping_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Shipping information"
+        },
+        {
+          "name": "store_info",
+          "python_name": "store_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the store"
+        },
+        {
+          "name": "transaction_id",
+          "python_name": "transaction_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique ID of the transaction"
+        },
+        {
+          "name": "transaction_info",
+          "python_name": "transaction_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Detailed information about the transaction"
+        },
+        {
+          "name": "transaction_initiation_date",
+          "python_name": "transaction_initiation_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the transaction was initiated"
+        },
+        {
+          "name": "transaction_updated_date",
+          "python_name": "transaction_updated_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the transaction was last updated"
+        }
+      ]
+    },
+    "balances": {
+      "entity": "balances",
+      "data_type_name": "BalancesSearchData",
+      "filter_type_name": "BalancesSearchFilter",
+      "in_filter_type_name": "BalancesInFilter",
+      "any_value_filter_type_name": "BalancesAnyValueFilter",
+      "string_filter_type_name": "BalancesStringFilter",
+      "sort_filter_type_name": "BalancesSortFilter",
+      "result_type_name": "BalancesSearchResult",
+      "query_type_name": "BalancesSearchQuery",
+      "condition_prefix": "Balances",
+      "condition_type_name": "BalancesCondition",
+      "fields": [
+        {
+          "name": "account_id",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier of the account."
+        },
+        {
+          "name": "as_of_time",
+          "python_name": "as_of_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the balances data was reported."
+        },
+        {
+          "name": "balances",
+          "python_name": "balances",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Object containing information about the account balances."
+        },
+        {
+          "name": "last_refresh_time",
+          "python_name": "last_refresh_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the balances data was last refreshed."
+        }
+      ]
+    },
+    "list_products": {
+      "entity": "list_products",
+      "data_type_name": "ListProductsSearchData",
+      "filter_type_name": "ListProductsSearchFilter",
+      "in_filter_type_name": "ListProductsInFilter",
+      "any_value_filter_type_name": "ListProductsAnyValueFilter",
+      "string_filter_type_name": "ListProductsStringFilter",
+      "sort_filter_type_name": "ListProductsSortFilter",
+      "result_type_name": "ListProductsSearchResult",
+      "query_type_name": "ListProductsSearchQuery",
+      "condition_prefix": "ListProducts",
+      "condition_type_name": "ListProductsCondition",
+      "fields": [
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The time when the product was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Detailed information or features of the product"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the product"
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of links related to the fetched products."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name or title of the product"
+        }
+      ]
+    },
+    "show_product_details": {
+      "entity": "show_product_details",
+      "data_type_name": "ShowProductDetailsSearchData",
+      "filter_type_name": "ShowProductDetailsSearchFilter",
+      "in_filter_type_name": "ShowProductDetailsInFilter",
+      "any_value_filter_type_name": "ShowProductDetailsAnyValueFilter",
+      "string_filter_type_name": "ShowProductDetailsStringFilter",
+      "sort_filter_type_name": "ShowProductDetailsSortFilter",
+      "result_type_name": "ShowProductDetailsSearchResult",
+      "query_type_name": "ShowProductDetailsSearchQuery",
+      "condition_prefix": "ShowProductDetails",
+      "condition_type_name": "ShowProductDetailsCondition",
+      "fields": [
+        {
+          "name": "category",
+          "python_name": "category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The category to which the product belongs"
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the product was created"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The detailed description of the product"
+        },
+        {
+          "name": "home_url",
+          "python_name": "home_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL for the home page of the product"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the product"
+        },
+        {
+          "name": "image_url",
+          "python_name": "image_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The URL to the image representing the product"
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Contains links related to the product details."
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name of the product"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type or category of the product"
+        },
+        {
+          "name": "update_time",
+          "python_name": "update_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the product was last updated"
+        }
+      ]
+    },
+    "list_disputes": {
+      "entity": "list_disputes",
+      "data_type_name": "ListDisputesSearchData",
+      "filter_type_name": "ListDisputesSearchFilter",
+      "in_filter_type_name": "ListDisputesInFilter",
+      "any_value_filter_type_name": "ListDisputesAnyValueFilter",
+      "string_filter_type_name": "ListDisputesStringFilter",
+      "sort_filter_type_name": "ListDisputesSortFilter",
+      "result_type_name": "ListDisputesSearchResult",
+      "query_type_name": "ListDisputesSearchQuery",
+      "condition_prefix": "ListDisputes",
+      "condition_type_name": "ListDisputesCondition",
+      "fields": [
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the dispute was created."
+        },
+        {
+          "name": "dispute_amount",
+          "python_name": "dispute_amount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details about the disputed amount."
+        },
+        {
+          "name": "dispute_channel",
+          "python_name": "dispute_channel",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The channel through which the dispute was initiated."
+        },
+        {
+          "name": "dispute_id",
+          "python_name": "dispute_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the dispute."
+        },
+        {
+          "name": "dispute_life_cycle_stage",
+          "python_name": "dispute_life_cycle_stage",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The stage in the life cycle of the dispute."
+        },
+        {
+          "name": "dispute_state",
+          "python_name": "dispute_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current state of the dispute."
+        },
+        {
+          "name": "disputed_transactions",
+          "python_name": "disputed_transactions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Details of transactions involved in the dispute."
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Links related to the dispute."
+        },
+        {
+          "name": "outcome",
+          "python_name": "outcome",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The outcome of the dispute resolution."
+        },
+        {
+          "name": "reason",
+          "python_name": "reason",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The reason for the dispute."
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The current status of the dispute."
+        },
+        {
+          "name": "update_time",
+          "python_name": "update_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The timestamp when the dispute was last updated."
+        },
+        {
+          "name": "updated_time_cut",
+          "python_name": "updated_time_cut",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The cut-off timestamp for the last update."
+        }
+      ]
+    },
+    "search_invoices": {
+      "entity": "search_invoices",
+      "data_type_name": "SearchInvoicesSearchData",
+      "filter_type_name": "SearchInvoicesSearchFilter",
+      "in_filter_type_name": "SearchInvoicesInFilter",
+      "any_value_filter_type_name": "SearchInvoicesAnyValueFilter",
+      "string_filter_type_name": "SearchInvoicesStringFilter",
+      "sort_filter_type_name": "SearchInvoicesSortFilter",
+      "result_type_name": "SearchInvoicesSearchResult",
+      "query_type_name": "SearchInvoicesSearchQuery",
+      "condition_prefix": "SearchInvoices",
+      "condition_type_name": "SearchInvoicesCondition",
+      "fields": [
+        {
+          "name": "additional_recipients",
+          "python_name": "additional_recipients",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of additional recipients associated with the invoice"
+        },
+        {
+          "name": "amount",
+          "python_name": "amount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Detailed breakdown of the invoice amount"
+        },
+        {
+          "name": "configuration",
+          "python_name": "configuration",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Configuration settings related to the invoice"
+        },
+        {
+          "name": "detail",
+          "python_name": "detail",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Detailed information about the invoice"
+        },
+        {
+          "name": "due_amount",
+          "python_name": "due_amount",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Due amount remaining to be paid for the invoice"
+        },
+        {
+          "name": "gratuity",
+          "python_name": "gratuity",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Gratuity amount included in the invoice"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the invoice"
+        },
+        {
+          "name": "invoicer",
+          "python_name": "invoicer",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about the invoicer associated with the invoice"
+        },
+        {
+          "name": "last_update_time",
+          "python_name": "last_update_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time of the last update made to the invoice"
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Links associated with the invoice"
+        },
+        {
+          "name": "payments",
+          "python_name": "payments",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Payment transactions associated with the invoice"
+        },
+        {
+          "name": "primary_recipients",
+          "python_name": "primary_recipients",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Primary recipients associated with the invoice"
+        },
+        {
+          "name": "refunds",
+          "python_name": "refunds",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Refund transactions associated with the invoice"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Current status of the invoice"
+        }
+      ]
+    },
+    "list_payments": {
+      "entity": "list_payments",
+      "data_type_name": "ListPaymentsSearchData",
+      "filter_type_name": "ListPaymentsSearchFilter",
+      "in_filter_type_name": "ListPaymentsInFilter",
+      "any_value_filter_type_name": "ListPaymentsAnyValueFilter",
+      "string_filter_type_name": "ListPaymentsStringFilter",
+      "sort_filter_type_name": "ListPaymentsSortFilter",
+      "result_type_name": "ListPaymentsSearchResult",
+      "query_type_name": "ListPaymentsSearchQuery",
+      "condition_prefix": "ListPayments",
+      "condition_type_name": "ListPaymentsCondition",
+      "fields": [
+        {
+          "name": "cart",
+          "python_name": "cart",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Details of the cart associated with the payment."
+        },
+        {
+          "name": "create_time",
+          "python_name": "create_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the payment was created."
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier for the payment."
+        },
+        {
+          "name": "intent",
+          "python_name": "intent",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The intention or purpose behind the payment."
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Collection of links related to the payment"
+        },
+        {
+          "name": "payer",
+          "python_name": "payer",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Details of the payer who made the payment"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The state of the payment."
+        },
+        {
+          "name": "transactions",
+          "python_name": "transactions",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of transactions associated with the payment"
+        },
+        {
+          "name": "update_time",
+          "python_name": "update_time",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date and time when the payment was last updated."
+        }
+      ]
+    }
+  }
+}

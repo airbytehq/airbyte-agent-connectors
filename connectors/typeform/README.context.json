@@ -1,0 +1,1157 @@
+{
+  "connector_name": "typeform",
+  "class_name": "TypeformConnector",
+  "package_name": "airbyte_agent_typeform",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://developer.typeform.com/",
+  "commit_sha": "unknown",
+  "auth_example": "TypeformAuthConfig(access_token=\"...\")",
+  "auth_import": ", TypeformAuthConfig",
+  "auth_config": {
+    "type_name": "TypeformAuthConfig",
+    "base_name": "Typeform",
+    "options": [
+      {
+        "title": "Access Token Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Personal access token from your Typeform account settings"
+          }
+        ],
+        "type_suffix": "AccessTokenAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "TypeformReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Typeform",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDT00:00:00Z from which to start replicating response data.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Typeform API. Provides access to forms, form responses, webhooks, workspaces, images, and themes. Supports listing and retrieving typeform resources for survey and form management workflows.\n",
+  "supported_questions": "- List all my typeforms\n- Show me the responses for my latest form\n- What workspaces do I have?\n- List all themes in my account\n- Get the details of a specific form\n- Which forms received the most responses last month?\n- Find responses submitted in the last week\n- What forms were created this year?\n- Show me all forms in a specific workspace",
+  "unsupported_questions": "- Create a new typeform\n- Delete a form response\n- Update form settings\n- Send a webhook notification",
+  "first_operation": {
+    "method_name": "list_forms",
+    "http_method": "get",
+    "path": "/forms",
+    "entity": "forms",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number to retrieve",
+        "is_deep_object": false
+      },
+      {
+        "name": "page_size",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200,
+          "default": 10
+        },
+        "required": null,
+        "description": "Number of forms per page",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "FormsListParams",
+    "response_type": "FormsListResult",
+    "description": "Returns a paginated list of forms in the account",
+    "record_extractor": "$.items",
+    "meta_extractor": {
+      "total_items": "$.total_items",
+      "page_count": "$.page_count"
+    },
+    "needs_envelope": true,
+    "record_type": "list[Form]",
+    "meta_fields": [
+      {
+        "name": "total_items",
+        "python_name": "total_items",
+        "type": "int | None",
+        "schema": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "description": "Total number of forms"
+        }
+      },
+      {
+        "name": "page_count",
+        "python_name": "page_count",
+        "type": "int | None",
+        "schema": {
+          "type": [
+            "null",
+            "integer"
+          ],
+          "description": "Total number of pages"
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "forms": [
+      {
+        "method_name": "list_forms",
+        "http_method": "get",
+        "path": "/forms",
+        "entity": "forms",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number to retrieve",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 10
+            },
+            "required": null,
+            "description": "Number of forms per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FormsListParams",
+        "response_type": "FormsListResult",
+        "description": "Returns a paginated list of forms in the account",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "total_items": "$.total_items",
+          "page_count": "$.page_count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Form]",
+        "meta_fields": [
+          {
+            "name": "total_items",
+            "python_name": "total_items",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of forms"
+            }
+          },
+          {
+            "name": "page_count",
+            "python_name": "page_count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of pages"
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_form",
+        "http_method": "get",
+        "path": "/forms/{form_id}",
+        "entity": "forms",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "form_id",
+            "python_name": "form_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique ID of the form"
+          }
+        ],
+        "params_type_name": "FormsGetParams",
+        "response_type": "Form",
+        "description": "Retrieves a single form by its ID, including fields, settings, and logic",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Form",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "responses": [
+      {
+        "method_name": "list_responses",
+        "http_method": "get",
+        "path": "/forms/{form_id}/responses",
+        "entity": "responses",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "form_id",
+            "python_name": "form_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique ID of the form"
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 25
+            },
+            "required": null,
+            "description": "Number of responses per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "since",
+            "python_name": "since",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit responses to those submitted since the specified date/time (ISO 8601 format, e.g. 2021-03-01T00:00:00Z)",
+            "is_deep_object": false
+          },
+          {
+            "name": "until",
+            "python_name": "until",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Limit responses to those submitted until the specified date/time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "after",
+            "python_name": "after",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor token for pagination; returns responses after this token",
+            "is_deep_object": false
+          },
+          {
+            "name": "before",
+            "python_name": "before",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor token for pagination; returns responses before this token",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Sort order for responses, e.g. submitted_at,asc",
+            "is_deep_object": false
+          },
+          {
+            "name": "completed",
+            "python_name": "completed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by completed status (true or false)",
+            "is_deep_object": false
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search query to filter responses",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ResponsesListParams",
+        "response_type": "ResponsesListResult",
+        "description": "Returns a paginated list of responses for a given form",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "total_items": "$.total_items",
+          "page_count": "$.page_count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Response]",
+        "meta_fields": [
+          {
+            "name": "total_items",
+            "python_name": "total_items",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of responses"
+            }
+          },
+          {
+            "name": "page_count",
+            "python_name": "page_count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of pages"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "webhooks": [
+      {
+        "method_name": "list_webhooks",
+        "http_method": "get",
+        "path": "/forms/{form_id}/webhooks",
+        "entity": "webhooks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "form_id",
+            "python_name": "form_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Unique ID of the form"
+          }
+        ],
+        "params_type_name": "WebhooksListParams",
+        "response_type": "WebhooksListResult",
+        "description": "Returns webhooks configured for a given form",
+        "record_extractor": "$.items",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Webhook]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "workspaces": [
+      {
+        "method_name": "list_workspaces",
+        "http_method": "get",
+        "path": "/workspaces",
+        "entity": "workspaces",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number to retrieve",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 10
+            },
+            "required": null,
+            "description": "Number of workspaces per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspacesListParams",
+        "response_type": "WorkspacesListResult",
+        "description": "Returns a paginated list of workspaces in the account",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "total_items": "$.total_items",
+          "page_count": "$.page_count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Workspace]",
+        "meta_fields": [
+          {
+            "name": "total_items",
+            "python_name": "total_items",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of workspaces"
+            }
+          },
+          {
+            "name": "page_count",
+            "python_name": "page_count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of pages"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "images": [
+      {
+        "method_name": "list_images",
+        "http_method": "get",
+        "path": "/images",
+        "entity": "images",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "ImagesListParams",
+        "response_type": "ImagesListResult",
+        "description": "Returns a list of images in the account",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Image]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "themes": [
+      {
+        "method_name": "list_themes",
+        "http_method": "get",
+        "path": "/themes",
+        "entity": "themes",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number to retrieve",
+            "is_deep_object": false
+          },
+          {
+            "name": "page_size",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 10
+            },
+            "required": null,
+            "description": "Number of themes per page",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ThemesListParams",
+        "response_type": "ThemesListResult",
+        "description": "Returns a paginated list of themes in the account",
+        "record_extractor": "$.items",
+        "meta_extractor": {
+          "total_items": "$.total_items",
+          "page_count": "$.page_count"
+        },
+        "needs_envelope": true,
+        "record_type": "list[Theme]",
+        "meta_fields": [
+          {
+            "name": "total_items",
+            "python_name": "total_items",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of themes"
+            }
+          },
+          {
+            "name": "page_count",
+            "python_name": "page_count",
+            "type": "int | None",
+            "schema": {
+              "type": [
+                "null",
+                "integer"
+              ],
+              "description": "Total number of pages"
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "forms": {
+      "entity": "forms",
+      "data_type_name": "FormsSearchData",
+      "filter_type_name": "FormsSearchFilter",
+      "in_filter_type_name": "FormsInFilter",
+      "any_value_filter_type_name": "FormsAnyValueFilter",
+      "string_filter_type_name": "FormsStringFilter",
+      "sort_filter_type_name": "FormsSortFilter",
+      "result_type_name": "FormsSearchResult",
+      "query_type_name": "FormsSearchQuery",
+      "condition_prefix": "Forms",
+      "condition_type_name": "FormsCondition",
+      "fields": [
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Links to related resources"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the form was created"
+        },
+        {
+          "name": "fields",
+          "python_name": "fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of fields within the form"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the form"
+        },
+        {
+          "name": "last_updated_at",
+          "python_name": "last_updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the form was last updated"
+        },
+        {
+          "name": "logic",
+          "python_name": "logic",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Logic rules or conditions applied to the form fields"
+        },
+        {
+          "name": "published_at",
+          "python_name": "published_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date and time when the form was published"
+        },
+        {
+          "name": "settings",
+          "python_name": "settings",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Settings and configurations for the form"
+        },
+        {
+          "name": "thankyou_screens",
+          "python_name": "thankyou_screens",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Thank you screen configurations"
+        },
+        {
+          "name": "theme",
+          "python_name": "theme",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Theme settings for the form"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the form"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the form"
+        },
+        {
+          "name": "welcome_screens",
+          "python_name": "welcome_screens",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Welcome screen configurations"
+        },
+        {
+          "name": "workspace",
+          "python_name": "workspace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Workspace details where the form belongs"
+        }
+      ]
+    },
+    "responses": {
+      "entity": "responses",
+      "data_type_name": "ResponsesSearchData",
+      "filter_type_name": "ResponsesSearchFilter",
+      "in_filter_type_name": "ResponsesInFilter",
+      "any_value_filter_type_name": "ResponsesAnyValueFilter",
+      "string_filter_type_name": "ResponsesStringFilter",
+      "sort_filter_type_name": "ResponsesSortFilter",
+      "result_type_name": "ResponsesSearchResult",
+      "query_type_name": "ResponsesSearchQuery",
+      "condition_prefix": "Responses",
+      "condition_type_name": "ResponsesCondition",
+      "fields": [
+        {
+          "name": "answers",
+          "python_name": "answers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Response data for each question in the form"
+        },
+        {
+          "name": "calculated",
+          "python_name": "calculated",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Calculated data related to the response"
+        },
+        {
+          "name": "form_id",
+          "python_name": "form_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the form"
+        },
+        {
+          "name": "hidden",
+          "python_name": "hidden",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Hidden fields in the response"
+        },
+        {
+          "name": "landed_at",
+          "python_name": "landed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the respondent landed on the form"
+        },
+        {
+          "name": "landing_id",
+          "python_name": "landing_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the landing page"
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Metadata related to the response"
+        },
+        {
+          "name": "response_id",
+          "python_name": "response_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the response"
+        },
+        {
+          "name": "response_type",
+          "python_name": "response_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the response"
+        },
+        {
+          "name": "submitted_at",
+          "python_name": "submitted_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the response was submitted"
+        },
+        {
+          "name": "token",
+          "python_name": "token",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Token associated with the response"
+        },
+        {
+          "name": "variables",
+          "python_name": "variables",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Variables associated with the response"
+        }
+      ]
+    },
+    "webhooks": {
+      "entity": "webhooks",
+      "data_type_name": "WebhooksSearchData",
+      "filter_type_name": "WebhooksSearchFilter",
+      "in_filter_type_name": "WebhooksInFilter",
+      "any_value_filter_type_name": "WebhooksAnyValueFilter",
+      "string_filter_type_name": "WebhooksStringFilter",
+      "sort_filter_type_name": "WebhooksSortFilter",
+      "result_type_name": "WebhooksSearchResult",
+      "query_type_name": "WebhooksSearchQuery",
+      "condition_prefix": "Webhooks",
+      "condition_type_name": "WebhooksCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the webhook was created"
+        },
+        {
+          "name": "enabled",
+          "python_name": "enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the webhook is currently enabled"
+        },
+        {
+          "name": "form_id",
+          "python_name": "form_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "ID of the form associated with the webhook"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the webhook"
+        },
+        {
+          "name": "tag",
+          "python_name": "tag",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tag to categorize or label the webhook"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the webhook was last updated"
+        },
+        {
+          "name": "url",
+          "python_name": "url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL where webhook data is sent"
+        },
+        {
+          "name": "verify_ssl",
+          "python_name": "verify_ssl",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether SSL verification is enforced"
+        }
+      ]
+    },
+    "workspaces": {
+      "entity": "workspaces",
+      "data_type_name": "WorkspacesSearchData",
+      "filter_type_name": "WorkspacesSearchFilter",
+      "in_filter_type_name": "WorkspacesInFilter",
+      "any_value_filter_type_name": "WorkspacesAnyValueFilter",
+      "string_filter_type_name": "WorkspacesStringFilter",
+      "sort_filter_type_name": "WorkspacesSortFilter",
+      "result_type_name": "WorkspacesSearchResult",
+      "query_type_name": "WorkspacesSearchQuery",
+      "condition_prefix": "Workspaces",
+      "condition_type_name": "WorkspacesCondition",
+      "fields": [
+        {
+          "name": "account_id",
+          "python_name": "account_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Account ID associated with the workspace"
+        },
+        {
+          "name": "default",
+          "python_name": "default",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is the default workspace"
+        },
+        {
+          "name": "forms",
+          "python_name": "forms",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Information about forms in the workspace"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the workspace"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the workspace"
+        },
+        {
+          "name": "self",
+          "python_name": "self",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Self-referential link"
+        },
+        {
+          "name": "shared",
+          "python_name": "shared",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this workspace is shared"
+        }
+      ]
+    },
+    "images": {
+      "entity": "images",
+      "data_type_name": "ImagesSearchData",
+      "filter_type_name": "ImagesSearchFilter",
+      "in_filter_type_name": "ImagesInFilter",
+      "any_value_filter_type_name": "ImagesAnyValueFilter",
+      "string_filter_type_name": "ImagesStringFilter",
+      "sort_filter_type_name": "ImagesSortFilter",
+      "result_type_name": "ImagesSearchResult",
+      "query_type_name": "ImagesSearchQuery",
+      "condition_prefix": "Images",
+      "condition_type_name": "ImagesCondition",
+      "fields": [
+        {
+          "name": "avg_color",
+          "python_name": "avg_color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Average color of the image"
+        },
+        {
+          "name": "file_name",
+          "python_name": "file_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the image file"
+        },
+        {
+          "name": "has_alpha",
+          "python_name": "has_alpha",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the image has an alpha channel"
+        },
+        {
+          "name": "height",
+          "python_name": "height",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Height of the image in pixels"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the image"
+        },
+        {
+          "name": "media_type",
+          "python_name": "media_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "MIME type of the image"
+        },
+        {
+          "name": "src",
+          "python_name": "src",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to access the image"
+        },
+        {
+          "name": "width",
+          "python_name": "width",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Width of the image in pixels"
+        }
+      ]
+    },
+    "themes": {
+      "entity": "themes",
+      "data_type_name": "ThemesSearchData",
+      "filter_type_name": "ThemesSearchFilter",
+      "in_filter_type_name": "ThemesInFilter",
+      "any_value_filter_type_name": "ThemesAnyValueFilter",
+      "string_filter_type_name": "ThemesStringFilter",
+      "sort_filter_type_name": "ThemesSortFilter",
+      "result_type_name": "ThemesSearchResult",
+      "query_type_name": "ThemesSearchQuery",
+      "condition_prefix": "Themes",
+      "condition_type_name": "ThemesCondition",
+      "fields": [
+        {
+          "name": "background",
+          "python_name": "background",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Background settings for the theme"
+        },
+        {
+          "name": "colors",
+          "python_name": "colors",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Color settings"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the theme was created"
+        },
+        {
+          "name": "fields",
+          "python_name": "fields",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Field display settings"
+        },
+        {
+          "name": "font",
+          "python_name": "font",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Font used in the theme"
+        },
+        {
+          "name": "has_transparent_button",
+          "python_name": "has_transparent_button",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the theme has a transparent button"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Unique identifier of the theme"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the theme"
+        },
+        {
+          "name": "rounded_corners",
+          "python_name": "rounded_corners",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Rounded corners setting"
+        },
+        {
+          "name": "screens",
+          "python_name": "screens",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Screen display settings"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the theme was last updated"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Visibility setting of the theme"
+        }
+      ]
+    }
+  }
+}

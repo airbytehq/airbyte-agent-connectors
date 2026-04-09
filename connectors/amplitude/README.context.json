@@ -1,0 +1,779 @@
+{
+  "connector_name": "amplitude",
+  "class_name": "AmplitudeConnector",
+  "package_name": "airbyte_agent_amplitude",
+  "package_version": "1.0.3",
+  "yaml_version": "1.0.3",
+  "api_reference_url": "https://www.docs.developers.amplitude.com/analytics/apis/",
+  "commit_sha": "unknown",
+  "auth_example": "AmplitudeAuthConfig(api_key=\"...\", secret_key=\"...\")",
+  "auth_import": ", AmplitudeAuthConfig",
+  "auth_config": {
+    "type_name": "AmplitudeAuthConfig",
+    "base_name": "Amplitude",
+    "options": [
+      {
+        "title": "API Key Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Amplitude project API key. Find it in Settings > Projects in your Amplitude account.\n"
+          },
+          {
+            "name": "secret_key",
+            "type": "str",
+            "required": true,
+            "title": "Secret Key",
+            "description": "Your Amplitude project secret key. Find it in Settings > Projects in your Amplitude account.\n"
+          }
+        ],
+        "type_suffix": "ApiKeyAuthentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "AmplitudeReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Amplitude.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": true,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ. Any data before this date will not be replicated.\n",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the Amplitude Analytics API. Provides access to core analytics data including event exports, cohort definitions, chart annotations, event type listings, active user counts, and average session length metrics. Authentication uses HTTP Basic with your Amplitude API key and secret key.\n",
+  "supported_questions": "- List all chart annotations in Amplitude\n- Show me all cohorts\n- List all event types\n- Which cohorts have more than 1000 users?\n- What are the most popular event types by total count?\n- Show me annotations created in the last month",
+  "unsupported_questions": "- Create a new annotation\n- Delete a cohort\n- Export raw event data",
+  "first_operation": {
+    "method_name": "list_annotations",
+    "http_method": "get",
+    "path": "/2/annotations",
+    "entity": "annotations",
+    "action": "list",
+    "parameters": [],
+    "params_type_name": "AnnotationsListParams",
+    "response_type": "AnnotationsListResult",
+    "description": "Returns all chart annotations for the project.",
+    "record_extractor": "$.data",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Annotation]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "annotations": [
+      {
+        "method_name": "list_annotations",
+        "http_method": "get",
+        "path": "/2/annotations",
+        "entity": "annotations",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "AnnotationsListParams",
+        "response_type": "AnnotationsListResult",
+        "description": "Returns all chart annotations for the project.",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Annotation]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_annotation",
+        "http_method": "get",
+        "path": "/3/annotations/{annotation_id}",
+        "entity": "annotations",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "annotation_id",
+            "python_name": "annotation_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the annotation to retrieve"
+          }
+        ],
+        "params_type_name": "AnnotationsGetParams",
+        "response_type": "AnnotationV3",
+        "description": "Retrieves a single chart annotation by ID.",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "AnnotationV3",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "cohorts": [
+      {
+        "method_name": "list_cohorts",
+        "http_method": "get",
+        "path": "/3/cohorts",
+        "entity": "cohorts",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "CohortsListParams",
+        "response_type": "CohortsListResult",
+        "description": "Returns all cohorts for the project.",
+        "record_extractor": "$.cohorts",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Cohort]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_cohort",
+        "http_method": "get",
+        "path": "/3/cohorts/{cohort_id}",
+        "entity": "cohorts",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "cohort_id",
+            "python_name": "cohort_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID of the cohort to retrieve"
+          }
+        ],
+        "params_type_name": "CohortsGetParams",
+        "response_type": "Cohort",
+        "description": "Retrieves a single cohort by ID.",
+        "record_extractor": "$.cohort",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Cohort",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "events_list": [
+      {
+        "method_name": "list_event_types",
+        "http_method": "get",
+        "path": "/2/events/list",
+        "entity": "events_list",
+        "action": "list",
+        "parameters": [],
+        "params_type_name": "EventsListListParams",
+        "response_type": "EventsListListResult",
+        "description": "Returns the list of event types with the current week's totals, unique users, and percentage of DAU.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[EventType]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "active_users": [
+      {
+        "method_name": "list_active_users",
+        "http_method": "get",
+        "path": "/2/users",
+        "entity": "active_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "First date included in data series, formatted YYYYMMDD (e.g. 20220101)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end",
+            "python_name": "end",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Last date included in data series, formatted YYYYMMDD (e.g. 20220131)",
+            "is_deep_object": false
+          },
+          {
+            "name": "m",
+            "python_name": "m",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "new"
+              ],
+              "default": "active"
+            },
+            "required": null,
+            "description": "Either 'new' or 'active' to get the desired count. Defaults to 'active'.",
+            "is_deep_object": false
+          },
+          {
+            "name": "i",
+            "python_name": "i",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                7,
+                30
+              ],
+              "default": 1
+            },
+            "required": null,
+            "description": "Either 1, 7, or 30 for daily, weekly, and monthly counts. Defaults to 1.",
+            "is_deep_object": false
+          },
+          {
+            "name": "g",
+            "python_name": "g",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The property to group by (e.g. country, city, platform).",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ActiveUsersListParams",
+        "response_type": "ActiveUsersListResult",
+        "description": "Returns the number of active or new users for each day in the specified date range.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "ActiveUsersData",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "average_session_length": [
+      {
+        "method_name": "list_average_session_length",
+        "http_method": "get",
+        "path": "/2/sessions/average",
+        "entity": "average_session_length",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "start",
+            "python_name": "start",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "First date included in data series, formatted YYYYMMDD (e.g. 20220101)",
+            "is_deep_object": false
+          },
+          {
+            "name": "end",
+            "python_name": "end",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Last date included in data series, formatted YYYYMMDD (e.g. 20220131)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AverageSessionLengthListParams",
+        "response_type": "AverageSessionLengthListResult",
+        "description": "Returns the average session length (in seconds) for each day in the specified date range.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "AverageSessionLengthData",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "annotations": {
+      "entity": "annotations",
+      "data_type_name": "AnnotationsSearchData",
+      "filter_type_name": "AnnotationsSearchFilter",
+      "in_filter_type_name": "AnnotationsInFilter",
+      "any_value_filter_type_name": "AnnotationsAnyValueFilter",
+      "string_filter_type_name": "AnnotationsStringFilter",
+      "sort_filter_type_name": "AnnotationsSortFilter",
+      "result_type_name": "AnnotationsSearchResult",
+      "query_type_name": "AnnotationsSearchQuery",
+      "condition_prefix": "Annotations",
+      "condition_type_name": "AnnotationsCondition",
+      "fields": [
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date when the annotation was made"
+        },
+        {
+          "name": "details",
+          "python_name": "details",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Additional details or information related to the annotation"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier for the annotation"
+        },
+        {
+          "name": "label",
+          "python_name": "label",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The label assigned to the annotation"
+        }
+      ]
+    },
+    "cohorts": {
+      "entity": "cohorts",
+      "data_type_name": "CohortsSearchData",
+      "filter_type_name": "CohortsSearchFilter",
+      "in_filter_type_name": "CohortsInFilter",
+      "any_value_filter_type_name": "CohortsAnyValueFilter",
+      "string_filter_type_name": "CohortsStringFilter",
+      "sort_filter_type_name": "CohortsSortFilter",
+      "result_type_name": "CohortsSearchResult",
+      "query_type_name": "CohortsSearchQuery",
+      "condition_prefix": "Cohorts",
+      "condition_type_name": "CohortsCondition",
+      "fields": [
+        {
+          "name": "appId",
+          "python_name": "app_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The unique identifier of the application"
+        },
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the cohort data is archived"
+        },
+        {
+          "name": "chart_id",
+          "python_name": "chart_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The identifier of the chart associated with the cohort"
+        },
+        {
+          "name": "createdAt",
+          "python_name": "created_at",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The timestamp when the cohort was created"
+        },
+        {
+          "name": "definition",
+          "python_name": "definition",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The specific definition or criteria for the cohort"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "A brief explanation or summary of the cohort"
+        },
+        {
+          "name": "edit_id",
+          "python_name": "edit_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The ID for editing purposes or version control"
+        },
+        {
+          "name": "finished",
+          "python_name": "finished",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the cohort data has been finalized"
+        },
+        {
+          "name": "hidden",
+          "python_name": "hidden",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag to determine if the cohort is hidden from view"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The unique identifier for the cohort"
+        },
+        {
+          "name": "is_official_content",
+          "python_name": "is_official_content",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Indicates if the cohort data is official content"
+        },
+        {
+          "name": "is_predictive",
+          "python_name": "is_predictive",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Flag to indicate if the cohort is predictive"
+        },
+        {
+          "name": "lastComputed",
+          "python_name": "last_computed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp of the last computation of cohort data"
+        },
+        {
+          "name": "lastMod",
+          "python_name": "last_mod",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp of the last modification made to the cohort"
+        },
+        {
+          "name": "last_viewed",
+          "python_name": "last_viewed",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Timestamp when the cohort was last viewed"
+        },
+        {
+          "name": "location_id",
+          "python_name": "location_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Identifier of the location associated with the cohort"
+        },
+        {
+          "name": "metadata",
+          "python_name": "metadata",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Additional information or data related to the cohort"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The name or title of the cohort"
+        },
+        {
+          "name": "owners",
+          "python_name": "owners",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "The owners or administrators of the cohort"
+        },
+        {
+          "name": "popularity",
+          "python_name": "popularity",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Popularity rank or score of the cohort"
+        },
+        {
+          "name": "published",
+          "python_name": "published",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Status indicating if the cohort data is published"
+        },
+        {
+          "name": "shortcut_ids",
+          "python_name": "shortcut_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Identifiers of any shortcuts associated with the cohort"
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Size or scale of the cohort data"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The type or category of the cohort"
+        },
+        {
+          "name": "view_count",
+          "python_name": "view_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The total count of views on the cohort data"
+        },
+        {
+          "name": "viewers",
+          "python_name": "viewers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Users or viewers who have access to the cohort data"
+        }
+      ]
+    },
+    "events_list": {
+      "entity": "events_list",
+      "data_type_name": "EventsListSearchData",
+      "filter_type_name": "EventsListSearchFilter",
+      "in_filter_type_name": "EventsListInFilter",
+      "any_value_filter_type_name": "EventsListAnyValueFilter",
+      "string_filter_type_name": "EventsListStringFilter",
+      "sort_filter_type_name": "EventsListSortFilter",
+      "result_type_name": "EventsListSearchResult",
+      "query_type_name": "EventsListSearchQuery",
+      "condition_prefix": "EventsList",
+      "condition_type_name": "EventsListCondition",
+      "fields": [
+        {
+          "name": "autohidden",
+          "python_name": "autohidden",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is auto-hidden"
+        },
+        {
+          "name": "clusters_hidden",
+          "python_name": "clusters_hidden",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is hidden from clusters"
+        },
+        {
+          "name": "deleted",
+          "python_name": "deleted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is deleted"
+        },
+        {
+          "name": "display",
+          "python_name": "display",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Display name of the event"
+        },
+        {
+          "name": "flow_hidden",
+          "python_name": "flow_hidden",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is hidden from Pathfinder"
+        },
+        {
+          "name": "hidden",
+          "python_name": "hidden",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is hidden"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Unique identifier for the event type"
+        },
+        {
+          "name": "in_waitroom",
+          "python_name": "in_waitroom",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is in the waitroom"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the event type"
+        },
+        {
+          "name": "non_active",
+          "python_name": "non_active",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the event is marked as inactive"
+        },
+        {
+          "name": "timeline_hidden",
+          "python_name": "timeline_hidden",
+          "type": "Any",
+          "json_type": "null | boolean | number",
+          "example_value_json": "True",
+          "description": "Whether the event is hidden from the timeline"
+        },
+        {
+          "name": "totals",
+          "python_name": "totals",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Total number of times the event occurred this week"
+        },
+        {
+          "name": "totals_delta",
+          "python_name": "totals_delta",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Change in totals from the previous period"
+        },
+        {
+          "name": "value",
+          "python_name": "value",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Raw event name in the data"
+        }
+      ]
+    },
+    "active_users": {
+      "entity": "active_users",
+      "data_type_name": "ActiveUsersSearchData",
+      "filter_type_name": "ActiveUsersSearchFilter",
+      "in_filter_type_name": "ActiveUsersInFilter",
+      "any_value_filter_type_name": "ActiveUsersAnyValueFilter",
+      "string_filter_type_name": "ActiveUsersStringFilter",
+      "sort_filter_type_name": "ActiveUsersSortFilter",
+      "result_type_name": "ActiveUsersSearchResult",
+      "query_type_name": "ActiveUsersSearchQuery",
+      "condition_prefix": "ActiveUsers",
+      "condition_type_name": "ActiveUsersCondition",
+      "fields": [
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date for which the active user data is reported"
+        },
+        {
+          "name": "statistics",
+          "python_name": "statistics",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "The statistics related to the active users for the given date"
+        }
+      ]
+    },
+    "average_session_length": {
+      "entity": "average_session_length",
+      "data_type_name": "AverageSessionLengthSearchData",
+      "filter_type_name": "AverageSessionLengthSearchFilter",
+      "in_filter_type_name": "AverageSessionLengthInFilter",
+      "any_value_filter_type_name": "AverageSessionLengthAnyValueFilter",
+      "string_filter_type_name": "AverageSessionLengthStringFilter",
+      "sort_filter_type_name": "AverageSessionLengthSortFilter",
+      "result_type_name": "AverageSessionLengthSearchResult",
+      "query_type_name": "AverageSessionLengthSearchQuery",
+      "condition_prefix": "AverageSessionLength",
+      "condition_type_name": "AverageSessionLengthCondition",
+      "fields": [
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The date on which the session occurred"
+        },
+        {
+          "name": "length",
+          "python_name": "length",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "The duration of the session in seconds"
+        }
+      ]
+    }
+  }
+}

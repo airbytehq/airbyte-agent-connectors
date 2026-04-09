@@ -46,11 +46,11 @@ def cli():
     "--output",
     type=click.Path(path_type=Path),
     required=True,
-    help="Directory to write REFERENCE.md and AUTH.md to",
+    help="Directory to write REFERENCE.md, AUTH.md, and README.md to",
 )
 def generate_docs(spec_path: Path, output: Path):
     """
-    Generate REFERENCE.md and AUTH.md for a connector spec.
+    Generate REFERENCE.md, AUTH.md, and README.md for a connector spec.
 
     SPEC_PATH: Path to OpenAPI 3.0 YAML specification file (connector.yaml)
 
@@ -72,8 +72,9 @@ def generate_docs(spec_path: Path, output: Path):
 
         generator._generate_docs(output, connector_name, connector_version, operations, envelope_types)
         generator._generate_auth_docs(output, connector_name, auth_config)
+        generator._generate_readme(output, connector_name, connector_version, operations, auth_config)
 
-        click.echo(f"✓ Generated REFERENCE.md and AUTH.md at {output}")
+        click.echo(f"✓ Generated REFERENCE.md, AUTH.md, and README.md at {output}")
     except Exception as e:
         click.echo(f"\n✗ Error generating docs: {e}", err=True)
         raise click.Abort()

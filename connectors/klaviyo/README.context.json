@@ -1,0 +1,1031 @@
+{
+  "connector_name": "klaviyo",
+  "class_name": "KlaviyoConnector",
+  "package_name": "airbyte_agent_klaviyo",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://developers.klaviyo.com/en/reference/api_overview",
+  "commit_sha": "unknown",
+  "auth_example": "KlaviyoAuthConfig(api_key=\"...\")",
+  "auth_import": ", KlaviyoAuthConfig",
+  "auth_config": {
+    "type_name": "KlaviyoAuthConfig",
+    "base_name": "Klaviyo",
+    "options": [
+      {
+        "title": "Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "api_key",
+            "type": "str",
+            "required": true,
+            "title": "API Key",
+            "description": "Your Klaviyo private API key"
+          }
+        ],
+        "type_suffix": "Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Klaviyo is a marketing automation platform that helps businesses build customer relationships\nthrough personalized email, SMS, and push notifications. This connector provides access to\nKlaviyo's core entities including profiles, lists, campaigns, events, metrics, flows, and\nemail templates for marketing analytics and customer engagement insights.\n",
+  "supported_questions": "- List all profiles in my Klaviyo account\n- Show me details for a recent profile\n- Show me all email lists\n- Show me details for a recent email list\n- What campaigns have been created?\n- Show me details for a recent campaign\n- Show me all email campaigns\n- List all events for tracking customer actions\n- Show me all metrics (event types)\n- Show me details for a recent metric\n- What automated flows are configured?\n- Show me details for a recent flow\n- List all email templates\n- Show me details for a recent email template",
+  "unsupported_questions": "- Create a new profile\n- Update a profile's email address\n- Delete a list\n- Send an email campaign\n- Add a profile to a list",
+  "first_operation": {
+    "method_name": "list_profiles",
+    "http_method": "get",
+    "path": "/profiles",
+    "entity": "profiles",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page[size]",
+        "python_name": "page_size",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "required": null,
+        "description": "Number of results per page (max 100)",
+        "is_deep_object": false
+      },
+      {
+        "name": "page[cursor]",
+        "python_name": "page_cursor",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Cursor for pagination",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ProfilesListParams",
+    "response_type": "ProfilesListResult",
+    "description": "Returns a paginated list of profiles (contacts) in your Klaviyo account",
+    "record_extractor": "$.data",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Profile]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "profiles": [
+      {
+        "method_name": "list_profiles",
+        "http_method": "get",
+        "path": "/profiles",
+        "entity": "profiles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProfilesListParams",
+        "response_type": "ProfilesListResult",
+        "description": "Returns a paginated list of profiles (contacts) in your Klaviyo account",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Profile]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_profile",
+        "http_method": "get",
+        "path": "/profiles/{id}",
+        "entity": "profiles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Profile ID"
+          }
+        ],
+        "params_type_name": "ProfilesGetParams",
+        "response_type": "Profile",
+        "description": "Get a single profile by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Profile",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "lists": [
+      {
+        "method_name": "list_lists",
+        "http_method": "get",
+        "path": "/lists",
+        "entity": "lists",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ListsListParams",
+        "response_type": "ListsListResult",
+        "description": "Returns a paginated list of all lists in your Klaviyo account",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[List]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_list",
+        "http_method": "get",
+        "path": "/lists/{id}",
+        "entity": "lists",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "List ID"
+          }
+        ],
+        "params_type_name": "ListsGetParams",
+        "response_type": "List",
+        "description": "Get a single list by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "List",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "campaigns": [
+      {
+        "method_name": "list_campaigns",
+        "http_method": "get",
+        "path": "/campaigns",
+        "entity": "campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "filter",
+            "python_name": "filter",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "equals(messages.channel,'email')"
+            },
+            "required": true,
+            "description": "Filter by channel (email or sms)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CampaignsListParams",
+        "response_type": "CampaignsListResult",
+        "description": "Returns a paginated list of campaigns. A channel filter is required.",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Campaign]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_campaign",
+        "http_method": "get",
+        "path": "/campaigns/{id}",
+        "entity": "campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Campaign ID"
+          }
+        ],
+        "params_type_name": "CampaignsGetParams",
+        "response_type": "Campaign",
+        "description": "Get a single campaign by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Campaign",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "events": [
+      {
+        "method_name": "list_events",
+        "http_method": "get",
+        "path": "/events",
+        "entity": "events",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "-datetime"
+            },
+            "required": null,
+            "description": "Sort order for events",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EventsListParams",
+        "response_type": "EventsListResult",
+        "description": "Returns a paginated list of events (actions taken by profiles)",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Event]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "metrics": [
+      {
+        "method_name": "list_metrics",
+        "http_method": "get",
+        "path": "/metrics",
+        "entity": "metrics",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MetricsListParams",
+        "response_type": "MetricsListResult",
+        "description": "Returns a paginated list of metrics (event types)",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Metric]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_metric",
+        "http_method": "get",
+        "path": "/metrics/{id}",
+        "entity": "metrics",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Metric ID"
+          }
+        ],
+        "params_type_name": "MetricsGetParams",
+        "response_type": "Metric",
+        "description": "Get a single metric by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Metric",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "flows": [
+      {
+        "method_name": "list_flows",
+        "http_method": "get",
+        "path": "/flows",
+        "entity": "flows",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "FlowsListParams",
+        "response_type": "FlowsListResult",
+        "description": "Returns a paginated list of flows (automated sequences)",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Flow]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_flow",
+        "http_method": "get",
+        "path": "/flows/{id}",
+        "entity": "flows",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Flow ID"
+          }
+        ],
+        "params_type_name": "FlowsGetParams",
+        "response_type": "Flow",
+        "description": "Get a single flow by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Flow",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "email_templates": [
+      {
+        "method_name": "list_templates",
+        "http_method": "get",
+        "path": "/templates",
+        "entity": "email_templates",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page[size]",
+            "python_name": "page_size",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of results per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "page[cursor]",
+            "python_name": "page_cursor",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Cursor for pagination",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "EmailTemplatesListParams",
+        "response_type": "EmailTemplatesListResult",
+        "description": "Returns a paginated list of email templates",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Template]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_template",
+        "http_method": "get",
+        "path": "/templates/{id}",
+        "entity": "email_templates",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Template ID"
+          }
+        ],
+        "params_type_name": "EmailTemplatesGetParams",
+        "response_type": "Template",
+        "description": "Get a single email template by ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Template",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "profiles": {
+      "entity": "profiles",
+      "data_type_name": "ProfilesSearchData",
+      "filter_type_name": "ProfilesSearchFilter",
+      "in_filter_type_name": "ProfilesInFilter",
+      "any_value_filter_type_name": "ProfilesAnyValueFilter",
+      "string_filter_type_name": "ProfilesStringFilter",
+      "sort_filter_type_name": "ProfilesSortFilter",
+      "result_type_name": "ProfilesSearchResult",
+      "query_type_name": "ProfilesSearchQuery",
+      "condition_prefix": "Profiles",
+      "condition_type_name": "ProfilesCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "segments",
+          "python_name": "segments",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "events": {
+      "entity": "events",
+      "data_type_name": "EventsSearchData",
+      "filter_type_name": "EventsSearchFilter",
+      "in_filter_type_name": "EventsInFilter",
+      "any_value_filter_type_name": "EventsAnyValueFilter",
+      "string_filter_type_name": "EventsStringFilter",
+      "sort_filter_type_name": "EventsSortFilter",
+      "result_type_name": "EventsSearchResult",
+      "query_type_name": "EventsSearchQuery",
+      "condition_prefix": "Events",
+      "condition_type_name": "EventsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "datetime",
+          "python_name": "datetime",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "email_templates": {
+      "entity": "email_templates",
+      "data_type_name": "EmailTemplatesSearchData",
+      "filter_type_name": "EmailTemplatesSearchFilter",
+      "in_filter_type_name": "EmailTemplatesInFilter",
+      "any_value_filter_type_name": "EmailTemplatesAnyValueFilter",
+      "string_filter_type_name": "EmailTemplatesStringFilter",
+      "sort_filter_type_name": "EmailTemplatesSortFilter",
+      "result_type_name": "EmailTemplatesSearchResult",
+      "query_type_name": "EmailTemplatesSearchQuery",
+      "condition_prefix": "EmailTemplates",
+      "condition_type_name": "EmailTemplatesCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "campaigns": {
+      "entity": "campaigns",
+      "data_type_name": "CampaignsSearchData",
+      "filter_type_name": "CampaignsSearchFilter",
+      "in_filter_type_name": "CampaignsInFilter",
+      "any_value_filter_type_name": "CampaignsAnyValueFilter",
+      "string_filter_type_name": "CampaignsStringFilter",
+      "sort_filter_type_name": "CampaignsSortFilter",
+      "result_type_name": "CampaignsSearchResult",
+      "query_type_name": "CampaignsSearchQuery",
+      "condition_prefix": "Campaigns",
+      "condition_type_name": "CampaignsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "flows": {
+      "entity": "flows",
+      "data_type_name": "FlowsSearchData",
+      "filter_type_name": "FlowsSearchFilter",
+      "in_filter_type_name": "FlowsInFilter",
+      "any_value_filter_type_name": "FlowsAnyValueFilter",
+      "string_filter_type_name": "FlowsStringFilter",
+      "sort_filter_type_name": "FlowsSortFilter",
+      "result_type_name": "FlowsSearchResult",
+      "query_type_name": "FlowsSearchQuery",
+      "condition_prefix": "Flows",
+      "condition_type_name": "FlowsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "metrics": {
+      "entity": "metrics",
+      "data_type_name": "MetricsSearchData",
+      "filter_type_name": "MetricsSearchFilter",
+      "in_filter_type_name": "MetricsInFilter",
+      "any_value_filter_type_name": "MetricsAnyValueFilter",
+      "string_filter_type_name": "MetricsStringFilter",
+      "sort_filter_type_name": "MetricsSortFilter",
+      "result_type_name": "MetricsSearchResult",
+      "query_type_name": "MetricsSearchQuery",
+      "condition_prefix": "Metrics",
+      "condition_type_name": "MetricsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "lists": {
+      "entity": "lists",
+      "data_type_name": "ListsSearchData",
+      "filter_type_name": "ListsSearchFilter",
+      "in_filter_type_name": "ListsInFilter",
+      "any_value_filter_type_name": "ListsAnyValueFilter",
+      "string_filter_type_name": "ListsStringFilter",
+      "sort_filter_type_name": "ListsSortFilter",
+      "result_type_name": "ListsSearchResult",
+      "query_type_name": "ListsSearchQuery",
+      "condition_prefix": "Lists",
+      "condition_type_name": "ListsCondition",
+      "fields": [
+        {
+          "name": "attributes",
+          "python_name": "attributes",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "relationships",
+          "python_name": "relationships",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "updated",
+          "python_name": "updated",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

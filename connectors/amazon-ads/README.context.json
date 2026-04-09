@@ -1,0 +1,357 @@
+{
+  "connector_name": "amazon-ads",
+  "class_name": "AmazonAdsConnector",
+  "package_name": "airbyte_agent_amazon_ads",
+  "package_version": "1.0.10",
+  "yaml_version": "1.0.10",
+  "api_reference_url": "https://advertising.amazon.com/API/docs/en-us",
+  "commit_sha": "unknown",
+  "auth_example": "AmazonAdsAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\")",
+  "auth_import": ", AmazonAdsAuthConfig",
+  "auth_config": {
+    "type_name": "AmazonAdsAuthConfig",
+    "base_name": "AmazonAds",
+    "options": [
+      {
+        "title": "OAuth2 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "The client ID of your Amazon Ads API application"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "The client secret of your Amazon Ads API application"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "The refresh token obtained from the OAuth authorization flow"
+          }
+        ],
+        "type_suffix": "Oauth2Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": null,
+  "custom_description": "Amazon Ads is Amazon's advertising platform that enables sellers and vendors to promote their\nproducts across Amazon's marketplace. This connector provides access to advertising profiles\nfor managing and analyzing advertising campaigns across different marketplaces.\n",
+  "supported_questions": "- List all my advertising profiles across marketplaces\n- Show me the profiles for my seller accounts\n- What marketplaces do I have advertising profiles in?\n- List all portfolios for one of my profiles\n- Show me all sponsored product campaigns\n- What campaigns are currently enabled?\n- Find campaigns with a specific targeting type",
+  "unsupported_questions": "- Create a new advertising campaign\n- Update my campaign budget\n- Delete an ad group\n- Generate a performance report",
+  "first_operation": {
+    "method_name": "list_profiles",
+    "http_method": "get",
+    "path": "/v2/profiles",
+    "entity": "profiles",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "profileTypeFilter",
+        "python_name": "profile_type_filter",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "default": "seller,vendor"
+        },
+        "required": null,
+        "description": "Filter profiles by type. Comma-separated list of profile types.\nValid values: seller, vendor, agency\n",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ProfilesListParams",
+    "response_type": "ProfilesListResult",
+    "description": "Returns a list of advertising profiles associated with the authenticated user.\nProfiles represent an advertiser's account in a specific marketplace. Advertisers\nmay have a single profile if they advertise in only one marketplace, or a separate\nprofile for each marketplace if they advertise regionally or globally.\n",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Profile]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "profiles": [
+      {
+        "method_name": "list_profiles",
+        "http_method": "get",
+        "path": "/v2/profiles",
+        "entity": "profiles",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "profileTypeFilter",
+            "python_name": "profile_type_filter",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "seller,vendor"
+            },
+            "required": null,
+            "description": "Filter profiles by type. Comma-separated list of profile types.\nValid values: seller, vendor, agency\n",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProfilesListParams",
+        "response_type": "ProfilesListResult",
+        "description": "Returns a list of advertising profiles associated with the authenticated user.\nProfiles represent an advertiser's account in a specific marketplace. Advertisers\nmay have a single profile if they advertise in only one marketplace, or a separate\nprofile for each marketplace if they advertise regionally or globally.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Profile]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_profile",
+        "http_method": "get",
+        "path": "/v2/profiles/{profileId}",
+        "entity": "profiles",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "profileId",
+            "python_name": "profile_id",
+            "type": "str",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true,
+            "description": "The unique identifier of the profile"
+          }
+        ],
+        "params_type_name": "ProfilesGetParams",
+        "response_type": "Profile",
+        "description": "Retrieves a single advertising profile by its ID. The profile contains\ninformation about the advertiser's account in a specific marketplace.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Profile",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "portfolios": [
+      {
+        "method_name": "list_portfolios",
+        "http_method": "post",
+        "path": "/portfolios/list",
+        "entity": "portfolios",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "includeExtendedDataFields",
+            "python_name": "include_extended_data_fields",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "default": "true",
+              "description": "Whether to include extended data fields in the response"
+            },
+            "required": false,
+            "description": "Whether to include extended data fields in the response"
+          }
+        ],
+        "params_type_name": "PortfoliosListParams",
+        "response_type": "PortfoliosListResult",
+        "description": "Returns a list of portfolios for the specified profile. Portfolios are used to\ngroup campaigns together for organizational and budget management purposes.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_portfolio",
+        "http_method": "get",
+        "path": "/v2/portfolios/{portfolioId}",
+        "entity": "portfolios",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "portfolioId",
+            "python_name": "portfolio_id",
+            "type": "str",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true,
+            "description": "The unique identifier of the portfolio"
+          }
+        ],
+        "params_type_name": "PortfoliosGetParams",
+        "response_type": "Portfolio",
+        "description": "Retrieves a single portfolio by its ID using the v2 API.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Portfolio",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "sponsored_product_campaigns": [
+      {
+        "method_name": "list_sponsored_product_campaigns",
+        "http_method": "post",
+        "path": "/sp/campaigns/list",
+        "entity": "sponsored_product_campaigns",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "stateFilter",
+            "python_name": "state_filter",
+            "type": "SponsoredProductCampaignsListParamsStatefilter",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "include": {
+                  "type": "string",
+                  "description": "Comma-separated list of states to include (enabled, paused, archived)"
+                }
+              }
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "maxResults",
+            "python_name": "max_results",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "description": "Maximum number of results to return",
+              "default": 100
+            },
+            "required": false,
+            "description": "Maximum number of results to return"
+          },
+          {
+            "name": "nextToken",
+            "python_name": "next_token",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "description": "Token for pagination"
+            },
+            "required": false,
+            "description": "Token for pagination"
+          }
+        ],
+        "params_type_name": "SponsoredProductCampaignsListParams",
+        "response_type": "SponsoredProductCampaignsListResult",
+        "description": "Returns a list of sponsored product campaigns for the specified profile.\nSponsored Products campaigns promote individual product listings on Amazon.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_sponsored_product_campaign",
+        "http_method": "get",
+        "path": "/v2/sp/campaigns/{campaignId}",
+        "entity": "sponsored_product_campaigns",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "campaignId",
+            "python_name": "campaign_id",
+            "type": "str",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true,
+            "description": "The unique identifier of the campaign"
+          }
+        ],
+        "params_type_name": "SponsoredProductCampaignsGetParams",
+        "response_type": "SponsoredProductCampaign",
+        "description": "Retrieves a single sponsored product campaign by its ID using the v2 API.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "SponsoredProductCampaign",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "profiles": {
+      "entity": "profiles",
+      "data_type_name": "ProfilesSearchData",
+      "filter_type_name": "ProfilesSearchFilter",
+      "in_filter_type_name": "ProfilesInFilter",
+      "any_value_filter_type_name": "ProfilesAnyValueFilter",
+      "string_filter_type_name": "ProfilesStringFilter",
+      "sort_filter_type_name": "ProfilesSortFilter",
+      "result_type_name": "ProfilesSearchResult",
+      "query_type_name": "ProfilesSearchQuery",
+      "condition_prefix": "Profiles",
+      "condition_type_name": "ProfilesCondition",
+      "fields": [
+        {
+          "name": "accountInfo",
+          "python_name": "account_info",
+          "type": "dict[str, Any] | None",
+          "json_type": "object | null",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "countryCode",
+          "python_name": "country_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "currencyCode",
+          "python_name": "currency_code",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "dailyBudget",
+          "python_name": "daily_budget",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": ""
+        },
+        {
+          "name": "profileId",
+          "python_name": "profile_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "timezone",
+          "python_name": "timezone",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

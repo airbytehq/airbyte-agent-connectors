@@ -1,0 +1,3270 @@
+{
+  "connector_name": "asana",
+  "class_name": "AsanaConnector",
+  "package_name": "airbyte_agent_asana",
+  "package_version": "0.1.20",
+  "yaml_version": "0.1.20",
+  "api_reference_url": "https://developers.asana.com/reference/rest-api-reference",
+  "commit_sha": "unknown",
+  "auth_example": "AsanaAuthConfig(access_token=\"...\", refresh_token=\"...\", client_id=\"...\", client_secret=\"...\")",
+  "auth_import": ", AsanaAuthConfig",
+  "auth_config": {
+    "type_name": "AsanaAuthConfig",
+    "base_name": "Asana",
+    "options": [
+      {
+        "title": "OAuth 2",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": false,
+            "title": "Access Token",
+            "description": "OAuth access token for API requests"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth refresh token for automatic token renewal"
+          },
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": false,
+            "title": "Client ID",
+            "description": "Connected App Consumer Key"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": false,
+            "title": "Client Secret",
+            "description": "Connected App Consumer Secret"
+          }
+        ],
+        "type_suffix": "Oauth2",
+        "scheme_name": "oauth2"
+      },
+      {
+        "title": "Personal Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "token",
+            "type": "str",
+            "required": true,
+            "title": "Personal Access Token",
+            "description": "Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps"
+          }
+        ],
+        "type_suffix": "PersonalAccessToken",
+        "scheme_name": "personalAccessToken"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": null,
+  "custom_description": "Asana is a work management platform that helps teams organize, track, and manage\nprojects and tasks. This connector provides access to tasks, projects, workspaces,\nteams, and users for project tracking, workload analysis, and productivity insights.\n",
+  "supported_questions": "- What tasks are assigned to me this week?\n- List all projects in my workspace\n- Show me the tasks for a recent project\n- Who are the team members in one of my teams?\n- Show me details of my current workspace and its users\n- Summarize my team's workload and task completion rates\n- Find all tasks related to {client_name} across my workspaces\n- Analyze the most active projects in my workspace last month\n- Compare task completion rates between my different teams\n- Identify overdue tasks across all my projects",
+  "unsupported_questions": "- Create a new task for [TeamMember]\n- Update the priority of this task\n- Delete the project [ProjectName]\n- Schedule a new team meeting\n- Add a new team member to [Workspace]\n- Move this task to another project",
+  "first_operation": {
+    "method_name": "list_tasks",
+    "http_method": "get",
+    "path": "/tasks",
+    "entity": "tasks",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "required": null,
+        "description": "Number of items to return per page",
+        "is_deep_object": false
+      },
+      {
+        "name": "offset",
+        "python_name": "offset",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9"
+        },
+        "required": null,
+        "description": "Pagination offset token",
+        "is_deep_object": false
+      },
+      {
+        "name": "project",
+        "python_name": "project",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The project to filter tasks on",
+        "is_deep_object": false
+      },
+      {
+        "name": "workspace",
+        "python_name": "workspace",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The workspace to filter tasks on",
+        "is_deep_object": false
+      },
+      {
+        "name": "section",
+        "python_name": "section",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "987654321"
+        },
+        "required": null,
+        "description": "The workspace to filter tasks on",
+        "is_deep_object": false
+      },
+      {
+        "name": "assignee",
+        "python_name": "assignee",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "example": "123456789"
+        },
+        "required": null,
+        "description": "The assignee to filter tasks on",
+        "is_deep_object": false
+      },
+      {
+        "name": "completed_since",
+        "python_name": "completed_since",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T00:00:00Z"
+        },
+        "required": null,
+        "description": "Only return tasks that have been completed since this time",
+        "is_deep_object": false
+      },
+      {
+        "name": "modified_since",
+        "python_name": "modified_since",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "format": "date-time",
+          "example": "2023-01-01T00:00:00Z"
+        },
+        "required": null,
+        "description": "Only return tasks that have been completed since this time",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "TasksListParams",
+    "response_type": "TasksListResult",
+    "description": "Returns a paginated list of tasks. Must include either a project OR a section OR a workspace AND assignee parameter.",
+    "record_extractor": "$.data",
+    "meta_extractor": {
+      "next_page": "$.next_page"
+    },
+    "needs_envelope": true,
+    "record_type": "list[TaskCompact]",
+    "meta_fields": [
+      {
+        "name": "next_page",
+        "python_name": "next_page",
+        "type": "dict[str, Any] | None",
+        "schema": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "offset": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "uri": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    ],
+    "is_download": false
+  },
+  "entities_grouped": {
+    "tasks": [
+      {
+        "method_name": "list_tasks",
+        "http_method": "get",
+        "path": "/tasks",
+        "entity": "tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "example": "eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "project",
+            "python_name": "project",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "example": "987654321"
+            },
+            "required": null,
+            "description": "The project to filter tasks on",
+            "is_deep_object": false
+          },
+          {
+            "name": "workspace",
+            "python_name": "workspace",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "example": "987654321"
+            },
+            "required": null,
+            "description": "The workspace to filter tasks on",
+            "is_deep_object": false
+          },
+          {
+            "name": "section",
+            "python_name": "section",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "example": "987654321"
+            },
+            "required": null,
+            "description": "The workspace to filter tasks on",
+            "is_deep_object": false
+          },
+          {
+            "name": "assignee",
+            "python_name": "assignee",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "example": "123456789"
+            },
+            "required": null,
+            "description": "The assignee to filter tasks on",
+            "is_deep_object": false
+          },
+          {
+            "name": "completed_since",
+            "python_name": "completed_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-01-01T00:00:00Z"
+            },
+            "required": null,
+            "description": "Only return tasks that have been completed since this time",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_since",
+            "python_name": "modified_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-01-01T00:00:00Z"
+            },
+            "required": null,
+            "description": "Only return tasks that have been completed since this time",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TasksListParams",
+        "response_type": "TasksListResult",
+        "description": "Returns a paginated list of tasks. Must include either a project OR a section OR a workspace AND assignee parameter.",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_task",
+        "http_method": "get",
+        "path": "/tasks/{task_gid}",
+        "entity": "tasks",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task GID"
+          }
+        ],
+        "params_type_name": "TasksGetParams",
+        "response_type": "Task",
+        "description": "Get a single task by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Task",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_tasks": [
+      {
+        "method_name": "list_project_tasks",
+        "http_method": "get",
+        "path": "/projects/{project_gid}/tasks",
+        "entity": "project_tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_gid",
+            "python_name": "project_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Project GID to list tasks from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "completed_since",
+            "python_name": "completed_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2023-01-01T00:00:00Z"
+            },
+            "required": null,
+            "description": "Only return tasks that have been completed since this time",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectTasksListParams",
+        "response_type": "ProjectTasksListResult",
+        "description": "Returns all tasks in a project",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "workspace_task_search": [
+      {
+        "method_name": "search_workspace_tasks",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}/tasks/search",
+        "entity": "workspace_task_search",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID to search tasks in"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "text",
+            "python_name": "text",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search text to filter tasks",
+            "is_deep_object": false
+          },
+          {
+            "name": "completed",
+            "python_name": "completed",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by completion status",
+            "is_deep_object": false
+          },
+          {
+            "name": "assignee.any",
+            "python_name": "assignee_any",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of assignee GIDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "projects.any",
+            "python_name": "projects_any",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of project GIDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "sections.any",
+            "python_name": "sections_any",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of section GIDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "teams.any",
+            "python_name": "teams_any",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of team GIDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "followers.any",
+            "python_name": "followers_any",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Comma-separated list of follower GIDs",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at.after",
+            "python_name": "created_at_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter tasks created after this date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_at.before",
+            "python_name": "created_at_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter tasks created before this date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_at.after",
+            "python_name": "modified_at_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter tasks modified after this date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "modified_at.before",
+            "python_name": "modified_at_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Filter tasks modified before this date (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "due_on.after",
+            "python_name": "due_on_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": null,
+            "description": "Filter tasks due after this date (ISO 8601 date format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "due_on.before",
+            "python_name": "due_on_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "required": null,
+            "description": "Filter tasks due before this date (ISO 8601 date format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "resource_subtype",
+            "python_name": "resource_subtype",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter by task resource subtype (e.g., default_task, milestone)",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_by",
+            "python_name": "sort_by",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Field to sort by (e.g., created_at, modified_at, due_date)",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort_ascending",
+            "python_name": "sort_ascending",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Sort order (true for ascending, false for descending)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspaceTaskSearchListParams",
+        "response_type": "WorkspaceTaskSearchListResult",
+        "description": "Returns tasks that match the specified search criteria. This endpoint requires a premium Asana account.\n\nIMPORTANT: At least one search filter parameter must be provided. Valid filter parameters include: text, completed, assignee.any, projects.any, sections.any, teams.any, followers.any, created_at.after, created_at.before, modified_at.after, modified_at.before, due_on.after, due_on.before, and resource_subtype. The sort_by and sort_ascending parameters are for ordering results and do not count as search filters.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "projects": [
+      {
+        "method_name": "list_projects",
+        "http_method": "get",
+        "path": "/projects",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "workspace",
+            "python_name": "workspace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The workspace to filter projects on",
+            "is_deep_object": false
+          },
+          {
+            "name": "team",
+            "python_name": "team",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The team to filter projects on",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by archived status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Returns a paginated list of projects",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProjectCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_project",
+        "http_method": "get",
+        "path": "/projects/{project_gid}",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_gid",
+            "python_name": "project_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Project GID"
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "Project",
+        "description": "Get a single project by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Project",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "task_projects": [
+      {
+        "method_name": "list_task_projects",
+        "http_method": "get",
+        "path": "/tasks/{task_gid}/projects",
+        "entity": "task_projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task GID to list projects from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaskProjectsListParams",
+        "response_type": "TaskProjectsListResult",
+        "description": "Returns all projects a task is in",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProjectCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "team_projects": [
+      {
+        "method_name": "list_team_projects",
+        "http_method": "get",
+        "path": "/teams/{team_gid}/projects",
+        "entity": "team_projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_gid",
+            "python_name": "team_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team GID to list projects from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by archived status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamProjectsListParams",
+        "response_type": "TeamProjectsListResult",
+        "description": "Returns all projects for a team",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProjectCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "workspace_projects": [
+      {
+        "method_name": "list_workspace_projects",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}/projects",
+        "entity": "workspace_projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID to list projects from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "archived",
+            "python_name": "archived",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter by archived status",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspaceProjectsListParams",
+        "response_type": "WorkspaceProjectsListResult",
+        "description": "Returns all projects in a workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[ProjectCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "workspaces": [
+      {
+        "method_name": "list_workspaces",
+        "http_method": "get",
+        "path": "/workspaces",
+        "entity": "workspaces",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspacesListParams",
+        "response_type": "WorkspacesListResult",
+        "description": "Returns a paginated list of workspaces",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[WorkspaceCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_workspace",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}",
+        "entity": "workspaces",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID"
+          }
+        ],
+        "params_type_name": "WorkspacesGetParams",
+        "response_type": "Workspace",
+        "description": "Get a single workspace by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Workspace",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "workspace",
+            "python_name": "workspace",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The workspace to filter users on",
+            "is_deep_object": false
+          },
+          {
+            "name": "team",
+            "python_name": "team",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The team to filter users on",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Returns a paginated list of users",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/users/{user_gid}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "user_gid",
+            "python_name": "user_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User GID"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by their ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "workspace_users": [
+      {
+        "method_name": "list_workspace_users",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}/users",
+        "entity": "workspace_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID to list users from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspaceUsersListParams",
+        "response_type": "WorkspaceUsersListResult",
+        "description": "Returns all users in a workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "team_users": [
+      {
+        "method_name": "list_team_users",
+        "http_method": "get",
+        "path": "/teams/{team_gid}/users",
+        "entity": "team_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "team_gid",
+            "python_name": "team_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team GID to list users from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TeamUsersListParams",
+        "response_type": "TeamUsersListResult",
+        "description": "Returns all users in a team",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[UserCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "teams": [
+      {
+        "method_name": "get_team",
+        "http_method": "get",
+        "path": "/teams/{team_gid}",
+        "entity": "teams",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "team_gid",
+            "python_name": "team_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Team GID"
+          }
+        ],
+        "params_type_name": "TeamsGetParams",
+        "response_type": "Team",
+        "description": "Get a single team by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Team",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "workspace_teams": [
+      {
+        "method_name": "list_workspace_teams",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}/teams",
+        "entity": "workspace_teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID to list teams from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspaceTeamsListParams",
+        "response_type": "WorkspaceTeamsListResult",
+        "description": "Returns all teams in a workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TeamCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "user_teams": [
+      {
+        "method_name": "list_user_teams",
+        "http_method": "get",
+        "path": "/users/{user_gid}/teams",
+        "entity": "user_teams",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "user_gid",
+            "python_name": "user_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "User GID to list teams from"
+          },
+          {
+            "name": "organization",
+            "python_name": "organization",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The workspace or organization to filter teams on",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UserTeamsListParams",
+        "response_type": "UserTeamsListResult",
+        "description": "Returns all teams a user is a member of",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TeamCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "attachments": [
+      {
+        "method_name": "list_attachments",
+        "http_method": "get",
+        "path": "/attachments",
+        "entity": "attachments",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "parent",
+            "python_name": "parent",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the object to fetch attachments for (e.g., a task GID)",
+            "is_deep_object": false
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "AttachmentsListParams",
+        "response_type": "AttachmentsListResult",
+        "description": "Returns a list of attachments for an object (task, project, etc.)",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[AttachmentCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "get_attachment",
+        "http_method": "get",
+        "path": "/attachments/{attachment_gid}",
+        "entity": "attachments",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "attachment_gid",
+            "python_name": "attachment_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the attachment"
+          }
+        ],
+        "params_type_name": "AttachmentsGetParams",
+        "response_type": "Attachment",
+        "description": "Get details for a single attachment by its GID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Attachment",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "download_attachment",
+        "http_method": "get",
+        "path": "/attachments/{attachment_gid}:download",
+        "entity": "attachments",
+        "action": "download",
+        "parameters": [
+          {
+            "name": "attachment_gid",
+            "python_name": "attachment_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the attachment"
+          },
+          {
+            "name": "range_header",
+            "python_name": "range_header",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Optional Range header for partial downloads (e.g., 'bytes=0-99')"
+          }
+        ],
+        "params_type_name": "AttachmentsDownloadParams",
+        "response_type": "AsyncIterator[bytes]",
+        "description": "Downloads the file content of an attachment. This operation first retrieves the attachment\nmetadata to get the download_url, then downloads the file from that URL.\n",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": null,
+        "meta_fields": null,
+        "is_download": true
+      }
+    ],
+    "workspace_tags": [
+      {
+        "method_name": "list_workspace_tags",
+        "http_method": "get",
+        "path": "/workspaces/{workspace_gid}/tags",
+        "entity": "workspace_tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Workspace GID to list tags from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "WorkspaceTagsListParams",
+        "response_type": "WorkspaceTagsListResult",
+        "description": "Returns all tags in a workspace",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TagCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "get_tag",
+        "http_method": "get",
+        "path": "/tags/{tag_gid}",
+        "entity": "tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "tag_gid",
+            "python_name": "tag_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Tag GID"
+          }
+        ],
+        "params_type_name": "TagsGetParams",
+        "response_type": "Tag",
+        "description": "Get a single tag by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_sections": [
+      {
+        "method_name": "list_project_sections",
+        "http_method": "get",
+        "path": "/projects/{project_gid}/sections",
+        "entity": "project_sections",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_gid",
+            "python_name": "project_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Project GID to list sections from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectSectionsListParams",
+        "response_type": "ProjectSectionsListResult",
+        "description": "Returns all sections in a project",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[SectionCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "sections": [
+      {
+        "method_name": "get_section",
+        "http_method": "get",
+        "path": "/sections/{section_gid}",
+        "entity": "sections",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "section_gid",
+            "python_name": "section_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Section GID"
+          }
+        ],
+        "params_type_name": "SectionsGetParams",
+        "response_type": "Section",
+        "description": "Get a single section by its ID",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Section",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "task_subtasks": [
+      {
+        "method_name": "list_task_subtasks",
+        "http_method": "get",
+        "path": "/tasks/{task_gid}/subtasks",
+        "entity": "task_subtasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task GID to list subtasks from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaskSubtasksListParams",
+        "response_type": "TaskSubtasksListResult",
+        "description": "Returns all subtasks of a task",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "task_dependencies": [
+      {
+        "method_name": "list_task_dependencies",
+        "http_method": "get",
+        "path": "/tasks/{task_gid}/dependencies",
+        "entity": "task_dependencies",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task GID to list dependencies from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaskDependenciesListParams",
+        "response_type": "TaskDependenciesListResult",
+        "description": "Returns all tasks that this task depends on",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ],
+    "task_dependents": [
+      {
+        "method_name": "list_task_dependents",
+        "http_method": "get",
+        "path": "/tasks/{task_gid}/dependents",
+        "entity": "task_dependents",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Task GID to list dependents from"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TaskDependentsListParams",
+        "response_type": "TaskDependentsListResult",
+        "description": "Returns all tasks that depend on this task",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "attachments": {
+      "entity": "attachments",
+      "data_type_name": "AttachmentsSearchData",
+      "filter_type_name": "AttachmentsSearchFilter",
+      "in_filter_type_name": "AttachmentsInFilter",
+      "any_value_filter_type_name": "AttachmentsAnyValueFilter",
+      "string_filter_type_name": "AttachmentsStringFilter",
+      "sort_filter_type_name": "AttachmentsSortFilter",
+      "result_type_name": "AttachmentsSearchResult",
+      "query_type_name": "AttachmentsSearchQuery",
+      "condition_prefix": "Attachments",
+      "condition_type_name": "AttachmentsCondition",
+      "fields": [
+        {
+          "name": "connected_to_app",
+          "python_name": "connected_to_app",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "download_url",
+          "python_name": "download_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "host",
+          "python_name": "host",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "permanent_url",
+          "python_name": "permanent_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_subtype",
+          "python_name": "resource_subtype",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "size",
+          "python_name": "size",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "view_url",
+          "python_name": "view_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "current_status",
+          "python_name": "current_status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "custom_field_settings",
+          "python_name": "custom_field_settings",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "default_view",
+          "python_name": "default_view",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "due_on",
+          "python_name": "due_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "followers",
+          "python_name": "followers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "html_notes",
+          "python_name": "html_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "icon",
+          "python_name": "icon",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "is_template",
+          "python_name": "is_template",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "members",
+          "python_name": "members",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "modified_at",
+          "python_name": "modified_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "owner",
+          "python_name": "owner",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "permalink_url",
+          "python_name": "permalink_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "public",
+          "python_name": "public",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "start_on",
+          "python_name": "start_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "team",
+          "python_name": "team",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "workspace",
+          "python_name": "workspace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        }
+      ]
+    },
+    "sections": {
+      "entity": "sections",
+      "data_type_name": "SectionsSearchData",
+      "filter_type_name": "SectionsSearchFilter",
+      "in_filter_type_name": "SectionsInFilter",
+      "any_value_filter_type_name": "SectionsAnyValueFilter",
+      "string_filter_type_name": "SectionsStringFilter",
+      "sort_filter_type_name": "SectionsSortFilter",
+      "result_type_name": "SectionsSearchResult",
+      "query_type_name": "SectionsSearchQuery",
+      "condition_prefix": "Sections",
+      "condition_type_name": "SectionsCondition",
+      "fields": [
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "project",
+          "python_name": "project",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "tags": {
+      "entity": "tags",
+      "data_type_name": "TagsSearchData",
+      "filter_type_name": "TagsSearchFilter",
+      "in_filter_type_name": "TagsInFilter",
+      "any_value_filter_type_name": "TagsAnyValueFilter",
+      "string_filter_type_name": "TagsStringFilter",
+      "sort_filter_type_name": "TagsSortFilter",
+      "result_type_name": "TagsSearchResult",
+      "query_type_name": "TagsSearchQuery",
+      "condition_prefix": "Tags",
+      "condition_type_name": "TagsCondition",
+      "fields": [
+        {
+          "name": "color",
+          "python_name": "color",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "followers",
+          "python_name": "followers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "permalink_url",
+          "python_name": "permalink_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "workspace",
+          "python_name": "workspace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        }
+      ]
+    },
+    "tasks": {
+      "entity": "tasks",
+      "data_type_name": "TasksSearchData",
+      "filter_type_name": "TasksSearchFilter",
+      "in_filter_type_name": "TasksInFilter",
+      "any_value_filter_type_name": "TasksAnyValueFilter",
+      "string_filter_type_name": "TasksStringFilter",
+      "sort_filter_type_name": "TasksSortFilter",
+      "result_type_name": "TasksSearchResult",
+      "query_type_name": "TasksSearchQuery",
+      "condition_prefix": "Tasks",
+      "condition_type_name": "TasksCondition",
+      "fields": [
+        {
+          "name": "actual_time_minutes",
+          "python_name": "actual_time_minutes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "The actual time spent on the task in minutes"
+        },
+        {
+          "name": "approval_status",
+          "python_name": "approval_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "assignee",
+          "python_name": "assignee",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "completed",
+          "python_name": "completed",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "completed_at",
+          "python_name": "completed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "completed_by",
+          "python_name": "completed_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "custom_fields",
+          "python_name": "custom_fields",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "dependencies",
+          "python_name": "dependencies",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "dependents",
+          "python_name": "dependents",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "due_at",
+          "python_name": "due_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "due_on",
+          "python_name": "due_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "external",
+          "python_name": "external",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "followers",
+          "python_name": "followers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "hearted",
+          "python_name": "hearted",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "hearts",
+          "python_name": "hearts",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "html_notes",
+          "python_name": "html_notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "is_rendered_as_separator",
+          "python_name": "is_rendered_as_separator",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "liked",
+          "python_name": "liked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "likes",
+          "python_name": "likes",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "memberships",
+          "python_name": "memberships",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "modified_at",
+          "python_name": "modified_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "notes",
+          "python_name": "notes",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "num_hearts",
+          "python_name": "num_hearts",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "num_likes",
+          "python_name": "num_likes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "num_subtasks",
+          "python_name": "num_subtasks",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": ""
+        },
+        {
+          "name": "parent",
+          "python_name": "parent",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "permalink_url",
+          "python_name": "permalink_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "projects",
+          "python_name": "projects",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "resource_subtype",
+          "python_name": "resource_subtype",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "start_on",
+          "python_name": "start_on",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "tags",
+          "python_name": "tags",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "workspace",
+          "python_name": "workspace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        }
+      ]
+    },
+    "teams": {
+      "entity": "teams",
+      "data_type_name": "TeamsSearchData",
+      "filter_type_name": "TeamsSearchFilter",
+      "in_filter_type_name": "TeamsInFilter",
+      "any_value_filter_type_name": "TeamsAnyValueFilter",
+      "string_filter_type_name": "TeamsStringFilter",
+      "sort_filter_type_name": "TeamsSortFilter",
+      "result_type_name": "TeamsSearchResult",
+      "query_type_name": "TeamsSearchQuery",
+      "condition_prefix": "Teams",
+      "condition_type_name": "TeamsCondition",
+      "fields": [
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "html_description",
+          "python_name": "html_description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "organization",
+          "python_name": "organization",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "permalink_url",
+          "python_name": "permalink_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "email",
+          "python_name": "email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "photo",
+          "python_name": "photo",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "workspaces",
+          "python_name": "workspaces",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        }
+      ]
+    },
+    "workspaces": {
+      "entity": "workspaces",
+      "data_type_name": "WorkspacesSearchData",
+      "filter_type_name": "WorkspacesSearchFilter",
+      "in_filter_type_name": "WorkspacesInFilter",
+      "any_value_filter_type_name": "WorkspacesAnyValueFilter",
+      "string_filter_type_name": "WorkspacesStringFilter",
+      "sort_filter_type_name": "WorkspacesSortFilter",
+      "result_type_name": "WorkspacesSearchResult",
+      "query_type_name": "WorkspacesSearchQuery",
+      "condition_prefix": "Workspaces",
+      "condition_type_name": "WorkspacesCondition",
+      "fields": [
+        {
+          "name": "email_domains",
+          "python_name": "email_domains",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": ""
+        },
+        {
+          "name": "gid",
+          "python_name": "gid",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "is_organization",
+          "python_name": "is_organization",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": ""
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        },
+        {
+          "name": "resource_type",
+          "python_name": "resource_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": ""
+        }
+      ]
+    }
+  }
+}

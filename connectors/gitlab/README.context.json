@@ -1,0 +1,4841 @@
+{
+  "connector_name": "gitlab",
+  "class_name": "GitlabConnector",
+  "package_name": "airbyte_agent_gitlab",
+  "package_version": "1.0.4",
+  "yaml_version": "1.0.4",
+  "api_reference_url": "https://docs.gitlab.com/ee/api/rest/",
+  "commit_sha": "unknown",
+  "auth_example": "GitlabAuthConfig(access_token=\"...\")",
+  "auth_import": ", GitlabAuthConfig",
+  "auth_config": {
+    "type_name": "GitlabAuthConfig",
+    "base_name": "Gitlab",
+    "options": [
+      {
+        "title": "Personal Access Token",
+        "description": "",
+        "fields": [
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Private Token",
+            "description": "Log into your GitLab account and generate a personal access token."
+          }
+        ],
+        "type_suffix": "PersonalAccessToken",
+        "scheme_name": "gitlabPAT"
+      },
+      {
+        "title": "OAuth2.0",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "The API ID of the GitLab developer application."
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "The API Secret of the GitLab developer application."
+          },
+          {
+            "name": "access_token",
+            "type": "str",
+            "required": true,
+            "title": "Access Token",
+            "description": "Access Token for making authenticated requests."
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "The key to refresh the expired access token."
+          }
+        ],
+        "type_suffix": "Oauth20",
+        "scheme_name": "gitlabOAuth"
+      }
+    ],
+    "is_multi_auth": true
+  },
+  "replication_config": {
+    "type_name": "GitlabReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from GitLab.",
+    "fields": [
+      {
+        "name": "start_date",
+        "type": "str",
+        "required": false,
+        "title": "Start Date",
+        "description": "UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data. If not set, all data will be replicated.",
+        "format": "date-time",
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Connector for the GitLab REST API (v4). Provides access to projects, issues, merge requests, commits, pipelines, groups, branches, releases, tags, members, milestones, and users. Supports both Personal Access Token and OAuth2 authentication.\n",
+  "supported_questions": "- List all projects I have access to\n- Get the details of a specific project\n- List all open issues in a project\n- Show merge requests for a project\n- List all groups I belong to\n- Show recent commits in a project\n- List pipelines for a project\n- Show all branches in a project\n- Find issues updated in the last week\n- What are the most active projects?\n- Show merge requests that are still open\n- List projects with the most commits",
+  "unsupported_questions": "- Create a new project\n- Delete an issue\n- Merge a merge request\n- Trigger a pipeline",
+  "first_operation": {
+    "method_name": "list_projects",
+    "http_method": "get",
+    "path": "/projects",
+    "entity": "projects",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "page",
+        "python_name": "page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "required": null,
+        "description": "Page number (1-indexed)",
+        "is_deep_object": false
+      },
+      {
+        "name": "per_page",
+        "python_name": "per_page",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        },
+        "required": null,
+        "description": "Number of items per page (max 100)",
+        "is_deep_object": false
+      },
+      {
+        "name": "membership",
+        "python_name": "membership",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": null,
+        "description": "Limit by projects that the current user is a member of",
+        "is_deep_object": false
+      },
+      {
+        "name": "owned",
+        "python_name": "owned",
+        "type": "bool",
+        "schema": {
+          "type": "boolean"
+        },
+        "required": null,
+        "description": "Limit by projects explicitly owned by the current user",
+        "is_deep_object": false
+      },
+      {
+        "name": "search",
+        "python_name": "search",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": null,
+        "description": "Return list of projects matching the search criteria",
+        "is_deep_object": false
+      },
+      {
+        "name": "order_by",
+        "python_name": "order_by",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "id",
+            "name",
+            "path",
+            "created_at",
+            "updated_at",
+            "last_activity_at",
+            "similarity",
+            "star_count"
+          ]
+        },
+        "required": null,
+        "description": "Return projects ordered by field",
+        "is_deep_object": false
+      },
+      {
+        "name": "sort",
+        "python_name": "sort",
+        "type": "str",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "asc",
+            "desc"
+          ]
+        },
+        "required": null,
+        "description": "Return projects sorted in asc or desc order",
+        "is_deep_object": false
+      }
+    ],
+    "params_type_name": "ProjectsListParams",
+    "response_type": "ProjectsListResult",
+    "description": "Get a list of all visible projects across GitLab for the authenticated user.",
+    "record_extractor": "$",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Project]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "projects": [
+      {
+        "method_name": "list_projects",
+        "http_method": "get",
+        "path": "/projects",
+        "entity": "projects",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number (1-indexed)",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page (max 100)",
+            "is_deep_object": false
+          },
+          {
+            "name": "membership",
+            "python_name": "membership",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit by projects that the current user is a member of",
+            "is_deep_object": false
+          },
+          {
+            "name": "owned",
+            "python_name": "owned",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit by projects explicitly owned by the current user",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Return list of projects matching the search criteria",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "name",
+                "path",
+                "created_at",
+                "updated_at",
+                "last_activity_at",
+                "similarity",
+                "star_count"
+              ]
+            },
+            "required": null,
+            "description": "Return projects ordered by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Return projects sorted in asc or desc order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsListParams",
+        "response_type": "ProjectsListResult",
+        "description": "Get a list of all visible projects across GitLab for the authenticated user.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Project]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_project",
+        "http_method": "get",
+        "path": "/projects/{id}",
+        "entity": "projects",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "statistics",
+            "python_name": "statistics",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Include project statistics",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectsGetParams",
+        "response_type": "Project",
+        "description": "Get a specific project by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Project",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "issues": [
+      {
+        "method_name": "list_issues",
+        "http_method": "get",
+        "path": "/projects/{project_id}/issues",
+        "entity": "issues",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "opened",
+                "closed",
+                "all"
+              ]
+            },
+            "required": null,
+            "description": "Filter issues by state",
+            "is_deep_object": false
+          },
+          {
+            "name": "scope",
+            "python_name": "scope",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_by_me",
+                "assigned_to_me",
+                "all"
+              ]
+            },
+            "required": null,
+            "description": "Filter issues by scope",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "priority",
+                "due_date",
+                "relative_position",
+                "label_priority",
+                "milestone_due",
+                "popularity",
+                "weight"
+              ]
+            },
+            "required": null,
+            "description": "Return issues ordered by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Return issues sorted in asc or desc order",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return issues created on or after the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return issues created on or before the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_after",
+            "python_name": "updated_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return issues updated on or after the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_before",
+            "python_name": "updated_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return issues updated on or before the given time (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "IssuesListParams",
+        "response_type": "IssuesListResult",
+        "description": "Get a list of a project's issues.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Issue]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_issue",
+        "http_method": "get",
+        "path": "/projects/{project_id}/issues/{issue_iid}",
+        "entity": "issues",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "issue_iid",
+            "python_name": "issue_iid",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The internal ID of a project's issue"
+          }
+        ],
+        "params_type_name": "IssuesGetParams",
+        "response_type": "Issue",
+        "description": "Get a single project issue.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Issue",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "merge_requests": [
+      {
+        "method_name": "list_merge_requests",
+        "http_method": "get",
+        "path": "/projects/{project_id}/merge_requests",
+        "entity": "merge_requests",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "opened",
+                "closed",
+                "locked",
+                "merged",
+                "all"
+              ]
+            },
+            "required": null,
+            "description": "Filter merge requests by state",
+            "is_deep_object": false
+          },
+          {
+            "name": "scope",
+            "python_name": "scope",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_by_me",
+                "assigned_to_me",
+                "all"
+              ]
+            },
+            "required": null,
+            "description": "Filter merge requests by scope",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "title",
+                "updated_at"
+              ]
+            },
+            "required": null,
+            "description": "Return merge requests ordered by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Return merge requests sorted in asc or desc order",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_after",
+            "python_name": "created_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return merge requests created on or after the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "created_before",
+            "python_name": "created_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return merge requests created on or before the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_after",
+            "python_name": "updated_after",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return merge requests updated on or after the given time (ISO 8601 format)",
+            "is_deep_object": false
+          },
+          {
+            "name": "updated_before",
+            "python_name": "updated_before",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Return merge requests updated on or before the given time (ISO 8601 format)",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "MergeRequestsListParams",
+        "response_type": "MergeRequestsListResult",
+        "description": "Get all merge requests for a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[MergeRequest]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_merge_request",
+        "http_method": "get",
+        "path": "/projects/{project_id}/merge_requests/{merge_request_iid}",
+        "entity": "merge_requests",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "merge_request_iid",
+            "python_name": "merge_request_iid",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The internal ID of the merge request"
+          }
+        ],
+        "params_type_name": "MergeRequestsGetParams",
+        "response_type": "MergeRequest",
+        "description": "Get information about a single merge request.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "MergeRequest",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "users": [
+      {
+        "method_name": "list_users",
+        "http_method": "get",
+        "path": "/users",
+        "entity": "users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search for users by name, username, or email",
+            "is_deep_object": false
+          },
+          {
+            "name": "active",
+            "python_name": "active",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Filter users by active state",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "UsersListParams",
+        "response_type": "UsersListResult",
+        "description": "Get a list of users.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[User]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_user",
+        "http_method": "get",
+        "path": "/users/{id}",
+        "entity": "users",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the user"
+          }
+        ],
+        "params_type_name": "UsersGetParams",
+        "response_type": "User",
+        "description": "Get a single user by ID.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "User",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "commits": [
+      {
+        "method_name": "list_commits",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/commits",
+        "entity": "commits",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "ref_name",
+            "python_name": "ref_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "The name of a repository branch, tag, or revision range",
+            "is_deep_object": false
+          },
+          {
+            "name": "since",
+            "python_name": "since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Only commits after or on this date (ISO 8601)",
+            "is_deep_object": false
+          },
+          {
+            "name": "until",
+            "python_name": "until",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Only commits before or on this date (ISO 8601)",
+            "is_deep_object": false
+          },
+          {
+            "name": "with_stats",
+            "python_name": "with_stats",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Include stats about each commit",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommitsListParams",
+        "response_type": "CommitsListResult",
+        "description": "Get a list of repository commits in a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Commit]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_commit",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/commits/{sha}",
+        "entity": "commits",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "sha",
+            "python_name": "sha",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The commit hash or name of a repository branch or tag"
+          },
+          {
+            "name": "stats",
+            "python_name": "stats",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Include commit stats",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "CommitsGetParams",
+        "response_type": "Commit",
+        "description": "Get a specific commit identified by the commit hash or name of a branch or tag.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Commit",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "groups": [
+      {
+        "method_name": "list_groups",
+        "http_method": "get",
+        "path": "/groups",
+        "entity": "groups",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search for groups by name or path",
+            "is_deep_object": false
+          },
+          {
+            "name": "owned",
+            "python_name": "owned",
+            "type": "bool",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": null,
+            "description": "Limit to groups explicitly owned by the current user",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "path",
+                "id"
+              ]
+            },
+            "required": null,
+            "description": "Order groups by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GroupsListParams",
+        "response_type": "GroupsListResult",
+        "description": "Get a list of visible groups for the authenticated user.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Group]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_group",
+        "http_method": "get",
+        "path": "/groups/{id}",
+        "entity": "groups",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "python_name": "id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the group"
+          }
+        ],
+        "params_type_name": "GroupsGetParams",
+        "response_type": "Group",
+        "description": "Get all details of a group.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Group",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "branches": [
+      {
+        "method_name": "list_branches",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/branches",
+        "entity": "branches",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Return list of branches containing the search string",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "BranchesListParams",
+        "response_type": "BranchesListResult",
+        "description": "Get a list of repository branches from a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Branch]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_branch",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/branches/{branch}",
+        "entity": "branches",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "branch",
+            "python_name": "branch",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the branch (URL-encoded if it contains special characters)"
+          }
+        ],
+        "params_type_name": "BranchesGetParams",
+        "response_type": "Branch",
+        "description": "Get a single project repository branch.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Branch",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pipelines": [
+      {
+        "method_name": "list_pipelines",
+        "http_method": "get",
+        "path": "/projects/{project_id}/pipelines",
+        "entity": "pipelines",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "status",
+            "python_name": "status",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created",
+                "waiting_for_resource",
+                "preparing",
+                "pending",
+                "running",
+                "success",
+                "failed",
+                "canceled",
+                "skipped",
+                "manual",
+                "scheduled"
+              ]
+            },
+            "required": null,
+            "description": "Filter pipelines by status",
+            "is_deep_object": false
+          },
+          {
+            "name": "ref",
+            "python_name": "ref",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter pipelines by ref",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "id",
+                "status",
+                "ref",
+                "updated_at",
+                "user_id"
+              ]
+            },
+            "required": null,
+            "description": "Order pipelines by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "PipelinesListParams",
+        "response_type": "PipelinesListResult",
+        "description": "List pipelines in a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Pipeline]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_pipeline",
+        "http_method": "get",
+        "path": "/projects/{project_id}/pipelines/{pipeline_id}",
+        "entity": "pipelines",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "pipeline_id",
+            "python_name": "pipeline_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the pipeline"
+          }
+        ],
+        "params_type_name": "PipelinesGetParams",
+        "response_type": "Pipeline",
+        "description": "Get one pipeline of a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Pipeline",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "group_members": [
+      {
+        "method_name": "list_group_members",
+        "http_method": "get",
+        "path": "/groups/{group_id}/members",
+        "entity": "group_members",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "group_id",
+            "python_name": "group_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the group"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter members by name or username",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GroupMembersListParams",
+        "response_type": "GroupMembersListResult",
+        "description": "Gets a list of group members viewable by the authenticated user.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Member]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_group_member",
+        "http_method": "get",
+        "path": "/groups/{group_id}/members/{user_id}",
+        "entity": "group_members",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "group_id",
+            "python_name": "group_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the group"
+          },
+          {
+            "name": "user_id",
+            "python_name": "user_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The user ID of the member"
+          }
+        ],
+        "params_type_name": "GroupMembersGetParams",
+        "response_type": "Member",
+        "description": "Get a member of a group.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Member",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_members": [
+      {
+        "method_name": "list_project_members",
+        "http_method": "get",
+        "path": "/projects/{project_id}/members",
+        "entity": "project_members",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "query",
+            "python_name": "query",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Filter members by name or username",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectMembersListParams",
+        "response_type": "ProjectMembersListResult",
+        "description": "Gets a list of project members viewable by the authenticated user.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Member]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_project_member",
+        "http_method": "get",
+        "path": "/projects/{project_id}/members/{user_id}",
+        "entity": "project_members",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "user_id",
+            "python_name": "user_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The user ID of the member"
+          }
+        ],
+        "params_type_name": "ProjectMembersGetParams",
+        "response_type": "Member",
+        "description": "Get a member of a project.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Member",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "releases": [
+      {
+        "method_name": "list_releases",
+        "http_method": "get",
+        "path": "/projects/{project_id}/releases",
+        "entity": "releases",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "released_at",
+                "created_at"
+              ]
+            },
+            "required": null,
+            "description": "Order by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ReleasesListParams",
+        "response_type": "ReleasesListResult",
+        "description": "Paginated list of releases for a given project, sorted by released_at.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Release]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_release",
+        "http_method": "get",
+        "path": "/projects/{project_id}/releases/{tag_name}",
+        "entity": "releases",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "tag_name",
+            "python_name": "tag_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The Git tag the release is associated with"
+          }
+        ],
+        "params_type_name": "ReleasesGetParams",
+        "response_type": "Release",
+        "description": "Get a release for the given tag.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Release",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tags": [
+      {
+        "method_name": "list_tags",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/tags",
+        "entity": "tags",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Return list of tags matching the search criteria",
+            "is_deep_object": false
+          },
+          {
+            "name": "order_by",
+            "python_name": "order_by",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "name",
+                "updated",
+                "version"
+              ]
+            },
+            "required": null,
+            "description": "Return tags ordered by field",
+            "is_deep_object": false
+          },
+          {
+            "name": "sort",
+            "python_name": "sort",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "required": null,
+            "description": "Sort order",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TagsListParams",
+        "response_type": "TagsListResult",
+        "description": "Get a list of repository tags from a project, sorted by update date and time in descending order.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Tag]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_tag",
+        "http_method": "get",
+        "path": "/projects/{project_id}/repository/tags/{tag_name}",
+        "entity": "tags",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "tag_name",
+            "python_name": "tag_name",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The name of the tag"
+          }
+        ],
+        "params_type_name": "TagsGetParams",
+        "response_type": "Tag",
+        "description": "Get a specific repository tag determined by its name.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "group_milestones": [
+      {
+        "method_name": "list_group_milestones",
+        "http_method": "get",
+        "path": "/groups/{group_id}/milestones",
+        "entity": "group_milestones",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "group_id",
+            "python_name": "group_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the group"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "closed"
+              ]
+            },
+            "required": null,
+            "description": "Filter milestones by state",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search for milestones by title or description",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "GroupMilestonesListParams",
+        "response_type": "GroupMilestonesListResult",
+        "description": "Returns a list of group milestones.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Milestone]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_group_milestone",
+        "http_method": "get",
+        "path": "/groups/{group_id}/milestones/{milestone_id}",
+        "entity": "group_milestones",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "group_id",
+            "python_name": "group_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the group"
+          },
+          {
+            "name": "milestone_id",
+            "python_name": "milestone_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the milestone"
+          }
+        ],
+        "params_type_name": "GroupMilestonesGetParams",
+        "response_type": "Milestone",
+        "description": "Get a single group milestone.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Milestone",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "project_milestones": [
+      {
+        "method_name": "list_project_milestones",
+        "http_method": "get",
+        "path": "/projects/{project_id}/milestones",
+        "entity": "project_milestones",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "page",
+            "python_name": "page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "required": null,
+            "description": "Page number",
+            "is_deep_object": false
+          },
+          {
+            "name": "per_page",
+            "python_name": "per_page",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "state",
+            "python_name": "state",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "closed"
+              ]
+            },
+            "required": null,
+            "description": "Filter milestones by state",
+            "is_deep_object": false
+          },
+          {
+            "name": "search",
+            "python_name": "search",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Search for milestones by title or description",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "ProjectMilestonesListParams",
+        "response_type": "ProjectMilestonesListResult",
+        "description": "Returns a list of project milestones.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Milestone]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "get_project_milestone",
+        "http_method": "get",
+        "path": "/projects/{project_id}/milestones/{milestone_id}",
+        "entity": "project_milestones",
+        "action": "get",
+        "parameters": [
+          {
+            "name": "project_id",
+            "python_name": "project_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The ID or URL-encoded path of the project"
+          },
+          {
+            "name": "milestone_id",
+            "python_name": "milestone_id",
+            "type": "str",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "The ID of the milestone"
+          }
+        ],
+        "params_type_name": "ProjectMilestonesGetParams",
+        "response_type": "Milestone",
+        "description": "Get a single project milestone.",
+        "record_extractor": "$",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Milestone",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "projects": {
+      "entity": "projects",
+      "data_type_name": "ProjectsSearchData",
+      "filter_type_name": "ProjectsSearchFilter",
+      "in_filter_type_name": "ProjectsInFilter",
+      "any_value_filter_type_name": "ProjectsAnyValueFilter",
+      "string_filter_type_name": "ProjectsStringFilter",
+      "sort_filter_type_name": "ProjectsSortFilter",
+      "result_type_name": "ProjectsSearchResult",
+      "query_type_name": "ProjectsSearchQuery",
+      "condition_prefix": "Projects",
+      "condition_type_name": "ProjectsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the project"
+        },
+        {
+          "name": "description_html",
+          "python_name": "description_html",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "HTML-rendered description of the project"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the project"
+        },
+        {
+          "name": "name_with_namespace",
+          "python_name": "name_with_namespace",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name including namespace"
+        },
+        {
+          "name": "path",
+          "python_name": "path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL path of the project"
+        },
+        {
+          "name": "path_with_namespace",
+          "python_name": "path_with_namespace",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full path including namespace"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the project was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the project was last updated"
+        },
+        {
+          "name": "default_branch",
+          "python_name": "default_branch",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Default branch of the project"
+        },
+        {
+          "name": "tag_list",
+          "python_name": "tag_list",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of tags for the project"
+        },
+        {
+          "name": "topics",
+          "python_name": "topics",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "List of topics for the project"
+        },
+        {
+          "name": "ssh_url_to_repo",
+          "python_name": "ssh_url_to_repo",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SSH URL to the repository"
+        },
+        {
+          "name": "http_url_to_repo",
+          "python_name": "http_url_to_repo",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "HTTP URL to the repository"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the project"
+        },
+        {
+          "name": "readme_url",
+          "python_name": "readme_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL to the project README"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the project avatar"
+        },
+        {
+          "name": "forks_count",
+          "python_name": "forks_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of forks"
+        },
+        {
+          "name": "star_count",
+          "python_name": "star_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of stars"
+        },
+        {
+          "name": "last_activity_at",
+          "python_name": "last_activity_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp of last activity"
+        },
+        {
+          "name": "namespace",
+          "python_name": "namespace",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Namespace the project belongs to"
+        },
+        {
+          "name": "container_registry_image_prefix",
+          "python_name": "container_registry_image_prefix",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Prefix for container registry images"
+        },
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Related resource links"
+        },
+        {
+          "name": "packages_enabled",
+          "python_name": "packages_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether packages are enabled"
+        },
+        {
+          "name": "empty_repo",
+          "python_name": "empty_repo",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the repository is empty"
+        },
+        {
+          "name": "archived",
+          "python_name": "archived",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the project is archived"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Visibility level of the project"
+        },
+        {
+          "name": "resolve_outdated_diff_discussions",
+          "python_name": "resolve_outdated_diff_discussions",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether outdated diff discussions are auto-resolved"
+        },
+        {
+          "name": "container_registry_enabled",
+          "python_name": "container_registry_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether container registry is enabled"
+        },
+        {
+          "name": "container_expiration_policy",
+          "python_name": "container_expiration_policy",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Container expiration policy settings"
+        },
+        {
+          "name": "issues_enabled",
+          "python_name": "issues_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether issues are enabled"
+        },
+        {
+          "name": "merge_requests_enabled",
+          "python_name": "merge_requests_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether merge requests are enabled"
+        },
+        {
+          "name": "wiki_enabled",
+          "python_name": "wiki_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether wiki is enabled"
+        },
+        {
+          "name": "jobs_enabled",
+          "python_name": "jobs_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether jobs are enabled"
+        },
+        {
+          "name": "snippets_enabled",
+          "python_name": "snippets_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether snippets are enabled"
+        },
+        {
+          "name": "service_desk_enabled",
+          "python_name": "service_desk_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether service desk is enabled"
+        },
+        {
+          "name": "service_desk_address",
+          "python_name": "service_desk_address",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email address for the service desk"
+        },
+        {
+          "name": "can_create_merge_request_in",
+          "python_name": "can_create_merge_request_in",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether user can create merge requests"
+        },
+        {
+          "name": "issues_access_level",
+          "python_name": "issues_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for issues"
+        },
+        {
+          "name": "repository_access_level",
+          "python_name": "repository_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for the repository"
+        },
+        {
+          "name": "merge_requests_access_level",
+          "python_name": "merge_requests_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for merge requests"
+        },
+        {
+          "name": "forking_access_level",
+          "python_name": "forking_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for forking"
+        },
+        {
+          "name": "wiki_access_level",
+          "python_name": "wiki_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for the wiki"
+        },
+        {
+          "name": "builds_access_level",
+          "python_name": "builds_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for builds"
+        },
+        {
+          "name": "snippets_access_level",
+          "python_name": "snippets_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for snippets"
+        },
+        {
+          "name": "pages_access_level",
+          "python_name": "pages_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for pages"
+        },
+        {
+          "name": "operations_access_level",
+          "python_name": "operations_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for operations"
+        },
+        {
+          "name": "analytics_access_level",
+          "python_name": "analytics_access_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Access level for analytics"
+        },
+        {
+          "name": "emails_disabled",
+          "python_name": "emails_disabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether emails are disabled"
+        },
+        {
+          "name": "shared_runners_enabled",
+          "python_name": "shared_runners_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether shared runners are enabled"
+        },
+        {
+          "name": "lfs_enabled",
+          "python_name": "lfs_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether Git LFS is enabled"
+        },
+        {
+          "name": "creator_id",
+          "python_name": "creator_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project creator"
+        },
+        {
+          "name": "import_status",
+          "python_name": "import_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Import status of the project"
+        },
+        {
+          "name": "open_issues_count",
+          "python_name": "open_issues_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of open issues"
+        },
+        {
+          "name": "ci_default_git_depth",
+          "python_name": "ci_default_git_depth",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Default git depth for CI pipelines"
+        },
+        {
+          "name": "ci_forward_deployment_enabled",
+          "python_name": "ci_forward_deployment_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether CI forward deployment is enabled"
+        },
+        {
+          "name": "public_jobs",
+          "python_name": "public_jobs",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether jobs are public"
+        },
+        {
+          "name": "build_timeout",
+          "python_name": "build_timeout",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Build timeout in seconds"
+        },
+        {
+          "name": "auto_cancel_pending_pipelines",
+          "python_name": "auto_cancel_pending_pipelines",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Auto-cancel pending pipelines setting"
+        },
+        {
+          "name": "ci_config_path",
+          "python_name": "ci_config_path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Path to the CI configuration file"
+        },
+        {
+          "name": "shared_with_groups",
+          "python_name": "shared_with_groups",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Groups the project is shared with"
+        },
+        {
+          "name": "only_allow_merge_if_pipeline_succeeds",
+          "python_name": "only_allow_merge_if_pipeline_succeeds",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether merge requires pipeline success"
+        },
+        {
+          "name": "allow_merge_on_skipped_pipeline",
+          "python_name": "allow_merge_on_skipped_pipeline",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether merge is allowed on skipped pipeline"
+        },
+        {
+          "name": "restrict_user_defined_variables",
+          "python_name": "restrict_user_defined_variables",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether user-defined variables are restricted"
+        },
+        {
+          "name": "request_access_enabled",
+          "python_name": "request_access_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether access requests are enabled"
+        },
+        {
+          "name": "only_allow_merge_if_all_discussions_are_resolved",
+          "python_name": "only_allow_merge_if_all_discussions_are_resolved",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether merge requires all discussions resolved"
+        },
+        {
+          "name": "remove_source_branch_after_merge",
+          "python_name": "remove_source_branch_after_merge",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether source branch is removed after merge"
+        },
+        {
+          "name": "printing_merge_request_link_enabled",
+          "python_name": "printing_merge_request_link_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether MR link printing is enabled"
+        },
+        {
+          "name": "merge_method",
+          "python_name": "merge_method",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Merge method used for the project"
+        },
+        {
+          "name": "statistics",
+          "python_name": "statistics",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Project statistics"
+        },
+        {
+          "name": "auto_devops_enabled",
+          "python_name": "auto_devops_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether Auto DevOps is enabled"
+        },
+        {
+          "name": "auto_devops_deploy_strategy",
+          "python_name": "auto_devops_deploy_strategy",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Auto DevOps deployment strategy"
+        },
+        {
+          "name": "autoclose_referenced_issues",
+          "python_name": "autoclose_referenced_issues",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether referenced issues are auto-closed"
+        },
+        {
+          "name": "external_authorization_classification_label",
+          "python_name": "external_authorization_classification_label",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "External authorization classification label"
+        },
+        {
+          "name": "requirements_enabled",
+          "python_name": "requirements_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether requirements are enabled"
+        },
+        {
+          "name": "security_and_compliance_enabled",
+          "python_name": "security_and_compliance_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether security and compliance is enabled"
+        },
+        {
+          "name": "compliance_frameworks",
+          "python_name": "compliance_frameworks",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Compliance frameworks for the project"
+        },
+        {
+          "name": "permissions",
+          "python_name": "permissions",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User permissions for the project"
+        },
+        {
+          "name": "keep_latest_artifact",
+          "python_name": "keep_latest_artifact",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the latest artifact is kept"
+        }
+      ]
+    },
+    "issues": {
+      "entity": "issues",
+      "data_type_name": "IssuesSearchData",
+      "filter_type_name": "IssuesSearchFilter",
+      "in_filter_type_name": "IssuesInFilter",
+      "any_value_filter_type_name": "IssuesAnyValueFilter",
+      "string_filter_type_name": "IssuesStringFilter",
+      "sort_filter_type_name": "IssuesSortFilter",
+      "result_type_name": "IssuesSearchResult",
+      "query_type_name": "IssuesSearchQuery",
+      "condition_prefix": "Issues",
+      "condition_type_name": "IssuesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the issue"
+        },
+        {
+          "name": "iid",
+          "python_name": "iid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Internal ID of the issue within the project"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project the issue belongs to"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the issue"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the issue"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the issue"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the issue was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the issue was last updated"
+        },
+        {
+          "name": "closed_at",
+          "python_name": "closed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the issue was closed"
+        },
+        {
+          "name": "labels",
+          "python_name": "labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Labels assigned to the issue"
+        },
+        {
+          "name": "assignees",
+          "python_name": "assignees",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Users assigned to the issue"
+        },
+        {
+          "name": "type",
+          "python_name": "type_",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type of the issue"
+        },
+        {
+          "name": "user_notes_count",
+          "python_name": "user_notes_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of user notes on the issue"
+        },
+        {
+          "name": "merge_requests_count",
+          "python_name": "merge_requests_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of related merge requests"
+        },
+        {
+          "name": "upvotes",
+          "python_name": "upvotes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of upvotes"
+        },
+        {
+          "name": "downvotes",
+          "python_name": "downvotes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of downvotes"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date for the issue"
+        },
+        {
+          "name": "confidential",
+          "python_name": "confidential",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the issue is confidential"
+        },
+        {
+          "name": "discussion_locked",
+          "python_name": "discussion_locked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether discussion is locked"
+        },
+        {
+          "name": "issue_type",
+          "python_name": "issue_type",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Type classification of the issue"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the issue"
+        },
+        {
+          "name": "time_stats",
+          "python_name": "time_stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Time tracking statistics"
+        },
+        {
+          "name": "task_completion_status",
+          "python_name": "task_completion_status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Task completion status"
+        },
+        {
+          "name": "blocking_issues_count",
+          "python_name": "blocking_issues_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of blocking issues"
+        },
+        {
+          "name": "has_tasks",
+          "python_name": "has_tasks",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the issue has tasks"
+        },
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Related resource links"
+        },
+        {
+          "name": "references",
+          "python_name": "references",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Issue references"
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Author of the issue"
+        },
+        {
+          "name": "author_id",
+          "python_name": "author_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the author"
+        },
+        {
+          "name": "assignee",
+          "python_name": "assignee",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Primary assignee of the issue"
+        },
+        {
+          "name": "assignee_id",
+          "python_name": "assignee_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the primary assignee"
+        },
+        {
+          "name": "closed_by",
+          "python_name": "closed_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who closed the issue"
+        },
+        {
+          "name": "closed_by_id",
+          "python_name": "closed_by_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the user who closed the issue"
+        },
+        {
+          "name": "milestone",
+          "python_name": "milestone",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Milestone the issue belongs to"
+        },
+        {
+          "name": "milestone_id",
+          "python_name": "milestone_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the milestone"
+        },
+        {
+          "name": "weight",
+          "python_name": "weight",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Weight of the issue"
+        },
+        {
+          "name": "severity",
+          "python_name": "severity",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Severity level of the issue"
+        }
+      ]
+    },
+    "merge_requests": {
+      "entity": "merge_requests",
+      "data_type_name": "MergeRequestsSearchData",
+      "filter_type_name": "MergeRequestsSearchFilter",
+      "in_filter_type_name": "MergeRequestsInFilter",
+      "any_value_filter_type_name": "MergeRequestsAnyValueFilter",
+      "string_filter_type_name": "MergeRequestsStringFilter",
+      "sort_filter_type_name": "MergeRequestsSortFilter",
+      "result_type_name": "MergeRequestsSearchResult",
+      "query_type_name": "MergeRequestsSearchQuery",
+      "condition_prefix": "MergeRequests",
+      "condition_type_name": "MergeRequestsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the merge request"
+        },
+        {
+          "name": "iid",
+          "python_name": "iid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Internal ID of the merge request within the project"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the merge request"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the merge request"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the merge request"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the merge request was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the merge request was last updated"
+        },
+        {
+          "name": "merged_at",
+          "python_name": "merged_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the merge request was merged"
+        },
+        {
+          "name": "closed_at",
+          "python_name": "closed_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the merge request was closed"
+        },
+        {
+          "name": "target_branch",
+          "python_name": "target_branch",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Target branch for the merge request"
+        },
+        {
+          "name": "source_branch",
+          "python_name": "source_branch",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source branch for the merge request"
+        },
+        {
+          "name": "user_notes_count",
+          "python_name": "user_notes_count",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of user notes"
+        },
+        {
+          "name": "upvotes",
+          "python_name": "upvotes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of upvotes"
+        },
+        {
+          "name": "downvotes",
+          "python_name": "downvotes",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of downvotes"
+        },
+        {
+          "name": "assignees",
+          "python_name": "assignees",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Users assigned to the merge request"
+        },
+        {
+          "name": "reviewers",
+          "python_name": "reviewers",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Users assigned as reviewers"
+        },
+        {
+          "name": "source_project_id",
+          "python_name": "source_project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the source project"
+        },
+        {
+          "name": "target_project_id",
+          "python_name": "target_project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the target project"
+        },
+        {
+          "name": "labels",
+          "python_name": "labels",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Labels assigned to the merge request"
+        },
+        {
+          "name": "work_in_progress",
+          "python_name": "work_in_progress",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the merge request is a work in progress"
+        },
+        {
+          "name": "merge_when_pipeline_succeeds",
+          "python_name": "merge_when_pipeline_succeeds",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to merge when pipeline succeeds"
+        },
+        {
+          "name": "merge_status",
+          "python_name": "merge_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Merge status of the merge request"
+        },
+        {
+          "name": "sha",
+          "python_name": "sha",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the head commit"
+        },
+        {
+          "name": "merge_commit_sha",
+          "python_name": "merge_commit_sha",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the merge commit"
+        },
+        {
+          "name": "squash_commit_sha",
+          "python_name": "squash_commit_sha",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the squash commit"
+        },
+        {
+          "name": "discussion_locked",
+          "python_name": "discussion_locked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether discussion is locked"
+        },
+        {
+          "name": "should_remove_source_branch",
+          "python_name": "should_remove_source_branch",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether source branch should be removed"
+        },
+        {
+          "name": "force_remove_source_branch",
+          "python_name": "force_remove_source_branch",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to force remove source branch"
+        },
+        {
+          "name": "reference",
+          "python_name": "reference",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Short reference for the merge request"
+        },
+        {
+          "name": "references",
+          "python_name": "references",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Merge request references"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the merge request"
+        },
+        {
+          "name": "time_stats",
+          "python_name": "time_stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Time tracking statistics"
+        },
+        {
+          "name": "squash",
+          "python_name": "squash",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether to squash commits on merge"
+        },
+        {
+          "name": "task_completion_status",
+          "python_name": "task_completion_status",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Task completion status"
+        },
+        {
+          "name": "has_conflicts",
+          "python_name": "has_conflicts",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the merge request has conflicts"
+        },
+        {
+          "name": "blocking_discussions_resolved",
+          "python_name": "blocking_discussions_resolved",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether blocking discussions are resolved"
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Author of the merge request"
+        },
+        {
+          "name": "author_id",
+          "python_name": "author_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the author"
+        },
+        {
+          "name": "assignee",
+          "python_name": "assignee",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Primary assignee of the merge request"
+        },
+        {
+          "name": "assignee_id",
+          "python_name": "assignee_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the primary assignee"
+        },
+        {
+          "name": "closed_by",
+          "python_name": "closed_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who closed the merge request"
+        },
+        {
+          "name": "closed_by_id",
+          "python_name": "closed_by_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the user who closed it"
+        },
+        {
+          "name": "milestone",
+          "python_name": "milestone",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Milestone the merge request belongs to"
+        },
+        {
+          "name": "milestone_id",
+          "python_name": "milestone_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the milestone"
+        },
+        {
+          "name": "merged_by",
+          "python_name": "merged_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who merged the merge request"
+        },
+        {
+          "name": "merged_by_id",
+          "python_name": "merged_by_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the user who merged it"
+        },
+        {
+          "name": "draft",
+          "python_name": "draft",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the merge request is a draft"
+        },
+        {
+          "name": "detailed_merge_status",
+          "python_name": "detailed_merge_status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Detailed merge status"
+        },
+        {
+          "name": "merge_user",
+          "python_name": "merge_user",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who performed the merge"
+        }
+      ]
+    },
+    "users": {
+      "entity": "users",
+      "data_type_name": "UsersSearchData",
+      "filter_type_name": "UsersSearchFilter",
+      "in_filter_type_name": "UsersInFilter",
+      "any_value_filter_type_name": "UsersAnyValueFilter",
+      "string_filter_type_name": "UsersStringFilter",
+      "sort_filter_type_name": "UsersSortFilter",
+      "result_type_name": "UsersSearchResult",
+      "query_type_name": "UsersSearchQuery",
+      "condition_prefix": "Users",
+      "condition_type_name": "UsersCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the user"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the user"
+        },
+        {
+          "name": "username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Username of the user"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the user account"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the user avatar"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the user profile"
+        },
+        {
+          "name": "locked",
+          "python_name": "locked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the user account is locked"
+        }
+      ]
+    },
+    "commits": {
+      "entity": "commits",
+      "data_type_name": "CommitsSearchData",
+      "filter_type_name": "CommitsSearchFilter",
+      "in_filter_type_name": "CommitsInFilter",
+      "any_value_filter_type_name": "CommitsAnyValueFilter",
+      "string_filter_type_name": "CommitsStringFilter",
+      "sort_filter_type_name": "CommitsSortFilter",
+      "result_type_name": "CommitsSearchResult",
+      "query_type_name": "CommitsSearchQuery",
+      "condition_prefix": "Commits",
+      "condition_type_name": "CommitsCondition",
+      "fields": [
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project the commit belongs to"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the commit"
+        },
+        {
+          "name": "short_id",
+          "python_name": "short_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Short SHA of the commit"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the commit was created"
+        },
+        {
+          "name": "parent_ids",
+          "python_name": "parent_ids",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "SHAs of parent commits"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the commit"
+        },
+        {
+          "name": "message",
+          "python_name": "message",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full commit message"
+        },
+        {
+          "name": "author_name",
+          "python_name": "author_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the commit author"
+        },
+        {
+          "name": "author_email",
+          "python_name": "author_email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email of the commit author"
+        },
+        {
+          "name": "authored_date",
+          "python_name": "authored_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date the commit was authored"
+        },
+        {
+          "name": "committer_name",
+          "python_name": "committer_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the committer"
+        },
+        {
+          "name": "committer_email",
+          "python_name": "committer_email",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Email of the committer"
+        },
+        {
+          "name": "committed_date",
+          "python_name": "committed_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date the commit was committed"
+        },
+        {
+          "name": "trailers",
+          "python_name": "trailers",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Git trailers for the commit"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the commit"
+        },
+        {
+          "name": "stats",
+          "python_name": "stats",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Commit statistics"
+        }
+      ]
+    },
+    "groups": {
+      "entity": "groups",
+      "data_type_name": "GroupsSearchData",
+      "filter_type_name": "GroupsSearchFilter",
+      "in_filter_type_name": "GroupsInFilter",
+      "any_value_filter_type_name": "GroupsAnyValueFilter",
+      "string_filter_type_name": "GroupsStringFilter",
+      "sort_filter_type_name": "GroupsSortFilter",
+      "result_type_name": "GroupsSearchResult",
+      "query_type_name": "GroupsSearchQuery",
+      "condition_prefix": "Groups",
+      "condition_type_name": "GroupsCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the group"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the group"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the group"
+        },
+        {
+          "name": "path",
+          "python_name": "path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL path of the group"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the group"
+        },
+        {
+          "name": "visibility",
+          "python_name": "visibility",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Visibility level of the group"
+        },
+        {
+          "name": "share_with_group_lock",
+          "python_name": "share_with_group_lock",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether sharing with other groups is locked"
+        },
+        {
+          "name": "require_two_factor_authentication",
+          "python_name": "require_two_factor_authentication",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether two-factor authentication is required"
+        },
+        {
+          "name": "two_factor_grace_period",
+          "python_name": "two_factor_grace_period",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Grace period for two-factor authentication"
+        },
+        {
+          "name": "project_creation_level",
+          "python_name": "project_creation_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Level required to create projects"
+        },
+        {
+          "name": "auto_devops_enabled",
+          "python_name": "auto_devops_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether Auto DevOps is enabled"
+        },
+        {
+          "name": "subgroup_creation_level",
+          "python_name": "subgroup_creation_level",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Level required to create subgroups"
+        },
+        {
+          "name": "emails_disabled",
+          "python_name": "emails_disabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether emails are disabled"
+        },
+        {
+          "name": "emails_enabled",
+          "python_name": "emails_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether emails are enabled"
+        },
+        {
+          "name": "mentions_disabled",
+          "python_name": "mentions_disabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether mentions are disabled"
+        },
+        {
+          "name": "lfs_enabled",
+          "python_name": "lfs_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether Git LFS is enabled"
+        },
+        {
+          "name": "default_branch_protection",
+          "python_name": "default_branch_protection",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Default branch protection level"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the group avatar"
+        },
+        {
+          "name": "request_access_enabled",
+          "python_name": "request_access_enabled",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether access requests are enabled"
+        },
+        {
+          "name": "full_name",
+          "python_name": "full_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the group"
+        },
+        {
+          "name": "full_path",
+          "python_name": "full_path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full path of the group"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the group was created"
+        },
+        {
+          "name": "parent_id",
+          "python_name": "parent_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the parent group"
+        },
+        {
+          "name": "shared_with_groups",
+          "python_name": "shared_with_groups",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Groups this group is shared with"
+        },
+        {
+          "name": "projects",
+          "python_name": "projects",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Projects in the group"
+        }
+      ]
+    },
+    "branches": {
+      "entity": "branches",
+      "data_type_name": "BranchesSearchData",
+      "filter_type_name": "BranchesSearchFilter",
+      "in_filter_type_name": "BranchesInFilter",
+      "any_value_filter_type_name": "BranchesAnyValueFilter",
+      "string_filter_type_name": "BranchesStringFilter",
+      "sort_filter_type_name": "BranchesSortFilter",
+      "result_type_name": "BranchesSearchResult",
+      "query_type_name": "BranchesSearchQuery",
+      "condition_prefix": "Branches",
+      "condition_type_name": "BranchesCondition",
+      "fields": [
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project the branch belongs to"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the branch"
+        },
+        {
+          "name": "merged",
+          "python_name": "merged",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the branch is merged"
+        },
+        {
+          "name": "protected",
+          "python_name": "protected",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the branch is protected"
+        },
+        {
+          "name": "developers_can_push",
+          "python_name": "developers_can_push",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether developers can push to the branch"
+        },
+        {
+          "name": "developers_can_merge",
+          "python_name": "developers_can_merge",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether developers can merge into the branch"
+        },
+        {
+          "name": "can_push",
+          "python_name": "can_push",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the current user can push"
+        },
+        {
+          "name": "default",
+          "python_name": "default",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is the default branch"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the branch"
+        },
+        {
+          "name": "commit_id",
+          "python_name": "commit_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the head commit"
+        },
+        {
+          "name": "commit",
+          "python_name": "commit",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Head commit details"
+        }
+      ]
+    },
+    "pipelines": {
+      "entity": "pipelines",
+      "data_type_name": "PipelinesSearchData",
+      "filter_type_name": "PipelinesSearchFilter",
+      "in_filter_type_name": "PipelinesInFilter",
+      "any_value_filter_type_name": "PipelinesAnyValueFilter",
+      "string_filter_type_name": "PipelinesStringFilter",
+      "sort_filter_type_name": "PipelinesSortFilter",
+      "result_type_name": "PipelinesSearchResult",
+      "query_type_name": "PipelinesSearchQuery",
+      "condition_prefix": "Pipelines",
+      "condition_type_name": "PipelinesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the pipeline"
+        },
+        {
+          "name": "iid",
+          "python_name": "iid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Internal ID of the pipeline within the project"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        },
+        {
+          "name": "sha",
+          "python_name": "sha",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the commit that triggered the pipeline"
+        },
+        {
+          "name": "source",
+          "python_name": "source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Source that triggered the pipeline"
+        },
+        {
+          "name": "ref",
+          "python_name": "ref",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Branch or tag that triggered the pipeline"
+        },
+        {
+          "name": "status",
+          "python_name": "status",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Status of the pipeline"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the pipeline was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the pipeline was last updated"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the pipeline"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the pipeline"
+        }
+      ]
+    },
+    "group_members": {
+      "entity": "group_members",
+      "data_type_name": "GroupMembersSearchData",
+      "filter_type_name": "GroupMembersSearchFilter",
+      "in_filter_type_name": "GroupMembersInFilter",
+      "any_value_filter_type_name": "GroupMembersAnyValueFilter",
+      "string_filter_type_name": "GroupMembersStringFilter",
+      "sort_filter_type_name": "GroupMembersSortFilter",
+      "result_type_name": "GroupMembersSearchResult",
+      "query_type_name": "GroupMembersSearchQuery",
+      "condition_prefix": "GroupMembers",
+      "condition_type_name": "GroupMembersCondition",
+      "fields": [
+        {
+          "name": "group_id",
+          "python_name": "group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the group"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the member"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the member"
+        },
+        {
+          "name": "username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Username of the member"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the member account"
+        },
+        {
+          "name": "membership_state",
+          "python_name": "membership_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the membership"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the member avatar"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the member profile"
+        },
+        {
+          "name": "access_level",
+          "python_name": "access_level",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Access level of the member"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the member was added"
+        },
+        {
+          "name": "expires_at",
+          "python_name": "expires_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expiration date of the membership"
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who added the member"
+        },
+        {
+          "name": "locked",
+          "python_name": "locked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the member account is locked"
+        }
+      ]
+    },
+    "project_members": {
+      "entity": "project_members",
+      "data_type_name": "ProjectMembersSearchData",
+      "filter_type_name": "ProjectMembersSearchFilter",
+      "in_filter_type_name": "ProjectMembersInFilter",
+      "any_value_filter_type_name": "ProjectMembersAnyValueFilter",
+      "string_filter_type_name": "ProjectMembersStringFilter",
+      "sort_filter_type_name": "ProjectMembersSortFilter",
+      "result_type_name": "ProjectMembersSearchResult",
+      "query_type_name": "ProjectMembersSearchQuery",
+      "condition_prefix": "ProjectMembers",
+      "condition_type_name": "ProjectMembersCondition",
+      "fields": [
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        },
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the member"
+        },
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Full name of the member"
+        },
+        {
+          "name": "username",
+          "python_name": "username",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Username of the member"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the member account"
+        },
+        {
+          "name": "membership_state",
+          "python_name": "membership_state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the membership"
+        },
+        {
+          "name": "avatar_url",
+          "python_name": "avatar_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "URL of the member avatar"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the member profile"
+        },
+        {
+          "name": "access_level",
+          "python_name": "access_level",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Access level of the member"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the member was added"
+        },
+        {
+          "name": "expires_at",
+          "python_name": "expires_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Expiration date of the membership"
+        },
+        {
+          "name": "created_by",
+          "python_name": "created_by",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "User who added the member"
+        },
+        {
+          "name": "locked",
+          "python_name": "locked",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the member account is locked"
+        }
+      ]
+    },
+    "releases": {
+      "entity": "releases",
+      "data_type_name": "ReleasesSearchData",
+      "filter_type_name": "ReleasesSearchFilter",
+      "in_filter_type_name": "ReleasesInFilter",
+      "any_value_filter_type_name": "ReleasesAnyValueFilter",
+      "string_filter_type_name": "ReleasesStringFilter",
+      "sort_filter_type_name": "ReleasesSortFilter",
+      "result_type_name": "ReleasesSearchResult",
+      "query_type_name": "ReleasesSearchQuery",
+      "condition_prefix": "Releases",
+      "condition_type_name": "ReleasesCondition",
+      "fields": [
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the release"
+        },
+        {
+          "name": "tag_name",
+          "python_name": "tag_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Tag name associated with the release"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the release"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the release was created"
+        },
+        {
+          "name": "released_at",
+          "python_name": "released_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the release was published"
+        },
+        {
+          "name": "upcoming_release",
+          "python_name": "upcoming_release",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether this is an upcoming release"
+        },
+        {
+          "name": "milestones",
+          "python_name": "milestones",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Milestones associated with the release"
+        },
+        {
+          "name": "commit_path",
+          "python_name": "commit_path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Path to the release commit"
+        },
+        {
+          "name": "tag_path",
+          "python_name": "tag_path",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Path to the release tag"
+        },
+        {
+          "name": "assets",
+          "python_name": "assets",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Assets attached to the release"
+        },
+        {
+          "name": "evidences",
+          "python_name": "evidences",
+          "type": "list[Any] | None",
+          "json_type": "null | array",
+          "example_value_json": "[]",
+          "description": "Evidences collected for the release"
+        },
+        {
+          "name": "_links",
+          "python_name": "links",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Related resource links"
+        },
+        {
+          "name": "author",
+          "python_name": "author",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Author of the release"
+        },
+        {
+          "name": "author_id",
+          "python_name": "author_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the author"
+        },
+        {
+          "name": "commit",
+          "python_name": "commit",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Commit associated with the release"
+        },
+        {
+          "name": "commit_id",
+          "python_name": "commit_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the associated commit"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        }
+      ]
+    },
+    "tags": {
+      "entity": "tags",
+      "data_type_name": "TagsSearchData",
+      "filter_type_name": "TagsSearchFilter",
+      "in_filter_type_name": "TagsInFilter",
+      "any_value_filter_type_name": "TagsAnyValueFilter",
+      "string_filter_type_name": "TagsStringFilter",
+      "sort_filter_type_name": "TagsSortFilter",
+      "result_type_name": "TagsSearchResult",
+      "query_type_name": "TagsSearchQuery",
+      "condition_prefix": "Tags",
+      "condition_type_name": "TagsCondition",
+      "fields": [
+        {
+          "name": "name",
+          "python_name": "name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Name of the tag"
+        },
+        {
+          "name": "message",
+          "python_name": "message",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Annotation message of the tag"
+        },
+        {
+          "name": "target",
+          "python_name": "target",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA the tag points to"
+        },
+        {
+          "name": "release",
+          "python_name": "release",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Release associated with the tag"
+        },
+        {
+          "name": "protected",
+          "python_name": "protected",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the tag is protected"
+        },
+        {
+          "name": "commit",
+          "python_name": "commit",
+          "type": "dict[str, Any] | None",
+          "json_type": "null | object",
+          "example_value_json": "{}",
+          "description": "Commit the tag points to"
+        },
+        {
+          "name": "commit_id",
+          "python_name": "commit_id",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "SHA of the tagged commit"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        }
+      ]
+    },
+    "group_milestones": {
+      "entity": "group_milestones",
+      "data_type_name": "GroupMilestonesSearchData",
+      "filter_type_name": "GroupMilestonesSearchFilter",
+      "in_filter_type_name": "GroupMilestonesInFilter",
+      "any_value_filter_type_name": "GroupMilestonesAnyValueFilter",
+      "string_filter_type_name": "GroupMilestonesStringFilter",
+      "sort_filter_type_name": "GroupMilestonesSortFilter",
+      "result_type_name": "GroupMilestonesSearchResult",
+      "query_type_name": "GroupMilestonesSearchQuery",
+      "condition_prefix": "GroupMilestones",
+      "condition_type_name": "GroupMilestonesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the milestone"
+        },
+        {
+          "name": "iid",
+          "python_name": "iid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Internal ID of the milestone within the group"
+        },
+        {
+          "name": "group_id",
+          "python_name": "group_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the group"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the milestone"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the milestone"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the milestone"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the milestone was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the milestone was last updated"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date of the milestone"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the milestone"
+        },
+        {
+          "name": "expired",
+          "python_name": "expired",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the milestone is expired"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the milestone"
+        }
+      ]
+    },
+    "project_milestones": {
+      "entity": "project_milestones",
+      "data_type_name": "ProjectMilestonesSearchData",
+      "filter_type_name": "ProjectMilestonesSearchFilter",
+      "in_filter_type_name": "ProjectMilestonesInFilter",
+      "any_value_filter_type_name": "ProjectMilestonesAnyValueFilter",
+      "string_filter_type_name": "ProjectMilestonesStringFilter",
+      "sort_filter_type_name": "ProjectMilestonesSortFilter",
+      "result_type_name": "ProjectMilestonesSearchResult",
+      "query_type_name": "ProjectMilestonesSearchQuery",
+      "condition_prefix": "ProjectMilestones",
+      "condition_type_name": "ProjectMilestonesCondition",
+      "fields": [
+        {
+          "name": "id",
+          "python_name": "id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the milestone"
+        },
+        {
+          "name": "iid",
+          "python_name": "iid",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Internal ID of the milestone within the project"
+        },
+        {
+          "name": "project_id",
+          "python_name": "project_id",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "ID of the project"
+        },
+        {
+          "name": "title",
+          "python_name": "title",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Title of the milestone"
+        },
+        {
+          "name": "description",
+          "python_name": "description",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Description of the milestone"
+        },
+        {
+          "name": "state",
+          "python_name": "state",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "State of the milestone"
+        },
+        {
+          "name": "created_at",
+          "python_name": "created_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the milestone was created"
+        },
+        {
+          "name": "updated_at",
+          "python_name": "updated_at",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Timestamp when the milestone was last updated"
+        },
+        {
+          "name": "due_date",
+          "python_name": "due_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Due date of the milestone"
+        },
+        {
+          "name": "start_date",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the milestone"
+        },
+        {
+          "name": "expired",
+          "python_name": "expired",
+          "type": "bool | None",
+          "json_type": "null | boolean",
+          "example_value_json": "True",
+          "description": "Whether the milestone is expired"
+        },
+        {
+          "name": "web_url",
+          "python_name": "web_url",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Web URL of the milestone"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,2199 @@
+{
+  "connector_name": "google-analytics-data-api",
+  "class_name": "GoogleAnalyticsDataApiConnector",
+  "package_name": "airbyte_agent_google_analytics_data_api",
+  "package_version": "1.0.5",
+  "yaml_version": "1.0.5",
+  "api_reference_url": "https://developers.google.com/analytics/devguides/reporting/data/v1/rest",
+  "commit_sha": "unknown",
+  "auth_example": "GoogleAnalyticsDataApiAuthConfig(client_id=\"...\", client_secret=\"...\", refresh_token=\"...\")",
+  "auth_import": ", GoogleAnalyticsDataApiAuthConfig",
+  "auth_config": {
+    "type_name": "GoogleAnalyticsDataApiAuthConfig",
+    "base_name": "GoogleAnalyticsDataApi",
+    "options": [
+      {
+        "title": "OAuth 2.0 Authentication",
+        "description": "",
+        "fields": [
+          {
+            "name": "client_id",
+            "type": "str",
+            "required": true,
+            "title": "Client ID",
+            "description": "OAuth 2.0 Client ID from Google Cloud Console"
+          },
+          {
+            "name": "client_secret",
+            "type": "str",
+            "required": true,
+            "title": "Client Secret",
+            "description": "OAuth 2.0 Client Secret from Google Cloud Console"
+          },
+          {
+            "name": "refresh_token",
+            "type": "str",
+            "required": true,
+            "title": "Refresh Token",
+            "description": "OAuth 2.0 Refresh Token for obtaining new access tokens"
+          }
+        ],
+        "type_suffix": "Oauth20Authentication"
+      }
+    ],
+    "is_multi_auth": false
+  },
+  "replication_config": {
+    "type_name": "GoogleAnalyticsDataApiReplicationConfig",
+    "title": "Replication Configuration",
+    "description": "Settings for data replication from Google Analytics.",
+    "fields": [
+      {
+        "name": "property_ids",
+        "type": "str",
+        "required": true,
+        "title": "Property IDs",
+        "description": "A list of GA4 Property IDs to replicate data from.",
+        "format": null,
+        "default": null
+      }
+    ]
+  },
+  "custom_description": "Google Analytics 4 (GA4) Data API connector for accessing website and app analytics data.\nThis connector provides access to pre-configured analytics reports including website overview,\nactive users, traffic sources, page performance, device breakdowns, and geographic locations.\nReports are retrieved via the GA4 Data API v1beta using configurable date ranges and\nproperty IDs. Requires OAuth2 authentication with Google Analytics read-only scope.\n",
+  "supported_questions": "- Show me the website overview report\n- List daily active users\n- Show weekly active user trends\n- Get the four-weekly active users report\n- List traffic sources\n- Show me page performance metrics\n- Get device breakdown data\n- List user locations\n- What are the top traffic sources by sessions?\n- Which pages have the highest bounce rate?\n- What devices do most users browse from?\n- Which countries send the most traffic?\n- How has daily active users changed over the last month?",
+  "unsupported_questions": "- Create a new GA4 property\n- Delete analytics data\n- Modify tracking configurations\n- Run a custom report with arbitrary dimensions\n- Access real-time analytics data",
+  "first_operation": {
+    "method_name": "list_website_overview",
+    "http_method": "post",
+    "path": "/properties/{property_id}:runReport:website_overview",
+    "entity": "website_overview",
+    "action": "list",
+    "parameters": [
+      {
+        "name": "dateRanges",
+        "python_name": "date_ranges",
+        "type": "list[WebsiteOverviewListParamsDaterangesItem]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "startDate": {
+                "type": "string",
+                "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+              },
+              "endDate": {
+                "type": "string",
+                "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+              }
+            }
+          },
+          "default": [
+            {
+              "startDate": "30daysAgo",
+              "endDate": "today"
+            }
+          ]
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "dimensions",
+        "python_name": "dimensions",
+        "type": "list[WebsiteOverviewListParamsDimensionsItem]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "default": [
+            {
+              "name": "date"
+            }
+          ]
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "metrics",
+        "python_name": "metrics",
+        "type": "list[WebsiteOverviewListParamsMetricsItem]",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            }
+          },
+          "default": [
+            {
+              "name": "totalUsers"
+            },
+            {
+              "name": "newUsers"
+            },
+            {
+              "name": "sessions"
+            },
+            {
+              "name": "sessionsPerUser"
+            },
+            {
+              "name": "averageSessionDuration"
+            },
+            {
+              "name": "screenPageViews"
+            },
+            {
+              "name": "screenPageViewsPerSession"
+            },
+            {
+              "name": "bounceRate"
+            }
+          ]
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "keepEmptyRows",
+        "python_name": "keep_empty_rows",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "returnPropertyQuota",
+        "python_name": "return_property_quota",
+        "type": "bool",
+        "schema": {
+          "type": "boolean",
+          "default": true
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "limit",
+        "python_name": "limit",
+        "type": "int",
+        "schema": {
+          "type": "integer",
+          "default": 100000
+        },
+        "required": false,
+        "description": ""
+      },
+      {
+        "name": "property_id",
+        "python_name": "property_id",
+        "type": "str",
+        "schema": {
+          "type": "string"
+        },
+        "required": true,
+        "description": "GA4 property ID"
+      }
+    ],
+    "params_type_name": "WebsiteOverviewListParams",
+    "response_type": "WebsiteOverviewListResult",
+    "description": "Returns website overview metrics including total users, new users, sessions, bounce rate, page views, and average session duration by date.",
+    "record_extractor": "$.rows",
+    "meta_extractor": null,
+    "needs_envelope": true,
+    "record_type": "list[Row]",
+    "meta_fields": null,
+    "is_download": false
+  },
+  "entities_grouped": {
+    "website_overview": [
+      {
+        "method_name": "list_website_overview",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:website_overview",
+        "entity": "website_overview",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[WebsiteOverviewListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[WebsiteOverviewListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[WebsiteOverviewListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "totalUsers"
+                },
+                {
+                  "name": "newUsers"
+                },
+                {
+                  "name": "sessions"
+                },
+                {
+                  "name": "sessionsPerUser"
+                },
+                {
+                  "name": "averageSessionDuration"
+                },
+                {
+                  "name": "screenPageViews"
+                },
+                {
+                  "name": "screenPageViewsPerSession"
+                },
+                {
+                  "name": "bounceRate"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "WebsiteOverviewListParams",
+        "response_type": "WebsiteOverviewListResult",
+        "description": "Returns website overview metrics including total users, new users, sessions, bounce rate, page views, and average session duration by date.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "daily_active_users": [
+      {
+        "method_name": "list_daily_active_users",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:daily_active_users",
+        "entity": "daily_active_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[DailyActiveUsersListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[DailyActiveUsersListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[DailyActiveUsersListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "active1DayUsers"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "DailyActiveUsersListParams",
+        "response_type": "DailyActiveUsersListResult",
+        "description": "Returns daily active user counts (1-day active users) by date.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "weekly_active_users": [
+      {
+        "method_name": "list_weekly_active_users",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:weekly_active_users",
+        "entity": "weekly_active_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[WeeklyActiveUsersListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[WeeklyActiveUsersListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[WeeklyActiveUsersListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "active7DayUsers"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "WeeklyActiveUsersListParams",
+        "response_type": "WeeklyActiveUsersListResult",
+        "description": "Returns weekly active user counts (7-day active users) by date.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "four_weekly_active_users": [
+      {
+        "method_name": "list_four_weekly_active_users",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:four_weekly_active_users",
+        "entity": "four_weekly_active_users",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[FourWeeklyActiveUsersListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[FourWeeklyActiveUsersListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[FourWeeklyActiveUsersListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "active28DayUsers"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "FourWeeklyActiveUsersListParams",
+        "response_type": "FourWeeklyActiveUsersListResult",
+        "description": "Returns 28-day active user counts by date.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "traffic_sources": [
+      {
+        "method_name": "list_traffic_sources",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:traffic_sources",
+        "entity": "traffic_sources",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[TrafficSourcesListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[TrafficSourcesListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                },
+                {
+                  "name": "sessionSource"
+                },
+                {
+                  "name": "sessionMedium"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[TrafficSourcesListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "totalUsers"
+                },
+                {
+                  "name": "newUsers"
+                },
+                {
+                  "name": "sessions"
+                },
+                {
+                  "name": "sessionsPerUser"
+                },
+                {
+                  "name": "averageSessionDuration"
+                },
+                {
+                  "name": "screenPageViews"
+                },
+                {
+                  "name": "screenPageViewsPerSession"
+                },
+                {
+                  "name": "bounceRate"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "TrafficSourcesListParams",
+        "response_type": "TrafficSourcesListResult",
+        "description": "Returns traffic source metrics broken down by session source, session medium, and date, including users, sessions, bounce rate, and page views.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "pages": [
+      {
+        "method_name": "list_pages",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:pages",
+        "entity": "pages",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[PagesListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[PagesListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                },
+                {
+                  "name": "hostName"
+                },
+                {
+                  "name": "pagePathPlusQueryString"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[PagesListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "screenPageViews"
+                },
+                {
+                  "name": "bounceRate"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "PagesListParams",
+        "response_type": "PagesListResult",
+        "description": "Returns page-level metrics including page views and bounce rate, broken down by host name, page path, and date.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "devices": [
+      {
+        "method_name": "list_devices",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:devices",
+        "entity": "devices",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[DevicesListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[DevicesListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "date"
+                },
+                {
+                  "name": "deviceCategory"
+                },
+                {
+                  "name": "operatingSystem"
+                },
+                {
+                  "name": "browser"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[DevicesListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "totalUsers"
+                },
+                {
+                  "name": "newUsers"
+                },
+                {
+                  "name": "sessions"
+                },
+                {
+                  "name": "sessionsPerUser"
+                },
+                {
+                  "name": "averageSessionDuration"
+                },
+                {
+                  "name": "screenPageViews"
+                },
+                {
+                  "name": "screenPageViewsPerSession"
+                },
+                {
+                  "name": "bounceRate"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "DevicesListParams",
+        "response_type": "DevicesListResult",
+        "description": "Returns device-related metrics broken down by device category, operating system, browser, and date, including users, sessions, and page views.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "locations": [
+      {
+        "method_name": "list_locations",
+        "http_method": "post",
+        "path": "/properties/{property_id}:runReport:locations",
+        "entity": "locations",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "dateRanges",
+            "python_name": "date_ranges",
+            "type": "list[LocationsListParamsDaterangesItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "startDate": {
+                    "type": "string",
+                    "description": "Start date in YYYY-MM-DD format or relative (e.g., 30daysAgo)"
+                  },
+                  "endDate": {
+                    "type": "string",
+                    "description": "End date in YYYY-MM-DD format or relative (e.g., today)"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "startDate": "30daysAgo",
+                  "endDate": "today"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "dimensions",
+            "python_name": "dimensions",
+            "type": "list[LocationsListParamsDimensionsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "region"
+                },
+                {
+                  "name": "country"
+                },
+                {
+                  "name": "city"
+                },
+                {
+                  "name": "date"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "metrics",
+            "python_name": "metrics",
+            "type": "list[LocationsListParamsMetricsItem]",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                }
+              },
+              "default": [
+                {
+                  "name": "totalUsers"
+                },
+                {
+                  "name": "newUsers"
+                },
+                {
+                  "name": "sessions"
+                },
+                {
+                  "name": "sessionsPerUser"
+                },
+                {
+                  "name": "averageSessionDuration"
+                },
+                {
+                  "name": "screenPageViews"
+                },
+                {
+                  "name": "screenPageViewsPerSession"
+                },
+                {
+                  "name": "bounceRate"
+                }
+              ]
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "keepEmptyRows",
+            "python_name": "keep_empty_rows",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "returnPropertyQuota",
+            "python_name": "return_property_quota",
+            "type": "bool",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "default": 100000
+            },
+            "required": false,
+            "description": ""
+          },
+          {
+            "name": "property_id",
+            "python_name": "property_id",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "GA4 property ID"
+          }
+        ],
+        "params_type_name": "LocationsListParams",
+        "response_type": "LocationsListResult",
+        "description": "Returns geographic metrics broken down by region, country, city, and date, including users, sessions, bounce rate, and page views.",
+        "record_extractor": "$.rows",
+        "meta_extractor": null,
+        "needs_envelope": true,
+        "record_type": "list[Row]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ]
+  },
+  "search_schemas": {
+    "website_overview": {
+      "entity": "website_overview",
+      "data_type_name": "WebsiteOverviewSearchData",
+      "filter_type_name": "WebsiteOverviewSearchFilter",
+      "in_filter_type_name": "WebsiteOverviewInFilter",
+      "any_value_filter_type_name": "WebsiteOverviewAnyValueFilter",
+      "string_filter_type_name": "WebsiteOverviewStringFilter",
+      "sort_filter_type_name": "WebsiteOverviewSortFilter",
+      "result_type_name": "WebsiteOverviewSearchResult",
+      "query_type_name": "WebsiteOverviewSearchQuery",
+      "condition_prefix": "WebsiteOverview",
+      "condition_type_name": "WebsiteOverviewCondition",
+      "fields": [
+        {
+          "name": "averageSessionDuration",
+          "python_name": "average_session_duration",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average duration of sessions in seconds"
+        },
+        {
+          "name": "bounceRate",
+          "python_name": "bounce_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage of sessions that were single-page with no interaction"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "newUsers",
+          "python_name": "new_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of first-time users"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "screenPageViews",
+          "python_name": "screen_page_views",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of screen or page views"
+        },
+        {
+          "name": "screenPageViewsPerSession",
+          "python_name": "screen_page_views_per_session",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average page views per session"
+        },
+        {
+          "name": "sessions",
+          "python_name": "sessions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of sessions"
+        },
+        {
+          "name": "sessionsPerUser",
+          "python_name": "sessions_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average number of sessions per user"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        },
+        {
+          "name": "totalUsers",
+          "python_name": "total_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of unique users"
+        }
+      ]
+    },
+    "daily_active_users": {
+      "entity": "daily_active_users",
+      "data_type_name": "DailyActiveUsersSearchData",
+      "filter_type_name": "DailyActiveUsersSearchFilter",
+      "in_filter_type_name": "DailyActiveUsersInFilter",
+      "any_value_filter_type_name": "DailyActiveUsersAnyValueFilter",
+      "string_filter_type_name": "DailyActiveUsersStringFilter",
+      "sort_filter_type_name": "DailyActiveUsersSortFilter",
+      "result_type_name": "DailyActiveUsersSearchResult",
+      "query_type_name": "DailyActiveUsersSearchQuery",
+      "condition_prefix": "DailyActiveUsers",
+      "condition_type_name": "DailyActiveUsersCondition",
+      "fields": [
+        {
+          "name": "active1DayUsers",
+          "python_name": "active1_day_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of distinct users active in the last 1 day"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        }
+      ]
+    },
+    "weekly_active_users": {
+      "entity": "weekly_active_users",
+      "data_type_name": "WeeklyActiveUsersSearchData",
+      "filter_type_name": "WeeklyActiveUsersSearchFilter",
+      "in_filter_type_name": "WeeklyActiveUsersInFilter",
+      "any_value_filter_type_name": "WeeklyActiveUsersAnyValueFilter",
+      "string_filter_type_name": "WeeklyActiveUsersStringFilter",
+      "sort_filter_type_name": "WeeklyActiveUsersSortFilter",
+      "result_type_name": "WeeklyActiveUsersSearchResult",
+      "query_type_name": "WeeklyActiveUsersSearchQuery",
+      "condition_prefix": "WeeklyActiveUsers",
+      "condition_type_name": "WeeklyActiveUsersCondition",
+      "fields": [
+        {
+          "name": "active7DayUsers",
+          "python_name": "active7_day_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of distinct users active in the last 7 days"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        }
+      ]
+    },
+    "four_weekly_active_users": {
+      "entity": "four_weekly_active_users",
+      "data_type_name": "FourWeeklyActiveUsersSearchData",
+      "filter_type_name": "FourWeeklyActiveUsersSearchFilter",
+      "in_filter_type_name": "FourWeeklyActiveUsersInFilter",
+      "any_value_filter_type_name": "FourWeeklyActiveUsersAnyValueFilter",
+      "string_filter_type_name": "FourWeeklyActiveUsersStringFilter",
+      "sort_filter_type_name": "FourWeeklyActiveUsersSortFilter",
+      "result_type_name": "FourWeeklyActiveUsersSearchResult",
+      "query_type_name": "FourWeeklyActiveUsersSearchQuery",
+      "condition_prefix": "FourWeeklyActiveUsers",
+      "condition_type_name": "FourWeeklyActiveUsersCondition",
+      "fields": [
+        {
+          "name": "active28DayUsers",
+          "python_name": "active28_day_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of distinct users active in the last 28 days"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        }
+      ]
+    },
+    "traffic_sources": {
+      "entity": "traffic_sources",
+      "data_type_name": "TrafficSourcesSearchData",
+      "filter_type_name": "TrafficSourcesSearchFilter",
+      "in_filter_type_name": "TrafficSourcesInFilter",
+      "any_value_filter_type_name": "TrafficSourcesAnyValueFilter",
+      "string_filter_type_name": "TrafficSourcesStringFilter",
+      "sort_filter_type_name": "TrafficSourcesSortFilter",
+      "result_type_name": "TrafficSourcesSearchResult",
+      "query_type_name": "TrafficSourcesSearchQuery",
+      "condition_prefix": "TrafficSources",
+      "condition_type_name": "TrafficSourcesCondition",
+      "fields": [
+        {
+          "name": "averageSessionDuration",
+          "python_name": "average_session_duration",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average duration of sessions in seconds"
+        },
+        {
+          "name": "bounceRate",
+          "python_name": "bounce_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage of sessions that were single-page with no interaction"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "newUsers",
+          "python_name": "new_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of first-time users"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "screenPageViews",
+          "python_name": "screen_page_views",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of screen or page views"
+        },
+        {
+          "name": "screenPageViewsPerSession",
+          "python_name": "screen_page_views_per_session",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average page views per session"
+        },
+        {
+          "name": "sessionMedium",
+          "python_name": "session_medium",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The medium of the traffic source (e.g., organic, cpc, referral)"
+        },
+        {
+          "name": "sessionSource",
+          "python_name": "session_source",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The source of the traffic (e.g., google, direct)"
+        },
+        {
+          "name": "sessions",
+          "python_name": "sessions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of sessions"
+        },
+        {
+          "name": "sessionsPerUser",
+          "python_name": "sessions_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average number of sessions per user"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        },
+        {
+          "name": "totalUsers",
+          "python_name": "total_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of unique users"
+        }
+      ]
+    },
+    "pages": {
+      "entity": "pages",
+      "data_type_name": "PagesSearchData",
+      "filter_type_name": "PagesSearchFilter",
+      "in_filter_type_name": "PagesInFilter",
+      "any_value_filter_type_name": "PagesAnyValueFilter",
+      "string_filter_type_name": "PagesStringFilter",
+      "sort_filter_type_name": "PagesSortFilter",
+      "result_type_name": "PagesSearchResult",
+      "query_type_name": "PagesSearchQuery",
+      "condition_prefix": "Pages",
+      "condition_type_name": "PagesCondition",
+      "fields": [
+        {
+          "name": "bounceRate",
+          "python_name": "bounce_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage of sessions that were single-page with no interaction"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "hostName",
+          "python_name": "host_name",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The hostname of the page"
+        },
+        {
+          "name": "pagePathPlusQueryString",
+          "python_name": "page_path_plus_query_string",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The page path and query string"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "screenPageViews",
+          "python_name": "screen_page_views",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of screen or page views"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        }
+      ]
+    },
+    "devices": {
+      "entity": "devices",
+      "data_type_name": "DevicesSearchData",
+      "filter_type_name": "DevicesSearchFilter",
+      "in_filter_type_name": "DevicesInFilter",
+      "any_value_filter_type_name": "DevicesAnyValueFilter",
+      "string_filter_type_name": "DevicesStringFilter",
+      "sort_filter_type_name": "DevicesSortFilter",
+      "result_type_name": "DevicesSearchResult",
+      "query_type_name": "DevicesSearchQuery",
+      "condition_prefix": "Devices",
+      "condition_type_name": "DevicesCondition",
+      "fields": [
+        {
+          "name": "averageSessionDuration",
+          "python_name": "average_session_duration",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average duration of sessions in seconds"
+        },
+        {
+          "name": "bounceRate",
+          "python_name": "bounce_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage of sessions that were single-page with no interaction"
+        },
+        {
+          "name": "browser",
+          "python_name": "browser",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The web browser used (e.g., Chrome, Safari, Firefox)"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "deviceCategory",
+          "python_name": "device_category",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The device category (desktop, mobile, tablet)"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "newUsers",
+          "python_name": "new_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of first-time users"
+        },
+        {
+          "name": "operatingSystem",
+          "python_name": "operating_system",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The operating system used (e.g., Windows, iOS, Android)"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "screenPageViews",
+          "python_name": "screen_page_views",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of screen or page views"
+        },
+        {
+          "name": "screenPageViewsPerSession",
+          "python_name": "screen_page_views_per_session",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average page views per session"
+        },
+        {
+          "name": "sessions",
+          "python_name": "sessions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of sessions"
+        },
+        {
+          "name": "sessionsPerUser",
+          "python_name": "sessions_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average number of sessions per user"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        },
+        {
+          "name": "totalUsers",
+          "python_name": "total_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of unique users"
+        }
+      ]
+    },
+    "locations": {
+      "entity": "locations",
+      "data_type_name": "LocationsSearchData",
+      "filter_type_name": "LocationsSearchFilter",
+      "in_filter_type_name": "LocationsInFilter",
+      "any_value_filter_type_name": "LocationsAnyValueFilter",
+      "string_filter_type_name": "LocationsStringFilter",
+      "sort_filter_type_name": "LocationsSortFilter",
+      "result_type_name": "LocationsSearchResult",
+      "query_type_name": "LocationsSearchQuery",
+      "condition_prefix": "Locations",
+      "condition_type_name": "LocationsCondition",
+      "fields": [
+        {
+          "name": "averageSessionDuration",
+          "python_name": "average_session_duration",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average duration of sessions in seconds"
+        },
+        {
+          "name": "bounceRate",
+          "python_name": "bounce_rate",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Percentage of sessions that were single-page with no interaction"
+        },
+        {
+          "name": "city",
+          "python_name": "city",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The city of the user"
+        },
+        {
+          "name": "country",
+          "python_name": "country",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The country of the user"
+        },
+        {
+          "name": "date",
+          "python_name": "date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Date of the report row in YYYYMMDD format"
+        },
+        {
+          "name": "endDate",
+          "python_name": "end_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "End date of the reporting period"
+        },
+        {
+          "name": "newUsers",
+          "python_name": "new_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Number of first-time users"
+        },
+        {
+          "name": "property_id",
+          "python_name": "property_id",
+          "type": "str",
+          "json_type": "string",
+          "example_value_json": "\"<str>\"",
+          "description": "GA4 property ID"
+        },
+        {
+          "name": "region",
+          "python_name": "region",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "The region (state/province) of the user"
+        },
+        {
+          "name": "screenPageViews",
+          "python_name": "screen_page_views",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of screen or page views"
+        },
+        {
+          "name": "screenPageViewsPerSession",
+          "python_name": "screen_page_views_per_session",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average page views per session"
+        },
+        {
+          "name": "sessions",
+          "python_name": "sessions",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of sessions"
+        },
+        {
+          "name": "sessionsPerUser",
+          "python_name": "sessions_per_user",
+          "type": "float | None",
+          "json_type": "null | number",
+          "example_value_json": "0.0",
+          "description": "Average number of sessions per user"
+        },
+        {
+          "name": "startDate",
+          "python_name": "start_date",
+          "type": "str | None",
+          "json_type": "null | string",
+          "example_value_json": "\"<str>\"",
+          "description": "Start date of the reporting period"
+        },
+        {
+          "name": "totalUsers",
+          "python_name": "total_users",
+          "type": "int | None",
+          "json_type": "null | integer",
+          "example_value_json": "0",
+          "description": "Total number of unique users"
+        }
+      ]
+    }
+  }
+}
