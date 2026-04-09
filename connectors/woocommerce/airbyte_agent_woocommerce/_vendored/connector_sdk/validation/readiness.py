@@ -1126,11 +1126,26 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         replication_warnings.append(drift_warning)
         total_warnings += 1
 
-    # Validate x-airbyte-cache entities against manifest
-    cache_result = validate_cache_against_manifest(
-        connector_yaml_path=config_file,
-        connector_def=raw_spec,
-    )
+    # Check x-airbyte-context-store presence (must have context-store or explicit skip reason)
+    cache_config = raw_spec.get("info", {}).get("x-airbyte-context-store")
+    skip_context_store = raw_spec.get("info", {}).get("x-airbyte-skip-context-store")
+    cache_presence_errors: list[str] = []
+    if not cache_config and not skip_context_store:
+        cache_presence_errors.append(
+            "Connector is missing x-airbyte-context-store. "
+            "Either add x-airbyte-context-store with entity definitions to enable api_search, "
+            "or add x-airbyte-skip-context-store with a justification to opt out."
+        )
+    total_errors += len(cache_presence_errors)
+
+    # Validate x-airbyte-context-store entities against manifest (skip if opted out)
+    if not skip_context_store:
+        cache_result = validate_cache_against_manifest(
+            connector_yaml_path=config_file,
+            connector_def=raw_spec,
+        )
+    else:
+        cache_result = {"errors": [], "warnings": []}
     cache_errors = cache_result.get("errors", [])
     cache_warnings = cache_result.get("warnings", [])
     total_errors += len(cache_errors)
@@ -1151,6 +1166,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
         and cassettes_invalid == 0
         and total_operations > 0
         and len(replication_errors) == 0
+        and len(cache_presence_errors) == 0
         and len(cache_errors) == 0
         and auth_valid
         and len(relationship_coverage_errors) == 0
@@ -1174,6 +1190,10 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "Add this extension to a lightweight operation (e.g., users.list or accounts.get) "
             "to enable reliable health checks."
         )
+
+    # Add cache presence errors to readiness_errors
+    readiness_errors = list(relationship_coverage_errors)  # copy to avoid mutating original
+    readiness_errors.extend(cache_presence_errors)
 
     # Add coverage warnings to readiness_warnings (errors already counted above)
     readiness_warnings.extend(relationship_coverage_warnings)
@@ -1227,7 +1247,7 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
             "missing_schemes": missing_tested,
             "untested_schemes": untested_schemes_list,
         },
-        "readiness_errors": relationship_coverage_errors,
+        "readiness_errors": readiness_errors,
         "readiness_warnings": readiness_warnings,
         "summary": {
             "total_operations": total_operations,

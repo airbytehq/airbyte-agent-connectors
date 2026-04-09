@@ -293,6 +293,7 @@ def _extract_auth_schemes(config) -> Dict[str, Any]:
 def _extract_exceptions(info: dict, config) -> Dict[str, Any]:
     skip_streams = info.get("x-airbyte-skip-suggested-streams", []) or []
     skip_auth = info.get("x-airbyte-skip-auth-methods", []) or []
+    skip_context_store = info.get("x-airbyte-skip-context-store") or None
 
     untested_ops = []
     for entity in config.entities:
@@ -304,10 +305,13 @@ def _extract_exceptions(info: dict, config) -> Dict[str, Any]:
     untested_auth = [opt.scheme_name for opt in (config.auth.options or []) if opt.untested]
 
     total = len(skip_streams) + len(skip_auth) + len(untested_ops) + len(untested_auth)
+    if skip_context_store:
+        total += 1
 
     return {
         "skip_suggested_streams": skip_streams,
         "skip_auth_methods": skip_auth,
+        "skip_context_store": skip_context_store,
         "untested_operations": untested_ops,
         "untested_auth_schemes": untested_auth,
         "total_count": total,
@@ -558,6 +562,16 @@ def diff_overviews(base: Dict[str, Any] | None, head: Dict[str, Any]) -> Dict[st
         if removed:
             changes[f"removed_{key}"] = sorted(removed)
 
+    base_skip_context_store = base_exc.get("skip_context_store")
+    head_skip_context_store = head_exc.get("skip_context_store")
+    if base_skip_context_store != head_skip_context_store:
+        if head_skip_context_store and not base_skip_context_store:
+            changes["skip_context_store_added"] = head_skip_context_store
+        elif base_skip_context_store and not head_skip_context_store:
+            changes["skip_context_store_removed"] = base_skip_context_store
+        else:
+            changes["skip_context_store_changed"] = {"from": base_skip_context_store, "to": head_skip_context_store}
+
     base_readiness = base.get("readiness", {}).get("success", False)
     head_readiness = head.get("readiness", {}).get("success", False)
     if base_readiness != head_readiness:
@@ -762,6 +776,16 @@ def _format_diff_section(diff: Dict[str, Any] | None) -> str:
         if removed:
             items.append(f"✅ Removed {label}: {', '.join(f'`{v}`' for v in removed)}")
 
+    skip_context_store_added = diff.get("skip_context_store_added")
+    if skip_context_store_added:
+        items.append(f"🔇 Added skip-cache exception: {skip_context_store_added}")
+    skip_context_store_removed = diff.get("skip_context_store_removed")
+    if skip_context_store_removed:
+        items.append("✅ Removed skip-cache exception")
+    skip_context_store_changed = diff.get("skip_context_store_changed")
+    if skip_context_store_changed:
+        items.append(f"🔇 Skip-cache reason changed: {skip_context_store_changed['to']}")
+
     errors_delta = diff.get("errors_delta")
     if errors_delta is not None and errors_delta != 0:
         if errors_delta > 0:
@@ -814,6 +838,10 @@ def _format_exceptions_section(overview: dict) -> str:
     if skip_auth:
         auth_str = ", ".join(f"`{a}`" for a in skip_auth)
         lines.append(f"> - 🔇 Skipped auth methods: {auth_str}")
+
+    skip_context_store = exceptions.get("skip_context_store")
+    if skip_context_store:
+        lines.append(f"> - 🔇 Skipped cache: {skip_context_store}")
 
     untested_ops = exceptions.get("untested_operations", [])
     if untested_ops:
