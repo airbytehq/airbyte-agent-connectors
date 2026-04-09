@@ -134,7 +134,7 @@ See the official [Zoho-Crm API reference](https://www.zoho.com/crm/developer/doc
 
 ## Version information
 
-- **Package version:** 0.1.13
+- **Package version:** 0.1.14
 - **Connector version:** 1.0.3
-- **Generated with Connector SDK commit SHA:** 6bf360a546d577c9f76e8a6b8abf9ffc4dbfcf3a
+- **Generated with Connector SDK commit SHA:** c5258debd165ab701252c1436d4acfb475bf92b9
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zoho-crm/CHANGELOG.md)
