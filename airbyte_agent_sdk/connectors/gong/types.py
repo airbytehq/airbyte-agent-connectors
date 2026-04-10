@@ -163,20 +163,20 @@ class WorkspacesListParams(TypedDict):
 
 class CallTranscriptsListParams(TypedDict):
     """Parameters for call_transcripts.list operation"""
-    filter: NotRequired[CallTranscriptsListParamsFilter]
+    filter: CallTranscriptsListParamsFilter
     cursor: NotRequired[str]
 
 class StatsActivityAggregateListParams(TypedDict):
     """Parameters for stats_activity_aggregate.list operation"""
-    filter: NotRequired[StatsActivityAggregateListParamsFilter]
+    filter: StatsActivityAggregateListParamsFilter
 
 class StatsActivityDayByDayListParams(TypedDict):
     """Parameters for stats_activity_day_by_day.list operation"""
-    filter: NotRequired[StatsActivityDayByDayListParamsFilter]
+    filter: StatsActivityDayByDayListParamsFilter
 
 class StatsInteractionListParams(TypedDict):
     """Parameters for stats_interaction.list operation"""
-    filter: NotRequired[StatsInteractionListParamsFilter]
+    filter: StatsInteractionListParamsFilter
 
 class SettingsScorecardsListParams(TypedDict):
     """Parameters for settings_scorecards.list operation"""
@@ -204,7 +204,7 @@ class CoachingListParams(TypedDict):
 
 class StatsActivityScorecardsListParams(TypedDict):
     """Parameters for stats_activity_scorecards.list operation"""
-    filter: NotRequired[StatsActivityScorecardsListParamsFilter]
+    filter: StatsActivityScorecardsListParamsFilter
     cursor: NotRequired[str]
 
 # ===== SEARCH TYPES =====

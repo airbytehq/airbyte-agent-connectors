@@ -20,6 +20,9 @@ from airbyte_agent_sdk.schema.security import (
     AuthConfigFieldSpec,
     AuthConfigSpec,
 )
+from airbyte_agent_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
 )
@@ -607,17 +610,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'Start date in ISO 8601 format',
+                                        'description': 'Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'End date in ISO 8601 format',
+                                        'description': 'End date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'callIds': {
                                         'type': 'array',
                                         'items': {'type': 'string'},
-                                        'description': 'List of specific call IDs to retrieve',
+                                        'description': 'List of specific call IDs to retrieve. Alternative to date range filtering.',
                                     },
                                     'workspaceId': {'type': 'string', 'description': 'Filter by workspace ID'},
                                 },
@@ -877,6 +880,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'calls_extensive',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Detailed call data including participants, interaction stats, collaboration, and content analysis',
+                                        'when_to_use': 'Questions about call details, talk ratios, participant info, or content analysis',
+                                        'trigger_phrases': [
+                                            'call details',
+                                            'talk ratio',
+                                            'interaction stats',
+                                            'call participants',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -1085,6 +1099,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'calls_extensive',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Detailed call data including participants, interaction stats, collaboration, and content analysis',
+                    'when_to_use': 'Questions about call details, talk ratios, participant info, or content analysis',
+                    'trigger_phrases': [
+                        'call details',
+                        'talk ratio',
+                        'interaction stats',
+                        'call participants',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Detailed call data including participants, interaction stats, collaboration, and content analysis',
+                'when_to_use': 'Questions about call details, talk ratios, participant info, or content analysis',
+                'trigger_phrases': [
+                    'call details',
+                    'talk ratio',
+                    'interaction stats',
+                    'call participants',
+                ],
+                'freshness': 'live',
             },
         ),
         EntityDefinition(
@@ -1325,6 +1361,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'calls_extensive',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Detailed call data including participants, interaction stats, collaboration, and content analysis',
+                                        'when_to_use': 'Questions about call details, talk ratios, participant info, or content analysis',
+                                        'trigger_phrases': [
+                                            'call details',
+                                            'talk ratio',
+                                            'interaction stats',
+                                            'call participants',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -1582,6 +1629,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'calls_extensive',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Detailed call data including participants, interaction stats, collaboration, and content analysis',
+                                        'when_to_use': 'Questions about call details, talk ratios, participant info, or content analysis',
+                                        'trigger_phrases': [
+                                            'call details',
+                                            'talk ratio',
+                                            'interaction stats',
+                                            'call participants',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -1658,6 +1716,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     body_fields=['filter', 'cursor'],
                     request_schema={
                         'type': 'object',
+                        'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
@@ -1665,17 +1724,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'Start date in ISO 8601 format (optional if callIds provided)',
+                                        'description': 'Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'End date in ISO 8601 format (optional if callIds provided)',
+                                        'description': 'End date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'callIds': {
                                         'type': 'array',
                                         'items': {'type': 'string'},
-                                        'description': 'List of specific call IDs to retrieve transcripts for',
+                                        'description': 'List of specific call IDs to retrieve transcripts for. Alternative to date range filtering.',
                                     },
                                 },
                             },
@@ -1719,6 +1778,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'call_transcripts',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Speaker-attributed call transcripts with timestamps',
+                                        'when_to_use': 'Questions about what was said on calls, conversation content, or speaker dialogue',
+                                        'trigger_phrases': [
+                                            'transcript',
+                                            'what was said',
+                                            'call recording text',
+                                            'conversation',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -1769,6 +1839,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'call_transcripts',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Speaker-attributed call transcripts with timestamps',
+                    'when_to_use': 'Questions about what was said on calls, conversation content, or speaker dialogue',
+                    'trigger_phrases': [
+                        'transcript',
+                        'what was said',
+                        'call recording text',
+                        'conversation',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Speaker-attributed call transcripts with timestamps',
+                'when_to_use': 'Questions about what was said on calls, conversation content, or speaker dialogue',
+                'trigger_phrases': [
+                    'transcript',
+                    'what was said',
+                    'call recording text',
+                    'conversation',
+                ],
+                'freshness': 'live',
             },
         ),
         EntityDefinition(
@@ -1783,6 +1875,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     body_fields=['filter'],
                     request_schema={
                         'type': 'object',
+                        'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
@@ -1790,12 +1883,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD)',
+                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD)',
+                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -1852,6 +1945,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'stats_activity_aggregate',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Aggregated user activity metrics (calls made, emails sent, etc.) over a date range',
+                                        'when_to_use': 'Questions about overall team or rep activity levels and productivity',
+                                        'trigger_phrases': [
+                                            'activity stats',
+                                            'rep productivity',
+                                            'how many calls',
+                                            'team activity',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'fromDateTime': {'type': 'string'},
@@ -1872,6 +1976,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     'userAggregateActivityStats': {'$ref': '#/components/schemas/UserAggregateActivityStats'},
                 },
                 'x-airbyte-entity-name': 'stats_activity_aggregate',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Aggregated user activity metrics (calls made, emails sent, etc.) over a date range',
+                    'when_to_use': 'Questions about overall team or rep activity levels and productivity',
+                    'trigger_phrases': [
+                        'activity stats',
+                        'rep productivity',
+                        'how many calls',
+                        'team activity',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Aggregated user activity metrics (calls made, emails sent, etc.) over a date range',
+                'when_to_use': 'Questions about overall team or rep activity levels and productivity',
+                'trigger_phrases': [
+                    'activity stats',
+                    'rep productivity',
+                    'how many calls',
+                    'team activity',
+                ],
+                'freshness': 'live',
             },
         ),
         EntityDefinition(
@@ -1886,6 +2012,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     body_fields=['filter'],
                     request_schema={
                         'type': 'object',
+                        'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
@@ -1893,12 +2020,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD)',
+                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD)',
+                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -2005,6 +2132,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'stats_activity_day_by_day',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Daily breakdown of user activity metrics over a date range',
+                                        'when_to_use': 'Questions about daily activity trends, day-over-day performance',
+                                        'trigger_phrases': [
+                                            'daily activity',
+                                            'day by day stats',
+                                            'activity trend',
+                                            'daily calls',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                         },
@@ -2025,6 +2163,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'stats_activity_day_by_day',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Daily breakdown of user activity metrics over a date range',
+                    'when_to_use': 'Questions about daily activity trends, day-over-day performance',
+                    'trigger_phrases': [
+                        'daily activity',
+                        'day by day stats',
+                        'activity trend',
+                        'daily calls',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Daily breakdown of user activity metrics over a date range',
+                'when_to_use': 'Questions about daily activity trends, day-over-day performance',
+                'trigger_phrases': [
+                    'daily activity',
+                    'day by day stats',
+                    'activity trend',
+                    'daily calls',
+                ],
+                'freshness': 'live',
             },
         ),
         EntityDefinition(
@@ -2039,6 +2199,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     body_fields=['filter'],
                     request_schema={
                         'type': 'object',
+                        'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
@@ -2046,12 +2207,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'Start date (YYYY-MM-DD)',
+                                        'description': 'Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDate': {
                                         'type': 'string',
                                         'format': 'date',
-                                        'description': 'End date (YYYY-MM-DD)',
+                                        'description': 'End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.',
                                     },
                                     'userIds': {
                                         'type': 'array',
@@ -2098,6 +2259,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'stats_interaction',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Interaction statistics for users on Whisper-enabled calls',
+                                        'when_to_use': 'Questions about interaction patterns, engagement metrics on calls',
+                                        'trigger_phrases': ['interaction stats', 'engagement metrics', 'whisper stats'],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'fromDateTime': {'type': 'string'},
@@ -2121,6 +2288,18 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'stats_interaction',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Interaction statistics for users on Whisper-enabled calls',
+                    'when_to_use': 'Questions about interaction patterns, engagement metrics on calls',
+                    'trigger_phrases': ['interaction stats', 'engagement metrics', 'whisper stats'],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Interaction statistics for users on Whisper-enabled calls',
+                'when_to_use': 'Questions about interaction patterns, engagement metrics on calls',
+                'trigger_phrases': ['interaction stats', 'engagement metrics', 'whisper stats'],
+                'freshness': 'live',
             },
         ),
         EntityDefinition(
@@ -2452,6 +2631,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'library_folders',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Library folders containing curated call collections within a workspace',
+                                        'when_to_use': 'Questions about call library organization, folder structure, or curated call collections',
+                                        'trigger_phrases': ['library folders', 'call collections', 'call library'],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                         },
@@ -2480,7 +2665,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     },
                 },
                 'x-airbyte-entity-name': 'library_folders',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Library folders containing curated call collections within a workspace',
+                    'when_to_use': 'Questions about call library organization, folder structure, or curated call collections',
+                    'trigger_phrases': ['library folders', 'call collections', 'call library'],
+                    'freshness': 'live',
+                },
             },
+            ai_hints={
+                'summary': 'Library folders containing curated call collections within a workspace',
+                'when_to_use': 'Questions about call library organization, folder structure, or curated call collections',
+                'trigger_phrases': ['library folders', 'call collections', 'call library'],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='library_folders',
+                    target_entity='workspaces',
+                    foreign_key='workspaceId',
+                    cardinality='many_to_one',
+                    description='Library folders belong to a workspace',
+                ),
+            ],
         ),
         EntityDefinition(
             name='library_folder_content',
@@ -2530,6 +2736,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         'url': {'type': 'string', 'description': 'URL to call in Gong'},
                                     },
                                     'x-airbyte-entity-name': 'library_folder_content',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Calls saved within a specific library folder',
+                                        'when_to_use': 'Questions about which calls are in a library folder',
+                                        'trigger_phrases': ['folder calls', 'library content', 'saved calls'],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -2564,7 +2776,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     'url': {'type': 'string', 'description': 'URL to call in Gong'},
                 },
                 'x-airbyte-entity-name': 'library_folder_content',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Calls saved within a specific library folder',
+                    'when_to_use': 'Questions about which calls are in a library folder',
+                    'trigger_phrases': ['folder calls', 'library content', 'saved calls'],
+                    'freshness': 'live',
+                },
             },
+            ai_hints={
+                'summary': 'Calls saved within a specific library folder',
+                'when_to_use': 'Questions about which calls are in a library folder',
+                'trigger_phrases': ['folder calls', 'library content', 'saved calls'],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='library_folder_content',
+                    target_entity='library_folders',
+                    foreign_key='folderId',
+                    cardinality='many_to_one',
+                    description='Folder content belongs to a library folder',
+                ),
+            ],
         ),
         EntityDefinition(
             name='coaching',
@@ -2615,6 +2848,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         },
                                     },
                                     'x-airbyte-entity-name': 'coaching',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Coaching metrics for a manager and their direct reports within a workspace',
+                                        'when_to_use': 'Questions about manager coaching activity, scorecard completion, feedback given',
+                                        'trigger_phrases': [
+                                            'coaching metrics',
+                                            'manager coaching',
+                                            'coaching activity',
+                                            'feedback stats',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'fromDateTime': {'type': 'string'},
@@ -2635,7 +2879,45 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     'coachingMetrics': {'$ref': '#/components/schemas/CoachingMetrics'},
                 },
                 'x-airbyte-entity-name': 'coaching',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Coaching metrics for a manager and their direct reports within a workspace',
+                    'when_to_use': 'Questions about manager coaching activity, scorecard completion, feedback given',
+                    'trigger_phrases': [
+                        'coaching metrics',
+                        'manager coaching',
+                        'coaching activity',
+                        'feedback stats',
+                    ],
+                    'freshness': 'live',
+                },
             },
+            ai_hints={
+                'summary': 'Coaching metrics for a manager and their direct reports within a workspace',
+                'when_to_use': 'Questions about manager coaching activity, scorecard completion, feedback given',
+                'trigger_phrases': [
+                    'coaching metrics',
+                    'manager coaching',
+                    'coaching activity',
+                    'feedback stats',
+                ],
+                'freshness': 'live',
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='coaching',
+                    target_entity='workspaces',
+                    foreign_key='workspace-id',
+                    cardinality='many_to_one',
+                    description='Coaching metrics are scoped to a workspace',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='coaching',
+                    target_entity='users',
+                    foreign_key='manager-id',
+                    cardinality='many_to_one',
+                    description='Coaching metrics are retrieved for a specific manager',
+                ),
+            ],
         ),
         EntityDefinition(
             name='stats_activity_scorecards',
@@ -2649,6 +2931,7 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     body_fields=['filter', 'cursor'],
                     request_schema={
                         'type': 'object',
+                        'required': ['filter'],
                         'properties': {
                             'filter': {
                                 'type': 'object',
@@ -2656,12 +2939,12 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                     'fromDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'Start date in ISO 8601 format',
+                                        'description': 'Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'toDateTime': {
                                         'type': 'string',
                                         'format': 'date-time',
-                                        'description': 'End date in ISO 8601 format',
+                                        'description': 'End date in ISO 8601 format. Recommended for scoping results to a manageable date range.',
                                     },
                                     'scorecardIds': {
                                         'type': 'array',
@@ -2754,6 +3037,17 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                                         'visibility': {'type': 'string', 'description': 'Visibility setting (public, private)'},
                                     },
                                     'x-airbyte-entity-name': 'stats_activity_scorecards',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Completed scorecards with scores and reviewer details',
+                                        'when_to_use': 'Questions about scorecard results, call evaluations, or quality scores',
+                                        'trigger_phrases': [
+                                            'scorecard results',
+                                            'call scores',
+                                            'evaluations',
+                                            'quality scores',
+                                        ],
+                                        'freshness': 'live',
+                                    },
                                 },
                             },
                             'records': {
@@ -2811,6 +3105,28 @@ GongConnectorModel: ConnectorModel = ConnectorModel(
                     'visibility': {'type': 'string', 'description': 'Visibility setting (public, private)'},
                 },
                 'x-airbyte-entity-name': 'stats_activity_scorecards',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Completed scorecards with scores and reviewer details',
+                    'when_to_use': 'Questions about scorecard results, call evaluations, or quality scores',
+                    'trigger_phrases': [
+                        'scorecard results',
+                        'call scores',
+                        'evaluations',
+                        'quality scores',
+                    ],
+                    'freshness': 'live',
+                },
+            },
+            ai_hints={
+                'summary': 'Completed scorecards with scores and reviewer details',
+                'when_to_use': 'Questions about scorecard results, call evaluations, or quality scores',
+                'trigger_phrases': [
+                    'scorecard results',
+                    'call scores',
+                    'evaluations',
+                    'quality scores',
+                ],
+                'freshness': 'live',
             },
         ),
     ],

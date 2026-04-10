@@ -1495,7 +1495,7 @@ class CallTranscriptsQuery:
 
     async def list(
         self,
-        filter: CallTranscriptsListParamsFilter | None = None,
+        filter: CallTranscriptsListParamsFilter,
         cursor: str | None = None,
         **kwargs
     ) -> CallTranscriptsListResult:
@@ -1536,7 +1536,7 @@ class StatsActivityAggregateQuery:
 
     async def list(
         self,
-        filter: StatsActivityAggregateListParamsFilter | None = None,
+        filter: StatsActivityAggregateListParamsFilter,
         **kwargs
     ) -> StatsActivityAggregateListResult:
         """
@@ -1574,7 +1574,7 @@ class StatsActivityDayByDayQuery:
 
     async def list(
         self,
-        filter: StatsActivityDayByDayListParamsFilter | None = None,
+        filter: StatsActivityDayByDayListParamsFilter,
         **kwargs
     ) -> StatsActivityDayByDayListResult:
         """
@@ -1612,7 +1612,7 @@ class StatsInteractionQuery:
 
     async def list(
         self,
-        filter: StatsInteractionListParamsFilter | None = None,
+        filter: StatsInteractionListParamsFilter,
         **kwargs
     ) -> StatsInteractionListResult:
         """
@@ -1910,7 +1910,7 @@ class StatsActivityScorecardsQuery:
 
     async def list(
         self,
-        filter: StatsActivityScorecardsListParamsFilter | None = None,
+        filter: StatsActivityScorecardsListParamsFilter,
         cursor: str | None = None,
         **kwargs
     ) -> StatsActivityScorecardsListResult:

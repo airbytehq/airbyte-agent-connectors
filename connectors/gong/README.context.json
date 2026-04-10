@@ -300,19 +300,19 @@
                 "fromDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "Start date in ISO 8601 format"
+                  "description": "Start date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "toDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "End date in ISO 8601 format"
+                  "description": "End date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "callIds": {
                   "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "description": "List of specific call IDs to retrieve"
+                  "description": "List of specific call IDs to retrieve. Alternative to date range filtering."
                 },
                 "workspaceId": {
                   "type": "string",
@@ -656,23 +656,23 @@
                 "fromDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "Start date in ISO 8601 format (optional if callIds provided)"
+                  "description": "Start date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "toDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "End date in ISO 8601 format (optional if callIds provided)"
+                  "description": "End date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "callIds": {
                   "type": "array",
                   "items": {
                     "type": "string"
                   },
-                  "description": "List of specific call IDs to retrieve transcripts for"
+                  "description": "List of specific call IDs to retrieve transcripts for. Alternative to date range filtering."
                 }
               }
             },
-            "required": false,
+            "required": true,
             "description": ""
           },
           {
@@ -727,12 +727,12 @@
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD)"
+                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD)"
+                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "userIds": {
                   "type": "array",
@@ -743,7 +743,7 @@
                 }
               }
             },
-            "required": false,
+            "required": true,
             "description": ""
           }
         ],
@@ -787,12 +787,12 @@
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD)"
+                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD)"
+                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "userIds": {
                   "type": "array",
@@ -803,7 +803,7 @@
                 }
               }
             },
-            "required": false,
+            "required": true,
             "description": ""
           }
         ],
@@ -847,12 +847,12 @@
                 "fromDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "Start date (YYYY-MM-DD)"
+                  "description": "Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "toDate": {
                   "type": "string",
                   "format": "date",
-                  "description": "End date (YYYY-MM-DD)"
+                  "description": "End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range."
                 },
                 "userIds": {
                   "type": "array",
@@ -863,7 +863,7 @@
                 }
               }
             },
-            "required": false,
+            "required": true,
             "description": ""
           }
         ],
@@ -1119,12 +1119,12 @@
                 "fromDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "Start date in ISO 8601 format"
+                  "description": "Start date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "toDateTime": {
                   "type": "string",
                   "format": "date-time",
-                  "description": "End date in ISO 8601 format"
+                  "description": "End date in ISO 8601 format. Recommended for scoping results to a manageable date range."
                 },
                 "scorecardIds": {
                   "type": "array",
@@ -1156,7 +1156,7 @@
                 }
               }
             },
-            "required": false,
+            "required": true,
             "description": ""
           },
           {

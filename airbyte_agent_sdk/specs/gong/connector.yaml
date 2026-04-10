@@ -539,6 +539,32 @@ info:
               - string
             description: Type indicating the visibility permissions for the answered scorecard.
 
+  x-airbyte-entity-relationships:
+    - source_entity: library_folders
+      target_entity: workspaces
+      foreign_key: workspaceId
+      target_key: id
+      cardinality: many_to_one
+      description: Library folders belong to a workspace
+    - source_entity: library_folder_content
+      target_entity: library_folders
+      foreign_key: folderId
+      target_key: id
+      cardinality: many_to_one
+      description: Folder content belongs to a library folder
+    - source_entity: coaching
+      target_entity: workspaces
+      foreign_key: workspace-id
+      target_key: id
+      cardinality: many_to_one
+      description: Coaching metrics are scoped to a workspace
+    - source_entity: coaching
+      target_entity: users
+      foreign_key: manager-id
+      target_key: id
+      cardinality: many_to_one
+      description: Coaching metrics are retrieved for a specific manager
+
 servers:
   - url: https://api.gong.io
     description: Gong API server
@@ -696,16 +722,16 @@ paths:
                     fromDateTime:
                       type: string
                       format: date-time
-                      description: Start date in ISO 8601 format
+                      description: Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     toDateTime:
                       type: string
                       format: date-time
-                      description: End date in ISO 8601 format
+                      description: End date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     callIds:
                       type: array
                       items:
                         type: string
-                      description: List of specific call IDs to retrieve
+                      description: List of specific call IDs to retrieve. Alternative to date range filtering.
                     workspaceId:
                       type: string
                       description: Filter by workspace ID
@@ -933,6 +959,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
@@ -940,16 +968,16 @@ paths:
                     fromDateTime:
                       type: string
                       format: date-time
-                      description: Start date in ISO 8601 format (optional if callIds provided)
+                      description: Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     toDateTime:
                       type: string
                       format: date-time
-                      description: End date in ISO 8601 format (optional if callIds provided)
+                      description: End date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     callIds:
                       type: array
                       items:
                         type: string
-                      description: List of specific call IDs to retrieve transcripts for
+                      description: List of specific call IDs to retrieve transcripts for. Alternative to date range filtering.
                 cursor:
                   type: string
                   description: Cursor for pagination
@@ -979,6 +1007,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
@@ -986,11 +1016,11 @@ paths:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD)
+                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD)
+                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     userIds:
                       type: array
                       items:
@@ -1022,6 +1052,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
@@ -1029,11 +1061,11 @@ paths:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD)
+                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD)
+                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     userIds:
                       type: array
                       items:
@@ -1065,6 +1097,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
@@ -1072,11 +1106,11 @@ paths:
                     fromDate:
                       type: string
                       format: date
-                      description: Start date (YYYY-MM-DD)
+                      description: Start date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     toDate:
                       type: string
                       format: date
-                      description: End date (YYYY-MM-DD)
+                      description: End date (YYYY-MM-DD). Recommended for scoping results to a manageable date range.
                     userIds:
                       type: array
                       items:
@@ -1265,6 +1299,8 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - filter
               properties:
                 filter:
                   type: object
@@ -1272,11 +1308,11 @@ paths:
                     fromDateTime:
                       type: string
                       format: date-time
-                      description: Start date in ISO 8601 format
+                      description: Start date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     toDateTime:
                       type: string
                       format: date-time
-                      description: End date in ISO 8601 format
+                      description: End date in ISO 8601 format. Recommended for scoping results to a manageable date range.
                     scorecardIds:
                       type: array
                       items:
@@ -1646,6 +1682,11 @@ components:
     CallTranscript:
       type: object
       x-airbyte-entity-name: call_transcripts
+      x-airbyte-ai-hints:
+        summary: "Speaker-attributed call transcripts with timestamps"
+        when_to_use: "Questions about what was said on calls, conversation content, or speaker dialogue"
+        trigger_phrases: ["transcript", "what was said", "call recording text", "conversation"]
+        freshness: live
       description: Call transcript object
       properties:
         callId:
@@ -1694,6 +1735,11 @@ components:
     ExtensiveCall:
       type: object
       x-airbyte-entity-name: calls_extensive
+      x-airbyte-ai-hints:
+        summary: "Detailed call data including participants, interaction stats, collaboration, and content analysis"
+        when_to_use: "Questions about call details, talk ratios, participant info, or content analysis"
+        trigger_phrases: ["call details", "talk ratio", "interaction stats", "call participants"]
+        freshness: live
       description: Detailed call object with extended information
       properties:
         metaData:
@@ -1953,6 +1999,11 @@ components:
     UserAggregateActivity:
       type: object
       x-airbyte-entity-name: stats_activity_aggregate
+      x-airbyte-ai-hints:
+        summary: "Aggregated user activity metrics (calls made, emails sent, etc.) over a date range"
+        when_to_use: "Questions about overall team or rep activity levels and productivity"
+        trigger_phrases: ["activity stats", "rep productivity", "how many calls", "team activity"]
+        freshness: live
       description: User with aggregated activity statistics
       properties:
         userId:
@@ -2053,6 +2104,11 @@ components:
     UserDetailedActivity:
       type: object
       x-airbyte-entity-name: stats_activity_day_by_day
+      x-airbyte-ai-hints:
+        summary: "Daily breakdown of user activity metrics over a date range"
+        when_to_use: "Questions about daily activity trends, day-over-day performance"
+        trigger_phrases: ["daily activity", "day by day stats", "activity trend", "daily calls"]
+        freshness: live
       description: User with detailed daily activity statistics
       properties:
         userId:
@@ -2089,6 +2145,11 @@ components:
     UserInteractionStats:
       type: object
       x-airbyte-entity-name: stats_interaction
+      x-airbyte-ai-hints:
+        summary: "Interaction statistics for users on Whisper-enabled calls"
+        when_to_use: "Questions about interaction patterns, engagement metrics on calls"
+        trigger_phrases: ["interaction stats", "engagement metrics", "whisper stats"]
+        freshness: live
       description: User with interaction statistics
       properties:
         userId:
@@ -2306,6 +2367,11 @@ components:
     LibraryFolder:
       type: object
       x-airbyte-entity-name: library_folders
+      x-airbyte-ai-hints:
+        summary: "Library folders containing curated call collections within a workspace"
+        when_to_use: "Questions about call library organization, folder structure, or curated call collections"
+        trigger_phrases: ["library folders", "call collections", "call library"]
+        freshness: live
       description: Library folder structure
       properties:
         id:
@@ -2340,6 +2406,11 @@ components:
     FolderCall:
       type: object
       x-airbyte-entity-name: library_folder_content
+      x-airbyte-ai-hints:
+        summary: "Calls saved within a specific library folder"
+        when_to_use: "Questions about which calls are in a library folder"
+        trigger_phrases: ["folder calls", "library content", "saved calls"]
+        freshness: live
       description: Call within a library folder
       properties:
         callId:
@@ -2412,6 +2483,11 @@ components:
     CoachingData:
       type: object
       x-airbyte-entity-name: coaching
+      x-airbyte-ai-hints:
+        summary: "Coaching metrics for a manager and their direct reports within a workspace"
+        when_to_use: "Questions about manager coaching activity, scorecard completion, feedback given"
+        trigger_phrases: ["coaching metrics", "manager coaching", "coaching activity", "feedback stats"]
+        freshness: live
       description: Coaching data for a user
       properties:
         userId:
@@ -2479,6 +2555,11 @@ components:
     AnsweredScorecard:
       type: object
       x-airbyte-entity-name: stats_activity_scorecards
+      x-airbyte-ai-hints:
+        summary: "Completed scorecards with scores and reviewer details"
+        when_to_use: "Questions about scorecard results, call evaluations, or quality scores"
+        trigger_phrases: ["scorecard results", "call scores", "evaluations", "quality scores"]
+        freshness: live
       description: A completed scorecard
       properties:
         answeredScorecardId:
