@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_google_search_console import GoogleSearchConsoleConnector
-from airbyte_agent_google_search_console.models import GoogleSearchConsoleAuthConfig
+from airbyte_agent_sdk.connectors.google_search_console import GoogleSearchConsoleConnector
+from airbyte_agent_sdk.connectors.google_search_console.models import GoogleSearchConsoleAuthConfig
 
 connector = GoogleSearchConsoleConnector(
     auth_config=GoogleSearchConsoleAuthConfig(
@@ -137,7 +137,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_google_search_console import GoogleSearchConsoleConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_search_console import GoogleSearchConsoleConnector, AirbyteAuthConfig
 
 connector = GoogleSearchConsoleConnector(
     auth_config=AirbyteAuthConfig(

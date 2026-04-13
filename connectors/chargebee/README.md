@@ -40,7 +40,7 @@ The Chargebee connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-chargebee
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -52,8 +52,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_chargebee import ChargebeeConnector
-from airbyte_agent_chargebee.models import ChargebeeAuthConfig
+from airbyte_agent_sdk.connectors.chargebee import ChargebeeConnector
+from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
@@ -75,7 +75,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_chargebee import ChargebeeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.chargebee import ChargebeeConnector, AirbyteAuthConfig
 
 connector = ChargebeeConnector(
     auth_config=AirbyteAuthConfig(

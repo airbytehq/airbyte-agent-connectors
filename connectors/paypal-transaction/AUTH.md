@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_paypal_transaction import PaypalTransactionConnector
-from airbyte_agent_paypal_transaction.models import PaypalTransactionAuthConfig
+from airbyte_agent_sdk.connectors.paypal_transaction import PaypalTransactionConnector
+from airbyte_agent_sdk.connectors.paypal_transaction.models import PaypalTransactionAuthConfig
 
 connector = PaypalTransactionConnector(
     auth_config=PaypalTransactionAuthConfig(
@@ -137,7 +137,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_paypal_transaction import PaypalTransactionConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.paypal_transaction import PaypalTransactionConnector, AirbyteAuthConfig
 
 connector = PaypalTransactionConnector(
     auth_config=AirbyteAuthConfig(

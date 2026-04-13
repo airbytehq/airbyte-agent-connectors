@@ -1,7 +1,8 @@
 {
   "connector_name": "google-search-console",
   "class_name": "GoogleSearchConsoleConnector",
-  "package_name": "airbyte_agent_google_search_console",
+  "package_name": "airbyte_agent_sdk.connectors.google_search_console",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.3",
   "yaml_version": "1.0.3",
   "api_reference_url": "https://developers.google.com/webmaster-tools/v1/api_reference_index",

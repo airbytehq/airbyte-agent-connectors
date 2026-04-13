@@ -20,8 +20,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_zendesk_chat import ZendeskChatConnector
-from airbyte_agent_zendesk_chat.models import ZendeskChatAuthConfig
+from airbyte_agent_sdk.connectors.zendesk_chat import ZendeskChatConnector
+from airbyte_agent_sdk.connectors.zendesk_chat.models import ZendeskChatAuthConfig
 
 connector = ZendeskChatConnector(
     auth_config=ZendeskChatAuthConfig(
@@ -123,7 +123,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_zendesk_chat import ZendeskChatConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.zendesk_chat import ZendeskChatConnector, AirbyteAuthConfig
 
 connector = ZendeskChatConnector(
     auth_config=AirbyteAuthConfig(

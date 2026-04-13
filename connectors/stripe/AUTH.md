@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_stripe import StripeConnector
-from airbyte_agent_stripe.models import StripeAuthConfig
+from airbyte_agent_sdk.connectors.stripe import StripeConnector
+from airbyte_agent_sdk.connectors.stripe.models import StripeAuthConfig
 
 connector = StripeConnector(
     auth_config=StripeAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_stripe import StripeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.stripe import StripeConnector, AirbyteAuthConfig
 
 connector = StripeConnector(
     auth_config=AirbyteAuthConfig(

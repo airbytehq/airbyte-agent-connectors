@@ -1,7 +1,8 @@
 {
   "connector_name": "confluence",
   "class_name": "ConfluenceConnector",
-  "package_name": "airbyte_agent_confluence",
+  "package_name": "airbyte_agent_sdk.connectors.confluence",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.1",
   "yaml_version": "1.0.1",
   "api_reference_url": "https://developer.atlassian.com/cloud/confluence/rest/v2/intro/",

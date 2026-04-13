@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_pylon import PylonConnector
-from airbyte_agent_pylon.models import PylonAuthConfig
+from airbyte_agent_sdk.connectors.pylon import PylonConnector
+from airbyte_agent_sdk.connectors.pylon.models import PylonAuthConfig
 
 connector = PylonConnector(
     auth_config=PylonAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_pylon import PylonConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.pylon import PylonConnector, AirbyteAuthConfig
 
 connector = PylonConnector(
     auth_config=AirbyteAuthConfig(

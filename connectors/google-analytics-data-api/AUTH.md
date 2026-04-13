@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_google_analytics_data_api import GoogleAnalyticsDataApiConnector
-from airbyte_agent_google_analytics_data_api.models import GoogleAnalyticsDataApiAuthConfig
+from airbyte_agent_sdk.connectors.google_analytics_data_api import GoogleAnalyticsDataApiConnector
+from airbyte_agent_sdk.connectors.google_analytics_data_api.models import GoogleAnalyticsDataApiAuthConfig
 
 connector = GoogleAnalyticsDataApiConnector(
     auth_config=GoogleAnalyticsDataApiAuthConfig(
@@ -131,7 +131,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_google_analytics_data_api import GoogleAnalyticsDataApiConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_analytics_data_api import GoogleAnalyticsDataApiConnector, AirbyteAuthConfig
 
 connector = GoogleAnalyticsDataApiConnector(
     auth_config=AirbyteAuthConfig(

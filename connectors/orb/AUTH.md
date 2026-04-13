@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_orb import OrbConnector
-from airbyte_agent_orb.models import OrbAuthConfig
+from airbyte_agent_sdk.connectors.orb import OrbConnector
+from airbyte_agent_sdk.connectors.orb.models import OrbAuthConfig
 
 connector = OrbConnector(
     auth_config=OrbAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_orb import OrbConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.orb import OrbConnector, AirbyteAuthConfig
 
 connector = OrbConnector(
     auth_config=AirbyteAuthConfig(

@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_google_ads import GoogleAdsConnector
-from airbyte_agent_google_ads.models import GoogleAdsAuthConfig
+from airbyte_agent_sdk.connectors.google_ads import GoogleAdsConnector
+from airbyte_agent_sdk.connectors.google_ads.models import GoogleAdsAuthConfig
 
 connector = GoogleAdsConnector(
     auth_config=GoogleAdsAuthConfig(
@@ -139,7 +139,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_google_ads import GoogleAdsConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_ads import GoogleAdsConnector, AirbyteAuthConfig
 
 connector = GoogleAdsConnector(
     auth_config=AirbyteAuthConfig(

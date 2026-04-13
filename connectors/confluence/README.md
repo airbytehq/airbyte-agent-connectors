@@ -35,7 +35,7 @@ The Confluence connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-confluence
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -47,8 +47,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_confluence import ConfluenceConnector
-from airbyte_agent_confluence.models import ConfluenceAuthConfig
+from airbyte_agent_sdk.connectors.confluence import ConfluenceConnector
+from airbyte_agent_sdk.connectors.confluence.models import ConfluenceAuthConfig
 
 connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
@@ -71,7 +71,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_confluence import ConfluenceConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.confluence import ConfluenceConnector, AirbyteAuthConfig
 
 connector = ConfluenceConnector(
     auth_config=AirbyteAuthConfig(

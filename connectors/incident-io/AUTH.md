@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_incident_io import IncidentIoConnector
-from airbyte_agent_incident_io.models import IncidentIoAuthConfig
+from airbyte_agent_sdk.connectors.incident_io import IncidentIoConnector
+from airbyte_agent_sdk.connectors.incident_io.models import IncidentIoAuthConfig
 
 connector = IncidentIoConnector(
     auth_config=IncidentIoAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_incident_io import IncidentIoConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.incident_io import IncidentIoConnector, AirbyteAuthConfig
 
 connector = IncidentIoConnector(
     auth_config=AirbyteAuthConfig(

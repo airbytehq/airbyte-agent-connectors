@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_notion import NotionConnector
-from airbyte_agent_notion.models import NotionOauth20AuthConfig
+from airbyte_agent_sdk.connectors.notion import NotionConnector
+from airbyte_agent_sdk.connectors.notion.models import NotionOauth20AuthConfig
 
 connector = NotionConnector(
     auth_config=NotionOauth20AuthConfig(
@@ -45,8 +45,8 @@ connector = NotionConnector(
 Example request:
 
 ```python
-from airbyte_agent_notion import NotionConnector
-from airbyte_agent_notion.models import NotionAccessTokenAuthConfig
+from airbyte_agent_sdk.connectors.notion import NotionConnector
+from airbyte_agent_sdk.connectors.notion.models import NotionAccessTokenAuthConfig
 
 connector = NotionConnector(
     auth_config=NotionAccessTokenAuthConfig(
@@ -101,8 +101,8 @@ By default, Airbyte uses its own OAuth app credentials. You can override these w
 **Python SDK**
 
 ```python
-from airbyte_agent_notion import NotionConnector, AirbyteAuthConfig
-from airbyte_agent_notion.models import NotionOAuthCredentials
+from airbyte_agent_sdk.connectors.notion import NotionConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.notion.models import NotionOAuthCredentials
 
 await NotionConnector.configure_oauth_app_parameters(
     airbyte_config=AirbyteAuthConfig(
@@ -222,7 +222,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_notion import NotionConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.notion import NotionConnector, AirbyteAuthConfig
 
 connector = NotionConnector(
     auth_config=AirbyteAuthConfig(

@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_gmail import GmailConnector
-from airbyte_agent_gmail.models import GmailAuthConfig
+from airbyte_agent_sdk.connectors.gmail import GmailConnector
+from airbyte_agent_sdk.connectors.gmail.models import GmailAuthConfig
 
 connector = GmailConnector(
     auth_config=GmailAuthConfig(
@@ -135,7 +135,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_gmail import GmailConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.gmail import GmailConnector, AirbyteAuthConfig
 
 connector = GmailConnector(
     auth_config=AirbyteAuthConfig(

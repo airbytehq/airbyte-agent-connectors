@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_linkedin_ads import LinkedinAdsConnector
-from airbyte_agent_linkedin_ads.models import LinkedinAdsAuthConfig
+from airbyte_agent_sdk.connectors.linkedin_ads import LinkedinAdsConnector
+from airbyte_agent_sdk.connectors.linkedin_ads.models import LinkedinAdsAuthConfig
 
 connector = LinkedinAdsConnector(
     auth_config=LinkedinAdsAuthConfig(
@@ -131,7 +131,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_linkedin_ads import LinkedinAdsConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.linkedin_ads import LinkedinAdsConnector, AirbyteAuthConfig
 
 connector = LinkedinAdsConnector(
     auth_config=AirbyteAuthConfig(

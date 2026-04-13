@@ -1,7 +1,8 @@
 {
   "connector_name": "paypal-transaction",
   "class_name": "PaypalTransactionConnector",
-  "package_name": "airbyte_agent_paypal_transaction",
+  "package_name": "airbyte_agent_sdk.connectors.paypal_transaction",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.2",
   "yaml_version": "1.0.2",
   "api_reference_url": "https://developer.paypal.com/docs/api/transaction-search/v1/",

@@ -1,7 +1,8 @@
 {
   "connector_name": "salesforce",
   "class_name": "SalesforceConnector",
-  "package_name": "airbyte_agent_salesforce",
+  "package_name": "airbyte_agent_sdk.connectors.salesforce",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.16",
   "yaml_version": "1.0.16",
   "api_reference_url": "https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_rest.htm",

@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector
-from airbyte_agent_amazon_ads.models import AmazonAdsAuthConfig
+from airbyte_agent_sdk.connectors.amazon_ads import AmazonAdsConnector
+from airbyte_agent_sdk.connectors.amazon_ads.models import AmazonAdsAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AmazonAdsAuthConfig(
@@ -122,7 +122,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.amazon_ads import AmazonAdsConnector, AirbyteAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AirbyteAuthConfig(

@@ -37,7 +37,7 @@ The Tiktok-Marketing connector isn't currently able to handle prompts like these
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-tiktok-marketing
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -49,8 +49,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_tiktok_marketing import TiktokMarketingConnector
-from airbyte_agent_tiktok_marketing.models import TiktokMarketingAuthConfig
+from airbyte_agent_sdk.connectors.tiktok_marketing import TiktokMarketingConnector
+from airbyte_agent_sdk.connectors.tiktok_marketing.models import TiktokMarketingAuthConfig
 
 connector = TiktokMarketingConnector(
     auth_config=TiktokMarketingAuthConfig(
@@ -72,7 +72,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_tiktok_marketing import TiktokMarketingConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.tiktok_marketing import TiktokMarketingConnector, AirbyteAuthConfig
 
 connector = TiktokMarketingConnector(
     auth_config=AirbyteAuthConfig(

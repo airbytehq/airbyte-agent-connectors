@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_clickup_api import ClickupApiConnector
-from airbyte_agent_clickup_api.models import ClickupApiAuthConfig
+from airbyte_agent_sdk.connectors.clickup_api import ClickupApiConnector
+from airbyte_agent_sdk.connectors.clickup_api.models import ClickupApiAuthConfig
 
 connector = ClickupApiConnector(
     auth_config=ClickupApiAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_clickup_api import ClickupApiConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.clickup_api import ClickupApiConnector, AirbyteAuthConfig
 
 connector = ClickupApiConnector(
     auth_config=AirbyteAuthConfig(

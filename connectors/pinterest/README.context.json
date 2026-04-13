@@ -1,7 +1,8 @@
 {
   "connector_name": "pinterest",
   "class_name": "PinterestConnector",
-  "package_name": "airbyte_agent_pinterest",
+  "package_name": "airbyte_agent_sdk.connectors.pinterest",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.4",
   "yaml_version": "0.1.4",
   "api_reference_url": "https://developers.pinterest.com/docs/api/v5/",

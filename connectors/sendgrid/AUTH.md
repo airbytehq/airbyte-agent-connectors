@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_sendgrid import SendgridConnector
-from airbyte_agent_sendgrid.models import SendgridAuthConfig
+from airbyte_agent_sdk.connectors.sendgrid import SendgridConnector
+from airbyte_agent_sdk.connectors.sendgrid.models import SendgridAuthConfig
 
 connector = SendgridConnector(
     auth_config=SendgridAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_sendgrid import SendgridConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.sendgrid import SendgridConnector, AirbyteAuthConfig
 
 connector = SendgridConnector(
     auth_config=AirbyteAuthConfig(

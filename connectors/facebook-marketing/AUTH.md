@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector
-from airbyte_agent_facebook_marketing.models import FacebookMarketingOauth20AuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector
+from airbyte_agent_sdk.connectors.facebook_marketing.models import FacebookMarketingOauth20AuthenticationAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=FacebookMarketingOauth20AuthenticationAuthConfig(
@@ -45,8 +45,8 @@ connector = FacebookMarketingConnector(
 Example request:
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector
-from airbyte_agent_facebook_marketing.models import FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector
+from airbyte_agent_sdk.connectors.facebook_marketing.models import FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=FacebookMarketingServiceAccountKeyAuthenticationAuthConfig(
@@ -182,7 +182,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector, AirbyteAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=AirbyteAuthConfig(

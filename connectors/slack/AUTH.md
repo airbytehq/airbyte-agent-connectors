@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_slack import SlackConnector
-from airbyte_agent_slack.models import SlackOauth20AuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.slack import SlackConnector
+from airbyte_agent_sdk.connectors.slack.models import SlackOauth20AuthenticationAuthConfig
 
 connector = SlackConnector(
     auth_config=SlackOauth20AuthenticationAuthConfig(
@@ -45,8 +45,8 @@ connector = SlackConnector(
 Example request:
 
 ```python
-from airbyte_agent_slack import SlackConnector
-from airbyte_agent_slack.models import SlackTokenAuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.slack import SlackConnector
+from airbyte_agent_sdk.connectors.slack.models import SlackTokenAuthenticationAuthConfig
 
 connector = SlackConnector(
     auth_config=SlackTokenAuthenticationAuthConfig(
@@ -190,7 +190,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_slack import SlackConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.slack import SlackConnector, AirbyteAuthConfig
 
 connector = SlackConnector(
     auth_config=AirbyteAuthConfig(

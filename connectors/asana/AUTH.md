@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_asana import AsanaConnector
-from airbyte_agent_asana.models import AsanaOauth2AuthConfig
+from airbyte_agent_sdk.connectors.asana import AsanaConnector
+from airbyte_agent_sdk.connectors.asana.models import AsanaOauth2AuthConfig
 
 connector = AsanaConnector(
     auth_config=AsanaOauth2AuthConfig(
@@ -47,8 +47,8 @@ connector = AsanaConnector(
 Example request:
 
 ```python
-from airbyte_agent_asana import AsanaConnector
-from airbyte_agent_asana.models import AsanaPersonalAccessTokenAuthConfig
+from airbyte_agent_sdk.connectors.asana import AsanaConnector
+from airbyte_agent_sdk.connectors.asana.models import AsanaPersonalAccessTokenAuthConfig
 
 connector = AsanaConnector(
     auth_config=AsanaPersonalAccessTokenAuthConfig(
@@ -168,7 +168,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_asana import AsanaConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.asana import AsanaConnector, AirbyteAuthConfig
 
 connector = AsanaConnector(
     auth_config=AirbyteAuthConfig(

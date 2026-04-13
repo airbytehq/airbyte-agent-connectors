@@ -24,8 +24,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_snapchat_marketing import SnapchatMarketingConnector
-from airbyte_agent_snapchat_marketing.models import SnapchatMarketingAuthConfig
+from airbyte_agent_sdk.connectors.snapchat_marketing import SnapchatMarketingConnector
+from airbyte_agent_sdk.connectors.snapchat_marketing.models import SnapchatMarketingAuthConfig
 
 connector = SnapchatMarketingConnector(
     auth_config=SnapchatMarketingAuthConfig(
@@ -94,7 +94,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_snapchat_marketing import SnapchatMarketingConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.snapchat_marketing import SnapchatMarketingConnector, AirbyteAuthConfig
 
 connector = SnapchatMarketingConnector(
     auth_config=AirbyteAuthConfig(

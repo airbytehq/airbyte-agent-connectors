@@ -1,7 +1,8 @@
 {
   "connector_name": "pylon",
   "class_name": "PylonConnector",
-  "package_name": "airbyte_agent_pylon",
+  "package_name": "airbyte_agent_sdk.connectors.pylon",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.9",
   "yaml_version": "0.1.9",
   "api_reference_url": "https://docs.usepylon.com/pylon-docs/developer/api/api-reference",

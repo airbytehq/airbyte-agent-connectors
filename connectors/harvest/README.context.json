@@ -1,7 +1,8 @@
 {
   "connector_name": "harvest",
   "class_name": "HarvestConnector",
-  "package_name": "airbyte_agent_harvest",
+  "package_name": "airbyte_agent_sdk.connectors.harvest",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.3",
   "yaml_version": "1.0.3",
   "api_reference_url": "https://help.getharvest.com/api-v2/",

@@ -1,7 +1,8 @@
 {
   "connector_name": "shopify",
   "class_name": "ShopifyConnector",
-  "package_name": "airbyte_agent_shopify",
+  "package_name": "airbyte_agent_sdk.connectors.shopify",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.12",
   "yaml_version": "0.1.12",
   "api_reference_url": "https://shopify.dev/docs/api/admin-rest",

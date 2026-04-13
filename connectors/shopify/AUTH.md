@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_shopify import ShopifyConnector
-from airbyte_agent_shopify.models import ShopifyAuthConfig
+from airbyte_agent_sdk.connectors.shopify import ShopifyConnector
+from airbyte_agent_sdk.connectors.shopify.models import ShopifyAuthConfig
 
 connector = ShopifyConnector(
     auth_config=ShopifyAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_shopify import ShopifyConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.shopify import ShopifyConnector, AirbyteAuthConfig
 
 connector = ShopifyConnector(
     auth_config=AirbyteAuthConfig(

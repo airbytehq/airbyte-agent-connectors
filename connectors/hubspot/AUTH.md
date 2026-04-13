@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_hubspot import HubspotConnector
-from airbyte_agent_hubspot.models import HubspotOauth2AuthConfig
+from airbyte_agent_sdk.connectors.hubspot import HubspotConnector
+from airbyte_agent_sdk.connectors.hubspot.models import HubspotOauth2AuthConfig
 
 connector = HubspotConnector(
     auth_config=HubspotOauth2AuthConfig(
@@ -47,8 +47,8 @@ connector = HubspotConnector(
 Example request:
 
 ```python
-from airbyte_agent_hubspot import HubspotConnector
-from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
+from airbyte_agent_sdk.connectors.hubspot import HubspotConnector
+from airbyte_agent_sdk.connectors.hubspot.models import HubspotPrivateAppAuthConfig
 
 connector = HubspotConnector(
     auth_config=HubspotPrivateAppAuthConfig(
@@ -105,8 +105,8 @@ By default, Airbyte uses its own OAuth app credentials. You can override these w
 **Python SDK**
 
 ```python
-from airbyte_agent_hubspot import HubspotConnector, AirbyteAuthConfig
-from airbyte_agent_hubspot.models import HubspotOAuthCredentials
+from airbyte_agent_sdk.connectors.hubspot import HubspotConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.hubspot.models import HubspotOAuthCredentials
 
 await HubspotConnector.configure_oauth_app_parameters(
     airbyte_config=AirbyteAuthConfig(
@@ -226,7 +226,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_hubspot import HubspotConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.hubspot import HubspotConnector, AirbyteAuthConfig
 
 connector = HubspotConnector(
     auth_config=AirbyteAuthConfig(

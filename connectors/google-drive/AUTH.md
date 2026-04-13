@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_google_drive import GoogleDriveConnector
-from airbyte_agent_google_drive.models import GoogleDriveAuthConfig
+from airbyte_agent_sdk.connectors.google_drive import GoogleDriveConnector
+from airbyte_agent_sdk.connectors.google_drive.models import GoogleDriveAuthConfig
 
 connector = GoogleDriveConnector(
     auth_config=GoogleDriveAuthConfig(
@@ -137,7 +137,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_google_drive import GoogleDriveConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_drive import GoogleDriveConnector, AirbyteAuthConfig
 
 connector = GoogleDriveConnector(
     auth_config=AirbyteAuthConfig(

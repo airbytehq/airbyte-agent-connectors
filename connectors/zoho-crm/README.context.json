@@ -1,7 +1,8 @@
 {
   "connector_name": "zoho-crm",
   "class_name": "ZohoCrmConnector",
-  "package_name": "airbyte_agent_zoho_crm",
+  "package_name": "airbyte_agent_sdk.connectors.zoho_crm",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.3",
   "yaml_version": "1.0.3",
   "api_reference_url": "https://www.zoho.com/crm/developer/docs/api/v2/",

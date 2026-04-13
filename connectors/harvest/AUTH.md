@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_harvest import HarvestConnector
-from airbyte_agent_harvest.models import HarvestOauth20AuthConfig
+from airbyte_agent_sdk.connectors.harvest import HarvestConnector
+from airbyte_agent_sdk.connectors.harvest.models import HarvestOauth20AuthConfig
 
 connector = HarvestConnector(
     auth_config=HarvestOauth20AuthConfig(
@@ -48,8 +48,8 @@ connector = HarvestConnector(
 Example request:
 
 ```python
-from airbyte_agent_harvest import HarvestConnector
-from airbyte_agent_harvest.models import HarvestPersonalAccessTokenAuthConfig
+from airbyte_agent_sdk.connectors.harvest import HarvestConnector
+from airbyte_agent_sdk.connectors.harvest.models import HarvestPersonalAccessTokenAuthConfig
 
 connector = HarvestConnector(
     auth_config=HarvestPersonalAccessTokenAuthConfig(
@@ -190,7 +190,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_harvest import HarvestConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.harvest import HarvestConnector, AirbyteAuthConfig
 
 connector = HarvestConnector(
     auth_config=AirbyteAuthConfig(

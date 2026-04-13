@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_greenhouse import GreenhouseConnector
-from airbyte_agent_greenhouse.models import GreenhouseAuthConfig
+from airbyte_agent_sdk.connectors.greenhouse import GreenhouseConnector
+from airbyte_agent_sdk.connectors.greenhouse.models import GreenhouseAuthConfig
 
 connector = GreenhouseConnector(
     auth_config=GreenhouseAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_greenhouse import GreenhouseConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.greenhouse import GreenhouseConnector, AirbyteAuthConfig
 
 connector = GreenhouseConnector(
     auth_config=AirbyteAuthConfig(

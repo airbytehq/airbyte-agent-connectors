@@ -31,7 +31,7 @@ The Amazon-Ads connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-amazon-ads
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -43,8 +43,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector
-from airbyte_agent_amazon_ads.models import AmazonAdsAuthConfig
+from airbyte_agent_sdk.connectors.amazon_ads import AmazonAdsConnector
+from airbyte_agent_sdk.connectors.amazon_ads.models import AmazonAdsAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AmazonAdsAuthConfig(
@@ -68,7 +68,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_amazon_ads import AmazonAdsConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.amazon_ads import AmazonAdsConnector, AirbyteAuthConfig
 
 connector = AmazonAdsConnector(
     auth_config=AirbyteAuthConfig(

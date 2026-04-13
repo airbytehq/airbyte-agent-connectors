@@ -23,8 +23,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_twilio import TwilioConnector
-from airbyte_agent_twilio.models import TwilioAuthConfig
+from airbyte_agent_sdk.connectors.twilio import TwilioConnector
+from airbyte_agent_sdk.connectors.twilio.models import TwilioAuthConfig
 
 connector = TwilioConnector(
     auth_config=TwilioAuthConfig(
@@ -92,7 +92,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_twilio import TwilioConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.twilio import TwilioConnector, AirbyteAuthConfig
 
 connector = TwilioConnector(
     auth_config=AirbyteAuthConfig(

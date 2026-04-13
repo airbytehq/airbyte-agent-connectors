@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_airtable import AirtableConnector
-from airbyte_agent_airtable.models import AirtableAuthConfig
+from airbyte_agent_sdk.connectors.airtable import AirtableConnector
+from airbyte_agent_sdk.connectors.airtable.models import AirtableAuthConfig
 
 connector = AirtableConnector(
     auth_config=AirtableAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_airtable import AirtableConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.airtable import AirtableConnector, AirbyteAuthConfig
 
 connector = AirtableConnector(
     auth_config=AirbyteAuthConfig(

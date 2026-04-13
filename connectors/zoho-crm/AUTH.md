@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_zoho_crm import ZohoCrmConnector
-from airbyte_agent_zoho_crm.models import ZohoCrmAuthConfig
+from airbyte_agent_sdk.connectors.zoho_crm import ZohoCrmConnector
+from airbyte_agent_sdk.connectors.zoho_crm.models import ZohoCrmAuthConfig
 
 connector = ZohoCrmConnector(
     auth_config=ZohoCrmAuthConfig(
@@ -122,7 +122,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_zoho_crm import ZohoCrmConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.zoho_crm import ZohoCrmConnector, AirbyteAuthConfig
 
 connector = ZohoCrmConnector(
     auth_config=AirbyteAuthConfig(

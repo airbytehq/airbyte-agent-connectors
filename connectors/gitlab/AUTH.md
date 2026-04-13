@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_gitlab import GitlabConnector
-from airbyte_agent_gitlab.models import GitlabOauth20AuthConfig
+from airbyte_agent_sdk.connectors.gitlab import GitlabConnector
+from airbyte_agent_sdk.connectors.gitlab.models import GitlabOauth20AuthConfig
 
 connector = GitlabConnector(
     auth_config=GitlabOauth20AuthConfig(
@@ -47,8 +47,8 @@ connector = GitlabConnector(
 Example request:
 
 ```python
-from airbyte_agent_gitlab import GitlabConnector
-from airbyte_agent_gitlab.models import GitlabPersonalAccessTokenAuthConfig
+from airbyte_agent_sdk.connectors.gitlab import GitlabConnector
+from airbyte_agent_sdk.connectors.gitlab.models import GitlabPersonalAccessTokenAuthConfig
 
 connector = GitlabConnector(
     auth_config=GitlabPersonalAccessTokenAuthConfig(
@@ -186,7 +186,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_gitlab import GitlabConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.gitlab import GitlabConnector, AirbyteAuthConfig
 
 connector = GitlabConnector(
     auth_config=AirbyteAuthConfig(

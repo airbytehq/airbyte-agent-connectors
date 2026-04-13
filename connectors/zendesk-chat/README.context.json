@@ -1,7 +1,8 @@
 {
   "connector_name": "zendesk-chat",
   "class_name": "ZendeskChatConnector",
-  "package_name": "airbyte_agent_zendesk_chat",
+  "package_name": "airbyte_agent_sdk.connectors.zendesk_chat",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.10",
   "yaml_version": "0.1.10",
   "api_reference_url": "https://developer.zendesk.com/api-reference/live-chat/chat-api/introduction/",

@@ -472,7 +472,9 @@ class ConnectorGenerator:
         update-readme.py when updating versions later.
         """
         class_name = self._get_class_name(connector_name)
-        package_name = f"airbyte_agent_{connector_name.replace('-', '_')}"
+        module_name = to_snake_case(connector_name)
+        package_name = f"airbyte_agent_sdk.connectors.{module_name}"
+        install_package = "airbyte-agent-sdk"
 
         # Use _extract_auth_config() if no auth_config provided
         if auth_config is None:
@@ -540,6 +542,7 @@ class ConnectorGenerator:
             "connector_name": connector_name,
             "class_name": class_name,
             "package_name": package_name,
+            "install_package": install_package,
             "package_version": connector_version,
             "yaml_version": connector_version,
             "api_reference_url": api_reference_url,
@@ -702,7 +705,8 @@ class ConnectorGenerator:
             auth_config: Optional auth configuration metadata
         """
         class_name = self._get_class_name(connector_name)
-        package_name = f"airbyte_agent_{to_snake_case(connector_name)}"
+        module_name = to_snake_case(connector_name)
+        package_name = f"airbyte_agent_sdk.connectors.{module_name}"
 
         # Extract server variables for configuration section
         server_variables = self._extract_server_variables()

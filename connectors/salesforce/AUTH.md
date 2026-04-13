@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_salesforce import SalesforceConnector
-from airbyte_agent_salesforce.models import SalesforceAuthConfig
+from airbyte_agent_sdk.connectors.salesforce import SalesforceConnector
+from airbyte_agent_sdk.connectors.salesforce.models import SalesforceAuthConfig
 
 connector = SalesforceConnector(
     auth_config=SalesforceAuthConfig(
@@ -122,7 +122,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_salesforce import SalesforceConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.salesforce import SalesforceConnector, AirbyteAuthConfig
 
 connector = SalesforceConnector(
     auth_config=AirbyteAuthConfig(

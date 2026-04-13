@@ -23,8 +23,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_confluence import ConfluenceConnector
-from airbyte_agent_confluence.models import ConfluenceAuthConfig
+from airbyte_agent_sdk.connectors.confluence import ConfluenceConnector
+from airbyte_agent_sdk.connectors.confluence.models import ConfluenceAuthConfig
 
 connector = ConfluenceConnector(
     auth_config=ConfluenceAuthConfig(
@@ -81,7 +81,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_confluence import ConfluenceConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.confluence import ConfluenceConnector, AirbyteAuthConfig
 
 connector = ConfluenceConnector(
     auth_config=AirbyteAuthConfig(

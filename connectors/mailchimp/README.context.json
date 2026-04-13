@@ -1,7 +1,8 @@
 {
   "connector_name": "mailchimp",
   "class_name": "MailchimpConnector",
-  "package_name": "airbyte_agent_mailchimp",
+  "package_name": "airbyte_agent_sdk.connectors.mailchimp",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.11",
   "yaml_version": "1.0.11",
   "api_reference_url": "https://mailchimp.com/developer/marketing/api/",

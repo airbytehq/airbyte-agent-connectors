@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_intercom import IntercomConnector
-from airbyte_agent_intercom.models import IntercomAuthConfig
+from airbyte_agent_sdk.connectors.intercom import IntercomConnector
+from airbyte_agent_sdk.connectors.intercom.models import IntercomAuthConfig
 
 connector = IntercomConnector(
     auth_config=IntercomAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_intercom import IntercomConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.intercom import IntercomConnector, AirbyteAuthConfig
 
 connector = IntercomConnector(
     auth_config=AirbyteAuthConfig(

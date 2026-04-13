@@ -20,8 +20,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_tiktok_marketing import TiktokMarketingConnector
-from airbyte_agent_tiktok_marketing.models import TiktokMarketingAuthConfig
+from airbyte_agent_sdk.connectors.tiktok_marketing import TiktokMarketingConnector
+from airbyte_agent_sdk.connectors.tiktok_marketing.models import TiktokMarketingAuthConfig
 
 connector = TiktokMarketingConnector(
     auth_config=TiktokMarketingAuthConfig(
@@ -123,7 +123,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_tiktok_marketing import TiktokMarketingConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.tiktok_marketing import TiktokMarketingConnector, AirbyteAuthConfig
 
 connector = TiktokMarketingConnector(
     auth_config=AirbyteAuthConfig(

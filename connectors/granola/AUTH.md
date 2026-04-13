@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_granola import GranolaConnector
-from airbyte_agent_granola.models import GranolaAuthConfig
+from airbyte_agent_sdk.connectors.granola import GranolaConnector
+from airbyte_agent_sdk.connectors.granola.models import GranolaAuthConfig
 
 connector = GranolaConnector(
     auth_config=GranolaAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_granola import GranolaConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.granola import GranolaConnector, AirbyteAuthConfig
 
 connector = GranolaConnector(
     auth_config=AirbyteAuthConfig(

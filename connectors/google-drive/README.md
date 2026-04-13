@@ -43,7 +43,7 @@ The Google-Drive connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-google-drive
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -55,8 +55,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_google_drive import GoogleDriveConnector
-from airbyte_agent_google_drive.models import GoogleDriveAuthConfig
+from airbyte_agent_sdk.connectors.google_drive import GoogleDriveConnector
+from airbyte_agent_sdk.connectors.google_drive.models import GoogleDriveAuthConfig
 
 connector = GoogleDriveConnector(
     auth_config=GoogleDriveAuthConfig(
@@ -81,7 +81,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_google_drive import GoogleDriveConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_drive import GoogleDriveConnector, AirbyteAuthConfig
 
 connector = GoogleDriveConnector(
     auth_config=AirbyteAuthConfig(

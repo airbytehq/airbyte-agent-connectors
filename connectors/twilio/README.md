@@ -40,7 +40,7 @@ The Twilio connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-twilio
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -52,8 +52,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_twilio import TwilioConnector
-from airbyte_agent_twilio.models import TwilioAuthConfig
+from airbyte_agent_sdk.connectors.twilio import TwilioConnector
+from airbyte_agent_sdk.connectors.twilio.models import TwilioAuthConfig
 
 connector = TwilioConnector(
     auth_config=TwilioAuthConfig(
@@ -76,7 +76,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_twilio import TwilioConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.twilio import TwilioConnector, AirbyteAuthConfig
 
 connector = TwilioConnector(
     auth_config=AirbyteAuthConfig(

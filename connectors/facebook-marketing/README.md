@@ -49,7 +49,7 @@ The Facebook-Marketing connector isn't currently able to handle prompts like the
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-facebook-marketing
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -61,8 +61,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector
-from airbyte_agent_facebook_marketing.models import FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector
+from airbyte_agent_sdk.connectors.facebook_marketing.models import FacebookMarketingServiceAccountKeyAuthenticationAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=FacebookMarketingServiceAccountKeyAuthenticationAuthConfig(
@@ -84,7 +84,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_facebook_marketing import FacebookMarketingConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.facebook_marketing import FacebookMarketingConnector, AirbyteAuthConfig
 
 connector = FacebookMarketingConnector(
     auth_config=AirbyteAuthConfig(

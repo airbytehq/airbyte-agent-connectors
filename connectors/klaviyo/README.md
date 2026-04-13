@@ -40,7 +40,7 @@ The Klaviyo connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-klaviyo
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -52,8 +52,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_klaviyo import KlaviyoConnector
-from airbyte_agent_klaviyo.models import KlaviyoAuthConfig
+from airbyte_agent_sdk.connectors.klaviyo import KlaviyoConnector
+from airbyte_agent_sdk.connectors.klaviyo.models import KlaviyoAuthConfig
 
 connector = KlaviyoConnector(
     auth_config=KlaviyoAuthConfig(
@@ -75,7 +75,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_klaviyo import KlaviyoConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.klaviyo import KlaviyoConnector, AirbyteAuthConfig
 
 connector = KlaviyoConnector(
     auth_config=AirbyteAuthConfig(

@@ -23,8 +23,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_woocommerce import WoocommerceConnector
-from airbyte_agent_woocommerce.models import WoocommerceAuthConfig
+from airbyte_agent_sdk.connectors.woocommerce import WoocommerceConnector
+from airbyte_agent_sdk.connectors.woocommerce.models import WoocommerceAuthConfig
 
 connector = WoocommerceConnector(
     auth_config=WoocommerceAuthConfig(
@@ -90,7 +90,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_woocommerce import WoocommerceConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.woocommerce import WoocommerceConnector, AirbyteAuthConfig
 
 connector = WoocommerceConnector(
     auth_config=AirbyteAuthConfig(

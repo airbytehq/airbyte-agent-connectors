@@ -41,7 +41,7 @@ The Stripe connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-stripe
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -53,8 +53,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_stripe import StripeConnector
-from airbyte_agent_stripe.models import StripeAuthConfig
+from airbyte_agent_sdk.connectors.stripe import StripeConnector
+from airbyte_agent_sdk.connectors.stripe.models import StripeAuthConfig
 
 connector = StripeConnector(
     auth_config=StripeAuthConfig(
@@ -76,7 +76,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_stripe import StripeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.stripe import StripeConnector, AirbyteAuthConfig
 
 connector = StripeConnector(
     auth_config=AirbyteAuthConfig(

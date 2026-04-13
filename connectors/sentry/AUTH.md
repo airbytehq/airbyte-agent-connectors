@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_sentry import SentryConnector
-from airbyte_agent_sentry.models import SentryAuthConfig
+from airbyte_agent_sdk.connectors.sentry import SentryConnector
+from airbyte_agent_sdk.connectors.sentry.models import SentryAuthConfig
 
 connector = SentryConnector(
     auth_config=SentryAuthConfig(
@@ -88,7 +88,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_sentry import SentryConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.sentry import SentryConnector, AirbyteAuthConfig
 
 connector = SentryConnector(
     auth_config=AirbyteAuthConfig(

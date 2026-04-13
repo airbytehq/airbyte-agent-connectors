@@ -1,7 +1,8 @@
 {
   "connector_name": "intercom",
   "class_name": "IntercomConnector",
-  "package_name": "airbyte_agent_intercom",
+  "package_name": "airbyte_agent_sdk.connectors.intercom",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.10",
   "yaml_version": "0.1.10",
   "api_reference_url": "https://developers.intercom.com/docs/references/rest-api/api.intercom.io",

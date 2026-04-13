@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_ashby import AshbyConnector
-from airbyte_agent_ashby.models import AshbyAuthConfig
+from airbyte_agent_sdk.connectors.ashby import AshbyConnector
+from airbyte_agent_sdk.connectors.ashby.models import AshbyAuthConfig
 
 connector = AshbyConnector(
     auth_config=AshbyAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_ashby import AshbyConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.ashby import AshbyConnector, AirbyteAuthConfig
 
 connector = AshbyConnector(
     auth_config=AirbyteAuthConfig(

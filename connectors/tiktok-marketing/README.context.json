@@ -1,7 +1,8 @@
 {
   "connector_name": "tiktok-marketing",
   "class_name": "TiktokMarketingConnector",
-  "package_name": "airbyte_agent_tiktok_marketing",
+  "package_name": "airbyte_agent_sdk.connectors.tiktok_marketing",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.1.5",
   "yaml_version": "1.1.5",
   "api_reference_url": "https://business-api.tiktok.com/portal/docs?id=1740302848670722",

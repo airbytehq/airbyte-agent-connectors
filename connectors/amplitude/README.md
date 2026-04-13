@@ -27,7 +27,7 @@ The Amplitude connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-amplitude
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -39,8 +39,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_amplitude import AmplitudeConnector
-from airbyte_agent_amplitude.models import AmplitudeAuthConfig
+from airbyte_agent_sdk.connectors.amplitude import AmplitudeConnector
+from airbyte_agent_sdk.connectors.amplitude.models import AmplitudeAuthConfig
 
 connector = AmplitudeConnector(
     auth_config=AmplitudeAuthConfig(
@@ -65,7 +65,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_amplitude import AmplitudeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.amplitude import AmplitudeConnector, AirbyteAuthConfig
 
 connector = AmplitudeConnector(
     auth_config=AirbyteAuthConfig(

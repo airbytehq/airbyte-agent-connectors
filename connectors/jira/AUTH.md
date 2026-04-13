@@ -23,8 +23,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_jira import JiraConnector
-from airbyte_agent_jira.models import JiraAuthConfig
+from airbyte_agent_sdk.connectors.jira import JiraConnector
+from airbyte_agent_sdk.connectors.jira.models import JiraAuthConfig
 
 connector = JiraConnector(
     auth_config=JiraAuthConfig(
@@ -81,7 +81,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_jira import JiraConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.jira import JiraConnector, AirbyteAuthConfig
 
 connector = JiraConnector(
     auth_config=AirbyteAuthConfig(

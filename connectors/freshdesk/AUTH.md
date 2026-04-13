@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_freshdesk import FreshdeskConnector
-from airbyte_agent_freshdesk.models import FreshdeskAuthConfig
+from airbyte_agent_sdk.connectors.freshdesk import FreshdeskConnector
+from airbyte_agent_sdk.connectors.freshdesk.models import FreshdeskAuthConfig
 
 connector = FreshdeskConnector(
     auth_config=FreshdeskAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_freshdesk import FreshdeskConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.freshdesk import FreshdeskConnector, AirbyteAuthConfig
 
 connector = FreshdeskConnector(
     auth_config=AirbyteAuthConfig(

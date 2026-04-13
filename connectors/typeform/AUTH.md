@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_typeform import TypeformConnector
-from airbyte_agent_typeform.models import TypeformAuthConfig
+from airbyte_agent_sdk.connectors.typeform import TypeformConnector
+from airbyte_agent_sdk.connectors.typeform.models import TypeformAuthConfig
 
 connector = TypeformConnector(
     auth_config=TypeformAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_typeform import TypeformConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.typeform import TypeformConnector, AirbyteAuthConfig
 
 connector = TypeformConnector(
     auth_config=AirbyteAuthConfig(

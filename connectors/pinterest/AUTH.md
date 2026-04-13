@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_pinterest import PinterestConnector
-from airbyte_agent_pinterest.models import PinterestAuthConfig
+from airbyte_agent_sdk.connectors.pinterest import PinterestConnector
+from airbyte_agent_sdk.connectors.pinterest.models import PinterestAuthConfig
 
 connector = PinterestConnector(
     auth_config=PinterestAuthConfig(
@@ -131,7 +131,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_pinterest import PinterestConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.pinterest import PinterestConnector, AirbyteAuthConfig
 
 connector = PinterestConnector(
     auth_config=AirbyteAuthConfig(

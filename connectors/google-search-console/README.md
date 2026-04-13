@@ -35,7 +35,7 @@ The Google-Search-Console connector isn't currently able to handle prompts like 
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-google-search-console
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -47,8 +47,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_google_search_console import GoogleSearchConsoleConnector
-from airbyte_agent_google_search_console.models import GoogleSearchConsoleAuthConfig
+from airbyte_agent_sdk.connectors.google_search_console import GoogleSearchConsoleConnector
+from airbyte_agent_sdk.connectors.google_search_console.models import GoogleSearchConsoleAuthConfig
 
 connector = GoogleSearchConsoleConnector(
     auth_config=GoogleSearchConsoleAuthConfig(
@@ -72,7 +72,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_google_search_console import GoogleSearchConsoleConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.google_search_console import GoogleSearchConsoleConnector, AirbyteAuthConfig
 
 connector = GoogleSearchConsoleConnector(
     auth_config=AirbyteAuthConfig(

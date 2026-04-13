@@ -22,6 +22,12 @@ class KlaviyoAuthConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class ProfileLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class ProfileAttributesLocation(BaseModel):
     """Location information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -65,12 +71,6 @@ class ProfileAttributes(BaseModel):
     properties: Union[dict[str, Any] | None, Any] = Field(default=None, description="Custom properties")
     """Custom properties"""
 
-class ProfileLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
-
 class Profile(BaseModel):
     """A Klaviyo profile representing a contact"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -95,6 +95,12 @@ class ProfilesList(BaseModel):
     data: Union[list[Profile], Any] = Field(default=None)
     links: Union[ProfilesListLinks | None, Any] = Field(default=None)
 
+class ListLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class ListAttributes(BaseModel):
     """List attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -107,12 +113,6 @@ class ListAttributes(BaseModel):
     """Last update timestamp"""
     opt_in_process: Union[str | None, Any] = Field(default=None, description="Opt-in process type")
     """Opt-in process type"""
-
-class ListLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class List(BaseModel):
     """A Klaviyo list for organizing profiles"""
@@ -272,6 +272,12 @@ class EventsList(BaseModel):
     data: Union[list[Event], Any] = Field(default=None)
     links: Union[EventsListLinks | None, Any] = Field(default=None)
 
+class MetricLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class MetricAttributesIntegration(BaseModel):
     """Integration information"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -292,12 +298,6 @@ class MetricAttributes(BaseModel):
     """Last update timestamp"""
     integration: Union[MetricAttributesIntegration | None, Any] = Field(default=None, description="Integration information")
     """Integration information"""
-
-class MetricLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class Metric(BaseModel):
     """A Klaviyo metric (event type)"""
@@ -370,6 +370,12 @@ class FlowsList(BaseModel):
     data: Union[list[Flow], Any] = Field(default=None)
     links: Union[FlowsListLinks | None, Any] = Field(default=None)
 
+class TemplateLinks(BaseModel):
+    """Related links"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    self: Union[str | None, Any] = Field(default=None)
+
 class TemplateAttributes(BaseModel):
     """Template attributes"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -386,12 +392,6 @@ class TemplateAttributes(BaseModel):
     """Creation timestamp"""
     updated: Union[str | None, Any] = Field(default=None, description="Last update timestamp")
     """Last update timestamp"""
-
-class TemplateLinks(BaseModel):
-    """Related links"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    self: Union[str | None, Any] = Field(default=None)
 
 class Template(BaseModel):
     """A Klaviyo email template"""

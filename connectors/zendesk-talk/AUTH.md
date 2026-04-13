@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_zendesk_talk import ZendeskTalkConnector
-from airbyte_agent_zendesk_talk.models import ZendeskTalkOauth20AuthConfig
+from airbyte_agent_sdk.connectors.zendesk_talk import ZendeskTalkConnector
+from airbyte_agent_sdk.connectors.zendesk_talk.models import ZendeskTalkOauth20AuthConfig
 
 connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkOauth20AuthConfig(
@@ -48,8 +48,8 @@ connector = ZendeskTalkConnector(
 Example request:
 
 ```python
-from airbyte_agent_zendesk_talk import ZendeskTalkConnector
-from airbyte_agent_zendesk_talk.models import ZendeskTalkApiTokenAuthConfig
+from airbyte_agent_sdk.connectors.zendesk_talk import ZendeskTalkConnector
+from airbyte_agent_sdk.connectors.zendesk_talk.models import ZendeskTalkApiTokenAuthConfig
 
 connector = ZendeskTalkConnector(
     auth_config=ZendeskTalkApiTokenAuthConfig(
@@ -190,7 +190,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_zendesk_talk import ZendeskTalkConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.zendesk_talk import ZendeskTalkConnector, AirbyteAuthConfig
 
 connector = ZendeskTalkConnector(
     auth_config=AirbyteAuthConfig(

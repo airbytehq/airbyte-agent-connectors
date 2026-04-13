@@ -42,7 +42,7 @@ The Pylon connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-pylon
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -54,8 +54,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_pylon import PylonConnector
-from airbyte_agent_pylon.models import PylonAuthConfig
+from airbyte_agent_sdk.connectors.pylon import PylonConnector
+from airbyte_agent_sdk.connectors.pylon.models import PylonAuthConfig
 
 connector = PylonConnector(
     auth_config=PylonAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_pylon import PylonConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.pylon import PylonConnector, AirbyteAuthConfig
 
 connector = PylonConnector(
     auth_config=AirbyteAuthConfig(

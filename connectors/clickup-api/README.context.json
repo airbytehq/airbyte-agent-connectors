@@ -1,7 +1,8 @@
 {
   "connector_name": "clickup-api",
   "class_name": "ClickupApiConnector",
-  "package_name": "airbyte_agent_clickup_api",
+  "package_name": "airbyte_agent_sdk.connectors.clickup_api",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "0.1.5",
   "yaml_version": "0.1.5",
   "api_reference_url": "https://developer.clickup.com/reference",

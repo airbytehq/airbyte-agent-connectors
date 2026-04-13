@@ -1,7 +1,8 @@
 {
   "connector_name": "woocommerce",
   "class_name": "WoocommerceConnector",
-  "package_name": "airbyte_agent_woocommerce",
+  "package_name": "airbyte_agent_sdk.connectors.woocommerce",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.4",
   "yaml_version": "1.0.4",
   "api_reference_url": "https://woocommerce.github.io/woocommerce-rest-api-docs/",

@@ -1,7 +1,8 @@
 {
   "connector_name": "incident-io",
   "class_name": "IncidentIoConnector",
-  "package_name": "airbyte_agent_incident_io",
+  "package_name": "airbyte_agent_sdk.connectors.incident_io",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.4",
   "yaml_version": "1.0.4",
   "api_reference_url": "https://api-docs.incident.io/",

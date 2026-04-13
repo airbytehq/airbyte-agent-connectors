@@ -1,7 +1,8 @@
 {
   "connector_name": "sendgrid",
   "class_name": "SendgridConnector",
-  "package_name": "airbyte_agent_sendgrid",
+  "package_name": "airbyte_agent_sdk.connectors.sendgrid",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.3",
   "yaml_version": "1.0.3",
   "api_reference_url": "https://docs.sendgrid.com/api-reference",

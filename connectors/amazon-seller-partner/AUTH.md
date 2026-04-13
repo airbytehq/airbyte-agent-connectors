@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_amazon_seller_partner import AmazonSellerPartnerConnector
-from airbyte_agent_amazon_seller_partner.models import AmazonSellerPartnerAuthConfig
+from airbyte_agent_sdk.connectors.amazon_seller_partner import AmazonSellerPartnerConnector
+from airbyte_agent_sdk.connectors.amazon_seller_partner.models import AmazonSellerPartnerAuthConfig
 
 connector = AmazonSellerPartnerConnector(
     auth_config=AmazonSellerPartnerAuthConfig(
@@ -135,7 +135,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_amazon_seller_partner import AmazonSellerPartnerConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.amazon_seller_partner import AmazonSellerPartnerConnector, AirbyteAuthConfig
 
 connector = AmazonSellerPartnerConnector(
     auth_config=AirbyteAuthConfig(

@@ -22,8 +22,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_monday import MondayConnector
-from airbyte_agent_monday.models import MondayOauth20AuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.monday import MondayConnector
+from airbyte_agent_sdk.connectors.monday.models import MondayOauth20AuthenticationAuthConfig
 
 connector = MondayConnector(
     auth_config=MondayOauth20AuthenticationAuthConfig(
@@ -45,8 +45,8 @@ connector = MondayConnector(
 Example request:
 
 ```python
-from airbyte_agent_monday import MondayConnector
-from airbyte_agent_monday.models import MondayApiTokenAuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.monday import MondayConnector
+from airbyte_agent_sdk.connectors.monday.models import MondayApiTokenAuthenticationAuthConfig
 
 connector = MondayConnector(
     auth_config=MondayApiTokenAuthenticationAuthConfig(
@@ -164,7 +164,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_monday import MondayConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.monday import MondayConnector, AirbyteAuthConfig
 
 connector = MondayConnector(
     auth_config=AirbyteAuthConfig(

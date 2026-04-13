@@ -1,7 +1,8 @@
 {
   "connector_name": "gitlab",
   "class_name": "GitlabConnector",
-  "package_name": "airbyte_agent_gitlab",
+  "package_name": "airbyte_agent_sdk.connectors.gitlab",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.4",
   "yaml_version": "1.0.4",
   "api_reference_url": "https://docs.gitlab.com/ee/api/rest/",

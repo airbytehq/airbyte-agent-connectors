@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_chargebee import ChargebeeConnector
-from airbyte_agent_chargebee.models import ChargebeeAuthConfig
+from airbyte_agent_sdk.connectors.chargebee import ChargebeeConnector
+from airbyte_agent_sdk.connectors.chargebee.models import ChargebeeAuthConfig
 
 connector = ChargebeeConnector(
     auth_config=ChargebeeAuthConfig(
@@ -86,7 +86,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_chargebee import ChargebeeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.chargebee import ChargebeeConnector, AirbyteAuthConfig
 
 connector = ChargebeeConnector(
     auth_config=AirbyteAuthConfig(

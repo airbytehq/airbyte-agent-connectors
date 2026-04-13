@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_linear import LinearConnector
-from airbyte_agent_linear.models import LinearAuthConfig
+from airbyte_agent_sdk.connectors.linear import LinearConnector
+from airbyte_agent_sdk.connectors.linear.models import LinearAuthConfig
 
 connector = LinearConnector(
     auth_config=LinearAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_linear import LinearConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.linear import LinearConnector, AirbyteAuthConfig
 
 connector = LinearConnector(
     auth_config=AirbyteAuthConfig(

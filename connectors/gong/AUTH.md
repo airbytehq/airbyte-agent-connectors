@@ -23,8 +23,8 @@ In open source mode, you provide API credentials directly to the connector.
 Example request:
 
 ```python
-from airbyte_agent_gong import GongConnector
-from airbyte_agent_gong.models import GongOauth20AuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.gong import GongConnector
+from airbyte_agent_sdk.connectors.gong.models import GongOauth20AuthenticationAuthConfig
 
 connector = GongConnector(
     auth_config=GongOauth20AuthenticationAuthConfig(
@@ -48,8 +48,8 @@ connector = GongConnector(
 Example request:
 
 ```python
-from airbyte_agent_gong import GongConnector
-from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
+from airbyte_agent_sdk.connectors.gong import GongConnector
+from airbyte_agent_sdk.connectors.gong.models import GongAccessKeyAuthenticationAuthConfig
 
 connector = GongConnector(
     auth_config=GongAccessKeyAuthenticationAuthConfig(
@@ -172,7 +172,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_gong import GongConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.gong import GongConnector, AirbyteAuthConfig
 
 connector = GongConnector(
     auth_config=AirbyteAuthConfig(

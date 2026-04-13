@@ -39,7 +39,7 @@ The Mailchimp connector isn't currently able to handle prompts like these.
 ## Installation
 
 ```bash
-uv pip install airbyte-agent-mailchimp
+uv pip install airbyte-agent-sdk
 ```
 
 ## Usage
@@ -51,8 +51,8 @@ Connectors can run in open source or hosted mode.
 In open source mode, you provide API credentials directly to the connector.
 
 ```python
-from airbyte_agent_mailchimp import MailchimpConnector
-from airbyte_agent_mailchimp.models import MailchimpAuthConfig
+from airbyte_agent_sdk.connectors.mailchimp import MailchimpConnector
+from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
@@ -74,7 +74,7 @@ If your Airbyte client can access multiple organizations, also set `organization
 This example assumes you've already authenticated your connector with Airbyte. See [Authentication](AUTH.md) to learn more about authenticating. If you need a step-by-step guide, see the [hosted execution tutorial](https://docs.airbyte.com/ai-agents/quickstarts/tutorial-hosted).
 
 ```python
-from airbyte_agent_mailchimp import MailchimpConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.mailchimp import MailchimpConnector, AirbyteAuthConfig
 
 connector = MailchimpConnector(
     auth_config=AirbyteAuthConfig(

@@ -25,8 +25,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_amplitude import AmplitudeConnector
-from airbyte_agent_amplitude.models import AmplitudeAuthConfig
+from airbyte_agent_sdk.connectors.amplitude import AmplitudeConnector
+from airbyte_agent_sdk.connectors.amplitude.models import AmplitudeAuthConfig
 
 connector = AmplitudeConnector(
     auth_config=AmplitudeAuthConfig(
@@ -100,7 +100,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_amplitude import AmplitudeConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.amplitude import AmplitudeConnector, AirbyteAuthConfig
 
 connector = AmplitudeConnector(
     auth_config=AirbyteAuthConfig(

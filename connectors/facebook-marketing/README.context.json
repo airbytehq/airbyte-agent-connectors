@@ -1,7 +1,8 @@
 {
   "connector_name": "facebook-marketing",
   "class_name": "FacebookMarketingConnector",
-  "package_name": "airbyte_agent_facebook_marketing",
+  "package_name": "airbyte_agent_sdk.connectors.facebook_marketing",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.24",
   "yaml_version": "1.0.24",
   "api_reference_url": "https://developers.facebook.com/docs/marketing-api/",

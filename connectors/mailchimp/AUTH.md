@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_mailchimp import MailchimpConnector
-from airbyte_agent_mailchimp.models import MailchimpAuthConfig
+from airbyte_agent_sdk.connectors.mailchimp import MailchimpConnector
+from airbyte_agent_sdk.connectors.mailchimp.models import MailchimpAuthConfig
 
 connector = MailchimpConnector(
     auth_config=MailchimpAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_mailchimp import MailchimpConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.mailchimp import MailchimpConnector, AirbyteAuthConfig
 
 connector = MailchimpConnector(
     auth_config=AirbyteAuthConfig(

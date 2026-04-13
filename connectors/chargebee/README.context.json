@@ -1,7 +1,8 @@
 {
   "connector_name": "chargebee",
   "class_name": "ChargebeeConnector",
-  "package_name": "airbyte_agent_chargebee",
+  "package_name": "airbyte_agent_sdk.connectors.chargebee",
+  "install_package": "airbyte-agent-sdk",
   "package_version": "1.0.2",
   "yaml_version": "1.0.2",
   "api_reference_url": "https://apidocs.chargebee.com/docs/api",

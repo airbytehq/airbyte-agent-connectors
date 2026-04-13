@@ -22,8 +22,8 @@ This authentication method isn't available for this connector.
 Example request:
 
 ```python
-from airbyte_agent_klaviyo import KlaviyoConnector
-from airbyte_agent_klaviyo.models import KlaviyoAuthConfig
+from airbyte_agent_sdk.connectors.klaviyo import KlaviyoConnector
+from airbyte_agent_sdk.connectors.klaviyo.models import KlaviyoAuthConfig
 
 connector = KlaviyoConnector(
     auth_config=KlaviyoAuthConfig(
@@ -77,7 +77,7 @@ If your Airbyte client can access multiple organizations, include `organization_
 **Python SDK**
 
 ```python
-from airbyte_agent_klaviyo import KlaviyoConnector, AirbyteAuthConfig
+from airbyte_agent_sdk.connectors.klaviyo import KlaviyoConnector, AirbyteAuthConfig
 
 connector = KlaviyoConnector(
     auth_config=AirbyteAuthConfig(
