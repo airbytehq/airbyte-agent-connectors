@@ -40,7 +40,7 @@ connector = SlackConnector(
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `api_token` | `str` | Yes | Your Slack Bot Token (xoxb-) or User Token (xoxp-) |
+| `bot_key` | `str` | Yes | Your Slack Bot Key (xoxb-) or User Token (xoxp-) |
 
 Example request:
 
@@ -50,7 +50,7 @@ from airbyte_agent_sdk.connectors.slack.models import SlackTokenAuthenticationAu
 
 connector = SlackConnector(
     auth_config=SlackTokenAuthenticationAuthConfig(
-        api_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+        bot_key="<Your Slack Bot Key (xoxb-) or User Token (xoxp-)>"
     )
 )
 ```
@@ -150,7 +150,7 @@ Create a connector with Token credentials.
 
 | Field Name | Type | Required | Description |
 |------------|------|----------|-------------|
-| `api_token` | `str` | Yes | Your Slack Bot Token (xoxb-) or User Token (xoxp-) |
+| `bot_key` | `str` | Yes | Your Slack Bot Key (xoxb-) or User Token (xoxp-) |
 
 `replication_config` fields you need:
 
@@ -172,7 +172,7 @@ curl -X POST "https://api.airbyte.ai/api/v1/integrations/connectors" \
     "connector_type": "Slack",
     "name": "My Slack Connector",
     "credentials": {
-      "api_token": "<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+      "bot_key": "<Your Slack Bot Key (xoxb-) or User Token (xoxp-)>"
     },
     "replication_config": {
       "start_date": "<UTC date and time in the format YYYY-MM-DDTHH:mm:ssZ from which to start replicating data.>",

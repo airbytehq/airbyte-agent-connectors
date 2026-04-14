@@ -41,15 +41,15 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
                 user_config_spec=AuthConfigSpec(
                     title='Token Authentication',
                     type='object',
-                    required=['api_token'],
+                    required=['bot_key'],
                     properties={
-                        'api_token': AuthConfigFieldSpec(
-                            title='API Token',
-                            description='Your Slack Bot Token (xoxb-) or User Token (xoxp-)',
+                        'bot_key': AuthConfigFieldSpec(
+                            title='Bot Key',
+                            description='Your Slack Bot Key (xoxb-) or User Token (xoxp-)',
                         ),
                     },
-                    auth_mapping={'token': '${api_token}'},
-                    replication_auth_key_mapping={'credentials.api_token': 'api_token'},
+                    auth_mapping={'token': '${bot_key}'},
+                    replication_auth_key_mapping={'credentials.api_token': 'bot_key'},
                     replication_auth_key_constants={'credentials.option_title': 'API Token Credentials'},
                 ),
             ),

@@ -1179,16 +1179,16 @@ components:
         title: "Token Authentication"
         type: object
         required:
-          - api_token
+          - bot_key
         properties:
-          api_token:
+          bot_key:
             type: string
-            title: "API Token"
-            description: "Your Slack Bot Token (xoxb-) or User Token (xoxp-)"
+            title: "Bot Key"
+            description: "Your Slack Bot Key (xoxb-) or User Token (xoxp-)"
         auth_mapping:
-          token: "${api_token}"
+          token: "${bot_key}"
         replication_auth_key_mapping:
-          credentials.api_token: "api_token"
+          credentials.api_token: "bot_key"
         replication_auth_key_constants:
           credentials.option_title: "API Token Credentials"
 

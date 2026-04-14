@@ -7,7 +7,7 @@
   "yaml_version": "0.1.19",
   "api_reference_url": "https://api.slack.com/methods",
   "commit_sha": "unknown",
-  "auth_example": "SlackAuthConfig(api_token=\"...\")",
+  "auth_example": "SlackAuthConfig(bot_key=\"...\")",
   "auth_import": ", SlackAuthConfig",
   "auth_config": {
     "type_name": "SlackAuthConfig",
@@ -18,11 +18,11 @@
         "description": "",
         "fields": [
           {
-            "name": "api_token",
+            "name": "bot_key",
             "type": "str",
             "required": true,
-            "title": "API Token",
-            "description": "Your Slack Bot Token (xoxb-) or User Token (xoxp-)"
+            "title": "Bot Key",
+            "description": "Your Slack Bot Key (xoxb-) or User Token (xoxp-)"
           }
         ],
         "type_suffix": "TokenAuthentication",

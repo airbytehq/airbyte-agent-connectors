@@ -69,7 +69,7 @@ from airbyte_agent_sdk.connectors.slack.models import SlackTokenAuthenticationAu
 
 connector = SlackConnector(
     auth_config=SlackTokenAuthenticationAuthConfig(
-        api_token="<Your Slack Bot Token (xoxb-) or User Token (xoxp-)>"
+        bot_key="<Your Slack Bot Key (xoxb-) or User Token (xoxp-)>"
     )
 )
 

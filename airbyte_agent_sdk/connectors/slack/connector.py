@@ -179,7 +179,7 @@ class SlackConnector:
                 Example: lambda tokens: save_to_database(tokens)
         Examples:
             # Local mode (direct API calls)
-            connector = SlackConnector(auth_config=SlackAuthConfig(api_token="..."))
+            connector = SlackConnector(auth_config=SlackAuthConfig(bot_key="..."))
             # Hosted mode with explicit connector_id (no lookup needed)
             connector = SlackConnector(
                 auth_config=AirbyteAuthConfig(
@@ -749,7 +749,7 @@ class SlackConnector:
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
-                auth_config=SlackAuthConfig(api_token="..."),
+                auth_config=SlackAuthConfig(bot_key="..."),
             )
 
             # With replication config (required for this connector):
@@ -760,7 +760,7 @@ class SlackConnector:
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
-                auth_config=SlackAuthConfig(api_token="..."),
+                auth_config=SlackAuthConfig(bot_key="..."),
                 replication_config=SlackReplicationConfig(start_date="...", lookback_window="...", join_channels="..."),
             )
 
