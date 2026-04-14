@@ -17,6 +17,91 @@ from typing import Any, Protocol
 # Constants
 MAX_EXAMPLE_QUESTIONS = 5  # Maximum number of example questions to include in description
 
+# --- Shared instruction sections (used by both EXECUTE_INSTRUCTIONS and generate_tool_description) ---
+
+FILTER_OPERATORS = (
+    "FILTER OPERATORS — operator is the outer key, field:value is nested inside:\n"
+    '  Exact match:    {"query": {"filter": {"eq":    {"status": "completed"}}}}\n'
+    '  Fuzzy text:     {"query": {"filter": {"fuzzy": {"name": "john smith"}}}}\n'
+    '  Substring:      {"query": {"filter": {"like":  {"externalId": "CUS-"}}}}\n'
+    '  Greater-or-eq:  {"query": {"filter": {"gte":   {"started": "2026-01-01T00:00:00Z"}}}}\n'
+    '  Less than:      {"query": {"filter": {"lt":    {"amount": 1000}}}}\n'
+    '  Set membership: {"query": {"filter": {"in":    {"stage": ["discovery", "negotiation"]}}}}\n'
+    '  Combined (AND): {"query": {"filter": {"gte": {"started": "..."}, "eq": {"status": "completed"}}}}\n'
+    "Available operators: eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any\n"
+    'Compose with and/or/not: {"and": [cond1, cond2]}, {"or": [...]}, {"not": cond}'
+)
+
+ID_RESOLUTION = (
+    "ID RESOLUTION: When filtering by a related entity (person, team, project), "
+    "inspect the schema above to identify primary keys and foreign keys — "
+    "these are NOT always named 'id'. Look for fields that reference other entities "
+    "(e.g. ownerId, accountId, assignee_id, project_key, or any field whose description or type "
+    "indicates it links to another entity). Then search that related entity by name to get its key, "
+    "and use it as a filter."
+)
+
+PAGINATION = (
+    "PAGINATION: Default limit 20-25. Don't paginate unless user asks for 'all'. "
+    "For 'how many' questions with has_more=true, say 'at least N'. "
+    "Hard stop at 3 pages — use filters to narrow instead."
+)
+
+DATE_RANGES = (
+    "DATE RANGES INCLUDING TODAY: Search index can lag hours. "
+    "Issue BOTH a context_store_search AND a list item with date parameters (in the same batch call), "
+    "then merge and deduplicate by id. "
+    "If the date range ends before today, search alone is sufficient. "
+    "Always resolve relative date phrases like 'today' or 'yesterday' to explicit absolute "
+    "timestamps and tell the user which range you used."
+)
+
+# MCP-specific execute instructions, appended to the backend describe_connector response
+# (via describe_service.py) so models always see them even when MCP clients truncate tool
+# descriptions. Framed for the MCP API shape: batched `items` list with connector_id,
+# select_fields/exclude_fields, and concurrent execution.
+#
+# generate_tool_description() does NOT use this constant — it emits its own SDK-appropriate
+# sections (execute(entity, action, params), params.fields, no batching). The shared
+# constants above (FILTER_OPERATORS, ID_RESOLUTION, PAGINATION, DATE_RANGES) are composed
+# into both paths so the overlapping knowledge stays in sync.
+EXECUTE_INSTRUCTIONS = (
+    "HOW TO CALL THE EXECUTE TOOL:\n"
+    "RESPONSE STRUCTURE:\n"
+    "  - list/api_search: {data: [...], meta: {has_more: bool}}\n"
+    "  - get: Returns entity directly (no envelope)\n"
+    "  To paginate: pass cursor=<last_cursor> while has_more is true"
+    "\n\n"
+    "ACTIONS: list, get, api_search, context_store_search, create, update. "
+    "Use `context_store_search` as the DEFAULT — it supports filtering, sorting, and pagination. "
+    "Only use `list` when: (a) you need today's data (search index may lag hours), or "
+    "(b) context_store_search returned no results and you suspect indexing delay."
+    "\n\n"
+    "HOW TO USE CONTEXT_STORE_SEARCH:\n"
+    "action='context_store_search' uses params.query with filter, sort, and limit.\n"
+    '- Basic:   params={"limit": 20, "query": {"filter": {...}}}\n'
+    '- Sort:    params={"limit": 20, "query": {"filter": {...}, "sort": {"field": "created", "order": "desc"}}}\n'
+    "- When searching for text, ALWAYS prefer `fuzzy` over `like`. "
+    "`fuzzy` matches words in any order, ignores punctuation/casing, and handles partial names. "
+    "`like` requires exact substring match and fails on typos or word reordering.\n"
+    "- Example — find a user by name:\n"
+    '  action="context_store_search", params={"query": {"filter": {"fuzzy": {"firstName": "Teo"}}}}\n'
+    "- Only fall back to `like` when you need exact substring matching (e.g. prefix search on IDs)."
+    "\n\n"
+    "FIELD SELECTION (MANDATORY): Every item MUST include select_fields (allowlist) or "
+    "exclude_fields (blocklist). Both support dot-notation for nested fields "
+    '(e.g. "billing.address.city"). Fewer fields = faster + cheaper. '
+    "If both provided, select_fields wins."
+    "\n\n"
+    + FILTER_OPERATORS
+    + "\n\n"
+    + ID_RESOLUTION
+    + "\n\n"
+    + PAGINATION
+    + "\n\n"
+    + DATE_RANGES
+)
+
 
 def _simplify_type(type_value: str | list[str]) -> str:
     """Simplify JSON Schema type to display string. ['null', 'string'] → 'string'."""
@@ -453,8 +538,6 @@ def describe_entities(model: ConnectorModelProtocol) -> list[dict[str, Any]]:
 
 def generate_tool_description(
     model: ConnectorModelProtocol,
-    *,
-    enable_hosted_mode_features: bool = True,
 ) -> str:
     """Generate AI tool description from connector metadata.
 
@@ -468,7 +551,6 @@ def generate_tool_description(
 
     Args:
         model: Object conforming to ConnectorModelProtocol (e.g., ConnectorModel)
-        enable_hosted_mode_features: When False, omit hosted-mode search guidance from the docstring.
 
     Returns:
         Formatted description string suitable for AI tool documentation
@@ -478,8 +560,8 @@ def generate_tool_description(
     # at the first empty line and only keeps the initial section.
 
     # Entity/action parameter details (including pagination params like limit, starting_after)
-    search_field_paths = _collect_search_field_paths(model) if enable_hosted_mode_features else {}
-    entity_field_schemas = _collect_entity_field_schemas(model) if enable_hosted_mode_features else {}
+    search_field_paths = _collect_search_field_paths(model)
+    entity_field_schemas = _collect_entity_field_schemas(model)
     _, rels_by_entity = _build_relationship_index(model.entities)
 
     # Avoid a "PARAMETERS:" header because some docstring parsers treat it as a params section marker.
@@ -562,23 +644,27 @@ def generate_tool_description(
         if hint_examples:
             lines.append(f"    Examples: {'; '.join(hint_examples[:3])}")
 
-    # Response structure (brief, includes pagination hint)
+    # Response structure
     lines.append("RESPONSE STRUCTURE:")
     lines.append("  - list/api_search: {data: [...], meta: {has_more: bool}}")
     lines.append("  - get: Returns entity directly (no envelope)")
     lines.append("  To paginate: pass starting_after=<last_id> while has_more is true")
 
+    # Guidelines
     lines.append("GUIDELINES:")
-    if enable_hosted_mode_features:
-        lines.append('  - Prefer cached search over direct API calls when using execute(): action="context_store_search" whenever possible.')
-        lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
+    lines.append('  - Prefer cached search over direct API calls: action="context_store_search" whenever possible.')
+    lines.append("  - Direct API actions (list/get/download) are slower and should be used only if search cannot answer the query.")
     lines.append("  - Keep results small: use params.fields, params.query.filter, small params.limit, and cursor pagination.")
     lines.append("  - If output is too large, refine the query with tighter filters/fields/limit.")
+    lines.append("  - When searching for text, ALWAYS prefer `fuzzy` over `like`.")
+    lines.append("    `fuzzy` matches words in any order, ignores punctuation/casing, and handles partial names.")
+    lines.append("    `like` requires exact substring match and fails on typos or word reordering.")
+    lines.append("    Only fall back to `like` when you need exact substring matching (e.g. prefix search on IDs).")
 
+    # Search section — only if entities have searchable fields
     if search_field_paths:
         lines.append("SEARCH:")
         lines.append('  execute(entity, action="context_store_search", params={')
-
         lines.append('    "query": {"filter": <condition>, "sort": [{"field": "asc|desc"}, ...]},')
         lines.append('    "limit": <int>, "cursor": <str>, "fields": ["field", "nested.field", ...]')
         lines.append("  })")
@@ -587,6 +673,15 @@ def generate_tool_description(
         lines.append("  Conditions are composable:")
         lines.append("    - eq, neq, gt, gte, lt, lte, in, like, fuzzy, keyword, contains, any")
         lines.append('    - and/or/not to combine conditions (e.g., {"and": [cond1, cond2]})')
+
+    # Shared constants — these are the single source of truth, also composed into
+    # EXECUTE_INSTRUCTIONS (the MCP/backend path). Split into lines here because
+    # pydantic-ai/griffe truncates docstrings at blank lines, so we can't use the
+    # constants' \n\n separators directly.
+    lines.extend(FILTER_OPERATORS.split("\n"))
+    lines.extend(ID_RESOLUTION.split("\n"))
+    lines.extend(PAGINATION.split("\n"))
+    lines.extend(DATE_RANGES.split("\n"))
 
     # Add example questions — try direct model field first, fall back to openapi_spec
     example_questions = getattr(model, "example_questions", None)
@@ -604,17 +699,17 @@ def generate_tool_description(
 
         selected_questions: list[str] = []
         if direct_questions or search_questions:
-            if enable_hosted_mode_features and search_questions:
+            if search_questions:
                 selected_questions = list(search_questions)
             else:
-                selected_questions = list(direct_questions) or list(search_questions)
+                selected_questions = list(direct_questions)
 
         if selected_questions:
             lines.append("EXAMPLE QUESTIONS:")
             for q in selected_questions[:MAX_EXAMPLE_QUESTIONS]:
                 lines.append(f"  - {q}")
 
-    # Generic parameter description for function signature
+    # Function parameters — SDK API shape
     lines.append("FUNCTION PARAMETERS:")
     lines.append("  - entity: Entity name (string)")
     lines.append("  - action: Operation to perform (string)")
