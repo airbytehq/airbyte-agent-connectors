@@ -1216,6 +1216,47 @@ components:
             im:history: View messages and other content in direct messages
             mpim:read: View basic information about group direct messages
             mpim:history: View messages and other content in group direct messages
+      x-airbyte-oauth-scopes:
+        - scope: "users:read"
+          mode: read
+          entities:
+            - users
+        - scope: "channels:read"
+          mode: read
+          entities:
+            - channels
+        - scope: "channels:history"
+          mode: read
+          entities:
+            - channel_messages
+            - threads
+        - scope: "groups:read"
+          mode: read
+          entities:
+            - channels
+        - scope: "groups:history"
+          mode: read
+          entities:
+            - channel_messages
+            - threads
+        - scope: "im:read"
+          mode: read
+          entities:
+            - channels
+        - scope: "im:history"
+          mode: read
+          entities:
+            - channel_messages
+            - threads
+        - scope: "mpim:read"
+          mode: read
+          entities:
+            - channels
+        - scope: "mpim:history"
+          mode: read
+          entities:
+            - channel_messages
+            - threads
       x-airbyte-auth-config:
         title: "OAuth 2.0 Authentication"
         type: object
