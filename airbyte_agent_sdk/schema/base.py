@@ -107,6 +107,28 @@ class DocUrl(BaseModel):
         return v
 
 
+class ResponseErrorCheck(BaseModel):
+    """
+    Configuration for detecting application-level errors returned with HTTP 200 status.
+
+    Some APIs (e.g. Slack) return errors as JSON bodies with HTTP 200 instead of using
+    HTTP error status codes. This extension allows connectors to declare how to detect
+    such errors.
+
+    Example (Slack):
+        x-airbyte-response-error-check:
+          field: "ok"
+          on_value: false
+          message_field: "error"
+    """
+
+    model_config = ConfigDict(populate_by_name=True, extra="forbid")
+
+    field: str
+    on_value: Any
+    message_field: str | None = None
+
+
 class Info(BaseModel):
     """
     API metadata information.
@@ -172,6 +194,12 @@ class Info(BaseModel):
         alias="x-airbyte-skip-context-store",
         description="Reason why this connector does not define x-airbyte-context-store. "
         "Connectors must have either x-airbyte-context-store or x-airbyte-skip-context-store with a justification.",
+    )
+    x_airbyte_response_error_check: ResponseErrorCheck | None = Field(
+        default=None,
+        alias="x-airbyte-response-error-check",
+        description="Configuration for detecting application-level errors returned with HTTP 200 status. "
+        "Checks a field in the response body and raises an error when the field matches on_value.",
     )
 
 

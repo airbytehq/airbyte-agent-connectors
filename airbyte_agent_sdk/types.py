@@ -9,6 +9,7 @@ from uuid import UUID
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from airbyte_agent_sdk.constants import OPENAPI_DEFAULT_VERSION
+from airbyte_agent_sdk.schema.base import ResponseErrorCheck
 from airbyte_agent_sdk.schema.components import PathOverrideConfig
 from airbyte_agent_sdk.schema.extensions import EntityRelationshipConfig, RetryConfig, ScopingParamConfig
 from airbyte_agent_sdk.schema.security import AuthConfigSpec
@@ -362,3 +363,4 @@ class ConnectorModel(BaseModel):
         description="Default values for server URL variables from the OpenAPI spec. "
         "Used as fallbacks when config_values doesn't include a variable.",
     )
+    response_error_check: ResponseErrorCheck | None = None

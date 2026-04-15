@@ -603,6 +603,7 @@ def convert_openapi_to_connector_model(spec: OpenAPIConnector) -> ConnectorModel
         example_questions=example_questions,
         server_variable_defaults=server_variable_defaults,
         scoping=scoping,
+        response_error_check=spec.info.x_airbyte_response_error_check,
     )
 
     return model

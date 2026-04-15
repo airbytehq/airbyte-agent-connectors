@@ -25,6 +25,7 @@ from airbyte_agent_sdk.constants import (
     DEFAULT_MAX_CONNECTIONS,
     DEFAULT_MAX_KEEPALIVE_CONNECTIONS,
 )
+from airbyte_agent_sdk.http.exceptions import HTTPClientError
 from airbyte_agent_sdk.http_client import HTTPClient, TokenRefreshCallback
 from airbyte_agent_sdk.logging import NullLogger, RequestLogger
 from airbyte_agent_sdk.observability import ObservabilitySession
@@ -1944,6 +1945,17 @@ class _StandardOperationHandler:
                     content=request_kwargs.get("content"),
                     headers=header_params if header_params else None,
                 )
+
+                # Check for application-level errors returned with HTTP 200
+                error_check = self.ctx.executor.model.response_error_check
+                if error_check and isinstance(response_data, dict):
+                    if response_data.get(error_check.field) == error_check.on_value:
+                        error_msg = (
+                            str(response_data.get(error_check.message_field, "unknown_error"))
+                            if error_check.message_field
+                            else "API returned application-level error"
+                        )
+                        raise HTTPClientError(f"API error: {error_msg}")
 
                 # Extract metadata from original response (before record extraction)
                 metadata = self.ctx.executor._extract_metadata(response_data, response_headers, endpoint)
