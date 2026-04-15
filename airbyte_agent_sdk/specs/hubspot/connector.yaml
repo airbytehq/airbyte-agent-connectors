@@ -1143,6 +1143,31 @@ components:
             crm.objects.companies.write: Write companies
             crm.objects.deals.read: Read deals
             crm.objects.deals.write: Write deals
+      x-airbyte-oauth-scopes:
+        - scope: "crm.objects.contacts.read"
+          mode: read
+          entities:
+            - contacts
+        - scope: "crm.objects.contacts.write"
+          mode: write
+          entities:
+            - contacts
+        - scope: "crm.objects.companies.read"
+          mode: read
+          entities:
+            - companies
+        - scope: "crm.objects.companies.write"
+          mode: write
+          entities:
+            - companies
+        - scope: "crm.objects.deals.read"
+          mode: read
+          entities:
+            - deals
+        - scope: "crm.objects.deals.write"
+          mode: write
+          entities:
+            - deals
       x-airbyte-token-refresh:
         auth_style: body
         body_format: form

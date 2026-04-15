@@ -66,13 +66,6 @@ class AdAccountsList(BaseModel):
     items: Union[list[AdAccount], Any] = Field(default=None)
     bookmark: Union[str | None, Any] = Field(default=None)
 
-class BoardOwner(BaseModel):
-    """Board owner details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
-    """Username of the board owner"""
-
 class BoardMedia(BaseModel):
     """Media content for the board"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -81,6 +74,13 @@ class BoardMedia(BaseModel):
     """Cover image URL"""
     pin_thumbnail_urls: Union[list[str] | None, Any] = Field(default=None, description="Thumbnail URLs of pins")
     """Thumbnail URLs of pins"""
+
+class BoardOwner(BaseModel):
+    """Board owner details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
+    """Username of the board owner"""
 
 class Board(BaseModel):
     """Pinterest board object"""
@@ -287,19 +287,19 @@ class BoardSectionsList(BaseModel):
     items: Union[list[BoardSection], Any] = Field(default=None)
     bookmark: Union[str | None, Any] = Field(default=None)
 
-class BoardPinBoardOwner(BaseModel):
-    """Board owner info"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
-    """Username of the board owner"""
-
 class BoardPinMedia(BaseModel):
     """Media content"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     media_type: Union[str | None, Any] = Field(default=None, description="Type of media")
     """Type of media"""
+
+class BoardPinBoardOwner(BaseModel):
+    """Board owner info"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    username: Union[str | None, Any] = Field(default=None, description="Username of the board owner")
+    """Username of the board owner"""
 
 class BoardPin(BaseModel):
     """Pinterest pin on a board"""

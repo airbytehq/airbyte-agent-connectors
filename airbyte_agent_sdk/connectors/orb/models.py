@@ -190,13 +190,6 @@ class PlansList(BaseModel):
     data: Union[list[Plan], Any] = Field(default=None)
     pagination_metadata: Union[PaginationMetadata, Any] = Field(default=None)
 
-class InvoiceSubscription(BaseModel):
-    """The subscription associated with the invoice"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
-    """The subscription ID"""
-
 class InvoiceLineItemsItem(BaseModel):
     """Nested schema for Invoice.line_items_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -222,6 +215,13 @@ class InvoiceCustomer(BaseModel):
     """The customer ID"""
     external_customer_id: Union[str | None, Any] = Field(default=None, description="The external customer ID")
     """The external customer ID"""
+
+class InvoiceSubscription(BaseModel):
+    """The subscription associated with the invoice"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None, description="The subscription ID")
+    """The subscription ID"""
 
 class Invoice(BaseModel):
     """Invoice object"""
