@@ -22,6 +22,7 @@ from airbyte_agent_sdk.schema.security import (
 )
 from airbyte_agent_sdk.schema.base import (
     ExampleQuestions,
+    ResponseErrorCheck,
 )
 from uuid import (
     UUID,
@@ -3523,5 +3524,10 @@ SlackConnectorModel: ConnectorModel = ConnectorModel(
             'Create a new user in the workspace',
             'Update user profile information',
         ],
+    ),
+    response_error_check=ResponseErrorCheck(
+        field='ok',
+        on_value=False,
+        message_field='error',
     ),
 )

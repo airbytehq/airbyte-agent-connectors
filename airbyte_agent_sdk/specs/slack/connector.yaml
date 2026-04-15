@@ -689,6 +689,11 @@ info:
               - "string"
             description: "Specifies who can share the user's contact card."
 
+  x-airbyte-response-error-check:
+    field: "ok"
+    on_value: false
+    message_field: "error"
+
 servers:
   - url: https://slack.com/api
     description: Slack API server
