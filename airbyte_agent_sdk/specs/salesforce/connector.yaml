@@ -2385,6 +2385,7 @@ paths:
             - "SELECT Id, Subject, Status FROM Case WHERE CreatedDate = TODAY"
           schema:
             type: string
+            default: "SELECT Id FROM Organization LIMIT 1"
       responses:
         "200":
           description: Query results

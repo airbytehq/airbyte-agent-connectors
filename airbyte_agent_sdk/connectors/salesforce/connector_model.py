@@ -1846,7 +1846,11 @@ SalesforceConnectorModel: ConnectorModel = ConnectorModel(
                     description='Execute a custom SOQL query and return results. Use this for querying any Salesforce object.\nFor pagination, check the response: if `done` is false, use `nextRecordsUrl` to fetch the next page.\n',
                     query_params=['q'],
                     query_params_schema={
-                        'q': {'type': 'string', 'required': True},
+                        'q': {
+                            'type': 'string',
+                            'required': True,
+                            'default': 'SELECT Id FROM Organization LIMIT 1',
+                        },
                     },
                     response_schema={
                         'type': 'object',

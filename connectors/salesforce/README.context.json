@@ -1497,7 +1497,8 @@
             "python_name": "q",
             "type": "str",
             "schema": {
-              "type": "string"
+              "type": "string",
+              "default": "SELECT Id FROM Organization LIMIT 1"
             },
             "required": true,
             "description": "SOQL query string. Include LIMIT clause to control the number of records returned.\nExamples:\n- \"SELECT Id, Name FROM Account LIMIT 100\"\n- \"SELECT FIELDS(STANDARD) FROM Contact WHERE AccountId = '001xx...' LIMIT 50\"\n- \"SELECT Id, Subject, Status FROM Case WHERE CreatedDate = TODAY\"\n",
