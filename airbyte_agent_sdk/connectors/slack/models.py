@@ -212,6 +212,14 @@ class Attachment(BaseModel):
     footer_icon: Union[str | None, Any] = Field(default=None)
     ts: Union[Any, Any] = Field(default=None)
 
+class Reaction(BaseModel):
+    """Message reaction"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str | None, Any] = Field(default=None)
+    users: Union[list[str] | None, Any] = Field(default=None)
+    count: Union[int | None, Any] = Field(default=None)
+
 class File(BaseModel):
     """File object"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -235,14 +243,6 @@ class File(BaseModel):
     permalink_public: Union[str | None, Any] = Field(default=None)
     created: Union[int | None, Any] = Field(default=None)
     timestamp: Union[int | None, Any] = Field(default=None)
-
-class Reaction(BaseModel):
-    """Message reaction"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str | None, Any] = Field(default=None)
-    users: Union[list[str] | None, Any] = Field(default=None)
-    count: Union[int | None, Any] = Field(default=None)
 
 class Message(BaseModel):
     """Slack message object"""
@@ -437,6 +437,21 @@ class ChannelPurposeParams(BaseModel):
 
 class ChannelPurposeResponse(BaseModel):
     """Response from setting channel purpose"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    ok: Union[bool, Any] = Field(default=None)
+    channel: Union[Channel, Any] = Field(default=None)
+
+class ChannelInviteParams(BaseModel):
+    """Parameters for inviting users to a channel"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    channel: Union[str, Any] = Field(default=None)
+    users: Union[str, Any] = Field(default=None)
+    force: Union[bool, Any] = Field(default=None)
+
+class ChannelInviteResponse(BaseModel):
+    """Response from inviting users to a channel"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     ok: Union[bool, Any] = Field(default=None)

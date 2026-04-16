@@ -20,6 +20,7 @@ from .connector_model import SlackConnectorModel
 from airbyte_agent_sdk.introspection import describe_entities, generate_tool_description
 from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
+    ChannelInvitesCreateParams,
     ChannelMessagesListParams,
     ChannelPurposesCreateParams,
     ChannelTopicsCreateParams,
@@ -137,6 +138,7 @@ class SlackConnector:
         ("channels", "update"): None,
         ("channel_topics", "create"): None,
         ("channel_purposes", "create"): None,
+        ("channel_invites", "create"): None,
         ("reactions", "create"): None,
     }
 
@@ -155,6 +157,7 @@ class SlackConnector:
         ('channels', 'update'): {'channel': 'channel', 'name': 'name'},
         ('channel_topics', 'create'): {'channel': 'channel', 'topic': 'topic'},
         ('channel_purposes', 'create'): {'channel': 'channel', 'purpose': 'purpose'},
+        ('channel_invites', 'create'): {'channel': 'channel', 'users': 'users', 'force': 'force'},
         ('reactions', 'create'): {'channel': 'channel', 'timestamp': 'timestamp', 'name': 'name'},
     }
 
@@ -267,6 +270,7 @@ class SlackConnector:
         self.messages = MessagesQuery(self)
         self.channel_topics = ChannelTopicsQuery(self)
         self.channel_purposes = ChannelPurposesQuery(self)
+        self.channel_invites = ChannelInvitesQuery(self)
         self.reactions = ReactionsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
@@ -365,6 +369,14 @@ class SlackConnector:
         entity: Literal["channel_purposes"],
         action: Literal["create"],
         params: "ChannelPurposesCreateParams"
+    ) -> "Channel": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["channel_invites"],
+        action: Literal["create"],
+        params: "ChannelInvitesCreateParams"
     ) -> "Channel": ...
 
     @overload
@@ -1587,6 +1599,46 @@ class ChannelPurposesQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("channel_purposes", "create", params)
+        return result
+
+
+
+class ChannelInvitesQuery:
+    """
+    Query class for ChannelInvites entity operations.
+    """
+
+    def __init__(self, connector: SlackConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        channel: str,
+        users: str,
+        force: bool | None = None,
+        **kwargs
+    ) -> Channel:
+        """
+        Invites one or more users to a public or private channel
+
+        Args:
+            channel: The ID of the public or private channel to invite user(s) to
+            users: A comma separated list of user IDs. Up to 1000 users may be listed.
+            force: When set to true and multiple user IDs are provided, continue inviting the valid ones while disregarding invalid IDs. Defaults to false.
+            **kwargs: Additional parameters
+
+        Returns:
+            Channel
+        """
+        params = {k: v for k, v in {
+            "channel": channel,
+            "users": users,
+            "force": force,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("channel_invites", "create", params)
         return result
 
 

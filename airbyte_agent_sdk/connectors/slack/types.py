@@ -93,6 +93,12 @@ class ChannelPurposesCreateParams(TypedDict):
     channel: str
     purpose: str
 
+class ChannelInvitesCreateParams(TypedDict):
+    """Parameters for channel_invites.create operation"""
+    channel: str
+    users: str
+    force: NotRequired[bool]
+
 class ReactionsCreateParams(TypedDict):
     """Parameters for reactions.create operation"""
     channel: str

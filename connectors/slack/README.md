@@ -5,8 +5,8 @@ The Slack agent connector is a Python package that equips AI agents to interact 
 Slack is a business communication platform that offers messaging, file sharing, and integrations
 with other tools. This connector provides read access to users, channels, channel members, channel
 messages, and threads for workspace analytics. It also supports write operations including sending
-and updating messages, creating and renaming channels, setting channel topics and purposes, and
-adding reactions to messages.
+and updating messages, creating and renaming channels, setting channel topics and purposes,
+adding reactions to messages, and inviting users to channels.
 
 
 ## Example questions
@@ -32,6 +32,8 @@ The Slack connector is optimized to handle prompts like these.
 - Add a thumbsup reaction to the latest message in a channel
 - React with :rocket: to the latest message in a channel
 - Reply to a recent thread with 'Thanks for the update!'
+- Invite a user to a channel
+- Add a team member to the #project-updates channel
 - What messages were posted in channel \{channel_id\} last week?
 - Show me the conversation history for channel \{channel_id\}
 - Search for messages mentioning \{keyword\} in channel \{channel_id\}
@@ -43,7 +45,6 @@ The Slack connector isn't currently able to handle prompts like these.
 - Delete a message from channel \{channel_id\}
 - Remove a reaction from a message
 - Archive channel \{channel_id\}
-- Invite user \{user_id\} to channel \{channel_id\}
 - Remove user \{user_id\} from channel \{channel_id\}
 - Delete channel \{channel_id\}
 - Create a new user in the workspace
@@ -119,6 +120,7 @@ This connector supports the following entities and actions. For more details, se
 | Messages | [Create](./REFERENCE.md#messages-create), [Update](./REFERENCE.md#messages-update) |
 | Channel Topics | [Create](./REFERENCE.md#channel-topics-create) |
 | Channel Purposes | [Create](./REFERENCE.md#channel-purposes-create) |
+| Channel Invites | [Create](./REFERENCE.md#channel-invites-create) |
 | Reactions | [Create](./REFERENCE.md#reactions-create) |
 
 
