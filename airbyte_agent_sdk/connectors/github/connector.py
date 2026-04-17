@@ -32,6 +32,7 @@ from .types import (
     DiscussionsListParams,
     FileContentGetParams,
     IssuesApiSearchParams,
+    IssuesCreateParams,
     IssuesGetParams,
     IssuesListParams,
     LabelsGetParams,
@@ -124,6 +125,7 @@ from .models import (
     DiscussionsListResult,
     DiscussionsApiSearchResult,
     DirectoryContentListResult,
+    IssueResponse,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     BranchesSearchData,
@@ -194,7 +196,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.18"
-    sdk_version = "0.1.6"
+    sdk_version = "0.1.7"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -211,6 +213,7 @@ class GithubConnector:
         ("issues", "list"): True,
         ("issues", "get"): None,
         ("issues", "api_search"): True,
+        ("issues", "create"): None,
         ("pull_requests", "list"): True,
         ("pull_requests", "get"): None,
         ("pull_requests", "api_search"): True,
@@ -261,6 +264,7 @@ class GithubConnector:
         ('issues', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('issues', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
         ('issues', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
+        ('issues', 'create'): {'title': 'title', 'body': 'body', 'labels': 'labels', 'assignees': 'assignees', 'milestone': 'milestone', 'owner': 'owner', 'repo': 'repo'},
         ('pull_requests', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('pull_requests', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
         ('pull_requests', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
@@ -531,6 +535,14 @@ class GithubConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["issues"],
+        action: Literal["create"],
+        params: "IssuesCreateParams"
+    ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["pull_requests"],
         action: Literal["list"],
         params: "PullRequestsListParams"
@@ -789,14 +801,14 @@ class GithubConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "api_search", "context_store_search"],
+        action: Literal["get", "list", "api_search", "create", "context_store_search"],
         params: Mapping[str, Any]
     ) -> GithubExecuteResult[Any] | GithubExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "api_search", "context_store_search"],
+        action: Literal["get", "list", "api_search", "create", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1887,6 +1899,52 @@ class IssuesQuery:
         return IssuesApiSearchResult(
             data=result.data
         )
+
+
+
+    async def create(
+        self,
+        title: str,
+        owner: str,
+        repo: str,
+        body: str | None = None,
+        labels: list[str] | None = None,
+        assignees: list[str] | None = None,
+        milestone: int | None | None = None,
+        **kwargs
+    ) -> IssueResponse:
+        """
+        Creates a new issue in the specified repository.
+Any user with pull access to a repository can create an issue.
+Labels and assignees are silently dropped if the authenticated user does not have push access.
+
+
+        Args:
+            title: The title of the issue
+            body: The contents of the issue (supports Markdown)
+            labels: Labels to associate with this issue (requires push access)
+            assignees: Logins for users to assign to this issue (requires push access)
+            milestone: The number of the milestone to associate this issue with (requires push access)
+            owner: The account owner of the repository (username or organization)
+            repo: The name of the repository
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueResponse
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "body": body,
+            "labels": labels,
+            "assignees": assignees,
+            "milestone": milestone,
+            "owner": owner,
+            "repo": repo,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "create", params)
+        return result
 
 
 

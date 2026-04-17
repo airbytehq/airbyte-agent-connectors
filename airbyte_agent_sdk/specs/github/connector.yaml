@@ -41,8 +41,12 @@ info:
       - "Show me insights about pull request review patterns in our team"
       - "List all unanswered discussions in a repository"
       - "Show me recent discussions in the General category"
+      - "Create a new issue titled 'Fix login bug' in my repository"
+      - "Create an issue with labels 'bug' and 'urgent' in owner/repo"
+      - "File a new bug report issue in our project repository"
+      - "Create an issue and assign it to a team member"
+      - "Open a new feature request issue in the repository"
     unsupported:
-      - "Create a new issue in the project repository"
       - "Update the status of this pull request"
       - "Delete an old branch from the repository"
       - "Schedule a team review for this code"
@@ -145,6 +149,273 @@ components:
           credentials.personal_access_token: "token"
         replication_auth_key_constants:
           credentials.option_title: "PAT Credentials"
+
+  schemas:
+    IssueCreateParams:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+          description: The title of the issue
+        body:
+          type: string
+          description: The contents of the issue (supports Markdown)
+        labels:
+          type: array
+          description: Labels to associate with this issue (requires push access)
+          items:
+            type: string
+        assignees:
+          type: array
+          description: Logins for users to assign to this issue (requires push access)
+          items:
+            type: string
+        milestone:
+          type:
+            - integer
+            - "null"
+          description: The number of the milestone to associate this issue with (requires push access)
+
+    IssueResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the issue
+        node_id:
+          type: string
+          description: GraphQL node ID
+        url:
+          type: string
+          description: API URL for this issue
+        repository_url:
+          type: string
+          description: API URL for the repository
+        labels_url:
+          type: string
+          description: URL template for labels
+        comments_url:
+          type: string
+          description: API URL for comments
+        events_url:
+          type: string
+          description: API URL for events
+        html_url:
+          type: string
+          description: Web URL for this issue
+        number:
+          type: integer
+          description: Issue number
+        state:
+          type: string
+          description: State of the issue (open or closed)
+        state_reason:
+          type:
+            - string
+            - "null"
+          description: Reason for the current state
+        title:
+          type: string
+          description: Title of the issue
+        body:
+          type:
+            - string
+            - "null"
+          description: Body content of the issue
+        user:
+          type:
+            - object
+            - "null"
+          description: The user who created the issue
+          properties:
+            login:
+              type: string
+            id:
+              type: integer
+            node_id:
+              type: string
+            avatar_url:
+              type: string
+            url:
+              type: string
+            html_url:
+              type: string
+            type:
+              type: string
+            site_admin:
+              type: boolean
+        labels:
+          type: array
+          description: Labels associated with this issue
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              node_id:
+                type: string
+              url:
+                type: string
+              name:
+                type: string
+              color:
+                type: string
+              default:
+                type: boolean
+              description:
+                type:
+                  - string
+                  - "null"
+        assignees:
+          type: array
+          description: Users assigned to this issue
+          items:
+            type: object
+            properties:
+              login:
+                type: string
+              id:
+                type: integer
+              node_id:
+                type: string
+              avatar_url:
+                type: string
+              url:
+                type: string
+              html_url:
+                type: string
+              type:
+                type: string
+              site_admin:
+                type: boolean
+        milestone:
+          type:
+            - object
+            - "null"
+          description: Milestone associated with this issue
+        locked:
+          type: boolean
+          description: Whether the issue is locked
+        comments:
+          type: integer
+          description: Number of comments
+        closed_at:
+          type:
+            - string
+            - "null"
+          description: When the issue was closed
+        created_at:
+          type: string
+          description: When the issue was created
+        updated_at:
+          type: string
+          description: When the issue was last updated
+        author_association:
+          type: string
+          description: How the author is associated with the repository
+        active_lock_reason:
+          type:
+            - string
+            - "null"
+          description: The reason the issue is locked
+        closed_by:
+          type:
+            - object
+            - "null"
+          description: The user who closed the issue
+        timeline_url:
+          type: string
+          description: API URL for the issue timeline
+        performed_via_github_app:
+          type:
+            - object
+            - "null"
+          description: GitHub App that performed the action
+        assignee:
+          type:
+            - object
+            - "null"
+          description: Primary user assigned to this issue
+          properties:
+            login:
+              type: string
+            id:
+              type: integer
+            node_id:
+              type: string
+            avatar_url:
+              type: string
+            url:
+              type: string
+            html_url:
+              type: string
+            type:
+              type: string
+            site_admin:
+              type: boolean
+        reactions:
+          type: object
+          description: Reaction counts
+          properties:
+            url:
+              type: string
+            total_count:
+              type: integer
+            "+1":
+              type: integer
+            "-1":
+              type: integer
+            laugh:
+              type: integer
+            hooray:
+              type: integer
+            confused:
+              type: integer
+            heart:
+              type: integer
+            rocket:
+              type: integer
+            eyes:
+              type: integer
+        sub_issues_summary:
+          type: object
+          description: Summary of sub-issues
+          properties:
+            total:
+              type: integer
+            completed:
+              type: integer
+            percent_completed:
+              type: integer
+        type:
+          type:
+            - object
+            - "null"
+          description: Issue type
+        pinned_comment:
+          type:
+            - object
+            - "null"
+          description: Pinned comment on the issue
+        issue_field_values:
+          type: array
+          description: Custom field values for the issue
+          items:
+            type: object
+        issue_dependencies_summary:
+          type: object
+          description: Summary of issue dependencies
+          properties:
+            blocked_by:
+              type: integer
+            blocking:
+              type: integer
+            total_blocked_by:
+              type: integer
+            total_blocking:
+              type: integer
 
 paths:
   /graphql:repositories:get:
@@ -1468,6 +1739,56 @@ paths:
                             type: array
                             items:
                               type: object
+
+  # Issues create endpoint (REST API)
+  /repos/{owner}/{repo}/issues:
+    post:
+      summary: Create an issue
+      description: |
+        Creates a new issue in the specified repository.
+        Any user with pull access to a repository can create an issue.
+        Labels and assignees are silently dropped if the authenticated user does not have push access.
+      operationId: Issues_Create
+      x-airbyte-entity: issues
+      x-airbyte-action: create
+      tags:
+        - Issues
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The account owner of the repository (username or organization)
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          description: The name of the repository
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueCreateParams"
+      responses:
+        "201":
+          description: Issue created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueResponse"
+        "400":
+          description: Bad request
+        "403":
+          description: Forbidden
+        "404":
+          description: Repository not found
+        "410":
+          description: Issues are disabled for this repository
+        "422":
+          description: Validation failed
 
   # Pull Requests endpoints
   /graphql:pull_requests:list:

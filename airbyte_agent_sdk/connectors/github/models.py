@@ -42,6 +42,138 @@ class GithubReplicationConfig(BaseModel):
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
 
+class IssueCreateParams(BaseModel):
+    """IssueCreateParams type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    title: Union[str, Any] = Field(default=None)
+    body: Union[str, Any] = Field(default=None)
+    labels: Union[list[str], Any] = Field(default=None)
+    assignees: Union[list[str], Any] = Field(default=None)
+    milestone: Union[int | None, Any] = Field(default=None)
+
+class IssueResponseUser(BaseModel):
+    """The user who created the issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: Union[str, Any] = Field(default=None)
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    avatar_url: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
+    site_admin: Union[bool, Any] = Field(default=None)
+
+class IssueResponseLabelsItem(BaseModel):
+    """Nested schema for IssueResponse.labels_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    color: Union[str, Any] = Field(default=None)
+    default: Union[bool, Any] = Field(default=None)
+    description: Union[str | None, Any] = Field(default=None)
+
+class IssueResponseIssueDependenciesSummary(BaseModel):
+    """Summary of issue dependencies"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    blocked_by: Union[int, Any] = Field(default=None)
+    blocking: Union[int, Any] = Field(default=None)
+    total_blocked_by: Union[int, Any] = Field(default=None)
+    total_blocking: Union[int, Any] = Field(default=None)
+
+class IssueResponseAssignee(BaseModel):
+    """Primary user assigned to this issue"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: Union[str, Any] = Field(default=None)
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    avatar_url: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
+    site_admin: Union[bool, Any] = Field(default=None)
+
+class IssueResponseReactions(BaseModel):
+    """Reaction counts"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    url: Union[str, Any] = Field(default=None)
+    total_count: Union[int, Any] = Field(default=None)
+    field_1: Union[int, Any] = Field(default=None, alias="+1")
+    field_1: Union[int, Any] = Field(default=None, alias="-1")
+    laugh: Union[int, Any] = Field(default=None)
+    hooray: Union[int, Any] = Field(default=None)
+    confused: Union[int, Any] = Field(default=None)
+    heart: Union[int, Any] = Field(default=None)
+    rocket: Union[int, Any] = Field(default=None)
+    eyes: Union[int, Any] = Field(default=None)
+
+class IssueResponseSubIssuesSummary(BaseModel):
+    """Summary of sub-issues"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    total: Union[int, Any] = Field(default=None)
+    completed: Union[int, Any] = Field(default=None)
+    percent_completed: Union[int, Any] = Field(default=None)
+
+class IssueResponseAssigneesItem(BaseModel):
+    """Nested schema for IssueResponse.assignees_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    login: Union[str, Any] = Field(default=None)
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    avatar_url: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    type_: Union[str, Any] = Field(default=None, alias="type")
+    site_admin: Union[bool, Any] = Field(default=None)
+
+class IssueResponse(BaseModel):
+    """IssueResponse type definition"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None)
+    node_id: Union[str, Any] = Field(default=None)
+    url: Union[str, Any] = Field(default=None)
+    repository_url: Union[str, Any] = Field(default=None)
+    labels_url: Union[str, Any] = Field(default=None)
+    comments_url: Union[str, Any] = Field(default=None)
+    events_url: Union[str, Any] = Field(default=None)
+    html_url: Union[str, Any] = Field(default=None)
+    number: Union[int, Any] = Field(default=None)
+    state: Union[str, Any] = Field(default=None)
+    state_reason: Union[str | None, Any] = Field(default=None)
+    title: Union[str, Any] = Field(default=None)
+    body: Union[str | None, Any] = Field(default=None)
+    user: Union[IssueResponseUser | None, Any] = Field(default=None)
+    labels: Union[list[IssueResponseLabelsItem], Any] = Field(default=None)
+    assignees: Union[list[IssueResponseAssigneesItem], Any] = Field(default=None)
+    milestone: Union[dict[str, Any] | None, Any] = Field(default=None)
+    locked: Union[bool, Any] = Field(default=None)
+    comments: Union[int, Any] = Field(default=None)
+    closed_at: Union[str | None, Any] = Field(default=None)
+    created_at: Union[str, Any] = Field(default=None)
+    updated_at: Union[str, Any] = Field(default=None)
+    author_association: Union[str, Any] = Field(default=None)
+    active_lock_reason: Union[str | None, Any] = Field(default=None)
+    closed_by: Union[dict[str, Any] | None, Any] = Field(default=None)
+    timeline_url: Union[str, Any] = Field(default=None)
+    performed_via_github_app: Union[dict[str, Any] | None, Any] = Field(default=None)
+    assignee: Union[IssueResponseAssignee | None, Any] = Field(default=None)
+    reactions: Union[IssueResponseReactions, Any] = Field(default=None)
+    sub_issues_summary: Union[IssueResponseSubIssuesSummary, Any] = Field(default=None)
+    type_: Union[dict[str, Any] | None, Any] = Field(default=None, alias="type")
+    pinned_comment: Union[dict[str, Any] | None, Any] = Field(default=None)
+    issue_field_values: Union[list[dict[str, Any]], Any] = Field(default=None)
+    issue_dependencies_summary: Union[IssueResponseIssueDependenciesSummary, Any] = Field(default=None)
+
 # ===== METADATA TYPE DEFINITIONS (PYDANTIC) =====
 # Meta types for operations that extract metadata (e.g., pagination info)
 

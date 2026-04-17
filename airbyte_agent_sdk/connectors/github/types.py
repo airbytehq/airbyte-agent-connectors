@@ -115,6 +115,16 @@ class IssuesApiSearchParams(TypedDict):
     after: NotRequired[str]
     fields: NotRequired[list[str]]
 
+class IssuesCreateParams(TypedDict):
+    """Parameters for issues.create operation"""
+    title: str
+    body: NotRequired[str]
+    labels: NotRequired[list[str]]
+    assignees: NotRequired[list[str]]
+    milestone: NotRequired[int | None]
+    owner: str
+    repo: str
+
 class PullRequestsListParams(TypedDict):
     """Parameters for pull_requests.list operation"""
     owner: str
