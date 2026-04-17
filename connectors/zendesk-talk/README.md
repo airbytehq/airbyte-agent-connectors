@@ -123,4 +123,3 @@ See the official [Zendesk-Talk API reference](https://developer.zendesk.com/api-
 - **Package version:** 1.0.2
 - **Connector version:** 1.0.2
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/zendesk-talk/CHANGELOG.md)

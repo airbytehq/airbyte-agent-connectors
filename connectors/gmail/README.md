@@ -136,4 +136,3 @@ See the official [Gmail API reference](https://developers.google.com/gmail/api/r
 - **Package version:** 0.1.4
 - **Connector version:** 0.1.4
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gmail/CHANGELOG.md)

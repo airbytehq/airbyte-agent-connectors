@@ -130,4 +130,3 @@ See the official [Intercom API reference](https://developers.intercom.com/docs/r
 - **Package version:** 0.1.10
 - **Connector version:** 0.1.10
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/intercom/CHANGELOG.md)

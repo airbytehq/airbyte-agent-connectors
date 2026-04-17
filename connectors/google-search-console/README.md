@@ -120,4 +120,3 @@ See the official [Google-Search-Console API reference](https://developers.google
 - **Package version:** 1.0.3
 - **Connector version:** 1.0.3
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/google-search-console/CHANGELOG.md)

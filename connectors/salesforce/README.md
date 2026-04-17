@@ -130,4 +130,3 @@ See the official [Salesforce API reference](https://developer.salesforce.com/doc
 - **Package version:** 1.0.16
 - **Connector version:** 1.0.16
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/salesforce/CHANGELOG.md)

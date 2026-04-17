@@ -126,4 +126,3 @@ See the official [Chargebee API reference](https://apidocs.chargebee.com/docs/ap
 - **Package version:** 1.0.2
 - **Connector version:** 1.0.2
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/chargebee/CHANGELOG.md)

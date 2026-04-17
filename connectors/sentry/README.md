@@ -110,4 +110,3 @@ See the official [Sentry API reference](https://docs.sentry.io/api/).
 - **Package version:** 1.0.4
 - **Connector version:** 1.0.4
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/sentry/CHANGELOG.md)

@@ -123,4 +123,3 @@ See the official [Gitlab API reference](https://docs.gitlab.com/ee/api/rest/).
 - **Package version:** 1.0.4
 - **Connector version:** 1.0.4
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gitlab/CHANGELOG.md)

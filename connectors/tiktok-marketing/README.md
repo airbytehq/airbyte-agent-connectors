@@ -123,4 +123,3 @@ See the official [Tiktok-Marketing API reference](https://business-api.tiktok.co
 - **Package version:** 1.1.5
 - **Connector version:** 1.1.5
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/tiktok-marketing/CHANGELOG.md)

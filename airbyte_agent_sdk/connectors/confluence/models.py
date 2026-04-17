@@ -143,6 +143,23 @@ class PagesList(BaseModel):
     results: Union[list[Page], Any] = Field(default=None)
     links: Union[PagesListLinks, Any] = Field(default=None, alias="_links")
 
+class BlogPostVersion(BaseModel):
+    """Version information"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    created_at: Union[str, Any] = Field(default=None, alias="createdAt", description="Version creation timestamp")
+    """Version creation timestamp"""
+    message: Union[str, Any] = Field(default=None, description="Version message")
+    """Version message"""
+    number: Union[int, Any] = Field(default=None, description="Version number")
+    """Version number"""
+    minor_edit: Union[bool, Any] = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
+    """Whether this was a minor edit"""
+    author_id: Union[str, Any] = Field(default=None, alias="authorId", description="ID of the version author")
+    """ID of the version author"""
+    ncs_step_version: Union[Any, Any] = Field(default=None, alias="ncsStepVersion", description="NCS step version")
+    """NCS step version"""
+
 class BlogPostLinks(BaseModel):
     """Links related to the blog post"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -166,23 +183,6 @@ class BlogPostBody(BaseModel):
     """Storage format body"""
     atlas_doc_format: Union[dict[str, Any], Any] = Field(default=None, description="Atlas doc format body")
     """Atlas doc format body"""
-
-class BlogPostVersion(BaseModel):
-    """Version information"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    created_at: Union[str, Any] = Field(default=None, alias="createdAt", description="Version creation timestamp")
-    """Version creation timestamp"""
-    message: Union[str, Any] = Field(default=None, description="Version message")
-    """Version message"""
-    number: Union[int, Any] = Field(default=None, description="Version number")
-    """Version number"""
-    minor_edit: Union[bool, Any] = Field(default=None, alias="minorEdit", description="Whether this was a minor edit")
-    """Whether this was a minor edit"""
-    author_id: Union[str, Any] = Field(default=None, alias="authorId", description="ID of the version author")
-    """ID of the version author"""
-    ncs_step_version: Union[Any, Any] = Field(default=None, alias="ncsStepVersion", description="NCS step version")
-    """NCS step version"""
 
 class BlogPost(BaseModel):
     """Confluence blog post object"""
@@ -252,15 +252,6 @@ class GroupsList(BaseModel):
     size: Union[int, Any] = Field(default=None)
     links: Union[GroupsListLinks, Any] = Field(default=None, alias="_links")
 
-class AuditRecordAssociatedobjectsItem(BaseModel):
-    """Nested schema for AuditRecord.associatedObjects_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    name: Union[str, Any] = Field(default=None, description="Name of the associated object")
-    """Name of the associated object"""
-    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the associated object")
-    """Type of the associated object"""
-
 class AuditRecordAffectedobject(BaseModel):
     """Object affected by the audit event"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -269,6 +260,15 @@ class AuditRecordAffectedobject(BaseModel):
     """Name of the affected object"""
     object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the affected object")
     """Type of the affected object"""
+
+class AuditRecordAssociatedobjectsItem(BaseModel):
+    """Nested schema for AuditRecord.associatedObjects_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Name of the associated object")
+    """Name of the associated object"""
+    object_type: Union[str, Any] = Field(default=None, alias="objectType", description="Type of the associated object")
+    """Type of the associated object"""
 
 class AuditRecordAuthor(BaseModel):
     """User who triggered the audit event"""

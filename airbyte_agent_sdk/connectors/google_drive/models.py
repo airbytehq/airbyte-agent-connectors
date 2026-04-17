@@ -52,13 +52,6 @@ class User(BaseModel):
     permission_id: Union[str | None, Any] = Field(default=None, alias="permissionId")
     email_address: Union[str | None, Any] = Field(default=None, alias="emailAddress")
 
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    security_update_eligible: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEnabled")
-
 class FileImagemediametadataLocation(BaseModel):
     """Nested schema for FileImagemediametadata.location"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -93,6 +86,14 @@ class FileImagemediametadata(BaseModel):
     lens: Union[str | None, Any] = Field(default=None)
     location: Union[FileImagemediametadataLocation | None, Any] = Field(default=None)
 
+class FileVideomediametadata(BaseModel):
+    """Additional metadata about video media"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    width: Union[int | None, Any] = Field(default=None)
+    height: Union[int | None, Any] = Field(default=None)
+    duration_millis: Union[str | None, Any] = Field(default=None, alias="durationMillis")
+
 class FileShortcutdetails(BaseModel):
     """Shortcut file details"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -101,11 +102,12 @@ class FileShortcutdetails(BaseModel):
     target_mime_type: Union[str | None, Any] = Field(default=None, alias="targetMimeType")
     target_resource_key: Union[str | None, Any] = Field(default=None, alias="targetResourceKey")
 
-class FileLabelinfo(BaseModel):
-    """An overview of the labels on the file"""
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    labels: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+    security_update_eligible: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEnabled")
 
 class FileContentrestrictionsItem(BaseModel):
     """Nested schema for File.contentRestrictions_item"""
@@ -116,14 +118,6 @@ class FileContentrestrictionsItem(BaseModel):
     restricting_user: Union[Any, Any] = Field(default=None, alias="restrictingUser")
     restriction_time: Union[str | None, Any] = Field(default=None, alias="restrictionTime")
     type_: Union[str | None, Any] = Field(default=None, alias="type")
-
-class FileVideomediametadata(BaseModel):
-    """Additional metadata about video media"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    duration_millis: Union[str | None, Any] = Field(default=None, alias="durationMillis")
 
 class FileCapabilities(BaseModel):
     """Capabilities the current user has on this file"""
@@ -141,6 +135,12 @@ class FileCapabilities(BaseModel):
     can_add_children: Union[bool | None, Any] = Field(default=None, alias="canAddChildren")
     can_list_children: Union[bool | None, Any] = Field(default=None, alias="canListChildren")
     can_remove_children: Union[bool | None, Any] = Field(default=None, alias="canRemoveChildren")
+
+class FileLabelinfo(BaseModel):
+    """An overview of the labels on the file"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    labels: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
 
 class File(BaseModel):
     """The metadata for a file"""
@@ -242,6 +242,15 @@ class FileUploadParams(BaseModel):
     description: Union[str, Any] = Field(default=None)
     file_mime_type: Union[str, Any] = Field(default=None)
 
+class DriveBackgroundimagefile(BaseModel):
+    """An image file and cropping parameters for the background image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    x_coordinate: Union[float | None, Any] = Field(default=None, alias="xCoordinate")
+    y_coordinate: Union[float | None, Any] = Field(default=None, alias="yCoordinate")
+    width: Union[float | None, Any] = Field(default=None)
+
 class DriveCapabilities(BaseModel):
     """Capabilities the current user has on this shared drive"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -277,15 +286,6 @@ class DriveRestrictions(BaseModel):
     admin_managed_restrictions: Union[bool | None, Any] = Field(default=None, alias="adminManagedRestrictions")
     sharing_folders_requires_organizer_permission: Union[bool | None, Any] = Field(default=None, alias="sharingFoldersRequiresOrganizerPermission")
 
-class DriveBackgroundimagefile(BaseModel):
-    """An image file and cropping parameters for the background image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    x_coordinate: Union[float | None, Any] = Field(default=None, alias="xCoordinate")
-    y_coordinate: Union[float | None, Any] = Field(default=None, alias="yCoordinate")
-    width: Union[float | None, Any] = Field(default=None)
-
 class Drive(BaseModel):
     """Representation of a shared drive"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -311,20 +311,20 @@ class DrivesListResponse(BaseModel):
     next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
     drives: Union[list[Drive], Any] = Field(default=None)
 
-class PermissionTeamdrivepermissiondetailsItem(BaseModel):
-    """Nested schema for Permission.teamDrivePermissionDetails_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    team_drive_permission_type: Union[str | None, Any] = Field(default=None, alias="teamDrivePermissionType")
-    role: Union[str | None, Any] = Field(default=None)
-    inherited_from: Union[str | None, Any] = Field(default=None, alias="inheritedFrom")
-    inherited: Union[bool | None, Any] = Field(default=None)
-
 class PermissionPermissiondetailsItem(BaseModel):
     """Nested schema for Permission.permissionDetails_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     permission_type: Union[str | None, Any] = Field(default=None, alias="permissionType")
+    role: Union[str | None, Any] = Field(default=None)
+    inherited_from: Union[str | None, Any] = Field(default=None, alias="inheritedFrom")
+    inherited: Union[bool | None, Any] = Field(default=None)
+
+class PermissionTeamdrivepermissiondetailsItem(BaseModel):
+    """Nested schema for Permission.teamDrivePermissionDetails_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    team_drive_permission_type: Union[str | None, Any] = Field(default=None, alias="teamDrivePermissionType")
     role: Union[str | None, Any] = Field(default=None)
     inherited_from: Union[str | None, Any] = Field(default=None, alias="inheritedFrom")
     inherited: Union[bool | None, Any] = Field(default=None)
@@ -357,6 +357,13 @@ class PermissionsListResponse(BaseModel):
     next_page_token: Union[str | None, Any] = Field(default=None, alias="nextPageToken")
     permissions: Union[list[Permission], Any] = Field(default=None)
 
+class CommentQuotedfilecontent(BaseModel):
+    """The file content to which the comment refers"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    mime_type: Union[str | None, Any] = Field(default=None, alias="mimeType")
+    value: Union[str | None, Any] = Field(default=None)
+
 class Reply(BaseModel):
     """A reply to a comment on a file"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -370,13 +377,6 @@ class Reply(BaseModel):
     content: Union[str | None, Any] = Field(default=None)
     deleted: Union[bool | None, Any] = Field(default=None)
     action: Union[str | None, Any] = Field(default=None)
-
-class CommentQuotedfilecontent(BaseModel):
-    """The file content to which the comment refers"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    mime_type: Union[str | None, Any] = Field(default=None, alias="mimeType")
-    value: Union[str | None, Any] = Field(default=None)
 
 class Comment(BaseModel):
     """A comment on a file"""
@@ -478,6 +478,14 @@ class AboutDrivethemesItem(BaseModel):
     background_image_link: Union[str | None, Any] = Field(default=None, alias="backgroundImageLink")
     color_rgb: Union[str | None, Any] = Field(default=None, alias="colorRgb")
 
+class AboutTeamdrivethemesItem(BaseModel):
+    """Nested schema for About.teamDriveThemes_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    background_image_link: Union[str | None, Any] = Field(default=None, alias="backgroundImageLink")
+    color_rgb: Union[str | None, Any] = Field(default=None, alias="colorRgb")
+
 class AboutStoragequota(BaseModel):
     """The user's storage quota limits and usage"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -490,14 +498,6 @@ class AboutStoragequota(BaseModel):
     """The usage by all files in Google Drive"""
     usage_in_drive_trash: Union[str | None, Any] = Field(default=None, alias="usageInDriveTrash", description="The usage by trashed files in Google Drive")
     """The usage by trashed files in Google Drive"""
-
-class AboutTeamdrivethemesItem(BaseModel):
-    """Nested schema for About.teamDriveThemes_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    background_image_link: Union[str | None, Any] = Field(default=None, alias="backgroundImageLink")
-    color_rgb: Union[str | None, Any] = Field(default=None, alias="colorRgb")
 
 class About(BaseModel):
     """Information about the user, the user's Drive, and system capabilities"""

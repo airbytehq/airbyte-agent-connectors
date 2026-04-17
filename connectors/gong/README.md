@@ -130,4 +130,3 @@ See the official [Gong API reference](https://gong.app.gong.io/settings/api/docu
 - **Package version:** 0.1.21
 - **Connector version:** 0.1.21
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gong/CHANGELOG.md)

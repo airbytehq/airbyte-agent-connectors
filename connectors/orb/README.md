@@ -123,4 +123,3 @@ See the official [Orb API reference](https://docs.withorb.com/api-reference).
 - **Package version:** 0.1.7
 - **Connector version:** 0.1.7
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/orb/CHANGELOG.md)

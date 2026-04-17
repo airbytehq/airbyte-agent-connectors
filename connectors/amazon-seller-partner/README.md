@@ -116,4 +116,3 @@ See the official [Amazon-Seller-Partner API reference](https://developer-docs.am
 - **Package version:** 1.0.5
 - **Connector version:** 1.0.5
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/amazon-seller-partner/CHANGELOG.md)

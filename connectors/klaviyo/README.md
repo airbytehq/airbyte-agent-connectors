@@ -122,4 +122,3 @@ See the official [Klaviyo API reference](https://developers.klaviyo.com/en/refer
 - **Package version:** 1.0.4
 - **Connector version:** 1.0.4
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/klaviyo/CHANGELOG.md)

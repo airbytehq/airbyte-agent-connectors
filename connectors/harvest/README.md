@@ -133,4 +133,3 @@ See the official [Harvest API reference](https://help.getharvest.com/api-v2/).
 - **Package version:** 1.0.3
 - **Connector version:** 1.0.3
 - **Generated with Connector SDK commit SHA:** unknown
-- **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/harvest/CHANGELOG.md)
