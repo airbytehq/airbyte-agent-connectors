@@ -727,6 +727,7 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                 Action.GET,
                 Action.API_SEARCH,
                 Action.CREATE,
+                Action.UPDATE,
             ],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -1118,12 +1119,569 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PATCH',
+                    path='/repos/{owner}/{repo}/issues/{issue_number}',
+                    action=Action.UPDATE,
+                    description='Updates an existing issue in the specified repository.\nUse this to close/reopen issues, change title/body, add/remove labels, assign users, or set milestones.\nAny user with push access can update an issue.\n',
+                    body_fields=[
+                        'title',
+                        'body',
+                        'state',
+                        'state_reason',
+                        'labels',
+                        'assignees',
+                        'milestone',
+                    ],
+                    path_params=['owner', 'repo', 'issue_number'],
+                    path_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'issue_number': {'type': 'integer', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string', 'description': 'The title of the issue'},
+                            'body': {'type': 'string', 'description': 'The contents of the issue (supports Markdown)'},
+                            'state': {
+                                'type': 'string',
+                                'enum': ['open', 'closed'],
+                                'description': 'State of the issue: open or closed',
+                            },
+                            'state_reason': {
+                                'type': ['string', 'null'],
+                                'enum': [
+                                    'completed',
+                                    'not_planned',
+                                    'reopened',
+                                    None,
+                                ],
+                                'description': 'Reason for the state change: completed, not_planned, reopened, or null',
+                            },
+                            'labels': {
+                                'type': 'array',
+                                'description': 'Labels to set on this issue (replaces all existing labels; requires push access)',
+                                'items': {'type': 'string'},
+                            },
+                            'assignees': {
+                                'type': 'array',
+                                'description': 'Logins for users to assign to this issue (replaces all existing assignees; requires push access)',
+                                'items': {'type': 'string'},
+                            },
+                            'milestone': {
+                                'type': ['integer', 'null'],
+                                'description': 'The number of the milestone to associate this issue with, or null to remove the milestone (requires push access)',
+                            },
+                        },
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'integer', 'description': 'Unique identifier of the issue'},
+                            'node_id': {'type': 'string', 'description': 'GraphQL node ID'},
+                            'url': {'type': 'string', 'description': 'API URL for this issue'},
+                            'repository_url': {'type': 'string', 'description': 'API URL for the repository'},
+                            'labels_url': {'type': 'string', 'description': 'URL template for labels'},
+                            'comments_url': {'type': 'string', 'description': 'API URL for comments'},
+                            'events_url': {'type': 'string', 'description': 'API URL for events'},
+                            'html_url': {'type': 'string', 'description': 'Web URL for this issue'},
+                            'number': {'type': 'integer', 'description': 'Issue number'},
+                            'state': {'type': 'string', 'description': 'State of the issue (open or closed)'},
+                            'state_reason': {
+                                'type': ['string', 'null'],
+                                'description': 'Reason for the current state',
+                            },
+                            'title': {'type': 'string', 'description': 'Title of the issue'},
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'Body content of the issue',
+                            },
+                            'user': {
+                                'type': ['object', 'null'],
+                                'description': 'The user who created the issue',
+                                'properties': {
+                                    'login': {'type': 'string'},
+                                    'id': {'type': 'integer'},
+                                    'node_id': {'type': 'string'},
+                                    'avatar_url': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                    'html_url': {'type': 'string'},
+                                    'type': {'type': 'string'},
+                                    'site_admin': {'type': 'boolean'},
+                                },
+                            },
+                            'labels': {
+                                'type': 'array',
+                                'description': 'Labels associated with this issue',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'id': {'type': 'integer'},
+                                        'node_id': {'type': 'string'},
+                                        'url': {'type': 'string'},
+                                        'name': {'type': 'string'},
+                                        'color': {'type': 'string'},
+                                        'default': {'type': 'boolean'},
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                            },
+                            'assignees': {
+                                'type': 'array',
+                                'description': 'Users assigned to this issue',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'login': {'type': 'string'},
+                                        'id': {'type': 'integer'},
+                                        'node_id': {'type': 'string'},
+                                        'avatar_url': {'type': 'string'},
+                                        'url': {'type': 'string'},
+                                        'html_url': {'type': 'string'},
+                                        'type': {'type': 'string'},
+                                        'site_admin': {'type': 'boolean'},
+                                    },
+                                },
+                            },
+                            'milestone': {
+                                'type': ['object', 'null'],
+                                'description': 'Milestone associated with this issue',
+                            },
+                            'locked': {'type': 'boolean', 'description': 'Whether the issue is locked'},
+                            'comments': {'type': 'integer', 'description': 'Number of comments'},
+                            'closed_at': {
+                                'type': ['string', 'null'],
+                                'description': 'When the issue was closed',
+                            },
+                            'created_at': {'type': 'string', 'description': 'When the issue was created'},
+                            'updated_at': {'type': 'string', 'description': 'When the issue was last updated'},
+                            'author_association': {'type': 'string', 'description': 'How the author is associated with the repository'},
+                            'active_lock_reason': {
+                                'type': ['string', 'null'],
+                                'description': 'The reason the issue is locked',
+                            },
+                            'closed_by': {
+                                'type': ['object', 'null'],
+                                'description': 'The user who closed the issue',
+                            },
+                            'timeline_url': {'type': 'string', 'description': 'API URL for the issue timeline'},
+                            'performed_via_github_app': {
+                                'type': ['object', 'null'],
+                                'description': 'GitHub App that performed the action',
+                            },
+                            'assignee': {
+                                'type': ['object', 'null'],
+                                'description': 'Primary user assigned to this issue',
+                                'properties': {
+                                    'login': {'type': 'string'},
+                                    'id': {'type': 'integer'},
+                                    'node_id': {'type': 'string'},
+                                    'avatar_url': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                    'html_url': {'type': 'string'},
+                                    'type': {'type': 'string'},
+                                    'site_admin': {'type': 'boolean'},
+                                },
+                            },
+                            'reactions': {
+                                'type': 'object',
+                                'description': 'Reaction counts',
+                                'properties': {
+                                    'url': {'type': 'string'},
+                                    'total_count': {'type': 'integer'},
+                                    '+1': {'type': 'integer'},
+                                    '-1': {'type': 'integer'},
+                                    'laugh': {'type': 'integer'},
+                                    'hooray': {'type': 'integer'},
+                                    'confused': {'type': 'integer'},
+                                    'heart': {'type': 'integer'},
+                                    'rocket': {'type': 'integer'},
+                                    'eyes': {'type': 'integer'},
+                                },
+                            },
+                            'sub_issues_summary': {
+                                'type': 'object',
+                                'description': 'Summary of sub-issues',
+                                'properties': {
+                                    'total': {'type': 'integer'},
+                                    'completed': {'type': 'integer'},
+                                    'percent_completed': {'type': 'integer'},
+                                },
+                            },
+                            'type': {
+                                'type': ['object', 'null'],
+                                'description': 'Issue type',
+                            },
+                            'pinned_comment': {
+                                'type': ['object', 'null'],
+                                'description': 'Pinned comment on the issue',
+                            },
+                            'issue_field_values': {
+                                'type': 'array',
+                                'description': 'Custom field values for the issue',
+                                'items': {'type': 'object'},
+                            },
+                            'issue_dependencies_summary': {
+                                'type': 'object',
+                                'description': 'Summary of issue dependencies',
+                                'properties': {
+                                    'blocked_by': {'type': 'integer'},
+                                    'blocking': {'type': 'integer'},
+                                    'total_blocked_by': {'type': 'integer'},
+                                    'total_blocking': {'type': 'integer'},
+                                },
+                            },
+                        },
+                    },
+                ),
+            },
+        ),
+        EntityDefinition(
+            name='comments',
+            actions=[Action.CREATE, Action.LIST, Action.GET],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/repos/{owner}/{repo}/issues/{issue_number}/comments',
+                    action=Action.CREATE,
+                    description='Creates a comment on the specified issue.\nThis endpoint works for both issues and pull requests, since pull requests are issues.\nAny user with read access can create a comment.\n',
+                    body_fields=['body'],
+                    path_params=['owner', 'repo', 'issue_number'],
+                    path_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'issue_number': {'type': 'integer', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'body': {'type': 'string', 'description': 'The contents of the comment (supports Markdown)'},
+                        },
+                        'required': ['body'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'integer', 'description': 'Unique identifier of the comment'},
+                            'node_id': {'type': 'string', 'description': 'GraphQL node ID'},
+                            'url': {'type': 'string', 'description': 'API URL for this comment'},
+                            'html_url': {'type': 'string', 'description': 'Web URL for this comment'},
+                            'body': {'type': 'string', 'description': 'Body content of the comment'},
+                            'user': {
+                                'type': ['object', 'null'],
+                                'description': 'The user who created the comment',
+                                'properties': {
+                                    'login': {'type': 'string'},
+                                    'id': {'type': 'integer'},
+                                    'node_id': {'type': 'string'},
+                                    'avatar_url': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                    'html_url': {'type': 'string'},
+                                    'type': {'type': 'string'},
+                                    'site_admin': {'type': 'boolean'},
+                                },
+                            },
+                            'created_at': {'type': 'string', 'description': 'When the comment was created'},
+                            'updated_at': {'type': 'string', 'description': 'When the comment was last updated'},
+                            'issue_url': {'type': 'string', 'description': 'API URL for the parent issue'},
+                            'author_association': {'type': 'string', 'description': 'How the author is associated with the repository'},
+                            'performed_via_github_app': {
+                                'type': ['object', 'null'],
+                                'description': 'GitHub App that performed the action',
+                            },
+                            'reactions': {
+                                'type': 'object',
+                                'description': 'Reaction counts',
+                                'properties': {
+                                    'url': {'type': 'string'},
+                                    'total_count': {'type': 'integer'},
+                                    '+1': {'type': 'integer'},
+                                    '-1': {'type': 'integer'},
+                                    'laugh': {'type': 'integer'},
+                                    'hooray': {'type': 'integer'},
+                                    'confused': {'type': 'integer'},
+                                    'heart': {'type': 'integer'},
+                                    'rocket': {'type': 'integer'},
+                                    'eyes': {'type': 'integer'},
+                                },
+                            },
+                        },
+                    },
+                ),
+                Action.LIST: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:comments:list',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.LIST,
+                    description='Returns a list of comments for the specified issue using GraphQL',
+                    query_params=[
+                        'owner',
+                        'repo',
+                        'number',
+                        'per_page',
+                        'after',
+                        'fields',
+                    ],
+                    query_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                        'number': {'type': 'integer', 'required': True},
+                        'per_page': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 30,
+                        },
+                        'after': {'type': 'string', 'required': False},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'repository': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'issue': {
+                                                'type': 'object',
+                                                'properties': {
+                                                    'comments': {
+                                                        'type': 'object',
+                                                        'properties': {
+                                                            'pageInfo': {
+                                                                'type': 'object',
+                                                                'properties': {
+                                                                    'hasNextPage': {'type': 'boolean'},
+                                                                    'endCursor': {
+                                                                        'type': ['string', 'null'],
+                                                                    },
+                                                                },
+                                                            },
+                                                            'nodes': {
+                                                                'type': 'array',
+                                                                'items': {'type': 'object'},
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query ListComments($owner: String!, $name: String!, $number: Int!, $first: Int!, $after: String) {\n  repository(owner: $owner, name: $name) {\n    issue(number: $number) {\n      comments(first: $first, after: $after) {\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n        nodes {\n          {{ fields }}\n        }\n      }\n    }\n  }\n}\n',
+                        'variables': {
+                            'owner': '{{ owner }}',
+                            'name': '{{ repo }}',
+                            'number': '{{ number }}',
+                            'first': '{{ per_page }}',
+                            'after': '{{ after }}',
+                        },
+                        'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
+                    },
+                    record_extractor='$.data.repository.issue.comments.nodes',
+                ),
+                Action.GET: EndpointDefinition(
+                    method='POST',
+                    path='/graphql:comments:get',
+                    path_override=PathOverrideConfig(
+                        path='/graphql',
+                    ),
+                    action=Action.GET,
+                    description="Gets information about a specific issue comment by its GraphQL node ID.\n\nNote: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),\nnot a numeric database ID. You can obtain node IDs from the Comments_List response,\nwhere each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).\n",
+                    query_params=['id', 'fields'],
+                    query_params_schema={
+                        'id': {'type': 'string', 'required': True},
+                        'fields': {'type': 'array', 'required': False},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'node': {'type': 'object'},
+                                },
+                            },
+                        },
+                    },
+                    graphql_body={
+                        'type': 'graphql',
+                        'query': 'query GetComment($id: ID!) {\n  node(id: $id) {\n    ... on IssueComment {\n      {{ fields }}\n    }\n  }\n}\n',
+                        'variables': {'id': '{{ id }}'},
+                        'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
+                    },
+                    record_extractor='$.data.node',
+                ),
             },
         ),
         EntityDefinition(
             name='pull_requests',
-            actions=[Action.LIST, Action.GET, Action.API_SEARCH],
+            actions=[
+                Action.CREATE,
+                Action.LIST,
+                Action.GET,
+                Action.API_SEARCH,
+            ],
             endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/repos/{owner}/{repo}/pulls',
+                    action=Action.CREATE,
+                    description='Creates a new pull request in the specified repository.\nTo open or update a pull request in a public repository, you must have write access to the head or the source branch.\n',
+                    body_fields=[
+                        'title',
+                        'head',
+                        'base',
+                        'body',
+                        'draft',
+                        'maintainer_can_modify',
+                    ],
+                    path_params=['owner', 'repo'],
+                    path_params_schema={
+                        'owner': {'type': 'string', 'required': True},
+                        'repo': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'properties': {
+                            'title': {'type': 'string', 'description': 'The title of the new pull request'},
+                            'head': {'type': 'string', 'description': 'The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace head with a user like this: username:branch'},
+                            'base': {'type': 'string', 'description': 'The name of the branch you want the changes pulled into (e.g. main)'},
+                            'body': {'type': 'string', 'description': 'The contents of the pull request (supports Markdown)'},
+                            'draft': {'type': 'boolean', 'description': 'Indicates whether the pull request is a draft'},
+                            'maintainer_can_modify': {'type': 'boolean', 'description': 'Indicates whether maintainers can modify the pull request'},
+                        },
+                        'required': ['title', 'head', 'base'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'properties': {
+                            'id': {'type': 'integer', 'description': 'Unique identifier of the pull request'},
+                            'node_id': {'type': 'string', 'description': 'GraphQL node ID'},
+                            'url': {'type': 'string', 'description': 'API URL for this pull request'},
+                            'html_url': {'type': 'string', 'description': 'Web URL for this pull request'},
+                            'diff_url': {'type': 'string', 'description': 'URL for the diff'},
+                            'patch_url': {'type': 'string', 'description': 'URL for the patch'},
+                            'number': {'type': 'integer', 'description': 'Pull request number'},
+                            'state': {'type': 'string', 'description': 'State of the pull request (open or closed)'},
+                            'locked': {'type': 'boolean', 'description': 'Whether the pull request is locked'},
+                            'title': {'type': 'string', 'description': 'Title of the pull request'},
+                            'body': {
+                                'type': ['string', 'null'],
+                                'description': 'Body content of the pull request',
+                            },
+                            'user': {
+                                'type': ['object', 'null'],
+                                'description': 'The user who created the pull request',
+                                'properties': {
+                                    'login': {'type': 'string'},
+                                    'id': {'type': 'integer'},
+                                    'node_id': {'type': 'string'},
+                                    'avatar_url': {'type': 'string'},
+                                    'url': {'type': 'string'},
+                                    'html_url': {'type': 'string'},
+                                    'type': {'type': 'string'},
+                                    'site_admin': {'type': 'boolean'},
+                                },
+                            },
+                            'created_at': {'type': 'string', 'description': 'When the pull request was created'},
+                            'updated_at': {'type': 'string', 'description': 'When the pull request was last updated'},
+                            'closed_at': {
+                                'type': ['string', 'null'],
+                                'description': 'When the pull request was closed',
+                            },
+                            'merged_at': {
+                                'type': ['string', 'null'],
+                                'description': 'When the pull request was merged',
+                            },
+                            'merge_commit_sha': {
+                                'type': ['string', 'null'],
+                                'description': 'SHA of the merge commit',
+                            },
+                            'draft': {'type': 'boolean', 'description': 'Whether this is a draft pull request'},
+                            'head': {
+                                'type': 'object',
+                                'description': 'The head branch',
+                                'properties': {
+                                    'label': {'type': 'string'},
+                                    'ref': {'type': 'string'},
+                                    'sha': {'type': 'string'},
+                                },
+                            },
+                            'base': {
+                                'type': 'object',
+                                'description': 'The base branch',
+                                'properties': {
+                                    'label': {'type': 'string'},
+                                    'ref': {'type': 'string'},
+                                    'sha': {'type': 'string'},
+                                },
+                            },
+                            'author_association': {'type': 'string', 'description': 'How the author is associated with the repository'},
+                            'labels': {
+                                'type': 'array',
+                                'description': 'Labels associated with this pull request',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'id': {'type': 'integer'},
+                                        'node_id': {'type': 'string'},
+                                        'url': {'type': 'string'},
+                                        'name': {'type': 'string'},
+                                        'color': {'type': 'string'},
+                                        'default': {'type': 'boolean'},
+                                        'description': {
+                                            'type': ['string', 'null'],
+                                        },
+                                    },
+                                },
+                            },
+                            'milestone': {
+                                'type': ['object', 'null'],
+                                'description': 'Milestone associated with this pull request',
+                            },
+                            'assignees': {
+                                'type': 'array',
+                                'description': 'Users assigned to this pull request',
+                                'items': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'login': {'type': 'string'},
+                                        'id': {'type': 'integer'},
+                                        'node_id': {'type': 'string'},
+                                        'avatar_url': {'type': 'string'},
+                                        'url': {'type': 'string'},
+                                        'html_url': {'type': 'string'},
+                                        'type': {'type': 'string'},
+                                        'site_admin': {'type': 'boolean'},
+                                    },
+                                },
+                            },
+                            'requested_reviewers': {
+                                'type': 'array',
+                                'description': 'Users requested to review this pull request',
+                                'items': {'type': 'object'},
+                            },
+                            'comments': {'type': 'integer', 'description': 'Number of comments'},
+                            'review_comments': {'type': 'integer', 'description': 'Number of review comments'},
+                            'commits': {'type': 'integer', 'description': 'Number of commits'},
+                            'additions': {'type': 'integer', 'description': 'Number of additions'},
+                            'deletions': {'type': 'integer', 'description': 'Number of deletions'},
+                            'changed_files': {'type': 'integer', 'description': 'Number of changed files'},
+                        },
+                    },
+                ),
                 Action.LIST: EndpointDefinition(
                     method='POST',
                     path='/graphql:pull_requests:list',
@@ -1397,124 +1955,6 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
                         'default_fields': 'id databaseId state body submittedAt author { login avatarUrl } comments { totalCount }',
                     },
                     record_extractor='$.data.repository.pullRequest.reviews.nodes',
-                ),
-            },
-        ),
-        EntityDefinition(
-            name='comments',
-            actions=[Action.LIST, Action.GET],
-            endpoints={
-                Action.LIST: EndpointDefinition(
-                    method='POST',
-                    path='/graphql:comments:list',
-                    path_override=PathOverrideConfig(
-                        path='/graphql',
-                    ),
-                    action=Action.LIST,
-                    description='Returns a list of comments for the specified issue using GraphQL',
-                    query_params=[
-                        'owner',
-                        'repo',
-                        'number',
-                        'per_page',
-                        'after',
-                        'fields',
-                    ],
-                    query_params_schema={
-                        'owner': {'type': 'string', 'required': True},
-                        'repo': {'type': 'string', 'required': True},
-                        'number': {'type': 'integer', 'required': True},
-                        'per_page': {
-                            'type': 'integer',
-                            'required': False,
-                            'default': 30,
-                        },
-                        'after': {'type': 'string', 'required': False},
-                        'fields': {'type': 'array', 'required': False},
-                    },
-                    response_schema={
-                        'type': 'object',
-                        'properties': {
-                            'data': {
-                                'type': 'object',
-                                'properties': {
-                                    'repository': {
-                                        'type': 'object',
-                                        'properties': {
-                                            'issue': {
-                                                'type': 'object',
-                                                'properties': {
-                                                    'comments': {
-                                                        'type': 'object',
-                                                        'properties': {
-                                                            'pageInfo': {
-                                                                'type': 'object',
-                                                                'properties': {
-                                                                    'hasNextPage': {'type': 'boolean'},
-                                                                    'endCursor': {
-                                                                        'type': ['string', 'null'],
-                                                                    },
-                                                                },
-                                                            },
-                                                            'nodes': {
-                                                                'type': 'array',
-                                                                'items': {'type': 'object'},
-                                                            },
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                    },
-                    graphql_body={
-                        'type': 'graphql',
-                        'query': 'query ListComments($owner: String!, $name: String!, $number: Int!, $first: Int!, $after: String) {\n  repository(owner: $owner, name: $name) {\n    issue(number: $number) {\n      comments(first: $first, after: $after) {\n        pageInfo {\n          hasNextPage\n          endCursor\n        }\n        nodes {\n          {{ fields }}\n        }\n      }\n    }\n  }\n}\n',
-                        'variables': {
-                            'owner': '{{ owner }}',
-                            'name': '{{ repo }}',
-                            'number': '{{ number }}',
-                            'first': '{{ per_page }}',
-                            'after': '{{ after }}',
-                        },
-                        'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
-                    },
-                    record_extractor='$.data.repository.issue.comments.nodes',
-                ),
-                Action.GET: EndpointDefinition(
-                    method='POST',
-                    path='/graphql:comments:get',
-                    path_override=PathOverrideConfig(
-                        path='/graphql',
-                    ),
-                    action=Action.GET,
-                    description="Gets information about a specific issue comment by its GraphQL node ID.\n\nNote: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),\nnot a numeric database ID. You can obtain node IDs from the Comments_List response,\nwhere each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).\n",
-                    query_params=['id', 'fields'],
-                    query_params_schema={
-                        'id': {'type': 'string', 'required': True},
-                        'fields': {'type': 'array', 'required': False},
-                    },
-                    response_schema={
-                        'type': 'object',
-                        'properties': {
-                            'data': {
-                                'type': 'object',
-                                'properties': {
-                                    'node': {'type': 'object'},
-                                },
-                            },
-                        },
-                    },
-                    graphql_body={
-                        'type': 'graphql',
-                        'query': 'query GetComment($id: ID!) {\n  node(id: $id) {\n    ... on IssueComment {\n      {{ fields }}\n    }\n  }\n}\n',
-                        'variables': {'id': '{{ id }}'},
-                        'default_fields': 'id databaseId body bodyHTML createdAt updatedAt author { login avatarUrl } url isMinimized minimizedReason',
-                    },
-                    record_extractor='$.data.node',
                 ),
             },
         ),
@@ -3128,12 +3568,21 @@ GithubConnectorModel: ConnectorModel = ConnectorModel(
             'File a new bug report issue in our project repository',
             'Create an issue and assign it to a team member',
             'Open a new feature request issue in the repository',
+            'Close issue #42 in owner/repo as completed',
+            'Reopen issue #15 in our repository',
+            "Add the 'bug' and 'urgent' labels to issue #10",
+            'Assign user @johndoe to issue #25 in owner/repo',
+            "Update the title of issue #30 to 'New title'",
+            "Add a comment to issue #5 saying 'This has been fixed in the latest release'",
+            'Post a comment on pull request #100 with a status update',
+            'Create a pull request from feature-branch to main in owner/repo',
+            "Open a draft PR titled 'Add new feature' from my-branch to main",
         ],
         unsupported=[
-            'Update the status of this pull request',
             'Delete an old branch from the repository',
             'Schedule a team review for this code',
-            'Assign a new label to this issue',
+            'Merge a pull request',
+            'Delete an issue or comment',
         ],
     ),
 )

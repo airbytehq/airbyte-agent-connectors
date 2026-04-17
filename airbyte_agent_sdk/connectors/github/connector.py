@@ -22,6 +22,7 @@ from airbyte_agent_sdk.types import AirbyteAuthConfig
 from .types import (
     BranchesGetParams,
     BranchesListParams,
+    CommentsCreateParams,
     CommentsGetParams,
     CommentsListParams,
     CommitsGetParams,
@@ -35,6 +36,7 @@ from .types import (
     IssuesCreateParams,
     IssuesGetParams,
     IssuesListParams,
+    IssuesUpdateParams,
     LabelsGetParams,
     LabelsListParams,
     MilestonesGetParams,
@@ -48,6 +50,7 @@ from .types import (
     ProjectsGetParams,
     ProjectsListParams,
     PullRequestsApiSearchParams,
+    PullRequestsCreateParams,
     PullRequestsGetParams,
     PullRequestsListParams,
     ReleasesGetParams,
@@ -125,7 +128,9 @@ from .models import (
     DiscussionsListResult,
     DiscussionsApiSearchResult,
     DirectoryContentListResult,
+    CommentResponse,
     IssueResponse,
+    PullRequestResponse,
     AirbyteSearchMeta,
     AirbyteSearchResult,
     BranchesSearchData,
@@ -196,7 +201,7 @@ class GithubConnector:
 
     connector_name = "github"
     connector_version = "0.1.18"
-    sdk_version = "0.1.9"
+    sdk_version = "0.1.10"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -214,6 +219,9 @@ class GithubConnector:
         ("issues", "get"): None,
         ("issues", "api_search"): True,
         ("issues", "create"): None,
+        ("issues", "update"): None,
+        ("comments", "create"): None,
+        ("pull_requests", "create"): None,
         ("pull_requests", "list"): True,
         ("pull_requests", "get"): None,
         ("pull_requests", "api_search"): True,
@@ -265,6 +273,9 @@ class GithubConnector:
         ('issues', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
         ('issues', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('issues', 'create'): {'title': 'title', 'body': 'body', 'labels': 'labels', 'assignees': 'assignees', 'milestone': 'milestone', 'owner': 'owner', 'repo': 'repo'},
+        ('issues', 'update'): {'title': 'title', 'body': 'body', 'state': 'state', 'state_reason': 'state_reason', 'labels': 'labels', 'assignees': 'assignees', 'milestone': 'milestone', 'owner': 'owner', 'repo': 'repo', 'issue_number': 'issue_number'},
+        ('comments', 'create'): {'body': 'body', 'owner': 'owner', 'repo': 'repo', 'issue_number': 'issue_number'},
+        ('pull_requests', 'create'): {'title': 'title', 'head': 'head', 'base': 'base', 'body': 'body', 'draft': 'draft', 'maintainer_can_modify': 'maintainer_can_modify', 'owner': 'owner', 'repo': 'repo'},
         ('pull_requests', 'list'): {'owner': 'owner', 'repo': 'repo', 'states': 'states', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
         ('pull_requests', 'get'): {'owner': 'owner', 'repo': 'repo', 'number': 'number', 'fields': 'fields'},
         ('pull_requests', 'api_search'): {'query': 'query', 'per_page': 'per_page', 'after': 'after', 'fields': 'fields'},
@@ -407,9 +418,9 @@ class GithubConnector:
         self.commits = CommitsQuery(self)
         self.releases = ReleasesQuery(self)
         self.issues = IssuesQuery(self)
+        self.comments = CommentsQuery(self)
         self.pull_requests = PullRequestsQuery(self)
         self.reviews = ReviewsQuery(self)
-        self.comments = CommentsQuery(self)
         self.pr_comments = PrCommentsQuery(self)
         self.labels = LabelsQuery(self)
         self.milestones = MilestonesQuery(self)
@@ -539,6 +550,30 @@ class GithubConnector:
         action: Literal["create"],
         params: "IssuesCreateParams"
     ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["issues"],
+        action: Literal["update"],
+        params: "IssuesUpdateParams"
+    ) -> "IssueResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["comments"],
+        action: Literal["create"],
+        params: "CommentsCreateParams"
+    ) -> "CommentResponse": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["pull_requests"],
+        action: Literal["create"],
+        params: "PullRequestsCreateParams"
+    ) -> "PullRequestResponse": ...
 
     @overload
     async def execute(
@@ -801,14 +836,14 @@ class GithubConnector:
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "api_search", "create", "context_store_search"],
+        action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
         params: Mapping[str, Any]
     ) -> GithubExecuteResult[Any] | GithubExecuteResultWithMeta[Any, Any] | Any: ...
 
     async def execute(
         self,
         entity: str,
-        action: Literal["get", "list", "api_search", "create", "context_store_search"],
+        action: Literal["get", "list", "api_search", "create", "update", "context_store_search"],
         params: Mapping[str, Any] | None = None
     ) -> Any:
         """
@@ -1948,6 +1983,61 @@ Labels and assignees are silently dropped if the authenticated user does not hav
 
 
 
+    async def update(
+        self,
+        owner: str,
+        repo: str,
+        issue_number: str,
+        title: str | None = None,
+        body: str | None = None,
+        state: str | None = None,
+        state_reason: str | None | None = None,
+        labels: list[str] | None = None,
+        assignees: list[str] | None = None,
+        milestone: int | None | None = None,
+        **kwargs
+    ) -> IssueResponse:
+        """
+        Updates an existing issue in the specified repository.
+Use this to close/reopen issues, change title/body, add/remove labels, assign users, or set milestones.
+Any user with push access can update an issue.
+
+
+        Args:
+            title: The title of the issue
+            body: The contents of the issue (supports Markdown)
+            state: State of the issue: open or closed
+            state_reason: Reason for the state change: completed, not_planned, reopened, or null
+            labels: Labels to set on this issue (replaces all existing labels; requires push access)
+            assignees: Logins for users to assign to this issue (replaces all existing assignees; requires push access)
+            milestone: The number of the milestone to associate this issue with, or null to remove the milestone (requires push access)
+            owner: The account owner of the repository (username or organization)
+            repo: The name of the repository
+            issue_number: The number that identifies the issue
+            **kwargs: Additional parameters
+
+        Returns:
+            IssueResponse
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "body": body,
+            "state": state,
+            "state_reason": state_reason,
+            "labels": labels,
+            "assignees": assignees,
+            "milestone": milestone,
+            "owner": owner,
+            "repo": repo,
+            "issue_number": issue_number,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("issues", "update", params)
+        return result
+
+
+
     async def context_store_search(
         self,
         query: IssuesSearchQuery,
@@ -2002,6 +2092,182 @@ Labels and assignees are silently dropped if the authenticated user does not hav
             ),
         )
 
+class CommentsQuery:
+    """
+    Query class for Comments entity operations.
+    """
+
+    def __init__(self, connector: GithubConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        body: str,
+        owner: str,
+        repo: str,
+        issue_number: str,
+        **kwargs
+    ) -> CommentResponse:
+        """
+        Creates a comment on the specified issue.
+This endpoint works for both issues and pull requests, since pull requests are issues.
+Any user with read access can create a comment.
+
+
+        Args:
+            body: The contents of the comment (supports Markdown)
+            owner: The account owner of the repository (username or organization)
+            repo: The name of the repository
+            issue_number: The number that identifies the issue or pull request
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentResponse
+        """
+        params = {k: v for k, v in {
+            "body": body,
+            "owner": owner,
+            "repo": repo,
+            "issue_number": issue_number,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "create", params)
+        return result
+
+
+
+    async def list(
+        self,
+        owner: str,
+        repo: str,
+        number: int,
+        per_page: int | None = None,
+        after: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> CommentsListResult:
+        """
+        Returns a list of comments for the specified issue using GraphQL
+
+        Args:
+            owner: The account owner of the repository
+            repo: The name of the repository
+            number: The issue number
+            per_page: The number of results per page
+            after: Cursor for pagination
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            CommentsListResult
+        """
+        params = {k: v for k, v in {
+            "owner": owner,
+            "repo": repo,
+            "number": number,
+            "per_page": per_page,
+            "after": after,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "list", params)
+        # Cast generic envelope to concrete typed result
+        return CommentsListResult(
+            data=result.data
+        )
+
+
+
+    async def get(
+        self,
+        id: str | None = None,
+        fields: list[str] | None = None,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Gets information about a specific issue comment by its GraphQL node ID.
+
+Note: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),
+not a numeric database ID. You can obtain node IDs from the Comments_List response,
+where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
+
+
+        Args:
+            id: The GraphQL node ID of the comment
+            fields: Optional array of field names to select
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "id": id,
+            "fields": fields,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("comments", "get", params)
+        return result
+
+
+
+    async def context_store_search(
+        self,
+        query: CommentsSearchQuery,
+        limit: int | None = None,
+        cursor: str | None = None,
+        fields: list[list[str]] | None = None,
+    ) -> CommentsSearchResult:
+        """
+        Search comments records from Airbyte cache.
+
+        This operation searches cached data from Airbyte syncs.
+        Only available in hosted execution mode.
+
+        Available filter fields (CommentsSearchFilter):
+
+        Args:
+            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
+                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
+            limit: Maximum results to return (default 1000)
+            cursor: Pagination cursor from previous response's meta.cursor
+            fields: Field paths to include in results. Each path is a list of keys for nested access.
+                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
+
+        Returns:
+            CommentsSearchResult with typed records, pagination metadata, and optional search metadata
+
+        Raises:
+            NotImplementedError: If called in local execution mode
+        """
+        params: dict[str, Any] = {"query": query}
+        if limit is not None:
+            params["limit"] = limit
+        if cursor is not None:
+            params["cursor"] = cursor
+        if fields is not None:
+            params["fields"] = fields
+
+        result = await self._connector.execute("comments", "context_store_search", params)
+
+        # Parse response into typed result
+        meta_data = result.get("meta")
+        return CommentsSearchResult(
+            data=[
+                CommentsSearchData(**row)
+                for row in result.get("data", [])
+                if isinstance(row, dict)
+            ],
+            meta=AirbyteSearchMeta(
+                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
+                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
+                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
+            ),
+        )
+
 class PullRequestsQuery:
     """
     Query class for PullRequests entity operations.
@@ -2010,6 +2276,54 @@ class PullRequestsQuery:
     def __init__(self, connector: GithubConnector):
         """Initialize query with connector reference."""
         self._connector = connector
+
+    async def create(
+        self,
+        title: str,
+        head: str,
+        base: str,
+        owner: str,
+        repo: str,
+        body: str | None = None,
+        draft: bool | None = None,
+        maintainer_can_modify: bool | None = None,
+        **kwargs
+    ) -> PullRequestResponse:
+        """
+        Creates a new pull request in the specified repository.
+To open or update a pull request in a public repository, you must have write access to the head or the source branch.
+
+
+        Args:
+            title: The title of the new pull request
+            head: The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace head with a user like this: username:branch
+            base: The name of the branch you want the changes pulled into (e.g. main)
+            body: The contents of the pull request (supports Markdown)
+            draft: Indicates whether the pull request is a draft
+            maintainer_can_modify: Indicates whether maintainers can modify the pull request
+            owner: The account owner of the repository (username or organization)
+            repo: The name of the repository
+            **kwargs: Additional parameters
+
+        Returns:
+            PullRequestResponse
+        """
+        params = {k: v for k, v in {
+            "title": title,
+            "head": head,
+            "base": base,
+            "body": body,
+            "draft": draft,
+            "maintainer_can_modify": maintainer_can_modify,
+            "owner": owner,
+            "repo": repo,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("pull_requests", "create", params)
+        return result
+
+
 
     async def list(
         self,
@@ -2230,145 +2544,6 @@ class ReviewsQuery:
         )
 
 
-
-class CommentsQuery:
-    """
-    Query class for Comments entity operations.
-    """
-
-    def __init__(self, connector: GithubConnector):
-        """Initialize query with connector reference."""
-        self._connector = connector
-
-    async def list(
-        self,
-        owner: str,
-        repo: str,
-        number: int,
-        per_page: int | None = None,
-        after: str | None = None,
-        fields: list[str] | None = None,
-        **kwargs
-    ) -> CommentsListResult:
-        """
-        Returns a list of comments for the specified issue using GraphQL
-
-        Args:
-            owner: The account owner of the repository
-            repo: The name of the repository
-            number: The issue number
-            per_page: The number of results per page
-            after: Cursor for pagination
-            fields: Optional array of field names to select
-            **kwargs: Additional parameters
-
-        Returns:
-            CommentsListResult
-        """
-        params = {k: v for k, v in {
-            "owner": owner,
-            "repo": repo,
-            "number": number,
-            "per_page": per_page,
-            "after": after,
-            "fields": fields,
-            **kwargs
-        }.items() if v is not None}
-
-        result = await self._connector.execute("comments", "list", params)
-        # Cast generic envelope to concrete typed result
-        return CommentsListResult(
-            data=result.data
-        )
-
-
-
-    async def get(
-        self,
-        id: str | None = None,
-        fields: list[str] | None = None,
-        **kwargs
-    ) -> dict[str, Any]:
-        """
-        Gets information about a specific issue comment by its GraphQL node ID.
-
-Note: This endpoint requires a GraphQL node ID (e.g., 'IC_kwDOBZtLds6YWTMj'),
-not a numeric database ID. You can obtain node IDs from the Comments_List response,
-where each comment includes both 'id' (node ID) and 'databaseId' (numeric ID).
-
-
-        Args:
-            id: The GraphQL node ID of the comment
-            fields: Optional array of field names to select
-            **kwargs: Additional parameters
-
-        Returns:
-            dict[str, Any]
-        """
-        params = {k: v for k, v in {
-            "id": id,
-            "fields": fields,
-            **kwargs
-        }.items() if v is not None}
-
-        result = await self._connector.execute("comments", "get", params)
-        return result
-
-
-
-    async def context_store_search(
-        self,
-        query: CommentsSearchQuery,
-        limit: int | None = None,
-        cursor: str | None = None,
-        fields: list[list[str]] | None = None,
-    ) -> CommentsSearchResult:
-        """
-        Search comments records from Airbyte cache.
-
-        This operation searches cached data from Airbyte syncs.
-        Only available in hosted execution mode.
-
-        Available filter fields (CommentsSearchFilter):
-
-        Args:
-            query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
-                   in, like, fuzzy, keyword, not, and, or. Example: {"filter": {"eq": {"status": "active"}}}
-            limit: Maximum results to return (default 1000)
-            cursor: Pagination cursor from previous response's meta.cursor
-            fields: Field paths to include in results. Each path is a list of keys for nested access.
-                    Example: [["id"], ["user", "name"]] returns id and user.name fields.
-
-        Returns:
-            CommentsSearchResult with typed records, pagination metadata, and optional search metadata
-
-        Raises:
-            NotImplementedError: If called in local execution mode
-        """
-        params: dict[str, Any] = {"query": query}
-        if limit is not None:
-            params["limit"] = limit
-        if cursor is not None:
-            params["cursor"] = cursor
-        if fields is not None:
-            params["fields"] = fields
-
-        result = await self._connector.execute("comments", "context_store_search", params)
-
-        # Parse response into typed result
-        meta_data = result.get("meta")
-        return CommentsSearchResult(
-            data=[
-                CommentsSearchData(**row)
-                for row in result.get("data", [])
-                if isinstance(row, dict)
-            ],
-            meta=AirbyteSearchMeta(
-                has_more=meta_data.get("has_more", False) if isinstance(meta_data, dict) else False,
-                cursor=meta_data.get("cursor") if isinstance(meta_data, dict) else None,
-                took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
-            ),
-        )
 
 class PrCommentsQuery:
     """

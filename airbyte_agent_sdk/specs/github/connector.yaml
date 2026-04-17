@@ -46,11 +46,20 @@ info:
       - "File a new bug report issue in our project repository"
       - "Create an issue and assign it to a team member"
       - "Open a new feature request issue in the repository"
+      - "Close issue #42 in owner/repo as completed"
+      - "Reopen issue #15 in our repository"
+      - "Add the 'bug' and 'urgent' labels to issue #10"
+      - "Assign user @johndoe to issue #25 in owner/repo"
+      - "Update the title of issue #30 to 'New title'"
+      - "Add a comment to issue #5 saying 'This has been fixed in the latest release'"
+      - "Post a comment on pull request #100 with a status update"
+      - "Create a pull request from feature-branch to main in owner/repo"
+      - "Open a draft PR titled 'Add new feature' from my-branch to main"
     unsupported:
-      - "Update the status of this pull request"
       - "Delete an old branch from the repository"
       - "Schedule a team review for this code"
-      - "Assign a new label to this issue"
+      - "Merge a pull request"
+      - "Delete an issue or comment"
   x-airbyte-replication-config:
     title: Replication Configuration
     description: Settings for data replication from GitHub.
@@ -416,6 +425,338 @@ components:
               type: integer
             total_blocking:
               type: integer
+
+    IssueUpdateParams:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the issue
+        body:
+          type: string
+          description: The contents of the issue (supports Markdown)
+        state:
+          type: string
+          enum: [open, closed]
+          description: "State of the issue: open or closed"
+        state_reason:
+          type:
+            - string
+            - "null"
+          enum: [completed, not_planned, reopened, null]
+          description: "Reason for the state change: completed, not_planned, reopened, or null"
+        labels:
+          type: array
+          description: Labels to set on this issue (replaces all existing labels; requires push access)
+          items:
+            type: string
+        assignees:
+          type: array
+          description: Logins for users to assign to this issue (replaces all existing assignees; requires push access)
+          items:
+            type: string
+        milestone:
+          type:
+            - integer
+            - "null"
+          description: The number of the milestone to associate this issue with, or null to remove the milestone (requires push access)
+
+    CommentCreateParams:
+      type: object
+      required:
+        - body
+      properties:
+        body:
+          type: string
+          description: The contents of the comment (supports Markdown)
+
+    CommentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the comment
+        node_id:
+          type: string
+          description: GraphQL node ID
+        url:
+          type: string
+          description: API URL for this comment
+        html_url:
+          type: string
+          description: Web URL for this comment
+        body:
+          type: string
+          description: Body content of the comment
+        user:
+          type:
+            - object
+            - "null"
+          description: The user who created the comment
+          properties:
+            login:
+              type: string
+            id:
+              type: integer
+            node_id:
+              type: string
+            avatar_url:
+              type: string
+            url:
+              type: string
+            html_url:
+              type: string
+            type:
+              type: string
+            site_admin:
+              type: boolean
+        created_at:
+          type: string
+          description: When the comment was created
+        updated_at:
+          type: string
+          description: When the comment was last updated
+        issue_url:
+          type: string
+          description: API URL for the parent issue
+        author_association:
+          type: string
+          description: How the author is associated with the repository
+        performed_via_github_app:
+          type:
+            - object
+            - "null"
+          description: GitHub App that performed the action
+        reactions:
+          type: object
+          description: Reaction counts
+          properties:
+            url:
+              type: string
+            total_count:
+              type: integer
+            "+1":
+              type: integer
+            "-1":
+              type: integer
+            laugh:
+              type: integer
+            hooray:
+              type: integer
+            confused:
+              type: integer
+            heart:
+              type: integer
+            rocket:
+              type: integer
+            eyes:
+              type: integer
+
+    PullRequestCreateParams:
+      type: object
+      required:
+        - title
+        - head
+        - base
+      properties:
+        title:
+          type: string
+          description: The title of the new pull request
+        head:
+          type: string
+          description: "The name of the branch where your changes are implemented. For cross-repository pull requests in the same network, namespace head with a user like this: username:branch"
+        base:
+          type: string
+          description: The name of the branch you want the changes pulled into (e.g. main)
+        body:
+          type: string
+          description: The contents of the pull request (supports Markdown)
+        draft:
+          type: boolean
+          description: Indicates whether the pull request is a draft
+        maintainer_can_modify:
+          type: boolean
+          description: Indicates whether maintainers can modify the pull request
+
+    PullRequestResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier of the pull request
+        node_id:
+          type: string
+          description: GraphQL node ID
+        url:
+          type: string
+          description: API URL for this pull request
+        html_url:
+          type: string
+          description: Web URL for this pull request
+        diff_url:
+          type: string
+          description: URL for the diff
+        patch_url:
+          type: string
+          description: URL for the patch
+        number:
+          type: integer
+          description: Pull request number
+        state:
+          type: string
+          description: State of the pull request (open or closed)
+        locked:
+          type: boolean
+          description: Whether the pull request is locked
+        title:
+          type: string
+          description: Title of the pull request
+        body:
+          type:
+            - string
+            - "null"
+          description: Body content of the pull request
+        user:
+          type:
+            - object
+            - "null"
+          description: The user who created the pull request
+          properties:
+            login:
+              type: string
+            id:
+              type: integer
+            node_id:
+              type: string
+            avatar_url:
+              type: string
+            url:
+              type: string
+            html_url:
+              type: string
+            type:
+              type: string
+            site_admin:
+              type: boolean
+        created_at:
+          type: string
+          description: When the pull request was created
+        updated_at:
+          type: string
+          description: When the pull request was last updated
+        closed_at:
+          type:
+            - string
+            - "null"
+          description: When the pull request was closed
+        merged_at:
+          type:
+            - string
+            - "null"
+          description: When the pull request was merged
+        merge_commit_sha:
+          type:
+            - string
+            - "null"
+          description: SHA of the merge commit
+        draft:
+          type: boolean
+          description: Whether this is a draft pull request
+        head:
+          type: object
+          description: The head branch
+          properties:
+            label:
+              type: string
+            ref:
+              type: string
+            sha:
+              type: string
+        base:
+          type: object
+          description: The base branch
+          properties:
+            label:
+              type: string
+            ref:
+              type: string
+            sha:
+              type: string
+        author_association:
+          type: string
+          description: How the author is associated with the repository
+        labels:
+          type: array
+          description: Labels associated with this pull request
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              node_id:
+                type: string
+              url:
+                type: string
+              name:
+                type: string
+              color:
+                type: string
+              default:
+                type: boolean
+              description:
+                type:
+                  - string
+                  - "null"
+        milestone:
+          type:
+            - object
+            - "null"
+          description: Milestone associated with this pull request
+        assignees:
+          type: array
+          description: Users assigned to this pull request
+          items:
+            type: object
+            properties:
+              login:
+                type: string
+              id:
+                type: integer
+              node_id:
+                type: string
+              avatar_url:
+                type: string
+              url:
+                type: string
+              html_url:
+                type: string
+              type:
+                type: string
+              site_admin:
+                type: boolean
+        requested_reviewers:
+          type: array
+          description: Users requested to review this pull request
+          items:
+            type: object
+        comments:
+          type: integer
+          description: Number of comments
+        review_comments:
+          type: integer
+          description: Number of review comments
+        commits:
+          type: integer
+          description: Number of commits
+        additions:
+          type: integer
+          description: Number of additions
+        deletions:
+          type: integer
+          description: Number of deletions
+        changed_files:
+          type: integer
+          description: Number of changed files
 
 paths:
   /graphql:repositories:get:
@@ -1787,6 +2128,159 @@ paths:
           description: Repository not found
         "410":
           description: Issues are disabled for this repository
+        "422":
+          description: Validation failed
+
+  # Issues update endpoint (REST API)
+  /repos/{owner}/{repo}/issues/{issue_number}:
+    patch:
+      summary: Update an issue
+      description: |
+        Updates an existing issue in the specified repository.
+        Use this to close/reopen issues, change title/body, add/remove labels, assign users, or set milestones.
+        Any user with push access can update an issue.
+      operationId: Issues_Update
+      x-airbyte-entity: issues
+      x-airbyte-action: update
+      tags:
+        - Issues
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The account owner of the repository (username or organization)
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          description: The name of the repository
+          schema:
+            type: string
+        - name: issue_number
+          in: path
+          required: true
+          description: The number that identifies the issue
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IssueUpdateParams"
+      responses:
+        "200":
+          description: Issue updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IssueResponse"
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+        "410":
+          description: Issues are disabled for this repository
+        "422":
+          description: Validation failed
+
+  # Comments create endpoint (REST API)
+  /repos/{owner}/{repo}/issues/{issue_number}/comments:
+    post:
+      summary: Create an issue comment
+      description: |
+        Creates a comment on the specified issue.
+        This endpoint works for both issues and pull requests, since pull requests are issues.
+        Any user with read access can create a comment.
+      operationId: Comments_Create
+      x-airbyte-entity: comments
+      x-airbyte-action: create
+      tags:
+        - Comments
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The account owner of the repository (username or organization)
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          description: The name of the repository
+          schema:
+            type: string
+        - name: issue_number
+          in: path
+          required: true
+          description: The number that identifies the issue or pull request
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CommentCreateParams"
+      responses:
+        "201":
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CommentResponse"
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
+        "410":
+          description: Issues are disabled for this repository
+        "422":
+          description: Validation failed
+
+  # Pull Requests create endpoint (REST API)
+  /repos/{owner}/{repo}/pulls:
+    post:
+      summary: Create a pull request
+      description: |
+        Creates a new pull request in the specified repository.
+        To open or update a pull request in a public repository, you must have write access to the head or the source branch.
+      operationId: PullRequests_Create
+      x-airbyte-entity: pull_requests
+      x-airbyte-action: create
+      tags:
+        - PullRequests
+      parameters:
+        - name: owner
+          in: path
+          required: true
+          description: The account owner of the repository (username or organization)
+          schema:
+            type: string
+        - name: repo
+          in: path
+          required: true
+          description: The name of the repository
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PullRequestCreateParams"
+      responses:
+        "201":
+          description: Pull request created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PullRequestResponse"
+        "403":
+          description: Forbidden
+        "404":
+          description: Resource not found
         "422":
           description: Validation failed
 

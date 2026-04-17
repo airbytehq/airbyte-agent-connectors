@@ -125,6 +125,37 @@ class IssuesCreateParams(TypedDict):
     owner: str
     repo: str
 
+class IssuesUpdateParams(TypedDict):
+    """Parameters for issues.update operation"""
+    title: NotRequired[str]
+    body: NotRequired[str]
+    state: NotRequired[str]
+    state_reason: NotRequired[str | None]
+    labels: NotRequired[list[str]]
+    assignees: NotRequired[list[str]]
+    milestone: NotRequired[int | None]
+    owner: str
+    repo: str
+    issue_number: str
+
+class CommentsCreateParams(TypedDict):
+    """Parameters for comments.create operation"""
+    body: str
+    owner: str
+    repo: str
+    issue_number: str
+
+class PullRequestsCreateParams(TypedDict):
+    """Parameters for pull_requests.create operation"""
+    title: str
+    head: str
+    base: str
+    body: NotRequired[str]
+    draft: NotRequired[bool]
+    maintainer_can_modify: NotRequired[bool]
+    owner: str
+    repo: str
+
 class PullRequestsListParams(TypedDict):
     """Parameters for pull_requests.list operation"""
     owner: str
