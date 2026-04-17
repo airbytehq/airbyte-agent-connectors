@@ -2319,7 +2319,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='workspace_tags',
-            actions=[Action.LIST],
+            actions=[Action.LIST, Action.CREATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2369,6 +2369,62 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/workspaces/{workspace_gid}/tags',
+                    action=Action.CREATE,
+                    description='Creates a new tag in a workspace or organization. Every tag is required to be\ncreated in a specific workspace or organization, and this cannot be changed once set.\nReturns the full record of the newly created tag.\n',
+                    body_fields=['data'],
+                    path_params=['workspace_gid'],
+                    path_params_schema={
+                        'workspace_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new tag in a workspace',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'required': ['name'],
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'Name of the tag'},
+                                    'color': {'type': 'string', 'description': 'Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null'},
+                                    'notes': {'type': 'string', 'description': 'Free-form textual description of the tag'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Tag response wrapper',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'description': 'Full tag object',
+                                'properties': {
+                                    'gid': {'type': 'string'},
+                                    'resource_type': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                    'color': {'type': 'string'},
+                                    'created_at': {'type': 'string'},
+                                    'followers': {'type': 'array'},
+                                    'notes': {'type': 'string'},
+                                    'permalink_url': {'type': 'string'},
+                                    'workspace': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'gid': {'type': 'string'},
+                                            'name': {'type': 'string'},
+                                            'resource_type': {'type': 'string'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -2382,7 +2438,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='tags',
-            actions=[Action.GET],
+            actions=[Action.GET, Action.UPDATE, Action.DELETE],
             endpoints={
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2423,6 +2479,79 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/tags/{tag_gid}',
+                    action=Action.UPDATE,
+                    description='Updates the properties of a tag. Only the fields provided in the data block will\nbe updated; any unspecified fields will remain unchanged. Returns the complete\nupdated tag record.\n',
+                    body_fields=['data'],
+                    path_params=['tag_gid'],
+                    path_params_schema={
+                        'tag_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing tag',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'Name of the tag'},
+                                    'color': {'type': 'string', 'description': 'Color of the tag'},
+                                    'notes': {'type': 'string', 'description': 'Free-form textual description of the tag'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Tag response wrapper',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'description': 'Full tag object',
+                                'properties': {
+                                    'gid': {'type': 'string'},
+                                    'resource_type': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                    'color': {'type': 'string'},
+                                    'created_at': {'type': 'string'},
+                                    'followers': {'type': 'array'},
+                                    'notes': {'type': 'string'},
+                                    'permalink_url': {'type': 'string'},
+                                    'workspace': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'gid': {'type': 'string'},
+                                            'name': {'type': 'string'},
+                                            'resource_type': {'type': 'string'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/tags/{tag_gid}',
+                    action=Action.DELETE,
+                    description='A specific, existing tag can be deleted by making a DELETE request on the URL\nfor that tag. Returns an empty data record.\n',
+                    path_params=['tag_gid'],
+                    path_params_schema={
+                        'tag_gid': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response returned by delete operations',
+                        'properties': {
+                            'data': {'type': 'object'},
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -2445,8 +2574,80 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             ],
         ),
         EntityDefinition(
-            name='project_sections',
+            name='tag_tasks',
             actions=[Action.LIST],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/tags/{tag_gid}/tasks',
+                    action=Action.LIST,
+                    description='Returns the compact task records for all tasks with the given tag.\nTasks can have more than one tag at a time.\n',
+                    query_params=['limit', 'offset'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 20,
+                        },
+                        'offset': {'type': 'string', 'required': False},
+                    },
+                    path_params=['tag_gid'],
+                    path_params_schema={
+                        'tag_gid': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of tasks containing compact task objects',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Compact task object',
+                                    'properties': {
+                                        'gid': {'type': 'string', 'description': 'Globally unique identifier'},
+                                        'resource_type': {'type': 'string', 'description': 'Resource type (task)'},
+                                        'name': {'type': 'string', 'description': 'Task name'},
+                                        'resource_subtype': {'type': 'string', 'description': 'Task subtype'},
+                                        'created_by': {
+                                            'type': 'object',
+                                            'description': 'User who created the task',
+                                            'properties': {
+                                                'gid': {'type': 'string'},
+                                                'resource_type': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'tasks',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['object', 'null'],
+                                'properties': {
+                                    'offset': {'type': 'string'},
+                                    'path': {'type': 'string'},
+                                    'uri': {'type': 'string'},
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'next_page': '$.next_page'},
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tag_tasks',
+                    target_entity='workspace_tags',
+                    foreign_key='tag_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='project_sections',
+            actions=[Action.LIST, Action.CREATE],
             endpoints={
                 Action.LIST: EndpointDefinition(
                     method='GET',
@@ -2496,6 +2697,58 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
                 ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/projects/{project_gid}/sections',
+                    action=Action.CREATE,
+                    description='Creates a new section in a project. Returns the full record of the newly created section.\n',
+                    body_fields=['data'],
+                    path_params=['project_gid'],
+                    path_params_schema={
+                        'project_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for creating a new section in a project',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'required': ['name'],
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'The name of the section (this is displayed as the column header in board view)'},
+                                    'insert_before': {'type': 'string', 'description': 'GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after.'},
+                                    'insert_after': {'type': 'string', 'description': 'GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before.'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Section response wrapper',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'description': 'Full section object',
+                                'properties': {
+                                    'gid': {'type': 'string'},
+                                    'resource_type': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                    'created_at': {'type': 'string'},
+                                    'project': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'gid': {'type': 'string'},
+                                            'name': {'type': 'string'},
+                                            'resource_type': {'type': 'string'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
             },
             relationships=[
                 EntityRelationshipConfig(
@@ -2509,7 +2762,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='sections',
-            actions=[Action.GET],
+            actions=[Action.GET, Action.UPDATE, Action.DELETE],
             endpoints={
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2546,6 +2799,73 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                 ),
+                Action.UPDATE: EndpointDefinition(
+                    method='PUT',
+                    path='/sections/{section_gid}',
+                    action=Action.UPDATE,
+                    description='A specific, existing section can be updated by making a PUT request on the URL for\nthat section. Only the fields provided in the data block will be updated; any unspecified\nfields will remain unchanged. Currently only the name field can be updated.\n',
+                    body_fields=['data'],
+                    path_params=['section_gid'],
+                    path_params_schema={
+                        'section_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for updating an existing section',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'properties': {
+                                    'name': {'type': 'string', 'description': 'The new name of the section'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Section response wrapper',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'description': 'Full section object',
+                                'properties': {
+                                    'gid': {'type': 'string'},
+                                    'resource_type': {'type': 'string'},
+                                    'name': {'type': 'string'},
+                                    'created_at': {'type': 'string'},
+                                    'project': {
+                                        'type': 'object',
+                                        'properties': {
+                                            'gid': {'type': 'string'},
+                                            'name': {'type': 'string'},
+                                            'resource_type': {'type': 'string'},
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='DELETE',
+                    path='/sections/{section_gid}',
+                    action=Action.DELETE,
+                    description='A specific, existing section can be deleted by making a DELETE request on the URL\nfor that section. Note that sections must be empty to be deleted. The last remaining\nsection in a project cannot be deleted.\n',
+                    path_params=['section_gid'],
+                    path_params_schema={
+                        'section_gid': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response returned by delete operations',
+                        'properties': {
+                            'data': {'type': 'object'},
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
             },
             entity_schema={
                 'type': 'object',
@@ -2560,6 +2880,114 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             relationships=[
                 EntityRelationshipConfig(
                     source_entity='sections',
+                    target_entity='project_sections',
+                    foreign_key='section_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='section_tasks',
+            actions=[Action.LIST, Action.CREATE],
+            endpoints={
+                Action.LIST: EndpointDefinition(
+                    method='GET',
+                    path='/sections/{section_gid}/tasks',
+                    action=Action.LIST,
+                    description='Returns the compact task records for all tasks within the given section.',
+                    query_params=['limit', 'offset', 'completed_since'],
+                    query_params_schema={
+                        'limit': {
+                            'type': 'integer',
+                            'required': False,
+                            'default': 20,
+                        },
+                        'offset': {'type': 'string', 'required': False},
+                        'completed_since': {'type': 'string', 'required': False},
+                    },
+                    path_params=['section_gid'],
+                    path_params_schema={
+                        'section_gid': {'type': 'string', 'required': True},
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Paginated list of tasks containing compact task objects',
+                        'properties': {
+                            'data': {
+                                'type': 'array',
+                                'items': {
+                                    'type': 'object',
+                                    'description': 'Compact task object',
+                                    'properties': {
+                                        'gid': {'type': 'string', 'description': 'Globally unique identifier'},
+                                        'resource_type': {'type': 'string', 'description': 'Resource type (task)'},
+                                        'name': {'type': 'string', 'description': 'Task name'},
+                                        'resource_subtype': {'type': 'string', 'description': 'Task subtype'},
+                                        'created_by': {
+                                            'type': 'object',
+                                            'description': 'User who created the task',
+                                            'properties': {
+                                                'gid': {'type': 'string'},
+                                                'resource_type': {'type': 'string'},
+                                            },
+                                        },
+                                    },
+                                    'x-airbyte-entity-name': 'tasks',
+                                },
+                            },
+                            'next_page': {
+                                'type': ['object', 'null'],
+                                'properties': {
+                                    'offset': {'type': 'string'},
+                                    'path': {'type': 'string'},
+                                    'uri': {'type': 'string'},
+                                },
+                            },
+                        },
+                    },
+                    record_extractor='$.data',
+                    meta_extractor={'next_page': '$.next_page'},
+                ),
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/sections/{section_gid}/addTask',
+                    action=Action.CREATE,
+                    description='Add a task to a specific, existing section. This will remove the task from other\nsections of the project. The task will be inserted at the top of the section unless\nan insert_before or insert_after parameter is declared.\n',
+                    body_fields=['data'],
+                    path_params=['section_gid'],
+                    path_params_schema={
+                        'section_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for adding a task to a section',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'required': ['task'],
+                                'properties': {
+                                    'task': {'type': 'string', 'description': 'The GID of the task to add to this section'},
+                                    'insert_before': {'type': 'string', 'description': 'GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after.'},
+                                    'insert_after': {'type': 'string', 'description': 'GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before.'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response returned by delete operations',
+                        'properties': {
+                            'data': {'type': 'object'},
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='section_tasks',
                     target_entity='project_sections',
                     foreign_key='section_gid',
                     target_key='gid',
@@ -2855,6 +3283,87 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             relationships=[
                 EntityRelationshipConfig(
                     source_entity='task_stories',
+                    target_entity='tasks',
+                    foreign_key='task_gid',
+                    target_key='gid',
+                    cardinality='many_to_one',
+                ),
+            ],
+        ),
+        EntityDefinition(
+            name='task_tags',
+            actions=[Action.CREATE, Action.DELETE],
+            endpoints={
+                Action.CREATE: EndpointDefinition(
+                    method='POST',
+                    path='/tasks/{task_gid}/addTag',
+                    action=Action.CREATE,
+                    description='Adds a tag to a task. Returns an empty data block.\n',
+                    body_fields=['data'],
+                    path_params=['task_gid'],
+                    path_params_schema={
+                        'task_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for adding a tag to a task',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'required': ['tag'],
+                                'properties': {
+                                    'tag': {'type': 'string', 'description': 'The GID of the tag to add to the task'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response returned by delete operations',
+                        'properties': {
+                            'data': {'type': 'object'},
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+                Action.DELETE: EndpointDefinition(
+                    method='POST',
+                    path='/tasks/{task_gid}/removeTag',
+                    action=Action.DELETE,
+                    description='Removes a tag from a task. Returns an empty data block.\n',
+                    body_fields=['data'],
+                    path_params=['task_gid'],
+                    path_params_schema={
+                        'task_gid': {'type': 'string', 'required': True},
+                    },
+                    request_schema={
+                        'type': 'object',
+                        'description': 'Parameters for removing a tag from a task',
+                        'properties': {
+                            'data': {
+                                'type': 'object',
+                                'required': ['tag'],
+                                'properties': {
+                                    'tag': {'type': 'string', 'description': 'The GID of the tag to remove from the task'},
+                                },
+                            },
+                        },
+                        'required': ['data'],
+                    },
+                    response_schema={
+                        'type': 'object',
+                        'description': 'Empty response returned by delete operations',
+                        'properties': {
+                            'data': {'type': 'object'},
+                        },
+                    },
+                    record_extractor='$.data',
+                ),
+            },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='task_tags',
                     target_entity='tasks',
                     foreign_key='task_gid',
                     target_key='gid',
@@ -3329,6 +3838,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             'Analyze the most active projects in my workspace last month',
             'Compare task completion rates between my different teams',
             'Identify overdue tasks across all my projects',
+            "Create a new section called 'In Review' in my project",
+            "Move a task to the 'Done' section",
+            "List all tasks in the 'To do' section",
+            "Rename the 'Backlog' section to 'Icebox'",
+            "Delete the empty 'Old Section' from the project",
+            "Create a tag called 'Urgent' in my workspace",
+            "Tag this task with 'Bug'",
+            "Remove the 'Low Priority' tag from this task",
+            "List all tasks tagged 'Release v2'",
+            "Rename the tag 'WIP' to 'In Progress'",
+            "Delete the tag 'Deprecated'",
         ],
         search=[
             "Summarize my team's workload and task completion rates",
@@ -3336,6 +3856,17 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
             'Analyze the most active projects in my workspace last month',
             'Compare task completion rates between my different teams',
             'Identify overdue tasks across all my projects',
+            "Create a new section called 'In Review' in my project",
+            "Move a task to the 'Done' section",
+            "List all tasks in the 'To do' section",
+            "Rename the 'Backlog' section to 'Icebox'",
+            "Delete the empty 'Old Section' from the project",
+            "Create a tag called 'Urgent' in my workspace",
+            "Tag this task with 'Bug'",
+            "Remove the 'Low Priority' tag from this task",
+            "List all tasks tagged 'Release v2'",
+            "Rename the tag 'WIP' to 'In Progress'",
+            "Delete the tag 'Deprecated'",
         ],
         unsupported=['Move this task to another project'],
     ),

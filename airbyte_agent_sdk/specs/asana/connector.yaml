@@ -53,6 +53,17 @@ info:
     - "Analyze the most active projects in my workspace last month"
     - "Compare task completion rates between my different teams"
     - "Identify overdue tasks across all my projects"
+    - "Create a new section called 'In Review' in my project"
+    - "Move a task to the 'Done' section"
+    - "List all tasks in the 'To do' section"
+    - "Rename the 'Backlog' section to 'Icebox'"
+    - "Delete the empty 'Old Section' from the project"
+    - "Create a tag called 'Urgent' in my workspace"
+    - "Tag this task with 'Bug'"
+    - "Remove the 'Low Priority' tag from this task"
+    - "List all tasks tagged 'Release v2'"
+    - "Rename the tag 'WIP' to 'In Progress'"
+    - "Delete the tag 'Deprecated'"
     unsupported:
     - "Move this task to another project"
 
@@ -148,6 +159,21 @@ info:
     target_key: gid
     cardinality: many_to_one
   - source_entity: task_stories
+    target_entity: tasks
+    foreign_key: task_gid
+    target_key: gid
+    cardinality: many_to_one
+  - source_entity: section_tasks
+    target_entity: project_sections
+    foreign_key: section_gid
+    target_key: gid
+    cardinality: many_to_one
+  - source_entity: tag_tasks
+    target_entity: workspace_tags
+    foreign_key: tag_gid
+    target_key: gid
+    cardinality: many_to_one
+  - source_entity: task_tags
     target_entity: tasks
     foreign_key: task_gid
     target_key: gid
@@ -2897,6 +2923,45 @@ paths:
         "401":
           description: Unauthorized
 
+    post:
+      summary: Create a tag in a workspace
+      description: |
+        Creates a new tag in a workspace or organization. Every tag is required to be
+        created in a specific workspace or organization, and this cannot be changed once set.
+        Returns the full record of the newly created tag.
+      operationId: createTagForWorkspace
+      x-airbyte-entity: workspace_tags
+      x-airbyte-action: create
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: workspace_gid
+        in: path
+        required: true
+        description: Globally unique identifier for the workspace or organization
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagCreateParams"
+      responses:
+        "201":
+          description: Tag created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Workspace not found
+
   "/tags/{tag_gid}":
     get:
       summary: Get a tag
@@ -2923,6 +2988,121 @@ paths:
           description: Tag not found
         "401":
           description: Unauthorized
+
+    put:
+      summary: Update a tag
+      description: |
+        Updates the properties of a tag. Only the fields provided in the data block will
+        be updated; any unspecified fields will remain unchanged. Returns the complete
+        updated tag record.
+      operationId: updateTag
+      x-airbyte-entity: tags
+      x-airbyte-action: update
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: tag_gid
+        in: path
+        required: true
+        description: The tag to update
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TagUpdateParams"
+      responses:
+        "200":
+          description: Tag updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TagResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+
+    delete:
+      summary: Delete a tag
+      description: |
+        A specific, existing tag can be deleted by making a DELETE request on the URL
+        for that tag. Returns an empty data record.
+      operationId: deleteTag
+      x-airbyte-entity: tags
+      x-airbyte-action: delete
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: tag_gid
+        in: path
+        required: true
+        description: The tag to delete
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Tag deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Tag not found
+
+  "/tags/{tag_gid}/tasks":
+    get:
+      summary: List tasks for a tag
+      description: |
+        Returns the compact task records for all tasks with the given tag.
+        Tasks can have more than one tag at a time.
+      operationId: getTasksForTag
+      x-airbyte-entity: tag_tasks
+      x-airbyte-action: list
+      x-airbyte-record-extractor: "$.data"
+      x-airbyte-meta-extractor:
+        next_page: $.next_page
+      parameters:
+      - name: tag_gid
+        in: path
+        required: true
+        description: Globally unique identifier for the tag
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Number of items to return per page
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: offset
+        in: query
+        description: Pagination offset token
+        schema:
+          type: string
+      responses:
+        "200":
+          description: List of tasks with this tag
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Tag not found
 
   # Sections endpoints
   "/projects/{project_gid}/sections":
@@ -2965,6 +3145,43 @@ paths:
         "401":
           description: Unauthorized
 
+    post:
+      summary: Create a section in a project
+      description: |
+        Creates a new section in a project. Returns the full record of the newly created section.
+      operationId: createProjectSection
+      x-airbyte-entity: project_sections
+      x-airbyte-action: create
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: project_gid
+        in: path
+        required: true
+        description: Globally unique identifier for the project
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SectionCreateParams"
+      responses:
+        "201":
+          description: Section created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SectionResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Project not found
+
   "/sections/{section_gid}":
     get:
       summary: Get a section
@@ -2991,6 +3208,167 @@ paths:
           description: Section not found
         "401":
           description: Unauthorized
+
+    put:
+      summary: Update a section
+      description: |
+        A specific, existing section can be updated by making a PUT request on the URL for
+        that section. Only the fields provided in the data block will be updated; any unspecified
+        fields will remain unchanged. Currently only the name field can be updated.
+      operationId: updateSection
+      x-airbyte-entity: sections
+      x-airbyte-action: update
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: section_gid
+        in: path
+        required: true
+        description: The section to update
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SectionUpdateParams"
+      responses:
+        "200":
+          description: Section updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SectionResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Section not found
+
+    delete:
+      summary: Delete a section
+      description: |
+        A specific, existing section can be deleted by making a DELETE request on the URL
+        for that section. Note that sections must be empty to be deleted. The last remaining
+        section in a project cannot be deleted.
+      operationId: deleteSection
+      x-airbyte-entity: sections
+      x-airbyte-action: delete
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: section_gid
+        in: path
+        required: true
+        description: The section to delete
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Section deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Section not found
+
+  # Section tasks endpoints
+  "/sections/{section_gid}/tasks":
+    get:
+      summary: List tasks in a section
+      description: Returns the compact task records for all tasks within the given section.
+      operationId: listSectionTasks
+      x-airbyte-entity: section_tasks
+      x-airbyte-action: list
+      x-airbyte-record-extractor: "$.data"
+      x-airbyte-meta-extractor:
+        next_page: $.next_page
+      parameters:
+      - name: section_gid
+        in: path
+        required: true
+        description: The globally unique identifier for the section
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Number of items to return per page
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      - name: offset
+        in: query
+        description: Pagination offset token
+        schema:
+          type: string
+      - name: completed_since
+        in: query
+        description: Only return tasks that are either incomplete or that have been completed since this time
+        schema:
+          type: string
+          format: date-time
+      responses:
+        "200":
+          description: List of tasks in section
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TasksList"
+        "401":
+          description: Unauthorized
+        "404":
+          description: Section not found
+
+  "/sections/{section_gid}/addTask":
+    post:
+      summary: Add a task to a section
+      description: |
+        Add a task to a specific, existing section. This will remove the task from other
+        sections of the project. The task will be inserted at the top of the section unless
+        an insert_before or insert_after parameter is declared.
+      operationId: addTaskToSection
+      x-airbyte-entity: section_tasks
+      x-airbyte-action: create
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: section_gid
+        in: path
+        required: true
+        description: The globally unique identifier for the section
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SectionAddTaskParams"
+      responses:
+        "200":
+          description: Task added to section
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Section or task not found
 
   # Task relationships endpoints
   "/tasks/{task_gid}/subtasks":
@@ -3152,6 +3530,83 @@ paths:
           description: Forbidden
         "404":
           description: Task not found
+
+  # Task tag operations
+  "/tasks/{task_gid}/addTag":
+    post:
+      summary: Add a tag to a task
+      description: |
+        Adds a tag to a task. Returns an empty data block.
+      operationId: addTagForTask
+      x-airbyte-entity: task_tags
+      x-airbyte-action: create
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: task_gid
+        in: path
+        required: true
+        description: The task to operate on
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskAddTagParams"
+      responses:
+        "200":
+          description: Tag added to task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Task or tag not found
+
+  "/tasks/{task_gid}/removeTag":
+    post:
+      summary: Remove a tag from a task
+      description: |
+        Removes a tag from a task. Returns an empty data block.
+      operationId: removeTagForTask
+      x-airbyte-entity: task_tags
+      x-airbyte-action: delete
+      x-airbyte-record-extractor: "$.data"
+      parameters:
+      - name: task_gid
+        in: path
+        required: true
+        description: The task to operate on
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskRemoveTagParams"
+      responses:
+        "200":
+          description: Tag removed from task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmptyResponse"
+        "400":
+          description: Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden
+        "404":
+          description: Task or tag not found
 
   # Workspace membership endpoint
   "/workspaces/{workspace_gid}/addUser":
@@ -4062,6 +4517,131 @@ components:
               type: string
 
     # Write operation schemas
+
+    SectionCreateParams:
+      type: object
+      description: Parameters for creating a new section in a project
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              type: string
+              description: The name of the section (this is displayed as the column header in board view)
+            insert_before:
+              type: string
+              description: GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after.
+            insert_after:
+              type: string
+              description: GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before.
+
+    SectionUpdateParams:
+      type: object
+      description: Parameters for updating an existing section
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          properties:
+            name:
+              type: string
+              description: The new name of the section
+
+    SectionAddTaskParams:
+      type: object
+      description: Parameters for adding a task to a section
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - task
+          properties:
+            task:
+              type: string
+              description: The GID of the task to add to this section
+            insert_before:
+              type: string
+              description: GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after.
+            insert_after:
+              type: string
+              description: GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before.
+
+    TagCreateParams:
+      type: object
+      description: Parameters for creating a new tag in a workspace
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - name
+          properties:
+            name:
+              type: string
+              description: Name of the tag
+            color:
+              type: string
+              description: "Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null"
+            notes:
+              type: string
+              description: Free-form textual description of the tag
+
+    TagUpdateParams:
+      type: object
+      description: Parameters for updating an existing tag
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the tag
+            color:
+              type: string
+              description: "Color of the tag"
+            notes:
+              type: string
+              description: Free-form textual description of the tag
+
+    TaskAddTagParams:
+      type: object
+      description: Parameters for adding a tag to a task
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - tag
+          properties:
+            tag:
+              type: string
+              description: The GID of the tag to add to the task
+
+    TaskRemoveTagParams:
+      type: object
+      description: Parameters for removing a tag from a task
+      required:
+      - data
+      properties:
+        data:
+          type: object
+          required:
+          - tag
+          properties:
+            tag:
+              type: string
+              description: The GID of the tag to remove from the task
 
     TaskCreateParams:
       type: object

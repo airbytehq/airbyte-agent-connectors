@@ -69,7 +69,7 @@
   },
   "replication_config": null,
   "custom_description": "Asana is a work management platform that helps teams organize, track, and manage\nprojects and tasks. This connector provides access to tasks, projects, workspaces,\nteams, and users for project tracking, workload analysis, and productivity insights.\n",
-  "supported_questions": "- What tasks are assigned to me this week?\n- List all projects in my workspace\n- Show me the tasks for a recent project\n- Who are the team members in one of my teams?\n- Show me details of my current workspace and its users\n- Create a new task called 'Review Q3 report' in my project\n- Mark the task 'Submit proposal' as completed\n- Update the due date of task X to next Friday\n- Create a new project called 'Product Launch' in my workspace\n- Add a comment on the task saying 'Looks good, approved!'\n- Assign the task to me and set the due date to tomorrow\n- Delete the project 'Old Campaign'\n- Schedule a new team meeting as a task for next Tuesday\n- Add a new team member to my workspace by email\n- Delete the task 'Outdated draft'\n- Summarize my team's workload and task completion rates\n- Find all tasks related to {client_name} across my workspaces\n- Analyze the most active projects in my workspace last month\n- Compare task completion rates between my different teams\n- Identify overdue tasks across all my projects",
+  "supported_questions": "- What tasks are assigned to me this week?\n- List all projects in my workspace\n- Show me the tasks for a recent project\n- Who are the team members in one of my teams?\n- Show me details of my current workspace and its users\n- Create a new task called 'Review Q3 report' in my project\n- Mark the task 'Submit proposal' as completed\n- Update the due date of task X to next Friday\n- Create a new project called 'Product Launch' in my workspace\n- Add a comment on the task saying 'Looks good, approved!'\n- Assign the task to me and set the due date to tomorrow\n- Delete the project 'Old Campaign'\n- Schedule a new team meeting as a task for next Tuesday\n- Add a new team member to my workspace by email\n- Delete the task 'Outdated draft'\n- Summarize my team's workload and task completion rates\n- Find all tasks related to {client_name} across my workspaces\n- Analyze the most active projects in my workspace last month\n- Compare task completion rates between my different teams\n- Identify overdue tasks across all my projects\n- Create a new section called 'In Review' in my project\n- Move a task to the 'Done' section\n- List all tasks in the 'To do' section\n- Rename the 'Backlog' section to 'Icebox'\n- Delete the empty 'Old Section' from the project\n- Create a tag called 'Urgent' in my workspace\n- Tag this task with 'Bug'\n- Remove the 'Low Priority' tag from this task\n- List all tasks tagged 'Release v2'\n- Rename the tag 'WIP' to 'In Progress'\n- Delete the tag 'Deprecated'",
   "unsupported_questions": "- Move this task to another project",
   "first_operation": {
     "method_name": "list_tasks",
@@ -2338,6 +2338,61 @@
           }
         ],
         "is_download": false
+      },
+      {
+        "method_name": "create_tag_for_workspace",
+        "http_method": "post",
+        "path": "/workspaces/{workspace_gid}/tags",
+        "entity": "workspace_tags",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "WorkspaceTagsCreateParamsData",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the tag"
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Free-form textual description of the tag"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "workspace_gid",
+            "python_name": "workspace_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the workspace or organization"
+          }
+        ],
+        "params_type_name": "WorkspaceTagsCreateParams",
+        "response_type": "Tag",
+        "description": "Creates a new tag in a workspace or organization. Every tag is required to be\ncreated in a specific workspace or organization, and this cannot be changed once set.\nReturns the full record of the newly created tag.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "tags": [
@@ -2367,6 +2422,166 @@
         "needs_envelope": null,
         "record_type": "Tag",
         "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_tag",
+        "http_method": "put",
+        "path": "/tags/{tag_gid}",
+        "entity": "tags",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "TagsUpdateParamsData",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the tag"
+                },
+                "color": {
+                  "type": "string",
+                  "description": "Color of the tag"
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Free-form textual description of the tag"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "tag_gid",
+            "python_name": "tag_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The tag to update"
+          }
+        ],
+        "params_type_name": "TagsUpdateParams",
+        "response_type": "Tag",
+        "description": "Updates the properties of a tag. Only the fields provided in the data block will\nbe updated; any unspecified fields will remain unchanged. Returns the complete\nupdated tag record.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Tag",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_tag",
+        "http_method": "delete",
+        "path": "/tags/{tag_gid}",
+        "entity": "tags",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "tag_gid",
+            "python_name": "tag_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The tag to delete"
+          }
+        ],
+        "params_type_name": "TagsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "A specific, existing tag can be deleted by making a DELETE request on the URL\nfor that tag. Returns an empty data record.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "tag_tasks": [
+      {
+        "method_name": "get_tasks_for_tag",
+        "http_method": "get",
+        "path": "/tags/{tag_gid}/tasks",
+        "entity": "tag_tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "tag_gid",
+            "python_name": "tag_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the tag"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "TagTasksListParams",
+        "response_type": "TagTasksListResult",
+        "description": "Returns the compact task records for all tasks with the given tag.\nTasks can have more than one tag at a time.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
         "is_download": false
       }
     ],
@@ -2448,6 +2663,61 @@
           }
         ],
         "is_download": false
+      },
+      {
+        "method_name": "create_project_section",
+        "http_method": "post",
+        "path": "/projects/{project_gid}/sections",
+        "entity": "project_sections",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "ProjectSectionsCreateParamsData",
+            "schema": {
+              "type": "object",
+              "required": [
+                "name"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the section (this is displayed as the column header in board view)"
+                },
+                "insert_before": {
+                  "type": "string",
+                  "description": "GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after."
+                },
+                "insert_after": {
+                  "type": "string",
+                  "description": "GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before."
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "project_gid",
+            "python_name": "project_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Globally unique identifier for the project"
+          }
+        ],
+        "params_type_name": "ProjectSectionsCreateParams",
+        "response_type": "Section",
+        "description": "Creates a new section in a project. Returns the full record of the newly created section.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Section",
+        "meta_fields": null,
+        "is_download": false
       }
     ],
     "sections": [
@@ -2476,6 +2746,225 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Section",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "update_section",
+        "http_method": "put",
+        "path": "/sections/{section_gid}",
+        "entity": "sections",
+        "action": "update",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "SectionsUpdateParamsData",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The new name of the section"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "section_gid",
+            "python_name": "section_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The section to update"
+          }
+        ],
+        "params_type_name": "SectionsUpdateParams",
+        "response_type": "Section",
+        "description": "A specific, existing section can be updated by making a PUT request on the URL for\nthat section. Only the fields provided in the data block will be updated; any unspecified\nfields will remain unchanged. Currently only the name field can be updated.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "Section",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "delete_section",
+        "http_method": "delete",
+        "path": "/sections/{section_gid}",
+        "entity": "sections",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "section_gid",
+            "python_name": "section_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The section to delete"
+          }
+        ],
+        "params_type_name": "SectionsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "A specific, existing section can be deleted by making a DELETE request on the URL\nfor that section. Note that sections must be empty to be deleted. The last remaining\nsection in a project cannot be deleted.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "section_tasks": [
+      {
+        "method_name": "list_section_tasks",
+        "http_method": "get",
+        "path": "/sections/{section_gid}/tasks",
+        "entity": "section_tasks",
+        "action": "list",
+        "parameters": [
+          {
+            "name": "section_gid",
+            "python_name": "section_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The globally unique identifier for the section"
+          },
+          {
+            "name": "limit",
+            "python_name": "limit",
+            "type": "int",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": null,
+            "description": "Number of items to return per page",
+            "is_deep_object": false
+          },
+          {
+            "name": "offset",
+            "python_name": "offset",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": null,
+            "description": "Pagination offset token",
+            "is_deep_object": false
+          },
+          {
+            "name": "completed_since",
+            "python_name": "completed_since",
+            "type": "str",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "required": null,
+            "description": "Only return tasks that are either incomplete or that have been completed since this time",
+            "is_deep_object": false
+          }
+        ],
+        "params_type_name": "SectionTasksListParams",
+        "response_type": "SectionTasksListResult",
+        "description": "Returns the compact task records for all tasks within the given section.",
+        "record_extractor": "$.data",
+        "meta_extractor": {
+          "next_page": "$.next_page"
+        },
+        "needs_envelope": true,
+        "record_type": "list[TaskCompact]",
+        "meta_fields": [
+          {
+            "name": "next_page",
+            "python_name": "next_page",
+            "type": "dict[str, Any] | None",
+            "schema": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "properties": {
+                "offset": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "is_download": false
+      },
+      {
+        "method_name": "add_task_to_section",
+        "http_method": "post",
+        "path": "/sections/{section_gid}/addTask",
+        "entity": "section_tasks",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "SectionTasksCreateParamsData",
+            "schema": {
+              "type": "object",
+              "required": [
+                "task"
+              ],
+              "properties": {
+                "task": {
+                  "type": "string",
+                  "description": "The GID of the task to add to this section"
+                },
+                "insert_before": {
+                  "type": "string",
+                  "description": "GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after."
+                },
+                "insert_after": {
+                  "type": "string",
+                  "description": "GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before."
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "section_gid",
+            "python_name": "section_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The globally unique identifier for the section"
+          }
+        ],
+        "params_type_name": "SectionTasksCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Add a task to a specific, existing section. This will remove the task from other\nsections of the project. The task will be inserted at the top of the section unless\nan insert_before or insert_after parameter is declared.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
         "meta_fields": null,
         "is_download": false
       }
@@ -2773,6 +3262,102 @@
         "meta_extractor": null,
         "needs_envelope": null,
         "record_type": "Story",
+        "meta_fields": null,
+        "is_download": false
+      }
+    ],
+    "task_tags": [
+      {
+        "method_name": "add_tag_for_task",
+        "http_method": "post",
+        "path": "/tasks/{task_gid}/addTag",
+        "entity": "task_tags",
+        "action": "create",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "TaskTagsCreateParamsData",
+            "schema": {
+              "type": "object",
+              "required": [
+                "tag"
+              ],
+              "properties": {
+                "tag": {
+                  "type": "string",
+                  "description": "The GID of the tag to add to the task"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The task to operate on"
+          }
+        ],
+        "params_type_name": "TaskTagsCreateParams",
+        "response_type": "dict[str, Any]",
+        "description": "Adds a tag to a task. Returns an empty data block.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
+        "meta_fields": null,
+        "is_download": false
+      },
+      {
+        "method_name": "remove_tag_for_task",
+        "http_method": "post",
+        "path": "/tasks/{task_gid}/removeTag",
+        "entity": "task_tags",
+        "action": "delete",
+        "parameters": [
+          {
+            "name": "data",
+            "python_name": "data",
+            "type": "TaskTagsDeleteParamsData",
+            "schema": {
+              "type": "object",
+              "required": [
+                "tag"
+              ],
+              "properties": {
+                "tag": {
+                  "type": "string",
+                  "description": "The GID of the tag to remove from the task"
+                }
+              }
+            },
+            "required": true,
+            "description": ""
+          },
+          {
+            "name": "task_gid",
+            "python_name": "task_gid",
+            "type": "str",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The task to operate on"
+          }
+        ],
+        "params_type_name": "TaskTagsDeleteParams",
+        "response_type": "dict[str, Any]",
+        "description": "Removes a tag from a task. Returns an empty data block.\n",
+        "record_extractor": "$.data",
+        "meta_extractor": null,
+        "needs_envelope": null,
+        "record_type": "dict[str, Any]",
         "meta_fields": null,
         "is_download": false
       }

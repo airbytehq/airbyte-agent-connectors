@@ -23,6 +23,8 @@ from .types import (
     AttachmentsDownloadParams,
     AttachmentsGetParams,
     AttachmentsListParams,
+    ProjectSectionsCreateParams,
+    ProjectSectionsCreateParamsData,
     ProjectSectionsListParams,
     ProjectTasksListParams,
     ProjectsCreateParams,
@@ -32,14 +34,28 @@ from .types import (
     ProjectsListParams,
     ProjectsUpdateParams,
     ProjectsUpdateParamsData,
+    SectionTasksCreateParams,
+    SectionTasksCreateParamsData,
+    SectionTasksListParams,
+    SectionsDeleteParams,
     SectionsGetParams,
+    SectionsUpdateParams,
+    SectionsUpdateParamsData,
+    TagTasksListParams,
+    TagsDeleteParams,
     TagsGetParams,
+    TagsUpdateParams,
+    TagsUpdateParamsData,
     TaskDependenciesListParams,
     TaskDependentsListParams,
     TaskProjectsListParams,
     TaskStoriesCreateParams,
     TaskStoriesCreateParamsData,
     TaskSubtasksListParams,
+    TaskTagsCreateParams,
+    TaskTagsCreateParamsData,
+    TaskTagsDeleteParams,
+    TaskTagsDeleteParamsData,
     TasksCreateParams,
     TasksCreateParamsData,
     TasksDeleteParams,
@@ -56,6 +72,8 @@ from .types import (
     WorkspaceMembershipsCreateParams,
     WorkspaceMembershipsCreateParamsData,
     WorkspaceProjectsListParams,
+    WorkspaceTagsCreateParams,
+    WorkspaceTagsCreateParamsData,
     WorkspaceTagsListParams,
     WorkspaceTaskSearchListParams,
     WorkspaceTeamsListParams,
@@ -103,7 +121,9 @@ from .models import (
     UserTeamsListResult,
     AttachmentsListResult,
     WorkspaceTagsListResult,
+    TagTasksListResult,
     ProjectSectionsListResult,
+    SectionTasksListResult,
     TaskSubtasksListResult,
     TaskDependenciesListResult,
     TaskDependentsListResult,
@@ -190,7 +210,7 @@ class AsanaConnector:
 
     connector_name = "asana"
     connector_version = "0.1.20"
-    sdk_version = "0.1.7"
+    sdk_version = "0.1.8"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -222,13 +242,24 @@ class AsanaConnector:
         ("attachments", "get"): None,
         ("attachments", "download"): None,
         ("workspace_tags", "list"): True,
+        ("workspace_tags", "create"): None,
         ("tags", "get"): None,
+        ("tags", "update"): None,
+        ("tags", "delete"): None,
+        ("tag_tasks", "list"): True,
         ("project_sections", "list"): True,
+        ("project_sections", "create"): None,
         ("sections", "get"): None,
+        ("sections", "update"): None,
+        ("sections", "delete"): None,
+        ("section_tasks", "list"): True,
+        ("section_tasks", "create"): None,
         ("task_subtasks", "list"): True,
         ("task_dependencies", "list"): True,
         ("task_dependents", "list"): True,
         ("task_stories", "create"): None,
+        ("task_tags", "create"): None,
+        ("task_tags", "delete"): None,
         ("workspace_memberships", "create"): None,
     }
 
@@ -263,13 +294,24 @@ class AsanaConnector:
         ('attachments', 'get'): {'attachment_gid': 'attachment_gid'},
         ('attachments', 'download'): {'attachment_gid': 'attachment_gid', 'range_header': 'range_header'},
         ('workspace_tags', 'list'): {'workspace_gid': 'workspace_gid', 'limit': 'limit', 'offset': 'offset'},
+        ('workspace_tags', 'create'): {'data': 'data', 'workspace_gid': 'workspace_gid'},
         ('tags', 'get'): {'tag_gid': 'tag_gid'},
+        ('tags', 'update'): {'data': 'data', 'tag_gid': 'tag_gid'},
+        ('tags', 'delete'): {'tag_gid': 'tag_gid'},
+        ('tag_tasks', 'list'): {'tag_gid': 'tag_gid', 'limit': 'limit', 'offset': 'offset'},
         ('project_sections', 'list'): {'project_gid': 'project_gid', 'limit': 'limit', 'offset': 'offset'},
+        ('project_sections', 'create'): {'data': 'data', 'project_gid': 'project_gid'},
         ('sections', 'get'): {'section_gid': 'section_gid'},
+        ('sections', 'update'): {'data': 'data', 'section_gid': 'section_gid'},
+        ('sections', 'delete'): {'section_gid': 'section_gid'},
+        ('section_tasks', 'list'): {'section_gid': 'section_gid', 'limit': 'limit', 'offset': 'offset', 'completed_since': 'completed_since'},
+        ('section_tasks', 'create'): {'data': 'data', 'section_gid': 'section_gid'},
         ('task_subtasks', 'list'): {'task_gid': 'task_gid', 'limit': 'limit', 'offset': 'offset'},
         ('task_dependencies', 'list'): {'task_gid': 'task_gid', 'limit': 'limit', 'offset': 'offset'},
         ('task_dependents', 'list'): {'task_gid': 'task_gid', 'limit': 'limit', 'offset': 'offset'},
         ('task_stories', 'create'): {'data': 'data', 'task_gid': 'task_gid'},
+        ('task_tags', 'create'): {'data': 'data', 'task_gid': 'task_gid'},
+        ('task_tags', 'delete'): {'data': 'data', 'task_gid': 'task_gid'},
         ('workspace_memberships', 'create'): {'data': 'data', 'workspace_gid': 'workspace_gid'},
     }
 
@@ -392,12 +434,15 @@ class AsanaConnector:
         self.attachments = AttachmentsQuery(self)
         self.workspace_tags = WorkspaceTagsQuery(self)
         self.tags = TagsQuery(self)
+        self.tag_tasks = TagTasksQuery(self)
         self.project_sections = ProjectSectionsQuery(self)
         self.sections = SectionsQuery(self)
+        self.section_tasks = SectionTasksQuery(self)
         self.task_subtasks = TaskSubtasksQuery(self)
         self.task_dependencies = TaskDependenciesQuery(self)
         self.task_dependents = TaskDependentsQuery(self)
         self.task_stories = TaskStoriesQuery(self)
+        self.task_tags = TaskTagsQuery(self)
         self.workspace_memberships = WorkspaceMembershipsQuery(self)
 
     # ===== TYPED EXECUTE METHOD (Recommended Interface) =====
@@ -629,10 +674,42 @@ class AsanaConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["workspace_tags"],
+        action: Literal["create"],
+        params: "WorkspaceTagsCreateParams"
+    ) -> "Tag": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["tags"],
         action: Literal["get"],
         params: "TagsGetParams"
     ) -> "Tag": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tags"],
+        action: Literal["update"],
+        params: "TagsUpdateParams"
+    ) -> "Tag": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tags"],
+        action: Literal["delete"],
+        params: "TagsDeleteParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["tag_tasks"],
+        action: Literal["list"],
+        params: "TagTasksListParams"
+    ) -> "TagTasksListResult": ...
 
     @overload
     async def execute(
@@ -645,10 +722,50 @@ class AsanaConnector:
     @overload
     async def execute(
         self,
+        entity: Literal["project_sections"],
+        action: Literal["create"],
+        params: "ProjectSectionsCreateParams"
+    ) -> "Section": ...
+
+    @overload
+    async def execute(
+        self,
         entity: Literal["sections"],
         action: Literal["get"],
         params: "SectionsGetParams"
     ) -> "Section": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sections"],
+        action: Literal["update"],
+        params: "SectionsUpdateParams"
+    ) -> "Section": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["sections"],
+        action: Literal["delete"],
+        params: "SectionsDeleteParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["section_tasks"],
+        action: Literal["list"],
+        params: "SectionTasksListParams"
+    ) -> "SectionTasksListResult": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["section_tasks"],
+        action: Literal["create"],
+        params: "SectionTasksCreateParams"
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -681,6 +798,22 @@ class AsanaConnector:
         action: Literal["create"],
         params: "TaskStoriesCreateParams"
     ) -> "Story": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["task_tags"],
+        action: Literal["create"],
+        params: "TaskTagsCreateParams"
+    ) -> "dict[str, Any]": ...
+
+    @overload
+    async def execute(
+        self,
+        entity: Literal["task_tags"],
+        action: Literal["delete"],
+        params: "TaskTagsDeleteParams"
+    ) -> "dict[str, Any]": ...
 
     @overload
     async def execute(
@@ -2682,6 +2815,37 @@ class WorkspaceTagsQuery:
 
 
 
+    async def create(
+        self,
+        data: WorkspaceTagsCreateParamsData,
+        workspace_gid: str,
+        **kwargs
+    ) -> Tag:
+        """
+        Creates a new tag in a workspace or organization. Every tag is required to be
+created in a specific workspace or organization, and this cannot be changed once set.
+Returns the full record of the newly created tag.
+
+
+        Args:
+            data: Parameter data
+            workspace_gid: Globally unique identifier for the workspace or organization
+            **kwargs: Additional parameters
+
+        Returns:
+            Tag
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "workspace_gid": workspace_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("workspace_tags", "create", params)
+        return result
+
+
+
 class TagsQuery:
     """
     Query class for Tags entity operations.
@@ -2712,6 +2876,64 @@ class TagsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("tags", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: TagsUpdateParamsData,
+        tag_gid: str,
+        **kwargs
+    ) -> Tag:
+        """
+        Updates the properties of a tag. Only the fields provided in the data block will
+be updated; any unspecified fields will remain unchanged. Returns the complete
+updated tag record.
+
+
+        Args:
+            data: Parameter data
+            tag_gid: The tag to update
+            **kwargs: Additional parameters
+
+        Returns:
+            Tag
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "tag_gid": tag_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tags", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        tag_gid: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        A specific, existing tag can be deleted by making a DELETE request on the URL
+for that tag. Returns an empty data record.
+
+
+        Args:
+            tag_gid: The tag to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "tag_gid": tag_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tags", "delete", params)
         return result
 
 
@@ -2777,6 +2999,52 @@ class TagsQuery:
             ),
         )
 
+class TagTasksQuery:
+    """
+    Query class for TagTasks entity operations.
+    """
+
+    def __init__(self, connector: AsanaConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        tag_gid: str,
+        limit: int | None = None,
+        offset: str | None = None,
+        **kwargs
+    ) -> TagTasksListResult:
+        """
+        Returns the compact task records for all tasks with the given tag.
+Tasks can have more than one tag at a time.
+
+
+        Args:
+            tag_gid: Globally unique identifier for the tag
+            limit: Number of items to return per page
+            offset: Pagination offset token
+            **kwargs: Additional parameters
+
+        Returns:
+            TagTasksListResult
+        """
+        params = {k: v for k, v in {
+            "tag_gid": tag_gid,
+            "limit": limit,
+            "offset": offset,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("tag_tasks", "list", params)
+        # Cast generic envelope to concrete typed result
+        return TagTasksListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
 class ProjectSectionsQuery:
     """
     Query class for ProjectSections entity operations.
@@ -2821,6 +3089,35 @@ class ProjectSectionsQuery:
 
 
 
+    async def create(
+        self,
+        data: ProjectSectionsCreateParamsData,
+        project_gid: str,
+        **kwargs
+    ) -> Section:
+        """
+        Creates a new section in a project. Returns the full record of the newly created section.
+
+
+        Args:
+            data: Parameter data
+            project_gid: Globally unique identifier for the project
+            **kwargs: Additional parameters
+
+        Returns:
+            Section
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "project_gid": project_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("project_sections", "create", params)
+        return result
+
+
+
 class SectionsQuery:
     """
     Query class for Sections entity operations.
@@ -2851,6 +3148,65 @@ class SectionsQuery:
         }.items() if v is not None}
 
         result = await self._connector.execute("sections", "get", params)
+        return result
+
+
+
+    async def update(
+        self,
+        data: SectionsUpdateParamsData,
+        section_gid: str,
+        **kwargs
+    ) -> Section:
+        """
+        A specific, existing section can be updated by making a PUT request on the URL for
+that section. Only the fields provided in the data block will be updated; any unspecified
+fields will remain unchanged. Currently only the name field can be updated.
+
+
+        Args:
+            data: Parameter data
+            section_gid: The section to update
+            **kwargs: Additional parameters
+
+        Returns:
+            Section
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "section_gid": section_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sections", "update", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        section_gid: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        A specific, existing section can be deleted by making a DELETE request on the URL
+for that section. Note that sections must be empty to be deleted. The last remaining
+section in a project cannot be deleted.
+
+
+        Args:
+            section_gid: The section to delete
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "section_gid": section_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("sections", "delete", params)
         return result
 
 
@@ -2913,6 +3269,84 @@ class SectionsQuery:
                 took_ms=meta_data.get("took_ms") if isinstance(meta_data, dict) else None,
             ),
         )
+
+class SectionTasksQuery:
+    """
+    Query class for SectionTasks entity operations.
+    """
+
+    def __init__(self, connector: AsanaConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def list(
+        self,
+        section_gid: str,
+        limit: int | None = None,
+        offset: str | None = None,
+        completed_since: str | None = None,
+        **kwargs
+    ) -> SectionTasksListResult:
+        """
+        Returns the compact task records for all tasks within the given section.
+
+        Args:
+            section_gid: The globally unique identifier for the section
+            limit: Number of items to return per page
+            offset: Pagination offset token
+            completed_since: Only return tasks that are either incomplete or that have been completed since this time
+            **kwargs: Additional parameters
+
+        Returns:
+            SectionTasksListResult
+        """
+        params = {k: v for k, v in {
+            "section_gid": section_gid,
+            "limit": limit,
+            "offset": offset,
+            "completed_since": completed_since,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("section_tasks", "list", params)
+        # Cast generic envelope to concrete typed result
+        return SectionTasksListResult(
+            data=result.data,
+            meta=result.meta
+        )
+
+
+
+    async def create(
+        self,
+        data: SectionTasksCreateParamsData,
+        section_gid: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Add a task to a specific, existing section. This will remove the task from other
+sections of the project. The task will be inserted at the top of the section unless
+an insert_before or insert_after parameter is declared.
+
+
+        Args:
+            data: Parameter data
+            section_gid: The globally unique identifier for the section
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "section_gid": section_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("section_tasks", "create", params)
+        return result
+
+
 
 class TaskSubtasksQuery:
     """
@@ -3081,6 +3515,73 @@ authenticated user, and timestamped when the server receives the request.
         }.items() if v is not None}
 
         result = await self._connector.execute("task_stories", "create", params)
+        return result
+
+
+
+class TaskTagsQuery:
+    """
+    Query class for TaskTags entity operations.
+    """
+
+    def __init__(self, connector: AsanaConnector):
+        """Initialize query with connector reference."""
+        self._connector = connector
+
+    async def create(
+        self,
+        data: TaskTagsCreateParamsData,
+        task_gid: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Adds a tag to a task. Returns an empty data block.
+
+
+        Args:
+            data: Parameter data
+            task_gid: The task to operate on
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "task_gid": task_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("task_tags", "create", params)
+        return result
+
+
+
+    async def delete(
+        self,
+        data: TaskTagsDeleteParamsData,
+        task_gid: str,
+        **kwargs
+    ) -> dict[str, Any]:
+        """
+        Removes a tag from a task. Returns an empty data block.
+
+
+        Args:
+            data: Parameter data
+            task_gid: The task to operate on
+            **kwargs: Additional parameters
+
+        Returns:
+            dict[str, Any]
+        """
+        params = {k: v for k, v in {
+            "data": data,
+            "task_gid": task_gid,
+            **kwargs
+        }.items() if v is not None}
+
+        result = await self._connector.execute("task_tags", "delete", params)
         return result
 
 

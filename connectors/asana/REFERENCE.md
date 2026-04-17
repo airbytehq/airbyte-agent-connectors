@@ -23,14 +23,17 @@ The Asana connector supports the following entities and actions.
 | Workspace Teams | [List](#workspace-teams-list) |
 | User Teams | [List](#user-teams-list) |
 | Attachments | [List](#attachments-list), [Get](#attachments-get), [Download](#attachments-download), [Context Store Search](#attachments-context-store-search) |
-| Workspace Tags | [List](#workspace-tags-list) |
-| Tags | [Get](#tags-get), [Context Store Search](#tags-context-store-search) |
-| Project Sections | [List](#project-sections-list) |
-| Sections | [Get](#sections-get), [Context Store Search](#sections-context-store-search) |
+| Workspace Tags | [List](#workspace-tags-list), [Create](#workspace-tags-create) |
+| Tags | [Get](#tags-get), [Update](#tags-update), [Delete](#tags-delete), [Context Store Search](#tags-context-store-search) |
+| Tag Tasks | [List](#tag-tasks-list) |
+| Project Sections | [List](#project-sections-list), [Create](#project-sections-create) |
+| Sections | [Get](#sections-get), [Update](#sections-update), [Delete](#sections-delete), [Context Store Search](#sections-context-store-search) |
+| Section Tasks | [List](#section-tasks-list), [Create](#section-tasks-create) |
 | Task Subtasks | [List](#task-subtasks-list) |
 | Task Dependencies | [List](#task-dependencies-list) |
 | Task Dependents | [List](#task-dependents-list) |
 | Task Stories | [Create](#task-stories-create) |
+| Task Tags | [Create](#task-tags-create), [Delete](#task-tags-delete) |
 | Workspace Memberships | [Create](#workspace-memberships-create) |
 
 ## Tasks
@@ -2220,6 +2223,74 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
+### Workspace Tags Create
+
+Creates a new tag in a workspace or organization. Every tag is required to be
+created in a specific workspace or organization, and this cannot be changed once set.
+Returns the full record of the newly created tag.
+
+
+#### Python SDK
+
+```python
+await asana.workspace_tags.create(
+    data={
+        "name": "<str>"
+    },
+    workspace_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "workspace_tags",
+    "action": "create",
+    "params": {
+        "data": {
+            "name": "<str>"
+        },
+        "workspace_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.name` | `string` | Yes | Name of the tag |
+| `data.color` | `string` | No | Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null |
+| `data.notes` | `string` | No | Free-form textual description of the tag |
+| `workspace_gid` | `string` | Yes | Globally unique identifier for the workspace or organization |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `color` | `string` |  |
+| `created_at` | `string` |  |
+| `followers` | `array` |  |
+| `notes` | `string` |  |
+| `permalink_url` | `string` |  |
+| `workspace` | `object` |  |
+
+
+</details>
+
 ## Tags
 
 ### Tags Get
@@ -2276,6 +2347,107 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 </details>
+
+### Tags Update
+
+Updates the properties of a tag. Only the fields provided in the data block will
+be updated; any unspecified fields will remain unchanged. Returns the complete
+updated tag record.
+
+
+#### Python SDK
+
+```python
+await asana.tags.update(
+    data={},
+    tag_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "tags",
+    "action": "update",
+    "params": {
+        "data": {},
+        "tag_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.name` | `string` | No | Name of the tag |
+| `data.color` | `string` | No | Color of the tag |
+| `data.notes` | `string` | No | Free-form textual description of the tag |
+| `tag_gid` | `string` | Yes | The tag to update |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `color` | `string` |  |
+| `created_at` | `string` |  |
+| `followers` | `array` |  |
+| `notes` | `string` |  |
+| `permalink_url` | `string` |  |
+| `workspace` | `object` |  |
+
+
+</details>
+
+### Tags Delete
+
+A specific, existing tag can be deleted by making a DELETE request on the URL
+for that tag. Returns an empty data record.
+
+
+#### Python SDK
+
+```python
+await asana.tags.delete(
+    tag_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "tags",
+    "action": "delete",
+    "params": {
+        "tag_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `tag_gid` | `string` | Yes | The tag to delete |
+
 
 ### Tags Context Store Search
 
@@ -2347,6 +2519,69 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
+## Tag Tasks
+
+### Tag Tasks List
+
+Returns the compact task records for all tasks with the given tag.
+Tasks can have more than one tag at a time.
+
+
+#### Python SDK
+
+```python
+await asana.tag_tasks.list(
+    tag_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "tag_tasks",
+    "action": "list",
+    "params": {
+        "tag_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `tag_gid` | `string` | Yes | Globally unique identifier for the tag |
+| `limit` | `integer` | No | Number of items to return per page |
+| `offset` | `string` | No | Pagination offset token |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `resource_subtype` | `string` |  |
+| `created_by` | `object` |  |
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_page` | `object \| null` |  |
+
+</details>
+
 ## Project Sections
 
 ### Project Sections List
@@ -2406,6 +2641,68 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 </details>
 
+### Project Sections Create
+
+Creates a new section in a project. Returns the full record of the newly created section.
+
+
+#### Python SDK
+
+```python
+await asana.project_sections.create(
+    data={
+        "name": "<str>"
+    },
+    project_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "project_sections",
+    "action": "create",
+    "params": {
+        "data": {
+            "name": "<str>"
+        },
+        "project_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.name` | `string` | Yes | The name of the section (this is displayed as the column header in board view) |
+| `data.insert_before` | `string` | No | GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after. |
+| `data.insert_after` | `string` | No | GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before. |
+| `project_gid` | `string` | Yes | Globally unique identifier for the project |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `created_at` | `string` |  |
+| `project` | `object` |  |
+
+
+</details>
+
 ## Sections
 
 ### Sections Get
@@ -2458,6 +2755,102 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 </details>
+
+### Sections Update
+
+A specific, existing section can be updated by making a PUT request on the URL for
+that section. Only the fields provided in the data block will be updated; any unspecified
+fields will remain unchanged. Currently only the name field can be updated.
+
+
+#### Python SDK
+
+```python
+await asana.sections.update(
+    data={},
+    section_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "sections",
+    "action": "update",
+    "params": {
+        "data": {},
+        "section_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.name` | `string` | No | The new name of the section |
+| `section_gid` | `string` | Yes | The section to update |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `created_at` | `string` |  |
+| `project` | `object` |  |
+
+
+</details>
+
+### Sections Delete
+
+A specific, existing section can be deleted by making a DELETE request on the URL
+for that section. Note that sections must be empty to be deleted. The last remaining
+section in a project cannot be deleted.
+
+
+#### Python SDK
+
+```python
+await asana.sections.delete(
+    section_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "sections",
+    "action": "delete",
+    "params": {
+        "section_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `section_gid` | `string` | Yes | The section to delete |
+
 
 ### Sections Context Store Search
 
@@ -2524,6 +2917,116 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 | `data[].resource_type` | `string` |  |
 
 </details>
+
+## Section Tasks
+
+### Section Tasks List
+
+Returns the compact task records for all tasks within the given section.
+
+#### Python SDK
+
+```python
+await asana.section_tasks.list(
+    section_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "section_tasks",
+    "action": "list",
+    "params": {
+        "section_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `section_gid` | `string` | Yes | The globally unique identifier for the section |
+| `limit` | `integer` | No | Number of items to return per page |
+| `offset` | `string` | No | Pagination offset token |
+| `completed_since` | `string` | No | Only return tasks that are either incomplete or that have been completed since this time |
+
+
+<details>
+<summary><b>Response Schema</b></summary>
+
+#### Records
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `gid` | `string` |  |
+| `resource_type` | `string` |  |
+| `name` | `string` |  |
+| `resource_subtype` | `string` |  |
+| `created_by` | `object` |  |
+
+
+#### Meta
+
+| Field Name | Type | Description |
+|------------|------|-------------|
+| `next_page` | `object \| null` |  |
+
+</details>
+
+### Section Tasks Create
+
+Add a task to a specific, existing section. This will remove the task from other
+sections of the project. The task will be inserted at the top of the section unless
+an insert_before or insert_after parameter is declared.
+
+
+#### Python SDK
+
+```python
+await asana.section_tasks.create(
+    data={
+        "task": "<str>"
+    },
+    section_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "section_tasks",
+    "action": "create",
+    "params": {
+        "data": {
+            "task": "<str>"
+        },
+        "section_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.task` | `string` | Yes | The GID of the task to add to this section |
+| `data.insert_before` | `string` | No | GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after. |
+| `data.insert_after` | `string` | No | GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before. |
+| `section_gid` | `string` | Yes | The globally unique identifier for the section |
+
 
 ## Task Subtasks
 
@@ -2777,6 +3280,96 @@ curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_con
 
 
 </details>
+
+## Task Tags
+
+### Task Tags Create
+
+Adds a tag to a task. Returns an empty data block.
+
+
+#### Python SDK
+
+```python
+await asana.task_tags.create(
+    data={
+        "tag": "<str>"
+    },
+    task_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "task_tags",
+    "action": "create",
+    "params": {
+        "data": {
+            "tag": "<str>"
+        },
+        "task_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.tag` | `string` | Yes | The GID of the tag to add to the task |
+| `task_gid` | `string` | Yes | The task to operate on |
+
+
+### Task Tags Delete
+
+Removes a tag from a task. Returns an empty data block.
+
+
+#### Python SDK
+
+```python
+await asana.task_tags.delete(
+    data={
+        "tag": "<str>"
+    },
+    task_gid="<str>"
+)
+```
+
+#### API
+
+```bash
+curl --location 'https://api.airbyte.ai/api/v1/integrations/connectors/{your_connector_id}/execute' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer {your_auth_token}' \
+--data '{
+    "entity": "task_tags",
+    "action": "delete",
+    "params": {
+        "data": {
+            "tag": "<str>"
+        },
+        "task_gid": "<str>"
+    }
+}'
+```
+
+
+#### Parameters
+
+| Parameter Name | Type | Required | Description |
+|----------------|------|----------|-------------|
+| `data` | `object` | Yes |  |
+| `data.tag` | `string` | Yes | The GID of the tag to remove from the task |
+| `task_gid` | `string` | Yes | The task to operate on |
+
 
 ## Workspace Memberships
 

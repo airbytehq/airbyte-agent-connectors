@@ -91,8 +91,16 @@ class ProjectCompact(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
 
-class ProjectCompletedBy(BaseModel):
-    """Nested schema for Project.completed_by"""
+class ProjectWorkspace(BaseModel):
+    """Nested schema for Project.workspace"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
+class ProjectFollowersItem(BaseModel):
+    """Nested schema for Project.followers_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -129,6 +137,14 @@ class ProjectCurrentStatus(BaseModel):
     text: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
 
+class ProjectCompletedBy(BaseModel):
+    """Nested schema for Project.completed_by"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    gid: Union[str, Any] = Field(default=None)
+    name: Union[str, Any] = Field(default=None)
+    resource_type: Union[str, Any] = Field(default=None)
+
 class ProjectTeam(BaseModel):
     """Nested schema for Project.team"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -153,22 +169,6 @@ class ProjectCurrentStatusUpdate(BaseModel):
     resource_type: Union[str, Any] = Field(default=None)
     resource_subtype: Union[str, Any] = Field(default=None)
     title: Union[str, Any] = Field(default=None)
-
-class ProjectWorkspace(BaseModel):
-    """Nested schema for Project.workspace"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
-
-class ProjectFollowersItem(BaseModel):
-    """Nested schema for Project.followers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    gid: Union[str, Any] = Field(default=None)
-    name: Union[str, Any] = Field(default=None)
-    resource_type: Union[str, Any] = Field(default=None)
 
 class ProjectOwner(BaseModel):
     """Nested schema for Project.owner"""
@@ -522,6 +522,113 @@ class SectionsList(BaseModel):
     data: Union[list[SectionCompact], Any] = Field(default=None)
     next_page: Union[SectionsListNextPage | None, Any] = Field(default=None)
 
+class SectionCreateParamsData(BaseModel):
+    """Nested schema for SectionCreateParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="The name of the section (this is displayed as the column header in board view)")
+    """The name of the section (this is displayed as the column header in board view)"""
+    insert_before: Union[str, Any] = Field(default=None, description="GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after.")
+    """GID of a section in the same project before which the new section should be inserted. Cannot be provided together with insert_after."""
+    insert_after: Union[str, Any] = Field(default=None, description="GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before.")
+    """GID of a section in the same project after which the new section should be inserted. Cannot be provided together with insert_before."""
+
+class SectionCreateParams(BaseModel):
+    """Parameters for creating a new section in a project"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[SectionCreateParamsData, Any] = Field(default=None)
+
+class SectionUpdateParamsData(BaseModel):
+    """Nested schema for SectionUpdateParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="The new name of the section")
+    """The new name of the section"""
+
+class SectionUpdateParams(BaseModel):
+    """Parameters for updating an existing section"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[SectionUpdateParamsData, Any] = Field(default=None)
+
+class SectionAddTaskParamsData(BaseModel):
+    """Nested schema for SectionAddTaskParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    task: Union[str, Any] = Field(default=None, description="The GID of the task to add to this section")
+    """The GID of the task to add to this section"""
+    insert_before: Union[str, Any] = Field(default=None, description="GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after.")
+    """GID of a task in this section before which the added task should be inserted. Cannot be provided together with insert_after."""
+    insert_after: Union[str, Any] = Field(default=None, description="GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before.")
+    """GID of a task in this section after which the added task should be inserted. Cannot be provided together with insert_before."""
+
+class SectionAddTaskParams(BaseModel):
+    """Parameters for adding a task to a section"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[SectionAddTaskParamsData, Any] = Field(default=None)
+
+class TagCreateParamsData(BaseModel):
+    """Nested schema for TagCreateParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Name of the tag")
+    """Name of the tag"""
+    color: Union[str, Any] = Field(default=None, description="Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null")
+    """Color of the tag. Must be one of: dark-pink, dark-green, dark-blue, dark-red, dark-teal, dark-brown, dark-orange, dark-purple, dark-warm-gray, light-pink, light-green, light-blue, light-red, light-teal, light-brown, light-orange, light-purple, light-warm-gray, none, null"""
+    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the tag")
+    """Free-form textual description of the tag"""
+
+class TagCreateParams(BaseModel):
+    """Parameters for creating a new tag in a workspace"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[TagCreateParamsData, Any] = Field(default=None)
+
+class TagUpdateParamsData(BaseModel):
+    """Nested schema for TagUpdateParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    name: Union[str, Any] = Field(default=None, description="Name of the tag")
+    """Name of the tag"""
+    color: Union[str, Any] = Field(default=None, description="Color of the tag")
+    """Color of the tag"""
+    notes: Union[str, Any] = Field(default=None, description="Free-form textual description of the tag")
+    """Free-form textual description of the tag"""
+
+class TagUpdateParams(BaseModel):
+    """Parameters for updating an existing tag"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[TagUpdateParamsData, Any] = Field(default=None)
+
+class TaskAddTagParamsData(BaseModel):
+    """Nested schema for TaskAddTagParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    tag: Union[str, Any] = Field(default=None, description="The GID of the tag to add to the task")
+    """The GID of the tag to add to the task"""
+
+class TaskAddTagParams(BaseModel):
+    """Parameters for adding a tag to a task"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[TaskAddTagParamsData, Any] = Field(default=None)
+
+class TaskRemoveTagParamsData(BaseModel):
+    """Nested schema for TaskRemoveTagParams.data"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    tag: Union[str, Any] = Field(default=None, description="The GID of the tag to remove from the task")
+    """The GID of the tag to remove from the task"""
+
+class TaskRemoveTagParams(BaseModel):
+    """Parameters for removing a tag from a task"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    data: Union[TaskRemoveTagParamsData, Any] = Field(default=None)
+
 class TaskCreateParamsData(BaseModel):
     """Nested schema for TaskCreateParams.data"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -665,16 +772,16 @@ class StoryCreateParams(BaseModel):
 
     data: Union[StoryCreateParamsData, Any] = Field(default=None)
 
-class StoryTarget(BaseModel):
-    """Nested schema for Story.target"""
+class StoryCreatedBy(BaseModel):
+    """Nested schema for Story.created_by"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
     name: Union[str, Any] = Field(default=None)
     resource_type: Union[str, Any] = Field(default=None)
 
-class StoryCreatedBy(BaseModel):
-    """Nested schema for Story.created_by"""
+class StoryTarget(BaseModel):
+    """Nested schema for Story.target"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     gid: Union[str, Any] = Field(default=None)
@@ -814,8 +921,20 @@ class WorkspaceTagsListResultMeta(BaseModel):
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
 
+class TagTasksListResultMeta(BaseModel):
+    """Metadata for tag_tasks.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
 class ProjectSectionsListResultMeta(BaseModel):
     """Metadata for project_sections.Action.LIST operation"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
+
+class SectionTasksListResultMeta(BaseModel):
+    """Metadata for section_tasks.Action.LIST operation"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     next_page: Union[dict[str, Any] | None, Any] = Field(default=None)
@@ -1245,8 +1364,14 @@ AttachmentsListResult = AsanaExecuteResultWithMeta[list[AttachmentCompact], Atta
 WorkspaceTagsListResult = AsanaExecuteResultWithMeta[list[TagCompact], WorkspaceTagsListResultMeta]
 """Result type for workspace_tags.list operation with data and metadata."""
 
+TagTasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TagTasksListResultMeta]
+"""Result type for tag_tasks.list operation with data and metadata."""
+
 ProjectSectionsListResult = AsanaExecuteResultWithMeta[list[SectionCompact], ProjectSectionsListResultMeta]
 """Result type for project_sections.list operation with data and metadata."""
+
+SectionTasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], SectionTasksListResultMeta]
+"""Result type for section_tasks.list operation with data and metadata."""
 
 TaskSubtasksListResult = AsanaExecuteResultWithMeta[list[TaskCompact], TaskSubtasksListResultMeta]
 """Result type for task_subtasks.list operation with data and metadata."""

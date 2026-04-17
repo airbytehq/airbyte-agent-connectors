@@ -70,11 +70,47 @@ class ProjectsUpdateParamsData(TypedDict):
     start_on: NotRequired[str]
     archived: NotRequired[bool]
 
+class WorkspaceTagsCreateParamsData(TypedDict):
+    """Nested schema for WorkspaceTagsCreateParams.data"""
+    name: str
+    color: NotRequired[str]
+    notes: NotRequired[str]
+
+class TagsUpdateParamsData(TypedDict):
+    """Nested schema for TagsUpdateParams.data"""
+    name: NotRequired[str]
+    color: NotRequired[str]
+    notes: NotRequired[str]
+
+class ProjectSectionsCreateParamsData(TypedDict):
+    """Nested schema for ProjectSectionsCreateParams.data"""
+    name: str
+    insert_before: NotRequired[str]
+    insert_after: NotRequired[str]
+
+class SectionsUpdateParamsData(TypedDict):
+    """Nested schema for SectionsUpdateParams.data"""
+    name: NotRequired[str]
+
+class SectionTasksCreateParamsData(TypedDict):
+    """Nested schema for SectionTasksCreateParams.data"""
+    task: str
+    insert_before: NotRequired[str]
+    insert_after: NotRequired[str]
+
 class TaskStoriesCreateParamsData(TypedDict):
     """Nested schema for TaskStoriesCreateParams.data"""
     text: str
     html_text: NotRequired[str]
     is_pinned: NotRequired[bool]
+
+class TaskTagsCreateParamsData(TypedDict):
+    """Nested schema for TaskTagsCreateParams.data"""
+    tag: str
+
+class TaskTagsDeleteParamsData(TypedDict):
+    """Nested schema for TaskTagsDeleteParams.data"""
+    tag: str
 
 class WorkspaceMembershipsCreateParamsData(TypedDict):
     """Nested schema for WorkspaceMembershipsCreateParams.data"""
@@ -254,9 +290,29 @@ class WorkspaceTagsListParams(TypedDict):
     limit: NotRequired[int]
     offset: NotRequired[str]
 
+class WorkspaceTagsCreateParams(TypedDict):
+    """Parameters for workspace_tags.create operation"""
+    data: WorkspaceTagsCreateParamsData
+    workspace_gid: str
+
 class TagsGetParams(TypedDict):
     """Parameters for tags.get operation"""
     tag_gid: str
+
+class TagsUpdateParams(TypedDict):
+    """Parameters for tags.update operation"""
+    data: TagsUpdateParamsData
+    tag_gid: str
+
+class TagsDeleteParams(TypedDict):
+    """Parameters for tags.delete operation"""
+    tag_gid: str
+
+class TagTasksListParams(TypedDict):
+    """Parameters for tag_tasks.list operation"""
+    tag_gid: str
+    limit: NotRequired[int]
+    offset: NotRequired[str]
 
 class ProjectSectionsListParams(TypedDict):
     """Parameters for project_sections.list operation"""
@@ -264,8 +320,34 @@ class ProjectSectionsListParams(TypedDict):
     limit: NotRequired[int]
     offset: NotRequired[str]
 
+class ProjectSectionsCreateParams(TypedDict):
+    """Parameters for project_sections.create operation"""
+    data: ProjectSectionsCreateParamsData
+    project_gid: str
+
 class SectionsGetParams(TypedDict):
     """Parameters for sections.get operation"""
+    section_gid: str
+
+class SectionsUpdateParams(TypedDict):
+    """Parameters for sections.update operation"""
+    data: SectionsUpdateParamsData
+    section_gid: str
+
+class SectionsDeleteParams(TypedDict):
+    """Parameters for sections.delete operation"""
+    section_gid: str
+
+class SectionTasksListParams(TypedDict):
+    """Parameters for section_tasks.list operation"""
+    section_gid: str
+    limit: NotRequired[int]
+    offset: NotRequired[str]
+    completed_since: NotRequired[str]
+
+class SectionTasksCreateParams(TypedDict):
+    """Parameters for section_tasks.create operation"""
+    data: SectionTasksCreateParamsData
     section_gid: str
 
 class TaskSubtasksListParams(TypedDict):
@@ -289,6 +371,16 @@ class TaskDependentsListParams(TypedDict):
 class TaskStoriesCreateParams(TypedDict):
     """Parameters for task_stories.create operation"""
     data: TaskStoriesCreateParamsData
+    task_gid: str
+
+class TaskTagsCreateParams(TypedDict):
+    """Parameters for task_tags.create operation"""
+    data: TaskTagsCreateParamsData
+    task_gid: str
+
+class TaskTagsDeleteParams(TypedDict):
+    """Parameters for task_tags.delete operation"""
+    data: TaskTagsDeleteParamsData
     task_gid: str
 
 class WorkspaceMembershipsCreateParams(TypedDict):

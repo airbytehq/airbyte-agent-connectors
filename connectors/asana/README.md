@@ -31,6 +31,17 @@ The Asana connector is optimized to handle prompts like these.
 - Analyze the most active projects in my workspace last month
 - Compare task completion rates between my different teams
 - Identify overdue tasks across all my projects
+- Create a new section called 'In Review' in my project
+- Move a task to the 'Done' section
+- List all tasks in the 'To do' section
+- Rename the 'Backlog' section to 'Icebox'
+- Delete the empty 'Old Section' from the project
+- Create a tag called 'Urgent' in my workspace
+- Tag this task with 'Bug'
+- Remove the 'Low Priority' tag from this task
+- List all tasks tagged 'Release v2'
+- Rename the tag 'WIP' to 'In Progress'
+- Delete the tag 'Deprecated'
 
 ## Unsupported questions
 
@@ -116,14 +127,17 @@ This connector supports the following entities and actions. For more details, se
 | Workspace Teams | [List](./REFERENCE.md#workspace-teams-list) |
 | User Teams | [List](./REFERENCE.md#user-teams-list) |
 | Attachments | [List](./REFERENCE.md#attachments-list), [Get](./REFERENCE.md#attachments-get), [Download](./REFERENCE.md#attachments-download), [Context Store Search](./REFERENCE.md#attachments-context-store-search) |
-| Workspace Tags | [List](./REFERENCE.md#workspace-tags-list) |
-| Tags | [Get](./REFERENCE.md#tags-get), [Context Store Search](./REFERENCE.md#tags-context-store-search) |
-| Project Sections | [List](./REFERENCE.md#project-sections-list) |
-| Sections | [Get](./REFERENCE.md#sections-get), [Context Store Search](./REFERENCE.md#sections-context-store-search) |
+| Workspace Tags | [List](./REFERENCE.md#workspace-tags-list), [Create](./REFERENCE.md#workspace-tags-create) |
+| Tags | [Get](./REFERENCE.md#tags-get), [Update](./REFERENCE.md#tags-update), [Delete](./REFERENCE.md#tags-delete), [Context Store Search](./REFERENCE.md#tags-context-store-search) |
+| Tag Tasks | [List](./REFERENCE.md#tag-tasks-list) |
+| Project Sections | [List](./REFERENCE.md#project-sections-list), [Create](./REFERENCE.md#project-sections-create) |
+| Sections | [Get](./REFERENCE.md#sections-get), [Update](./REFERENCE.md#sections-update), [Delete](./REFERENCE.md#sections-delete), [Context Store Search](./REFERENCE.md#sections-context-store-search) |
+| Section Tasks | [List](./REFERENCE.md#section-tasks-list), [Create](./REFERENCE.md#section-tasks-create) |
 | Task Subtasks | [List](./REFERENCE.md#task-subtasks-list) |
 | Task Dependencies | [List](./REFERENCE.md#task-dependencies-list) |
 | Task Dependents | [List](./REFERENCE.md#task-dependents-list) |
 | Task Stories | [Create](./REFERENCE.md#task-stories-create) |
+| Task Tags | [Create](./REFERENCE.md#task-tags-create), [Delete](./REFERENCE.md#task-tags-delete) |
 | Workspace Memberships | [Create](./REFERENCE.md#workspace-memberships-create) |
 
 
