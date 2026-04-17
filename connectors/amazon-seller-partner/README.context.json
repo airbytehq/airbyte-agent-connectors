@@ -61,15 +61,15 @@
         "type": "str",
         "required": true,
         "title": "Start Date",
-        "description": "UTC date and time in the format 2017-01-25T00:00:00Z. Any data before this date will not be replicated.",
+        "description": "UTC date and time in ISO 8601 format (e.g. 2024-01-01T00:00:00Z). Any data before this date will not be replicated. This sets the earliest date for order creation and financial event queries. For most sellers, a start date of 1-2 years ago is a good default. Must include the time component and Z timezone suffix.",
         "format": "date-time",
         "default": null
       }
     ]
   },
   "custom_description": "Connector for the Amazon Selling Partner API (SP-API). Provides access to seller orders and order items, financial events and event groups, catalog item search and details, and report metadata. Supports OAuth 2.0 authentication via Login with Amazon (LWA) with automatic token refresh.\n",
-  "supported_questions": "- List all recent orders\n- Show me order items for a specific order\n- List financial event groups\n- Show recent financial events\n- Search catalog items by keyword\n- List recent reports\n- What are my top-selling products by order volume?\n- Show orders from the last 30 days with status Shipped\n- Find financial events related to refunds\n- Which orders have the highest total value?",
-  "unsupported_questions": "- Create a new order\n- Cancel an order\n- Submit a new report request\n- Update product listings",
+  "supported_questions": "- List all orders from the last 7 days\n- Show me shipped orders from January 2024\n- Show me order items for order 111-2222222-3333333\n- List financial event groups from the last 90 days\n- Show refund events from last month\n- Search the catalog for wireless headphones\n- Look up product details for ASIN B08N5WRWNW\n- List completed reports from this week\n- What are my top-selling products by order volume this month?\n- Show orders with status Shipped from the last 30 days\n- Find all refund financial events from last quarter\n- Which orders have the highest total value this week?\n- How many orders were canceled in the last 60 days?\n- What service fees were charged last month?",
+  "unsupported_questions": "- Create a new order\n- Cancel an order\n- Submit a new report request\n- Update product listings\n- Change the marketplace region",
   "first_operation": {
     "method_name": "list_orders",
     "http_method": "get",
@@ -85,7 +85,7 @@
           "type": "string"
         },
         "required": true,
-        "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.",
+        "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces. This is auto-injected from the configured seller region \u2014 do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region setting (US, CA, MX, BR, DE, FR, IT, ES, UK, IN, JP, AU, SG, etc.).",
         "is_deep_object": false
       },
       {
@@ -97,7 +97,7 @@
           "format": "date-time"
         },
         "required": null,
-        "description": "A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.",
+        "description": "A date used for selecting orders created after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter is not specified \u2014 the API requires at least one of CreatedAfter or LastUpdatedAfter. Use this to scope orders by creation date. For example, to get orders from the last 30 days, set this to a date 30 days ago.",
         "is_deep_object": false
       },
       {
@@ -109,7 +109,7 @@
           "format": "date-time"
         },
         "required": null,
-        "description": "A date used for selecting orders created before the specified date (ISO 8601 format).",
+        "description": "A date used for selecting orders created before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with CreatedAfter to define a creation date range. If omitted, defaults to now.",
         "is_deep_object": false
       },
       {
@@ -121,7 +121,7 @@
           "format": "date-time"
         },
         "required": null,
-        "description": "A date used for selecting orders that were last updated after the specified date (ISO 8601 format).",
+        "description": "A date used for selecting orders that were last updated after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if CreatedAfter is not specified \u2014 the API requires at least one of these. Use this when you want orders that changed recently (e.g. status updates, shipment changes).",
         "is_deep_object": false
       },
       {
@@ -133,7 +133,7 @@
           "format": "date-time"
         },
         "required": null,
-        "description": "A date used for selecting orders that were last updated before the specified date (ISO 8601 format).",
+        "description": "A date used for selecting orders that were last updated before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with LastUpdatedAfter to define an update date range. If omitted, defaults to now.",
         "is_deep_object": false
       },
       {
@@ -144,7 +144,7 @@
           "type": "string"
         },
         "required": null,
-        "description": "Filter by order status values.",
+        "description": "Filter by order status values. Comma-separated list of statuses: Pending, Unshipped, PartiallyShipped, Shipped, Canceled, Unfulfillable, InvoiceUnconfirmed, PendingAvailability. Example: \"Shipped,Unshipped\".",
         "is_deep_object": false
       },
       {
@@ -158,7 +158,7 @@
           "default": 100
         },
         "required": null,
-        "description": "Maximum number of results to return per page.",
+        "description": "Maximum number of results to return per page (1-100, default 100).",
         "is_deep_object": false
       },
       {
@@ -212,7 +212,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.",
+            "description": "A list of MarketplaceId values. Used to select orders placed in the specified marketplaces. This is auto-injected from the configured seller region \u2014 do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region setting (US, CA, MX, BR, DE, FR, IT, ES, UK, IN, JP, AU, SG, etc.).",
             "is_deep_object": false
           },
           {
@@ -224,7 +224,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.",
+            "description": "A date used for selecting orders created after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter is not specified \u2014 the API requires at least one of CreatedAfter or LastUpdatedAfter. Use this to scope orders by creation date. For example, to get orders from the last 30 days, set this to a date 30 days ago.",
             "is_deep_object": false
           },
           {
@@ -236,7 +236,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "A date used for selecting orders created before the specified date (ISO 8601 format).",
+            "description": "A date used for selecting orders created before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with CreatedAfter to define a creation date range. If omitted, defaults to now.",
             "is_deep_object": false
           },
           {
@@ -248,7 +248,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "A date used for selecting orders that were last updated after the specified date (ISO 8601 format).",
+            "description": "A date used for selecting orders that were last updated after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if CreatedAfter is not specified \u2014 the API requires at least one of these. Use this when you want orders that changed recently (e.g. status updates, shipment changes).",
             "is_deep_object": false
           },
           {
@@ -260,7 +260,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "A date used for selecting orders that were last updated before the specified date (ISO 8601 format).",
+            "description": "A date used for selecting orders that were last updated before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with LastUpdatedAfter to define an update date range. If omitted, defaults to now.",
             "is_deep_object": false
           },
           {
@@ -271,7 +271,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "Filter by order status values.",
+            "description": "Filter by order status values. Comma-separated list of statuses: Pending, Unshipped, PartiallyShipped, Shipped, Canceled, Unfulfillable, InvoiceUnconfirmed, PendingAvailability. Example: \"Shipped,Unshipped\".",
             "is_deep_object": false
           },
           {
@@ -285,7 +285,7 @@
               "default": 100
             },
             "required": null,
-            "description": "Maximum number of results to return per page.",
+            "description": "Maximum number of results to return per page (1-100, default 100).",
             "is_deep_object": false
           },
           {
@@ -337,7 +337,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "An Amazon order identifier in 3-7-7 format."
+            "description": "An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333). This is the AmazonOrderId returned by the list orders endpoint."
           }
         ],
         "params_type_name": "OrdersGetParams",
@@ -367,7 +367,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "An Amazon order identifier in 3-7-7 format."
+            "description": "An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333). This is the AmazonOrderId returned by the list orders endpoint."
           },
           {
             "name": "NextToken",
@@ -420,7 +420,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Return groups opened after this date (ISO 8601 format).",
+            "description": "Return groups that started after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Use this to scope results to a specific time period. For example, to see settlements from the last 90 days, set this to 90 days ago.",
             "is_deep_object": false
           },
           {
@@ -432,7 +432,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Return groups opened before this date (ISO 8601 format).",
+            "description": "Return groups that started before this date. Must be in ISO 8601 date-time format (e.g. 2024-03-31T23:59:59Z). Use together with FinancialEventGroupStartedAfter to define a date range. If omitted, defaults to now.",
             "is_deep_object": false
           },
           {
@@ -446,7 +446,7 @@
               "default": 100
             },
             "required": null,
-            "description": "Maximum number of results to return per page.",
+            "description": "Maximum number of results to return per page (1-100, default 100).",
             "is_deep_object": false
           },
           {
@@ -500,7 +500,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Return events posted after this date (ISO 8601 format).",
+            "description": "Return events posted after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Recommended for scoping results to a manageable date range. For recent activity, set this to 30 days ago.",
             "is_deep_object": false
           },
           {
@@ -512,7 +512,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Return events posted before this date (ISO 8601 format).",
+            "description": "Return events posted before this date. Must be in ISO 8601 date-time format (e.g. 2024-01-31T23:59:59Z). Use together with PostedAfter to define a date range. If omitted, defaults to now.",
             "is_deep_object": false
           },
           {
@@ -526,7 +526,7 @@
               "default": 100
             },
             "required": null,
-            "description": "Maximum number of results to return per page.",
+            "description": "Maximum number of results to return per page (1-100, default 100).",
             "is_deep_object": false
           },
           {
@@ -579,7 +579,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "A marketplace identifier.",
+            "description": "A marketplace identifier. This is auto-injected from the configured seller region \u2014 do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region setting.",
             "is_deep_object": false
           },
           {
@@ -590,7 +590,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "Keywords to search for in the Amazon catalog.",
+            "description": "Keywords to search for in the Amazon catalog. Use this for text-based product search. Cannot be used together with identifiers \u2014 provide one or the other.",
             "is_deep_object": false
           },
           {
@@ -601,7 +601,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "Product identifiers to search for (ASIN, EAN, UPC, etc.).",
+            "description": "Product identifiers to search for (ASIN, EAN, UPC, etc.). When using this parameter, identifiersType must also be set. Cannot be used together with keywords \u2014 provide one or the other.",
             "is_deep_object": false
           },
           {
@@ -622,7 +622,7 @@
               ]
             },
             "required": null,
-            "description": "Type of identifiers (required when identifiers is set).",
+            "description": "Type of product identifiers being searched. Required when identifiers is set. Valid values: ASIN, EAN, GTIN, ISBN, JAN, MINSAN, SKU, UPC.",
             "is_deep_object": false
           },
           {
@@ -634,7 +634,7 @@
               "default": "summaries"
             },
             "required": null,
-            "description": "Data sets to include in the response.",
+            "description": "Comma-separated list of data sets to include in the response. Default is \"summaries\" (brand, title, classification). Other options: identifiers, images, productTypes, salesRanks, dimensions, relationships, vendorDetails.",
             "is_deep_object": false
           },
           {
@@ -648,7 +648,7 @@
               "default": 10
             },
             "required": null,
-            "description": "Number of items to return per page.",
+            "description": "Number of items to return per page (1-20, default 10).",
             "is_deep_object": false
           },
           {
@@ -709,7 +709,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "The Amazon Standard Identification Number (ASIN) of the item."
+            "description": "The Amazon Standard Identification Number (ASIN) of the item. ASINs are 10-character alphanumeric unique identifiers (e.g. B08N5WRWNW). You can find ASINs from order items (the ASIN field) or from catalog search results."
           },
           {
             "name": "marketplaceIds",
@@ -719,7 +719,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "A marketplace identifier.",
+            "description": "A marketplace identifier. This is auto-injected from the configured seller region \u2014 do not ask the user for a marketplace ID. The correct ID is resolved automatically from the region setting.",
             "is_deep_object": false
           },
           {
@@ -731,7 +731,7 @@
               "default": "summaries"
             },
             "required": null,
-            "description": "Data sets to include in the response.",
+            "description": "Comma-separated list of data sets to include in the response. Default is \"summaries\" (brand, title, classification). Other options: identifiers, images, productTypes, salesRanks, dimensions, relationships, vendorDetails.",
             "is_deep_object": false
           }
         ],
@@ -762,7 +762,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "A list of report types used to filter reports.",
+            "description": "A comma-separated list of report types to filter by. Common report types include GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL (orders), GET_FBA_FULFILLMENT_REMOVAL_ORDER_DETAIL_DATA (FBA removals), GET_MERCHANT_LISTINGS_ALL_DATA (listings). See SP-API docs for full list.",
             "is_deep_object": false
           },
           {
@@ -773,7 +773,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "A list of processing statuses used to filter reports.",
+            "description": "A comma-separated list of processing statuses to filter by. Valid values: IN_QUEUE, IN_PROGRESS, DONE, CANCELLED, FATAL. Use \"DONE\" to find completed reports ready for download.",
             "is_deep_object": false
           },
           {
@@ -784,7 +784,7 @@
               "type": "string"
             },
             "required": null,
-            "description": "A list of marketplace identifiers used to filter reports.",
+            "description": "A list of marketplace identifiers used to filter reports. This is auto-injected from the configured seller region \u2014 do not ask the user for a marketplace ID. The correct ID is resolved automatically from the region setting.",
             "is_deep_object": false
           },
           {
@@ -798,7 +798,7 @@
               "default": 10
             },
             "required": null,
-            "description": "Maximum number of reports to return per page.",
+            "description": "Maximum number of reports to return per page (1-100, default 10).",
             "is_deep_object": false
           },
           {
@@ -810,7 +810,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Earliest report creation date and time (ISO 8601 format).",
+            "description": "Earliest report creation date and time. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Use together with createdUntil to define a date range for when reports were created.",
             "is_deep_object": false
           },
           {
@@ -822,7 +822,7 @@
               "format": "date-time"
             },
             "required": null,
-            "description": "Latest report creation date and time (ISO 8601 format).",
+            "description": "Latest report creation date and time. Must be in ISO 8601 date-time format (e.g. 2024-01-31T23:59:59Z). Use together with createdSince to define a date range. If omitted, defaults to now.",
             "is_deep_object": false
           },
           {
@@ -874,7 +874,7 @@
               "type": "string"
             },
             "required": true,
-            "description": "The identifier for the report."
+            "description": "The identifier for the report. Obtain this from the list reports endpoint. The reportId is a unique string identifier assigned when a report is created."
           }
         ],
         "params_type_name": "ReportsGetParams",

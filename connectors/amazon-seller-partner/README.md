@@ -9,16 +9,20 @@ Connector for the Amazon Selling Partner API (SP-API). Provides access to seller
 
 The Amazon-Seller-Partner connector is optimized to handle prompts like these.
 
-- List all recent orders
-- Show me order items for a specific order
-- List financial event groups
-- Show recent financial events
-- Search catalog items by keyword
-- List recent reports
-- What are my top-selling products by order volume?
-- Show orders from the last 30 days with status Shipped
-- Find financial events related to refunds
-- Which orders have the highest total value?
+- List all orders from the last 7 days
+- Show me shipped orders from January 2024
+- Show me order items for order 111-2222222-3333333
+- List financial event groups from the last 90 days
+- Show refund events from last month
+- Search the catalog for wireless headphones
+- Look up product details for ASIN B08N5WRWNW
+- List completed reports from this week
+- What are my top-selling products by order volume this month?
+- Show orders with status Shipped from the last 30 days
+- Find all refund financial events from last quarter
+- Which orders have the highest total value this week?
+- How many orders were canceled in the last 60 days?
+- What service fees were charged last month?
 
 ## Unsupported questions
 
@@ -28,6 +32,7 @@ The Amazon-Seller-Partner connector isn't currently able to handle prompts like 
 - Cancel an order
 - Submit a new report request
 - Update product listings
+- Change the marketplace region
 
 ## Installation
 

@@ -118,7 +118,7 @@ class AmazonSellerPartnerConnector:
 
     connector_name = "amazon-seller-partner"
     connector_version = "1.0.5"
-    sdk_version = "0.1.13"
+    sdk_version = "0.1.14"
 
     # Map of (entity, action) -> needs_envelope for envelope wrapping decision
     _ENVELOPE_MAP = {
@@ -166,11 +166,11 @@ class AmazonSellerPartnerConnector:
             auth_config: Either connector-specific auth config for local mode, or AirbyteAuthConfig for hosted mode
             on_token_refresh: Optional callback for OAuth2 token refresh persistence.
                 Called with new_tokens dict when tokens are refreshed. Can be sync or async.
-                Example: lambda tokens: save_to_database(tokens)            region: The SP-API endpoint URL based on seller region:
-- NA (North America: US, CA, MX, BR): https://sellingpartnerapi-na.amazon.com
-- EU (Europe/Middle East/Africa/India): https://sellingpartnerapi-eu.amazon.com
-- FE (Far East: JP, AU, SG): https://sellingpartnerapi-fe.amazon.com
-
+                Example: lambda tokens: save_to_database(tokens)            region: The seller's marketplace region. This determines both the API endpoint and the marketplace ID used for queries. Select the country code where you sell:
+North America (NA endpoint): US (Amazon.com), CA (Amazon.ca), MX (Amazon.com.mx), BR (Amazon.com.br)
+Europe (EU endpoint): DE (Amazon.de), FR (Amazon.fr), IT (Amazon.it), ES (Amazon.es), UK/GB (Amazon.co.uk), NL (Amazon.nl), SE (Amazon.se), PL (Amazon.pl), BE (Amazon.com.be), TR (Amazon.com.tr), EG (Amazon.eg), SA (Amazon.sa), AE (Amazon.ae), IN (Amazon.in), ZA (Amazon.co.za)
+Far East (FE endpoint): JP (Amazon.co.jp), AU (Amazon.com.au), SG (Amazon.sg)
+The region is automatically mapped to the correct API endpoint (na/eu/fe) and marketplace ID. You only need to specify your country code.
         Examples:
             # Local mode (direct API calls)
             connector = AmazonSellerPartnerConnector(auth_config=AmazonSellerPartnerAuthConfig(lwa_app_id="...", lwa_client_secret="...", refresh_token="...", access_token="..."))
@@ -812,13 +812,13 @@ class OrdersQuery:
         Returns a list of orders based on the specified parameters.
 
         Args:
-            marketplace_ids: A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.
-            created_after: A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.
-            created_before: A date used for selecting orders created before the specified date (ISO 8601 format).
-            last_updated_after: A date used for selecting orders that were last updated after the specified date (ISO 8601 format).
-            last_updated_before: A date used for selecting orders that were last updated before the specified date (ISO 8601 format).
-            order_statuses: Filter by order status values.
-            max_results_per_page: Maximum number of results to return per page.
+            marketplace_ids: A list of MarketplaceId values. Used to select orders placed in the specified marketplaces. This is auto-injected from the configured seller region — do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region setting (US, CA, MX, BR, DE, FR, IT, ES, UK, IN, JP, AU, SG, etc.).
+            created_after: A date used for selecting orders created after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter is not specified — the API requires at least one of CreatedAfter or LastUpdatedAfter. Use this to scope orders by creation date. For example, to get orders from the last 30 days, set this to a date 30 days ago.
+            created_before: A date used for selecting orders created before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with CreatedAfter to define a creation date range. If omitted, defaults to now.
+            last_updated_after: A date used for selecting orders that were last updated after the specified date. Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if CreatedAfter is not specified — the API requires at least one of these. Use this when you want orders that changed recently (e.g. status updates, shipment changes).
+            last_updated_before: A date used for selecting orders that were last updated before the specified date. Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with LastUpdatedAfter to define an update date range. If omitted, defaults to now.
+            order_statuses: Filter by order status values. Comma-separated list of statuses: Pending, Unshipped, PartiallyShipped, Shipped, Canceled, Unfulfillable, InvoiceUnconfirmed, PendingAvailability. Example: "Shipped,Unshipped".
+            max_results_per_page: Maximum number of results to return per page (1-100, default 100).
             next_token: A string token returned in a previous response for pagination.
             **kwargs: Additional parameters
 
@@ -855,7 +855,7 @@ class OrdersQuery:
         Returns the order indicated by the specified order ID.
 
         Args:
-            order_id: An Amazon order identifier in 3-7-7 format.
+            order_id: An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333). This is the AmazonOrderId returned by the list orders endpoint.
             **kwargs: Additional parameters
 
         Returns:
@@ -978,7 +978,7 @@ class OrderItemsQuery:
         Returns detailed order item information for the order indicated by the specified order ID.
 
         Args:
-            order_id: An Amazon order identifier in 3-7-7 format.
+            order_id: An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333). This is the AmazonOrderId returned by the list orders endpoint.
             next_token: A string token returned in a previous response for pagination.
             **kwargs: Additional parameters
 
@@ -1112,9 +1112,9 @@ class ListFinancialEventGroupsQuery:
         Returns financial event groups for a given date range.
 
         Args:
-            financial_event_group_started_after: Return groups opened after this date (ISO 8601 format).
-            financial_event_group_started_before: Return groups opened before this date (ISO 8601 format).
-            max_results_per_page: Maximum number of results to return per page.
+            financial_event_group_started_after: Return groups that started after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Use this to scope results to a specific time period. For example, to see settlements from the last 90 days, set this to 90 days ago.
+            financial_event_group_started_before: Return groups that started before this date. Must be in ISO 8601 date-time format (e.g. 2024-03-31T23:59:59Z). Use together with FinancialEventGroupStartedAfter to define a date range. If omitted, defaults to now.
+            max_results_per_page: Maximum number of results to return per page (1-100, default 100).
             next_token: A string token returned in a previous response for pagination.
             **kwargs: Additional parameters
 
@@ -1224,9 +1224,9 @@ class ListFinancialEventsQuery:
         Returns financial events for a given date range.
 
         Args:
-            posted_after: Return events posted after this date (ISO 8601 format).
-            posted_before: Return events posted before this date (ISO 8601 format).
-            max_results_per_page: Maximum number of results to return per page.
+            posted_after: Return events posted after this date. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Recommended for scoping results to a manageable date range. For recent activity, set this to 30 days ago.
+            posted_before: Return events posted before this date. Must be in ISO 8601 date-time format (e.g. 2024-01-31T23:59:59Z). Use together with PostedAfter to define a date range. If omitted, defaults to now.
+            max_results_per_page: Maximum number of results to return per page (1-100, default 100).
             next_token: A string token returned in a previous response for pagination.
             **kwargs: Additional parameters
 
@@ -1363,12 +1363,12 @@ class CatalogItemsQuery:
         Search for items in the Amazon catalog by keywords or identifiers.
 
         Args:
-            marketplace_ids: A marketplace identifier.
-            keywords: Keywords to search for in the Amazon catalog.
-            identifiers: Product identifiers to search for (ASIN, EAN, UPC, etc.).
-            identifiers_type: Type of identifiers (required when identifiers is set).
-            included_data: Data sets to include in the response.
-            page_size: Number of items to return per page.
+            marketplace_ids: A marketplace identifier. This is auto-injected from the configured seller region — do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region setting.
+            keywords: Keywords to search for in the Amazon catalog. Use this for text-based product search. Cannot be used together with identifiers — provide one or the other.
+            identifiers: Product identifiers to search for (ASIN, EAN, UPC, etc.). When using this parameter, identifiersType must also be set. Cannot be used together with keywords — provide one or the other.
+            identifiers_type: Type of product identifiers being searched. Required when identifiers is set. Valid values: ASIN, EAN, GTIN, ISBN, JAN, MINSAN, SKU, UPC.
+            included_data: Comma-separated list of data sets to include in the response. Default is "summaries" (brand, title, classification). Other options: identifiers, images, productTypes, salesRanks, dimensions, relationships, vendorDetails.
+            page_size: Number of items to return per page (1-20, default 10).
             page_token: Token for pagination returned by a previous request.
             **kwargs: Additional parameters
 
@@ -1406,9 +1406,9 @@ class CatalogItemsQuery:
         Retrieves details for an item in the Amazon catalog by ASIN.
 
         Args:
-            asin: The Amazon Standard Identification Number (ASIN) of the item.
-            marketplace_ids: A marketplace identifier.
-            included_data: Data sets to include in the response.
+            asin: The Amazon Standard Identification Number (ASIN) of the item. ASINs are 10-character alphanumeric unique identifiers (e.g. B08N5WRWNW). You can find ASINs from order items (the ASIN field) or from catalog search results.
+            marketplace_ids: A marketplace identifier. This is auto-injected from the configured seller region — do not ask the user for a marketplace ID. The correct ID is resolved automatically from the region setting.
+            included_data: Comma-separated list of data sets to include in the response. Default is "summaries" (brand, title, classification). Other options: identifiers, images, productTypes, salesRanks, dimensions, relationships, vendorDetails.
             **kwargs: Additional parameters
 
         Returns:
@@ -1450,12 +1450,12 @@ class ReportsQuery:
         Returns report details for the reports that match the specified filters.
 
         Args:
-            report_types: A list of report types used to filter reports.
-            processing_statuses: A list of processing statuses used to filter reports.
-            marketplace_ids: A list of marketplace identifiers used to filter reports.
-            page_size: Maximum number of reports to return per page.
-            created_since: Earliest report creation date and time (ISO 8601 format).
-            created_until: Latest report creation date and time (ISO 8601 format).
+            report_types: A comma-separated list of report types to filter by. Common report types include GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL (orders), GET_FBA_FULFILLMENT_REMOVAL_ORDER_DETAIL_DATA (FBA removals), GET_MERCHANT_LISTINGS_ALL_DATA (listings). See SP-API docs for full list.
+            processing_statuses: A comma-separated list of processing statuses to filter by. Valid values: IN_QUEUE, IN_PROGRESS, DONE, CANCELLED, FATAL. Use "DONE" to find completed reports ready for download.
+            marketplace_ids: A list of marketplace identifiers used to filter reports. This is auto-injected from the configured seller region — do not ask the user for a marketplace ID. The correct ID is resolved automatically from the region setting.
+            page_size: Maximum number of reports to return per page (1-100, default 10).
+            created_since: Earliest report creation date and time. Must be in ISO 8601 date-time format (e.g. 2024-01-01T00:00:00Z). Use together with createdUntil to define a date range for when reports were created.
+            created_until: Latest report creation date and time. Must be in ISO 8601 date-time format (e.g. 2024-01-31T23:59:59Z). Use together with createdSince to define a date range. If omitted, defaults to now.
             next_token: A string token returned in a previous response for pagination.
             **kwargs: Additional parameters
 
@@ -1491,7 +1491,7 @@ class ReportsQuery:
         Returns report details including status and report document ID for a specified report.
 
         Args:
-            report_id: The identifier for the report.
+            report_id: The identifier for the report. Obtain this from the list reports endpoint. The reportId is a unique string identifier assigned when a report is created.
             **kwargs: Additional parameters
 
         Returns:

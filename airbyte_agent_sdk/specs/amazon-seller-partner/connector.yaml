@@ -32,8 +32,11 @@ info:
         type: string
         title: Start Date
         description: >-
-          UTC date and time in the format 2017-01-25T00:00:00Z. Any data before
-          this date will not be replicated.
+          UTC date and time in ISO 8601 format (e.g. 2024-01-01T00:00:00Z). Any data
+          before this date will not be replicated. This sets the earliest date for
+          order creation and financial event queries. For most sellers, a start date
+          of 1-2 years ago is a good default. Must include the time component and Z
+          timezone suffix.
         format: date-time
     required:
       - replication_start_date
@@ -458,22 +461,27 @@ info:
             description: List of value-added service charge events
   x-airbyte-example-questions:
     direct:
-      - "List all recent orders"
-      - "Show me order items for a specific order"
-      - "List financial event groups"
-      - "Show recent financial events"
-      - "Search catalog items by keyword"
-      - "List recent reports"
+      - "List all orders from the last 7 days"
+      - "Show me shipped orders from January 2024"
+      - "Show me order items for order 111-2222222-3333333"
+      - "List financial event groups from the last 90 days"
+      - "Show refund events from last month"
+      - "Search the catalog for wireless headphones"
+      - "Look up product details for ASIN B08N5WRWNW"
+      - "List completed reports from this week"
     search:
-      - "What are my top-selling products by order volume?"
-      - "Show orders from the last 30 days with status Shipped"
-      - "Find financial events related to refunds"
-      - "Which orders have the highest total value?"
+      - "What are my top-selling products by order volume this month?"
+      - "Show orders with status Shipped from the last 30 days"
+      - "Find all refund financial events from last quarter"
+      - "Which orders have the highest total value this week?"
+      - "How many orders were canceled in the last 60 days?"
+      - "What service fees were charged last month?"
     unsupported:
       - "Create a new order"
       - "Cancel an order"
       - "Submit a new report request"
       - "Update product listings"
+      - "Change the marketplace region"
 
 servers:
   - url: "https://sellingpartnerapi-{region}.amazon.com"
@@ -481,11 +489,21 @@ servers:
     variables:
       region:
         default: na
-        description: |
-          The SP-API endpoint URL based on seller region:
-          - NA (North America: US, CA, MX, BR): https://sellingpartnerapi-na.amazon.com
-          - EU (Europe/Middle East/Africa/India): https://sellingpartnerapi-eu.amazon.com
-          - FE (Far East: JP, AU, SG): https://sellingpartnerapi-fe.amazon.com
+        description: >-
+          The seller's marketplace region. This determines both the API endpoint and the
+          marketplace ID used for queries. Select the country code where you sell:
+
+          North America (NA endpoint): US (Amazon.com), CA (Amazon.ca), MX (Amazon.com.mx), BR (Amazon.com.br)
+
+          Europe (EU endpoint): DE (Amazon.de), FR (Amazon.fr), IT (Amazon.it), ES (Amazon.es),
+          UK/GB (Amazon.co.uk), NL (Amazon.nl), SE (Amazon.se), PL (Amazon.pl),
+          BE (Amazon.com.be), TR (Amazon.com.tr), EG (Amazon.eg), SA (Amazon.sa),
+          AE (Amazon.ae), IN (Amazon.in), ZA (Amazon.co.za)
+
+          Far East (FE endpoint): JP (Amazon.co.jp), AU (Amazon.com.au), SG (Amazon.sg)
+
+          The region is automatically mapped to the correct API endpoint (na/eu/fe) and
+          marketplace ID. You only need to specify your country code.
         enum:
           - US
           - CA
@@ -540,11 +558,33 @@ paths:
       x-airbyte-record-extractor: $.payload.Orders
       x-airbyte-meta-extractor:
         next_token: $.payload.NextToken
+      x-airbyte-ai-hints:
+        summary: "List Amazon seller orders with optional date range and status filters"
+        when_to_use: "When the user asks about their Amazon orders, recent sales, order history, or wants to filter orders by date or status"
+        trigger_phrases: ["list orders", "recent orders", "my orders", "order history", "sales this month", "shipped orders"]
+        freshness: live
+        search_strategy: >-
+          MarketplaceIds is auto-injected from the configured region — do not ask the user for it.
+          To filter orders by date, use CreatedAfter/CreatedBefore for order creation date range, or
+          LastUpdatedAfter/LastUpdatedBefore for last-modified date range. You must provide either
+          CreatedAfter or LastUpdatedAfter — the API requires at least one. All dates must be in
+          ISO 8601 format (e.g. 2024-01-15T00:00:00Z). Use OrderStatuses to filter by status
+          (e.g. Shipped, Unshipped, Canceled). When the user says "last 30 days", compute the date
+          and pass it as CreatedAfter.
+        example_questions:
+          - "Show me all orders from the last 7 days"
+          - "List shipped orders from January 2024"
+          - "What orders were updated today?"
       parameters:
         - name: MarketplaceIds
           in: query
           required: true
-          description: A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.
+          description: >-
+            A list of MarketplaceId values. Used to select orders placed in the specified marketplaces.
+            This is auto-injected from the configured seller region — do not ask the user for a
+            marketplace ID. Each Amazon marketplace has a unique ID (e.g. ATVPDKIKX0DER for US,
+            A1PA6795UKMFR9 for DE). The correct ID is resolved automatically from the region
+            setting (US, CA, MX, BR, DE, FR, IT, ES, UK, IN, JP, AU, SG, etc.).
           schema:
             type: string
           x-airbyte-param-config-inject:
@@ -578,36 +618,54 @@ paths:
               ZA: "AE08WJ6YKNBMC"
         - name: CreatedAfter
           in: query
-          description: A date used for selecting orders created after the specified date (ISO 8601 format). Required if LastUpdatedAfter is not set.
+          description: >-
+            A date used for selecting orders created after the specified date. Must be in
+            ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if LastUpdatedAfter
+            is not specified — the API requires at least one of CreatedAfter or LastUpdatedAfter.
+            Use this to scope orders by creation date. For example, to get orders from the last
+            30 days, set this to a date 30 days ago.
           schema:
             type: string
             format: date-time
         - name: CreatedBefore
           in: query
-          description: A date used for selecting orders created before the specified date (ISO 8601 format).
+          description: >-
+            A date used for selecting orders created before the specified date. Must be in
+            ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together with
+            CreatedAfter to define a creation date range. If omitted, defaults to now.
           schema:
             type: string
             format: date-time
         - name: LastUpdatedAfter
           in: query
-          description: A date used for selecting orders that were last updated after the specified date (ISO 8601 format).
+          description: >-
+            A date used for selecting orders that were last updated after the specified date.
+            Must be in ISO 8601 date-time format (e.g. 2024-01-15T00:00:00Z). Required if
+            CreatedAfter is not specified — the API requires at least one of these. Use this
+            when you want orders that changed recently (e.g. status updates, shipment changes).
           schema:
             type: string
             format: date-time
         - name: LastUpdatedBefore
           in: query
-          description: A date used for selecting orders that were last updated before the specified date (ISO 8601 format).
+          description: >-
+            A date used for selecting orders that were last updated before the specified date.
+            Must be in ISO 8601 date-time format (e.g. 2024-02-15T23:59:59Z). Use together
+            with LastUpdatedAfter to define an update date range. If omitted, defaults to now.
           schema:
             type: string
             format: date-time
         - name: OrderStatuses
           in: query
-          description: Filter by order status values.
+          description: >-
+            Filter by order status values. Comma-separated list of statuses:
+            Pending, Unshipped, PartiallyShipped, Shipped, Canceled, Unfulfillable,
+            InvoiceUnconfirmed, PendingAvailability. Example: "Shipped,Unshipped".
           schema:
             type: string
         - name: MaxResultsPerPage
           in: query
-          description: Maximum number of results to return per page.
+          description: Maximum number of results to return per page (1-100, default 100).
           schema:
             type: integer
             minimum: 1
@@ -635,11 +693,25 @@ paths:
       x-airbyte-action: get
       x-airbyte-untested: true
       x-airbyte-record-extractor: $.payload
+      x-airbyte-ai-hints:
+        summary: "Get details for a specific Amazon order by order ID"
+        when_to_use: "When the user asks about a specific order by its Amazon order ID"
+        trigger_phrases: ["order details", "get order", "order info", "specific order", "look up order"]
+        freshness: live
+        search_strategy: >-
+          Requires an Amazon order ID in 3-7-7 format (e.g. 111-2222222-3333333). If the user
+          provides an order ID, use it directly. If they describe an order without an ID, first
+          list orders to find the matching AmazonOrderId, then use this endpoint.
+        example_questions:
+          - "Get details for order 111-2222222-3333333"
+          - "Show me the status of a specific order"
       parameters:
         - name: orderId
           in: path
           required: true
-          description: An Amazon order identifier in 3-7-7 format.
+          description: >-
+            An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333).
+            This is the AmazonOrderId returned by the list orders endpoint.
           schema:
             type: string
       responses:
@@ -663,11 +735,26 @@ paths:
       x-airbyte-record-extractor: $.payload.OrderItems
       x-airbyte-meta-extractor:
         next_token: $.payload.NextToken
+      x-airbyte-ai-hints:
+        summary: "List individual items within a specific Amazon order"
+        when_to_use: "When the user asks about products in an order, item details, prices, or quantities for a specific order"
+        trigger_phrases: ["order items", "products in order", "what was ordered", "items shipped", "order contents"]
+        freshness: live
+        search_strategy: >-
+          Requires an Amazon order ID (3-7-7 format). First list orders to find the AmazonOrderId,
+          then use this endpoint to get the individual items. Each item includes ASIN, title,
+          quantity, price, and shipping details. Use the orders entity to find orders by date
+          range, then drill into items for a specific order.
+        example_questions:
+          - "What items were in order 111-2222222-3333333?"
+          - "Show me the products and prices for my latest order"
       parameters:
         - name: orderId
           in: path
           required: true
-          description: An Amazon order identifier in 3-7-7 format.
+          description: >-
+            An Amazon order identifier in 3-7-7 format (e.g. 111-2222222-3333333).
+            This is the AmazonOrderId returned by the list orders endpoint.
           schema:
             type: string
         - name: NextToken
@@ -693,22 +780,43 @@ paths:
       x-airbyte-record-extractor: $.payload.FinancialEventGroupList
       x-airbyte-meta-extractor:
         next_token: $.payload.NextToken
+      x-airbyte-ai-hints:
+        summary: "List financial event groups (settlement periods) with optional date range filters"
+        when_to_use: "When the user asks about financial settlements, payment groups, disbursements, or settlement periods"
+        trigger_phrases: ["financial groups", "settlements", "payment periods", "disbursements", "fund transfers"]
+        freshness: live
+        search_strategy: >-
+          Use FinancialEventGroupStartedAfter and FinancialEventGroupStartedBefore to scope
+          results to a date range. Both dates must be in ISO 8601 format (e.g. 2024-01-01T00:00:00Z).
+          If no dates are provided, the API returns all available groups. Each group represents a
+          settlement period with an OriginalTotal, processing status, and fund transfer details.
+          For recent settlements, set FinancialEventGroupStartedAfter to a date a few months back.
+        example_questions:
+          - "Show me financial settlement groups from last quarter"
+          - "What disbursements have been processed this month?"
+          - "List all open financial event groups"
       parameters:
         - name: FinancialEventGroupStartedAfter
           in: query
-          description: Return groups opened after this date (ISO 8601 format).
+          description: >-
+            Return groups that started after this date. Must be in ISO 8601 date-time format
+            (e.g. 2024-01-01T00:00:00Z). Use this to scope results to a specific time period.
+            For example, to see settlements from the last 90 days, set this to 90 days ago.
           schema:
             type: string
             format: date-time
         - name: FinancialEventGroupStartedBefore
           in: query
-          description: Return groups opened before this date (ISO 8601 format).
+          description: >-
+            Return groups that started before this date. Must be in ISO 8601 date-time format
+            (e.g. 2024-03-31T23:59:59Z). Use together with FinancialEventGroupStartedAfter
+            to define a date range. If omitted, defaults to now.
           schema:
             type: string
             format: date-time
         - name: MaxResultsPerPage
           in: query
-          description: Maximum number of results to return per page.
+          description: Maximum number of results to return per page (1-100, default 100).
           schema:
             type: integer
             minimum: 1
@@ -737,22 +845,45 @@ paths:
       x-airbyte-record-extractor: $.payload.FinancialEvents
       x-airbyte-meta-extractor:
         next_token: $.payload.NextToken
+      x-airbyte-ai-hints:
+        summary: "List individual financial events (shipments, refunds, fees, etc.) with optional date range filters"
+        when_to_use: "When the user asks about specific financial transactions, refunds, fees, shipment charges, or detailed financial activity"
+        trigger_phrases: ["financial events", "refunds", "fees", "charges", "shipment events", "financial transactions"]
+        freshness: live
+        search_strategy: >-
+          Use PostedAfter and PostedBefore to scope results to a date range. Both dates must be
+          in ISO 8601 format (e.g. 2024-01-01T00:00:00Z). The response contains categorized
+          event lists: ShipmentEventList, RefundEventList, ServiceFeeEventList, AdjustmentEventList,
+          and many more. Each event type is a separate array. When the user asks about refunds,
+          look at RefundEventList; for fees, look at ServiceFeeEventList; for chargebacks, look
+          at ChargebackEventList. Always recommend scoping to a manageable date range (e.g. last
+          30 days) to avoid excessive data.
+        example_questions:
+          - "Show me all refund events from the last 30 days"
+          - "What service fees were charged this month?"
+          - "List financial events including shipment charges for last week"
       parameters:
         - name: PostedAfter
           in: query
-          description: Return events posted after this date (ISO 8601 format).
+          description: >-
+            Return events posted after this date. Must be in ISO 8601 date-time format
+            (e.g. 2024-01-01T00:00:00Z). Recommended for scoping results to a manageable
+            date range. For recent activity, set this to 30 days ago.
           schema:
             type: string
             format: date-time
         - name: PostedBefore
           in: query
-          description: Return events posted before this date (ISO 8601 format).
+          description: >-
+            Return events posted before this date. Must be in ISO 8601 date-time format
+            (e.g. 2024-01-31T23:59:59Z). Use together with PostedAfter to define a date
+            range. If omitted, defaults to now.
           schema:
             type: string
             format: date-time
         - name: MaxResultsPerPage
           in: query
-          description: Maximum number of results to return per page.
+          description: Maximum number of results to return per page (1-100, default 100).
           schema:
             type: integer
             minimum: 1
@@ -782,11 +913,32 @@ paths:
       x-airbyte-meta-extractor:
         next_token: $.pagination.nextToken
         number_of_results: $.numberOfResults
+      x-airbyte-ai-hints:
+        summary: "Search the Amazon product catalog by keywords or product identifiers (ASIN, UPC, EAN, etc.)"
+        when_to_use: "When the user asks about products, catalog items, product details, or wants to search by keyword or product identifier"
+        trigger_phrases: ["search catalog", "find product", "look up ASIN", "product details", "catalog search", "find item"]
+        freshness: live
+        search_strategy: >-
+          marketplaceIds is auto-injected from the configured region — do not ask the user for it.
+          Use keywords for text-based product search, or identifiers with identifiersType for
+          lookup by ASIN, UPC, EAN, ISBN, etc. You must provide either keywords or identifiers
+          (not both). When using identifiers, identifiersType is required (e.g. ASIN, UPC).
+          The includedData parameter controls what data is returned — default is "summaries"
+          which includes brand, title, and classification. Other options: identifiers, images,
+          productTypes, salesRanks, dimensions, relationships, vendorDetails.
+        example_questions:
+          - "Search for wireless headphones in the Amazon catalog"
+          - "Look up product details for ASIN B08N5WRWNW"
+          - "Find products by UPC 012345678901"
       parameters:
         - name: marketplaceIds
           in: query
           required: true
-          description: A marketplace identifier.
+          description: >-
+            A marketplace identifier. This is auto-injected from the configured seller region —
+            do not ask the user for a marketplace ID. Each Amazon marketplace has a unique ID
+            (e.g. ATVPDKIKX0DER for US, A1PA6795UKMFR9 for DE). The correct ID is resolved
+            automatically from the region setting.
           schema:
             type: string
           x-airbyte-param-config-inject:
@@ -820,17 +972,24 @@ paths:
               ZA: "AE08WJ6YKNBMC"
         - name: keywords
           in: query
-          description: Keywords to search for in the Amazon catalog.
+          description: >-
+            Keywords to search for in the Amazon catalog. Use this for text-based product
+            search. Cannot be used together with identifiers — provide one or the other.
           schema:
             type: string
         - name: identifiers
           in: query
-          description: Product identifiers to search for (ASIN, EAN, UPC, etc.).
+          description: >-
+            Product identifiers to search for (ASIN, EAN, UPC, etc.). When using this
+            parameter, identifiersType must also be set. Cannot be used together with
+            keywords — provide one or the other.
           schema:
             type: string
         - name: identifiersType
           in: query
-          description: Type of identifiers (required when identifiers is set).
+          description: >-
+            Type of product identifiers being searched. Required when identifiers is set.
+            Valid values: ASIN, EAN, GTIN, ISBN, JAN, MINSAN, SKU, UPC.
           schema:
             type: string
             enum:
@@ -844,13 +1003,16 @@ paths:
               - UPC
         - name: includedData
           in: query
-          description: Data sets to include in the response.
+          description: >-
+            Comma-separated list of data sets to include in the response. Default is
+            "summaries" (brand, title, classification). Other options: identifiers,
+            images, productTypes, salesRanks, dimensions, relationships, vendorDetails.
           schema:
             type: string
             default: summaries
         - name: pageSize
           in: query
-          description: Number of items to return per page.
+          description: Number of items to return per page (1-20, default 10).
           schema:
             type: integer
             minimum: 1
@@ -876,17 +1038,36 @@ paths:
       operationId: getCatalogItem
       x-airbyte-entity: catalog_items
       x-airbyte-action: get
+      x-airbyte-ai-hints:
+        summary: "Get detailed information for a specific Amazon catalog item by ASIN"
+        when_to_use: "When the user asks about a specific product by ASIN and wants full details"
+        trigger_phrases: ["get product", "ASIN details", "product info", "item details"]
+        freshness: live
+        search_strategy: >-
+          Requires a product ASIN (e.g. B08N5WRWNW). marketplaceIds is auto-injected from the
+          configured region. Use includedData to control which data sets are returned — default
+          is "summaries". For comprehensive data, set includedData to
+          "summaries,identifiers,images,productTypes,salesRanks".
+        example_questions:
+          - "Get full details for ASIN B08N5WRWNW"
+          - "Show me images and sales rank for a product"
       parameters:
         - name: asin
           in: path
           required: true
-          description: The Amazon Standard Identification Number (ASIN) of the item.
+          description: >-
+            The Amazon Standard Identification Number (ASIN) of the item. ASINs are
+            10-character alphanumeric unique identifiers (e.g. B08N5WRWNW). You can find
+            ASINs from order items (the ASIN field) or from catalog search results.
           schema:
             type: string
         - name: marketplaceIds
           in: query
           required: true
-          description: A marketplace identifier.
+          description: >-
+            A marketplace identifier. This is auto-injected from the configured seller region —
+            do not ask the user for a marketplace ID. The correct ID is resolved automatically
+            from the region setting.
           schema:
             type: string
           x-airbyte-param-config-inject:
@@ -920,7 +1101,10 @@ paths:
               ZA: "AE08WJ6YKNBMC"
         - name: includedData
           in: query
-          description: Data sets to include in the response.
+          description: >-
+            Comma-separated list of data sets to include in the response. Default is
+            "summaries" (brand, title, classification). Other options: identifiers,
+            images, productTypes, salesRanks, dimensions, relationships, vendorDetails.
           schema:
             type: string
             default: summaries
@@ -944,20 +1128,47 @@ paths:
       x-airbyte-record-extractor: $.reports
       x-airbyte-meta-extractor:
         next_token: $.nextToken
+      x-airbyte-ai-hints:
+        summary: "List SP-API report metadata with optional filters for report type, status, marketplace, and creation date"
+        when_to_use: "When the user asks about generated reports, report status, or wants to find reports by type or date"
+        trigger_phrases: ["list reports", "report status", "my reports", "generated reports", "find report"]
+        freshness: live
+        search_strategy: >-
+          marketplaceIds is auto-injected from the configured region — do not ask the user for it.
+          Use createdSince and createdUntil to filter by report creation date range — both must be
+          in ISO 8601 format (e.g. 2024-01-01T00:00:00Z). Use reportTypes to filter by specific
+          report types (e.g. GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL). Use
+          processingStatuses to filter by status: IN_QUEUE, IN_PROGRESS, DONE, CANCELLED, FATAL.
+          This endpoint returns report metadata only — use the reportDocumentId from a DONE report
+          to download the actual report content.
+        example_questions:
+          - "Show me all completed reports from the last week"
+          - "List reports that are currently processing"
+          - "Find order reports created this month"
       parameters:
         - name: reportTypes
           in: query
-          description: A list of report types used to filter reports.
+          description: >-
+            A comma-separated list of report types to filter by. Common report types include
+            GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL (orders),
+            GET_FBA_FULFILLMENT_REMOVAL_ORDER_DETAIL_DATA (FBA removals),
+            GET_MERCHANT_LISTINGS_ALL_DATA (listings). See SP-API docs for full list.
           schema:
             type: string
         - name: processingStatuses
           in: query
-          description: A list of processing statuses used to filter reports.
+          description: >-
+            A comma-separated list of processing statuses to filter by.
+            Valid values: IN_QUEUE, IN_PROGRESS, DONE, CANCELLED, FATAL.
+            Use "DONE" to find completed reports ready for download.
           schema:
             type: string
         - name: marketplaceIds
           in: query
-          description: A list of marketplace identifiers used to filter reports.
+          description: >-
+            A list of marketplace identifiers used to filter reports. This is auto-injected
+            from the configured seller region — do not ask the user for a marketplace ID.
+            The correct ID is resolved automatically from the region setting.
           schema:
             type: string
           x-airbyte-param-config-inject:
@@ -991,7 +1202,7 @@ paths:
               ZA: "AE08WJ6YKNBMC"
         - name: pageSize
           in: query
-          description: Maximum number of reports to return per page.
+          description: Maximum number of reports to return per page (1-100, default 10).
           schema:
             type: integer
             minimum: 1
@@ -999,13 +1210,19 @@ paths:
             default: 10
         - name: createdSince
           in: query
-          description: Earliest report creation date and time (ISO 8601 format).
+          description: >-
+            Earliest report creation date and time. Must be in ISO 8601 date-time format
+            (e.g. 2024-01-01T00:00:00Z). Use together with createdUntil to define a date
+            range for when reports were created.
           schema:
             type: string
             format: date-time
         - name: createdUntil
           in: query
-          description: Latest report creation date and time (ISO 8601 format).
+          description: >-
+            Latest report creation date and time. Must be in ISO 8601 date-time format
+            (e.g. 2024-01-31T23:59:59Z). Use together with createdSince to define a date
+            range. If omitted, defaults to now.
           schema:
             type: string
             format: date-time
@@ -1029,11 +1246,26 @@ paths:
       operationId: getReport
       x-airbyte-entity: reports
       x-airbyte-action: get
+      x-airbyte-ai-hints:
+        summary: "Get status and details for a specific report by report ID"
+        when_to_use: "When the user asks about a specific report's status or wants to check if a report is ready"
+        trigger_phrases: ["report status", "get report", "check report", "report details"]
+        freshness: live
+        search_strategy: >-
+          Requires a reportId obtained from the list reports endpoint. The response includes
+          processingStatus (IN_QUEUE, IN_PROGRESS, DONE, CANCELLED, FATAL) and when DONE,
+          a reportDocumentId for downloading the actual report content. First list reports
+          to find the reportId, then use this endpoint to check its status.
+        example_questions:
+          - "Check the status of report 12345"
+          - "Is my report ready for download?"
       parameters:
         - name: reportId
           in: path
           required: true
-          description: The identifier for the report.
+          description: >-
+            The identifier for the report. Obtain this from the list reports endpoint.
+            The reportId is a unique string identifier assigned when a report is created.
           schema:
             type: string
       responses:
@@ -1103,6 +1335,21 @@ components:
       type: object
       x-airbyte-entity-name: orders
       x-airbyte-stream-name: Orders
+      x-airbyte-ai-hints:
+        summary: "Amazon seller orders with status, totals, shipping details, and marketplace info"
+        when_to_use: "Questions about orders, sales volume, order status, shipping, or revenue"
+        trigger_phrases: ["orders", "sales", "order status", "shipped", "revenue", "purchases"]
+        freshness: live
+        search_strategy: >-
+          When searching for orders, use the list orders endpoint with date filters
+          (CreatedAfter/CreatedBefore or LastUpdatedAfter/LastUpdatedBefore). Filter by
+          OrderStatuses for specific states (Shipped, Unshipped, Canceled, etc.). The
+          MarketplaceId field on each order indicates which Amazon marketplace it was placed on.
+          To drill into order contents, use the order_items entity with the AmazonOrderId.
+        example_questions:
+          - "How many orders were placed this week?"
+          - "Show me all shipped orders from last month"
+          - "What is the total revenue from orders in the last 30 days?"
       description: Amazon order object
       required:
         - AmazonOrderId
@@ -1273,6 +1520,19 @@ components:
       type: object
       x-airbyte-entity-name: order_items
       x-airbyte-stream-name: OrderItems
+      x-airbyte-ai-hints:
+        summary: "Individual line items within Amazon orders, including product ASIN, title, quantity, price, and tax details"
+        when_to_use: "Questions about specific products in orders, item prices, quantities, SKUs, or ASINs"
+        trigger_phrases: ["order items", "products ordered", "item price", "SKU", "ASIN", "what was ordered", "quantity"]
+        freshness: live
+        search_strategy: >-
+          Order items are fetched per order — you need an AmazonOrderId to list items.
+          First find orders using the orders entity (with date or status filters), then
+          use the order_items list endpoint with the AmazonOrderId. Each item includes
+          ASIN, SellerSKU, Title, QuantityOrdered, ItemPrice, and shipping details.
+        example_questions:
+          - "What products were in my latest order?"
+          - "Show me the ASINs and quantities for order 111-2222222-3333333"
       description: Amazon order item object
       required:
         - OrderItemId
@@ -1489,6 +1749,21 @@ components:
       type: object
       x-airbyte-entity-name: list_financial_event_groups
       x-airbyte-stream-name: ListFinancialEventGroups
+      x-airbyte-ai-hints:
+        summary: "Financial settlement periods with totals, fund transfer status, and account details"
+        when_to_use: "Questions about settlement periods, disbursements, payment transfers, or financial group summaries"
+        trigger_phrases: ["settlements", "disbursements", "payment groups", "fund transfers", "settlement periods"]
+        freshness: live
+        search_strategy: >-
+          Financial event groups represent settlement periods. Each group has a start/end date,
+          OriginalTotal (settlement amount), ProcessingStatus (Open or Closed), and fund
+          transfer details. Use FinancialEventGroupStartedAfter/Before date filters to scope
+          to a specific period. All dates are in ISO 8601 format. For recent settlements,
+          filter to the last 90 days.
+        example_questions:
+          - "What were my settlement totals for last quarter?"
+          - "Show me all closed financial event groups this year"
+          - "When was the last fund transfer?"
       description: A financial event group
       required:
         - FinancialEventGroupId
@@ -1575,6 +1850,22 @@ components:
       type: object
       x-airbyte-entity-name: list_financial_events
       x-airbyte-stream-name: ListFinancialEvents
+      x-airbyte-ai-hints:
+        summary: "Detailed financial events categorized by type — shipments, refunds, fees, chargebacks, adjustments, and more"
+        when_to_use: "Questions about specific financial transactions, refund details, fee breakdowns, or categorized financial activity"
+        trigger_phrases: ["financial events", "refunds", "fees", "chargebacks", "shipment charges", "adjustments", "financial details"]
+        freshness: live
+        search_strategy: >-
+          The response is a single object with many event type arrays: ShipmentEventList (order
+          shipment fees), RefundEventList (refunds), ServiceFeeEventList (Amazon fees),
+          AdjustmentEventList (adjustments), ChargebackEventList, DebtRecoveryEventList, etc.
+          Use PostedAfter/PostedBefore date filters (ISO 8601 format) to scope to a manageable
+          date range. When the user asks about refunds, examine RefundEventList; for fees,
+          examine ServiceFeeEventList; for chargebacks, examine ChargebackEventList.
+        example_questions:
+          - "What refunds were processed this month?"
+          - "Show me all service fees charged in the last 30 days"
+          - "Are there any chargeback events recently?"
       description: A collection of financial events grouped by type
       properties:
         ShipmentEventList:
@@ -1820,6 +2111,21 @@ components:
     CatalogItem:
       type: object
       x-airbyte-entity-name: catalog_items
+      x-airbyte-ai-hints:
+        summary: "Amazon product catalog items with ASIN, title, brand, images, identifiers, and sales rank"
+        when_to_use: "Questions about products, catalog search, product details, ASINs, or brand/category information"
+        trigger_phrases: ["product", "catalog", "ASIN", "brand", "product search", "item details", "UPC", "EAN"]
+        freshness: live
+        search_strategy: >-
+          Search by keywords for text-based product search, or by identifiers (ASIN, UPC, EAN,
+          ISBN, etc.) for exact lookups. The marketplaceIds parameter is auto-injected from the
+          seller region. Each catalog item has an ASIN and optional summaries with brand, title,
+          and classification. Use includedData to request additional data like images, salesRanks,
+          identifiers, dimensions, and productTypes.
+        example_questions:
+          - "Search the Amazon catalog for wireless chargers"
+          - "Look up product B08N5WRWNW in the catalog"
+          - "What brand makes this product?"
       description: Amazon catalog item
       required:
         - asin
@@ -1963,6 +2269,21 @@ components:
     Report:
       type: object
       x-airbyte-entity-name: reports
+      x-airbyte-ai-hints:
+        summary: "SP-API report metadata including report type, processing status, data date range, and document ID"
+        when_to_use: "Questions about report status, available reports, report types, or finding report documents"
+        trigger_phrases: ["reports", "report status", "report type", "report document", "download report"]
+        freshness: live
+        search_strategy: >-
+          Reports have a processingStatus lifecycle: IN_QUEUE -> IN_PROGRESS -> DONE (or CANCELLED/FATAL).
+          The dataStartTime and dataEndTime fields indicate what date range the report data covers.
+          The createdTime is when the report was requested. When a report is DONE, the
+          reportDocumentId can be used to download the actual report content. Use createdSince/
+          createdUntil date filters (ISO 8601 format) to find reports by creation date.
+        example_questions:
+          - "What reports have completed processing recently?"
+          - "Are there any failed reports?"
+          - "Show me the latest order data report"
       description: Amazon SP-API report
       required:
         - reportId

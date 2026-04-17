@@ -96,31 +96,20 @@ class TeamsListResponse(BaseModel):
 
     teams: Union[list[Team], Any] = Field(default=None)
 
-class SpaceFeaturesTimeTracking(BaseModel):
-    """Time tracking feature settings"""
+class SpaceStatusesItem(BaseModel):
+    """Nested schema for Space.statuses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: Union[bool, Any] = Field(default=None, description="Whether time tracking is enabled")
-    """Whether time tracking is enabled"""
-    harvest: Union[bool, Any] = Field(default=None, description="Whether Harvest integration is enabled")
-    """Whether Harvest integration is enabled"""
-    rollup: Union[bool, Any] = Field(default=None, description="Whether time rollup is enabled")
-    """Whether time rollup is enabled"""
-    default_to_billable: Union[int | None, Any] = Field(default=None, description="Default billable setting")
-    """Default billable setting"""
-
-class SpaceFeaturesCheckUnresolved(BaseModel):
-    """Check unresolved feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether check unresolved is enabled")
-    """Whether check unresolved is enabled"""
-    subtasks: Union[bool | None, Any] = Field(default=None, description="Check unresolved subtasks")
-    """Check unresolved subtasks"""
-    checklists: Union[bool | None, Any] = Field(default=None, description="Check unresolved checklists")
-    """Check unresolved checklists"""
-    comments: Union[bool | None, Any] = Field(default=None, description="Check unresolved comments")
-    """Check unresolved comments"""
+    id: Union[str, Any] = Field(default=None, description="Status ID")
+    """Status ID"""
+    status: Union[str, Any] = Field(default=None, description="Status name")
+    """Status name"""
+    type_: Union[str, Any] = Field(default=None, alias="type", description="Status type (open, custom, closed)")
+    """Status type (open, custom, closed)"""
+    orderindex: Union[int, Any] = Field(default=None, description="Status order index")
+    """Status order index"""
+    color: Union[str, Any] = Field(default=None, description="Status color hex code")
+    """Status color hex code"""
 
 class SpaceFeaturesMilestones(BaseModel):
     """Milestones feature settings"""
@@ -128,41 +117,6 @@ class SpaceFeaturesMilestones(BaseModel):
 
     enabled: Union[bool, Any] = Field(default=None, description="Whether milestones are enabled")
     """Whether milestones are enabled"""
-
-class SpaceFeaturesDependencyWarning(BaseModel):
-    """Dependency warning feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether dependency warnings are enabled")
-    """Whether dependency warnings are enabled"""
-
-class SpaceFeaturesStatusPies(BaseModel):
-    """Status pies feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether status pies are enabled")
-    """Whether status pies are enabled"""
-
-class SpaceFeaturesTags(BaseModel):
-    """Tags feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether tags are enabled")
-    """Whether tags are enabled"""
-
-class SpaceFeaturesRemapDependencies(BaseModel):
-    """Remap dependencies feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether remap dependencies is enabled")
-    """Whether remap dependencies is enabled"""
-
-class SpaceFeaturesMultipleAssignees(BaseModel):
-    """Multiple assignees feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether multiple assignees are enabled")
-    """Whether multiple assignees are enabled"""
 
 class SpaceFeaturesTimeEstimates(BaseModel):
     """Time estimates feature settings"""
@@ -175,19 +129,12 @@ class SpaceFeaturesTimeEstimates(BaseModel):
     per_assignee: Union[bool, Any] = Field(default=None, description="Whether per-assignee estimates are enabled")
     """Whether per-assignee estimates are enabled"""
 
-class SpaceFeaturesSprints(BaseModel):
-    """Sprints feature settings"""
+class SpaceFeaturesCustomItems(BaseModel):
+    """Custom items feature settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
-    enabled: Union[bool, Any] = Field(default=None, description="Whether sprints are enabled")
-    """Whether sprints are enabled"""
-
-class SpaceFeaturesEmails(BaseModel):
-    """Emails feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether emails are enabled")
-    """Whether emails are enabled"""
+    enabled: Union[bool, Any] = Field(default=None, description="Whether custom items are enabled")
+    """Whether custom items are enabled"""
 
 class SpaceFeaturesRescheduleClosedDependencies(BaseModel):
     """Reschedule closed dependencies settings"""
@@ -196,48 +143,12 @@ class SpaceFeaturesRescheduleClosedDependencies(BaseModel):
     enabled: Union[bool, Any] = Field(default=None, description="Whether rescheduling closed dependencies is enabled")
     """Whether rescheduling closed dependencies is enabled"""
 
-class SpaceFeaturesCustomItems(BaseModel):
-    """Custom items feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether custom items are enabled")
-    """Whether custom items are enabled"""
-
 class SpaceFeaturesPoints(BaseModel):
     """Points feature settings"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     enabled: Union[bool, Any] = Field(default=None, description="Whether points are enabled")
     """Whether points are enabled"""
-
-class SpaceFeaturesDependencyEnforcement(BaseModel):
-    """Dependency enforcement settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enforcement_enabled: Union[bool, Any] = Field(default=None, description="Whether enforcement is enabled")
-    """Whether enforcement is enabled"""
-    enforcement_mode: Union[int | None, Any] = Field(default=None, description="Enforcement mode")
-    """Enforcement mode"""
-
-class SpaceFeaturesDueDates(BaseModel):
-    """Due dates feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether due dates are enabled")
-    """Whether due dates are enabled"""
-    start_date: Union[bool, Any] = Field(default=None, description="Whether start dates are enabled")
-    """Whether start dates are enabled"""
-    remap_due_dates: Union[bool, Any] = Field(default=None, description="Whether due dates are remapped")
-    """Whether due dates are remapped"""
-    remap_closed_due_date: Union[bool, Any] = Field(default=None, description="Whether closed due dates are remapped")
-    """Whether closed due dates are remapped"""
-
-class SpaceFeaturesCustomFields(BaseModel):
-    """Custom fields feature settings"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    enabled: Union[bool, Any] = Field(default=None, description="Whether custom fields are enabled")
-    """Whether custom fields are enabled"""
 
 class SpaceFeaturesPrioritiesPrioritiesItem(BaseModel):
     """Nested schema for SpaceFeaturesPriorities.priorities_item"""
@@ -260,6 +171,110 @@ class SpaceFeaturesPriorities(BaseModel):
     """Whether priorities are enabled"""
     priorities: Union[list[SpaceFeaturesPrioritiesPrioritiesItem], Any] = Field(default=None, description="Priority levels")
     """Priority levels"""
+
+class SpaceFeaturesTags(BaseModel):
+    """Tags feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether tags are enabled")
+    """Whether tags are enabled"""
+
+class SpaceFeaturesDueDates(BaseModel):
+    """Due dates feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether due dates are enabled")
+    """Whether due dates are enabled"""
+    start_date: Union[bool, Any] = Field(default=None, description="Whether start dates are enabled")
+    """Whether start dates are enabled"""
+    remap_due_dates: Union[bool, Any] = Field(default=None, description="Whether due dates are remapped")
+    """Whether due dates are remapped"""
+    remap_closed_due_date: Union[bool, Any] = Field(default=None, description="Whether closed due dates are remapped")
+    """Whether closed due dates are remapped"""
+
+class SpaceFeaturesEmails(BaseModel):
+    """Emails feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether emails are enabled")
+    """Whether emails are enabled"""
+
+class SpaceFeaturesMultipleAssignees(BaseModel):
+    """Multiple assignees feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether multiple assignees are enabled")
+    """Whether multiple assignees are enabled"""
+
+class SpaceFeaturesTimeTracking(BaseModel):
+    """Time tracking feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether time tracking is enabled")
+    """Whether time tracking is enabled"""
+    harvest: Union[bool, Any] = Field(default=None, description="Whether Harvest integration is enabled")
+    """Whether Harvest integration is enabled"""
+    rollup: Union[bool, Any] = Field(default=None, description="Whether time rollup is enabled")
+    """Whether time rollup is enabled"""
+    default_to_billable: Union[int | None, Any] = Field(default=None, description="Default billable setting")
+    """Default billable setting"""
+
+class SpaceFeaturesStatusPies(BaseModel):
+    """Status pies feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether status pies are enabled")
+    """Whether status pies are enabled"""
+
+class SpaceFeaturesCustomFields(BaseModel):
+    """Custom fields feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether custom fields are enabled")
+    """Whether custom fields are enabled"""
+
+class SpaceFeaturesRemapDependencies(BaseModel):
+    """Remap dependencies feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether remap dependencies is enabled")
+    """Whether remap dependencies is enabled"""
+
+class SpaceFeaturesDependencyEnforcement(BaseModel):
+    """Dependency enforcement settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enforcement_enabled: Union[bool, Any] = Field(default=None, description="Whether enforcement is enabled")
+    """Whether enforcement is enabled"""
+    enforcement_mode: Union[int | None, Any] = Field(default=None, description="Enforcement mode")
+    """Enforcement mode"""
+
+class SpaceFeaturesDependencyWarning(BaseModel):
+    """Dependency warning feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether dependency warnings are enabled")
+    """Whether dependency warnings are enabled"""
+
+class SpaceFeaturesCheckUnresolved(BaseModel):
+    """Check unresolved feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether check unresolved is enabled")
+    """Whether check unresolved is enabled"""
+    subtasks: Union[bool | None, Any] = Field(default=None, description="Check unresolved subtasks")
+    """Check unresolved subtasks"""
+    checklists: Union[bool | None, Any] = Field(default=None, description="Check unresolved checklists")
+    """Check unresolved checklists"""
+    comments: Union[bool | None, Any] = Field(default=None, description="Check unresolved comments")
+    """Check unresolved comments"""
+
+class SpaceFeaturesSprints(BaseModel):
+    """Sprints feature settings"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    enabled: Union[bool, Any] = Field(default=None, description="Whether sprints are enabled")
+    """Whether sprints are enabled"""
 
 class SpaceFeatures(BaseModel):
     """Feature flags for the space"""
@@ -305,21 +320,6 @@ class SpaceFeatures(BaseModel):
     """Dependency enforcement settings"""
     reschedule_closed_dependencies: Union[SpaceFeaturesRescheduleClosedDependencies, Any] = Field(default=None, description="Reschedule closed dependencies settings")
     """Reschedule closed dependencies settings"""
-
-class SpaceStatusesItem(BaseModel):
-    """Nested schema for Space.statuses_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Status ID")
-    """Status ID"""
-    status: Union[str, Any] = Field(default=None, description="Status name")
-    """Status name"""
-    type_: Union[str, Any] = Field(default=None, alias="type", description="Status type (open, custom, closed)")
-    """Status type (open, custom, closed)"""
-    orderindex: Union[int, Any] = Field(default=None, description="Status order index")
-    """Status order index"""
-    color: Union[str, Any] = Field(default=None, description="Status color hex code")
-    """Status color hex code"""
 
 class Space(BaseModel):
     """Space type definition"""
@@ -443,17 +443,6 @@ class FoldersListResponse(BaseModel):
 
     folders: Union[list[Folder], Any] = Field(default=None)
 
-class ListSpace(BaseModel):
-    """Parent space reference"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str, Any] = Field(default=None, description="Space ID")
-    """Space ID"""
-    name: Union[str, Any] = Field(default=None, description="Space name")
-    """Space name"""
-    access: Union[bool | None, Any] = Field(default=None, description="Whether user has access")
-    """Whether user has access"""
-
 class ListStatusesItem(BaseModel):
     """Nested schema for List.statuses_item"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -481,6 +470,17 @@ class ListFolder(BaseModel):
     """Folder name"""
     hidden: Union[bool | None, Any] = Field(default=None, description="Whether the folder is hidden")
     """Whether the folder is hidden"""
+    access: Union[bool | None, Any] = Field(default=None, description="Whether user has access")
+    """Whether user has access"""
+
+class ListSpace(BaseModel):
+    """Parent space reference"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str, Any] = Field(default=None, description="Space ID")
+    """Space ID"""
+    name: Union[str, Any] = Field(default=None, description="Space name")
+    """Space name"""
     access: Union[bool | None, Any] = Field(default=None, description="Whether user has access")
     """Whether user has access"""
 
@@ -513,23 +513,6 @@ class ListsListResponse(BaseModel):
 
     lists: Union[list[List], Any] = Field(default=None)
 
-class TaskWatchersItem(BaseModel):
-    """Nested schema for Task.watchers_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[int, Any] = Field(default=None, description="Watcher user ID")
-    """Watcher user ID"""
-    username: Union[str, Any] = Field(default=None, description="Watcher username")
-    """Watcher username"""
-    color: Union[str | None, Any] = Field(default=None, description="Watcher avatar color")
-    """Watcher avatar color"""
-    initials: Union[str | None, Any] = Field(default=None, description="Watcher initials")
-    """Watcher initials"""
-    email: Union[str, Any] = Field(default=None, description="Watcher email")
-    """Watcher email"""
-    profile_picture: Union[str | None, Any] = Field(default=None, alias="profilePicture", description="Watcher profile picture URL")
-    """Watcher profile picture URL"""
-
 class TaskStatus(BaseModel):
     """Task status"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -559,6 +542,23 @@ class TaskCreator(BaseModel):
     """Creator email"""
     profile_picture: Union[str | None, Any] = Field(default=None, alias="profilePicture", description="Creator profile picture URL")
     """Creator profile picture URL"""
+
+class TaskWatchersItem(BaseModel):
+    """Nested schema for Task.watchers_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[int, Any] = Field(default=None, description="Watcher user ID")
+    """Watcher user ID"""
+    username: Union[str, Any] = Field(default=None, description="Watcher username")
+    """Watcher username"""
+    color: Union[str | None, Any] = Field(default=None, description="Watcher avatar color")
+    """Watcher avatar color"""
+    initials: Union[str | None, Any] = Field(default=None, description="Watcher initials")
+    """Watcher initials"""
+    email: Union[str, Any] = Field(default=None, description="Watcher email")
+    """Watcher email"""
+    profile_picture: Union[str | None, Any] = Field(default=None, alias="profilePicture", description="Watcher profile picture URL")
+    """Watcher profile picture URL"""
 
 class Task(BaseModel):
     """Task type definition"""
