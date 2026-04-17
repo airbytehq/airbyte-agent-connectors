@@ -1024,7 +1024,9 @@ $defs:
       - x-airbyte-path-override: Path override (Airbyte extension)
 
       - x-airbyte-record-extractor: JSONPath to extract records from response (Airbyte
-      extension)'
+      extension)
+
+      - x-airbyte-ai-hints: AI guidance for this specific operation (Airbyte extension)'
     properties:
       tags:
         anyOf:
@@ -1189,6 +1191,15 @@ $defs:
           uploads. When set, the executor builds a multipart/related body with JSON
           metadata and binary file content.
         title: X-Airbyte-Upload-File-Param
+      x-airbyte-ai-hints:
+        anyOf:
+        - $ref: '#/$defs/AiHints'
+        - type: 'null'
+        default: null
+        description: AI hints for this specific operation. Use for action-level guidance,
+          especially write actions whose request params should not be treated as
+          streams.
+        title: X-Airbyte-Ai-Hints
     required:
     - x-airbyte-entity
     - x-airbyte-action

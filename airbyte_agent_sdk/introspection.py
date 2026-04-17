@@ -111,6 +111,21 @@ def _simplify_type(type_value: str | list[str]) -> str:
     return types[0] if types else "any"
 
 
+def _format_ai_hint_lines(hints: dict[str, Any], indent: str = "    ") -> list[str]:
+    """Format ai_hints dict into indented lines."""
+    lines: list[str] = []
+    if hints.get("when_to_use"):
+        lines.append(f"{indent}WHEN TO USE: {hints['when_to_use']}")
+    if hints.get("freshness"):
+        lines.append(f"{indent}FRESHNESS: {str(hints['freshness']).upper()}")
+    trigger_phrases = hints.get("trigger_phrases", [])
+    if trigger_phrases and isinstance(trigger_phrases, list):
+        lines.append(f"{indent}Trigger phrases: {', '.join(trigger_phrases)}")
+    if hints.get("search_strategy"):
+        lines.append(f"{indent}SEARCH STRATEGY: {hints['search_strategy']}")
+    return lines
+
+
 def _type_includes(type_value: Any, target: str) -> bool:
     if isinstance(type_value, list):
         return target in type_value
@@ -569,23 +584,23 @@ def generate_tool_description(
     for entity in model.entities:
         # Emit per-entity AI hints if available
         ai_hints = getattr(entity, "ai_hints", None) or {}
+        actions = getattr(entity, "actions", []) or []
+        endpoints = getattr(entity, "endpoints", {}) or {}
+
         hint_summary = ai_hints.get("summary") if isinstance(ai_hints, dict) else None
+        if not hint_summary:
+            for action in actions:
+                endpoint = endpoints.get(action)
+                endpoint_hints = getattr(endpoint, "ai_hints", None) if endpoint else None
+                if isinstance(endpoint_hints, dict) and endpoint_hints.get("summary"):
+                    hint_summary = endpoint_hints["summary"]
+                    break
         if hint_summary:
             lines.append(f"  {entity.name}: {hint_summary}")
         else:
             lines.append(f"  {entity.name}:")
-        hint_when = ai_hints.get("when_to_use") if isinstance(ai_hints, dict) else None
-        if hint_when:
-            lines.append(f"    WHEN TO USE: {hint_when}")
-        hint_freshness = ai_hints.get("freshness") if isinstance(ai_hints, dict) else None
-        if hint_freshness:
-            lines.append(f"    FRESHNESS: {hint_freshness.upper()}")
-        hint_triggers = ai_hints.get("trigger_phrases", []) if isinstance(ai_hints, dict) else []
-        if hint_triggers:
-            lines.append(f"    Trigger phrases: {', '.join(hint_triggers)}")
-        hint_search = ai_hints.get("search_strategy") if isinstance(ai_hints, dict) else None
-        if hint_search:
-            lines.append(f"    SEARCH STRATEGY: {hint_search}")
+        if isinstance(ai_hints, dict):
+            lines.extend(_format_ai_hint_lines(ai_hints))
 
         # Fields sub-section
         cache_fields = entity_field_schemas.get(entity.name)
@@ -617,8 +632,6 @@ def generate_tool_description(
                 lines.append(line)
 
         # Actions sub-section
-        actions = getattr(entity, "actions", []) or []
-        endpoints = getattr(entity, "endpoints", {}) or {}
         lines.append("    Actions:")
         for action in actions:
             action_str = action.value if hasattr(action, "value") else str(action)
@@ -626,6 +639,12 @@ def generate_tool_description(
             if endpoint:
                 param_sig = format_param_signature(endpoint)
                 lines.append(f"      - {action_str}{param_sig}")
+                endpoint_hints = getattr(endpoint, "ai_hints", None)
+                if isinstance(endpoint_hints, dict):
+                    lines.extend(_format_ai_hint_lines(endpoint_hints, indent="        "))
+                    hint_examples = endpoint_hints.get("example_questions", [])
+                    if hint_examples and isinstance(hint_examples, list):
+                        lines.append(f"        Examples: {'; '.join(hint_examples[:3])}")
             else:
                 lines.append(f"      - {action_str}()")
         if entity.name in search_field_paths:

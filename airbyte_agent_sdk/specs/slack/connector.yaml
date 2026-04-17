@@ -986,6 +986,15 @@ paths:
       operationId: createMessage
       x-airbyte-entity: messages
       x-airbyte-action: create
+      x-airbyte-ai-hints:
+        summary: "Post or update Slack messages"
+        when_to_use: "When the user asks to send, post, announce, or reply with a new Slack message"
+        trigger_phrases: ["send a message", "post in #", "announce in channel", "reply in Slack"]
+        freshness: live
+        search_strategy: "Use messages.create to send a new Slack message. Required params: channel and text. Do not use channel_messages.create for writes."
+        example_questions:
+          - "Post 'Hello team' in a Slack channel"
+          - "Send a message to a Slack channel"
       x-airbyte-record-extractor: $.message
       requestBody:
         required: true
@@ -1014,6 +1023,14 @@ paths:
       operationId: updateMessage
       x-airbyte-entity: messages
       x-airbyte-action: update
+      x-airbyte-ai-hints:
+        summary: "Post or update Slack messages"
+        when_to_use: "When the user asks to edit, revise, or correct an existing Slack message"
+        trigger_phrases: ["update a message", "edit the Slack message", "correct the Slack message"]
+        freshness: live
+        search_strategy: "Use messages.update to edit an existing Slack message. Required params: channel, ts, and text."
+        example_questions:
+          - "Update the Slack message to say 'Hello team'"
       x-airbyte-record-extractor: $.message
       requestBody:
         required: true

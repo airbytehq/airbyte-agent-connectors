@@ -314,6 +314,10 @@ class EndpointDefinition(BaseModel):
         False,
         description="True when the operation defines a 204 No Content response, indicating no response body is expected",
     )
+    ai_hints: dict[str, Any] | None = Field(
+        default=None,
+        description="AI hints attached to this specific operation (from x-airbyte-ai-hints)",
+    )
 
 
 class EntityDefinition(BaseModel):

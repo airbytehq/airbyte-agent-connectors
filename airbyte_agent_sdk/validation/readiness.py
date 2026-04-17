@@ -798,6 +798,15 @@ def _validate_entity_relationships(config: ConnectorModel, raw_spec: Dict[str, A
     return warnings
 
 
+def _entity_has_ai_hints(entity: Any) -> bool:
+    """Return True if an entity has schema-level or operation-level AI hints."""
+    if getattr(entity, "ai_hints", None):
+        return True
+
+    endpoints = getattr(entity, "endpoints", {}) or {}
+    return any(getattr(endpoint, "ai_hints", None) for endpoint in endpoints.values())
+
+
 def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     """
     Validate that a connector is ready to ship.
@@ -1209,12 +1218,12 @@ def validate_connector_readiness(connector_dir: str | Path) -> Dict[str, Any]:
     total_warnings += len(relationship_validation_warnings)
 
     # Check for missing x-airbyte-ai-hints on entities
-    entities_missing_hints = [entity.name for entity in config.entities if not getattr(entity, "ai_hints", None)]
+    entities_missing_hints = [entity.name for entity in config.entities if not _entity_has_ai_hints(entity)]
     if entities_missing_hints:
         readiness_warnings.append(
             f"Entities missing x-airbyte-ai-hints: {', '.join(entities_missing_hints)}. "
-            "Add AI hints (summary, when_to_use, trigger_phrases, freshness) to each entity schema "
-            "to improve LLM tool selection. See get_connector_yaml_schema_docs('extensions') for details."
+            "Add AI hints (summary, when_to_use, trigger_phrases, freshness) to an entity schema "
+            "or its operations to improve LLM tool selection. See get_connector_yaml_schema_docs('extensions') for details."
         )
         total_warnings += 1
 

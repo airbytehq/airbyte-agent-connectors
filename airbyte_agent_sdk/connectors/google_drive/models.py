@@ -52,6 +52,62 @@ class User(BaseModel):
     permission_id: Union[str | None, Any] = Field(default=None, alias="permissionId")
     email_address: Union[str | None, Any] = Field(default=None, alias="emailAddress")
 
+class FileContentrestrictionsItem(BaseModel):
+    """Nested schema for File.contentRestrictions_item"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    read_only: Union[bool | None, Any] = Field(default=None, alias="readOnly")
+    reason: Union[str | None, Any] = Field(default=None)
+    restricting_user: Union[Any, Any] = Field(default=None, alias="restrictingUser")
+    restriction_time: Union[str | None, Any] = Field(default=None, alias="restrictionTime")
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
+
+class FileCapabilities(BaseModel):
+    """Capabilities the current user has on this file"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    can_edit: Union[bool | None, Any] = Field(default=None, alias="canEdit")
+    can_comment: Union[bool | None, Any] = Field(default=None, alias="canComment")
+    can_share: Union[bool | None, Any] = Field(default=None, alias="canShare")
+    can_copy: Union[bool | None, Any] = Field(default=None, alias="canCopy")
+    can_download: Union[bool | None, Any] = Field(default=None, alias="canDownload")
+    can_delete: Union[bool | None, Any] = Field(default=None, alias="canDelete")
+    can_rename: Union[bool | None, Any] = Field(default=None, alias="canRename")
+    can_trash: Union[bool | None, Any] = Field(default=None, alias="canTrash")
+    can_read_revisions: Union[bool | None, Any] = Field(default=None, alias="canReadRevisions")
+    can_add_children: Union[bool | None, Any] = Field(default=None, alias="canAddChildren")
+    can_list_children: Union[bool | None, Any] = Field(default=None, alias="canListChildren")
+    can_remove_children: Union[bool | None, Any] = Field(default=None, alias="canRemoveChildren")
+
+class FileLinksharemetadata(BaseModel):
+    """Contains details about the link URLs"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    security_update_eligible: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEligible")
+    security_update_enabled: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEnabled")
+
+class FileShortcutdetails(BaseModel):
+    """Shortcut file details"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    target_id: Union[str | None, Any] = Field(default=None, alias="targetId")
+    target_mime_type: Union[str | None, Any] = Field(default=None, alias="targetMimeType")
+    target_resource_key: Union[str | None, Any] = Field(default=None, alias="targetResourceKey")
+
+class FileVideomediametadata(BaseModel):
+    """Additional metadata about video media"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    width: Union[int | None, Any] = Field(default=None)
+    height: Union[int | None, Any] = Field(default=None)
+    duration_millis: Union[str | None, Any] = Field(default=None, alias="durationMillis")
+
+class FileLabelinfo(BaseModel):
+    """An overview of the labels on the file"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    labels: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
+
 class FileImagemediametadataLocation(BaseModel):
     """Nested schema for FileImagemediametadata.location"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -85,62 +141,6 @@ class FileImagemediametadata(BaseModel):
     subject_distance: Union[int | None, Any] = Field(default=None, alias="subjectDistance")
     lens: Union[str | None, Any] = Field(default=None)
     location: Union[FileImagemediametadataLocation | None, Any] = Field(default=None)
-
-class FileVideomediametadata(BaseModel):
-    """Additional metadata about video media"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    width: Union[int | None, Any] = Field(default=None)
-    height: Union[int | None, Any] = Field(default=None)
-    duration_millis: Union[str | None, Any] = Field(default=None, alias="durationMillis")
-
-class FileShortcutdetails(BaseModel):
-    """Shortcut file details"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    target_id: Union[str | None, Any] = Field(default=None, alias="targetId")
-    target_mime_type: Union[str | None, Any] = Field(default=None, alias="targetMimeType")
-    target_resource_key: Union[str | None, Any] = Field(default=None, alias="targetResourceKey")
-
-class FileLinksharemetadata(BaseModel):
-    """Contains details about the link URLs"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    security_update_eligible: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEligible")
-    security_update_enabled: Union[bool | None, Any] = Field(default=None, alias="securityUpdateEnabled")
-
-class FileContentrestrictionsItem(BaseModel):
-    """Nested schema for File.contentRestrictions_item"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    read_only: Union[bool | None, Any] = Field(default=None, alias="readOnly")
-    reason: Union[str | None, Any] = Field(default=None)
-    restricting_user: Union[Any, Any] = Field(default=None, alias="restrictingUser")
-    restriction_time: Union[str | None, Any] = Field(default=None, alias="restrictionTime")
-    type_: Union[str | None, Any] = Field(default=None, alias="type")
-
-class FileCapabilities(BaseModel):
-    """Capabilities the current user has on this file"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    can_edit: Union[bool | None, Any] = Field(default=None, alias="canEdit")
-    can_comment: Union[bool | None, Any] = Field(default=None, alias="canComment")
-    can_share: Union[bool | None, Any] = Field(default=None, alias="canShare")
-    can_copy: Union[bool | None, Any] = Field(default=None, alias="canCopy")
-    can_download: Union[bool | None, Any] = Field(default=None, alias="canDownload")
-    can_delete: Union[bool | None, Any] = Field(default=None, alias="canDelete")
-    can_rename: Union[bool | None, Any] = Field(default=None, alias="canRename")
-    can_trash: Union[bool | None, Any] = Field(default=None, alias="canTrash")
-    can_read_revisions: Union[bool | None, Any] = Field(default=None, alias="canReadRevisions")
-    can_add_children: Union[bool | None, Any] = Field(default=None, alias="canAddChildren")
-    can_list_children: Union[bool | None, Any] = Field(default=None, alias="canListChildren")
-    can_remove_children: Union[bool | None, Any] = Field(default=None, alias="canRemoveChildren")
-
-class FileLabelinfo(BaseModel):
-    """An overview of the labels on the file"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    labels: Union[list[dict[str, Any]] | None, Any] = Field(default=None)
 
 class File(BaseModel):
     """The metadata for a file"""
@@ -242,15 +242,6 @@ class FileUploadParams(BaseModel):
     description: Union[str, Any] = Field(default=None)
     file_mime_type: Union[str, Any] = Field(default=None)
 
-class DriveBackgroundimagefile(BaseModel):
-    """An image file and cropping parameters for the background image"""
-    model_config = ConfigDict(extra="allow", populate_by_name=True)
-
-    id: Union[str | None, Any] = Field(default=None)
-    x_coordinate: Union[float | None, Any] = Field(default=None, alias="xCoordinate")
-    y_coordinate: Union[float | None, Any] = Field(default=None, alias="yCoordinate")
-    width: Union[float | None, Any] = Field(default=None)
-
 class DriveCapabilities(BaseModel):
     """Capabilities the current user has on this shared drive"""
     model_config = ConfigDict(extra="allow", populate_by_name=True)
@@ -275,6 +266,15 @@ class DriveCapabilities(BaseModel):
     can_reset_drive_restrictions: Union[bool | None, Any] = Field(default=None, alias="canResetDriveRestrictions")
     can_delete_children: Union[bool | None, Any] = Field(default=None, alias="canDeleteChildren")
     can_trash_children: Union[bool | None, Any] = Field(default=None, alias="canTrashChildren")
+
+class DriveBackgroundimagefile(BaseModel):
+    """An image file and cropping parameters for the background image"""
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
+
+    id: Union[str | None, Any] = Field(default=None)
+    x_coordinate: Union[float | None, Any] = Field(default=None, alias="xCoordinate")
+    y_coordinate: Union[float | None, Any] = Field(default=None, alias="yCoordinate")
+    width: Union[float | None, Any] = Field(default=None)
 
 class DriveRestrictions(BaseModel):
     """A set of restrictions that apply to this shared drive"""

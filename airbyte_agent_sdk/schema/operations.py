@@ -11,7 +11,7 @@ from typing import Any, Dict, List
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from ..extensions import ActionTypeLiteral
-from .components import Parameter, PathOverrideConfig, RequestBody, Response
+from .components import AiHints, Parameter, PathOverrideConfig, RequestBody, Response
 from .security import SecurityRequirement
 
 
@@ -26,6 +26,7 @@ class Operation(BaseModel):
     - x-airbyte-action: Semantic action (Airbyte extension)
     - x-airbyte-path-override: Path override (Airbyte extension)
     - x-airbyte-record-extractor: JSONPath to extract records from response (Airbyte extension)
+    - x-airbyte-ai-hints: AI guidance for this specific operation (Airbyte extension)
 
     """
 
@@ -101,6 +102,14 @@ class Operation(BaseModel):
         description=(
             "Parameter name containing base64-encoded file content for multipart/related uploads. "
             "When set, the executor builds a multipart/related body with JSON metadata and binary file content."
+        ),
+    )
+    x_airbyte_ai_hints: AiHints | None = Field(
+        None,
+        alias="x-airbyte-ai-hints",
+        description=(
+            "AI hints for this specific operation. Use for action-level guidance, "
+            "especially write actions whose request params should not be treated as streams."
         ),
     )
 
